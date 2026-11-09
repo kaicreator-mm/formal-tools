@@ -1,45 +1,53 @@
 ---
-name: formal-alloy
+name: alloy
 description: Use Alloy Analyzer to check 关系模型、依赖图、唯一性、有限域结构反例; generate reproducible formal inputs, run positive and negative tests, and record exact executable proof or counterexample evidence.
 ---
 # Alloy Analyzer Formal Verification Skill
 
 **Use for:** 关系模型、依赖图、唯一性、有限域结构反例.
 
-**Expected offline bundle version:** `6.2.0`. **Upstream reference:** https://alloytools.org/. The skill is `SOURCE_REVIEWED / RUNTIME_NOT_VERIFIED` until an actual executable receipt is recorded.
+**Expected offline bundle version:** `6.2.0`. **Upstream reference:** https://alloytools.org/. The skill has source-reviewed instructions and unexecuted fixtures; `RUNTIME_NOT_VERIFIED` until signed execution receipts exist.
 
 ## Environment doctor
 
+First obtain the executable from the [indexed Drive packages](https://drive.google.com/drive/folders/1GqX-Dn42Xi_STaoWYoq4aRXi3le2WPHB). The `formal-toolkit-linux-x86_64/install_offline.py` installer only covers its six named tools and dependencies; it **does not** install every skill in this repository. Use the appropriate standalone archive for other tools.
+
+From this skill directory, after installing this specific tool and its dependencies:
+
 ```sh
-优先先确认官方发行包内 CLI / jar 入口；不要猜测 jar 参数
+alloy help
 ```
 
-Never claim verification unless the command ran in an actual compatible environment and its exact version was recorded. When offline installation is needed, use the `formal-toolkit-linux-x86_64` archive's `install_offline.py` and checksum verification; do not assume the tools were automatically installed by Drive.
+The doctor is version/help only; **do not** run a model before creating or locating the fixture. Do not claim any executed result from a command written in documentation.
 
-## Minimal model
+## Reproducible fixtures
 
-```text
-sig Node { next: lone Node }
-assert NoSelfLoop { no n: Node | n in n.next }
-check NoSelfLoop for 4
+The version-controlled files in `examples/` are separate positive and mutation inputs. Use exactly the files below; do not paraphrase them and execute an unsaved prompt.
+
+**Positive case** (working directory: `skills/alloy`):
+
+```sh
+alloy exec -c 0 examples/positive.als
 ```
 
-## Procedure
+**Negative/mutation case** (same working directory, different saved input):
 
-通过 Alloy Analyzer 打开 `.als` 并运行 `check`；若发行包带可用 CLI，先从 `--help` 记录准确命令，再自动化执行。
+```sh
+alloy exec -c 0 examples/negative.als
+```
 
-## Negative and mutation check
+**Expected outcome and judgment:** `alloy` is AlloyTools 6.x, not Grafana Alloy or an AI agent with the same name. Verify that the installed official Alloy 6.2.0 CLI supports `exec -c 0`, otherwise use `java -jar alloy.jar help` and adapt from CLI help. Positive uses `fact Acyclic` to exclude self-loops; negative removes that fact and should produce a counterexample within scope 4. The Alloy 6.2.0 archive is standalone.
 
-构造允许自环的节点，预期反例；scope=4 不能外推到所有规模。
+These are **statically prepared** test cases, NOT verified executions. Use `validation/SKILL_ACCEPTANCE_CASES.json` for the complete suite. Every run requires an exact input SHA-256, command, version, timeout, stdout/stderr and result status. Distinguish expected negative behavior from a tool error.
 
 ## Model limits and failure modes
 
 仅在边界 scope 内模型检查；图结构和 Element 分解适用，软件库 Titanium Alloy 不是同一个工具。
 
 ## Shared verification contract
-1. Determine the actual executable and locked version from `MANIFEST.json`, and run a version/doctor probe before any claim. Files on Drive are **not automatically installed**.
+1. Determine the actual executable and locked version from the correct package index and (where present) its `MANIFEST.json`; run a version/doctor probe before any runtime claim. Drive files are **not automatically installed**.
 2. Translate the human-language claim into explicit scope, assumptions, formal input and expected property. Separate *model correctness* from *solver correctness*.
-3. Run positive and negative/mutation checks on exactly the saved source file; use a bounded timeout and isolated writable directory.
+3. Run positive and negative/mutation checks on the two separate saved fixture files; hash both. Use a bounded timeout and isolated writable directory.
 4. Preserve input files, stdout, stderr, exit code, tool versions, environment, duration and SHA-256 in evidence. Expected negative tests may exit nonzero; classify against expectation.
 5. Use statuses `PASS`, `COUNTEREXAMPLE`, `UNKNOWN`, `ERROR`, `NOT_RUN`. Never claim `PASS` for merely generated scripts or for `UNKNOWN`.
 6. Never interpret bounded checking as universal proof, assume a library/tool is installed because a ZIP is present, or weaken the claim to force green.
@@ -48,4 +56,4 @@ check NoSelfLoop for 4
 
 ## Experience reuse
 
-On every real use, append a small entry to `../../experience/EXPERIENCE_LOG.md` or the project's source-of-truth Git issue: exact SHA, CLI version, model hash, positive result, negative mutation, outcome and any corrected assumptions. Do not silently rewrite a historical receipt.
+On every real use, write evidence to the project's source-of-truth Git issue and propose a reusable lesson for the canonical repository `experience/EXPERIENCE_LOG.md` (do not assume the packaged Skill can mutate that Git path): exact SHA, CLI version, model hash, positive result, negative mutation, outcome and any corrected assumptions. Do not silently rewrite a historical receipt.

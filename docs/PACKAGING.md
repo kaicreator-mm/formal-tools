@@ -1,6 +1,6 @@
 # Skills-only plugin package
 
-The directory `repository root` is deliberately installable as a self-contained *source tree* named `formal-methods` with `plugin.json` and `skills/`.
+The repository root contains the source of a skills-only plugin: `plugin.json` and `skills/`. Build an archive with one top-level directory named `formal-methods/`; the unpacked root of this directory contains those source files. Do not upload the repository root without this packaging check.
 
 - Archive with **exactly one** top-level directory `formal-methods/` containing `plugin.json`, `skills/formal-tool-router/SKILL.md`, the 13 tool `SKILL.md` files and references.
 - Use the ChatGPT Plugin Creator private `create_plugin` workflow with the actual local archive path. The creator API does **not** accept a GitHub or Drive URL directly.

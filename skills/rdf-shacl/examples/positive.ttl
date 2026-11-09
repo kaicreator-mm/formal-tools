@@ -1,0 +1,3 @@
+@prefix ex: <urn:ex:> .
+ex:x a ex:Package ;
+     ex:version "1.0" .

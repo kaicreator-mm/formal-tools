@@ -1,0 +1,11 @@
+.decl edge(src:symbol,dst:symbol)
+.decl reach(src:symbol,dst:symbol)
+.decl cycle(node:symbol)
+edge("A","B").
+edge("B","C").
+edge("C","A").
+reach(x,y) :- edge(x,y).
+reach(x,z) :- reach(x,y), edge(y,z).
+cycle(x) :- reach(x,x).
+.output reach
+.output cycle

@@ -1,0 +1,2 @@
+@prefix ex: <urn:ex:> .
+ex:x a ex:Package .

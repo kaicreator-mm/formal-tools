@@ -19,7 +19,7 @@ Read `references/VERIFICATION_PROTOCOL.md` first. Select the tool by *claim and 
 | First-order entailment | Vampire | Lean explicit theorem or SMT under shared assumptions |
 | Program contract and implementation proof | Dafny | Lean as needed |
 
-Choose the matching `skills/<name>/SKILL.md`. Start with a minimal reproducible executable case, then the actual invariant, then a negative mutation. Preserve Git SHA, tool version and model checksum. If environment execution is unavailable, output `NOT_RUN` and an exact reproduction command without claiming a proof. Avoid spawning all tools for every claim; use only independent checks that change confidence or coverage.
+Read the peer Skill at `../<name>/SKILL.md` from this router directory (for example `../z3/SKILL.md`). Start with a minimal reproducible executable case, then the actual invariant, then a negative mutation. Preserve Git SHA, tool version and model checksum. If environment execution is unavailable, output `NOT_RUN` and an exact reproduction command without claiming a proof. Avoid spawning all tools for every claim; use only independent checks that change confidence or coverage.
 
 ## Assurance limits
 
