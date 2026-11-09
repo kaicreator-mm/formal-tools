@@ -86,3 +86,15 @@ docs/
 - 每 Batch 遵循 ADS #1359 Delivery-First：一个 Writer 处理同一 write set 的修复与测试；需要本地时一次交接，避免只做 VALIDATION 的任务。
 
 **禁止重回业务范围**：不添加 ADS/DKE/DIS property 模型、工具推荐策略、领域模拟流程或业务验收门禁。
+
+## G. 追加 Web 源码推进：D06/D07（实验性）
+
+D01-D05 的 Tool Manager 与 CLI/MCP 完成后，继续 Web-first 实施通用技术结果层：
+
+- `packages/runner/js/tool-result.mjs`：把 Runner 输出转换为 `formal-tools/tool-execution/1`，只含 process status、tool-native status、原始输出/Hash、argv、制品收集状态。
+- `packages/runner/js/sdk.mjs`：`listTools`、`toolDetails`、`planTool`、`whereTool`、`whereAll`、`invokeTool`，仅允许声明的类型化操作，不支持任意 raw shell。
+- CLI `invoke TOOL OP --input ...`：使用同一 SDK，返回技术工具结果；旧 `exec` 不改行为。
+- `registry/TOOL_EXECUTION_RESULT.schema.json` 和 `tests/tool-sdk.test.mjs` 提供结构与运行前参数验证。
+- **仍未完成**：完整依赖模型/产物的隔离打包、资源限制的宿主实现、官方工具轨迹文件收集、所有平台的运行兼容，以及 SDK npm 发布资格。因此 D06/D07 目前只是 `SOURCE_PARTIAL`，**不允许标为交付通过**。
+
+该追加实现无业务模型、验证内容、业务工具选择逻辑或模拟编排。SDK 返回 SAT/UNSAT 等只作为原生工具技术状态，不能当成业务验收结论。

@@ -41,3 +41,13 @@ test("CLI preserves existing catalog and rejects unknown tool",()=>{
   assert.equal(bad.status,2);
   assert.match(bad.stderr,/unknown tool/);
 });
+
+test("CLI invoke returns a technical NOT_STARTED receipt for missing upstream binary",()=>{
+  const p=command(["invoke","z3","solve","--input","no-model.smt2"],
+    {FORMAL_TOOLS_BIN_DIR:join(repo,"__formal_tools_nonexistent_bin_directory__")});
+  assert.equal(p.exitCode,2,p.stderr);
+  assert.equal(p.json.schema,"formal-tools/tool-execution/1");
+  assert.equal(p.json.process.status,"NOT_STARTED");
+  assert.equal(p.json.tool_status,"INCONCLUSIVE");
+  assert.ok(!Object.hasOwn(p.json,"claim_verdict"));
+});

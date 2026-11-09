@@ -24,3 +24,11 @@
 ## 下一步
 
 优先交给真实 Node/原生工具宿主**一次性完成缺失验证+修复**；不要求重复手动批准，也不因单个工具暂时缺失而阻塞其他独立源码工作。验收后更新 Issue #7、Issue #4、PR、Task DAG 及最终 Exact-SHA，继续 D06 可靠执行/产物和 D07 SDK。
+
+## D06/D07 源码追加（实验状态）
+
+- D06 只完成 **ToolExecutionResult** 技术结果规范化函数，默认输出 `artifacts.status=NOT_COLLECTED`，不谎报有完整轨迹与生成制品收集；运行隔离尚未完整。
+- D07 只完成 **SDK 实验性源码** 与 CLI `invoke` 入口；原有 `exec` 和 MCP fixed fixture 仍然存在。SDK 是受信 Node Host API，不暴露给不可信 MCP。
+- 已在受限 JS 中验证 Result 10/10 状态和边界，以及 SDK mock dispatch 7/7；12 个 JS 模块/测试文件仅做 V8 语法解析，不是 Node 原生测试。
+- 尚需真实 Node/TypeScript/原生工具跑 `tests/tool-sdk.test.mjs` 和 CLI `invoke` 冒烟。完整资源/工作目录隔离与产物发现待 D06 后续修复。
+- 细节见 `validation/R1_SDK_SOURCE_AUDIT.json`。

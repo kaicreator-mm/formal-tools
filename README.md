@@ -70,3 +70,9 @@ node packages/runner/js/cli.mjs doctor-all --probe --timeout 12
 ```
 
 [工具诊断说明](docs/TOOL_MANAGER.md) · [R1 开发计划](docs/implementation/r1/DEVELOPMENT_PLAN.md)
+
+## R1 通用工具 SDK（实验接口）
+
+`packages/runner/js/sdk.mjs` 提供 `listTools`、`toolDetails`、`planTool`、`whereTool`、`whereAll`、`invokeTool`。它仅包装**工具本身**的技术状态，不判断业务性质。CLI 新增 `invoke TOOL OP --option value`，返回一致的机器可读 `ToolExecutionResult`；原来的 `exec` 原样保留避免破坏兼容性。
+
+[SDK 开发文档](docs/TOOL_SDK.md)。本接口尚须 Node/TypeScript/原生运行验收；MCP 仍不开放任意执行。

@@ -7,6 +7,7 @@ import { verifyPure } from "../../core/src/finite.mjs";
 import { knownTools, inspectTool, validateSource, doctor, runFixture, executeNativePlan } from "./native.mjs";
 import { describeNativeTool, planNative, planRawNative, planNativeHelp, toolIds } from "./native-catalog.mjs";
 import { toolInfo, inspectInstallation, inspectAllInstallations } from "./tool-manager.mjs";
+import { invokeTool } from "./sdk.mjs";
 
 function localParams(args) {
   /** @type {{[key:string]:string|number|boolean}} */
@@ -95,6 +96,13 @@ export async function main(args=process.argv.slice(2)) {
       const cwd=optString(params.cwd,process.cwd());
       delete params.timeout;delete params.cwd;
       result=await executeNativePlan(planNative(arg,op,params),{cwd,timeout});
+    } else if (action==="invoke") {
+      const [op,...opts]=rest;
+      const params=localParams(opts);
+      const timeoutS=optNumber(params.timeout,30);
+      const cwd=optString(params.cwd,process.cwd());
+      delete params.timeout;delete params.cwd;
+      result=await invokeTool({tool:arg,operation:op,settings:params,timeoutS,cwd});
     } else if (action==="native-help") {
       const opts=localParams(rest);
       if(Object.keys(opts).some(k=>!["entry","timeout","cwd"].includes(k)))throw new TypeError("invalid help options");
@@ -113,7 +121,7 @@ export async function main(args=process.argv.slice(2)) {
       const model=JSON.parse(await readFile(path,"utf8"));
       result=verifyPure(/** @type {import("../../core/src/finite.mjs").PureEngine} */(arg),model);
     } else {
-      throw new TypeError("Usage: cli.mjs <list|validate|info TOOL|where TOOL|doctor-all [--probe --timeout N]|catalog [TOOL]|plan TOOL OP --option value|exec TOOL OP --option value|native-help TOOL|native TOOL -- [official args]|inspect TOOL|doctor TOOL|run TOOL --case positive|negative|suite|pure KIND --input file.json>");
+      throw new TypeError("Usage: cli.mjs <list|validate|info TOOL|where TOOL|doctor-all [--probe --timeout N]|catalog [TOOL]|plan TOOL OP --option value|exec TOOL OP --option value|invoke TOOL OP --option value|native-help TOOL|native TOOL -- [official args]|inspect TOOL|doctor TOOL|run TOOL --case positive|negative|suite|pure KIND --input file.json>");
     }
     print(result);
     if(action==="validate")return result.status==="STATIC_PASS"?0:2;
@@ -130,6 +138,7 @@ export async function main(args=process.argv.slice(2)) {
       return result.checks.every(x=>x.status==="FOUND_NOT_PROBED")?0:2;
     }
     if(action==="pure")return result.tool_outcome==="UNKNOWN"?2:0;
+    if(action==="invoke")return result.process.status==="EXIT_ZERO"?0:2;
     if(["exec","native"].includes(action))return result.process_outcome==="EXIT_ZERO"?0:2; // counterexample is a meaningful observation
     return 0;
   } catch(e) {

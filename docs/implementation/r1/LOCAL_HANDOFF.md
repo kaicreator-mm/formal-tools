@@ -20,3 +20,10 @@
 10. 不创建 GitHub Actions、不做生产业务验证、不重命名已被消费的 npm/MCP identity、不修改用户全局环境、不下载未经批准的二进制。
 
 **返回字段**：`FINAL_HEAD`、`NODE_TEST`、`TYPECHECK`、`CLI_INFO_WHERE_DOCTOR`、`MCP_9`、`NATIVE_DOCTOR_13`、`NATIVE_FIXTURES_26`、`WOODPECKER`、`P0/P1/P2`、`RECEIPT_PATHS`、`NEXT_GATE`。
+
+## R1 D06/D07 增量加入本地验收（无需另开单）
+
+- 运行新增 `tests/tool-sdk.test.mjs` 及 `tests/tool-cli.test.mjs` 中的 `invoke` 冒烟；仍由原 PR Writer 修复。
+- 在实际工具环境测试 `node packages/runner/js/cli.mjs invoke z3 solve --input skills/z3/examples/positive.smt2`，确认返回 `schema=formal-tools/tool-execution/1`、原生状态、输出哈希；失败返回技术错误，不冒充业务通过。
+- SDK 的 `invokeTool` 只允许类型化目录操作，`failedToolLaunch` 正确返回 NOT_STARTED；通用模型依赖打包/产物发现仍未实现，不得声明完整文件隔离。
+- 上游 MCP 不应在这次验收中开放可任意执行的 raw/native 参数；SDK 为可信主机 API。

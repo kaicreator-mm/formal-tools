@@ -74,7 +74,8 @@
     "pure",
     "info",
     "where",
-    "doctor-all"
+    "doctor-all",
+    "invoke"
   ],
   "native_cli": {
     "catalog": "packages/runner/js/native-catalog.mjs",
@@ -91,5 +92,14 @@
     "static_diagnostics": "FOUND_NOT_PROBED|MISSING_EXECUTABLE|NEEDS_CONFIGURATION|MISSING_DEPENDENCY_FILE|WINDOWS_WRAPPER_UNSUPPORTED",
     "status": "SOURCE_IMPLEMENTED_JS_PLANNING_TESTED_NODE_NOT_RUN",
     "development_plan": "docs/implementation/r1/DEVELOPMENT_PLAN.md"
+  },
+  "tool_sdk": {
+    "source": "packages/runner/js/sdk.mjs",
+    "interface": "ToolInvocation / ToolExecutionResult",
+    "schema": "registry/TOOL_EXECUTION_RESULT.schema.json",
+    "maturity": "EXPERIMENTAL_SOURCE_ONLY_NODE_NOT_RUN",
+    "native_raw_command": false,
+    "mcp_raw_command": false,
+    "execution_environment": "TRUSTED_NODE_HOST"
   }
 }

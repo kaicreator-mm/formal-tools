@@ -3,7 +3,7 @@
   "source_main": "5bd8a552c61218d56408de12bb832a5b39f568a2",
   "product": "kaicreator-mm/formal-tools",
   "plan": "docs/implementation/r1/DEVELOPMENT_PLAN.md",
-  "status": "BATCH_1_SOURCE_READY_NATIVE_RUNTIME_PENDING",
+  "status": "D01_D05_SOURCE_DONE_D06_D07_PARTIAL_PENDING_NODE_NATIVE",
   "scope": "TOOL_MAINTENANCE_ONLY",
   "tasks": [
     {
@@ -74,9 +74,10 @@
       ],
       "gate": "G2",
       "priority": "P0",
-      "status": "PLANNED",
-      "source_status": "NOT_STARTED",
-      "runtime_status": "NOT_RUN"
+      "status": "SOURCE_PARTIAL",
+      "source_status": "SOURCE_IMPLEMENTED_EXPERIMENTAL",
+      "runtime_status": "NOT_RUN",
+      "remaining": "Sandboxed execution of arbitrary native input dependencies; generated output artifacts, resource guards, real Node tests"
     },
     {
       "id": "D07",
@@ -87,9 +88,10 @@
       ],
       "gate": "G2",
       "priority": "P1",
-      "status": "PLANNED",
-      "source_status": "NOT_STARTED",
-      "runtime_status": "NOT_RUN"
+      "status": "SOURCE_PARTIAL",
+      "source_status": "SOURCE_IMPLEMENTED_EXPERIMENTAL",
+      "runtime_status": "NOT_RUN",
+      "remaining": "SDK packaging/export stability, CLI/MCP interoperability and host runtime validation"
     },
     {
       "id": "D08",
@@ -159,5 +161,6 @@
     }
   ],
   "receipt": "validation/R1_TOOL_MANAGER_SOURCE_AUDIT.json",
-  "last_prospective_tree": "08848a2b57cf3f9a0d7a6c1977bfee16ce3f0501"
+  "last_prospective_tree": "08848a2b57cf3f9a0d7a6c1977bfee16ce3f0501",
+  "sdk_receipt": "validation/R1_SDK_SOURCE_AUDIT.json"
 }
