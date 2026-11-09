@@ -1,0 +1,186 @@
+{
+  "schema": "formal-tools-maintenance-task-dag/2",
+  "version": "R1",
+  "product": "kaicreator-mm/formal-tools",
+  "mission": "Maintain, package, wrap, diagnose, and improve formal/logic tools; no business model, validation strategy, tool selection policy, or domain simulation ownership",
+  "status": "PLANNED_NOT_IMPLEMENTED",
+  "baseline_main_sha": "22466e346617a4725458a36f19616e0c0b97d375",
+  "plan": "docs/roadmap/FORMAL_TOOLS_MAINTENANCE_PLAN_R1.md",
+  "gates": [
+    {
+      "id": "G0",
+      "purpose": "Scope, naming, latest-SHA runtime evidence closure"
+    },
+    {
+      "id": "G1",
+      "purpose": "Tool installation, version, discovery, CLI maintenance"
+    },
+    {
+      "id": "G2",
+      "purpose": "Reliable tool execution and generic CLI/MCP/SDK interfaces"
+    },
+    {
+      "id": "G3",
+      "purpose": "Per-tool compatibility, regression, actual Woodpecker"
+    },
+    {
+      "id": "G4",
+      "purpose": "Generic external consumer API interoperability smoke only"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T01",
+      "gate": "G0",
+      "priority": "P0",
+      "title": "产品定位、仓库更名与兼容迁移清单",
+      "depends_on": [],
+      "status": "PLANNED",
+      "ownership": "formal-tools_TOOL_MAINTENANCE_ONLY"
+    },
+    {
+      "id": "T02",
+      "gate": "G0",
+      "priority": "P0",
+      "title": "最新 SHA 回归与原始工具收据/状态校准",
+      "depends_on": [
+        "T01"
+      ],
+      "status": "PLANNED",
+      "ownership": "formal-tools_TOOL_MAINTENANCE_ONLY"
+    },
+    {
+      "id": "T03",
+      "gate": "G1",
+      "priority": "P0",
+      "title": "13 工具 Manifest、来源和版本兼容信息",
+      "depends_on": [
+        "T01"
+      ],
+      "status": "PLANNED",
+      "ownership": "formal-tools_TOOL_MAINTENANCE_ONLY"
+    },
+    {
+      "id": "T04",
+      "gate": "G1",
+      "priority": "P0",
+      "title": "工具发现、环境探测、依赖和安装诊断",
+      "depends_on": [
+        "T03"
+      ],
+      "status": "PLANNED",
+      "ownership": "formal-tools_TOOL_MAINTENANCE_ONLY"
+    },
+    {
+      "id": "T05",
+      "gate": "G1",
+      "priority": "P0",
+      "title": "原生 CLI 命令透传与类型化操作兼容维护",
+      "depends_on": [
+        "T03"
+      ],
+      "status": "PLANNED",
+      "ownership": "formal-tools_TOOL_MAINTENANCE_ONLY"
+    },
+    {
+      "id": "T06",
+      "gate": "G2",
+      "priority": "P0",
+      "title": "通用 ToolInvocation/Result 及可靠隔离执行核心",
+      "depends_on": [
+        "T04",
+        "T05"
+      ],
+      "status": "PLANNED",
+      "ownership": "formal-tools_TOOL_MAINTENANCE_ONLY"
+    },
+    {
+      "id": "T07",
+      "gate": "G2",
+      "priority": "P0",
+      "title": "Tool-native 状态、错误和生成制品处理",
+      "depends_on": [
+        "T06"
+      ],
+      "status": "PLANNED",
+      "ownership": "formal-tools_TOOL_MAINTENANCE_ONLY"
+    },
+    {
+      "id": "T08",
+      "gate": "G2",
+      "priority": "P1",
+      "title": "CLI/MCP/JS SDK 对等通用工具接口",
+      "depends_on": [
+        "T06",
+        "T07"
+      ],
+      "status": "PLANNED",
+      "ownership": "formal-tools_TOOL_MAINTENANCE_ONLY"
+    },
+    {
+      "id": "T09",
+      "gate": "G2",
+      "priority": "P1",
+      "title": "上游模型检查/模拟/探索命令的通用技术适配",
+      "depends_on": [
+        "T06",
+        "T07"
+      ],
+      "status": "PLANNED",
+      "ownership": "formal-tools_TOOL_MAINTENANCE_ONLY"
+    },
+    {
+      "id": "T10",
+      "gate": "G3",
+      "priority": "P1",
+      "title": "OS/版本兼容与工具级回归矩阵",
+      "depends_on": [
+        "T02",
+        "T08",
+        "T09"
+      ],
+      "status": "PLANNED",
+      "ownership": "formal-tools_TOOL_MAINTENANCE_ONLY"
+    },
+    {
+      "id": "T11",
+      "gate": "G3",
+      "priority": "P1",
+      "title": "真实 Woodpecker CI 与工具级验收收据",
+      "depends_on": [
+        "T10"
+      ],
+      "status": "PLANNED",
+      "ownership": "formal-tools_TOOL_MAINTENANCE_ONLY"
+    },
+    {
+      "id": "T12",
+      "gate": "G4",
+      "priority": "P2",
+      "title": "外部消费者（domain-simulator 优先）的通用工具 API 冒烟",
+      "depends_on": [
+        "T08",
+        "T09",
+        "T10"
+      ],
+      "status": "PLANNED",
+      "ownership": "formal-tools_TOOL_MAINTENANCE_ONLY"
+    }
+  ],
+  "excluded_tasks": [
+    "ADS/DKE/DIS specific property/model implementation",
+    "Formal tool selection based on business claim",
+    "Business scenario simulation, evolution or orchestration",
+    "Natural-language requirement semantic evaluation",
+    "Project-level proof acceptance or release approval"
+  ],
+  "scope_rules": {
+    "domains": "Consumer owns their models, simulation content, purposes and decisions",
+    "skills": "Optional connector medium, not project identity",
+    "domain_simulator": "Consumes generic formal-tool interfaces, owns Domain Data simulation business logic",
+    "mcp": "No arbitrary native shell or unrestricted raw execution",
+    "native_cli": "Retain trusted-local official argument passthrough",
+    "git": "One monorepo, expand packages only as demanded by tool maintenance",
+    "quality": "Local runtime at exact SHA, never inherit stale native receipts"
+  }
+}
