@@ -1,0 +1,10 @@
+{
+  "schema": "formal-native-cli-coverage/1",
+  "generated_from": "packages/runner/js/native-catalog.mjs",
+  "contract": "53 typed operations; all native CLI options accessible via trusted local native passthrough",
+  "tool_count": 13,
+  "typed_operation_count": 53,
+  "raw_pass_through": "CLI_ONLY",
+  "mcp_raw_execution": "FORBIDDEN",
+  "status": "JS_PLANNING_VERIFIED_NATIVE_NOT_RUN"
+}

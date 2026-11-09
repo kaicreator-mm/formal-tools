@@ -17,3 +17,10 @@ node --test tests/finite.test.mjs tests/runner.test.mjs tests/property.test.mjs
 node packages/runner/js/cli.mjs validate
 node packages/runner/js/cli.mjs pure dag --input validation/js/dag-positive.json
 ```
+
+## R4 CLI coverage validation
+
+- 13 tool families / 53 typed native operations: pure JavaScript command-plan matrix checked.
+- Final updated catalog read back at blob `0a4051585fe475a77d06571ffabf041ee569ce21` and checked with **218/218** pure-JS plan, typed error-path, raw-entry and parameter cases. Initial source version had 239/239 separate checks.
+- Raw CLI passthrough is trusted local only and is not reachable through MCP.
+- Remaining work is a **single local execution/repair handoff** at `validation/LOCAL_NATIVE_ACCEPTANCE.md`. The acceptance command produces 13 doctor results and 26 native fixture receipts, retaining inconclusive outcomes honestly.

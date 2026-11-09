@@ -17,3 +17,16 @@ Execution gates:
 - MCP: live SDK package + Node host + host connection required.
 - Native solvers: binaries required; outputs must be verified.
 - Current saved Node/MCP code: **runtime NOT_RUN** in ChatGPT execution environment.
+
+## R4 native CLI surface
+
+`native-catalog.mjs` defines 53 common operations for 13 CLI families and type-checks their arguments in pure JS. `cli.mjs` now exposes `catalog`, `plan`, `exec`, `native-help` and trusted-local `native` pass-through.
+
+```sh
+node packages/runner/js/cli.mjs catalog
+node packages/runner/js/cli.mjs plan z3 solve --input problem.smt2
+node packages/runner/js/cli.mjs exec z3 solve --input problem.smt2
+node packages/runner/js/cli.mjs native z3 -- -h
+```
+
+New MCP interfaces `describe_native_cli` and `plan_native_cli` **return metadata/argv only**. Raw native execution remains local CLI only. Run `node --test tests/native-catalog.test.mjs` on a Node host; native acceptance uses `node scripts/native-acceptance.mjs` and requires actual binaries.

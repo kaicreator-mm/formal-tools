@@ -13,9 +13,10 @@
   "scripts": {
     "formal": "node packages/runner/js/cli.mjs",
     "formal:validate": "node packages/runner/js/cli.mjs validate",
-    "formal:test": "node --test tests/finite.test.mjs tests/runner.test.mjs tests/property.test.mjs",
+    "formal:test": "node --test tests/finite.test.mjs tests/runner.test.mjs tests/property.test.mjs tests/native-catalog.test.mjs",
     "formal:mcp": "node packages/runner/js/mcp.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "formal:native-acceptance": "node scripts/native-acceptance.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "^2.0.0",

@@ -9,6 +9,7 @@ import { tmpdir } from "node:os";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
+import { describeNativeTool } from "./native-catalog.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const TOOLS = Object.freeze(["lean4","z3","tla-tlc","apalache","alloy","souffle","rdf-shacl","cvc5","vampire","clingo","apache-jena","prob","dafny"]);
@@ -91,6 +92,13 @@ function versionCommand(tool) {
     dafny:["dafny","--version"], apalache:["apalache-mc","--version"],
     "apache-jena":["riot","--help"], alloy:["alloy","help"]
   };
+  if (tool==="alloy"){
+    if (process.env.FORMAL_ALLOY_JAR)
+      return [executable("java"),"-jar",resolve(process.env.FORMAL_ALLOY_JAR),"help"];
+    if (process.env.FORMAL_ALLOY_BIN)
+      return [resolve(process.env.FORMAL_ALLOY_BIN),"help"];
+    throw new TypeError("Alloy Analyzer binary is ambiguous; configure FORMAL_ALLOY_JAR or FORMAL_ALLOY_BIN");
+  }
   if (tool==="tla-tlc") return [executable("java"),"-cp",jar("TLA2TOOLS_JAR"),"tlc2.TLC","-help"];
   if (tool==="clingo"||tool==="rdf-shacl") return [toolPython(tool),"-m",tool==="clingo"?"clingo":"pyshacl","--help"];
   return [executable(version[tool][0]),...version[tool].slice(1)];
@@ -199,4 +207,77 @@ export async function runFixture(tool,which,timeout=30) {
       ...result,claim_verdict:"NOT_EVALUATED",input_sha256,executions:steps,
       scope:"committed fixture only; not a proof of a project requirement"};
   } finally {await rm(dir,{recursive:true,force:true});}
+}
+
+/**
+ * Host-process adapter for CLI-produced native plans.
+ * All launchers are fixed by the tool catalog; arguments never reach a shell.
+ * "raw" is a trusted local CLI capability, never exported as an MCP action.
+ */
+const TOOL_CLASSES=Object.freeze({
+ tlc:"tlc2.TLC",sany:"tla2sany.SANY",pcal:"pcal.trans",
+ "xml-exporter":"tla2sany.xml.XMLExporter"
+});
+function nativeCommand(plan) {
+ const {entry,args}=plan;
+ const known=describeNativeTool(plan.tool);
+ if(!known.entries.includes(entry)) throw new TypeError("native entry not registered for "+plan.tool);
+ if(!Array.isArray(args)||args.some(x=>typeof x!=="string"||x.includes("\0")))
+   throw new TypeError("invalid native argv");
+ if(Object.hasOwn(TOOL_CLASSES,entry)) {
+   const jar=process.env.TLA2TOOLS_JAR;
+   if(!jar)throw new TypeError("TLA2TOOLS_JAR missing");
+   return [executable("java"),"-cp",resolve(jar),TOOL_CLASSES[entry],...args];
+ }
+ if(entry==="clingo"||entry==="pyshacl")return [
+   process.env[entry==="clingo"?"FORMAL_CLINGO_PYTHON":"FORMAL_PYSHACL_PYTHON"]||"python3",
+   "-m",entry,...args
+ ];
+ if(entry==="alloy"){
+   if(process.env.FORMAL_ALLOY_JAR)
+     return [executable("java"),"-jar",resolve(process.env.FORMAL_ALLOY_JAR),...args];
+   if(process.env.FORMAL_ALLOY_BIN)
+     return [resolve(process.env.FORMAL_ALLOY_BIN),...args];
+   throw new TypeError("Alloy Analyzer can be confused with Grafana Alloy: configure FORMAL_ALLOY_JAR or FORMAL_ALLOY_BIN");
+ }
+ // The tool ID/entry combination was validated in native-catalog.mjs.
+ return [executable(entry),...args];
+}
+export function interpretNativeObservation(tool,stdout,stderr,exitCode) {
+ const output=(stdout+"\n"+stderr).trim();
+ let outcome="UNPARSED";
+ if(tool==="z3"||tool==="cvc5"){
+   const m=[...output.matchAll(/^\s*(sat|unsat|unknown)\s*$/gm)];
+   outcome=m.at(-1)?.[1].toUpperCase()??"UNPARSED";
+ } else if(tool==="clingo") {
+   outcome=/(?:^|\n)UNSATISFIABLE\s*$/m.test(output)?"UNSATISFIABLE":
+           /(?:^|\n)SATISFIABLE\s*$/m.test(output)?"SATISFIABLE":"UNPARSED";
+ } else if(tool==="vampire") {
+   outcome=output.match(/SZS status ([A-Za-z]+)/)?.[1]?.toUpperCase()??"UNPARSED";
+ } else if(tool==="rdf-shacl") {
+   outcome=output.match(/Conforms:\s*(True|False)/i)?.[1]?.toUpperCase()??"UNPARSED";
+ }
+ return {tool_outcome:outcome,
+   process_outcome:exitCode===0?"EXIT_ZERO":exitCode===null?"NOT_STARTED":"NONZERO_EXIT",
+   test_verdict:"NOT_EVALUATED",
+   claim_verdict:"NOT_EVALUATED",
+   note:"Native command output only; solver result is not an acceptance verdict"};
+}
+export async function executeNativePlan(plan,{cwd=process.cwd(),timeout=30,allowRaw=false}={}) {
+ if(!plan||typeof plan!=="object")throw new TypeError("invalid plan");
+ if(plan.mode==="LOCAL_CLI_ONLY"&&!allowRaw)
+   throw new TypeError("raw native pass-through is disabled for this caller");
+ if(!["LOCAL_CLI_ONLY","LOCAL_CLI","typed"].includes(plan.mode))
+   throw new TypeError("unsupported plan mode");
+ if(!Number.isInteger(timeout)||timeout<1||timeout>120)throw new TypeError("timeout must be 1..120 s");
+ const argv=nativeCommand(plan);
+ const receipt=await capture(argv,{cwd:resolve(cwd),timeoutMs:timeout*1000});
+ const observed=interpretNativeObservation(plan.tool,receipt.stdout,receipt.stderr,receipt.exit_code);
+ return {tool:plan.tool,operation:plan.operation,mode:plan.mode,
+   run_status:receipt.error?"NOT_RUN":"EXECUTED",...observed,
+   ...(receipt.timed_out||receipt.output_truncated?{
+     process_outcome:receipt.timed_out?"TIMEOUT":"OUTPUT_LIMIT",
+     test_verdict:"INCONCLUSIVE"
+   }:{}),
+   executions:[receipt],scope:"local native CLI; not an independently validated project claim"};
 }

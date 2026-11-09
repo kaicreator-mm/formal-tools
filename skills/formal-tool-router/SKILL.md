@@ -34,3 +34,9 @@ When a project-level claim lacks a curated model, prepare the model and request 
 A SAT model is a witness of satisfiability, UNSAT is relative to encoded axioms/theory, bounded search is not universal proof, and a Lean kernel-checked term proves only its formalized theorem. Natural-language specifications require independent semantic review of the encoding.
 
 **Pure JS core:** `packages/core/src/finite.mjs` is independently executable in a restricted JS evaluator. Use it first for exact finite DAG/write-set/CNF/state problems; native proof engines remain separate. MCP is Node.js ESM on the official TypeScript SDK v2.
+
+## R4 JavaScript native CLI coverage
+
+Read `docs/NATIVE_CLI_COVERAGE.md` and `packages/runner/js/native-catalog.mjs` at the repository source to choose from 53 declared common operations across all 13 native CLI families. Call the pure JS planner (`planNative`) when current ChatGPT JS execution is constrained. A plan is **not** a solver run.
+
+A trusted local user may use `node packages/runner/js/cli.mjs native TOOL -- OFFICIAL_FLAGS` to access the installed tool's entire native CLI option space without shell interpolation. The official installed binary's help remains authoritative. This raw pass-through is **not exposed to MCP**. Need actual execution? Request the one-shot `validation/LOCAL_NATIVE_ACCEPTANCE.md` handoff and never claim native PASS without stdout/stderr/version receipts.

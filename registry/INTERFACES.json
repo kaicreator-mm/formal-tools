@@ -1,7 +1,7 @@
 {
-  "schema": "formal-tools-interfaces/2",
-  "version": "0.3.0-r3",
-  "status": "JS_SOURCE_DELIVERED_NODE_MCP_NOT_RUN",
+  "schema": "formal-tools-interfaces/3",
+  "version": "0.4.0-r4",
+  "status": "JS_PLANNING_TESTED_NODE_NATIVE_MCP_NOT_RUN",
   "core": "packages/core/src/finite.mjs",
   "cli": "node packages/runner/js/cli.mjs",
   "mcp": "node packages/runner/js/mcp.mjs",
@@ -21,7 +21,9 @@
     "inspect_formal_tool",
     "probe_formal_tool",
     "run_formal_fixture",
-    "verify_formal_model"
+    "verify_formal_model",
+    "describe_native_cli",
+    "plan_native_cli"
   ],
   "pure_engines": [
     "dag",
@@ -55,5 +57,28 @@
       1,
       120
     ]
+  },
+  "cli_subcommands": [
+    "list",
+    "validate",
+    "catalog",
+    "plan",
+    "exec",
+    "native-help",
+    "native",
+    "inspect",
+    "doctor",
+    "run",
+    "suite",
+    "pure"
+  ],
+  "native_cli": {
+    "catalog": "packages/runner/js/native-catalog.mjs",
+    "tool_families": 13,
+    "named_operations": 53,
+    "untyped_full_surface": "trusted local CLI native passthrough",
+    "mcp_raw_execution": false,
+    "local_acceptance": "validation/LOCAL_NATIVE_ACCEPTANCE.md",
+    "status": "PLAN_TESTED_NATIVE_NOT_RUN"
   }
 }

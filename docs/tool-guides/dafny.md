@@ -31,3 +31,17 @@ Dafny 4.11.0 + .NET 8。实际文件在 Google Drive `App/Formal-Methods/package
 https://dafny.org/latest/DafnyRef/DafnyRef
 
 **JS-only 说明：** 共享 `packages/core/src/finite.mjs` 支持有限图、写集、CNF 和状态检查；本工具的原生证明/模型检查能力仍需单独安装相应二进制。MCP 服务实现为 `packages/runner/js/mcp.mjs`，不是 Python 服务。
+
+## 完整官方 CLI 参数与 R4 JS 封装
+
+该工具的原生命令行具有比演示用例更大的参数面。**完整选项支持采用本地透传（而非全部手写重实现）**：
+
+```bash
+node packages/runner/js/cli.mjs catalog dafny
+node packages/runner/js/cli.mjs native-help dafny
+node packages/runner/js/cli.mjs native dafny -- --help
+```
+
+如果该工具有多个入口，请根据 `catalog` 返回的 `entries` 用 `--entry <name>` 指定；特定版本可能使用 `-h`、`help` 或特殊命令（以 `native-help` 为准）。安全的常用功能通过 `plan <tool> <operation> --input ...` 生成 argv，确认后执行 `exec`。
+
+每个工具的已命名操作、参数类型、官方引用和版本未验证状态见 [CLI 覆盖矩阵](../NATIVE_CLI_COVERAGE.md)。`native` 是可信本地 CLI 能力，不开放给 MCP 的 raw execution。真实运行与正反例结果仍须由本地验收收据确认。

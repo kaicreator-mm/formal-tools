@@ -47,3 +47,11 @@ Do not overwrite failure history on successful reruns. Link back to authoritativ
 - A bounded variable count alone does not guarantee acceptable runtime for a JS SAT checker with long clauses. Enforce a hard work budget and return `UNKNOWN/INCONCLUSIVE` on exhaustion instead of silently declaring `UNSAT`.
 - Re-ran 1,704 finite model cases against revised core and one deliberate budget-exhaustion input, 1,705/1,705 checks passed in the restricted JavaScript environment.
 - The saved receipt is in `validation/R3_JS_EXECUTION.json`; Node/MCP and native binary execution remain NOT_RUN.
+
+## 2026-11-10 — R4 full CLI surface vs typed operation coverage
+
+- **Problem:** hundreds of tool/version-specific flags cannot be accurately mirrored as a static, manually maintained cross-tool interface. Confusing CLI pass-through with complete typed wrappers produces invalid acceptance claims.
+- **Resolution:** 13 official native tool families, 53 typed common operations, a **trusted-local-only raw native pass-through**, and live binary-specific `native-help`. The MCP interface can describe or plan the operation without exposing arbitrary raw execution.
+- **Safety:** enforce tool/entry allowlist, reject unknown option names and types, keep `shell:false`, preserve process/solver/test/claim verdict distinctions. Disambiguate Alloy Analyzer from Grafana Alloy by requiring an explicit JAR or binary path.
+- **Evidence:** pure V8 command-plan self-checks at source blob `0a4051585fe475a77d06571ffabf041ee569ce21`: 218/218 PASS. Six newly created JS source/test files parsed in a restricted JS evaluator. **Native Node CLI launch, 13 help texts, 26 actual proof fixtures, MCP handshake and Woodpecker CI remain NOT_RUN.**
+- **Local repair path:** use single PR R4 and Issue #4 for the full native runtime and parser verification, do not dispatch validation-only tasks.

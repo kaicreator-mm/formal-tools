@@ -37,3 +37,16 @@ Pure JS finite-model algorithms executed in this conversation's restricted JS ru
 [Verification protocol](docs/VERIFICATION_PROTOCOL.md) · [CLI/MCP contract](docs/CLI_MCP_CONTRACT.md) · [Tool guides](docs/TOOL_GUIDES.md) · [Experience](experience/EXPERIENCE_LOG.md)
 
 Previous Python runner sources were experimental and are superseded by the JavaScript implementation; no Python runner is required for CLI or MCP.
+
+## R4: complete native CLI surface through safe local passthrough
+
+The JavaScript CLI now provides **53 typed common operations** across 13 tool families plus an explicit local-only `native TOOL -- official args` passthrough. This is the only maintainable way to expose the official CLI's full and version-dependent option surface without claiming to have individually implemented every flag. Use:
+
+```sh
+node packages/runner/js/cli.mjs catalog
+node packages/runner/js/cli.mjs plan cvc5 solve --input model.smt2 --models
+node packages/runner/js/cli.mjs exec cvc5 solve --input model.smt2 --models
+node packages/runner/js/cli.mjs native lean4 --entry lake -- build
+```
+
+See [13-tool operations matrix](docs/NATIVE_CLI_COVERAGE.md) and [local acceptance handoff](validation/LOCAL_NATIVE_ACCEPTANCE.md). MCP can describe and plan these operations, but **does not expose raw native execution**. The assistant performed source-level command-planning validation; native CLI, Node host and MCP protocol runtime acceptance remain open.

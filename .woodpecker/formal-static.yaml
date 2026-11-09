@@ -5,6 +5,8 @@ steps:
   - name: formal-js-source-and-finite-model
     image: node:24-alpine
     commands:
-      - node --test tests/finite.test.mjs tests/runner.test.mjs tests/property.test.mjs
+      - node --test tests/finite.test.mjs tests/runner.test.mjs tests/property.test.mjs tests/native-catalog.test.mjs
       - node packages/runner/js/cli.mjs validate
       - node packages/runner/js/cli.mjs pure dag --input validation/js/dag-positive.json
+      - node packages/runner/js/cli.mjs catalog z3
+      - node packages/runner/js/cli.mjs plan z3 solve --input skills/z3/examples/positive.smt2

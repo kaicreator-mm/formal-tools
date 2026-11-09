@@ -7,6 +7,7 @@ import { serveStdio } from "@modelcontextprotocol/server/stdio";
 import * as z from "zod/v4";
 import { verifyPure } from "../../core/src/finite.mjs";
 import { knownTools, validateSource, inspectTool, doctor, runFixture } from "./native.mjs";
+import { describeNativeTool, planNative } from "./native-catalog.mjs";
 
 const txt=x=>({content:[{type:"text",text:JSON.stringify(x)}]});
 const handle=async callback=>{
@@ -36,6 +37,14 @@ serveStdio(()=>{
     description:"Execute a fixed, committed tool fixture, not arbitrary shell or user code.",
     inputSchema:z.object({tool:toolId,case:z.enum(["positive","negative"]),timeout_s:z.number().int().min(1).max(120).default(30)})
   },async({tool,case:which,timeout_s})=>handle(()=>runFixture(tool,which,timeout_s)));
+  server.registerTool("describe_native_cli",{
+    description:"Describe a tool and its named CLI operations, without executing anything.",
+    inputSchema:z.object({tool:toolId})
+  },async({tool})=>handle(()=>describeNativeTool(tool)));
+  server.registerTool("plan_native_cli",{
+    description:"Validate native CLI option values, return planned argv; NO execution and NO raw passthrough.",
+    inputSchema:z.object({tool:toolId,operation:z.string().min(1),settings:z.record(z.string(),z.union([z.string(),z.number(),z.boolean()])).default({})})
+  },async({tool,operation,settings})=>handle(()=>planNative(tool,operation,settings)));
   server.registerTool("verify_formal_model",{
     description:"Run real finite-model checks in pure JS: DAG, writer exclusivity, CNF or finite state.",
     inputSchema:z.object({engine:z.enum(["dag","writers","cnf","states"]),model:z.record(z.string(),z.unknown())})
