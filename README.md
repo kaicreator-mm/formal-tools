@@ -1,31 +1,39 @@
 # Formal Tools Skill
 
-Independent, versioned Agent Skills for formal proof and symbolic verification across ADS, DKE, DIS and Domain-Forge.
+**JavaScript-first, monorepo** for formal verification Skills, proofs, CLI, MCP, source fixtures and experience.
 
-**Single source of truth:** this GitHub repository for Skills, validation protocol and reusable experiences. **One offline package location:** [Google Drive App/Formal-Methods/packages](https://drive.google.com/drive/folders/1GqX-Dn42Xi_STaoWYoq4aRXi3le2WPHB). Keep third-party binary files in Drive, not in Git.
+- **Pure JS core**: `packages/core/src/finite.mjs`, no Node/Python/native binary required. Supports finite DAG, writer-exclusivity, propositional CNF (up to 18 variables) and finite state invariants.
+- **Node.js CLI**: `packages/runner/js/cli.mjs`, directly interprets model JSON via JS or invokes 13 native formal tools on committed fixtures.
+- **MCP v2**: `packages/runner/js/mcp.mjs`, official TypeScript SDK v2 and ESM JavaScript, using the same pure/core + native Node adapter. **No Python dependency.**
+- **Agent Skills**: `skills/`, 13 tool Skills and one routing Skill; these instruct an LLM but do not by themselves grant access to a local process.
+- **User guide**: `docs/TOOL_GUIDES.md`, one guide per native tool.
+- **Google Drive**: installers at [Formal-Methods/packages](https://drive.google.com/drive/folders/1GqX-Dn42Xi_STaoWYoq4aRXi3le2WPHB), Git stores indexes, scripts, models and lessons only.
+- **Woodpecker**: `.woodpecker/formal-static.yaml` and [integration](docs/WOODPECKER_AGENT_INTEGRATION.md), Node.js CI execution without GH Actions.
 
-## Repository
+## Quick start — no npm install for pure JS
 
-- `plugin.json`: skills-only private plugin manifest (source only; not yet installed)
-- `skills/`: 13 tool Skills plus formal-tool-router (14 total)
-- `registry/SKILL_REGISTRY.json`: tool versions, source links and maturity
-- `docs/`: provenance, verification rules, packaging and migration
-- `packages/`: index of actual Drive installers and bundle manifests (no binaries)
-- `experience/`: reusable, append-only lessons and cross-project defects
-- `validation/`: positive/negative runtime acceptance requirements
+```sh
+node packages/runner/js/cli.mjs list
+node packages/runner/js/cli.mjs validate
+node --test tests/finite.test.mjs tests/runner.test.mjs
+node packages/runner/js/cli.mjs pure dag --input validation/js/dag-positive.json
+```
 
-**Status:** `SOURCE_REVIEWED / RUNTIME_NOT_VERIFIED`. A Skill file does not execute a tool or automatically register as a ChatGPT Skill. Install a packaged skills-only plugin before cross-chat discovery, and use a Linux runner for actual executables.
+## Native tools and MCP
 
-This repository migrates the draft from [domain-forge PR #210](https://github.com/kaicreator-mm/domain-forge/pull/210) source SHA `51e2b6c4a55bbca5ce79a10c7f162a05299498d2`; the old PR is historical and should no longer be used as an editable authority.
+```sh
+node packages/runner/js/cli.mjs doctor z3
+node packages/runner/js/cli.mjs run z3 --case positive
+npm install
+node packages/runner/js/mcp.mjs
+```
 
-[Router](skills/formal-tool-router/SKILL.md) · [Registry](registry/SKILL_REGISTRY.json) · [Provenance](docs/PROVENANCE.md) · [Package index](packages/INDEX.json) · [Experience](experience/EXPERIENCE_LOG.md)
+MCP uses `@modelcontextprotocol/server` v2 + Zod 4; not the v1 `@modelcontextprotocol/sdk` package. Requires a connected, running MCP host and Node.js 20+ compatible execution backend. The CLI itself only requires Node. Native solvers still require their corresponding binaries; changing the orchestration language does **not** turn Lean/cvc5/Dafny into pure JS.
 
-## R2 CLI / MCP / Woodpecker (source candidate)
+## Verification truthfulness
 
-- [13 tools: theory, architecture, implementation, quick start](docs/TOOL_GUIDES.md)
-- [CLI + MCP contract](docs/CLI_MCP_CONTRACT.md)
-- [Python runner source and usage](packages/runner/README.md)
-- [Woodpecker Agent integration decision and templates](docs/WOODPECKER_AGENT_INTEGRATION.md)
-- [Interface registry](registry/INTERFACES.json)
+Pure JS finite-model algorithms executed in this conversation's restricted JS runtime (1,705/1,705 deterministic and independent-reference checks); the saved source is scheduled for an exact Git readback run. Node CLI, native binary adapters, MCP transport and Woodpecker execution remain **NOT_RUN**, pending a Node host. None of these checks independently certifies ADS, DKE or DIS natural-language requirements. Do not infer universal proof from bounded models.
 
-These are source-level additions only. Native binary execution, optional MCP host connection and Woodpecker CI execution remain NOT_RUN until independently verified; do not read this section as a runtime release claim.
+[Verification protocol](docs/VERIFICATION_PROTOCOL.md) · [CLI/MCP contract](docs/CLI_MCP_CONTRACT.md) · [Tool guides](docs/TOOL_GUIDES.md) · [Experience](experience/EXPERIENCE_LOG.md)
+
+Previous Python runner sources were experimental and are superseded by the JavaScript implementation; no Python runner is required for CLI or MCP.

@@ -1,11 +1,19 @@
 # Validation
 
-Status: `NOT_RUN` for real executions in current chat. Each tool must pass SHA-256, version detection, one positive and one negative/mutation test in Linux; preserve exact command, exit code, stdout/stderr and bounded scope. Do not confuse model search with universal proof. Keep large receipts in Google Drive Formal-Methods/validation-receipts and link their hashes to Git.
+Current R3 design cleanly separates three gates:
 
-## R1 self-audit (2026-11-09)
+- **PURE_JS_VERIFIED**: restricted JS evaluator executed 1,705 finite-algorithm checks (1,200 CNF, 500 DAG, 4 direct cases, 1 computational-budget case) for DAG, writer exclusivity, CNF and finite states; examples and code are checked in. Scope is explicit finite models only.
+- **NODE_NOT_RUN**: Node.js filesystem, CLI process and native solver invocation are not available in the current ChatGPT code-mode JS runtime.
+- **MCP_NOT_RUN**: MCP TypeScript SDK v2 and stdio transport sources exist, but the server has not started or connected to an MCP host.
+- **WOODPECKER_NOT_RUN**: CI YAML source is committed but not executed.
+- **NATIVE_TOOLS_NOT_RUN**: 13 real engines have not executed in this environment.
 
-The authored Skill text and fixtures were statically checked at source exact HEAD `2df9e94e516caaaa4b261ae0ae4175ef19aa6983`. Result: 14/14 Skill names/frontmatter; 29/29 example inputs present; 13/13 intentional mutation-pair textual checks; 74/74 structural checks; 6 documented router mappings. This is **not executable proof or parser validation**. Native proof engines could not be started because container execution returned `ClientError`. See `validation/STATIC_AUDIT_R1.json` and `validation/SKILL_ACCEPTANCE_CASES.json`. Runtime acceptance remains **NOT_RUN** for all 13.
+No solver PASS is asserted from static source checks. See `registry/INTERFACES.json`, `docs/CLI_MCP_CONTRACT.md` and `validation/SKILL_ACCEPTANCE_CASES.json`.
 
-## R2 CLI, MCP and Woodpecker source candidate
+Commands for Node-enabled host:
 
-13 native-tool adapters and one shared Python CLI/MCP server were added as source at packages/runner. Official MCP Python SDK v2 supplies MCPServer, but no MCP host, solver binary or Woodpecker agent runtime is currently connected from this environment. See docs/CLI_MCP_CONTRACT.md and docs/WOODPECKER_AGENT_INTEGRATION.md. The static Woodpecker job tests source only, never proof-engine acceptance. RUNTIME/CI/MCP verdict: NOT_RUN.
+```sh
+node --test tests/finite.test.mjs tests/runner.test.mjs tests/property.test.mjs
+node packages/runner/js/cli.mjs validate
+node packages/runner/js/cli.mjs pure dag --input validation/js/dag-positive.json
+```

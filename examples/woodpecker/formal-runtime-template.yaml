@@ -1,11 +1,9 @@
-# TEMPLATE ONLY — DO NOT place into .woodpecker/ until the image exists and is tested.
-# Replace IMAGE_FROM_PRIVATE_REGISTRY with a real digest-pinned image.
-# Requires all 13 solvers, Python environments, Java 21 and .NET 8 inside the image.
+# TEMPLATE ONLY; do not enable until a digest-pinned image contains all 13 native tools.
 when:
-  - event: pull_request
+  - event: [pull_request]
 steps:
-  - name: formal-native-fixtures
-    image: IMAGE_FROM_PRIVATE_REGISTRY
+  - name: native-formal-tools
+    image: REPLACE_WITH_DIGEST_PINNED_IMAGE
     commands:
-      - python3 -m packages.runner validate
-      - python3 -m packages.runner suite --timeout 30
+      - node packages/runner/js/cli.mjs validate
+      - node packages/runner/js/cli.mjs suite --timeout 30

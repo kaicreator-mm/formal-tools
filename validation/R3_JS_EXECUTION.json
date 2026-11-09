@@ -1,0 +1,37 @@
+{
+  "schema": "formal-js-runtime-receipt/1",
+  "source_repository": "kaicreator-mm/formal-tools-skill",
+  "source_blob_sha": "c717cb3b2eb4d13422fbdfb859aa3fcceee3851a",
+  "execution_environment": "ChatGPT Code Mode restricted V8 JavaScript isolate",
+  "run_date": "2026-11-09",
+  "execution": "ACTUALLY_EXECUTED",
+  "method": "Load exact GitHub source blob; evaluate without imports/Node; compare independent algorithms using deterministic Xorshift seed 240517; plus explicit 200000-step limit negative case",
+  "checks": {
+    "seed": 240517,
+    "cnf_random_cases": {
+      "count": 1200,
+      "passed": 1200,
+      "reference": "independent exhaustive Boolean enumeration up to four vars"
+    },
+    "dag_random_cases": {
+      "count": 500,
+      "passed": 500,
+      "reference": "independent Kahn algorithm and cycle witness arc checks"
+    },
+    "direct_cases": {
+      "count": 4,
+      "passed": 4,
+      "reference": "writer collision/exclusion, finite state trace, rejected unknown engine"
+    },
+    "resource_budget": {
+      "count": 1,
+      "passed": 1,
+      "reference": "18-variable heavy CNF rejected as UNKNOWN/INCONCLUSIVE at 200000 step cap"
+    }
+  },
+  "total": 1705,
+  "passed": 1705,
+  "failed": 0,
+  "scope": "Only pure JS finite CNF/DAG/writer/state computations; NOT native proof tools, MCP stdio, Node CLI runtime, or general user claims",
+  "runner_status": "PURE_JS_CHECKED_NATIVE_NODE_MCP_NOT_RUN"
+}

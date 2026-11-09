@@ -1,0 +1,8 @@
+{
+  "name": "@formal-tools/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/finite.mjs",
+  "description": "Dependency-free JS finite formal model checking"
+}

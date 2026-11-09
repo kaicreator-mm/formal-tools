@@ -1,0 +1,22 @@
+{
+  "states": [
+    "new",
+    "claimed",
+    "closed"
+  ],
+  "initial": "new",
+  "transitions": [
+    [
+      "new",
+      "claimed"
+    ],
+    [
+      "claimed",
+      "closed"
+    ]
+  ],
+  "allowedStates": [
+    "new",
+    "claimed"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "formal-js-saved-fixtures/1",
+  "source_core_git_blob_sha": "c717cb3b2eb4d13422fbdfb859aa3fcceee3851a",
+  "actual_run": "restricted ChatGPT V8 JS execution",
+  "cases": {
+    "dag-positive.json": "ACYCLIC",
+    "dag-negative.json": "CYCLE_FOUND",
+    "writers-positive.json": "EXCLUSIVE",
+    "writers-negative.json": "WRITE_CONFLICT",
+    "cnf-sat.json": "SAT",
+    "cnf-unsat.json": "UNSAT",
+    "states-positive.json": "SAFE_FINITE",
+    "states-negative.json": "INVARIANT_VIOLATED"
+  },
+  "total": 8,
+  "passed": 8,
+  "failed": 0,
+  "note": "Executed the checked-in JSON blobs in the pure JS core. Not evidence of native solver or MCP protocol availability."
+}

@@ -1,6 +1,6 @@
 {
-  "schema": "formal-skills-registry/1",
-  "version": "0.1.0-draft",
+  "schema": "formal-skills-registry/2",
+  "version": "0.3.0-js-first",
   "release_status": "SOURCE_ONLY_NOT_RUNTIME_VERIFIED",
   "drive_bundle": "https://drive.google.com/drive/folders/1a1H87Q95J0z4sU7R_ZoGnT0xXUpN5Lbi",
   "tools": [
@@ -121,7 +121,7 @@
   "verification_protocol": "docs/VERIFICATION_PROTOCOL.md",
   "package_directory": "https://drive.google.com/drive/folders/1GqX-Dn42Xi_STaoWYoq4aRXi3le2WPHB",
   "shared_execution_interface": "registry/INTERFACES.json",
-  "cli_mcp_impl": "packages/runner",
+  "cli_mcp_impl": "packages/runner/js",
   "woodpecker_integration": "docs/WOODPECKER_AGENT_INTEGRATION.md",
-  "runner_status": "SOURCE_IMPLEMENTED_RUNTIME_NOT_RUN"
+  "runner_status": "JS_CORE_TESTED_1704_NODE_MCP_NOT_RUN"
 }

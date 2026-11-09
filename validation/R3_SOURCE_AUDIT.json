@@ -1,0 +1,45 @@
+{
+  "schema": "formal-js-first-r3-source-audit/1",
+  "audit_date": "2026-11-09",
+  "repo": "kaicreator-mm/formal-tools-skill",
+  "exact_git_tree": "2552e753e1ea2d53feea3d31d877a8f1de1dc55c",
+  "source_change": "CLI and MCP migrated from Python to ESM JavaScript; TS declaration + JSDoc type checking added",
+  "source": {
+    "pure_core": "packages/core/src/finite.mjs",
+    "pure_core_git_blob_sha": "c717cb3b2eb4d13422fbdfb859aa3fcceee3851a",
+    "node_cli": "packages/runner/js/cli.mjs",
+    "mcp_v2": "packages/runner/js/mcp.mjs",
+    "native_adapter": "packages/runner/js/native.mjs",
+    "tools": 13,
+    "skills": 14,
+    "user_guides": 13,
+    "python_source_files_remaining": 0
+  },
+  "actual_execution": {
+    "environment": "restricted ChatGPT V8 JavaScript isolate, no container/native Node process",
+    "pure_model_cross_checks": {
+      "passed": 1705,
+      "failed": 0,
+      "receipt": "validation/R3_JS_EXECUTION.json"
+    },
+    "saved_json_fixtures": {
+      "passed": 8,
+      "failed": 0
+    },
+    "js_source_syntax_checks": {
+      "passed": 7,
+      "failed": 0,
+      "method": "AsyncFunction parsing after removing ESM import/export syntax (not Node module loading)"
+    }
+  },
+  "runtime_not_run": {
+    "node_cli_process": "NOT_RUN",
+    "native_solvers": "NOT_RUN",
+    "mcp_stdio_handshake": "NOT_RUN",
+    "woodpecker_ci": "NOT_RUN",
+    "typescript_typecheck": "NOT_RUN",
+    "node_unit_tests": "NOT_RUN"
+  },
+  "conclusion": "PURE_JS_VERIFIED__NODE_AND_MCP_RUNTIME_NOT_RUN",
+  "model_scope": "finite explicit graphs, resource-time writer claims, <=18 Boolean variables with 200000-step budget, explicit finite state transitions"
+}
