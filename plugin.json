@@ -1,0 +1,24 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "formal-methods",
+  "version": "0.1.0",
+  "description": "Reusable Agent Skills for formal verification and symbolic analysis across ADS, DKE, DIS, and Domain-Forge.",
+  "author": {
+    "name": "kaicreator-mm"
+  },
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Formal Methods Toolkit",
+        "shortDescription": "Formal verification skills",
+        "longDescription": "Route formal claims to 13 symbolic and theorem-proving tools with reproducible evidence and negative-case checks. Executables must be installed separately.",
+        "developerName": "kaicreator-mm",
+        "category": "Productivity",
+        "capabilities": [
+          "Interactive"
+        ],
+        "defaultPrompt": "Use the formal tool router to model this property, select a proof engine and record executable evidence."
+      }
+    }
+  }
+}
