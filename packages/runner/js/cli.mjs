@@ -8,6 +8,7 @@ import { knownTools, inspectTool, validateSource, doctor, runFixture, executeNat
 import { describeNativeTool, planNative, planRawNative, planNativeHelp, toolIds } from "./native-catalog.mjs";
 
 function localParams(args) {
+  /** @type {{[key:string]:string|number|boolean}} */
   const out={};
   for(let i=0;i<args.length;i++) {
     const token=args[i];
@@ -24,6 +25,16 @@ function localParams(args) {
 function flag(args,key,defaultValue) {
   const i=args.indexOf(key);
   return i<0?defaultValue:args[i+1];
+}
+function optNumber(v,fallback) {
+  if(v===undefined)return fallback;
+  if(typeof v!=="number")throw new TypeError("option must be a number: "+String(v));
+  return v;
+}
+function optString(v,fallback) {
+  if(v===undefined)return fallback;
+  if(typeof v!=="string")throw new TypeError("option must be a string: "+String(v));
+  return v;
 }
 const print=x=>process.stdout.write(JSON.stringify(x,null,2)+"\n");
 export async function main(args=process.argv.slice(2)) {
@@ -54,14 +65,14 @@ export async function main(args=process.argv.slice(2)) {
     } else if (action==="exec") {
       const [op,...opts]=rest;
       const params=localParams(opts);
-      const timeout=params.timeout??30;
-      const cwd=params.cwd??process.cwd();
+      const timeout=optNumber(params.timeout,30);
+      const cwd=optString(params.cwd,process.cwd());
       delete params.timeout;delete params.cwd;
       result=await executeNativePlan(planNative(arg,op,params),{cwd,timeout});
     } else if (action==="native-help") {
       const opts=localParams(rest);
       if(Object.keys(opts).some(k=>!["entry","timeout","cwd"].includes(k)))throw new TypeError("invalid help options");
-      result=await executeNativePlan(planNativeHelp(arg,opts.entry),{timeout:opts.timeout??15,cwd:opts.cwd??process.cwd()});
+      result=await executeNativePlan(planNativeHelp(arg,opts.entry),{timeout:optNumber(opts.timeout,15),cwd:optString(opts.cwd,process.cwd())});
     } else if (action==="native") {
       const split=rest.indexOf("--");
       if(split<0)throw new TypeError("raw local native CLI requires -- before native argv");
@@ -69,12 +80,12 @@ export async function main(args=process.argv.slice(2)) {
       if(Object.keys(opts).some(k=>!["entry","timeout","cwd"].includes(k)))throw new TypeError("invalid raw options");
       const entry=opts.entry??describeNativeTool(arg).entries[0];
       result=await executeNativePlan(planRawNative(arg,entry,rest.slice(split+1)),
-        {allowRaw:true,cwd:opts.cwd??process.cwd(),timeout:opts.timeout??30});
+        {allowRaw:true,cwd:optString(opts.cwd,process.cwd()),timeout:optNumber(opts.timeout,30)});
     } else if (action==="pure") {
       const path=flag(rest,"--input");
       if (!path) throw new TypeError("pure requires --input <JSON-file>");
       const model=JSON.parse(await readFile(path,"utf8"));
-      result=verifyPure(arg,model);
+      result=verifyPure(/** @type {import("../../core/src/finite.mjs").PureEngine} */(arg),model);
     } else {
       throw new TypeError("Usage: cli.mjs <list|validate|catalog [TOOL]|plan TOOL OP --option value|exec TOOL OP --option value|native-help TOOL|native TOOL -- [official args]|inspect TOOL|doctor TOOL|run TOOL --case positive|negative|suite|pure KIND --input file.json>");
     }
@@ -82,9 +93,13 @@ export async function main(args=process.argv.slice(2)) {
     if(action==="validate")return result.status==="STATIC_PASS"?0:2;
     if(action==="run")return result.test_verdict==="PASS"?0:2;
     if(action==="suite")return result.results.every(x=>x.test_verdict==="PASS")?0:2;
-    if(action==="doctor")return result.run_status==="EXECUTED"&&result.exit_code===0?0:2;
+    // Doctor and native-help fingerprint the installed binary: success = executed with captured
+    // output. Some official CLIs exit non-zero for --help/--version (TLC 2.19, cvc5, apalache),
+    // so the observed exit code stays in the receipt instead of gating these probes.
+    if(action==="doctor")return result.run_status==="EXECUTED"?0:2;
+    if(action==="native-help")return result.run_status==="EXECUTED"&&(result.executions?.[0]?.stdout||result.executions?.[0]?.stderr)?0:2;
     if(action==="pure")return result.tool_outcome==="UNKNOWN"?2:0;
-    if(["exec","native","native-help"].includes(action))return result.process_outcome==="EXIT_ZERO"?0:2; // counterexample is a meaningful observation
+    if(["exec","native"].includes(action))return result.process_outcome==="EXIT_ZERO"?0:2; // counterexample is a meaningful observation
     return 0;
   } catch(e) {
     process.stderr.write(JSON.stringify({status:"ERROR",message:String(e)})+"\n");

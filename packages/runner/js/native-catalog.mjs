@@ -49,7 +49,8 @@ const REGISTRY = {
   entries:["tlc","sany","pcal","xml-exporter"],help:{entry:"tlc",args:["-help"]},
   operations:{
    check:operation("tlc",[],["input"],{config:str("-config"),workers:integer("-workers",1,128),depth:integer("-depth",1,100000),dump_trace:str("-dumpTrace")}),
-   simulate:operation("tlc",["-simulate"],["input"],{config:str("-config"),depth:integer("-depth",1,100000),seed:integer("-seed",0,2147483647)}),
+   // TLC simulation is unbounded unless limited: runs must be "num=<traces>" (TLC -simulate [file=X,num=Y]).
+   simulate:operation("tlc",["-simulate"],["input"],{runs:str(""),config:str("-config"),depth:integer("-depth",1,100000),seed:integer("-seed",0,2147483647)}),
    parse:operation("sany",[],["input"]),
    pluscal:operation("pcal",[],["input"]),
    xml:operation("xml-exporter",[],["input"])
@@ -63,7 +64,8 @@ const REGISTRY = {
    parse:operation("apalache-mc",["parse"],["input"],{output:str("--output=")}),
    typecheck:operation("apalache-mc",["typecheck"],["input"]),
    simulate:operation("apalache-mc",["simulate"],["input"],{length:integer("--length=",0,100000),runs:integer("--max-run=",1,100000)}),
-   test:operation("apalache-mc",["test"],["input"],{length:integer("--length=",0,100000)})
+   // apalache-mc 0.62.x `test` takes <file> <before> <action> <assertion> positionally (verified against the installed release help).
+   test:operation("apalache-mc",["test"],["input","before","action","assertion"],{})
   }
  },
  alloy:{
@@ -96,9 +98,10 @@ const REGISTRY = {
   title:"Vampire theorem prover",source:"https://github.com/vprover/vampire",
   entries:["vampire"],help:{entry:"vampire",args:["--show_options","on"]},
   operations:{
-   prove:operation("vampire",[],["input"],{mode:choice("--mode",["casc","casc_sat","portfolio"]),proof:choice("--proof",["tptp","off"])}),
+   // 5.1.0 removed --mode casc_sat: sat intent is --mode casc --intent sat (verified against installed release).
+   prove:operation("vampire",[],["input"],{mode:choice("--mode",["casc","portfolio"]),intent:choice("--intent",["unsat","sat"]),proof:choice("--proof",["tptp","off"])}),
    "casc":operation("vampire",["--mode","casc"],["input"]),
-   "casc-sat":operation("vampire",["--mode","casc_sat"],["input"])
+   "casc-sat":operation("vampire",["--mode","casc","--intent","sat"],["input"])
   }
  },
  clingo:{
@@ -158,6 +161,7 @@ export function describeNativeTool(tool){
 }
 function encodeOpt(name,definition,val){
  if(definition.type==="bool"){if(typeof val!=="boolean")throw new TypeError("flag "+name+" must be boolean");return val?[definition.flag]:[];}
+ if(definition.type==="bool"){if(typeof val!=="boolean")throw new TypeError("flag "+name+" must be boolean");return val?[definition.flag]:[];}
  if(definition.type==="integer"){if(!Number.isInteger(val)||val<definition.min||val>definition.max)throw new TypeError("invalid number for "+name);}
  if(definition.type==="enum"&&!definition.values.includes(String(val)))throw new TypeError("invalid enum "+name);
  if(definition.type==="string")string(name,val);
@@ -166,7 +170,8 @@ function encodeOpt(name,definition,val){
  if(definition.flag.endsWith("=")||definition.flag.endsWith(":"))return [definition.flag+text];
  return [definition.flag,text];
 }
-/** Plan only: does not launch subprocess or read files. */
+/** Plan only: does not launch subprocess or read files.
+ * @param {{[key:string]:string|number|boolean|undefined}} [settings] option values keyed by input/option name */
 export function planNative(tool,op,settings={}){
  if(!Object.hasOwn(REGISTRY,tool))throw new TypeError("unknown tool "+String(tool));
  const spec=REGISTRY[tool].operations[op];
@@ -175,18 +180,22 @@ export function planNative(tool,op,settings={}){
  const permissible=new Set([...spec.files,...Object.keys(spec.options)]);
  for(const name of Object.keys(settings))if(!permissible.has(name))throw new TypeError("unknown option "+name+" for "+tool+"/"+op);
  const filePaths=spec.files.map(name=>string(name,settings[name]));
- const argumentsList=[...spec.head];
+ const headArgs=[...spec.head];
+ const optionArgs=[];
  for(const [name,def] of Object.entries(spec.options)){
-   if(settings[name]!==undefined)argumentsList.push(...encodeOpt(name,def,settings[name]));
+   if(settings[name]!==undefined)optionArgs.push(...encodeOpt(name,def,settings[name]));
  }
  if(tool==="prob"&&op==="check"&&settings.bounded!==undefined) {
    // -mc <n> is bounded and must not be followed by unbounded -model_check.
-   return {tool,operation:op,entry:spec.entry,args:[...filePaths,...argumentsList],mode:"typed",runtime:"NOT_RUN"};
+   return {tool,operation:op,entry:spec.entry,args:[...filePaths,...headArgs,...optionArgs],mode:"typed",runtime:"NOT_RUN"};
  }
- // ProB expects input filename before switches; Jena query uses explicit --data/--query.
+ // ProB expects the input filename before switches; apalache-mc 0.62.x `test` takes
+ // <file> <before> <action> <assertion> positionally after the subcommand.
  const args=tool==="prob"
-   ?[...filePaths,...argumentsList,...spec.tail]
-   :[...argumentsList,...filePaths,...spec.tail];
+   ?[...filePaths,...headArgs,...optionArgs,...spec.tail]
+   :(tool==="apalache"&&op==="test")
+   ?[...headArgs,...filePaths,...optionArgs]
+   :[...headArgs,...optionArgs,...filePaths,...spec.tail];
  return {tool,operation:op,entry:spec.entry,args,mode:"typed",runtime:"NOT_RUN"};
 }
 /** Local trusted CLI only. Do NOT expose raw arguments via MCP. */

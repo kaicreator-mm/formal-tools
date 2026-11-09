@@ -5,6 +5,7 @@ import {
 } from "../packages/runner/js/native-catalog.mjs";
 
 function validOptions(operation){
+  /** @type {{[key:string]:string|number|boolean}} */
   const opts={};
   for(const required of operation.required) opts[required]="model.example";
   for(const [k,desc] of Object.entries(operation.options)){

@@ -9,7 +9,10 @@ import { verifyPure } from "../../core/src/finite.mjs";
 import { knownTools, validateSource, inspectTool, doctor, runFixture } from "./native.mjs";
 import { describeNativeTool, planNative } from "./native-catalog.mjs";
 
+/** @typedef {{type:"text",text:string}} TextBlock */
+/** @type {(x:unknown)=>{content:TextBlock[]}} */
 const txt=x=>({content:[{type:"text",text:JSON.stringify(x)}]});
+/** @type {(callback: ()=>unknown)=>Promise<{content:TextBlock[],isError?:boolean}>} */
 const handle=async callback=>{
   try{return txt(await callback());}
   catch(e){return {content:[{type:"text",text:JSON.stringify({status:"ERROR",message:String(e)})}],isError:true};}

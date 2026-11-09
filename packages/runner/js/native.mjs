@@ -89,7 +89,7 @@ function versionCommand(tool) {
   const version={
     lean4:["lean","--version"], z3:["z3","-version"], cvc5:["cvc5","--version"],
     souffle:["souffle","--version"], vampire:["vampire","--help"], prob:["probcli","-version"],
-    dafny:["dafny","--version"], apalache:["apalache-mc","--version"],
+    dafny:["dafny","--version"], apalache:["apalache-mc","version"],
     "apache-jena":["riot","--help"], alloy:["alloy","help"]
   };
   if (tool==="alloy"){
@@ -164,8 +164,12 @@ export function interpret(tool,which,steps,extra={}) {
     return {tool_outcome:ok?(positive?"VERIFIED":"REFUTED"):"UNPARSED",test_verdict:ok?"PASS":"INCONCLUSIVE"};
   }
   if (tool==="vampire") {
-    const theorem=/SZS status Theorem\b/.test(text);
-    return {tool_outcome:theorem?"THEOREM":"UNPARSED",test_verdict:theorem?(positive?(exit===0?"PASS":"INCONCLUSIVE"):"FAIL"):"INCONCLUSIVE"};
+    const szs=text.match(/SZS status\s+([A-Za-z]+)\b/)?.[1]??null;
+    if(!szs) return {tool_outcome:"UNPARSED",test_verdict:"INCONCLUSIVE"};
+    if(szs==="Theorem") return {tool_outcome:"THEOREM",test_verdict:positive&&exit===0?"PASS":"INCONCLUSIVE"};
+    // False conjecture under --mode casc: Vampire saturates the negated goal.
+    if(szs==="CounterSatisfiable") return {tool_outcome:"COUNTER_SATISFIABLE",test_verdict:!positive&&exit===0?"PASS":"INCONCLUSIVE"};
+    return {tool_outcome:szs.toUpperCase(),test_verdict:"INCONCLUSIVE"};
   }
   if (tool==="souffle") {
     if (exit!==0||!Array.isArray(extra.cycle))return {tool_outcome:"UNPARSED",test_verdict:"INCONCLUSIVE"};
@@ -174,16 +178,50 @@ export function interpret(tool,which,steps,extra={}) {
     return {tool_outcome:cyclic?"CYCLIC":"ACYCLIC",test_verdict:(positive?!cyclic&&reachable:cyclic)?"PASS":"INCONCLUSIVE"};
   }
   if (tool==="apache-jena") {
-    const good=positive?(steps.every(x=>x.exit_code===0)&&text.includes("urn:a")&&text.includes("urn:b")):(exit!==0&&/riotexception|parseexception|syntax error/i.test(text));
+    // Jena 6.x logs fatal syntax errors as "ERROR riot :: ..."; older builds may
+    // throw RiotException/ParseException text instead.
+    const good=positive?(steps.every(x=>x.exit_code===0)&&text.includes("urn:a")&&text.includes("urn:b")):(exit!==0&&/(riotexception|parseexception|syntax error|ERROR\s+riot)/i.test(text));
     return {tool_outcome:good?(positive?"QUERY_MATCH":"INVALID_TURTLE"):"UNPARSED",test_verdict:good?"PASS":"INCONCLUSIVE"};
   }
-  // TLC / Apalache / Alloy / ProB parsers must be validated against real receipts first.
+  if (tool==="tla-tlc") {
+    const completed=/Model checking completed/.test(text)&&/No error has been found/.test(text);
+    const violated=/Invariant\s+\S+\s+is violated/.test(text);
+    if(completed) return {tool_outcome:"MODEL_CHECKED",test_verdict:positive&&exit===0?"PASS":"INCONCLUSIVE"};
+    if(violated) return {tool_outcome:"INVARIANT_VIOLATED",test_verdict:!positive&&exit!==0?"PASS":"INCONCLUSIVE"};
+    return {tool_outcome:"UNPARSED",test_verdict:"INCONCLUSIVE"};
+  }
+  if (tool==="apalache") {
+    const noError=/The outcome is: NoError/.test(text);
+    const foundError=/The outcome is: Error/.test(text);
+    if(noError) return {tool_outcome:"NO_ERROR",test_verdict:positive&&exit===0?"PASS":"INCONCLUSIVE"};
+    if(foundError) return {tool_outcome:"ERROR_FOUND",test_verdict:!positive&&exit!==0?"PASS":"INCONCLUSIVE"};
+    return {tool_outcome:"UNPARSED",test_verdict:"INCONCLUSIVE"};
+  }
+  if (tool==="alloy") {
+    if(exit!==0) return {tool_outcome:"UNPARSED",test_verdict:"INCONCLUSIVE"};
+    // The alloy dispatcher prints "<n>. check <Name> ... UNSAT|SAT" result lines (observed on stderr).
+    const lines=[...text.matchAll(/^\s*\d+\.\s+check\s+\S+\s.*\b(UNSAT|SAT)\s*$/gm)];
+    if(!lines.length) return {tool_outcome:"UNPARSED",test_verdict:"INCONCLUSIVE"};
+    const violated=lines.some(m=>m[1]==="SAT");
+    return {tool_outcome:violated?"SAT":"UNSAT",test_verdict:(positive?!violated:violated)?"PASS":"INCONCLUSIVE"};
+  }
+  if (tool==="prob") {
+    const violated=/COUNTER\s+EXAMPLE\s+FOUND/.test(text);
+    const clean=/No counter example found/i.test(text);
+    const kind=/invariant_violation/i.test(text)?"INVARIANT_VIOLATION":/deadlock/i.test(text)?"DEADLOCK":null;
+    if(clean) return {tool_outcome:"NO_COUNTEREXAMPLE",test_verdict:positive&&exit===0?"PASS":"INCONCLUSIVE"};
+    if(violated) return {tool_outcome:kind??"COUNTEREXAMPLE",test_verdict:!positive&&kind==="INVARIANT_VIOLATION"?"PASS":"INCONCLUSIVE"};
+    return {tool_outcome:"UNPARSED",test_verdict:"INCONCLUSIVE"};
+  }
+  // Any further tool-specific parser must be validated against real receipts first.
   return {tool_outcome:"UNPARSED",test_verdict:"INCONCLUSIVE"};
 }
 export async function runFixture(tool,which,timeout=30) {
   assertTool(tool);assertTimeout(timeout);
   if (!["positive","negative"].includes(which)) throw new TypeError("case must be positive/negative");
-  const inputs=await readdir(file("skills",tool,"examples"));
+  // Only regular files are fixture inputs; tools may leave artifact directories
+  // (e.g. TLC 2.19 states/<timestamp>/ beside the spec) in the examples folder.
+  const inputs=(await readdir(file("skills",tool,"examples"),{withFileTypes:true})).filter(d=>d.isFile()).map(d=>d.name);
   const input_sha256=Object.fromEntries(await Promise.all(inputs.map(async n=>[n,sha(await readFile(fixture(tool,n)))])));
   const dir=await mkdtemp(join(tmpdir(),"formal-js-"));
   try {
@@ -206,7 +244,17 @@ export async function runFixture(tool,which,timeout=30) {
     return {tool,case:which,run_status:steps.some(x=>!x.error)?"EXECUTED":"NOT_RUN",
       ...result,claim_verdict:"NOT_EVALUATED",input_sha256,executions:steps,
       scope:"committed fixture only; not a proof of a project requirement"};
-  } finally {await rm(dir,{recursive:true,force:true});}
+  } finally {
+    await rm(dir,{recursive:true,force:true});
+    // TLC writes an empty states/<timestamp>/ dir and ProB writes counterexample *.prob
+    // traces next to the fixture files; remove those runner-produced artifacts.
+    if(tool==="tla-tlc") await rm(file("skills","tla-tlc","examples","states"),{recursive:true,force:true});
+    if(tool==="prob"){
+      for(const name of await readdir(file("skills","prob","examples"))){
+        if(name.endsWith(".prob")) await rm(file("skills","prob","examples",name),{force:true});
+      }
+    }
+  }
 }
 
 /**
