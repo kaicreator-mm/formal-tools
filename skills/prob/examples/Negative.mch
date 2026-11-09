@@ -1,0 +1,7 @@
+MACHINE Negative
+VARIABLES n
+INVARIANT n : NAT & n <= 2
+INITIALISATION n := 0
+OPERATIONS
+  inc = BEGIN n := n + 1 END
+END

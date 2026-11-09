@@ -1,0 +1,5 @@
+@prefix ex: <urn:ex:> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+ex:PackageShape a sh:NodeShape ;
+  sh:targetClass ex:Package ;
+  sh:property [ sh:path ex:version ; sh:minCount 1 ] .

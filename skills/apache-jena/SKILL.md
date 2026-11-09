@@ -6,38 +6,48 @@ description: Use Apache Jena to check RDF/Turtle 解析、SPARQL 查询、规则
 
 **Use for:** RDF/Turtle 解析、SPARQL 查询、规则推理以及 DIS 语义消费.
 
-**Expected offline bundle version:** `6.2.0`. **Upstream reference:** https://jena.apache.org/documentation/. The skill is `SOURCE_REVIEWED / RUNTIME_NOT_VERIFIED` until an actual executable receipt is recorded.
+**Expected offline bundle version:** `6.2.0`. **Upstream reference:** https://jena.apache.org/documentation/. The skill has source-reviewed instructions and unexecuted fixtures; `RUNTIME_NOT_VERIFIED` until signed execution receipts exist.
 
 ## Environment doctor
 
+First obtain the executable from the [indexed Drive packages](https://drive.google.com/drive/folders/1GqX-Dn42Xi_STaoWYoq4aRXi3le2WPHB). The `formal-toolkit-linux-x86_64/install_offline.py` installer only covers its six named tools and dependencies; it **does not** install every skill in this repository. Use the appropriate standalone archive for other tools.
+
+From this skill directory, after installing this specific tool and its dependencies:
+
 ```sh
-riot --help; arq --help
+riot --help
 ```
 
-Never claim verification unless the command ran in an actual compatible environment and its exact version was recorded. When offline installation is needed, use the `formal-toolkit-linux-x86_64` archive's `install_offline.py` and checksum verification; do not assume the tools were automatically installed by Drive.
+The doctor is version/help only; **do not** run a model before creating or locating the fixture. Do not claim any executed result from a command written in documentation.
 
-## Minimal model
+## Reproducible fixtures
 
-```text
-在 data.ttl 中写 `<urn:a> <urn:dependsOn> <urn:b> .`，使用 SELECT 查询关系。
+The version-controlled files in `examples/` are separate positive and mutation inputs. Use exactly the files below; do not paraphrase them and execute an unsaved prompt.
+
+**Positive case** (working directory: `skills/apache-jena`):
+
+```sh
+riot --validate examples/data.ttl && arq --data examples/data.ttl --query examples/query.rq
 ```
 
-## Procedure
+**Negative/mutation case** (same working directory, different saved input):
 
-先 `riot --validate data.ttl` 检查语法，再用 `arq --data data.ttl --query query.rq` 执行 SELECT 或 ASK 查询。
+```sh
+riot --validate examples/invalid.ttl
+```
 
-## Negative and mutation check
+**Expected outcome and judgment:** Positive query must return the (urn:a, urn:b) edge; negative malformed Turtle must fail validation. Jena 6 requires Java 21+. CLI `riot` / `arq` syntax is documented by Apache. No OWL inference is configured.
 
-故意提供无效 Turtle 期望解析失败；未配置 reasoner 时不能将 SPARQL 结果当作 OWL 推理闭包。
+These are **statically prepared** test cases, NOT verified executions. Use `validation/SKILL_ACCEPTANCE_CASES.json` for the complete suite. Every run requires an exact input SHA-256, command, version, timeout, stdout/stderr and result status. Distinguish expected negative behavior from a tool error.
 
 ## Model limits and failure modes
 
 Jena 6.x 需要 Java 21+；记录 entailment/推理规则集、数据集与查询文件 SHA。
 
 ## Shared verification contract
-1. Determine the actual executable and locked version from `MANIFEST.json`, and run a version/doctor probe before any claim. Files on Drive are **not automatically installed**.
+1. Determine the actual executable and locked version from the correct package index and (where present) its `MANIFEST.json`; run a version/doctor probe before any runtime claim. Drive files are **not automatically installed**.
 2. Translate the human-language claim into explicit scope, assumptions, formal input and expected property. Separate *model correctness* from *solver correctness*.
-3. Run positive and negative/mutation checks on exactly the saved source file; use a bounded timeout and isolated writable directory.
+3. Run positive and negative/mutation checks on the two separate saved fixture files; hash both. Use a bounded timeout and isolated writable directory.
 4. Preserve input files, stdout, stderr, exit code, tool versions, environment, duration and SHA-256 in evidence. Expected negative tests may exit nonzero; classify against expectation.
 5. Use statuses `PASS`, `COUNTEREXAMPLE`, `UNKNOWN`, `ERROR`, `NOT_RUN`. Never claim `PASS` for merely generated scripts or for `UNKNOWN`.
 6. Never interpret bounded checking as universal proof, assume a library/tool is installed because a ZIP is present, or weaken the claim to force green.
@@ -46,4 +56,4 @@ Jena 6.x 需要 Java 21+；记录 entailment/推理规则集、数据集与查�
 
 ## Experience reuse
 
-On every real use, append a small entry to `../../experience/EXPERIENCE_LOG.md` or the project's source-of-truth Git issue: exact SHA, CLI version, model hash, positive result, negative mutation, outcome and any corrected assumptions. Do not silently rewrite a historical receipt.
+On every real use, write evidence to the project's source-of-truth Git issue and propose a reusable lesson for the canonical repository `experience/EXPERIENCE_LOG.md` (do not assume the packaged Skill can mutate that Git path): exact SHA, CLI version, model hash, positive result, negative mutation, outcome and any corrected assumptions. Do not silently rewrite a historical receipt.

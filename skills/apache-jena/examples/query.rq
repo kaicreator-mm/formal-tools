@@ -1,0 +1,1 @@
+SELECT ?source ?target WHERE { ?source <urn:dependsOn> ?target . }

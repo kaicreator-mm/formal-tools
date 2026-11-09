@@ -1,0 +1,163 @@
+{
+  "schema": "formal-skill-acceptance/1",
+  "description": "Commands are checked statically; tool execution is NOT_RUN until signed receipts exist",
+  "working_directory": "respective skill folder",
+  "cases": [
+    {
+      "id": "lean4",
+      "skill": "skills/lean4/SKILL.md",
+      "cwd": "skills/lean4",
+      "doctor": "lean --version",
+      "positive_command": "lean examples/Positive.lean",
+      "negative_command": "lean examples/Negative.lean",
+      "positive_expected": "Lean compilation exits 0 and no sorry/admit",
+      "negative_expected": "nonzero: unsolved proof goal",
+      "run_status": "NOT_RUN",
+      "result_parser_status": "ADVISORY_ONLY"
+    },
+    {
+      "id": "z3",
+      "skill": "skills/z3/SKILL.md",
+      "cwd": "skills/z3",
+      "doctor": "z3 -version",
+      "positive_command": "z3 -smt2 examples/positive.smt2",
+      "negative_command": "z3 -smt2 examples/negative.smt2",
+      "positive_expected": "stdout unsat",
+      "negative_expected": "stdout sat (changed formula satisfiable; not a theorem counterexample)",
+      "run_status": "NOT_RUN",
+      "result_parser_status": "ADVISORY_ONLY"
+    },
+    {
+      "id": "cvc5",
+      "skill": "skills/cvc5/SKILL.md",
+      "cwd": "skills/cvc5",
+      "doctor": "cvc5 --version",
+      "positive_command": "cvc5 --lang smt2 examples/positive.smt2",
+      "negative_command": "cvc5 --lang smt2 examples/negative.smt2",
+      "positive_expected": "stdout unsat",
+      "negative_expected": "stdout sat",
+      "run_status": "NOT_RUN",
+      "result_parser_status": "ADVISORY_ONLY"
+    },
+    {
+      "id": "tla-tlc",
+      "skill": "skills/tla-tlc/SKILL.md",
+      "cwd": "skills/tla-tlc",
+      "doctor": "java -version",
+      "positive_command": "java -cp \"$TLA2TOOLS_JAR\" tlc2.TLC -config examples/Toggle.cfg examples/TogglePositive.tla",
+      "negative_command": "java -cp \"$TLA2TOOLS_JAR\" tlc2.TLC -config examples/Toggle.cfg examples/ToggleNegative.tla",
+      "positive_expected": "Invariant holds over enumerated states",
+      "negative_expected": "Invariant violated at x=1",
+      "run_status": "NOT_RUN",
+      "result_parser_status": "ADVISORY_ONLY"
+    },
+    {
+      "id": "apalache",
+      "skill": "skills/apalache/SKILL.md",
+      "cwd": "skills/apalache",
+      "doctor": "apalache-mc --version",
+      "positive_command": "apalache-mc check --init=Init --next=Next --inv=Inv --length=3 examples/TogglePositive.tla",
+      "negative_command": "apalache-mc check --init=Init --next=Next --inv=Inv --length=3 examples/ToggleNegative.tla",
+      "positive_expected": "No counterexample up to bound 3",
+      "negative_expected": "bound-3 counterexample x=1",
+      "run_status": "NOT_RUN",
+      "result_parser_status": "ADVISORY_ONLY"
+    },
+    {
+      "id": "alloy",
+      "skill": "skills/alloy/SKILL.md",
+      "cwd": "skills/alloy",
+      "doctor": "alloy help (or java -jar alloy.jar help)",
+      "positive_command": "alloy exec -c 0 examples/positive.als",
+      "negative_command": "alloy exec -c 0 examples/negative.als",
+      "positive_expected": "no counterexample within scope 4",
+      "negative_expected": "counterexample self-loop within scope 4",
+      "run_status": "NOT_RUN",
+      "result_parser_status": "ADVISORY_ONLY"
+    },
+    {
+      "id": "souffle",
+      "skill": "skills/souffle/SKILL.md",
+      "cwd": "skills/souffle",
+      "doctor": "souffle --version",
+      "positive_command": "souffle examples/positive.dl -D output-positive",
+      "negative_command": "souffle examples/negative.dl -D output-negative",
+      "positive_expected": "reach.csv includes A,C; cycle.csv contains zero rows",
+      "negative_expected": "cycle.csv contains one or more cycle nodes",
+      "run_status": "NOT_RUN",
+      "result_parser_status": "ADVISORY_ONLY"
+    },
+    {
+      "id": "rdf-shacl",
+      "skill": "skills/rdf-shacl/SKILL.md",
+      "cwd": "skills/rdf-shacl",
+      "doctor": "python -m pyshacl --help",
+      "positive_command": "python -m pyshacl -s examples/shapes.ttl -df turtle -sf turtle -f human examples/positive.ttl",
+      "negative_command": "python -m pyshacl -s examples/shapes.ttl -df turtle -sf turtle -f human examples/negative.ttl",
+      "positive_expected": "Conforms: True",
+      "negative_expected": "Conforms: False and sh:MinCountConstraintComponent",
+      "run_status": "NOT_RUN",
+      "result_parser_status": "ADVISORY_ONLY"
+    },
+    {
+      "id": "vampire",
+      "skill": "skills/vampire/SKILL.md",
+      "cwd": "skills/vampire",
+      "doctor": "vampire --help",
+      "positive_command": "vampire --mode casc examples/positive.p",
+      "negative_command": "vampire --mode casc examples/negative.p",
+      "positive_expected": "SZS status Theorem",
+      "negative_expected": "must NOT return Theorem; CounterSatisfiable, timeout or Unknown possible",
+      "run_status": "NOT_RUN",
+      "result_parser_status": "ADVISORY_ONLY"
+    },
+    {
+      "id": "clingo",
+      "skill": "skills/clingo/SKILL.md",
+      "cwd": "skills/clingo",
+      "doctor": "python -m clingo --version",
+      "positive_command": "python -m clingo examples/positive.lp 0",
+      "negative_command": "python -m clingo examples/negative.lp 0",
+      "positive_expected": "exactly two answer sets, SATISFIABLE",
+      "negative_expected": "UNSATISFIABLE; exit code may be nonzero by solver convention",
+      "run_status": "NOT_RUN",
+      "result_parser_status": "ADVISORY_ONLY"
+    },
+    {
+      "id": "apache-jena",
+      "skill": "skills/apache-jena/SKILL.md",
+      "cwd": "skills/apache-jena",
+      "doctor": "riot --help",
+      "positive_command": "riot --validate examples/data.ttl && arq --data examples/data.ttl --query examples/query.rq",
+      "negative_command": "riot --validate examples/invalid.ttl",
+      "positive_expected": "query result contains urn:a and urn:b",
+      "negative_expected": "invalid Turtle is rejected with nonzero exit",
+      "run_status": "NOT_RUN",
+      "result_parser_status": "ADVISORY_ONLY"
+    },
+    {
+      "id": "prob",
+      "skill": "skills/prob/SKILL.md",
+      "cwd": "skills/prob",
+      "doctor": "probcli -help",
+      "positive_command": "probcli examples/Positive.mch -model_check",
+      "negative_command": "probcli examples/Negative.mch -model_check",
+      "positive_expected": "no invariant violation after full reachable-state check",
+      "negative_expected": "invariant violated after increment from n=2",
+      "run_status": "NOT_RUN",
+      "result_parser_status": "ADVISORY_ONLY"
+    },
+    {
+      "id": "dafny",
+      "skill": "skills/dafny/SKILL.md",
+      "cwd": "skills/dafny",
+      "doctor": "dafny --version",
+      "positive_command": "dafny verify examples/Positive.dfy",
+      "negative_command": "dafny verify examples/Negative.dfy",
+      "positive_expected": "1 method verified",
+      "negative_expected": "postcondition not verified",
+      "run_status": "NOT_RUN",
+      "result_parser_status": "ADVISORY_ONLY"
+    }
+  ]
+}
