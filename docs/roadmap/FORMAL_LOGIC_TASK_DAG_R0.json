@@ -1,0 +1,157 @@
+{
+  "schema": "formal-logic-toolkit-task-dag/1",
+  "status": "PLANNED_NOT_EXECUTED",
+  "owner_repo": "kaicreator-mm/formal-tools",
+  "plan": "docs/roadmap/FORMAL_LOGIC_TOOLKIT_OPTIMIZATION_PLAN_R0.md",
+  "base_main_exact_sha": "22466e346617a4725458a36f19616e0c0b97d375",
+  "gates": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4"
+  ],
+  "tasks": [
+    {
+      "id": "T01",
+      "gate": "G0",
+      "priority": "P0",
+      "title": "最新 SHA 增量回归与隔离输入验收",
+      "depends_on": [],
+      "status": "PLANNED"
+    },
+    {
+      "id": "T02",
+      "gate": "G0",
+      "priority": "P0",
+      "title": "原始证据索引持久化和版本状态校准",
+      "depends_on": [
+        "T01"
+      ],
+      "status": "PLANNED"
+    },
+    {
+      "id": "T03",
+      "gate": "G1",
+      "priority": "P0",
+      "title": "Verification/Simulation Request Result Trace Evidence 契约",
+      "depends_on": [
+        "T02"
+      ],
+      "status": "PLANNED"
+    },
+    {
+      "id": "T04",
+      "gate": "G1",
+      "priority": "P0",
+      "title": "模型 Git+Exact-SHA 准入与临时工作区",
+      "depends_on": [
+        "T03"
+      ],
+      "status": "PLANNED"
+    },
+    {
+      "id": "T05",
+      "gate": "G1",
+      "priority": "P0",
+      "title": "两个原生引擎范式的消费模型验证 CLI/MCP",
+      "depends_on": [
+        "T04"
+      ],
+      "status": "PLANNED"
+    },
+    {
+      "id": "T06",
+      "gate": "G2",
+      "priority": "P1",
+      "title": "有界模拟状态探索与反例重放",
+      "depends_on": [
+        "T04",
+        "T05"
+      ],
+      "status": "PLANNED"
+    },
+    {
+      "id": "T07",
+      "gate": "G2",
+      "priority": "P1",
+      "title": "工具路由、结果解释与交叉核对",
+      "depends_on": [
+        "T03",
+        "T05"
+      ],
+      "status": "PLANNED"
+    },
+    {
+      "id": "T08",
+      "gate": "G3",
+      "priority": "P1",
+      "title": "ADS TaskDAG / Writer / Lifecycle 真实消费",
+      "depends_on": [
+        "T06",
+        "T07"
+      ],
+      "status": "PLANNED"
+    },
+    {
+      "id": "T09",
+      "gate": "G3",
+      "priority": "P1",
+      "title": "DKE Element 递归/闭包/冲突真实消费",
+      "depends_on": [
+        "T06",
+        "T07"
+      ],
+      "status": "PLANNED"
+    },
+    {
+      "id": "T10",
+      "gate": "G3",
+      "priority": "P1",
+      "title": "DIS Function/typed outcomes/Package 真实消费",
+      "depends_on": [
+        "T06",
+        "T07"
+      ],
+      "status": "PLANNED"
+    },
+    {
+      "id": "T11",
+      "gate": "G4",
+      "priority": "P1",
+      "title": "真实 Woodpecker 回归与可追溯 CI 记录",
+      "depends_on": [
+        "T02",
+        "T05"
+      ],
+      "status": "PLANNED"
+    },
+    {
+      "id": "T12",
+      "gate": "G4",
+      "priority": "P2",
+      "title": "Tally/Runx/DomainSimulator 扩展和版本兼容矩阵",
+      "depends_on": [
+        "T08",
+        "T09",
+        "T10",
+        "T11"
+      ],
+      "status": "PLANNED"
+    }
+  ],
+  "notes": {
+    "existing_runtime_issue": "https://github.com/kaicreator-mm/formal-tools/issues/4",
+    "ecosystem_boundary": "domain-simulator owns Domain Data scenario simulation/evolution; formal-tools owns proof/logic search/trace/evidence mechanism",
+    "execution_model": "ADS #1359 Delivery-First; Web Builder first, one writer per write set; local when runtime required",
+    "task_integrity": "No task may be marked PASS using proof receipts belonging to another Git SHA"
+  },
+  "metrics": {
+    "tool_families_existing": 13,
+    "typed_cli_operations_existing": 53,
+    "pilot_projects_minimum": 3,
+    "positive_and_mutation_negative_per_pilot": true,
+    "source_semantic_review_required": true,
+    "exact_sha_replay_required": true
+  }
+}
