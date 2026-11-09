@@ -6,6 +6,7 @@ import { resolve } from "node:path";
 import { verifyPure } from "../../core/src/finite.mjs";
 import { knownTools, inspectTool, validateSource, doctor, runFixture, executeNativePlan } from "./native.mjs";
 import { describeNativeTool, planNative, planRawNative, planNativeHelp, toolIds } from "./native-catalog.mjs";
+import { toolInfo, inspectInstallation, inspectAllInstallations } from "./tool-manager.mjs";
 
 function localParams(args) {
   /** @type {{[key:string]:string|number|boolean}} */
@@ -57,6 +58,31 @@ export async function main(args=process.argv.slice(2)) {
       for(const tool of knownTools()) for(const which of ["positive","negative"])
         results.push(await runFixture(tool,which,timeout));
       result={cases:results.length,results};
+    } else if (action==="info") {
+      if(!arg||rest.length)throw new TypeError("info requires exactly one tool ID");
+      result=toolInfo(arg);
+    } else if (action==="where") {
+      if(!arg||rest.length)throw new TypeError("where requires exactly one tool ID");
+      result=await inspectInstallation(arg);
+    } else if (action==="doctor-all") {
+      const opts=localParams([arg,...rest].filter(v=>v!==undefined));
+      if(Object.keys(opts).some(k=>!["probe","timeout"].includes(k)))
+        throw new TypeError("doctor-all accepts only --probe and --timeout");
+      if(opts.probe!==undefined&&opts.probe!==true)
+        throw new TypeError("--probe must be a standalone switch");
+      const timeout=optNumber(opts.timeout,12);
+      if(!Number.isInteger(timeout)||timeout<1||timeout>120)
+        throw new TypeError("--timeout must be in 1..120 seconds");
+      result=await inspectAllInstallations();
+      if(opts.probe===true) {
+        const probes=[];
+        for(const item of result.checks){
+          probes.push(item.status==="FOUND_NOT_PROBED"
+            ? await doctor(item.tool,timeout)
+            : {tool:item.tool,run_status:"NOT_RUN",reason:item.status});
+        }
+        result={...result,probes,probe_status:"REAL_NATIVE_ATTEMPT"};
+      }
     } else if (action==="catalog") {
       result=arg?describeNativeTool(arg):toolIds.map(describeNativeTool);
     } else if (action==="plan") {
@@ -87,7 +113,7 @@ export async function main(args=process.argv.slice(2)) {
       const model=JSON.parse(await readFile(path,"utf8"));
       result=verifyPure(/** @type {import("../../core/src/finite.mjs").PureEngine} */(arg),model);
     } else {
-      throw new TypeError("Usage: cli.mjs <list|validate|catalog [TOOL]|plan TOOL OP --option value|exec TOOL OP --option value|native-help TOOL|native TOOL -- [official args]|inspect TOOL|doctor TOOL|run TOOL --case positive|negative|suite|pure KIND --input file.json>");
+      throw new TypeError("Usage: cli.mjs <list|validate|info TOOL|where TOOL|doctor-all [--probe --timeout N]|catalog [TOOL]|plan TOOL OP --option value|exec TOOL OP --option value|native-help TOOL|native TOOL -- [official args]|inspect TOOL|doctor TOOL|run TOOL --case positive|negative|suite|pure KIND --input file.json>");
     }
     print(result);
     if(action==="validate")return result.status==="STATIC_PASS"?0:2;
@@ -98,6 +124,11 @@ export async function main(args=process.argv.slice(2)) {
     // so the observed exit code stays in the receipt instead of gating these probes.
     if(action==="doctor")return result.run_status==="EXECUTED"?0:2;
     if(action==="native-help")return result.run_status==="EXECUTED"&&(result.executions?.[0]?.stdout||result.executions?.[0]?.stderr)?0:2;
+    if(action==="where")return result.status==="FOUND_NOT_PROBED"?0:2;
+    if(action==="doctor-all"){
+      if(result.probes)return result.probes.every(x=>x.run_status==="EXECUTED")?0:2;
+      return result.checks.every(x=>x.status==="FOUND_NOT_PROBED")?0:2;
+    }
     if(action==="pure")return result.tool_outcome==="UNKNOWN"?2:0;
     if(["exec","native"].includes(action))return result.process_outcome==="EXIT_ZERO"?0:2; // counterexample is a meaningful observation
     return 0;
