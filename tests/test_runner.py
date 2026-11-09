@@ -1,6 +1,8 @@
 """Static contract tests. They do not execute solver binaries."""
 from pathlib import Path
 import unittest
+from unittest.mock import patch
+from types import SimpleNamespace
 from packages.runner import core
 
 class RunnerTests(unittest.TestCase):
@@ -24,6 +26,16 @@ class RunnerTests(unittest.TestCase):
     def test_clingo_nonzero_valid_unsat(self):
         a = {"timed_out": False, "stdout": "UNSATISFIABLE\n", "stderr": "", "exit_code": 20}
         self.assertEqual(core.classify("clingo","negative",[a],Path("."))[1],"PASS")
+    def test_doctor_probe_does_not_claim_version_verified(self):
+        result = SimpleNamespace(stdout=b"Z3 version 5.3.3", stderr=b"", returncode=0)
+        with patch.object(core, "executable", return_value="/mock/z3"):
+            with patch.object(core.subprocess, "run", return_value=result) as call:
+                doctor = core.probe("z3", timeout_s=10)
+        self.assertEqual(doctor["run_status"], "EXECUTED")
+        self.assertEqual(doctor["version_verdict"], "UNVERIFIED")
+        self.assertIn("-version", doctor["argv"])
+        self.assertFalse(call.call_args.kwargs["shell"])
+
     def test_unverified_parsers_fail_closed(self):
         a = {"timed_out": False, "stdout": "success", "stderr": "", "exit_code": 0}
         for tool in ("alloy","prob"):
