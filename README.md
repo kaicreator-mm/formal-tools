@@ -1,6 +1,12 @@
-# Formal Tools Skill
+# Formal Tools
 
-**JavaScript-first, monorepo** for formal verification Skills, proofs, CLI, MCP, source fixtures and experience.
+**formal-tools** 是维护与封装形式化、逻辑化工具的 JS/TS Monorepo，目标是让原生工具更易于安装、配置、调用、集成、升级与排错。
+
+本项目**只负责工具层**：官方命令/版本、环境诊断、CLI/MCP/SDK 接入、工具运行、输出和产物、兼容性与回归。它**不决定该用什么工具做什么业务、不生成业务模型、不设计验证策略或领域模拟场景、不评价消费项目的业务结论**。
+
+`skills/` 是可选 Agent 接入层，与 CLI、MCP、SDK 并列，而不是产品定位。可以为 `domain-simulator` 等项目提供工具接口，但场景、语义、模拟与演化由消费项目负责。
+
+[项目边界](docs/PROJECT_SCOPE.md) · [R1 维护与易用性优化计划](docs/roadmap/FORMAL_TOOLS_MAINTENANCE_PLAN_R1.md).
 
 - **Pure JS core**: `packages/core/src/finite.mjs`, no Node/Python/native binary required. Supports finite DAG, writer-exclusivity, propositional CNF (up to 18 variables) and finite state invariants.
 - **Node.js CLI**: `packages/runner/js/cli.mjs`, directly interprets model JSON via JS or invokes 13 native formal tools on committed fixtures.
