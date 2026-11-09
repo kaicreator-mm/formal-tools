@@ -1,0 +1,85 @@
+{
+  "schema": "formal-tools-r4-local-runtime-summary/1",
+  "provenance": {
+    "repository": "kaicreator-mm/formal-tools-skill",
+    "pr": 6,
+    "issue": 4,
+    "local_execution_exact_sha": "f945fc50751f71e120c355661d63cce4f7041ea4",
+    "local_pr_comment_id": 6748830702,
+    "local_issue_comment_id": 6748844094,
+    "source": "local-agent-declared results recorded in GitHub comments, not independently replayed by web reviewer",
+    "raw_evidence_location": "Local agent working directory _tmp/r4-accept/; raw receipt files not yet in GitHub",
+    "artifact_names": [
+      "native-acceptance.json",
+      "typed-op-flag-audit.json",
+      "typed-ops-exec-smoke.json",
+      "mcp-handshake.json",
+      "binary-fingerprints.txt",
+      "woodpecker-static.json"
+    ]
+  },
+  "local_reported_results": {
+    "node_unit_tests": {
+      "passed": 32,
+      "total": 32
+    },
+    "typescript_typecheck": {
+      "exit_code": 0,
+      "error_count": 0
+    },
+    "registry_static": {
+      "status": "STATIC_PASS",
+      "tools": 13
+    },
+    "native_doctor": {
+      "executed": 13,
+      "total": 13
+    },
+    "native_fixture_cases": {
+      "passed": 26,
+      "total": 26,
+      "tool_families": 13,
+      "blocked": 0
+    },
+    "native_cli_typed_operations": {
+      "planned": 53,
+      "smoke_executed": 49,
+      "exit_zero": 43,
+      "semantic_nonzero": 6,
+      "deliberately_not_executed": 4
+    },
+    "mcp_sdk_v2_stdio": {
+      "passed": 12,
+      "total": 12
+    },
+    "woodpecker": {
+      "yaml_valid": true,
+      "local_pipeline_equivalent_commands_passed": 5,
+      "local_pipeline_equivalent_commands_total": 5,
+      "remote_ci": "NOT_RUN"
+    },
+    "raw_passthrough": {
+      "local_cli": "PROBED",
+      "mcp_exposure": "DENIED"
+    }
+  },
+  "post_acceptance_source_review": {
+    "issue": "Test execution previously ran native tools against checked-in model paths, then deleted all states/ and *.prob siblings in example dirs; this could remove pre-existing local files.",
+    "repair": "Copy all regular fixture inputs into a unique tempdir and invoke all native tools only on those copies. Delete only the owned tempdir. Add a Node regression using a fake Z3 that writes generated files next to its received model.",
+    "files": [
+      "packages/runner/js/native.mjs",
+      "tests/native-workspace.test.mjs",
+      "package.json"
+    ],
+    "static_review": "PASS: syntax and explicit source path audit; no native execution since local acceptance SHA",
+    "regression_node_runtime": "NOT_RUN",
+    "impact": "Subprocess paths and write location changed; old 26/26 observations remain attributable to the earlier exact SHA, not automatically to the patched commit."
+  },
+  "status": "LOCAL_REPORTED_RUNTIME_PASS_WITH_POST_REPAIR_NODE_REGRESSION_OPEN",
+  "bounded_scope": "committed fixtures in local Linux execution; no real ADS/DKE/DIS business property proof",
+  "followups": [
+    "Retain raw local evidence with hashes in an accessible durable store or attach to GitHub PR/Issue",
+    "Run new tests/native-workspace.test.mjs and targeted 26 fixture smoke on the merged SHA when local environment next available",
+    "Activate real Woodpecker pipeline separately if desired"
+  ]
+}

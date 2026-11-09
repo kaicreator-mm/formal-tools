@@ -1,0 +1,44 @@
+{
+  "schema": "formal-native-cli-r4-source-audit/1",
+  "date": "2026-11-10",
+  "repository": "kaicreator-mm/formal-tools-skill",
+  "base_main_sha": "46198e0c272f483ec35363be7a320ca08c5f6035",
+  "branch": "feature/cli-full-coverage-r4",
+  "catalog_source_sha": "0a4051585fe475a77d06571ffabf041ee569ce21",
+  "capability": {
+    "tool_families": 13,
+    "typed_operations": 53,
+    "native_raw_cli": "available in local CLI, passes every native argv unchanged",
+    "mcp_raw_cli": "FORBIDDEN",
+    "mcp_static_introspection": "describe_native_cli + plan_native_cli"
+  },
+  "actually_executed_js": {
+    "environment": "restricted ChatGPT JavaScript evaluator",
+    "catalog_plan_validation": {
+      "passed": 218,
+      "failed": 0,
+      "scope": "all tools, typed operations, parameter validation, native entrypoint help planning, raw option preservation"
+    },
+    "source_syntax": {
+      "passed": 6,
+      "failed": 0,
+      "method": "V8 parse of ESM contents with import/export removed; not Node module execution"
+    },
+    "native_binary_execution": {
+      "status": "NOT_RUN",
+      "reason": "No Node child_process or native runtime in ChatGPT isolate"
+    }
+  },
+  "pending": {
+    "node_unit_tests": "NOT_RUN",
+    "typescript_typecheck": "NOT_RUN",
+    "thirteen_installed_native_help": "NOT_RUN",
+    "twenty_six_positive_negative": "NOT_RUN",
+    "mcp_sdk_handshake": "NOT_RUN",
+    "woodpecker_3_18": "NOT_RUN",
+    "version_specific_option_compatibility": "NOT_RUN"
+  },
+  "decision": "JS_CLI_PLANNING_ACCEPTED_NATIVE_RUNTIME_PENDING",
+  "local_handoff": "validation/LOCAL_NATIVE_ACCEPTANCE.md",
+  "status_caveat": "Full native CLI SURFACE is accessible through trusted local pass-through; this is not complete individually typed or runtime-certified coverage."
+}

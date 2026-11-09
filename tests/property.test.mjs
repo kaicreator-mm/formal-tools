@@ -54,13 +54,16 @@ test("1,200 seeded CNF formulas agree with independent exhaustive enumeration",(
 });
 test("500 seeded DAGs agree with independent Kahn algorithm; witnesses are real arcs",()=>{
   for(let i=0;i<500;i++){
-    const nodes=["A","B","C","D"],edges=[];
+    const nodes=["A","B","C","D"];
+    /** @type {[string,string][]} */
+    const edges=[];
     for(const from of nodes)for(const to of nodes)if(rand()<0.22)edges.push([from,to]);
     const observed=analyzeDag({nodes,edges});
     assert.equal(observed.tool_outcome==="CYCLE_FOUND",kahnHasCycle(nodes,edges));
     if(observed.cycle){
-      for(let k=1;k<observed.cycle.length;k++)
-        assert.ok(edges.some(e=>e[0]===observed.cycle[k-1]&&e[1]===observed.cycle[k]));
+      const cycle=/** @type {string[]} */ (observed.cycle);
+      for(let k=1;k<cycle.length;k++)
+        assert.ok(edges.some(e=>e[0]===cycle[k-1]&&e[1]===cycle[k]));
     }
   }
 });

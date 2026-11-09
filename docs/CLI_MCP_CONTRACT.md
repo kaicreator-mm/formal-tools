@@ -46,3 +46,13 @@ Official current TypeScript SDK: https://ts.sdk.modelcontextprotocol.io/v2/ . v2
 `tool_outcome` is raw result, `test_verdict` is expected fixture behavior, and `claim_verdict` represents a business claim (always `NOT_EVALUATED` for these demos). SAT is not a theorem proof. A finite DAG checker only proves facts about the supplied explicit graph. UNKNOWN/timeout/error is not PASS. A negative counterexample may be an expected *test* result without proving a natural-language claim.
 
 Native binary runtime, MCP handshake/host discovery and Woodpecker CI remain NOT_RUN until real executable receipts exist.
+
+## R4: full native CLI coverage contract
+
+`native-catalog.mjs` is the single source for 13 official CLI families and 53 typed operations. `catalog` prints operation schemas, `plan` generates validated argv without running the process, and `exec` executes a named operation with bounded stdout/stderr, timeouts and SHA receipts. `native-help` resolves the actual installed CLI help, and `native TOOL [--entry entry] -- args` forwards **all official raw CLI flags unchanged** on a **trusted local** host.
+
+The JS MCP adapter offers two additional read-only tools: `describe_native_cli` and `plan_native_cli`, making **8 MCP tools** in source. The raw CLI and native plan execution are **not** MCP capabilities; no user-provided executable name is accepted through MCP.
+
+Native exit code 0, SMT `sat`/`unsat`, and a model checker finding no counterexample are separate outcomes. The CLI's native receipt has `tool_outcome`, `process_outcome`, `test_verdict: NOT_EVALUATED` and `claim_verdict: NOT_EVALUATED` until independent semantic acceptance.
+
+See [R4 native CLI operation matrix](NATIVE_CLI_COVERAGE.md) and [local acceptance plan](../validation/LOCAL_NATIVE_ACCEPTANCE.md). The 53 plans and schemas can be checked in a restricted JavaScript evaluator; no native processes or complete upstream CLI help transcripts have been executed in ChatGPT.
