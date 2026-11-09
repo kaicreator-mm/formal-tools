@@ -54,6 +54,20 @@ TPTP 的 `Theorem`、`CounterSatisfiable`、`GaveUp` 含义不同；严格记录
 7. For a contradiction across tools, stop, record a divergence case, and inspect encoding, assumptions and modes before adjudicating.
 
 
+## Shared CLI / MCP and Woodpecker integration
+
+All commands in this Skill are native examples. For the curated repository fixtures, the shared runner also supports:
+
+    python3 -m packages.runner inspect vampire
+    python3 -m packages.runner run vampire --case positive
+    python3 -m packages.runner run vampire --case negative
+
+After separately installing and connecting the optional MCP SDK v2 server, the same fixed fixture can be called through run_formal_fixture(tool="vampire", case="positive"). This is a *shared adapter*, not a claim that the upstream tool itself offers an official MCP server.
+
+Read docs/tool-guides/vampire.md for the tool's theory, architecture, implementation and quick start. Read docs/CLI_MCP_CONTRACT.md for evidence semantics and docs/WOODPECKER_AGENT_INTEGRATION.md before CI integration. Those paths are relative to the Git repository root; the packaged ChatGPT Skill may not contain them.
+
+R2 integration is source-only and runtime remains NOT_RUN until executable/MCP/CI receipts exist.
+
 ## Experience reuse
 
 On every real use, write evidence to the project's source-of-truth Git issue and propose a reusable lesson for the canonical repository `experience/EXPERIENCE_LOG.md` (do not assume the packaged Skill can mutate that Git path): exact SHA, CLI version, model hash, positive result, negative mutation, outcome and any corrected assumptions. Do not silently rewrite a historical receipt.

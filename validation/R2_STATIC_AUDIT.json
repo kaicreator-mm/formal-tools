@@ -1,0 +1,34 @@
+{
+  "schema": "formal-tools-r2-source-audit/1",
+  "date": "2026-11-09",
+  "repo": "kaicreator-mm/formal-tools-skill",
+  "audited_source_exact_head": "711a6e27d2951b87368dba05f6405618ce7f0d49",
+  "scope": "Source readback and structural/contract checks only; no Python compilation/execution, no native solver, no MCP handshake, no Woodpecker build",
+  "findings": {
+    "tool_guides": "13/13 files present",
+    "tool_skills": "13/13 integrated",
+    "mcp_tools": "3 shared tools registered in source",
+    "repo_paths": "88 Git blobs before receipt; no missing referenced module",
+    "static_checks": "11/11 textual structural checks",
+    "runner_sources": "Python CLI and stdlib runner authored; tests not executed",
+    "ci": "Static workflow source present; service execution NOT_RUN",
+    "mcp": "MCPServer API checked against official Python SDK v2 docs; handshake NOT_RUN"
+  },
+  "gates": {
+    "skill_source_structure": "SOURCE_INSPECTED",
+    "cli_pytest": "NOT_RUN",
+    "native_solver_26_cases": "NOT_RUN",
+    "mcp_stdio_protocol": "NOT_RUN",
+    "woodpecker_3_18_static_build": "NOT_RUN",
+    "woodpecker_native_build": "NOT_RUN",
+    "production_acceptance": "BLOCKED"
+  },
+  "limitations": [
+    "Alloy and ProB result parsers deliberately return INCONCLUSIVE until real output receipts",
+    "Some other solver outcome parsers are version-dependent and may require repair after native runs",
+    "Runner accepts committed fixtures only and does not validate ADS/DKE/DIS real models",
+    "CPU/memory/network sandbox requires trusted CI container; Python subprocess timeouts alone are insufficient",
+    "MCP source does not mean a live server connected to ChatGPT"
+  ],
+  "decision": "SOURCE_DELIVERED_RUNTIME_GATES_OPEN"
+}

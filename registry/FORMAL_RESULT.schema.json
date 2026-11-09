@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kaicreator-mm/formal-tools-skill/blob/main/registry/FORMAL_RESULT.schema.json",
+  "title": "Formal fixture execution result (R2)",
+  "type": "object",
+  "required": [
+    "tool",
+    "case",
+    "run_status",
+    "tool_outcome",
+    "test_verdict"
+  ],
+  "properties": {
+    "tool": {
+      "type": "string",
+      "minLength": 1
+    },
+    "case": {
+      "enum": [
+        "positive",
+        "negative"
+      ]
+    },
+    "run_status": {
+      "enum": [
+        "EXECUTED",
+        "NOT_RUN"
+      ]
+    },
+    "tool_outcome": {
+      "type": "string"
+    },
+    "test_verdict": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "INCONCLUSIVE",
+        "NOT_RUN"
+      ]
+    },
+    "claim_verdict": {
+      "enum": [
+        "NOT_EVALUATED",
+        "PROVED",
+        "REFUTED",
+        "UNKNOWN",
+        "INCONCLUSIVE"
+      ]
+    },
+    "input_sha256": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[a-f0-9]{64}$"
+      }
+    },
+    "executions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "argv",
+          "exit_code",
+          "timed_out",
+          "stdout_sha256",
+          "stderr_sha256",
+          "elapsed_ms"
+        ],
+        "properties": {
+          "argv": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "exit_code": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "timed_out": {
+            "type": "boolean"
+          },
+          "stdout": {
+            "type": "string"
+          },
+          "stderr": {
+            "type": "string"
+          },
+          "stdout_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "stderr_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "elapsed_ms": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "error": {
+      "type": "string"
+    },
+    "runtime_scope": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

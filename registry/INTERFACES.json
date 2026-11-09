@@ -1,0 +1,58 @@
+{
+  "schema": "formal-tools-interfaces/1",
+  "version": "0.1.0-draft",
+  "status": "SOURCE_IMPLEMENTED_RUNTIME_NOT_RUN",
+  "core": "packages/runner/core.py",
+  "cli": "python3 -m packages.runner",
+  "mcp": "python3 -m packages.runner.mcp_server",
+  "mcp_sdk": "Python SDK v2; from mcp.server import MCPServer",
+  "mcp_transport": "stdio",
+  "mcp_tools": [
+    "list_formal_tools",
+    "inspect_formal_tool",
+    "probe_formal_tool",
+    "run_formal_fixture"
+  ],
+  "native_mcp_by_engine": "NOT_ASSUMED",
+  "native_cli_by_engine": "REFER_TO_OFFICIAL_GUIDE",
+  "security": {
+    "shell": false,
+    "allowed_inputs": "committed positive/negative fixtures only",
+    "process_timeout_seconds": [
+      1,
+      120
+    ],
+    "remote_network_endpoint": false
+  },
+  "ci": {
+    "platform": "Woodpecker 3.18",
+    "recommended": "Docker Pipeline Step",
+    "agent_binary_modification": false,
+    "static_workflow": ".woodpecker/formal-static.yaml",
+    "runtime_template": "examples/woodpecker/formal-runtime-template.yaml"
+  },
+  "tool_ids": [
+    "lean4",
+    "z3",
+    "tla-tlc",
+    "apalache",
+    "alloy",
+    "souffle",
+    "rdf-shacl",
+    "cvc5",
+    "vampire",
+    "clingo",
+    "apache-jena",
+    "prob",
+    "dafny"
+  ],
+  "cli_subcommands": [
+    "list",
+    "validate",
+    "inspect",
+    "doctor",
+    "run",
+    "suite"
+  ],
+  "probe_version_status": "PROCESS_OUTPUT_UNVERIFIED"
+}

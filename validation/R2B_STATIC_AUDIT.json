@@ -1,0 +1,35 @@
+{
+  "schema": "formal-tools-r2b-static-audit/1",
+  "authoring_date": "2026-11-09",
+  "source_repository": "kaicreator-mm/formal-tools-skill",
+  "audited_exact_sha": "fcce1f377591ac55e567b6c167692c5f1481e671",
+  "scope": "GitHub source readback, name/path/interface/guide consistency only",
+  "source_checks": {
+    "tool_guides_coverage": "13/13",
+    "tool_guide_headings_and_links": "143/143",
+    "native_command_runner_mapping": "13 tools present in packages/runner/core.py",
+    "mcp_adapter": "4 shared MCP functions declared using MCPServer v2",
+    "woodpecker": "v3.18 source-only pipeline and disabled runtime template present",
+    "source_interface_checks": "11/11 on initial R2",
+    "result_schema": "FORMAL_RESULT.schema.json available",
+    "tests": "python unittest source present, not executed"
+  },
+  "executable_gates": {
+    "python_syntax_compile": "NOT_RUN",
+    "python_unit_tests": "NOT_RUN",
+    "native_tool_acceptance": "NOT_RUN",
+    "mcp_inspector": "NOT_RUN",
+    "woodpecker_static_pipeline": "NOT_RUN",
+    "woodpecker_runtime": "NOT_RUN",
+    "connected_chatgpt_tool": "NOT_INSTALLED"
+  },
+  "delivery": "SOURCE_INTEGRATED_NOT_RUNTIME_CERTIFIED",
+  "followup": [
+    "Run python3 -m unittest discover -s tests -v",
+    "Run python3 -m packages.runner validate",
+    "Build digest-pinned Docker image and verify publisher SHA/license",
+    "Run 26 actual tool fixtures including Alloy/ProB parser refinements",
+    "Start MCP stdio, run MCP Inspector and connect supported host",
+    "Verify Woodpecker 3.18 workflow and promote project gates gradually"
+  ]
+}
