@@ -2,9 +2,9 @@
 
 > 状态：**规划草案（未实施）**
 >
-> 仓库：\`kaicreator-mm/formal-tools\`（由 \`formal-tools-skill\` 更名）
+> 仓库：`kaicreator-mm/formal-tools`（由 `formal-tools-skill` 更名）
 >
-> 基线：\`main@22466e346617a4725458a36f19616e0c0b97d375\`
+> 基线：`main@22466e346617a4725458a36f19616e0c0b97d375`
 >
 > 目标：**维护、封装和改善现有形式化与逻辑化工具，让它们更容易安装、配置、调用、集成、升级和排错。**
 >
@@ -12,7 +12,7 @@
 
 ## 1. 唯一产品定位
 
-formal-tools 是可复用的**形式化与逻辑化工具维护层 / Tooling Foundation**，为 \`kaicreator-mm\` 旗下各种项目提供稳定通用的工具接入能力，包括 \`domain-simulator\`，但不针对任何一个业务项目开发专属规则。
+formal-tools 是可复用的**形式化与逻辑化工具维护层 / Tooling Foundation**，为 `kaicreator-mm` 旗下各种项目提供稳定通用的工具接入能力，包括 `domain-simulator`，但不针对任何一个业务项目开发专属规则。
 
 目标是工具层的工程质量，而不是某个项目的验证成效。
 
@@ -36,7 +36,7 @@ formal-tools 是可复用的**形式化与逻辑化工具维护层 / Tooling Fou
 - 不编写消费项目的形式化模型、性质或证明，不维护 ADS/DKE/DIS 的业务规则。
 - 不设计验证工作流、业务模型审核流程、领域模拟场景、故障注入策略或业务生命周期。
 - 不解释业务结果、不替调用方判断验证结论是否支持原始需求，也不做独立业务语义审查。
-- 不取代 \`domain-simulator\` 的 Domain Data 模拟/分析/演化权威，不取代 \`domain-harness\` 生产 Runtime。
+- 不取代 `domain-simulator` 的 Domain Data 模拟/分析/演化权威，不取代 `domain-harness` 生产 Runtime。
 - 不重新实现 Lean/Z3/cvc5/TLC 等成熟工具，不建设统一跨语言 DSL，不为每个工具建设独立 MCP Server。
 - 不自动更改消费者仓库、不自动提交项目证明、不授予发布权限、不对业务状态产生副作用。
 - 不因项目数量增加而增加项目专属适配器；只有通用工具接口的缺陷或被两个以上消费者复现的兼容问题进入 formal-tools 的长期维护范围。
@@ -49,12 +49,12 @@ formal-tools 是可复用的**形式化与逻辑化工具维护层 / Tooling Fou
 
 - 13 个原生工具族：Lean4、Z3、cvc5、TLA+/TLC、Apalache、Alloy、Soufflé、pySHACL、Vampire、Clingo、Apache Jena、ProB、Dafny。
 - JS/TS Monorepo；纯 JS 小型有限算法作为现有辅助能力；Node 原生 Runner；CLI 53 个类型化操作及可信本地 raw 透传；MCP v2 8 个接口；14 个 Skill（包括 Router）。
-- 旧本地 Agent 曾报告 32/32 Node 测试、26/26 原生正反例、12/12 MCP 验收，其 Exact-SHA 为 \`f945fc50751f71e120c355661d63cce4f7041ea4\`；之后 \`main@22466e3...\` 修复了原生工具在 Git 工作目录写入的风险，新回归仍未实际执行。**旧收据不自动证明新 SHA。**
+- 旧本地 Agent 曾报告 32/32 Node 测试、26/26 原生正反例、12/12 MCP 验收，其 Exact-SHA 为 `f945fc50751f71e120c355661d63cce4f7041ea4`；之后 `main@22466e3...` 修复了原生工具在 Git 工作目录写入的风险，新回归仍未实际执行。**旧收据不自动证明新 SHA。**
 - 原始执行日志部分只存在本地、Woodpecker 远程 Pipeline 未运行；注册表与 README 的历史状态以及 package 版本需要整理。
 
 ### 2.1 主要优化方向
 
-1. **更易安装与配置**：通过工具 Manifest 描述运行需求和可执行文件位置，提供 \`doctor\`、\`which\`、\`version\`、\`help\`，并能够解释缺失依赖；不强制将所有证明器打包成一个巨型安装包。
+1. **更易安装与配置**：通过工具 Manifest 描述运行需求和可执行文件位置，提供 `doctor`、`which`、`version`、`help`，并能够解释缺失依赖；不强制将所有证明器打包成一个巨型安装包。
 2. **更易调用**：统一稳定参数类型、CLI/MCP 接口与错误码，原生命令的其余特性仍可在可信本地按原样透传。
 3. **更易集成**：以无业务语义的请求和返回封套描述“运行某个已注册工具的已声明操作”，外部项目可选择自己的模型、语言、场景和运行次序。
 4. **更易排错**：区分启动失败、工具退出、超时、输出上限、工具报告的错误；附原始 stdout/stderr 及哈希。
@@ -62,7 +62,7 @@ formal-tools 是可复用的**形式化与逻辑化工具维护层 / Tooling Fou
 
 ## 3. 技术架构：保留 Git Monorepo
 
-\`\`\`text
+```text
          arbitrary consuming applications
   (domain-simulator / domain-forge / other)
   own: inputs, models, business scenarios, decisions
@@ -85,39 +85,39 @@ formal-tools 是可复用的**形式化与逻辑化工具维护层 / Tooling Fou
                          │
                          ▼
      tool-native stdout, stderr, artifacts, trace
-\`\`\`
+```
 
-**少拆模块**：首先实现通用 contracts；Tool Registry 可以先继续存于现有 \`registry/\`，除非维护复杂度确实增加才独立分包。未出现真实维护需求前不新增 \`simulation-orchestrator\`、\`project-model-manager\`、\`business-evidence-engine\` 等模块。
+**少拆模块**：首先实现通用 contracts；Tool Registry 可以先继续存于现有 `registry/`，除非维护复杂度确实增加才独立分包。未出现真实维护需求前不新增 `simulation-orchestrator`、`project-model-manager`、`business-evidence-engine` 等模块。
 
 ### 3.1 工具请求（只描述技术执行）
 
-\`ToolInvocation\` 建议包含：
+`ToolInvocation` 建议包含：
 
-- \`tool_id\`、\`tool_version_constraint\`、\`operation\`、\`parameters\`
-- \`inputs\`（文件/数据或已授权工作区相对路径）、\`output_policy\`
-- \`execution_options\`（超时、最大输出、CPU/内存/工作目录限制，按宿主能力）
-- \`invocation_id\`、\`caller_context\`（不强制 Git 项目、领域模型、业务性质字段）
+- `tool_id`、`tool_version_constraint`、`operation`、`parameters`
+- `inputs`（文件/数据或已授权工作区相对路径）、`output_policy`
+- `execution_options`（超时、最大输出、CPU/内存/工作目录限制，按宿主能力）
+- `invocation_id`、`caller_context`（不强制 Git 项目、领域模型、业务性质字段）
 
-工具层不要求 \`property_id\`、\`business_claim\`、\`project_model\`、\`domain_semantics\` 等业务字段；调用方需要时自行封装在其业务层。
+工具层不要求 `property_id`、`business_claim`、`project_model`、`domain_semantics` 等业务字段；调用方需要时自行封装在其业务层。
 
 ### 3.2 工具返回（不解释业务语义）
 
-\`ToolExecutionResult\` 建议包含：
+`ToolExecutionResult` 建议包含：
 
-- \`launch_status\`、\`exit_code\`、\`signal\`、\`timed_out\`、\`resource_limited\`
-- \`tool_reported_status\`（**由具体官方工具自身的定义解释**，例如 SAT/UNSAT、解析错误、验证完成；不做业务推广）
-- \`stdout\` / \`stderr\` 摘要、完整输出制品引用与 SHA-256
-- \`generated_artifacts\`（工具生成的模型、证明对象、轨迹和日志的路径、类型与 hash）
-- \`tool_version\`、\`binary_fingerprint\`、\`argv\`、\`execution_environment\`、\`elapsed_ms\`
-- \`compatibility_warning\`、\`diagnostics\`
+- `launch_status`、`exit_code`、`signal`、`timed_out`、`resource_limited`
+- `tool_reported_status`（**由具体官方工具自身的定义解释**，例如 SAT/UNSAT、解析错误、验证完成；不做业务推广）
+- `stdout` / `stderr` 摘要、完整输出制品引用与 SHA-256
+- `generated_artifacts`（工具生成的模型、证明对象、轨迹和日志的路径、类型与 hash）
+- `tool_version`、`binary_fingerprint`、`argv`、`execution_environment`、`elapsed_ms`
+- `compatibility_warning`、`diagnostics`
 
-历史 \`test_verdict\` / \`claim_verdict\` 只可作为向后兼容字段；新的通用工具接口**不以业务命题判断作为必需字段**。工具层测试的 PASS 表示 API/fixture 按工具规则工作，不表示某业务性质成立。
+历史 `test_verdict` / `claim_verdict` 只可作为向后兼容字段；新的通用工具接口**不以业务命题判断作为必需字段**。工具层测试的 PASS 表示 API/fixture 按工具规则工作，不表示某业务性质成立。
 
 ### 3.3 CLI / MCP / SDK 分工
 
-- CLI 是主要通用调试入口，提供 \`catalog\`、\`doctor\`、\`help\`、\`plan\`、\`exec\`、\`native\`（可信本地），保留官方的全部 CLI 能力透传。
+- CLI 是主要通用调试入口，提供 `catalog`、`doctor`、`help`、`plan`、`exec`、`native`（可信本地），保留官方的全部 CLI 能力透传。
 - MCP 为已注册、已类型化的工具接口提供受控访问，并允许查询版本、能力和运行状态；不暴露任意 shell 或原始命令。**不嵌入模型设计与验证目标选择。**
-- JS/TS SDK 为消费项目提供可复用 \`listTools\`、\`inspectTool\`、\`invokeTool\`、\`getArtifacts\` 等 API；SDK 不直接承担业务编排。
+- JS/TS SDK 为消费项目提供可复用 `listTools`、`inspectTool`、`invokeTool`、`getArtifacts` 等 API；SDK 不直接承担业务编排。
 - Skill 仅提供 Agent 对通用工具接口的访问说明，未来是否保留旧的业务属性路由器是兼容性/分工问题，不作为产品主线。
 
 ## 4. 模拟工具支持范围
@@ -131,13 +131,13 @@ formal-tools 是可复用的**形式化与逻辑化工具维护层 / Tooling Fou
 | Z3 / cvc5 / Clingo 等 | 求解模式、模型输出、结果解析、超时与版本兼容 | 编码假设、公式、约束、场景设计 |
 | Jena / pySHACL / Soufflé | 查询/规则工具执行与结果导出 | 知识建模、业务关系与约束设计 |
 
-\`domain-simulator\` 可调用上述任何通用接口，**但它自己决定用哪个工具、模拟什么、如何组合工具、如何解释轨迹、怎样反馈演化**。formal-tools 不管理 Domain Data、场景、Evolution 或生产事实。
+`domain-simulator` 可调用上述任何通用接口，**但它自己决定用哪个工具、模拟什么、如何组合工具、如何解释轨迹、怎样反馈演化**。formal-tools 不管理 Domain Data、场景、Evolution 或生产事实。
 
 ## 5. 分阶段实施（全部是工具工程任务）
 
 ### G0 — 定位与 R4 收口
 
-- 完成仓库重命名后的品牌、包名/文档定位及兼容迁移方案；根名称 \`formal-tools-skill\` 若改名影响依赖，必须先确认引用方，不盲目改 npm ID。
+- 完成仓库重命名后的品牌、包名/文档定位及兼容迁移方案；根名称 `formal-tools-skill` 若改名影响依赖，必须先确认引用方，不盲目改 npm ID。
 - 最新 main Exact-SHA 的原生工作区隔离增量回归、必要的受影响验证。
 - 归档已有本地原始执行收据，统一 version/registry/README 的状态归属，清除历史误导性 NOT_RUN；真正运行 Woodpecker 时再更新远程 CI 状态。
 
@@ -146,14 +146,14 @@ formal-tools 是可复用的**形式化与逻辑化工具维护层 / Tooling Fou
 ### G1 — 工具生命周期/可用性基础
 
 - 统一工具 Manifest：id、官方来源、版本、OS/架构、依赖、执行入口与子命令、工具能力、受支持选项、已知兼容范围。
-- 提升工具发现、\`doctor\`、安装/路径指引、版本探测与原因清晰的诊断；不强制在线下载、不覆盖用户已有安装。
+- 提升工具发现、`doctor`、安装/路径指引、版本探测与原因清晰的诊断；不强制在线下载、不覆盖用户已有安装。
 - 整理 CLI 参数与本地 raw pass-through，消除版本漂移、缺少参数或进程启动方式错误的问题。
 
 **G1 Gate**：13 个工具具备元数据、运行探测、故障反馈和可回归操作；不同版本差异可被明确标注。
 
 ### G2 — 统一通用 API 和执行可靠性
 
-- 通用 \`ToolInvocation\` / \`ToolExecutionResult\` / \`GeneratedArtifact\` 契约。
+- 通用 `ToolInvocation` / `ToolExecutionResult` / `GeneratedArtifact` 契约。
 - CLI/MCP/JS SDK 共用一套 Runner/Tool Adapter；完善进程启动、工作目录隔离、资源限制、输出收集与清理。
 - 将各工具的格式化、查询、模型检查、模拟/探索等**官方功能**通过同一套技术接口输出；保留原始输出。
 - 维护 Tool-native status adapter，不定义业务 proof claim status；MCP 原生命令透传继续关闭。
@@ -171,7 +171,7 @@ formal-tools 是可复用的**形式化与逻辑化工具维护层 / Tooling Fou
 
 ### G4 — 通用消费接口验证
 
-- 选外部消费者（可优先 \`domain-simulator\`）仅验证 **工具 API 接入兼容性**：调用已注册工具、传入测试数据、返回状态/产物、处理错误与超时。
+- 选外部消费者（可优先 `domain-simulator`）仅验证 **工具 API 接入兼容性**：调用已注册工具、传入测试数据、返回状态/产物、处理错误与超时。
 - 不替消费者提供模型/领域场景，不承担任务编排或业务验证。
 - 按真实兼容问题完善 SDK/MCP 的稳定性、向后兼容与文档，使任何项目都能用同一套接口调用工具。
 
