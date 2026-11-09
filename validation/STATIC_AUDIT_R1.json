@@ -1,0 +1,59 @@
+{
+  "schema": "formal-skills-static-audit/1",
+  "audit_date_utc": "2026-11-09",
+  "repository": "kaicreator-mm/formal-tools-skill",
+  "audited_source_exact_sha": "2df9e94e516caaaa4b261ae0ae4175ef19aa6983",
+  "scope": "Static source and fixture structural checks; **NOT** running proof engines or installing plugin",
+  "tool_skill_count": 13,
+  "router_skill_count": 1,
+  "fixture_files": 29,
+  "positive_negative_cases": 13,
+  "structural_checks": {
+    "passed": 74,
+    "failed": 0,
+    "detail": "registry and cases coverage, file existence, mutation inputs distinct (including auxiliary shared shape/config), independent doctor command, status NOT_RUN"
+  },
+  "frontmatter": {
+    "checked": 14,
+    "passed": 14,
+    "failed": 0,
+    "note": "name must equal skills/<folder>; 13 names corrected from prefixed form"
+  },
+  "semantic_fixture_shape_checks": {
+    "checked": 13,
+    "passed": 13,
+    "failed": 0,
+    "note": "Textual mutation signatures only; not parser or solver execution"
+  },
+  "routing_document_checks": {
+    "checked": 6,
+    "passed": 6,
+    "failed": 0,
+    "note": "documented router pair mapping presence, not LLM skill activation"
+  },
+  "runtime_test": {
+    "status": "NOT_RUN",
+    "attempts": "Container trivial commands returned ClientError",
+    "executables_tested": 0
+  },
+  "plugin_install": {
+    "status": "NOT_RUN",
+    "reason": "No verified ZIP packaging or plugin install; current container unavailable"
+  },
+  "not_proven": [
+    "model syntax accepted by actual solver",
+    "CLI flags work on actual downloaded release",
+    "positive/negative semantic outcomes with solver",
+    "new-chat Plugin discovery",
+    "proof obligations for ADS/DKE/DIS production cases"
+  ],
+  "findings_fixed": [
+    "P1: 13 frontmatter name/directory mismatch",
+    "P1: Alloy initial positive model permits counterexample",
+    "P1: missing executable SHACL/Jena/Apalache fixtures",
+    "P1: Souffle negative cycle case did not define cycle relation",
+    "P2: doctor commands referenced nonexistent files",
+    "P2: installation guidance incorrectly implied six-tool bundle installs all 13"
+  ],
+  "verdict": "STATIC_ACCEPTED_WITH_RUNTIME_GATES_OPEN"
+}

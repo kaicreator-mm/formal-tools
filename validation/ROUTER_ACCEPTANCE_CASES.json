@@ -1,0 +1,66 @@
+{
+  "schema": "formal-router-static-cases/1",
+  "notes": "Expected tool selection only, not active LLM routing; runtime NOT_RUN",
+  "scenarios": [
+    {
+      "id": "ADS-01",
+      "claim": "task DAG cycle and dependency reachability",
+      "primary": "Alloy",
+      "cross": "Soufflé",
+      "primaryMentioned": true,
+      "secondaryMentioned": true,
+      "type": "documented-route-static",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "ADS-02",
+      "claim": "concurrent write-set exclusion and arithmetic constraints",
+      "primary": "Z3",
+      "cross": "cvc5",
+      "primaryMentioned": true,
+      "secondaryMentioned": true,
+      "type": "documented-route-static",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "ADS-03",
+      "claim": "task lifecycle invariants and reachability",
+      "primary": "TLA+/TLC",
+      "cross": "Apalache",
+      "primaryMentioned": true,
+      "secondaryMentioned": true,
+      "type": "documented-route-static",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "DKE-01",
+      "claim": "Element decomposition recursive closure",
+      "primary": "Soufflé",
+      "cross": "Alloy",
+      "primaryMentioned": true,
+      "secondaryMentioned": true,
+      "type": "documented-route-static",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "DIS-01",
+      "claim": "RDF Evidence schema and query consumption",
+      "primary": "pySHACL",
+      "cross": "Jena",
+      "primaryMentioned": true,
+      "secondaryMentioned": true,
+      "type": "documented-route-static",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "FORGE-01",
+      "claim": "nonmonotonic candidate choice and conflict resolution",
+      "primary": "Clingo",
+      "cross": "Z3",
+      "primaryMentioned": true,
+      "secondaryMentioned": true,
+      "type": "documented-route-static",
+      "runtime": "NOT_RUN"
+    }
+  ]
+}
