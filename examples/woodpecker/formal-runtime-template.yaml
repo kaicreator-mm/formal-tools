@@ -1,0 +1,11 @@
+# TEMPLATE ONLY — DO NOT place into .woodpecker/ until the image exists and is tested.
+# Replace IMAGE_FROM_PRIVATE_REGISTRY with a real digest-pinned image.
+# Requires all 13 solvers, Python environments, Java 21 and .NET 8 inside the image.
+when:
+  - event: pull_request
+steps:
+  - name: formal-native-fixtures
+    image: IMAGE_FROM_PRIVATE_REGISTRY
+    commands:
+      - python3 -m packages.runner validate
+      - python3 -m packages.runner suite --timeout 30

@@ -26,3 +26,11 @@ Do not overwrite failure history on successful reruns. Link back to authoritativ
 - **Static evaluation:** 74/74 structural checks, 14/14 frontmatter checks, 13/13 fixture mutation-shape checks. The checks do **not** prove parser or solver correctness.
 - **Runtime gate:** `NOT_RUN`, container command execution returned `ClientError`; no solver outputs, no Plugin install and no cross-conversation discovery evidence.
 - **Lesson:** Skill generation must be followed by a name/path contract check and executable fixture pair readback before requesting runtime validation. Never confuse source audit with proof.
+
+## 2026-11-09 — R2 shared CLI/MCP/Woodpecker design (source-only)
+
+- The 13 tool wrappers should share one allowlisted subprocess core, not 13 separately evolving MCP servers.
+- Woodpecker Agent is a CI worker: integrate formal checks as Docker Pipeline Steps first, then a reusable Plugin; do not patch the core Agent binary.
+- Document every tool's theoretical basis, architecture, implementation and quick start, including separate Python/Java/.NET dependency needs.
+- Distinguish fixture test PASS, underlying tool result, and project Claim verdict.
+- Pending: run unit tests, parser/CLI/version checks, native positive/negative fixtures, MCP Inspector connection and Woodpecker 3.18 CI receipts. All remain NOT_RUN at time of authoring.

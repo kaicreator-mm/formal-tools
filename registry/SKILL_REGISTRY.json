@@ -119,5 +119,9 @@
   "repository": "https://github.com/kaicreator-mm/formal-tools-skill",
   "experience_log": "experience/EXPERIENCE_LOG.md",
   "verification_protocol": "docs/VERIFICATION_PROTOCOL.md",
-  "package_directory": "https://drive.google.com/drive/folders/1GqX-Dn42Xi_STaoWYoq4aRXi3le2WPHB"
+  "package_directory": "https://drive.google.com/drive/folders/1GqX-Dn42Xi_STaoWYoq4aRXi3le2WPHB",
+  "shared_execution_interface": "registry/INTERFACES.json",
+  "cli_mcp_impl": "packages/runner",
+  "woodpecker_integration": "docs/WOODPECKER_AGENT_INTEGRATION.md",
+  "runner_status": "SOURCE_IMPLEMENTED_RUNTIME_NOT_RUN"
 }

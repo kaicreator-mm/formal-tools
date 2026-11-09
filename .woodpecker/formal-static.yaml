@@ -1,0 +1,9 @@
+# Woodpecker 3.18 source-only smoke. Does NOT run solver binaries.
+when:
+  - event: [push, pull_request]
+steps:
+  - name: formal-skill-source-contract
+    image: python:3.12-slim
+    commands:
+      - python3 -m unittest discover -s tests -p 'test_*.py' -v
+      - python3 -m packages.runner validate
