@@ -3,7 +3,7 @@
  * Only fixed, Git-tracked example inputs may reach native binaries.
  * Real binary/MCP integration remains NOT_RUN until executed with receipts.
  */
-import { readFile, readdir, mkdtemp, mkdir, rm, stat } from "node:fs/promises";
+import { readFile, readdir, mkdtemp, mkdir, rm, stat, copyFile } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join, resolve, dirname } from "node:path";
@@ -60,28 +60,29 @@ function jar(variable) {
   if (!p) throw new TypeError(variable+" must point to an installed jar");
   return resolve(p);
 }
-function commands(tool,which,output) {
+function commands(tool,which,output,inputDir) {
+  const model = name => join(inputDir,name);
   assertTool(tool);
   if (!["positive","negative"].includes(which)) throw new TypeError("case must be positive/negative");
   const positive=which==="positive", stem=positive?"positive":"negative";
-  if (tool==="z3") return [[executable("z3"),"-smt2",fixture(tool,stem+".smt2")]];
-  if (tool==="cvc5") return [[executable("cvc5"),"--lang","smt2",fixture(tool,stem+".smt2")]];
-  if (tool==="lean4") return [[executable("lean"),fixture(tool,positive?"Positive.lean":"Negative.lean")]];
-  if (tool==="dafny") return [[executable("dafny"),"verify",fixture(tool,positive?"Positive.dfy":"Negative.dfy")]];
-  if (tool==="vampire") return [[executable("vampire"),"--mode","casc",fixture(tool,stem+".p")]];
-  if (tool==="clingo") return [[toolPython(tool),"-m","clingo",fixture(tool,stem+".lp"),"0"]];
-  if (tool==="rdf-shacl") return [[toolPython(tool),"-m","pyshacl","-s",fixture(tool,"shapes.ttl"),"-df","turtle","-sf","turtle","-f","human",fixture(tool,stem+".ttl")]];
-  if (tool==="souffle") return [[executable("souffle"),fixture(tool,stem+".dl"),"-D",output]];
-  if (tool==="tla-tlc") return [[executable("java"),"-cp",jar("TLA2TOOLS_JAR"),"tlc2.TLC","-config",fixture(tool,"Toggle.cfg"),fixture(tool,positive?"TogglePositive.tla":"ToggleNegative.tla")]];
-  if (tool==="apalache") return [[executable("apalache-mc"),"check","--init=Init","--next=Next","--inv=Inv","--length=3",fixture(tool,positive?"TogglePositive.tla":"ToggleNegative.tla")]];
+  if (tool==="z3") return [[executable("z3"),"-smt2",model(stem+".smt2")]];
+  if (tool==="cvc5") return [[executable("cvc5"),"--lang","smt2",model(stem+".smt2")]];
+  if (tool==="lean4") return [[executable("lean"),model(positive?"Positive.lean":"Negative.lean")]];
+  if (tool==="dafny") return [[executable("dafny"),"verify",model(positive?"Positive.dfy":"Negative.dfy")]];
+  if (tool==="vampire") return [[executable("vampire"),"--mode","casc",model(stem+".p")]];
+  if (tool==="clingo") return [[toolPython(tool),"-m","clingo",model(stem+".lp"),"0"]];
+  if (tool==="rdf-shacl") return [[toolPython(tool),"-m","pyshacl","-s",model("shapes.ttl"),"-df","turtle","-sf","turtle","-f","human",model(stem+".ttl")]];
+  if (tool==="souffle") return [[executable("souffle"),model(stem+".dl"),"-D",output]];
+  if (tool==="tla-tlc") return [[executable("java"),"-cp",jar("TLA2TOOLS_JAR"),"tlc2.TLC","-config",model("Toggle.cfg"),model(positive?"TogglePositive.tla":"ToggleNegative.tla")]];
+  if (tool==="apalache") return [[executable("apalache-mc"),"check","--init=Init","--next=Next","--inv=Inv","--length=3",model(positive?"TogglePositive.tla":"ToggleNegative.tla")]];
   if (tool==="alloy") {
     const prefix=process.env.FORMAL_ALLOY_JAR?[executable("java"),"-jar",jar("FORMAL_ALLOY_JAR")]:[executable("alloy")];
-    return [[...prefix,"exec","-c","0",fixture(tool,stem+".als")]];
+    return [[...prefix,"exec","-c","0",model(stem+".als")]];
   }
-  if (tool==="prob") return [[executable("probcli"),fixture(tool,positive?"Positive.mch":"Negative.mch"),"-model_check"]];
+  if (tool==="prob") return [[executable("probcli"),model(positive?"Positive.mch":"Negative.mch"),"-model_check"]];
   if (tool==="apache-jena") {
-    const tt=fixture(tool,positive?"data.ttl":"invalid.ttl");
-    return positive ? [[executable("riot"),"--validate",tt],[executable("arq"),"--data",tt,"--query",fixture(tool,"query.rq")]] : [[executable("riot"),"--validate",tt]];
+    const tt=model(positive?"data.ttl":"invalid.ttl");
+    return positive ? [[executable("riot"),"--validate",tt],[executable("arq"),"--data",tt,"--query",model("query.rq")]] : [[executable("riot"),"--validate",tt]];
   }
   throw new TypeError("unknown tool");
 }
@@ -225,8 +226,13 @@ export async function runFixture(tool,which,timeout=30) {
   const input_sha256=Object.fromEntries(await Promise.all(inputs.map(async n=>[n,sha(await readFile(fixture(tool,n)))])));
   const dir=await mkdtemp(join(tmpdir(),"formal-js-"));
   try {
+    // Tools may write states/, counterexample traces, or log files beside their
+    // input model. Always execute against private copies, never against Git.
+    const inputDir=join(dir,"examples");
+    await mkdir(inputDir,{recursive:true});
+    for(const name of inputs) await copyFile(fixture(tool,name),join(inputDir,name));
     let commandsToRun;
-    try {commandsToRun=commands(tool,which,dir);}
+    try {commandsToRun=commands(tool,which,dir,inputDir);}
     catch(e){return {tool,case:which,run_status:"NOT_RUN",tool_outcome:"ERROR",test_verdict:"INCONCLUSIVE",claim_verdict:"NOT_EVALUATED",error:String(e)};}
     await mkdir(dir,{recursive:true});
     const steps=[];
@@ -245,15 +251,8 @@ export async function runFixture(tool,which,timeout=30) {
       ...result,claim_verdict:"NOT_EVALUATED",input_sha256,executions:steps,
       scope:"committed fixture only; not a proof of a project requirement"};
   } finally {
+    // This is the only directory owned by the runner; never remove caller files.
     await rm(dir,{recursive:true,force:true});
-    // TLC writes an empty states/<timestamp>/ dir and ProB writes counterexample *.prob
-    // traces next to the fixture files; remove those runner-produced artifacts.
-    if(tool==="tla-tlc") await rm(file("skills","tla-tlc","examples","states"),{recursive:true,force:true});
-    if(tool==="prob"){
-      for(const name of await readdir(file("skills","prob","examples"))){
-        if(name.endsWith(".prob")) await rm(file("skills","prob","examples",name),{force:true});
-      }
-    }
   }
 }
 
