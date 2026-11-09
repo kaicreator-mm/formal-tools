@@ -1,6 +1,6 @@
 # Dafny — 简介与快速入门
 
-## 核心用途
+## 理论基础与核心用途
 Hoare 风格的程序契约、最弱前置条件与 SMT 自动证明，使用 requires、ensures、invariant。
 
 ## 架构

@@ -1,6 +1,6 @@
 # Apache Jena — 简介与快速入门
 
-## 核心用途
+## 理论基础与核心用途
 RDF 图、SPARQL 代数与语义网络查询；规则推理需要显式指定 entailment regime。
 
 ## 架构
