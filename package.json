@@ -1,0 +1,28 @@
+{
+  "name": "formal-tools-skill",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "packages/core",
+    "packages/runner"
+  ],
+  "scripts": {
+    "formal": "node packages/runner/js/cli.mjs",
+    "formal:validate": "node packages/runner/js/cli.mjs validate",
+    "formal:test": "node --test tests/finite.test.mjs tests/runner.test.mjs tests/property.test.mjs",
+    "formal:mcp": "node packages/runner/js/mcp.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "^2.0.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0",
+    "@types/node": "^24.0.0"
+  }
+}

@@ -34,3 +34,16 @@ Do not overwrite failure history on successful reruns. Link back to authoritativ
 - Document every tool's theoretical basis, architecture, implementation and quick start, including separate Python/Java/.NET dependency needs.
 - Distinguish fixture test PASS, underlying tool result, and project Claim verdict.
 - Pending: run unit tests, parser/CLI/version checks, native positive/negative fixtures, MCP Inspector connection and Woodpecker 3.18 CI receipts. All remain NOT_RUN at time of authoring.
+
+## 2026-11-09 — R3 JavaScript-first runner migration and actual pure-JS checks
+
+- **Architecture:** ESM JavaScript core + Node.js CLI + official MCP TypeScript SDK v2 adapter; no Python CLI/MCP left in the canonical branch. Node external native calls remain optional and separately governed.
+- **Actually executed in restricted ChatGPT V8 JS environment:** 1,200 seeded CNF samples compared to independent brute-force Boolean enumeration; 500 seeded graph samples compared to independent Kahn cycle detection (including cycle-witness edges); 4 direct writer/state/error cases. Result 1,704/1,704 PASS with zero mismatches. Pure core source blob SHA `509b9e6b970d54ec68469cee702bc0ae2ee33340`.
+- **Experience:** differentiate formal logic proof from finite-model checking. Pure JS can check explicitly bounded and finite relationships directly without any external binary, yet cannot replace first-order theorem provers or SMT engines over unrestricted domains.
+- **Remaining gates:** Node CLI integration, MCP v2 stdio handshake, 13 native tools' actual binaries, Woodpecker 3.18 workflow; all NOT_RUN. Do not promote to native-runtime PASS on the basis of pure JS.
+
+## R3 refinement — explicit computational budget (source c717cb3b2eb4d13422fbdfb859aa3fcceee3851a)
+
+- A bounded variable count alone does not guarantee acceptable runtime for a JS SAT checker with long clauses. Enforce a hard work budget and return `UNKNOWN/INCONCLUSIVE` on exhaustion instead of silently declaring `UNSAT`.
+- Re-ran 1,704 finite model cases against revised core and one deliberate budget-exhaustion input, 1,705/1,705 checks passed in the restricted JavaScript environment.
+- The saved receipt is in `validation/R3_JS_EXECUTION.json`; Node/MCP and native binary execution remain NOT_RUN.

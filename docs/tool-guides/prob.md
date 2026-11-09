@@ -14,9 +14,9 @@ B 模型前端、状态探索器、约束求解与模型检查器。
 
 ## CLI 与 MCP 接入
 上述命令是原生 CLI 示例（可能受版本、工作目录和依赖影响）。统一 CLI 可执行：
-    python3 -m packages.runner run prob --case positive
-    python3 -m packages.runner run prob --case negative
-统一 MCP 通过 `run_formal_fixture(tool="prob", case="positive")` 对同一个固定 fixture 执行，**并非声称工具本身提供官方 MCP 服务**。依赖官方 Python MCP SDK v2；安装并连接服务器后才能调用。
+    node packages/runner/js/cli.mjs run prob --case positive
+    node packages/runner/js/cli.mjs run prob --case negative
+统一 MCP 通过 `run_formal_fixture(tool="prob", case="positive")` 对同一个固定 fixture 执行，**并非声称工具本身提供官方 MCP 服务**。依赖官方 TypeScript MCP SDK v2；安装并连接服务器后才能调用。
 
 ## 安装与兼容
 ProB 1.16.0 Linux64。实际文件在 Google Drive `App/Formal-Methods/packages`，详细文件 ID 见 `packages/INDEX.json`。
@@ -29,3 +29,5 @@ ProB 1.16.0 Linux64。实际文件在 Google Drive `App/Formal-Methods/packages`
 
 ## 权威资料
 https://prob.hhu.de/w/index.php?title=ProB_CLI
+
+**JS-only 说明：** 共享 `packages/core/src/finite.mjs` 支持有限图、写集、CNF 和状态检查；本工具的原生证明/模型检查能力仍需单独安装相应二进制。MCP 服务实现为 `packages/runner/js/mcp.mjs`，不是 Python 服务。

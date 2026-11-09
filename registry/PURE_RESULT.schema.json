@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Pure JavaScript finite model result",
+  "type": "object",
+  "required": [
+    "tool_outcome",
+    "test_verdict",
+    "claim_verdict",
+    "execution",
+    "scope"
+  ],
+  "properties": {
+    "tool_outcome": {
+      "type": "string"
+    },
+    "test_verdict": {
+      "enum": [
+        "PASS",
+        "COUNTEREXAMPLE",
+        "INCONCLUSIVE"
+      ]
+    },
+    "claim_verdict": {
+      "const": "NOT_EVALUATED"
+    },
+    "execution": {
+      "const": "PURE_JS"
+    },
+    "scope": {
+      "type": "string"
+    },
+    "cycle": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "model": {
+      "type": "array",
+      "items": {
+        "type": "boolean"
+      }
+    },
+    "explored": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "additionalProperties": true
+}

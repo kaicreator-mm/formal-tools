@@ -1,0 +1,9 @@
+{
+  "name": "@formal-tools/runner",
+  "version": "0.3.0",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "formal-tools": "./js/cli.mjs"
+  }
+}

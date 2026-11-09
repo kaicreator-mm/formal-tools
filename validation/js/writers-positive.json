@@ -1,0 +1,14 @@
+{
+  "claims": [
+    {
+      "task": "builderA",
+      "resource": "docs/Product.md",
+      "slot": "lane-1"
+    },
+    {
+      "task": "builderB",
+      "resource": "docs/L2.md",
+      "slot": "lane-1"
+    }
+  ]
+}

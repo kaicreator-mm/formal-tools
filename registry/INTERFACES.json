@@ -1,58 +1,59 @@
 {
-  "schema": "formal-tools-interfaces/1",
-  "version": "0.1.0-draft",
-  "status": "SOURCE_IMPLEMENTED_RUNTIME_NOT_RUN",
-  "core": "packages/runner/core.py",
-  "cli": "python3 -m packages.runner",
-  "mcp": "python3 -m packages.runner.mcp_server",
-  "mcp_sdk": "Python SDK v2; from mcp.server import MCPServer",
-  "mcp_transport": "stdio",
+  "schema": "formal-tools-interfaces/2",
+  "version": "0.3.0-r3",
+  "status": "JS_SOURCE_DELIVERED_NODE_MCP_NOT_RUN",
+  "core": "packages/core/src/finite.mjs",
+  "cli": "node packages/runner/js/cli.mjs",
+  "mcp": "node packages/runner/js/mcp.mjs",
+  "typescript": {
+    "type": "checkJs + finite.d.mts",
+    "build_required": false
+  },
+  "mcp_sdk": {
+    "name": "@modelcontextprotocol/server",
+    "major": 2,
+    "transport": "stdio",
+    "source": "https://ts.sdk.modelcontextprotocol.io/v2/"
+  },
   "mcp_tools": [
     "list_formal_tools",
+    "validate_formal_source",
     "inspect_formal_tool",
     "probe_formal_tool",
-    "run_formal_fixture"
+    "run_formal_fixture",
+    "verify_formal_model"
   ],
-  "native_mcp_by_engine": "NOT_ASSUMED",
-  "native_cli_by_engine": "REFER_TO_OFFICIAL_GUIDE",
+  "pure_engines": [
+    "dag",
+    "writers",
+    "cnf",
+    "states"
+  ],
+  "native_tool_count": 13,
+  "native_status": "NOT_RUN",
+  "node_cli_status": "NOT_RUN",
+  "mcp_transport_status": "NOT_RUN",
+  "js_core": {
+    "status": "ACTUALLY_EXECUTED_IN_RESTRICTED_JS_CONTEXT",
+    "checks_passed": 1705,
+    "checks_total": 1705,
+    "source_blob_sha": "c717cb3b2eb4d13422fbdfb859aa3fcceee3851a",
+    "receipt": "validation/R3_JS_EXECUTION.json"
+  },
+  "woodpecker": {
+    "version": "3.18",
+    "integration": "Docker Pipeline Step",
+    "static_yaml": ".woodpecker/formal-static.yaml",
+    "runtime_yaml": "examples/woodpecker/formal-runtime-template.yaml",
+    "ci_status": "NOT_RUN"
+  },
   "security": {
-    "shell": false,
-    "allowed_inputs": "committed positive/negative fixtures only",
-    "process_timeout_seconds": [
+    "arbitrary_native_command": false,
+    "allowlisted_fixture_only": true,
+    "node_spawn_shell": false,
+    "process_timeout_s": [
       1,
       120
-    ],
-    "remote_network_endpoint": false
-  },
-  "ci": {
-    "platform": "Woodpecker 3.18",
-    "recommended": "Docker Pipeline Step",
-    "agent_binary_modification": false,
-    "static_workflow": ".woodpecker/formal-static.yaml",
-    "runtime_template": "examples/woodpecker/formal-runtime-template.yaml"
-  },
-  "tool_ids": [
-    "lean4",
-    "z3",
-    "tla-tlc",
-    "apalache",
-    "alloy",
-    "souffle",
-    "rdf-shacl",
-    "cvc5",
-    "vampire",
-    "clingo",
-    "apache-jena",
-    "prob",
-    "dafny"
-  ],
-  "cli_subcommands": [
-    "list",
-    "validate",
-    "inspect",
-    "doctor",
-    "run",
-    "suite"
-  ],
-  "probe_version_status": "PROCESS_OUTPUT_UNVERIFIED"
+    ]
+  }
 }

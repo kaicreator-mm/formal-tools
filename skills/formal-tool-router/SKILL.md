@@ -23,7 +23,7 @@ Read the peer Skill at `../<name>/SKILL.md` from this router directory (for exam
 
 ## Runner access and execution-gate decision
 
-For committed demos, the repo provides python3 -m packages.runner list / validate / run, and an optional SDK v2 MCP stdio server with list_formal_tools, inspect_formal_tool, run_formal_fixture. Select only the relevant engine(s); do not run every solver by default. The MCP server requires separate host connection and does not itself install a binary.
+For committed demos, the repo provides node packages/runner/js/cli.mjs list / validate / run, and an optional SDK v2 MCP stdio server with list_formal_tools, inspect_formal_tool, run_formal_fixture. Select only the relevant engine(s); do not run every solver by default. The MCP server requires separate host connection and does not itself install a binary.
 
 When a project-level claim lacks a curated model, prepare the model and request a separate governed execution path; the R2 adapter deliberately does not expose arbitrary commands or model uploads. See docs/CLI_MCP_CONTRACT.md and docs/WOODPECKER_AGENT_INTEGRATION.md in Git.
 
@@ -32,3 +32,5 @@ When a project-level claim lacks a curated model, prepare the model and request 
 ## Assurance limits
 
 A SAT model is a witness of satisfiability, UNSAT is relative to encoded axioms/theory, bounded search is not universal proof, and a Lean kernel-checked term proves only its formalized theorem. Natural-language specifications require independent semantic review of the encoding.
+
+**Pure JS core:** `packages/core/src/finite.mjs` is independently executable in a restricted JS evaluator. Use it first for exact finite DAG/write-set/CNF/state problems; native proof engines remain separate. MCP is Node.js ESM on the official TypeScript SDK v2.
