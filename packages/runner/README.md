@@ -10,6 +10,7 @@ From repository root (no pip install needed for these source-only checks):
     python3 -m packages.runner validate
     python3 -m unittest discover -s tests -v
     python3 -m packages.runner inspect z3
+    python3 -m packages.runner doctor z3
     python3 -m packages.runner run z3 --case positive --timeout 30
     python3 -m packages.runner run z3 --case negative --timeout 30
     python3 -m packages.runner suite --timeout 30
@@ -33,7 +34,7 @@ Use the current official MCP Python SDK v2 API:
     python3 -m pip install 'mcp>=2,<3'
     python3 -m packages.runner.mcp_server
 
-The local stdio server exports three tools: list_formal_tools, inspect_formal_tool, run_formal_fixture. To inspect during development, use the official SDK's MCP Inspector workflow with an appropriate environment. This does not automatically connect the MCP server to ChatGPT; a compatible MCP host must launch/connect it explicitly.
+The local stdio server exports four tools: list_formal_tools, inspect_formal_tool, probe_formal_tool, run_formal_fixture. To inspect during development, use the official SDK's MCP Inspector workflow with an appropriate environment. This does not automatically connect the MCP server to ChatGPT; a compatible MCP host must launch/connect it explicitly.
 
 API reference: https://py.sdk.modelcontextprotocol.io/
 Run transport reference: https://github.com/modelcontextprotocol/python-sdk/blob/main/docs/run/index.md
@@ -46,3 +47,5 @@ Run transport reference: https://github.com/modelcontextprotocol/python-sdk/blob
 - Result fields distinguish tool_outcome, test_verdict, and claim_verdict. The demo runner always sets claim_verdict=NOT_EVALUATED.
 - No process-level OS sandbox inside the Python CLI; isolation, CPU/memory limits and network restriction belong to the CI container/host.
 - Source and fixture tests have NOT been executed in the ChatGPT container, and 13-tool native runtime checks remain NOT_RUN. Do not promote to runtime-verified status without real receipts.
+
+The doctor command makes an actual process invocation to inspect help/version output, but its version_verdict remains UNVERIFIED until the output is checked against a pinned release digest and expected tool version. No doctor has run in ChatGPT.

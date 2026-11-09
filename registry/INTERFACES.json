@@ -10,6 +10,7 @@
   "mcp_tools": [
     "list_formal_tools",
     "inspect_formal_tool",
+    "probe_formal_tool",
     "run_formal_fixture"
   ],
   "native_mcp_by_engine": "NOT_ASSUMED",
@@ -44,5 +45,14 @@
     "apache-jena",
     "prob",
     "dafny"
-  ]
+  ],
+  "cli_subcommands": [
+    "list",
+    "validate",
+    "inspect",
+    "doctor",
+    "run",
+    "suite"
+  ],
+  "probe_version_status": "PROCESS_OUTPUT_UNVERIFIED"
 }

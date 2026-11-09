@@ -54,6 +54,44 @@ def executable(name):
         raise RunnerError("Missing executable: " + name)
     return s
 
+def probe(tool, timeout_s=15):
+    """Attempt to start a trusted tool and collect its version/help response.
+
+    This reports a process invocation, not certified tool compatibility.
+    """
+    inspect(tool)
+    if type(timeout_s) is not int or not 1 <= timeout_s <= 120:
+        raise RunnerError("timeout must be 1..120 seconds")
+    if tool == "lean4": argv = [executable("lean"), "--version"]
+    elif tool == "z3": argv = [executable("z3"), "-version"]
+    elif tool == "cvc5": argv = [executable("cvc5"), "--version"]
+    elif tool == "vampire": argv = [executable("vampire"), "--help"]
+    elif tool == "clingo": argv = [os.getenv("FORMAL_CLINGO_PYTHON", sys.executable), "-m", "clingo", "--version"]
+    elif tool == "rdf-shacl": argv = [os.getenv("FORMAL_PYSHACL_PYTHON", sys.executable), "-m", "pyshacl", "--help"]
+    elif tool == "souffle": argv = [executable("souffle"), "--version"]
+    elif tool == "apalache": argv = [executable("apalache-mc"), "--version"]
+    elif tool == "dafny": argv = [executable("dafny"), "--version"]
+    elif tool == "prob": argv = [executable("probcli"), "-version"]
+    elif tool == "apache-jena": argv = [executable("riot"), "--help"]
+    elif tool == "alloy":
+        jar = os.getenv("FORMAL_ALLOY_JAR")
+        argv = ([executable("java"), "-jar", str(Path(jar).resolve()), "help"]
+                if jar and Path(jar).is_file() else [executable("alloy"), "help"])
+    else:
+        jar = os.getenv("TLA2TOOLS_JAR")
+        if not jar or not Path(jar).is_file(): raise RunnerError("Missing TLA2TOOLS_JAR")
+        argv = [executable("java"), "-cp", str(Path(jar).resolve()), "tlc2.TLC", "-help"]
+    try:
+        p = subprocess.run(argv, capture_output=True, input=b"", timeout=timeout_s, shell=False)
+        raw = p.stdout + p.stderr
+        return {"tool": tool, "run_status": "EXECUTED", "argv": argv,
+                "exit_code": p.returncode, "output_excerpt": raw.decode("utf-8", "replace")[:2000],
+                "output_sha256": hashlib.sha256(raw).hexdigest(),
+                "version_verdict": "UNVERIFIED"}
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return {"tool": tool, "run_status": "NOT_RUN", "version_verdict": "UNVERIFIED",
+                "error": str(exc)}
+
 def commands(tool, case, output):
     base = ROOT / "skills" / tool / "examples"
     p = case == "positive"
@@ -65,7 +103,7 @@ def commands(tool, case, output):
     if tool == "dafny": return [[executable("dafny"), "verify", f("Positive.dfy" if p else "Negative.dfy")]]
     if tool == "vampire": return [[executable("vampire"), "--mode", "casc", f(n+".p")]]
     if tool == "clingo": return [[os.getenv("FORMAL_CLINGO_PYTHON", sys.executable), "-m", "clingo", f(n+".lp"), "0"]]
-    if tool == "rdf-shacl": return [[os.getenv("FORMAL_PYSHACL_PYTHON", sys.executable), "-m", "pyshacl", "-s", f("shapes.ttl"), "-df", "turtle", "-sf", "turtle", f(n+".ttl")]]
+    if tool == "rdf-shacl": return [[os.getenv("FORMAL_PYSHACL_PYTHON", sys.executable), "-m", "pyshacl", "-s", f("shapes.ttl"), "-df", "turtle", "-sf", "turtle", "-f", "human", f(n+".ttl")]]
     if tool == "souffle": return [[executable("souffle"), f(n+".dl"), "-D", str(output)]]
     if tool == "tla-tlc":
         jar = os.getenv("TLA2TOOLS_JAR")

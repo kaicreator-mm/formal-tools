@@ -25,6 +25,7 @@ Native CLI (Z3/cvc5/etc) does solver execution. The Python CLI decides when/how 
     python3 -m packages.runner list
     python3 -m packages.runner validate
     python3 -m packages.runner inspect cvc5
+    python3 -m packages.runner doctor cvc5
     python3 -m packages.runner run cvc5 --case positive
     python3 -m packages.runner run cvc5 --case negative
     python3 -m packages.runner suite --timeout 30
@@ -33,7 +34,8 @@ MCP tools:
 
 1. list_formal_tools() -> registered engines + static status
 2. inspect_formal_tool(tool: str) -> CLI recipe, expected observations, compatibility
-3. run_formal_fixture(tool: str, case: str, timeout_s: int=30) -> execution receipt
+3. probe_formal_tool(tool: str, timeout_s: int=15) -> process-start/version/help probe
+4. run_formal_fixture(tool: str, case: str, timeout_s: int=30) -> execution receipt
 
 The only accepted cases are positive and negative, and tool IDs are allowlisted from registry. The MCP surface intentionally rejects arbitrary shell, uploaded source, arbitrary executable paths and Git mutations; a future arbitrary-model capability needs separate security, schema and model-fidelity work.
 

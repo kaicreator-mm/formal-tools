@@ -18,7 +18,7 @@ class InterfaceInventoryTests(unittest.TestCase):
     def test_shared_interface_and_ci_contract(self):
         itf = json.loads((ROOT / "registry" / "INTERFACES.json").read_text())
         self.assertEqual(len(itf["tool_ids"]), 13)
-        self.assertEqual(len(itf["mcp_tools"]), 3)
+        self.assertEqual(len(itf["mcp_tools"]), 4)
         self.assertFalse(itf["security"]["shell"])
         self.assertTrue((ROOT / ".woodpecker" / "formal-static.yaml").is_file())
         self.assertEqual(itf["status"], "SOURCE_IMPLEMENTED_RUNTIME_NOT_RUN")
