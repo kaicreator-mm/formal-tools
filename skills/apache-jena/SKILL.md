@@ -1,5 +1,5 @@
 ---
-name: formal-apache-jena
+name: apache-jena
 description: Use Apache Jena to check RDF/Turtle 解析、SPARQL 查询、规则推理以及 DIS 语义消费; generate reproducible formal inputs, run positive and negative tests, and record exact executable proof or counterexample evidence.
 ---
 # Apache Jena Formal Verification Skill

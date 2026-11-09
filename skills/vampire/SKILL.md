@@ -1,5 +1,5 @@
 ---
-name: formal-vampire
+name: vampire
 description: Use Vampire to check 一阶逻辑 TPTP 自动证明、规范蕴含与一致性反例探索; generate reproducible formal inputs, run positive and negative tests, and record exact executable proof or counterexample evidence.
 ---
 # Vampire Formal Verification Skill

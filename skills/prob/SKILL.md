@@ -1,5 +1,5 @@
 ---
-name: formal-prob
+name: prob
 description: Use ProB to check B/Event-B 模型检查、规范精化、状态不变量; generate reproducible formal inputs, run positive and negative tests, and record exact executable proof or counterexample evidence.
 ---
 # ProB Formal Verification Skill

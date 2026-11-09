@@ -1,5 +1,5 @@
 ---
-name: formal-cvc5
+name: cvc5
 description: Use cvc5 to check SMT-LIB 约束求解、Z3 独立对照及模型差异检测; generate reproducible formal inputs, run positive and negative tests, and record exact executable proof or counterexample evidence.
 ---
 # cvc5 Formal Verification Skill

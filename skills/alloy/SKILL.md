@@ -1,5 +1,5 @@
 ---
-name: formal-alloy
+name: alloy
 description: Use Alloy Analyzer to check 关系模型、依赖图、唯一性、有限域结构反例; generate reproducible formal inputs, run positive and negative tests, and record exact executable proof or counterexample evidence.
 ---
 # Alloy Analyzer Formal Verification Skill

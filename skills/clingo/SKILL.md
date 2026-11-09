@@ -1,5 +1,5 @@
 ---
-name: formal-clingo
+name: clingo
 description: Use Clingo to check ASP 候选选择、互斥决策、默认否定、答案集枚举; generate reproducible formal inputs, run positive and negative tests, and record exact executable proof or counterexample evidence.
 ---
 # Clingo Formal Verification Skill

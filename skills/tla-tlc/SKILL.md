@@ -1,5 +1,5 @@
 ---
-name: formal-tla-tlc
+name: tla-tlc
 description: Use TLA+ / TLC to check 状态迁移、并发流程、可达性、死锁和安全性/活性检查; generate reproducible formal inputs, run positive and negative tests, and record exact executable proof or counterexample evidence.
 ---
 # TLA+ / TLC Formal Verification Skill

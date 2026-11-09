@@ -1,5 +1,5 @@
 ---
-name: formal-souffle
+name: souffle
 description: Use Soufflé to check 递归 Datalog、DAG 可达性、传递闭包、规则关系推导; generate reproducible formal inputs, run positive and negative tests, and record exact executable proof or counterexample evidence.
 ---
 # Soufflé Formal Verification Skill

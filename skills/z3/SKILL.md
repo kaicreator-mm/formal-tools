@@ -1,5 +1,5 @@
 ---
-name: formal-z3
+name: z3
 description: Use Z3 to check 通用 SMT、约束可满足性、模型/unsat core 及第二求解器对照; generate reproducible formal inputs, run positive and negative tests, and record exact executable proof or counterexample evidence.
 ---
 # Z3 Formal Verification Skill

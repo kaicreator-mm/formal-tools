@@ -1,5 +1,5 @@
 ---
-name: formal-dafny
+name: dafny
 description: Use Dafny to check 程序级前置/后置条件、循环不变量、自动程序证明; generate reproducible formal inputs, run positive and negative tests, and record exact executable proof or counterexample evidence.
 ---
 # Dafny Formal Verification Skill

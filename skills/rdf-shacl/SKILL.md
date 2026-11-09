@@ -1,5 +1,5 @@
 ---
-name: formal-rdf-shacl
+name: rdf-shacl
 description: Use pySHACL / SHACL to check RDF 数据形状约束、必需属性、类型、数量和语义约束验证; generate reproducible formal inputs, run positive and negative tests, and record exact executable proof or counterexample evidence.
 ---
 # pySHACL / SHACL Formal Verification Skill

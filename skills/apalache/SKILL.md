@@ -1,5 +1,5 @@
 ---
-name: formal-apalache
+name: apalache
 description: Use Apalache to check TLA+ 有界符号模型检查、状态约束与 SMT 后端验证; generate reproducible formal inputs, run positive and negative tests, and record exact executable proof or counterexample evidence.
 ---
 # Apalache Formal Verification Skill

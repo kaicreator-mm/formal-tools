@@ -1,5 +1,5 @@
 ---
-name: formal-lean4
+name: lean4
 description: Use Lean 4 to check 核心定理证明、归纳不变量、算法性质的内核检查; generate reproducible formal inputs, run positive and negative tests, and record exact executable proof or counterexample evidence.
 ---
 # Lean 4 Formal Verification Skill
