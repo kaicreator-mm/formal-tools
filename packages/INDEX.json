@@ -1,0 +1,74 @@
+{
+  "schema": "formal-tools-package-index/1",
+  "drive_folder": "https://drive.google.com/drive/folders/1GqX-Dn42Xi_STaoWYoq4aRXi3le2WPHB",
+  "updated": "2026-11-09",
+  "number_of_records": 11,
+  "items": [
+    {
+      "name": "formal-toolkit-linux-x86_64",
+      "drive_id": "1a1H87Q95J0z4sU7R_ZoGnT0xXUpN5Lbi",
+      "note": "bundle folder: cvc5 Vampire Jena ProB Dafny Clingo JDK .NET",
+      "status": "RUNTIME_NOT_VERIFIED"
+    },
+    {
+      "name": "lean-4.35.0-linux.tar.zst",
+      "drive_id": "18GvtLy7qP73ubZD-xIWdxzj7pH5S3TiX",
+      "note": "Lean",
+      "status": "RUNTIME_NOT_VERIFIED"
+    },
+    {
+      "name": "alloy-6.2.0-linux-amd64.tar.gz",
+      "drive_id": "1znRRwtshOnRyc2E11_ttJWn8xUdhppGR",
+      "note": "Alloy",
+      "status": "RUNTIME_NOT_VERIFIED"
+    },
+    {
+      "name": "z3-5.3.3-x64-glibc-2.39.zip",
+      "drive_id": "1rBpMhIUhOhEYwk7Lx_y1-2Gb6jEtZF6M",
+      "note": "Z3",
+      "status": "RUNTIME_NOT_VERIFIED"
+    },
+    {
+      "name": "z3-5.3.3-all.jar",
+      "drive_id": "1QRleMCYwIf90Hi5tgrCKIBUZch9ZGcgw",
+      "note": "Z3 JVM",
+      "status": "RUNTIME_NOT_VERIFIED"
+    },
+    {
+      "name": "apalache-0.62.4.zip",
+      "drive_id": "1a89GAa52Lg_kxuR4iLlpqQgL4Nd5uYx3",
+      "note": "Apalache",
+      "status": "RUNTIME_NOT_VERIFIED"
+    },
+    {
+      "name": "tla2tools.jar",
+      "drive_id": "1k5t8eu7XCiv6yj44QNkuQ-ATmAcX6-Ck",
+      "note": "TLA+ TLC",
+      "status": "RUNTIME_NOT_VERIFIED"
+    },
+    {
+      "name": "x86_64-ubuntu-2404-souffle-2.5-Linux.deb",
+      "drive_id": "1ALymubvWXKbCfIw0ERxCL8PA7X2PqM6a",
+      "note": "Soufflé",
+      "status": "RUNTIME_NOT_VERIFIED"
+    },
+    {
+      "name": "pyshacl-0.40.2-linux-x86_64-py313-offline.zip",
+      "drive_id": "1m-TnYoxO6z4q7NcDFN1zCTisIbF9qqLL",
+      "note": "pySHACL offline Python3.13",
+      "status": "RUNTIME_NOT_VERIFIED"
+    },
+    {
+      "name": "pyshacl-0.40.2-py3-none-any.whl",
+      "drive_id": "1Y-vPy3iIXv3Do2j9EIrBcGZHx3C6lslz",
+      "note": "pySHACL wheel",
+      "status": "RUNTIME_NOT_VERIFIED"
+    },
+    {
+      "name": "shacl-1.5.0.tar.gz",
+      "drive_id": "1WJUcj0YPKFGXsg12ul6LJoy23SzEw55i",
+      "note": "SHACL",
+      "status": "RUNTIME_NOT_VERIFIED"
+    }
+  ]
+}

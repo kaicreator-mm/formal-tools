@@ -1,0 +1,123 @@
+{
+  "schema": "formal-skills-registry/1",
+  "version": "0.1.0-draft",
+  "release_status": "SOURCE_ONLY_NOT_RUNTIME_VERIFIED",
+  "drive_bundle": "https://drive.google.com/drive/folders/1a1H87Q95J0z4sU7R_ZoGnT0xXUpN5Lbi",
+  "tools": [
+    {
+      "id": "lean4",
+      "skill": "skills/lean4/SKILL.md",
+      "bundle_version": "4.35.0",
+      "source": "https://github.com/leanprover/lean-beam/blob/main/skills/lean-beam/SKILL.md",
+      "trust_level": "SOURCE_REVIEWED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "z3",
+      "skill": "skills/z3/SKILL.md",
+      "bundle_version": "5.3.3",
+      "source": "https://github.com/Z3Prover/z3/blob/master/.github/skills/README.md",
+      "trust_level": "SOURCE_REVIEWED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "tla-tlc",
+      "skill": "skills/tla-tlc/SKILL.md",
+      "bundle_version": "tla2tools.jar (version via runtime)",
+      "source": "https://github.com/younes-io/agent-skills/blob/main/skills/tla-check/SKILL.md",
+      "trust_level": "SOURCE_REVIEWED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "apalache",
+      "skill": "skills/apalache/SKILL.md",
+      "bundle_version": "0.62.4",
+      "source": "https://apalache-mc.org/",
+      "trust_level": "SOURCE_REVIEWED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "alloy",
+      "skill": "skills/alloy/SKILL.md",
+      "bundle_version": "6.2.0",
+      "source": "https://alloytools.org/",
+      "trust_level": "SOURCE_REVIEWED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "souffle",
+      "skill": "skills/souffle/SKILL.md",
+      "bundle_version": "2.5",
+      "source": "https://souffle-lang.github.io/",
+      "trust_level": "SOURCE_REVIEWED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "rdf-shacl",
+      "skill": "skills/rdf-shacl/SKILL.md",
+      "bundle_version": "pySHACL 0.40.2; SHACL 1.5.0 artifact",
+      "source": "https://github.com/RDFLib/pySHACL",
+      "trust_level": "SOURCE_REVIEWED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "cvc5",
+      "skill": "skills/cvc5/SKILL.md",
+      "bundle_version": "1.4.2",
+      "source": "https://cvc5.github.io/docs/latest/",
+      "trust_level": "SOURCE_REVIEWED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "vampire",
+      "skill": "skills/vampire/SKILL.md",
+      "bundle_version": "5.1.0",
+      "source": "https://github.com/vprover/vampire",
+      "trust_level": "SOURCE_REVIEWED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "clingo",
+      "skill": "skills/clingo/SKILL.md",
+      "bundle_version": "5.8.3",
+      "source": "https://potassco.org/clingo/",
+      "trust_level": "SOURCE_REVIEWED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "apache-jena",
+      "skill": "skills/apache-jena/SKILL.md",
+      "bundle_version": "6.2.0",
+      "source": "https://jena.apache.org/documentation/",
+      "trust_level": "SOURCE_REVIEWED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "prob",
+      "skill": "skills/prob/SKILL.md",
+      "bundle_version": "1.16.0",
+      "source": "https://prob.hhu.de/w/index.php?title=ProB_CLI",
+      "trust_level": "SOURCE_REVIEWED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "dafny",
+      "skill": "skills/dafny/SKILL.md",
+      "bundle_version": "4.11.0",
+      "source": "https://dafny.org/latest/DafnyRef/DafnyRef",
+      "trust_level": "SOURCE_REVIEWED",
+      "runtime_status": "NOT_RUN"
+    }
+  ],
+  "router": "skills/formal-tool-router/SKILL.md",
+  "chatgpt_plugin": {
+    "manifest": "plugin.json",
+    "version": "0.1.0",
+    "installation": "PENDING",
+    "runtime": "NOT_RUN"
+  },
+  "repository": "https://github.com/kaicreator-mm/formal-tools-skill",
+  "experience_log": "experience/EXPERIENCE_LOG.md",
+  "verification_protocol": "docs/VERIFICATION_PROTOCOL.md",
+  "package_directory": "https://drive.google.com/drive/folders/1GqX-Dn42Xi_STaoWYoq4aRXi3le2WPHB"
+}

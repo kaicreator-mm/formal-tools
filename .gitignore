@@ -1,0 +1,15 @@
+*.zip
+*.tar.gz
+*.tar.zst
+*.jar
+*.whl
+*.deb
+*.7z
+*.exe
+*.dll
+*.so
+*.dylib
+__pycache__/
+.venv/
+installed/
+dist/
