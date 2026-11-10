@@ -25,7 +25,15 @@ py_env() {
   export MPLCONFIGDIR="$FT_TMP/mpl"
   # shipped private libffi (debian:13 base image lacks it) + grammar cache for tree-sitter
   export LD_LIBRARY_PATH="$FT_ROOT/runtimes/python313/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-  export XDG_CACHE_HOME="$FT_ROOT/runtimes/py-cache"
+  # tree-sitter-language pack takes a lock inside its cache dir -> bundle mount is RO;
+  # copy the tiny shipped cache to a writable location per invocation
+  if [ -d "$FT_ROOT/runtimes/py-cache" ]; then
+    rm -rf "$FT_TMP/py-cache"
+    cp -a "$FT_ROOT/runtimes/py-cache" "$FT_TMP/py-cache" 2>/dev/null || true
+    export XDG_CACHE_HOME="$FT_TMP"
+  else
+    export XDG_CACHE_HOME="$FT_ROOT/runtimes/py-cache"
+  fi
   # pytensor/pymc: no system compiler in minimal runtime -> pure-python mode
   export PYTENSOR_FLAGS="${PYTENSOR_FLAGS:-cxx=,compiledir=$FT_TMP/pytensor,base_compiledir=$FT_TMP/pytensor}"
   [ -d "$FT_TMP/mpl" ] || mkdir -p "$FT_TMP/mpl"
