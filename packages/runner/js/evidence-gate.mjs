@@ -54,8 +54,11 @@ export function inspectEvidenceBundle(bundle) {
      bundle.method_sha256!==claim?.method_sha256)
     fail("source/model/method digest mismatch");
   const policy=bundle.policy;
-  if(!own(policy,["allowed_tool_ids","classification","destination","network_allowed"])||
+  if(!own(policy,["allowed_tool_ids","allowed_operations","classification","destination","network_allowed"])||
      !uniq(policy?.allowed_tool_ids)||policy?.allowed_tool_ids?.some(x=>!id(x))||
+     !isObject(policy?.allowed_operations)||
+     !Object.entries(policy.allowed_operations).every(([tool,ops])=>
+       policy.allowed_tool_ids.includes(tool)&&uniq(ops)&&ops.every(id))||
      !privacy.includes(policy?.classification)||policy?.destination!=="LOCAL"||
      policy?.network_allowed!==false)
     fail("invalid or unsafe execution policy");
@@ -86,6 +89,8 @@ export function inspectEvidenceBundle(bundle) {
        receipt.method_sha256!==bundle.method_sha256)fail("receipt source/model/method digest mismatch");
     if(!nativeIds.has(receipt.tool_id)||
        !policy?.allowed_tool_ids?.includes(receipt.tool_id))fail("unregistered or unpermitted native tool: "+receipt.tool_id);
+    else if(!policy.allowed_operations[receipt.tool_id]?.includes(receipt.operation))
+      fail("tool operation not permitted by execution policy: "+receipt.tool_id+"/"+receipt.operation);
     else{
       let operations;
       try {operations=describeNativeTool(receipt.tool_id).operations;}
