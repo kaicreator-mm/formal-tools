@@ -31,7 +31,7 @@ import { pathToFileURL } from "node:url";
  * - fail-closed: the receipt is only written when no absolute local path
  *   survives anywhere in the JSON; a leak aborts the run instead of publishing.
  */
-const WIN_PATH=/[A-Za-z]:[\\/][^\s"'`]*/g;
+const WIN_PATH=/(^|[\s"'=(])([A-Za-z]:[\\/][^\s"'`]*)/g;
 // Also cover Linux/WSL/macOS absolute paths; "https://" URLs do not match.
 const POSIX_PATH=/(^|[\s"'=(])\/(?!\/)[^\s"'`<>]+/g;
 
@@ -46,7 +46,7 @@ export function redactPath(p,keep=3){
 }
 export function redactString(s){
   return String(s)
-    .replace(WIN_PATH,m=>redactPath(m))
+    .replace(WIN_PATH,(text,prefix)=>prefix+redactPath(text.slice(prefix.length)))
     .replace(POSIX_PATH,(text,prefix)=>prefix+redactPath(text.slice(prefix.length)));
 }
 const REDACTED_KEYS=new Set(["hostname"]);
