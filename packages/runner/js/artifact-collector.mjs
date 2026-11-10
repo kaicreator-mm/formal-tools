@@ -27,7 +27,10 @@ const inside=(root,pathname)=>{
 };
 function validatePath(p){
   if(typeof p!=="string"||!p||p.includes("\0")||p.includes("\\")||
-    p.startsWith("/")||p.split("/").some(part=>!part||part==="."||part===".."))
+    p.startsWith("/")||p.includes(":")||
+    p.split("/").some(part=>!part||part==="."||part===".."||
+      /[\x00-\x1f<>"|?*]/.test(part)||/[. ]$/.test(part)||
+      /^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\..*)?$/i.test(part)))
     throw new TypeError("invalid workspace-relative artifact path");
   return p;
 }

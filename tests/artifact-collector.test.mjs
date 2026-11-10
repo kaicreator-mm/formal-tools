@@ -89,6 +89,18 @@ test("pure delta rejects malicious paths and incomplete baseline",()=>{
   assert.throws(()=>artifactDelta({status:"PARTIAL",files:[good]},[good]),/complete workspace/);
   assert.deepEqual(artifactDelta([good],[good]).items,[]);
 });
+test("artifact paths reject Windows drive, ADS and reserved-name aliases",()=>{
+  const entry={path:"good.json",bytes:1,sha256:hash("a")};
+  for(const unsafe of [
+    "C:/outside","C:outside","trace:alternate-stream","CON","NUL.txt",
+    "nested/COM1","nested/LPT9.log","nested/name.","nested/name ",
+    "nested/name?.log"
+  ]){
+    assert.throws(()=>artifactDelta([{...entry,path:unsafe}],[entry]),
+      /invalid workspace-relative artifact path/,unsafe);
+  }
+  assert.deepEqual(artifactDelta([entry],[entry]).items,[]);
+});
 test("changing only bytes does not invent proof semantics",()=>{
   const a={path:"out.json",bytes:2,sha256:hash("a")};
   const b={path:"out.json",bytes:3,sha256:hash("changed")};
