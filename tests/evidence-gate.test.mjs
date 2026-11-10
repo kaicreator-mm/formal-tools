@@ -10,7 +10,7 @@ function fixture() {
     claim:{id:"claim1",kind:"symbolic",source_sha256:source,model_sha256:model,
       method_sha256:method,required_step_ids:["step01"]},
     source_sha256:source,model_sha256:model,method_sha256:method,
-    policy:{allowed_tool_ids:["z3"],classification:"PUBLIC",destination:"LOCAL",network_allowed:false},
+    policy:{allowed_tool_ids:["z3"],allowed_operations:{z3:["solve"]},classification:"PUBLIC",destination:"LOCAL",network_allowed:false},
     receipts:[{step_id:"step01",claim_id:"claim1",tool_id:"z3",operation:"solve",
       tool_binary_sha256:"d".repeat(64),invocation_sha256:"e".repeat(64),
       output_sha256:"f".repeat(64),source_sha256:source,model_sha256:model,
@@ -116,4 +116,16 @@ test("G3 prework: no receipts remains unresolved, not proof",()=>{
   const result=inspectEvidenceBundle(b);
   assert.equal(result.status,"BLOCKED");
   assert.equal(result.claim_result,"INCONCLUSIVE");
+});
+
+test("G3 prework: approved tool identity never grants arbitrary typed operation",()=>{
+  const a=fixture();a.policy.allowed_operations={z3:["dimacs"]};
+  assert.equal(inspectEvidenceBundle(a).status,"BLOCKED");
+  assert.match(inspectEvidenceBundle(a).issues.join(" "),/operation not permitted/);
+  const b=fixture();b.policy.allowed_operations={notregistered:["solve"]};
+  assert.equal(inspectEvidenceBundle(b).status,"BLOCKED");
+  const c=fixture();c.policy.allowed_operations={z3:"solve"};
+  assert.equal(inspectEvidenceBundle(c).status,"BLOCKED");
+  const d=fixture();delete d.policy.allowed_operations;
+  assert.equal(inspectEvidenceBundle(d).status,"BLOCKED");
 });
