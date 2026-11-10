@@ -66,15 +66,11 @@ run_case() { # id phase via args_string exit_ok_list regex label
   if [ "$via" = sh ]; then
     : # command string already assembled
   else
-  # eval-split so quoted args (e.g. --prop "P>=0.1 [F done]") survive; input is our expect.sh only
-  eval "args=($args_s)" || return 2
-  local t
-  for t in ${args[@]+"${args[@]}"}; do cmd+=("$(expand_arg "$t")"); done
+    # eval-split so quoted args (e.g. --prop "P>=0.1 [F done]") survive; input is our expect.sh only
+    eval "args=($args_s)" || return 2
+    local t
+    for t in ${args[@]+"${args[@]}"}; do cmd+=("$(expand_arg "$t")"); done
   fi
-  # eval-split so quoted args (e.g. --prop "P>=0.1 [F done]") survive; input is our expect.sh only
-  eval "args=($args_s)" || return 2
-  local t
-  for t in ${args[@]+"${args[@]}"}; do cmd+=("$(expand_arg "$t")"); done
   local t0 te rc out="$FT_EV/verify-$id.$phase.log"
   t0=$(date +%s%3N)
   cd "$FT_TMP" || cd /tmp
