@@ -86,3 +86,27 @@ test("unverified external facts cannot acquire fake formal PASS",()=>{
   reg.semantics.claim_result_states=reg.semantics.claim_result_states.filter(x=>x!=="NEEDS_SOURCE");
   assert.ok(validateCapabilityRegistry(reg).issues.some(x=>x.includes("NEEDS_SOURCE")));
 });
+
+
+test("new problem capabilities and candidate tools can be added without a hardcoded 36-tool cap",()=>{
+  const reg=clone(readCapabilityRegistry());
+  reg.capabilities.push({id:"graph.flow",label:"network flow",limitations:"model completeness required",claim_scope:"FORMAL_CHECKABLE_WITH_EXPLICIT_MODEL"});
+  reg.tools.push({
+    id:"future-network-flow",origin:"candidate",priority:"C",capability_ids:["graph.flow"],
+    official_url:"https://example.org/flow-tool",distribution:"manual",
+    availability:"NOT_ASSESSED",runtime_verified:false,version:null,evidence_ref:null,
+    license_status:"REVIEW_REQUIRED",consumer_scope:"FORMAL_TOOLS_GENERIC"
+  });
+  const report=validateCapabilityRegistry(reg);
+  assert.equal(report.ok,true,JSON.stringify(report.issues));
+  assert.deepEqual(report.counts,{capabilities:24,tools:37,native_refs:13,candidates:24});
+});
+test("fail closed for malformed null capability and null tool records",()=>{
+  const base=readCapabilityRegistry();
+  const a=clone(base);
+  a.capabilities[0]=null;
+  const b=clone(base);
+  b.tools[1]=null;
+  assert.equal(validateCapabilityRegistry(a).ok,false);
+  assert.equal(validateCapabilityRegistry(b).ok,false);
+});
