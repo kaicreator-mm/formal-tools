@@ -28,7 +28,11 @@ ft_tool_build || { rc=$?; ft::log "spec build failed rc=$rc"; ft::note build_sta
 # ---- version probe (best effort) ------------------------------------------
 FT_PROBE=("${FT_PROBE[@]:-}")
 ver_out=""
-if [ "${#FT_PROBE[@]}" -gt 0 ] && [ -n "${FT_PROBE[0]:-}" ]; then
+if [ -f "$FT_TOOL_DIR/UNAVAILABLE" ]; then
+  export M_UNAVAILABLE="1"
+  export M_REASON="$(cat "$FT_TOOL_DIR/UNAVAILABLE")"
+  ver_out="(unavailable)"
+elif [ "${#FT_PROBE[@]}" -gt 0 ] && [ -n "${FT_PROBE[0]:-}" ]; then
   if [ -x "$FT_TOOL_DIR/${FT_PROBE[0]}" ]; then
     ver_out=$( cd "$FT_TOOL_DIR" && timeout 60 "./${FT_PROBE[0]}" "${FT_PROBE[@]:1}" 2>&1 | head -c 400 || true )
   else
@@ -38,6 +42,7 @@ fi
 
 # ---- ELF audit --------------------------------------------------------------
 glibc_max=""; elf_arch=""; needed_libs=""
+[ -n "${M_UNAVAILABLE:-}" ] && FT_MAIN_BIN=""
 if [ -n "${FT_MAIN_BIN:-}" ] && [ -f "$FT_OUT/$FT_MAIN_BIN" ]; then
   glibc_max=$(ft::glibc_max "$FT_OUT/$FT_MAIN_BIN")
   elf_arch=$(readelf -h "$FT_OUT/$FT_MAIN_BIN" 2>/dev/null | awk '/Machine:/{print $2}')

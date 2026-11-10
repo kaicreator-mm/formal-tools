@@ -17,6 +17,8 @@ fields = {
     "build_ts": os.environ["M_BUILD_TS"],
     "builder_image": "ft-builder:deb13",
     "target": {"os": "debian-13", "arch": "x86_64", "glibc_max": "2.41"},
+    "unavailable": os.environ.get("M_UNAVAILABLE") == "1",
+    "unavailable_reason": os.environ.get("M_REASON") or None,
 }
 meta_json = os.path.join(tool_dir, "meta.json")
 with open(meta_json, "w", encoding="utf-8") as f:
@@ -25,4 +27,5 @@ meta_sh = os.path.join(tool_dir, "meta.sh")
 with open(meta_sh, "w", encoding="utf-8") as f:
     for k in ("tool_id", "version", "kind", "main_bin", "glibc_max", "elf_arch"):
         f.write("%s=%s\n" % (k.upper(), shlex.quote(fields[k] or "")))
+    f.write("UNAVAILABLE=%s\n" % ("1" if fields["unavailable"] else "0"))
 print("meta written:", meta_json)

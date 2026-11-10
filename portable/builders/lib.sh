@@ -171,11 +171,12 @@ ft::require_env() {
 }
 
 # ft::unavailable "<reason>" — honest UNAVAILABLE exit (not a failure): no usable official
-# download channel / license gate. Reason is recorded in build events + status report.
+# download channel / license gate. Writes a marker so build-tool still emits meta.json
+# (the bundle must list every registered tool, including the not-shippable ones).
 ft::unavailable() {
   ft::note build_status UNAVAILABLE
   ft::note failure_reason "$1"
-  FT_TOOL_UNAVAILABLE=1
+  printf '%s\n' "$1" > "$FT_TOOL_DIR/UNAVAILABLE"
   ft::log "UNAVAILABLE: $1"
   exit 0
 }
