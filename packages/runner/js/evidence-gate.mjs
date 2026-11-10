@@ -59,6 +59,8 @@ export function inspectEvidenceBundle(bundle) {
      !privacy.includes(policy?.classification)||policy?.destination!=="LOCAL"||
      policy?.network_allowed!==false)
     fail("invalid or unsafe execution policy");
+  // Fail closed before dereferencing any nested untrusted policy or claim shape.
+  if(issues.length)return denied(issues);
   const receipts=Array.isArray(bundle.receipts)?bundle.receipts:[];
   if(!Array.isArray(bundle.receipts)||receipts.length>16)
     return denied([...issues,"invalid or excessive tool receipts"]);
