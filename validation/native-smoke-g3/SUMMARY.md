@@ -23,6 +23,9 @@
 - 元数据中的本地绝对路径（argv/tool_bin_dir/executable/missing/diagnostics/error 文本）折叠为**末 3 段**（`…\.venv\bin\z3.exe` 形式）；stdout/stderr 保持逐字（哈希锚定证据，不改写）。
 - **fail-closed 不变量**：写盘前全量扫描收据 JSON，任何残留盘符绝对路径 → 抛错拒写，宁可失败不发布泄漏收据。
 - 首采 v1.1 收据含 22 处主机名/绝对路径字符串（公开仓库隐私暴露，P1），已由 v1.2 重采替换；z3 判定与 stdout SHA-256 与首采逐项一致（同一二进制同输出，证据等价）。
+- **独立复核发现的历史风险（尚未消除）：** 旧提交 `2effef8775d6946bf1ccd3153291121de4562c62` 仍能通过 GitHub 完整 SHA 读取早期 v1.1 JSON（真实 hostname + 本地绝对路径）；新的分支 HEAD / Git 对象重新提交 **不能** 保证 GitHub 已删除旧对象或其他引用/缓存。必须由 Owner 决定既有公开披露的保留/通知/处置并向 GitHub 管理渠道确认实际清理证据；本 PR 不改写其他分支的历史，不宣称完成隐私擦除。
+- **本次独立修复：** 新生成器还检测 POSIX/Linux/WSL/macOS 绝对路径，同时 Windows 路径识别不会截断 `https://` URL；stdout/stderr 中含本地绝对路径仍 fail-closed 拒绝公开写盘。已提交跨平台隐私回归测试。历史 v1.2 收据本身未改动。
+- **输入字节匹配说明：** Windows 本地 `core.autocrlf` 造成 `positive.smt2` 与 `negative.smt2` 工作树内容为 CRLF；分别以 Git blob LF 文本转换 CRLF 后重算 SHA-256，匹配 v1.2 收据中的 `ad656e3f...` 与 `137366ea...`。原始 Git blob LF SHA 不相同；该区分不意味着源模型被独立语义证明。
 
 ## HOST_IDENTITY
 
