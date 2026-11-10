@@ -97,9 +97,63 @@
     "source": "packages/runner/js/sdk.mjs",
     "interface": "ToolInvocation / ToolExecutionResult",
     "schema": "registry/TOOL_EXECUTION_RESULT.schema.json",
-    "maturity": "EXPERIMENTAL_SOURCE_ONLY_NODE_NOT_RUN",
+    "maturity": "EXPERIMENTAL_STAGED_SOURCE_READY_RUNTIME_CURRENT_SHA_PENDING",
     "native_raw_command": false,
     "mcp_raw_command": false,
-    "execution_environment": "TRUSTED_NODE_HOST"
+    "execution_environment": "TRUSTED_NODE_HOST",
+    "staged_api": "invokeStagedTool",
+    "staged_input_support": "EXPLICIT_RELATIVE_FILES_ONLY",
+    "artifact_inventory": "SHA256_NEW_OR_MODIFIED_FILES"
+  },
+  "historical_baseline": {
+    "interface_registry_version": "0.4.0-r4",
+    "package_version": "0.3.0",
+    "historical_status": "JS_PLANNING_TESTED_NODE_NATIVE_MCP_NOT_RUN",
+    "note": "The legacy status fields are source-era values; current runtime acceptance is SHA-scoped in r1_acceptance"
+  },
+  "r1_acceptance": {
+    "pr9": {
+      "source_head": "fc8899a6b3fc69636fffdfbd17fc74f8b4fb63e4",
+      "main_merge_sha": "41925288dd5b777d49c4e442d9731581895cb037",
+      "windows_node": {
+        "passed": 51,
+        "skipped": 1,
+        "failed": 0
+      },
+      "linux_woodpecker_node": {
+        "passed": 52,
+        "skipped": 0,
+        "failed": 0,
+        "builds": [
+          9,
+          10
+        ]
+      },
+      "typecheck": "PASS",
+      "mcp_stdio": {
+        "tools": 9,
+        "checks_passed": 13,
+        "checks_total": 13
+      },
+      "native_engine_host": {
+        "installed_proven": 0,
+        "total": 13,
+        "native_fixture_outcome": "26/26 INCONCLUSIVE"
+      },
+      "evidence": "validation/local-runtime-receipts/R1_LOCAL_RUNTIME_ACCEPTANCE.json"
+    },
+    "pr10": {
+      "scope": "staged tool execution, generated artifact scan, OS/version matrix",
+      "status": "SOURCE_INTEGRATED_NEW_HEAD_NODE_TYPECHECK_CI_PENDING",
+      "audit": "validation/R1_SDK_INTEGRATION_SOURCE_AUDIT.json"
+    }
+  },
+  "tool_artifacts": {
+    "input_staging": "packages/runner/js/tool-workspace.mjs",
+    "scanner": "packages/runner/js/artifact-collector.mjs",
+    "compatibility": "packages/runner/js/compatibility-matrix.mjs",
+    "schema": "registry/GENERATED_ARTIFACTS.schema.json",
+    "compatibility_schema": "registry/TOOL_COMPATIBILITY_MATRIX.schema.json",
+    "native_runtime_status": "NOT_VERIFIED_ON_PR10"
   }
 }

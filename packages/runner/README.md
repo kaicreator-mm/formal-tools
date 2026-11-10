@@ -40,3 +40,12 @@ New MCP interfaces `describe_native_cli` and `plan_native_cli` **return metadata
 - This experimental SDK is currently **source-only**. There is no stable npm export promise until Node/TS/native host acceptance and packaging review. Callers must prepare existing working directories and understand upstream tools may write beside input files; no general model dependency copy or artifact collection is claimed yet.
 
 [Tool Manager guide](../../docs/TOOL_MANAGER.md) · [Experimental SDK contract](../../docs/TOOL_SDK.md) · [R1 development plan](../../docs/implementation/r1/DEVELOPMENT_PLAN.md)
+
+## Internal monorepo SDK export (experimental)
+
+From a workspace that installs the root npm workspaces, other modules may use
+`import {listTools, whereTool, invokeTool, invokeStagedTool} from "@formal-tools/runner"`.
+The explicit package export maps to `js/sdk.mjs` and `js/sdk.d.mts`; the existing
+`formal-tools` CLI bin is unchanged. `private: true` stays in place: this is **not**
+an npm public release or a promise of stable package semver. A trusted host is still
+required for actual native execution, and consumers own their inputs and domain semantics.

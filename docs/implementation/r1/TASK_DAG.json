@@ -3,7 +3,7 @@
   "source_main": "5bd8a552c61218d56408de12bb832a5b39f568a2",
   "product": "kaicreator-mm/formal-tools",
   "plan": "docs/implementation/r1/DEVELOPMENT_PLAN.md",
-  "status": "D01_D05_SOURCE_DONE_D06_D07_PARTIAL_PENDING_NODE_NATIVE",
+  "status": "ISSUE7_MAIN_5_PR10_SOURCE_PROGRESS_CI_P1_REMAINS",
   "scope": "TOOL_MAINTENANCE_ONLY",
   "tasks": [
     {
@@ -75,9 +75,9 @@
       "gate": "G2",
       "priority": "P0",
       "status": "SOURCE_PARTIAL",
-      "source_status": "SOURCE_IMPLEMENTED_EXPERIMENTAL",
-      "runtime_status": "NOT_RUN",
-      "remaining": "Sandboxed execution of arbitrary native input dependencies; generated output artifacts, resource guards, real Node tests"
+      "source_status": "WORKSPACE_AND_ARTIFACT_INTEGRATION_SOURCE_READY",
+      "runtime_status": "NOT_RUN_ON_CURRENT_HEAD",
+      "remaining": "Node/TypeScript tests of staged SDK, host resource budgets, real engine artifact evidence"
     },
     {
       "id": "D07",
@@ -89,52 +89,55 @@
       "gate": "G2",
       "priority": "P1",
       "status": "SOURCE_PARTIAL",
-      "source_status": "SOURCE_IMPLEMENTED_EXPERIMENTAL",
-      "runtime_status": "NOT_RUN",
-      "remaining": "SDK packaging/export stability, CLI/MCP interoperability and host runtime validation"
+      "source_status": "INVOKE_STAGED_TOOL_EXPERIMENTAL_SOURCE_READY",
+      "runtime_status": "NOT_RUN_ON_CURRENT_HEAD",
+      "remaining": "staged SDK/CLI/MCP host acceptance, stable npm export strategy and versioning"
     },
     {
       "id": "D08",
-      "title": "官方模拟与模型检查命令能力维护",
+      "title": "通用 CLI/MCP/SDK 能力与权限对等性",
       "depends_on": [
         "D06",
         "D07"
       ],
       "gate": "G2",
       "priority": "P1",
-      "status": "PLANNED",
-      "source_status": "NOT_STARTED",
-      "runtime_status": "NOT_RUN"
+      "status": "SOURCE_PARTIAL",
+      "source_status": "PARITY_SOURCE_TEST_ADDED",
+      "runtime_status": "NOT_RUN_ON_CURRENT_HEAD",
+      "remaining": "Final exact-SHA Node/TypeScript CI, public/permission contract smoke"
     },
     {
       "id": "D09",
-      "title": "多平台与版本兼容矩阵",
+      "title": "多平台/上游工具版本与 Exact-SHA 兼容清单",
       "depends_on": [
         "D06",
         "D07"
       ],
       "gate": "G3",
       "priority": "P1",
-      "status": "PLANNED",
-      "source_status": "NOT_STARTED",
-      "runtime_status": "NOT_RUN"
+      "status": "SOURCE_PARTIAL",
+      "source_status": "MULTI_OS_COMPATIBILITY_REPORT_SOURCE_READY",
+      "runtime_status": "NOT_RUN",
+      "remaining": "Real upstream engine versions across representative OS still unverified (Issue #4); historical Windows exact-SHA observations imported as D11 source"
     },
     {
       "id": "D10",
-      "title": "Woodpecker 实际运行与收据",
+      "title": "Woodpecker Node+TypeScript 实际质量门禁",
       "depends_on": [
         "D08",
         "D09"
       ],
       "gate": "G3",
       "priority": "P1",
-      "status": "PLANNED",
-      "source_status": "NOT_STARTED",
-      "runtime_status": "NOT_RUN"
+      "status": "SOURCE_PARTIAL",
+      "source_status": "TYPECHECK_GATE_ADDED",
+      "runtime_status": "PR10_BUILDS_23_24_FAILED_LATEST_SHA_CI_PENDING",
+      "remaining": "Diagnose exact failed Woodpecker command from private host logs, repair same PR, obtain final exact-SHA Node+TS+CI SUCCESS"
     },
     {
       "id": "D11",
-      "title": "外部工具 API 冒烟/文档",
+      "title": "真实 CI 收据与工具兼容性证据收口",
       "depends_on": [
         "D07",
         "D08",
@@ -142,25 +145,67 @@
       ],
       "gate": "G4",
       "priority": "P2",
-      "status": "PLANNED",
-      "source_status": "NOT_STARTED",
-      "runtime_status": "NOT_RUN"
+      "status": "SOURCE_PARTIAL",
+      "source_status": "ACTUAL_HISTORICAL_HOST_OBSERVATIONS_IMPORTED",
+      "runtime_status": "SOURCE_AUDIT_ONLY_FINAL_CI_PENDING",
+      "remaining": "Final-HEAD Node/TypeScript/Woodpecker and actual installed-tool/version evidence; 13 historic observations remain STALE_SHA on PR #10",
+      "evidence_path": "validation/r1/windows-host-observations.json",
+      "source_blob": "e2b2021d2afea6d14ff8837a4827a4aef27759db"
     },
     {
       "id": "D12",
-      "title": "版本升级和 Release 资格",
+      "title": "至少一个外部消费者的通用工具接口冒烟",
       "depends_on": [
         "D10",
         "D11"
       ],
       "gate": "G4",
       "priority": "P2",
-      "status": "PLANNED",
-      "source_status": "NOT_STARTED",
-      "runtime_status": "NOT_RUN"
+      "status": "SOURCE_PARTIAL",
+      "source_status": "REAL_EXTERNAL_REPO_SMOKE_SCRIPT_IN_PR263",
+      "runtime_status": "EXTERNAL_HOST_SMOKE_NOT_RUN",
+      "remaining": "Execute on real external checkout against formal-tools final exact SHA and preserve receipt; no business model or production Z3 adapter changes",
+      "external_pr": "https://github.com/kaicreator-mm/domain-simulator/pull/263",
+      "external_head": "c195767689ff1d524765934c52ee9a2eb43b34c5"
     }
   ],
   "receipt": "validation/R1_TOOL_MANAGER_SOURCE_AUDIT.json",
   "last_prospective_tree": "08848a2b57cf3f9a0d7a6c1977bfee16ce3f0501",
-  "sdk_receipt": "validation/R1_SDK_SOURCE_AUDIT.json"
+  "sdk_receipt": "validation/R1_SDK_SOURCE_AUDIT.json",
+  "integration_note": "PR #9 merged main@41925288dd5b777d49c4e442d9731581895cb037. PR #10 rebases via two-parent merge commit, adds staged-tool SDK and technical artifact inventory. New final SHA needs CI/Node verification.",
+  "product_scope_authority": "https://github.com/kaicreator-mm/formal-tools/issues/7",
+  "delivery_decision": "R1_TOOL_INFRASTRUCTURE_ONLY_FUTURE_METHOD_ENGINEERING_SEPARATE_PRODUCT",
+  "revision": "Issue #7 scope correction 2026-11-10",
+  "current_gate": {
+    "blocking_pr": 10,
+    "previous_failed_head": "30b4313cb3f0755f6a25c8b673ad96e4ec981a0b",
+    "previous_failed_builds": [
+      23,
+      24
+    ],
+    "new_source_head": "ce33235b4529f5fc39a3e3d6b2019e2298664866",
+    "source_acceptance": "PENDING",
+    "native_engine_blocking_for_source_merge": false
+  },
+  "progress_evidence": {
+    "integrated_main": [
+      "D01",
+      "D02",
+      "D03",
+      "D04",
+      "D05"
+    ],
+    "in_progress": [
+      "D06",
+      "D07",
+      "D08",
+      "D09",
+      "D10",
+      "D11",
+      "D12"
+    ],
+    "node_ts_final_exact_sha": "PENDING",
+    "external_consumer_host": "NOT_RUN",
+    "native_13_engine_host": "NOT_RUN_ISSUE_4"
+  }
 }

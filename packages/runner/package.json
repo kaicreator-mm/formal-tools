@@ -5,5 +5,16 @@
   "private": true,
   "bin": {
     "formal-tools": "./js/cli.mjs"
+  },
+  "exports": {
+    ".": {
+      "types": "./js/sdk.d.mts",
+      "default": "./js/sdk.mjs"
+    },
+    "./sdk": {
+      "types": "./js/sdk.d.mts",
+      "default": "./js/sdk.mjs"
+    },
+    "./package.json": "./package.json"
   }
 }

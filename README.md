@@ -38,7 +38,7 @@ MCP uses `@modelcontextprotocol/server` v2 + Zod 4; not the v1 `@modelcontextpro
 
 ## Verification truthfulness
 
-Pure JS finite-model algorithms executed in this conversation's restricted JS runtime (1,705/1,705 deterministic and independent-reference checks); the saved source is scheduled for an exact Git readback run. Node CLI, native binary adapters, MCP transport and Woodpecker execution remain **NOT_RUN**, pending a Node host. None of these checks independently certifies ADS, DKE or DIS natural-language requirements. Do not infer universal proof from bounded models.
+Pure JS finite-model algorithms executed in this conversation's restricted JS runtime (1,705/1,705 deterministic and independent-reference checks); the saved source is scheduled for an exact Git readback run. 上述数字属于较早的 R3 源代码与有限模型检查记录；R1 的 Node、MCP 和 Woodpecker 已有独立的 Exact-SHA 运行证据，详见下方 R1 进展。13 个官方工具的实际安装与运行验收须按各自宿主及 SHA 单独判断。 None of these checks independently certifies ADS, DKE or DIS natural-language requirements. Do not infer universal proof from bounded models.
 
 [Verification protocol](docs/VERIFICATION_PROTOCOL.md) · [CLI/MCP contract](docs/CLI_MCP_CONTRACT.md) · [Tool guides](docs/TOOL_GUIDES.md) · [Experience](experience/EXPERIENCE_LOG.md)
 
@@ -55,7 +55,7 @@ node packages/runner/js/cli.mjs exec cvc5 solve --input model.smt2 --models
 node packages/runner/js/cli.mjs native lean4 --entry lake -- build
 ```
 
-See [13-tool operations matrix](docs/NATIVE_CLI_COVERAGE.md) and [local acceptance handoff](validation/LOCAL_NATIVE_ACCEPTANCE.md). MCP can describe and plan these operations, but **does not expose raw native execution**. The assistant performed source-level command-planning validation; native CLI, Node host and MCP protocol runtime acceptance remain open.
+See [13-tool operations matrix](docs/NATIVE_CLI_COVERAGE.md) and [local acceptance handoff](validation/LOCAL_NATIVE_ACCEPTANCE.md). MCP can describe and plan these operations, but **does not expose raw native execution**. 旧的 R4 静态规划记录已经由后续主机测试补充，但每条收据只适用于实际执行的 Git SHA。最新安装环境是否具备 13 个官方工具，仍以对应主机的真实版本探测为准。
 
 ## R1 工具管理开发线
 
@@ -76,3 +76,12 @@ node packages/runner/js/cli.mjs doctor-all --probe --timeout 12
 `packages/runner/js/sdk.mjs` 提供 `listTools`、`toolDetails`、`planTool`、`whereTool`、`whereAll`、`invokeTool`。它仅包装**工具本身**的技术状态，不判断业务性质。CLI 新增 `invoke TOOL OP --option value`，返回一致的机器可读 `ToolExecutionResult`；原来的 `exec` 原样保留避免破坏兼容性。
 
 [SDK 开发文档](docs/TOOL_SDK.md)。本接口尚须 Node/TypeScript/原生运行验收；MCP 仍不开放任意执行。
+
+## R1 工具层集成进展（以 Git Exact-SHA 为准）
+
+- **PR #9 已合并 main**：工具注册表、环境诊断、CLI/MCP 只读安装检测、实验性类型化 SDK。PR #9 源码 HEAD `fc8899a6b3fc69636fffdfbd17fc74f8b4fb63e4` 上，Windows Node/TypeScript/MCP 基础验收通过；Woodpecker Linux Build #9/#10 真实通过，Node **52/52 PASS**。
+- **PR #10 集成开发中**：增加 `invokeStagedTool`，为已登记的类型化操作将调用方指定输入复制到独立临时目录，执行后扫描新增/修改文件并返回 SHA-256 元数据。见 [分阶段暂存 SDK](docs/TOOL_STAGED_SDK.md) 和 [集成审查](docs/implementation/r1/INTEGRATION_REVIEW.md)。
+- **运行事实边界**：PR #9 验收时的 Windows 主机未安装完整的 13 个官方原生工具，因此 13 个版本验证未完成、26 项正反例未得到原生工具的有效结论；PR #10 最新源码的新增 Node/TypeScript/CI 仍须重新验收。
+- **产品边界**：这些接口仅维护工具调用与原生产物。业务模型、工具选择、领域模拟、验收决策由调用项目负责。
+
+`packages/runner` 已提供 `formal-tools` 命令入口；在确立稳定 SDK 发布与依赖兼容前，根包和 MCP 的历史 `formal-tools-skill` 标识暂保留以避免破坏现有客户端。

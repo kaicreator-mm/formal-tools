@@ -38,3 +38,8 @@ console.log(result.tool_status, result.process.status, result.streams.stdout.tex
 ## Next
 
 后续 D06 补上运行工作区与生成文件的可靠收集、退出码适配、多平台覆盖；D07 在实际宿主验收之后确定稳定的 npm export/version 策略。当前根 package 名与 MCP identity 不贸然破坏性重命名。
+
+
+## Staged SDK integration
+
+See [Experimental staged native tool SDK](TOOL_STAGED_SDK.md). `invokeStagedTool` stages explicitly selected input files into a private directory and records generated artifact metadata; unlike the original `invokeTool`, it does not use input files directly from the caller's project working tree. No OS-level sandbox or automatic dependency discovery is claimed.

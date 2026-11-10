@@ -157,15 +157,116 @@
       ],
       "properties": {
         "status": {
-          "const": "NOT_COLLECTED"
+          "enum": [
+            "NOT_COLLECTED",
+            "COMPLETE",
+            "PARTIAL"
+          ]
         },
         "items": {
-          "type": "array"
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "bytes",
+              "sha256"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "bytes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          }
+        },
+        "skipped": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "path",
+              "reason"
+            ],
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "schema": {
+          "type": "string"
+        },
+        "unchanged": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "scannedFiles": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "hashedBytes": {
+          "type": "integer",
+          "minimum": 0
         }
       }
     },
     "scope": {
       "const": "UPSTREAM_TOOL_TECHNICAL_RESULT_ONLY"
+    },
+    "staging": {
+      "type": "object",
+      "required": [
+        "status",
+        "inputs",
+        "totalBytes"
+      ],
+      "properties": {
+        "status": {
+          "const": "STAGED_IN_PRIVATE_WORKSPACE"
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "path",
+              "bytes",
+              "sha256"
+            ],
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "bytes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          }
+        },
+        "totalBytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
     }
   }
 }

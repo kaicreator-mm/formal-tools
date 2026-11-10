@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kaicreator-mm/formal-tools/blob/main/registry/TOOL_COMPATIBILITY_MATRIX.schema.json",
+  "title": "formal-tools technical capability and source-scoped host observations",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "target_git_head",
+    "status",
+    "tool_count",
+    "typed_operation_count",
+    "counts",
+    "observation_counts",
+    "tools",
+    "caution"
+  ],
+  "properties": {
+    "schema": {
+      "const": "formal-tools/tool-compatibility-matrix/1"
+    },
+    "target_git_head": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "status": {
+      "const": "SOURCE_CATALOG_WITH_UNREVIEWED_HOST_OBSERVATIONS"
+    },
+    "tool_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "typed_operation_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "counts": {
+      "type": "object",
+      "required": [
+        "NOT_RUN",
+        "STALE_SHA",
+        "REPORTED_UNREVIEWED"
+      ],
+      "properties": {
+        "NOT_RUN": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "STALE_SHA": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "REPORTED_UNREVIEWED": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "observation_counts": {
+      "type": "object",
+      "required": [
+        "STALE_SHA",
+        "REPORTED_UNREVIEWED"
+      ],
+      "properties": {
+        "STALE_SHA": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "REPORTED_UNREVIEWED": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "observation_status",
+          "observations",
+          "typed_operation_count",
+          "entrypoints"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "official_documentation": {
+            "type": "string"
+          },
+          "entrypoints": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "typed_operation_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "observation_status": {
+            "enum": [
+              "NOT_RUN",
+              "STALE_SHA",
+              "REPORTED_UNREVIEWED"
+            ]
+          },
+          "observations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "observation_status",
+                "git_head",
+                "platform",
+                "arch",
+                "declared_run_status"
+              ],
+              "properties": {
+                "observation_status": {
+                  "enum": [
+                    "STALE_SHA",
+                    "REPORTED_UNREVIEWED"
+                  ]
+                },
+                "git_head": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{40}$"
+                },
+                "platform": {
+                  "type": "string"
+                },
+                "arch": {
+                  "type": "string"
+                },
+                "tool_version": {
+                  "type": "string"
+                },
+                "evidence_sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "declared_run_status": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "reported": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "caution": {
+      "type": "string"
+    }
+  }
+}

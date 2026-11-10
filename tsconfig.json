@@ -15,6 +15,7 @@
   "include": [
     "packages/core/src/**/*.mjs",
     "packages/runner/js/**/*.mjs",
-    "tests/**/*.mjs"
+    "tests/**/*.mjs",
+    "packages/runner/js/**/*.d.mts"
   ]
 }

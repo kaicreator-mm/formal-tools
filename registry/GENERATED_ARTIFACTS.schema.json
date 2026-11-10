@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kaicreator-mm/formal-tools/blob/main/registry/GENERATED_ARTIFACTS.schema.json",
+  "title": "Formal tools: generated artifact delta",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "status",
+    "items",
+    "unchanged",
+    "skipped",
+    "scannedFiles",
+    "hashedBytes"
+  ],
+  "properties": {
+    "schema": {
+      "const": "formal-tools/generated-artifacts/1"
+    },
+    "status": {
+      "enum": [
+        "COMPLETE",
+        "PARTIAL"
+      ]
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "bytes",
+          "sha256"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      }
+    },
+    "unchanged": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "scannedFiles": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "hashedBytes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "skipped": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "reason"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

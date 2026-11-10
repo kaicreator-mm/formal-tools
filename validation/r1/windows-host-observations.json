@@ -1,0 +1,109 @@
+{
+  "schema": "formal-tools/host-observations/1",
+  "observations": [
+    {
+      "tool_id": "lean4",
+      "git_head": "61bf9e29ba519d02849cad8fe6fdb421fc3f1fed",
+      "platform": "win32",
+      "arch": "x64",
+      "run_status": "NOT_RUN"
+    },
+    {
+      "tool_id": "z3",
+      "git_head": "61bf9e29ba519d02849cad8fe6fdb421fc3f1fed",
+      "platform": "win32",
+      "arch": "x64",
+      "run_status": "NOT_RUN"
+    },
+    {
+      "tool_id": "cvc5",
+      "git_head": "61bf9e29ba519d02849cad8fe6fdb421fc3f1fed",
+      "platform": "win32",
+      "arch": "x64",
+      "run_status": "NOT_RUN"
+    },
+    {
+      "tool_id": "tla-tlc",
+      "git_head": "61bf9e29ba519d02849cad8fe6fdb421fc3f1fed",
+      "platform": "win32",
+      "arch": "x64",
+      "run_status": "NOT_RUN"
+    },
+    {
+      "tool_id": "apalache",
+      "git_head": "61bf9e29ba519d02849cad8fe6fdb421fc3f1fed",
+      "platform": "win32",
+      "arch": "x64",
+      "run_status": "NOT_RUN"
+    },
+    {
+      "tool_id": "alloy",
+      "git_head": "61bf9e29ba519d02849cad8fe6fdb421fc3f1fed",
+      "platform": "win32",
+      "arch": "x64",
+      "run_status": "NOT_RUN"
+    },
+    {
+      "tool_id": "souffle",
+      "git_head": "61bf9e29ba519d02849cad8fe6fdb421fc3f1fed",
+      "platform": "win32",
+      "arch": "x64",
+      "run_status": "NOT_RUN"
+    },
+    {
+      "tool_id": "rdf-shacl",
+      "git_head": "61bf9e29ba519d02849cad8fe6fdb421fc3f1fed",
+      "platform": "win32",
+      "arch": "x64",
+      "run_status": "EXECUTED"
+    },
+    {
+      "tool_id": "vampire",
+      "git_head": "61bf9e29ba519d02849cad8fe6fdb421fc3f1fed",
+      "platform": "win32",
+      "arch": "x64",
+      "run_status": "NOT_RUN"
+    },
+    {
+      "tool_id": "clingo",
+      "git_head": "61bf9e29ba519d02849cad8fe6fdb421fc3f1fed",
+      "platform": "win32",
+      "arch": "x64",
+      "run_status": "EXECUTED"
+    },
+    {
+      "tool_id": "apache-jena",
+      "git_head": "61bf9e29ba519d02849cad8fe6fdb421fc3f1fed",
+      "platform": "win32",
+      "arch": "x64",
+      "run_status": "NOT_RUN"
+    },
+    {
+      "tool_id": "prob",
+      "git_head": "61bf9e29ba519d02849cad8fe6fdb421fc3f1fed",
+      "platform": "win32",
+      "arch": "x64",
+      "run_status": "NOT_RUN"
+    },
+    {
+      "tool_id": "dafny",
+      "git_head": "61bf9e29ba519d02849cad8fe6fdb421fc3f1fed",
+      "platform": "win32",
+      "arch": "x64",
+      "run_status": "NOT_RUN"
+    }
+  ],
+  "provenance": {
+    "source_repository": "kaicreator-mm/formal-tools",
+    "source_path": "validation/local-runtime-receipts/native-acceptance.json",
+    "source_blob_sha": "e2b2021d2afea6d14ff8837a4827a4aef27759db",
+    "run_code_exact_sha": "61bf9e29ba519d02849cad8fe6fdb421fc3f1fed",
+    "host_os": "win32",
+    "host_arch": "x64",
+    "run_at": "2026-11-10T04:32:25.765Z",
+    "tool_versions_verified": 0,
+    "fixture_positive_negative_total": 26,
+    "fixture_conclusive": 0,
+    "note": "11 native versions NOT_RUN; 2 Python interpreters EXECUTED but required modules absent. These are host technical observations, not solver verification."
+  }
+}
