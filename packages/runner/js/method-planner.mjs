@@ -70,7 +70,7 @@ export function validateProblemSpec(problem) {
        x.requirement_ids.some(y=>!reference(y,reqIds))||
        !Array.isArray(x?.source_refs)||!unique(x.source_refs)||x.source_refs.some(y=>!reference(y,sourceIds))||
        !Array.isArray(x?.capability_ids)||!unique(x.capability_ids)||
-       x.capability_ids.some(y=>!knownCaps.has(y)||!caps?.includes(y)))
+       x.capability_ids.some(y=>!knownCaps.has(y)||!Array.isArray(caps)||!caps.includes(y)))
       {fail("invalid claim/anchors/capability mappings");continue;}
     if(claimIds.has(x.id))fail("duplicate claim "+x.id);
     claimIds.add(x.id);
@@ -229,7 +229,12 @@ export async function proposeMethod(problem, generate) {
   const wanted=new Set(problem.capability_ids);
   const options=catalog.tools.filter(t=>t.capability_ids.some(c=>wanted.has(c)))
     .map(t=>({id:t.id,origin:t.origin,capability_ids:t.capability_ids.filter(c=>wanted.has(c)),
-              availability:t.availability,operation_policy:"native-typed-allowlist-or-candidate-UNRESOLVED"}));
+              availability:t.availability,operation_policy:"native-typed-allowlist-or-candidate-UNRESOLVED",
+              allowed_operations:t.origin==="native-ref"
+                ? Object.keys(describeNativeTool(t.id).operations)
+                   .filter(op=>problem.policy.allowed_tools.includes(t.id)
+                     && (problem.policy.allowed_operations[t.id]??[]).includes(op))
+                : ["UNRESOLVED"]}));
   const prompt={mode:"UNTRUSTED_PROPOSAL_ONLY",problem:structuredClone(problem),
                 candidates:options,max_steps:problem.budget.max_steps,
                 warning:"No execution authority. Do not invent claim verification, model equivalence or tool receipts."};
