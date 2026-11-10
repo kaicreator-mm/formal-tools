@@ -108,6 +108,7 @@ export function validateProblemSpec(problem) {
 export function assessMethod(problem, method) {
   const pre=validateProblemSpec(problem);
   const issues=[...pre.errors];
+  if(!pre.ok)return {status:"REJECTED",issues,tool_execution:"NOT_RUN",executable:false,solution_promotable:false};
   const fail = message => issues.push(message);
   if(!isObject(method))return {status:"REJECTED",issues:[...issues,"Method must be an object"],executable:false,claim_result:"INCONCLUSIVE"};
   if(!hasOnly(method,["schema","method_id","problem_id","goal_claim_ids","steps","oracle_ids","semantic_review"]))
@@ -147,6 +148,8 @@ export function assessMethod(problem, method) {
       fail("bad dependencies: "+s.id);
     if(!Array.isArray(s.source_refs)||!unique(s.source_refs)||s.source_refs.some(x=>!reference(x,new Set(sourceMap.keys()))))
       fail("unknown source dependencies: "+s.id);
+    if(Array.isArray(s.source_refs)&&Array.isArray(s.depends_on)&&!s.source_refs.length&&!s.depends_on.length)
+      fail("isolated tool step has no source or dependency lineage: "+s.id);
     if(!finiteInt(s.estimated_cost_units,0,100000)||!finiteInt(s.timeout_ms,1,600000))
       fail("unbounded per-step cost/time: "+s.id);
     else {cost+=s.estimated_cost_units;totalTime+=s.timeout_ms;}
@@ -214,6 +217,14 @@ export async function proposeMethod(problem, generate) {
   const checked=validateProblemSpec(problem);
   if(!checked.ok)return {status:"REJECTED",issues:checked.errors,tool_execution:"NOT_RUN",executable:false,solution_promotable:false};
   if(typeof generate!=="function")throw new TypeError("generate must be an injected LLM proposal callback");
+  // No provider trust/egress proof exists in G2. Fail closed before calling a
+  // potentially remote callback with USER_PRIVATE or RESTRICTED material.
+  if(problem.source_refs.some(x=>x.classification!=="PUBLIC"))
+    return {status:"BLOCKED_BY_POLICY",issues:["G2 LLM provider boundary is unverified for non-public sources"],
+      tool_execution:"NOT_RUN",executable:false,solution_promotable:false};
+  if(problem.claims.every(x=>x.kind==="external_fact"||x.kind==="not_formalizable"))
+    return {status:"NEEDS_SOURCE",issues:["No checkable claim; require external factual sources or other evaluation"],
+      claim_result:"NEEDS_SOURCE",tool_execution:"NOT_RUN",executable:false,solution_promotable:false};
   const catalog=readCapabilityRegistry();
   const wanted=new Set(problem.capability_ids);
   const options=catalog.tools.filter(t=>t.capability_ids.some(c=>wanted.has(c)))
