@@ -28,7 +28,8 @@ W="$FT_TMP/kani-home"; mkdir -p "$W/.kani" 2>/dev/null || true
 export HOME="$W"
 if [ -d "$1" ] && [ -f "$1/Cargo.toml" ]; then
   rm -rf "$FT_TMP/crate"; cp -r "$1" "$FT_TMP/crate" || exit 3
-  INPUT="$FT_TMP/crate"; shift
+  INPUT="$FT_TMP/crate/src/main.rs"; [ -f "$INPUT" ] || INPUT="$FT_TMP/crate"
+  shift
   exec "$TOOL_DIR/bin/kani-driver" "$@" "$INPUT"
 fi
 exec "$TOOL_DIR/bin/kani-driver" "$@"'
