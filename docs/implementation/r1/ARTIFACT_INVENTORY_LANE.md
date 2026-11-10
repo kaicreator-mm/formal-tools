@@ -42,3 +42,7 @@ Exports:
 `node --test tests/artifact-collector.test.mjs` runs temporary-workspace tests: hash correctness, new/modified/unchanged outputs, file/byte/depth caps, symlink behavior (skipped on Windows systems without link permission), root symlink rejection and path validation.
 
 **CI/native state**: authoring an executable test file does not mean it ran. Restricted-JS unit checks apply only to the pure `artifactDelta` function; Node filesystem tests and integration with 13 native tools remain `NOT_RUN` until independently executed at the PR's exact HEAD.
+
+## Safe input staging primitive
+
+`packages/runner/js/tool-workspace.mjs` adds `validateInputManifest` and `prepareToolWorkspace`: copy explicit regular input files from a caller-chosen trusted root into a fresh owned working directory, with checked source-relative paths, Windows reserved/case-folded aliases and byte limits. Result includes a `cleanup()` callback. The caller must always call cleanup after artifact collection; this is a trusted-host helper, not a sandbox for malicious/native code. It is deliberately **not** integrated into the SDK until PR #9's Writer completes.
