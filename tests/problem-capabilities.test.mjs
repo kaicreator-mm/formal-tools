@@ -52,6 +52,7 @@ test("reject unknown capability and malformed input, no natural-language halluci
   assert.throws(()=>discoverTools(["this-is-not-a-capability"]),RangeError);
   assert.throws(()=>discoverTools([""]),TypeError);
   assert.throws(()=>discoverTools([]),TypeError);
+  // @ts-expect-error — deliberate wrong-type negative test: non-boolean option must still throw TypeError at runtime
   assert.throws(()=>discoverTools(["logic.smt"],{includeCandidates:"true"}),TypeError);
 });
 test("tampered native tool list fail closed before execution",()=>{
