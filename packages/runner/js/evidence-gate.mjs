@@ -45,7 +45,8 @@ export function inspectEvidenceBundle(bundle) {
   if(!own(claim,["id","kind","source_sha256","model_sha256","method_sha256","required_step_ids"])||
      !id(claim?.id)||!kinds.has(claim?.kind)||!sha(claim?.source_sha256)||
      !sha(claim?.model_sha256)||!sha(claim?.method_sha256)||
-     !uniq(claim?.required_step_ids)||!claim?.required_step_ids?.length||
+     !Array.isArray(claim?.required_step_ids)||claim.required_step_ids.length>16||
+     !uniq(claim.required_step_ids)||!claim.required_step_ids.length||
      claim?.required_step_ids?.some(step=>!id(step)))
     fail("invalid or empty atomic claim anchor");
   if(!sha(bundle.source_sha256)||!sha(bundle.model_sha256)||!sha(bundle.method_sha256)||
@@ -55,10 +56,13 @@ export function inspectEvidenceBundle(bundle) {
     fail("source/model/method digest mismatch");
   const policy=bundle.policy;
   if(!own(policy,["allowed_tool_ids","allowed_operations","classification","destination","network_allowed"])||
-     !uniq(policy?.allowed_tool_ids)||policy?.allowed_tool_ids?.some(x=>!id(x))||
+     !Array.isArray(policy?.allowed_tool_ids)||policy.allowed_tool_ids.length>toolIds.length||
+     !uniq(policy.allowed_tool_ids)||policy.allowed_tool_ids.some(x=>!id(x))||
      !isObject(policy?.allowed_operations)||
+     Object.keys(policy.allowed_operations).length>toolIds.length||
      !Object.entries(policy.allowed_operations).every(([tool,ops])=>
-       policy.allowed_tool_ids.includes(tool)&&uniq(ops)&&ops.every(id))||
+       policy.allowed_tool_ids.includes(tool)&&Array.isArray(ops)&&ops.length<=64&&
+       uniq(ops)&&ops.every(id))||
      !privacy.includes(policy?.classification)||policy?.destination!=="LOCAL"||
      policy?.network_allowed!==false)
     fail("invalid or unsafe execution policy");
