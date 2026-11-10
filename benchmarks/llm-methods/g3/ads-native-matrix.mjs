@@ -111,12 +111,22 @@ export function generateAdsMatrix(fixtures=readFrozenAdsCases()){
  * @param {any} outcomes - exact entry ID to SAT|UNSAT|UNKNOWN|ERROR|TIMEOUT|NOT_RUN
  */
 export function scoreAdsMatrix(matrix,outcomes){
- assert(matrix&&Array.isArray(matrix.entries)&&matrix.entries.length<=512,
-        "invalid matrix");
- assert(outcomes&&typeof outcomes==="object"&&!Array.isArray(outcomes),
-        "native outcomes must be a map");
+ const frozen=generateAdsMatrix();
+ assert(matrix&&matrix.schema===frozen.schema&&
+   matrix.source_case_sha256===frozen.source_case_sha256&&
+   Array.isArray(matrix.entries)&&matrix.entries.length===frozen.entries.length&&
+   matrix.entries.every((e,i)=>e&&Object.entries(frozen.entries[i]).every(
+     ([key,value])=>e[key]===value)),
+   "matrix differs from source-frozen exact query/worklist");
+ assert(outcomes&&typeof outcomes==="object"&&!Array.isArray(outcomes)&&
+   (Object.getPrototypeOf(outcomes)===null||Object.getPrototypeOf(outcomes)===Object.prototype),
+   "native outcomes must be a plain map");
+ const allowedIds=new Set(frozen.entries.map(e=>e.id));
+ assert(Reflect.ownKeys(outcomes).every(k=>typeof k==="string"&&allowedIds.has(k)&&
+   Object.hasOwn(Object.getOwnPropertyDescriptor(outcomes,k),"value")),
+   "unexpected/native-result accessor key");
  const records=[];
- for(const e of matrix.entries){
+ for(const e of frozen.entries){
    assert(typeof e.id==="string"&&typeof e.model_id==="string"&&
      ["PASS","FAIL"].includes(e.oracle_case_verdict),"invalid matrix entry");
    const raw=Object.hasOwn(outcomes,e.id)?outcomes[e.id]:"NOT_RUN";
@@ -135,10 +145,12 @@ export function scoreAdsMatrix(matrix,outcomes){
    const badPass=group.filter(r=>r.false_pass).map(r=>r.id);
    const badReject=group.filter(r=>r.false_reject).map(r=>r.id);
    const vacuous=classified.length===group.length&&group.every(r=>r.prediction==="FAIL");
-   const kind=classified.length<group.length?"INCONCLUSIVE":
+   // A confirmed false-PASS is decisive even when another case is missing.
+   // Incomplete results must never conceal a known dangerous classification.
+   const kind=badPass.length?"REJECT_WEAK":
+     badReject.length?"REJECT_OVERSTRONG":
      vacuous?"REJECT_VACUOUS":
-     badPass.length?"REJECT_WEAK":
-     badReject.length?"REJECT_OVERSTRONG":"MATCHES_FROZEN_SAMPLES_UNATTESTED";
+     classified.length<group.length?"INCONCLUSIVE":"MATCHES_FROZEN_SAMPLES_UNATTESTED";
    summaries.push({model_id:modelId,diagnostic_classification:kind,
      observed:classified.length,total:group.length,false_pass_ids:badPass,
      false_reject_ids:badReject});
