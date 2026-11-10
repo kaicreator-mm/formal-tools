@@ -211,12 +211,16 @@ export function assessMethod(problem, method) {
     return depth;
   };
   for(const id of stepMap.keys())if(depthOf(id)>budget.max_depth)fail("method depth exceeds budget: "+id);
-  const taint=new Map();
+  const taint=new Map(),lineage=new Map();
   const classOf=id=>{
     if(taint.has(id))return taint.get(id);
     const s=stepMap.get(id);if(!s)return "RESTRICTED";
     const inputs=(Array.isArray(s.source_refs)?s.source_refs:[]).map(ref=>sourceMap.get(ref)?.classification??"RESTRICTED");
     const inherited=(Array.isArray(s.depends_on)?s.depends_on:[]).map(dep=>taint.get(dep)??"RESTRICTED");
+    const sourceLineage=new Set(Array.isArray(s.source_refs)?s.source_refs:[]);
+    for(const dep of (Array.isArray(s.depends_on)?s.depends_on:[]))
+      for(const source of (lineage.get(dep)??[]))sourceLineage.add(source);
+    lineage.set(id,sourceLineage);
     const label=strongest([...inputs,...inherited]);
     if(rank(s.output_classification)<rank(label))fail("derived output illegally declassified: "+id);
     if(rank(label)>rank(permissions.max_input_classification))fail("input sensitivity exceeds policy: "+id);
@@ -224,6 +228,18 @@ export function assessMethod(problem, method) {
     return taint.get(id);
   };
   for(const [id] of [...stepMap.entries()].sort((a,b)=>(levels.get(a[0])??0)-(levels.get(b[0])??0)))classOf(id);
+  const requirementSource=new Map(problem.requirements.map(req=>[req.id,req.source_ref]));
+  for(const [id,step] of stepMap){
+    for(const claimId of (Array.isArray(step.claim_ids)?step.claim_ids:[])){
+      const claim=targetClaimMap.get(claimId);
+      if(!claim)continue;
+      const required=new Set([...claim.source_refs,
+        ...claim.requirement_ids.map(reqId=>requirementSource.get(reqId))]);
+      for(const ref of required)
+        if(!lineage.get(id)?.has(ref))
+          fail("claim source missing from transitive step lineage: "+id+" -> "+claimId+" -> "+ref);
+    }
+  }
   const unverifiable=(problem?.claims??[]).filter(x=>x?.kind==="external_fact" && !x?.source_refs?.length).map(x=>x.id);
   let methodSha=null,problemSha=null;
   try { methodSha=digest(method); problemSha=digest(problem); }
