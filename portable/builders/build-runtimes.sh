@@ -19,8 +19,17 @@ fetch() { # url [sha256]
   local url="$1" want="${2:-}" f="/tmp/rt/$(basename "${url%%\?*}")"
   if [ -f "$f" ] && [ -f "$f.ok" ]; then echo "$f"; return 0; fi
   log "fetch: $url"
-  curl -fSL --retry 3 --retry-delay 3 --connect-timeout 25 -o "$f.part" "$url" || { rm -f "$f.part"; log "FATAL fetch $url"; exit 3; }
-  mv "$f.part" "$f"
+  local attempt ok=0
+  for attempt in 1 2 3; do
+    rm -f "$f.part"
+    if curl -fSL --http1.1 --retry 3 --retry-all-errors --retry-delay 3 --connect-timeout 25 \
+         -o "$f.part" "$url" && [ -s "$f.part" ]; then
+      mv "$f.part" "$f"; ok=1; break
+    fi
+    log "fetch attempt $attempt failed for $url"
+    sleep 3
+  done
+  [ "$ok" = 1 ] || { log "FATAL fetch $url"; exit 3; }
   local got; got=$(sha256sum "$f" | cut -d' ' -f1)
   log "sha256: $got"
   if [ -n "$want" ]; then
@@ -38,7 +47,13 @@ JAVA_SHA="a535a1df9c6284d9618872984e026ae0352d1f7e9e0605425c0e6114f47351dd"
 
 log "== python313: compile CPython $PYVER =="
 if [ ! -x "$FT_OUT/runtimes/python313/bin/python3.13" ]; then
-  p=$(fetch "https://www.python.org/ftp/python/$PYVER/Python-$PYVER.tgz")
+  p=""
+  for u in "https://www.python.org/ftp/python/$PYVER/Python-$PYVER.tgz" \
+           "https://mirrors.huaweicloud.com/python/$PYVER/Python-$PYVER.tgz" \
+           "https://registry.npmmirror.com/-/binary/python/$PYVER/Python-$PYVER.tgz"; do
+    if p=$(fetch "$u" 2>>"$LOG"); then break; fi
+  done
+  [ -n "$p" ] || { log "FATAL all python tarball mirrors failed"; exit 3; }
   rm -rf /tmp/rt/Python-$PYVER && tar -xzf "$p" -C /tmp/rt
   ( cd /tmp/rt/Python-$PYVER \
     && ./configure --prefix=/opt/py313 --with-ensurepip=install >>"$LOG" 2>&1 \
@@ -68,8 +83,16 @@ log "java21 OK"
 
 log "== node22: official tarball =="
 if [ ! -x "$FT_OUT/runtimes/node22/bin/node" ]; then
-  n=$(fetch "https://nodejs.org/dist/v$NODEVER/node-v$NODEVER-linux-x64.tar.xz")
-  curl -fsSL "https://nodejs.org/dist/v$NODEVER/SHASUMS256.txt" -o /tmp/rt/SHASUMS256.txt
+  n=""
+  for host in nodejs.org registry.npmmirror.com/-/binary; do
+    case "$host" in
+      nodejs.org) u="https://nodejs.org/dist/v$NODEVER/node-v$NODEVER-linux-x64.tar.xz"; s="https://nodejs.org/dist/v$NODEVER/SHASUMS256.txt" ;;
+      *) u="https://registry.npmmirror.com/-/binary/node/v$NODEVER/node-v$NODEVER-linux-x64.tar.xz"; s="https://registry.npmmirror.com/-/binary/node/v$NODEVER/SHASUMS256.txt" ;;
+    esac
+    if n=$(fetch "$u" 2>>"$LOG"); then S="$s"; break; fi
+  done
+  [ -n "$n" ] || { log "FATAL node tarball fetch failed on all mirrors"; exit 3; }
+  curl -fsSL --http1.1 --retry 3 "$S" -o /tmp/rt/SHASUMS256.txt
   got=$(sha256sum "$n" | cut -d' ' -f1)
   grep -qE "^$got  node-v$NODEVER-linux-x64.tar.xz$" /tmp/rt/SHASUMS256.txt \
     || { log "FATAL node sha mismatch vs SHASUMS256.txt"; exit 3; }
