@@ -51,6 +51,46 @@ test("maxFiles and maxDepth bound enumeration",()=>withWorkspace(async workspace
   assert.ok(result.skipped.some(x=>x.reason==="FILE_COUNT_LIMIT"));
   assert.ok(result.skipped.some(x=>x.reason==="DEPTH_LIMIT"));
 }));
+test("directory budget stops thousands of empty-directory work and never returns COMPLETE",()=>withWorkspace(async workspace=>{
+  for(let i=0;i<14;i++)await mkdir(join(workspace,"dir-"+String(i).padStart(2,"0")));
+  const result=await scanArtifactWorkspace(workspace,{maxDirectories:3});
+  assert.equal(result.status,"PARTIAL");
+  assert.ok(result.visitedDirectories<=3);
+  assert.ok(result.skipped.some(x=>x.reason==="DIRECTORY_LIMIT"));
+}));
+test("entry budget bounds flat directory iteration without hashing every entry",()=>withWorkspace(async workspace=>{
+  for(let i=0;i<14;i++)await writeFile(join(workspace,"f-"+String(i).padStart(2,"0")),"x");
+  const result=await scanArtifactWorkspace(workspace,{maxEntries:4});
+  assert.equal(result.status,"PARTIAL");
+  assert.ok(result.scannedEntries<=4);
+  assert.ok(result.files.length<=4);
+  assert.ok(result.skipped.some(x=>x.reason==="ENTRY_LIMIT"));
+}));
+test("skipped-record cap emits a single summary rather than an unbounded list",()=>withWorkspace(async workspace=>{
+  for(let i=0;i<6;i++){
+    const name="dir-"+i;
+    await mkdir(join(workspace,name));
+    await mkdir(join(workspace,name,"child"));
+  }
+  const result=await scanArtifactWorkspace(workspace,{maxDepth:1,maxSkipped:2});
+  assert.equal(result.status,"PARTIAL");
+  assert.equal(result.skipped.length,2);
+  assert.equal(result.skipped.at(-1).reason,"SKIPPED_RECORD_LIMIT");
+}));
+test("normal scan reports bounded directory and entry counters without changing hashes",()=>withWorkspace(async workspace=>{
+  await mkdir(join(workspace,"inner"));
+  await writeFile(join(workspace,"inner","x.txt"),"stable");
+  const result=await scanArtifactWorkspace(workspace,{maxDirectories:2,maxEntries:2,maxSkipped:2});
+  assert.equal(result.status,"COMPLETE");
+  assert.equal(result.visitedDirectories,2);
+  assert.equal(result.scannedEntries,2);
+  assert.equal(result.files[0].sha256,hash("stable"));
+}));
+test("new scan budgets must be positive and within capped bounds",async()=>{
+  await assert.rejects(scanArtifactWorkspace("/tmp",{maxDirectories:0}),/invalid maxDirectories/);
+  await assert.rejects(scanArtifactWorkspace("/tmp",{maxEntries:1000001}),/invalid maxEntries/);
+  await assert.rejects(scanArtifactWorkspace("/tmp",{maxSkipped:-1}),/invalid maxSkipped/);
+});
 test("symlink to an outside file is never followed",()=>withWorkspace(async workspace=>{
   const external=await mkdtemp(join(tmpdir(),"formal-external-"));
   try{

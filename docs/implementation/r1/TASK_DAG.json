@@ -1,9 +1,9 @@
 {
   "schema": "formal-tools-development-dag/1",
-  "source_main": "5bd8a552c61218d56408de12bb832a5b39f568a2",
+  "source_main": "1016deab720c692d337484e95f1705dbe9f30e87",
   "product": "kaicreator-mm/formal-tools",
   "plan": "docs/implementation/r1/DEVELOPMENT_PLAN.md",
-  "status": "ISSUE7_MAIN_5_PR10_SOURCE_PROGRESS_CI_P1_REMAINS",
+  "status": "ISSUE7_COMPLETED_12_OF_12_R1_ACCEPTED",
   "scope": "TOOL_MAINTENANCE_ONLY",
   "tasks": [
     {
@@ -12,9 +12,9 @@
       "depends_on": [],
       "gate": "G0",
       "priority": "P0",
-      "status": "SOURCE_IMPLEMENTED",
-      "source_status": "SOURCE_IMPLEMENTED",
-      "runtime_status": "SOURCE_ONLY"
+      "status": "INTEGRATED_ACCEPTED",
+      "source_status": "SOURCE_MERGED_MAIN",
+      "runtime_status": "ACCEPTED_ISSUE7"
     },
     {
       "id": "D02",
@@ -24,9 +24,9 @@
       ],
       "gate": "G1",
       "priority": "P0",
-      "status": "STATIC_TESTED",
-      "source_status": "STATIC_TESTED",
-      "runtime_status": "NOT_RUN"
+      "status": "INTEGRATED_ACCEPTED",
+      "source_status": "SOURCE_MERGED_MAIN",
+      "runtime_status": "ACCEPTED_ISSUE7"
     },
     {
       "id": "D03",
@@ -36,9 +36,9 @@
       ],
       "gate": "G1",
       "priority": "P0",
-      "status": "STATIC_TESTED",
-      "source_status": "STATIC_TESTED",
-      "runtime_status": "NOT_RUN"
+      "status": "INTEGRATED_ACCEPTED",
+      "source_status": "SOURCE_MERGED_MAIN",
+      "runtime_status": "ACCEPTED_ISSUE7"
     },
     {
       "id": "D04",
@@ -48,9 +48,9 @@
       ],
       "gate": "G1",
       "priority": "P0",
-      "status": "SOURCE_IMPLEMENTED",
-      "source_status": "SOURCE_IMPLEMENTED",
-      "runtime_status": "NOT_RUN"
+      "status": "INTEGRATED_ACCEPTED",
+      "source_status": "SOURCE_MERGED_MAIN",
+      "runtime_status": "ACCEPTED_ISSUE7"
     },
     {
       "id": "D05",
@@ -61,9 +61,9 @@
       ],
       "gate": "G2",
       "priority": "P1",
-      "status": "SOURCE_IMPLEMENTED",
-      "source_status": "SOURCE_IMPLEMENTED",
-      "runtime_status": "NOT_RUN"
+      "status": "INTEGRATED_ACCEPTED",
+      "source_status": "SOURCE_MERGED_MAIN",
+      "runtime_status": "ACCEPTED_ISSUE7"
     },
     {
       "id": "D06",
@@ -74,10 +74,9 @@
       ],
       "gate": "G2",
       "priority": "P0",
-      "status": "SOURCE_PARTIAL",
-      "source_status": "WORKSPACE_AND_ARTIFACT_INTEGRATION_SOURCE_READY",
-      "runtime_status": "NOT_RUN_ON_CURRENT_HEAD",
-      "remaining": "Node/TypeScript tests of staged SDK, host resource budgets, real engine artifact evidence"
+      "status": "INTEGRATED_ACCEPTED",
+      "source_status": "SOURCE_MERGED_MAIN",
+      "runtime_status": "ACCEPTED_ISSUE7"
     },
     {
       "id": "D07",
@@ -88,10 +87,9 @@
       ],
       "gate": "G2",
       "priority": "P1",
-      "status": "SOURCE_PARTIAL",
-      "source_status": "INVOKE_STAGED_TOOL_EXPERIMENTAL_SOURCE_READY",
-      "runtime_status": "NOT_RUN_ON_CURRENT_HEAD",
-      "remaining": "staged SDK/CLI/MCP host acceptance, stable npm export strategy and versioning"
+      "status": "INTEGRATED_ACCEPTED",
+      "source_status": "SOURCE_MERGED_MAIN",
+      "runtime_status": "ACCEPTED_ISSUE7"
     },
     {
       "id": "D08",
@@ -102,10 +100,9 @@
       ],
       "gate": "G2",
       "priority": "P1",
-      "status": "SOURCE_PARTIAL",
-      "source_status": "PARITY_SOURCE_TEST_ADDED",
-      "runtime_status": "NOT_RUN_ON_CURRENT_HEAD",
-      "remaining": "Final exact-SHA Node/TypeScript CI, public/permission contract smoke"
+      "status": "INTEGRATED_ACCEPTED",
+      "source_status": "SOURCE_MERGED_MAIN",
+      "runtime_status": "ACCEPTED_ISSUE7"
     },
     {
       "id": "D09",
@@ -116,10 +113,9 @@
       ],
       "gate": "G3",
       "priority": "P1",
-      "status": "SOURCE_PARTIAL",
-      "source_status": "MULTI_OS_COMPATIBILITY_REPORT_SOURCE_READY",
-      "runtime_status": "NOT_RUN",
-      "remaining": "Real upstream engine versions across representative OS still unverified (Issue #4); historical Windows exact-SHA observations imported as D11 source"
+      "status": "INTEGRATED_ACCEPTED",
+      "source_status": "SOURCE_MERGED_MAIN",
+      "runtime_status": "TECHNICAL_MATRIX_ACCEPTED_NATIVE_ENGINES_ISSUE4"
     },
     {
       "id": "D10",
@@ -130,10 +126,9 @@
       ],
       "gate": "G3",
       "priority": "P1",
-      "status": "SOURCE_PARTIAL",
-      "source_status": "TYPECHECK_GATE_ADDED",
-      "runtime_status": "PR10_BUILDS_23_24_FAILED_LATEST_SHA_CI_PENDING",
-      "remaining": "Diagnose exact failed Woodpecker command from private host logs, repair same PR, obtain final exact-SHA Node+TS+CI SUCCESS"
+      "status": "INTEGRATED_ACCEPTED",
+      "source_status": "SOURCE_MERGED_MAIN",
+      "runtime_status": "ACCEPTED_ISSUE7"
     },
     {
       "id": "D11",
@@ -145,10 +140,9 @@
       ],
       "gate": "G4",
       "priority": "P2",
-      "status": "SOURCE_PARTIAL",
-      "source_status": "ACTUAL_HISTORICAL_HOST_OBSERVATIONS_IMPORTED",
-      "runtime_status": "SOURCE_AUDIT_ONLY_FINAL_CI_PENDING",
-      "remaining": "Final-HEAD Node/TypeScript/Woodpecker and actual installed-tool/version evidence; 13 historic observations remain STALE_SHA on PR #10",
+      "status": "INTEGRATED_ACCEPTED",
+      "source_status": "SOURCE_MERGED_MAIN",
+      "runtime_status": "ACCEPTED_ISSUE7",
       "evidence_path": "validation/r1/windows-host-observations.json",
       "source_blob": "e2b2021d2afea6d14ff8837a4827a4aef27759db"
     },
@@ -161,30 +155,47 @@
       ],
       "gate": "G4",
       "priority": "P2",
-      "status": "SOURCE_PARTIAL",
-      "source_status": "REAL_EXTERNAL_REPO_SMOKE_SCRIPT_IN_PR263",
-      "runtime_status": "EXTERNAL_HOST_SMOKE_NOT_RUN",
-      "remaining": "Execute on real external checkout against formal-tools final exact SHA and preserve receipt; no business model or production Z3 adapter changes",
+      "status": "INTEGRATED_ACCEPTED",
+      "source_status": "EXTERNAL_CONSUMER_PR263_MERGED",
+      "runtime_status": "UBUNTU_HOST_SMOKE_TWICE_PASS",
       "external_pr": "https://github.com/kaicreator-mm/domain-simulator/pull/263",
-      "external_head": "c195767689ff1d524765934c52ee9a2eb43b34c5"
+      "external_head": "d9c90a9a278ccddeb5cf03fff3ae5e53bf8d8328",
+      "external_merge_sha": "85e61c71e10b8e47b70480b036f97a972d928561",
+      "external_smoke": {
+        "status": "PASS",
+        "runs": 2,
+        "checks_per_run": 12,
+        "evidence": "https://github.com/kaicreator-mm/domain-simulator/pull/263#issuecomment-6771295915",
+        "scope": "GENERIC_TOOL_INTERFACE_ONLY_NOT_NATIVE_PROOF"
+      }
     }
   ],
   "receipt": "validation/R1_TOOL_MANAGER_SOURCE_AUDIT.json",
   "last_prospective_tree": "08848a2b57cf3f9a0d7a6c1977bfee16ce3f0501",
   "sdk_receipt": "validation/R1_SDK_SOURCE_AUDIT.json",
-  "integration_note": "PR #9 merged main@41925288dd5b777d49c4e442d9731581895cb037. PR #10 rebases via two-parent merge commit, adds staged-tool SDK and technical artifact inventory. New final SHA needs CI/Node verification.",
+  "integration_note": "Historical pre-acceptance record superseded by Issue #7 Completed; formal-tools PR #10 CI-green source head 436da7247842b835bad198435cb3e3d05fb7b2b3 merged as 1016deab720c692d337484e95f1705dbe9f30e87. External consumer PR #263 host smoke PASS and merged 85e61c71e10b8e47b70480b036f97a972d928561. Native engine proof remains Issue #4.",
   "product_scope_authority": "https://github.com/kaicreator-mm/formal-tools/issues/7",
   "delivery_decision": "R1_TOOL_INFRASTRUCTURE_ONLY_FUTURE_METHOD_ENGINEERING_SEPARATE_PRODUCT",
-  "revision": "Issue #7 scope correction 2026-11-10",
+  "revision": "Issue #14 M01: post-closure factual reconciliation (2026-11-10)",
   "current_gate": {
-    "blocking_pr": 10,
-    "previous_failed_head": "30b4313cb3f0755f6a25c8b673ad96e4ec981a0b",
-    "previous_failed_builds": [
-      23,
-      24
-    ],
-    "new_source_head": "ce33235b4529f5fc39a3e3d6b2019e2298664866",
-    "source_acceptance": "PENDING",
+    "blocking_pr": null,
+    "source_acceptance": "PASS",
+    "accepted_r1_source_head": "436da7247842b835bad198435cb3e3d05fb7b2b3",
+    "integrated_main_sha": "1016deab720c692d337484e95f1705dbe9f30e87",
+    "woodpecker_push": {
+      "build": 83,
+      "status": "SUCCESS"
+    },
+    "woodpecker_pr": {
+      "build": 84,
+      "status": "SUCCESS"
+    },
+    "external_consumer": {
+      "pr": 263,
+      "source_head": "d9c90a9a278ccddeb5cf03fff3ae5e53bf8d8328",
+      "merge_sha": "85e61c71e10b8e47b70480b036f97a972d928561",
+      "status": "HOST_SMOKE_PASS"
+    },
     "native_engine_blocking_for_source_merge": false
   },
   "progress_evidence": {
@@ -193,9 +204,7 @@
       "D02",
       "D03",
       "D04",
-      "D05"
-    ],
-    "in_progress": [
+      "D05",
       "D06",
       "D07",
       "D08",
@@ -204,8 +213,11 @@
       "D11",
       "D12"
     ],
-    "node_ts_final_exact_sha": "PENDING",
-    "external_consumer_host": "NOT_RUN",
+    "in_progress": [],
+    "node_ts_final_exact_sha": "436da7247842b835bad198435cb3e3d05fb7b2b3",
+    "node_ts_ci": "PASS_91_OF_91_LINUX",
+    "external_consumer_host": "PASS_2_RUNS_12_CHECKS_EACH",
+    "external_consumer_merge_sha": "85e61c71e10b8e47b70480b036f97a972d928561",
     "native_13_engine_host": "NOT_RUN_ISSUE_4"
   }
 }

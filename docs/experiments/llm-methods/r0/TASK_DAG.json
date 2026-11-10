@@ -4,15 +4,17 @@
     "repo": "kaicreator-mm/formal-tools",
     "issue": 11,
     "source_base_sha": "41925288dd5b777d49c4e442d9731581895cb037",
-    "scope": "NEW_DIRECTION_NOT_R1"
+    "scope": "NEW_DIRECTION_NOT_R1",
+    "accepted_pr_12_head": "b07318af910cbeedae6228a180b06e5bce153ab8",
+    "main_integrated_sha": "e1d172ec7f3b2743993f6b4004fe3b5b03007150"
   },
-  "status": "G0_G1_SOURCE_COMMITTED_CI_PENDING_RESEARCH_CONTRACT_COMMITTED_REVIEW_PENDING",
+  "status": "G0_G1_RESEARCH_R0_ACCEPTED_G2_SOURCE_IMPLEMENTATION_IN_REVIEW",
   "gates": [
     {
       "id": "G0",
       "name": "Product L1 + baseline audit + gates",
       "depends_on": [],
-      "status": "SOURCE_COMMITTED_TEST_CI_PENDING",
+      "status": "ACCEPTED_INTEGRATED",
       "exit": "source-reviewed Product/L1 and complete dependency DAG, scope separated from Issue #7"
     },
     {
@@ -21,7 +23,7 @@
       "depends_on": [
         "G0"
       ],
-      "status": "SOURCE_COMMITTED_TEST_CI_PENDING",
+      "status": "ACCEPTED_INTEGRATED",
       "exit": "23 canonical capability codes, 13 native references verified against source, 23 candidate records, negative contract checks"
     },
     {
@@ -31,7 +33,7 @@
         "G0",
         "G1"
       ],
-      "status": "SOURCE_EVIDENCE_AND_CONTRACT_READY_FOR_INDEPENDENT_REVIEW",
+      "status": "ACCEPTED_INTEGRATED",
       "exit": "Research report readback, semantic fidelity and independent-claim oracle contracts reviewed; no G2 code until implementation admission"
     },
     {
@@ -42,7 +44,7 @@
         "G1",
         "RESEARCH-R0"
       ],
-      "status": "NOT_STARTED",
+      "status": "SOURCE_IMPLEMENTED_CI_AND_REVIEW_PENDING",
       "exit": "model-independent typed DAG, budget/alternatives, cycles and missing contracts fail closed"
     },
     {
@@ -91,7 +93,7 @@
       "title": "Audit true native catalog and frozen R1 exclusion boundary",
       "depends_on": [],
       "owner": "web",
-      "status": "SOURCE_COMMITTED_AWAIT_FINAL_SHA_REVIEW",
+      "status": "ACCEPTED_INTEGRATED",
       "evidence": [
         "packages/runner/js/native-catalog.mjs",
         "docs/PROJECT_SCOPE.md",
@@ -106,7 +108,7 @@
         "T-G0-01"
       ],
       "owner": "web",
-      "status": "SOURCE_COMMITTED_AWAIT_FINAL_SHA_REVIEW",
+      "status": "ACCEPTED_INTEGRATED",
       "evidence": [
         "docs/experiments/llm-methods/r0/PRODUCT_L1.md"
       ]
@@ -119,7 +121,7 @@
         "T-G0-02"
       ],
       "owner": "web",
-      "status": "SOURCE_COMMITTED_AWAIT_FINAL_SHA_REVIEW",
+      "status": "ACCEPTED_INTEGRATED",
       "evidence": [
         "docs/experiments/llm-methods/r0/TASK_DAG.json"
       ]
@@ -132,7 +134,7 @@
         "T-G0-01"
       ],
       "owner": "web",
-      "status": "SOURCE_COMMITTED_AWAIT_FINAL_SHA_REVIEW",
+      "status": "ACCEPTED_INTEGRATED",
       "evidence": [
         "registry/PROBLEM_CAPABILITIES.json"
       ]
@@ -145,7 +147,7 @@
         "T-G1-01"
       ],
       "owner": "web",
-      "status": "SOURCE_COMMITTED_AWAIT_FINAL_SHA_REVIEW",
+      "status": "ACCEPTED_INTEGRATED",
       "evidence": [
         "packages/runner/js/problem-capabilities.mjs",
         "tests/problem-capabilities.test.mjs"
@@ -160,7 +162,7 @@
         "T-G1-02"
       ],
       "owner": "web",
-      "status": "SOURCE_COMMITTED_AWAIT_FINAL_SHA_REVIEW",
+      "status": "ACCEPTED_INTEGRATED",
       "evidence": [
         "docs/experiments/llm-methods/r0/CAPABILITY_MATRIX.md"
       ]
@@ -174,7 +176,7 @@
         "T-G1-02"
       ],
       "owner": "web",
-      "status": "SOURCE_CONTRACT_CASES_COMMITTED_INDEPENDENT_REVIEW_PENDING",
+      "status": "ACCEPTED_INTEGRATED",
       "evidence": [
         "docs/experiments/llm-methods/r0/TECHNICAL_REVIEW_2026-11-10.md",
         "docs/experiments/llm-methods/r0/SPEC_CLAIM_CONTRACT_R0.md",
@@ -191,7 +193,12 @@
         "T-R0-01"
       ],
       "owner": "web",
-      "status": "NOT_STARTED"
+      "status": "SOURCE_IMPLEMENTED_CI_PENDING",
+      "evidence": [
+        "packages/runner/js/method-planner.mjs",
+        "tests/method-planner.test.mjs",
+        "docs/experiments/llm-methods/g2/IMPLEMENTATION_R0.md"
+      ]
     },
     {
       "id": "T-G2-02",
@@ -201,7 +208,11 @@
         "T-G2-01"
       ],
       "owner": "web",
-      "status": "NOT_STARTED"
+      "status": "SOURCE_PARTIAL_LLM_ADAPTER_MOCKED",
+      "evidence": [
+        "packages/runner/js/method-planner.mjs",
+        "tests/method-planner.test.mjs"
+      ]
     },
     {
       "id": "T-G3-01",
@@ -250,6 +261,8 @@
     "tool_downloads": "PARALLEL_NOT_BLOCKING_G0_G1",
     "native_execution": "NOT_RUN",
     "llm_ab_benchmarks": "NOT_RUN",
-    "old_issue7": "OUT_OF_SCOPE"
+    "old_issue7": "OUT_OF_SCOPE",
+    "g2_native_execution": "NOT_RUN",
+    "g2_llm_live_integration": "NOT_RUN"
   }
 }

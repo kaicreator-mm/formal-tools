@@ -1,5 +1,8 @@
 # R1 Batch 1 实施状态（Source-first）
 
+> **历史阶段快照**：下文按实施当时记录 NOT_RUN / SOURCE_PARTIAL 与旧 CI 失败，**不代表当前 R1 Gate**。Issue #7 已于 2026-11-10 完成 **12/12**；formal-tools PR #10 源 HEAD `436da7247842b835bad198435cb3e3d05fb7b2b3` 经 Woodpecker push #83 / PR #84（91/91 Node、mandatory TypeScript/CLI）PASS，合入 main `1016deab720c692d337484e95f1705dbe9f30e87`。独立消费者 domain-simulator PR #263 HEAD `d9c90a9a278ccddeb5cf03fff3ae5e53bf8d8328` 对上述 SHA 运行两次、每次 12/12 PASS，合并 SHA `85e61c71e10b8e47b70480b036f97a972d928561`。原生 13×26 仍由 Issue #4 管理、未经本次证明。机器可读最终 Gate 以 `TASK_DAG.json` 的 `current_gate` / `progress_evidence` 为准。
+
+
 **仓库**：`kaicreator-mm/formal-tools`；实施分支 `dev/r1-tool-manager-r0`。此次开发源自 Issue #7；旧 R4 Native 验收继续通过 Issue #4 跟踪。
 
 ## 已实施 / 已测试的范围

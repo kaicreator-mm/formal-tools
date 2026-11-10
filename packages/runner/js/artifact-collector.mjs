@@ -12,14 +12,14 @@
  *
  * Neither this scanner nor a hashed manifest constitutes an OS sandbox.
  */
-import { readdir, lstat, realpath, open } from "node:fs/promises";
+import { opendir, lstat, realpath, open } from "node:fs/promises";
 import { constants } from "node:fs";
 import { createHash } from "node:crypto";
 import { resolve, relative, isAbsolute, sep, join } from "node:path";
 
 const HASH=/^[a-f0-9]{64}$/;
-const DEFAULTS=Object.freeze({maxFiles:256,maxBytes:16*1024*1024,maxDepth:8});
-const MAX=Object.freeze({maxFiles:10000,maxBytes:256*1024*1024,maxDepth:32});
+const DEFAULTS=Object.freeze({maxFiles:256,maxBytes:16*1024*1024,maxDepth:8,maxDirectories:1024,maxEntries:8192,maxSkipped:512});
+const MAX=Object.freeze({maxFiles:10000,maxBytes:256*1024*1024,maxDepth:32,maxDirectories:100000,maxEntries:1000000,maxSkipped:10000});
 const sortByPath=(a,b)=>a.path<b.path?-1:a.path>b.path?1:0;
 const inside=(root,pathname)=>{
   const rel=relative(root,pathname);
@@ -101,73 +101,93 @@ export async function scanArtifactWorkspace(workspace,options={}){
     throw new TypeError("workspace root must be a real directory");
   const canonicalRoot=await realpath(root);
   const files=[],skipped=[];
-  let scannedFiles=0,hashedBytes=0;
-  const skip=(p,reason)=>skipped.push({path:p,reason});
+  let scannedFiles=0,hashedBytes=0,visitedDirectories=0,scannedEntries=0,stopped=false;
+  // Bounded diagnostic memory. Last slot is reserved for an explicit summary
+  // when many unreadable/non-regular entries would otherwise grow unbounded.
+  const skip=(p,reason)=>{
+    if(stopped)return;
+    if(skipped.length+1>=cap.maxSkipped){
+      skipped.push({path:".",reason:"SKIPPED_RECORD_LIMIT"});
+      stopped=true;
+    }else skipped.push({path:p,reason});
+  };
   async function visit(directory,parts,depth){
+    if(stopped)return;
+    if(visitedDirectories>=cap.maxDirectories){
+      skip(parts.join("/")||".","DIRECTORY_LIMIT");stopped=true;return;
+    }
+    visitedDirectories++;
     const abs=await realpath(directory).catch(()=>null);
     if(abs===null||!inside(canonicalRoot,abs)){
       skip(parts.join("/")||".","DIRECTORY_OUTSIDE_WORKSPACE");return;
     }
-    let entries;
-    try{entries=await readdir(directory,{withFileTypes:true});}
+    let dir;
+    try{dir=await opendir(directory);}
     catch{skip(parts.join("/")||".","UNREADABLE_DIRECTORY");return;}
-    entries.sort((a,b)=>a.name<b.name?-1:a.name>b.name?1:0);
-    for(const entry of entries){
-      const relParts=[...parts,entry.name];
-      const relativeName=relParts.join("/");
-      const target=join(directory,entry.name);
-      if(!entry.name||entry.name==="."||entry.name===".."||
-        entry.name.includes("/")||entry.name.includes("\\")||entry.name.includes("\0")){
-        skip(relativeName,"INVALID_NAME");continue;
-      }
-      let meta;
-      try{meta=await lstat(target);}catch{skip(relativeName,"UNREADABLE_ENTRY");continue;}
-      if(meta.isSymbolicLink()){skip(relativeName,"SYMLINK_SKIPPED");continue;}
-      if(meta.isDirectory()){
-        if(depth>=cap.maxDepth){skip(relativeName,"DEPTH_LIMIT");continue;}
-        await visit(target,relParts,depth+1);
-        continue;
-      }
-      if(!meta.isFile()){skip(relativeName,"NON_REGULAR_ENTRY");continue;}
-      scannedFiles++;
-      if(scannedFiles>cap.maxFiles){skip(relativeName,"FILE_COUNT_LIMIT");continue;}
-      if(meta.size>cap.maxBytes-hashedBytes){skip(relativeName,"BYTE_LIMIT");continue;}
-      const canonicalFile=await realpath(target).catch(()=>null);
-      if(canonicalFile===null||!inside(canonicalRoot,canonicalFile)){
-        skip(relativeName,"FILE_OUTSIDE_WORKSPACE");continue;
-      }
-      let handle;
-      try{
-        handle=await open(target,constants.O_RDONLY|(constants.O_NOFOLLOW??0));
-        const verified=await handle.stat();
-        if(!verified.isFile()||verified.size!==meta.size){
-          skip(relativeName,"FILE_CHANGED_DURING_SCAN");continue;
+    try{
+      // opendir streams directory entries: no unbounded readdir allocation.
+      for await(const entry of dir){
+        if(stopped)break;
+        const relParts=[...parts,entry.name];
+        const relativeName=relParts.join("/");
+        if(scannedEntries>=cap.maxEntries){
+          skip(relativeName,"ENTRY_LIMIT");stopped=true;break;
         }
-        const hash=createHash("sha256"),buf=Buffer.allocUnsafe(65536);
-        let pos=0;
-        while(pos<verified.size){
-          const n=Math.min(buf.length,verified.size-pos);
-          const readResult=await handle.read(buf,0,n,pos);
-          if(!readResult.bytesRead)throw new Error("short read");
-          hash.update(buf.subarray(0,readResult.bytesRead));
-          pos+=readResult.bytesRead;
+        scannedEntries++;
+        const target=join(directory,entry.name);
+        if(!entry.name||entry.name==="."||entry.name===".."||
+          entry.name.includes("/")||entry.name.includes("\\")||entry.name.includes("\0")){
+          skip(relativeName,"INVALID_NAME");continue;
         }
-        const finalStat=await handle.stat();
-        if(finalStat.size!==verified.size||finalStat.mtimeMs!==verified.mtimeMs){
-          skip(relativeName,"FILE_CHANGED_DURING_SCAN");continue;
+        let meta;
+        try{meta=await lstat(target);}catch{skip(relativeName,"UNREADABLE_ENTRY");continue;}
+        if(meta.isSymbolicLink()){skip(relativeName,"SYMLINK_SKIPPED");continue;}
+        if(meta.isDirectory()){
+          if(depth>=cap.maxDepth){skip(relativeName,"DEPTH_LIMIT");continue;}
+          await visit(target,relParts,depth+1);
+          continue;
         }
-        files.push({path:relativeName,bytes:verified.size,sha256:hash.digest("hex")});
-        hashedBytes+=verified.size;
-      }catch{
-        skip(relativeName,"UNREADABLE_OR_CHANGED_FILE");
-      }finally{await handle?.close().catch(()=>{});}
-    }
+        if(!meta.isFile()){skip(relativeName,"NON_REGULAR_ENTRY");continue;}
+        scannedFiles++;
+        if(scannedFiles>cap.maxFiles){skip(relativeName,"FILE_COUNT_LIMIT");continue;}
+        if(meta.size>cap.maxBytes-hashedBytes){skip(relativeName,"BYTE_LIMIT");continue;}
+        const canonicalFile=await realpath(target).catch(()=>null);
+        if(canonicalFile===null||!inside(canonicalRoot,canonicalFile)){
+          skip(relativeName,"FILE_OUTSIDE_WORKSPACE");continue;
+        }
+        let handle;
+        try{
+          handle=await open(target,constants.O_RDONLY|(constants.O_NOFOLLOW??0));
+          const verified=await handle.stat();
+          if(!verified.isFile()||verified.size!==meta.size){
+            skip(relativeName,"FILE_CHANGED_DURING_SCAN");continue;
+          }
+          const hash=createHash("sha256"),buf=Buffer.allocUnsafe(65536);
+          let pos=0;
+          while(pos<verified.size){
+            const n=Math.min(buf.length,verified.size-pos);
+            const readResult=await handle.read(buf,0,n,pos);
+            if(!readResult.bytesRead)throw new Error("short read");
+            hash.update(buf.subarray(0,readResult.bytesRead));
+            pos+=readResult.bytesRead;
+          }
+          const finalStat=await handle.stat();
+          if(finalStat.size!==verified.size||finalStat.mtimeMs!==verified.mtimeMs){
+            skip(relativeName,"FILE_CHANGED_DURING_SCAN");continue;
+          }
+          files.push({path:relativeName,bytes:verified.size,sha256:hash.digest("hex")});
+          hashedBytes+=verified.size;
+        }catch{
+          skip(relativeName,"UNREADABLE_OR_CHANGED_FILE");
+        }finally{await handle?.close().catch(()=>{});}
+      }
+    }catch{skip(parts.join("/")||".","DIRECTORY_READ_FAILED");}
   }
   await visit(root,[],0);
   files.sort(sortByPath);
   return {schema:"formal-tools/workspace-artifact-scan/1",
-    status:skipped.length?"PARTIAL":"COMPLETE",
-    files,skipped,scannedFiles,hashedBytes,limits:cap};
+    status:stopped||skipped.length?"PARTIAL":"COMPLETE",
+    files,skipped,scannedFiles,hashedBytes,visitedDirectories,scannedEntries,limits:cap};
 }
 /** No subprocess is launched and no workspace files are changed. */
 export async function collectGeneratedArtifacts(workspace,baseline,options={}){
