@@ -26,6 +26,13 @@ const canonical = value => Array.isArray(value) ? value.map(canonical)
   : isObject(value) ? Object.fromEntries(Object.entries(value).sort(([a],[b])=>a.localeCompare(b)).map(([k,v])=>[k,canonical(v)]))
   : value;
 const digest = obj => createHash("sha256").update(JSON.stringify(canonical(obj))).digest("hex");
+const rejected = issues => ({
+  status:"REJECTED",issues:[...new Set(issues)],method_sha256:null,problem_sha256:null,
+  candidate_tools_present:false,tool_execution:"NOT_RUN",executable:false,
+  semantic_fidelity:"NOT_EVALUATED",independent_oracle_review:"NOT_RUN",
+  claim_result:"INCONCLUSIVE",needs_source_claim_ids:[],solution_promotable:false,
+  budget:{planned_cost_units:0,planned_total_timeout_ms:0,step_count:0}
+});
 
 export function validateProblemSpec(problem) {
   const errors = [];
@@ -108,9 +115,9 @@ export function validateProblemSpec(problem) {
 export function assessMethod(problem, method) {
   const pre=validateProblemSpec(problem);
   const issues=[...pre.errors];
-  if(!pre.ok)return {status:"REJECTED",issues,tool_execution:"NOT_RUN",executable:false,solution_promotable:false};
+  if(!pre.ok)return rejected(issues);
   const fail = message => issues.push(message);
-  if(!isObject(method))return {status:"REJECTED",issues:[...issues,"Method must be an object"],executable:false,claim_result:"INCONCLUSIVE"};
+  if(!isObject(method))return rejected([...issues,"Method must be an object"]);
   if(!hasOnly(method,["schema","method_id","problem_id","goal_claim_ids","steps","oracle_ids","semantic_review"]))
     fail("Method contains unexpected fields (no shell, argv or tool output claims)");
   if(method.schema!=="formal-tools/method-proposal/0.1"||!isId(method.method_id)||
@@ -197,9 +204,12 @@ export function assessMethod(problem, method) {
   };
   for(const [id] of [...stepMap.entries()].sort((a,b)=>(levels.get(a[0])??0)-(levels.get(b[0])??0)))classOf(id);
   const unverifiable=(problem?.claims??[]).filter(x=>x?.kind==="external_fact" && !x?.source_refs?.length).map(x=>x.id);
+  let methodSha=null,problemSha=null;
+  try { methodSha=digest(method); problemSha=digest(problem); }
+  catch { fail("cyclic or non-JSON Method/ProblemSpec payload"); }
   const status=issues.length?"REJECTED":"STRUCTURALLY_VALID";
   return {
-    status,issues:[...new Set(issues)],method_sha256:digest(method),problem_sha256:digest(problem),
+    status,issues:[...new Set(issues)],method_sha256:methodSha,problem_sha256:problemSha,
     candidate_tools_present:hasCandidate,tool_execution:"NOT_RUN",executable:false,
     semantic_fidelity:"NOT_EVALUATED",independent_oracle_review:"NOT_RUN",
     claim_result:unverifiable.length?"NEEDS_SOURCE":"INCONCLUSIVE",
