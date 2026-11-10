@@ -127,6 +127,7 @@ test("G2: public LLM proposal callback is isolated and executed once",async()=>{
    calls++;
    assert.equal(prompt.mode,"UNTRUSTED_PROPOSAL_ONLY");
    assert.ok(prompt.candidates.some(x=>x.id==="z3"));
+   assert.deepEqual(prompt.candidates.find(x=>x.id==="z3").allowed_operations,["solve"]);
    assert.ok(prompt.candidates.every(x=>x.operation_policy.includes("allowlist")));
    return JSON.stringify(method);
  });
@@ -182,4 +183,32 @@ test("G2: restrictive inputs cannot be exported by a downstream derived artifact
  const result=assessMethod(problem,method);
  assert.match(result.issues.join(" "),/illegally declassified/);
  assert.equal(result.status,"REJECTED");
+});
+
+
+test("G2: a two-tool typed Method DAG is accepted only as a non-executable plan",()=>{
+ const {problem,method}=fixture();
+ problem.policy.allowed_tools=["z3","cvc5"];
+ problem.policy.allowed_operations={z3:["solve"],cvc5:["solve"]};
+ method.steps.push({
+   id:"step02",tool_id:"cvc5",operation:"solve",provides:["logic.smt"],
+   depends_on:["step01"],source_refs:[],estimated_cost_units:2,timeout_ms:300,
+   destination:"LOCAL",output_classification:"PUBLIC"
+ });
+ const result=assessMethod(problem,method);
+ assert.equal(result.status,"STRUCTURALLY_VALID",JSON.stringify(result.issues));
+ assert.equal(result.budget.step_count,2);
+ assert.equal(result.tool_execution,"NOT_RUN");
+ assert.equal(result.executable,false);
+ assert.equal(result.solution_promotable,false);
+});
+test("G2: malformed capability array and unapproved tool selection fail closed",()=>{
+ const {problem,method}=fixture();
+ // @ts-expect-error deliberate malformed ProblemSpec
+ problem.capability_ids={includes:true};
+ assert.equal(validateProblemSpec(problem).ok,false);
+ assert.equal(assessMethod(problem,method).status,"REJECTED");
+ const fresh=fixture();
+ fresh.problem.policy.allowed_tools=[];
+ assert.match(assessMethod(fresh.problem,fresh.method).issues.join(" "),/tool not permitted/);
 });
