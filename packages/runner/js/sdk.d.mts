@@ -20,7 +20,7 @@ export interface StagedToolRequest extends Omit<ToolInvokeRequest, "cwd"> {
   sourceRoot: string;
   inputs: string[];
   workspaceOptions?: ScanLimits;
-  artifactOptions?: ScanLimits;
+  artifactOptions?: ScanLimits & {maxDirectories?: number; maxEntries?: number; maxSkipped?: number};
 }
 export interface ToolArtifact {
   path: string;
