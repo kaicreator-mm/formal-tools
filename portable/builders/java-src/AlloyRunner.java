@@ -19,15 +19,13 @@ public class AlloyRunner {
         }
         A4Reporter rep = new A4Reporter();
         Module world = CompUtil.parseEverything_fromFile(rep, null, args[0]);
-        A4Options opt = new A4Options();
-        opt.solver = A4Options.SatSolver.SAT4J;
-        Command[] cmds = world.getAllCommands();
-        if (cmds.length == 0) {
+        A4Options opt = new A4Options(); // default solver is SAT4J (bundled, headless)
+        if (world.getAllCommands().isEmpty()) {
             System.out.println("ALLOY_ERROR: no commands in file");
             System.exit(3);
         }
         boolean anySat = false;
-        for (Command cmd : cmds) {
+        for (Command cmd : world.getAllCommands()) {
             A4Solution sol = TranslateAlloyToKodkod.execute_command(rep, world.getAllReachableSigs(), cmd, opt);
             boolean sat = sol.satisfiable();
             if (sat) anySat = true;

@@ -39,6 +39,13 @@ ft::fetch() {
     rm -f "$f.part"; ft::die "download failed: $url"
   fi
   mv "$f.part" "$f"
+  # content-type sanity: mirrors behind HTML-SPA frontends may serve 200 with an error page
+  case "$base" in
+    *.tar.gz|*.tgz|*.tar.xz|*.tar.zst|*.tar.bz2|*.zip|*.jar|*.deb|*.gz)
+      if ! file -b "$f" | grep -qiE 'gzip|Zip archive|XZ|Zstandard|POSIX tar|Debian binary'; then
+        rm -f "$f"; ft::die "download is not an archive (mirror served HTML?): $url"
+      fi ;;
+  esac
   got=$(sha256sum "$f" | cut -d' ' -f1)
   ft::note "download_url" "$url"
   ft::note "download_sha256" "$got"
