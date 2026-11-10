@@ -44,6 +44,28 @@ No result in layer 1 implies layer 2 or 3 by itself. `NOT_RUN / UNKNOWN / INCONC
 
 Immutable package with applicability envelope, requirement/claim/model/method/tool version hashes, frozen oracle references, replay procedure, evidence and expiration/invalidation policies. **Method structural validity alone can never promote to `REUSABLE`.** Changed requirements or tool implementations invalidate earlier evidence until requalification.
 
+## R4 tool permission, privacy and cross-tool data-flow admission (design-only)
+
+No LLM or tool result can grant itself an execution permission or upgrade a data-release permission. Before G2 implementation, each ProblemSpec / proposed Method must carry a reviewable **data-flow policy**:
+
+- **Source labels**: `PUBLIC / USER_PRIVATE / RESTRICTED`, issuer/source identity, allowed processing purpose, and permitted consumers; unknown provenance defaults to restricted treatment, not public.
+- **Tool boundary**: an allowlisted tool ID + typed operation, approved input sensitivity, external/network side effects, destination policy, maximum input/output size, and budget. Candidate-only discovery records never confer execution permission.
+- **Derived outputs**: track every input artifact/source in a derived evidence/claim dependency graph. A derived artifact cannot silently have a less restrictive release classification than its inputs. Independent review/approval is required before release or declassification, especially when individually innocuous tool outputs together reveal a sensitive conclusion.
+- **Receipt boundary**: attach exact source/model/claim/operation identifiers, tool version, redacted hashes, and disclosed recipients. A receipt is a process-evidence link, never evidence that private inputs may be disclosed or that the original claim is true.
+- **Failure handling**: if destination, source identity, data-flow lineage, authorization or external-fact provenance cannot be established, emit `INCONCLUSIVE/NEEDS_SOURCE` or `BLOCKED_BY_POLICY` as appropriate; never retry using an arbitrary shell or a different tool to bypass policy.
+
+**Frozen design-negative obligations for later G2/G3 tests (NOT_EXECUTED in R0):**
+
+| Case | Invalid proposal | Required admission response |
+|---|---|---|
+| DP1 | Tool A and B reveal separate harmless-looking properties; combined output infers a restricted user attribute and is sent to a public endpoint | Refuse release without explicit approved declassification; keep input→derived-output lineage |
+| DP2 | Discovery returns a candidate tool as `NOT_ASSESSED`, but Method attempts to invoke it | Reject execution capability; `NOT_RUN` |
+| DP3 | Two solver receipts share the same incomplete generated specification | Do not accept agreement as an independent semantic oracle; `INCONCLUSIVE` until source-anchored review |
+| DP4 | A qualified Solution is replayed after its source, assumptions, model or tool version changes | Invalidate / requalify before `REUSABLE` status |
+| DP5 | A tool returns successful exit status with a receipt for another claim/model | Refuse Claim promotion, retain claim↔model↔receipt mismatch |
+
+These are **design acceptance rules**, not new executable G2/G3 functionality, no claim of privacy proof, and no substitute for independent implementation tests.
+
 ## Research R0 executable negative-case baseline
 
 Synthetic D-ADS resource-writer scheduling semantics used **only as cross-tool regression fixture**, not as a domain-simulator authority:
