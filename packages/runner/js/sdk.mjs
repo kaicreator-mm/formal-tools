@@ -82,11 +82,17 @@ export async function invokeStagedTool(request) {
   // Validate operation and flags before allocating any temporary workspace.
   planNative(tool,operation,settings);
   const operationSpec=describeNativeTool(tool).operations[operation];
-  if(!operationSpec.required.length)
+  // Apalache test takes <file> <before> <action> <assertion>. Only the first
+  // positional is a filesystem input; the other three are state/action names.
+  // Keep their typed argv contract, but do not require phantom staged files.
+  const nonFilePositionals=tool==="apalache"&&operation==="test"
+    ?new Set(["before","action","assertion"]):new Set();
+  const requiredFiles=operationSpec.required.filter(name=>!nonFilePositionals.has(name));
+  if(!requiredFiles.length)
     throw new TypeError("staged API only supports operations with declared input file arguments");
   const namedInputs=validateInputManifest(inputs,workspaceOptions);
   assertStagedOptionPaths(settings,namedInputs);
-  for(const name of operationSpec.required) {
+  for(const name of requiredFiles) {
     if(typeof settings[name]!=="string"||!namedInputs.includes(settings[name]))
       throw new TypeError("required file option "+name+" must reference an explicitly staged input");
   }
