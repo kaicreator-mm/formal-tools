@@ -178,3 +178,48 @@ test("G3: G3 receipts cannot widen original G2 privacy policy or downgrade step 
  assert.equal(r.status,"BLOCKED");
  assert.match(r.issues.join(" "),/downgrades G2 step sensitivity/);
 });
+
+test("G3 security P1: instance-overridden G2 tool allowlist cannot forge authorization",()=>{
+ const a=fixture();
+ a.problem.policy.allowed_tools=[];
+ a.problem.policy.allowed_tools.includes=()=>true;
+ a.problem.policy.allowed_tools.some=()=>false;
+ const result=inspectByteBoundClaim(a);
+ assert.equal(result.status,"BLOCKED");
+ assert.equal(result.native_host_attested,false);
+ assert.equal(result.solution_promotable,false);
+});
+
+test("G3 security P1: overridden G2 typed operation array cannot grant extra operations",()=>{
+ const a=fixture();
+ a.problem.policy.allowed_operations.z3=[];
+ a.problem.policy.allowed_operations.z3.includes=()=>true;
+ assert.equal(inspectByteBoundClaim(a).status,"BLOCKED");
+ const b=fixture();
+ b.method.goal_claim_ids.includes=()=>true;
+ assert.equal(inspectByteBoundClaim(b).status,"BLOCKED");
+});
+
+test("G3 security P1: nested Proxy, getter and sparse Method arrays fail closed",()=>{
+ const a=fixture();
+ a.problem.policy.allowed_tools=new Proxy(["z3"],{get:(target,key)=>key==="includes"?()=>true:Reflect.get(target,key)});
+ assert.equal(inspectByteBoundClaim(a).status,"BLOCKED");
+ const b=fixture();
+ Object.defineProperty(b.method.steps,"0",{get(){return {};},configurable:true});
+ assert.equal(inspectByteBoundClaim(b).status,"BLOCKED");
+ const c=fixture();
+ c.method.steps=new Array(1);
+ assert.equal(inspectByteBoundClaim(c).status,"BLOCKED");
+});
+
+test("G3 security P1: ordinary parsed JSON Method and ProblemSpec retain unverified byte binding",()=>{
+ const a=fixture();
+ a.problem=JSON.parse(JSON.stringify(a.problem));
+ a.method=JSON.parse(JSON.stringify(a.method));
+ a.bundle=JSON.parse(JSON.stringify(a.bundle));
+ const result=inspectByteBoundClaim(a);
+ assert.equal(result.status,"BYTES_BOUND_UNATTESTED",JSON.stringify(result.issues));
+ assert.equal(result.claim_result,"UNVERIFIED");
+ assert.equal(result.native_host_attested,false);
+ assert.equal(result.solution_promotable,false);
+});
