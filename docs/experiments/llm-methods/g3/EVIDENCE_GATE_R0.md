@@ -36,6 +36,6 @@ A bundle declares an **atomic claim** (stable ID, verification kind, required st
 
 ## Test / acceptance
 
-At current source stage: 13 synthetic cases cover output forging, different claim/source/model SHA, wrong tool/operation/permission, duplicated or missing steps, unsupported statuses, privacy declassification, local-only policy and arbitrary-size malformed arrays.
+At current source stage: 14 synthetic cases cover output forging, different claim/source/model SHA, wrong tool/operation/permission, duplicated or missing steps, unsupported statuses, privacy declassification, local-only policy and arbitrary-size malformed arrays.
 
 **Gate:** exact final-SHA `node --test tests/evidence-gate.test.mjs`, `node --test tests/*.test.mjs`, `npm run typecheck`, Woodpecker push+PR, then source review. All this is **G3 PREP**, not G3 ACCEPTED. G2's independent review must not be bypassed by merging this PR prematurely.
