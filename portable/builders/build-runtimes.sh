@@ -13,10 +13,14 @@ set -uo pipefail
 LOG="$FT_OUT/logs/runtimes.build.log"
 mkdir -p "$FT_OUT/runtimes" "$FT_OUT/logs" "$FT_CACHE" /tmp/rt
 : > "$LOG"
-log() { printf '[%s] %s\n' "$(date -u '+%H:%M:%S')" "$*" | tee -a "$LOG" >&2; }
+log() { printf '[%s] %s\n' "$(date -u '+%H:%M:%S')" "$*" >> "$LOG"; }
 
 fetch() { # url [sha256]
-  local url="$1" want="${2:-}" f="/tmp/rt/$(basename "${url%%\?*}")"
+  local url="$1"
+  local want="${2:-}"
+  local base
+  base=$(basename "${url%%\?*}")
+  local f="/tmp/rt/$base"
   if [ -f "$f" ] && [ -f "$f.ok" ]; then echo "$f"; return 0; fi
   log "fetch: $url"
   local attempt ok=0
@@ -29,7 +33,7 @@ fetch() { # url [sha256]
     log "fetch attempt $attempt failed for $url"
     sleep 3
   done
-  [ "$ok" = 1 ] || { log "FATAL fetch $url"; exit 3; }
+  [ "$ok" = 1 ] || { log "FATAL fetch $url"; echo "FATAL fetch $url" >&2; exit 3; }
   local got; got=$(sha256sum "$f" | cut -d' ' -f1)
   log "sha256: $got"
   if [ -n "$want" ]; then
