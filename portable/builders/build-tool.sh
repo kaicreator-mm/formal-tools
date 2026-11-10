@@ -23,7 +23,14 @@ rm -rf "$FT_TOOL_DIR"; mkdir -p "$FT_TOOL_DIR"
 source "$spec"
 ft::log "building $id version=${FT_TOOL_VERSION:-runtime-resolved} kind=${FT_TOOL_KIND:-binary}"
 
-ft_tool_build || { rc=$?; ft::log "spec build failed rc=$rc"; ft::note build_status FAILED; exit "$rc"; }
+if ! ( ft_tool_build ); then
+  rc=$?
+  if [ -f "$FT_TOOL_DIR/UNAVAILABLE" ]; then
+    ft::log "spec exited via ft::unavailable (rc=$rc) — writing meta and continuing"
+  else
+    ft::log "spec build failed rc=$rc"; ft::note build_status FAILED; exit "$rc"
+  fi
+fi
 
 # ---- version probe (best effort) ------------------------------------------
 FT_PROBE=("${FT_PROBE[@]:-}")
