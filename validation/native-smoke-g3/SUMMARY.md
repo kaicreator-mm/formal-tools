@@ -23,8 +23,8 @@
 - 元数据中的本地绝对路径（argv/tool_bin_dir/executable/missing/diagnostics/error 文本）折叠为**末 3 段**（`…\.venv\bin\z3.exe` 形式）；stdout/stderr 保持逐字（哈希锚定证据，不改写）。
 - **fail-closed 不变量**：写盘前全量扫描收据 JSON，任何残留盘符绝对路径 → 抛错拒写，宁可失败不发布泄漏收据。
 - 首采 v1.1 收据含 22 处主机名/绝对路径字符串（公开仓库隐私暴露，P1），已由 v1.2 重采替换；z3 判定与 stdout SHA-256 与首采逐项一致（同一二进制同输出，证据等价）。
-- **独立复核发现的历史风险（尚未消除）：** 旧提交 `2effef8775d6946bf1ccd3153291121de4562c62` 仍能通过 GitHub 完整 SHA 读取早期 v1.1 JSON（真实 hostname + 本地绝对路径）；新的分支 HEAD / Git 对象重新提交 **不能** 保证 GitHub 已删除旧对象或其他引用/缓存。必须由 Owner 决定既有公开披露的保留/通知/处置并向 GitHub 管理渠道确认实际清理证据；本 PR 不改写其他分支的历史，不宣称完成隐私擦除。
-- **本次独立修复：** 新生成器还检测 POSIX/Linux/WSL/macOS 绝对路径，同时 Windows 路径识别不会截断 `https://` URL；stdout/stderr 中含本地绝对路径仍 fail-closed 拒绝公开写盘。已提交跨平台隐私回归测试。历史 v1.2 收据本身未改动。
+- **独立复核发现的历史风险（Owner 已接受）：** 旧提交 `2effef8775d6946bf1ccd3153291121de4562c62` 仍可能通过 GitHub 完整 SHA 读取早期 v1.1 JSON（真实 hostname + 本地绝对路径）；新的 HEAD **不能** 证明 GitHub 已清除旧对象。Owner 已在 [Issue #11 决议 #6778865075](https://github.com/kaicreator-mm/formal-tools/issues/11#issuecomment-6778865075) 接受仅限任务专用工作机非秘密路径及主机名的历史残留风险，明确不要求历史重写或 GitHub purge；该项不再作为当前 PR 未解决 P1。令牌、密钥和未知敏感信息仍不在接受范围内；本 PR 不触碰 #7 或旧 R1。
+- **本次独立修复：** 新生成器还检测 POSIX/Linux/WSL/macOS 绝对路径，同时 Windows 路径识别不会截断 `https://` URL；追加覆盖 `error:C:\\...`、`error:/home/...` 与逗号/方括号前缀的边界校验，拒绝 hash-anchored stdout/stderr 中新发现的此类路径。新增 2 条回归测试，总计 9 条隐私测试；并修复扩大正则范围后误判已脱敏 `…/` 路径导致的回归。**历史 v1.2 原始收据完全不改写**，新增代码仅影响后续收据捕获。
 - **输入字节匹配说明：** Windows 本地 `core.autocrlf` 造成 `positive.smt2` 与 `negative.smt2` 工作树内容为 CRLF；分别以 Git blob LF 文本转换 CRLF 后重算 SHA-256，匹配 v1.2 收据中的 `ad656e3f...` 与 `137366ea...`。原始 Git blob LF SHA 不相同；该区分不意味着源模型被独立语义证明。
 
 ## HOST_IDENTITY
