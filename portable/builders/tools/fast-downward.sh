@@ -9,9 +9,9 @@ FT_PROBE=(fast-downward.py --help)
 ft_tool_build() {
   local tgz=""
   for u in \
-    "https://gitlab.com/aibasel/downward/-/archive/main/downward-main.tar.gz" \
+    "https://codeload.github.com/aibasel/downward/tar.gz/refs/heads/main" \
     "https://github.com/aibasel/downward/archive/refs/heads/main.tar.gz" \
-    "https://codeload.github.com/aibasel/downward/tar.gz/refs/heads/main"; do
+    "https://gitlab.com/aibasel/downward/-/archive/main/downward-main.tar.gz"; do
     tgz=$(ft::fetch "$u" 2>/dev/null) && break
   done
   [ -n "$tgz" ] || ft::unavailable "downward source unreachable (gitlab.com + github mirror both failed)"

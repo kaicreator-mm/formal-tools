@@ -26,7 +26,7 @@ ensure_debian() {
 builder_image() {
   if ! img "$FT_IMG"; then
     ensure_debian || return 1
-    docker build -q -t "$FT_IMG" "$FT_SRC/builders" || return 1
+    docker build -q -t "$FT_IMG" -f "$FT_SRC/builders/base.Dockerfile" "$FT_SRC/builders" || return 1
   fi
 }
 

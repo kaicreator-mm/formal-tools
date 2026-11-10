@@ -4,6 +4,10 @@ FROM debian:13
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+# deb.debian.org is unreachable from the build network; use USTC mirror
+RUN printf 'deb http://mirrors.ustc.edu.cn/debian trixie main\ndeb http://mirrors.ustc.edu.cn/debian-security trixie-security main\n' > /etc/apt/sources.list \
+    && rm -f /etc/apt/sources.list.d/debian.sources
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
         ca-certificates curl wget xz-utils zstd unzip bzip2 file binutils patchelf \
         build-essential cmake ninja-build pkg-config git autoconf automake libtool m4 \
