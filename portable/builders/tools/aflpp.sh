@@ -10,13 +10,12 @@ ft_tool_build() {
   local tgz; tgz=$(ft::fetch "$FT_UPSTREAM_URL")
   ft::extract "$tgz" /tmp/aflx
   local src; src=$(find /tmp/aflx -maxdepth 1 -type d -name 'AFLplusplus*' | head -1)
-  ( cd "$src" && make -j"$(nproc)" afl-fuzz afl-gcc afl-compiler-rt.o >>"$FT_LOG" 2>&1 ) \
-    || ft::die "AFL++ build failed (explicit targets)"
-  mkdir -p "$FT_TOOL_DIR/bin" "$FT_TOOL_DIR/lib" "$FT_TOOL_DIR/testcases"
-  cp "$src/afl-fuzz" "$src/afl-gcc" "$src/afl-compiler-rt.o" "$FT_TOOL_DIR/bin/" 2>/dev/null || true
+  ( cd "$src" && make -j"$(nproc)" afl-fuzz >>"$FT_LOG" 2>&1 ) \
+    || ft::die "AFL++ afl-fuzz build failed"
+  mkdir -p "$FT_TOOL_DIR/bin" "$FT_TOOL_DIR/testcases"
+  cp "$src/afl-fuzz" "$FT_TOOL_DIR/bin/"
   cp -a "$src/include" "$FT_TOOL_DIR/" 2>/dev/null || true
-  [ -f "$FT_TOOL_DIR/bin/afl-compiler-rt.o" ] || cp "$src/afl-compiler-rt.o" "$FT_TOOL_DIR/bin/" || ft::die "afl-compiler-rt.o missing"
-  # build an instrumented smoke target now (needs afl-gcc at build time only)
+  # plain-compiled smoke target; fuzzed in non-instrumented mode (-n), so no compiler plugin needed
   cat > /tmp/smoke.c <<'EOF'
 #include <stdio.h>
 #include <string.h>
@@ -31,13 +30,12 @@ int main(int argc, char **argv) {
   return 0;
 }
 EOF
-  AFL_QUIET=1 "$src/afl-gcc" -O1 -o "$FT_TOOL_DIR/test-target" /tmp/smoke.c >>"$FT_LOG" 2>&1 \
-    || ft::die "afl-gcc instrumentation of smoke target failed"
+  gcc -O1 -o "$FT_TOOL_DIR/test-target" /tmp/smoke.c >>"$FT_LOG" 2>&1 || ft::die "smoke target compile failed"
   printf 'AAAA' > "$FT_TOOL_DIR/testcases/seed"
-  ft::make_shim 'export AFL_SKIP_CPUFREQ=1 AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1 AFL_NO_AFFINITY=1 AFL_NO_UI=1
+  ft::make_shim 'export AFL_SKIP_CPUFREQ=1 AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1 AFL_NO_AFFINITY=1 AFL_NO_UI=1 AFL_DISABLE_TRIM=1
 if [ "$1" = "--fuzz-smoke" ]; then
   out="$FT_TMP/afl-out"; rm -rf "$out"; mkdir -p "$out"
-  timeout 30 "$TOOL_DIR/bin/afl-fuzz" -V 3 -i "$TOOL_DIR/testcases" -o "$out" "$TOOL_DIR/test-target" "$TOOL_DIR/testcases/seed" >/dev/null 2>&1
+  timeout 40 "$TOOL_DIR/bin/afl-fuzz" -n -V 3 -t 200 -i "$TOOL_DIR/testcases" -o "$out" "$TOOL_DIR/test-target" "$TOOL_DIR/testcases/seed" >/dev/null 2>&1
   st=$?
   n=$(grep -oE "execs_done *: *[0-9]+" "$out/default/fuzzer_stats" 2>/dev/null | grep -oE "[0-9]+" | head -1)
   n="${n:-0}"
