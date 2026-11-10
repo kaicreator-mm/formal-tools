@@ -265,3 +265,23 @@ test("G2: malformed claim IDs and oversized DAG return REJECTED without traversi
  assert.match(blocked.issues.join(" "),/step count exceeds budget/);
  assert.equal(blocked.tool_execution,"NOT_RUN");
 });
+
+
+test("G2: a tool step cannot claim proof about a different source even with correct capability",()=>{
+ const {problem,method}=fixture();
+ problem.source_refs.push({id:"unrelated",sha256:"b".repeat(64),classification:"PUBLIC",
+   purpose:"independent fixture",consumer:"formal_tools"});
+ method.steps[0].source_refs=["unrelated"];
+ const bad=assessMethod(problem,method);
+ assert.equal(bad.status,"REJECTED");
+ assert.match(bad.issues.join(" "),/claim source missing from transitive step lineage/);
+ method.steps.unshift({
+   id:"source_step",tool_id:"z3",operation:"solve",claim_ids:[],provides:["logic.smt"],
+   depends_on:[],source_refs:["requirements"],estimated_cost_units:1,timeout_ms:150,
+   destination:"LOCAL",output_classification:"PUBLIC"
+ });
+ method.steps[1].depends_on=["source_step"];
+ const valid=assessMethod(problem,method);
+ assert.equal(valid.status,"STRUCTURALLY_VALID",JSON.stringify(valid.issues));
+ assert.equal(valid.tool_execution,"NOT_RUN");
+});
