@@ -14,7 +14,7 @@ const withSource=async callback=>{
 test("staged SDK rejects nonstaged or unsafe input names before launching",()=>withSource(async root=>{
   await writeFile(join(root,"model.smt2"),"(check-sat)");
   const common={tool:"z3",operation:"solve",sourceRoot:root,inputs:["model.smt2"]};
-  await assert.rejects(invokeStagedTool({...common,settings:{input:"../escape"}}),/explicitly staged|invalid/);
+  await assert.rejects(invokeStagedTool({...common,settings:{input:"../escape"}}),/may not access paths outside the private workspace/);
   await assert.rejects(invokeStagedTool({...common,inputs:["../escape"],settings:{input:"../escape"}}),/invalid/);
   await assert.rejects(invokeStagedTool({...common,settings:{input:"absent.smt2"}}),/explicitly staged/);
   await assert.rejects(invokeStagedTool({...common,settings:{}}),/must be nonempty|required/);
