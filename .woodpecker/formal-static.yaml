@@ -12,6 +12,9 @@ steps:
     commands:
       - node --version
       - node --test tests/*.test.mjs
+      # Local-backend Woodpecker only guarantees Node/bash. tsc/@types/node
+      # are project devDependencies, not bundled with the agent image.
+      - npm install --ignore-scripts --no-audit --no-fund --prefer-offline
       - npm run typecheck
       - node packages/runner/js/cli.mjs validate
       - node packages/runner/js/cli.mjs pure dag --input validation/js/dag-positive.json
