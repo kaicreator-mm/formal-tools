@@ -14,6 +14,7 @@ ft_tool_build() {
     || ft::die "rustup-init fetch failed"
   sh /tmp/rustup-init.sh -y --profile minimal --default-toolchain stable >>"$FT_LOG" 2>&1 \
     || ft::die "rustup install failed"
+  rustup default stable >>"$FT_LOG" 2>&1 || true
   export PATH="/root/.cargo/bin:$PATH"
   cargo install --locked kani-verifier >>"$FT_LOG" 2>&1 || ft::die "cargo install kani-verifier failed"
   mkdir -p "$FT_TOOL_DIR/home" "$FT_TOOL_DIR/bin"
