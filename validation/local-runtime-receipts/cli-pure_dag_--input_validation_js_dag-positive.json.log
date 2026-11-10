@@ -1,0 +1,15 @@
+{
+  "tool_outcome": "ACYCLIC",
+  "test_verdict": "PASS",
+  "claim_verdict": "NOT_EVALUATED",
+  "execution": "PURE_JS",
+  "topological_order": [
+    "L1",
+    "L2",
+    "task"
+  ],
+  "node_count": 3,
+  "edge_count": 2,
+  "scope": "complete supplied finite graph"
+}
+EXIT=0

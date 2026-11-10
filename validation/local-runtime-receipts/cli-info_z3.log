@@ -1,0 +1,23 @@
+{
+  "id": "z3",
+  "title": "Z3",
+  "source": "https://github.com/Z3Prover/z3",
+  "entries": [
+    "z3"
+  ],
+  "help": {
+    "entry": "z3",
+    "args": [
+      "-h"
+    ]
+  },
+  "runtime": {
+    "kind": "binary",
+    "command": "z3",
+    "probeArgs": [
+      "-version"
+    ]
+  },
+  "operationCount": 2
+}
+EXIT=0

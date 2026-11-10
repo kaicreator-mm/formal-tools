@@ -1,0 +1,22 @@
+{
+  "status": "STATIC_PASS",
+  "count": 13,
+  "issues": [],
+  "warnings": [
+    "optional Skill header mismatch for lean4",
+    "optional Skill header mismatch for z3",
+    "optional Skill header mismatch for cvc5",
+    "optional Skill header mismatch for tla-tlc",
+    "optional Skill header mismatch for apalache",
+    "optional Skill header mismatch for alloy",
+    "optional Skill header mismatch for souffle",
+    "optional Skill header mismatch for rdf-shacl",
+    "optional Skill header mismatch for vampire",
+    "optional Skill header mismatch for clingo",
+    "optional Skill header mismatch for apache-jena",
+    "optional Skill header mismatch for prob",
+    "optional Skill header mismatch for dafny"
+  ],
+  "native_runtime": "NOT_RUN"
+}
+EXIT=0

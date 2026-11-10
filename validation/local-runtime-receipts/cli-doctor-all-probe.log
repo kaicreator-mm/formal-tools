@@ -1,0 +1,260 @@
+{
+  "status": "STATIC_ENVIRONMENT_INSPECTION_ONLY",
+  "tools": 13,
+  "counts": {
+    "MISSING_EXECUTABLE": 9,
+    "NEEDS_CONFIGURATION": 2,
+    "FOUND_NOT_PROBED": 2
+  },
+  "checks": [
+    {
+      "tool": "lean4",
+      "status": "MISSING_EXECUTABLE",
+      "launcher": "binary",
+      "diagnostics": [
+        "No matching executable found in the configured directory or PATH"
+      ],
+      "searched": 230,
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "z3",
+      "status": "MISSING_EXECUTABLE",
+      "launcher": "binary",
+      "diagnostics": [
+        "No matching executable found in the configured directory or PATH"
+      ],
+      "searched": 230,
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "cvc5",
+      "status": "MISSING_EXECUTABLE",
+      "launcher": "binary",
+      "diagnostics": [
+        "No matching executable found in the configured directory or PATH"
+      ],
+      "searched": 230,
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "tla-tlc",
+      "status": "NEEDS_CONFIGURATION",
+      "launcher": "java-jar",
+      "missing": [
+        "TLA2TOOLS_JAR"
+      ],
+      "diagnostics": [
+        "Set TLA2TOOLS_JAR to the installed upstream tool location; no automatic install will occur"
+      ],
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "apalache",
+      "status": "MISSING_EXECUTABLE",
+      "launcher": "binary",
+      "diagnostics": [
+        "No matching executable found in the configured directory or PATH"
+      ],
+      "searched": 230,
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "alloy",
+      "status": "NEEDS_CONFIGURATION",
+      "launcher": "alloy",
+      "missing": [
+        "FORMAL_ALLOY_JAR or FORMAL_ALLOY_BIN"
+      ],
+      "diagnostics": [
+        "Set FORMAL_ALLOY_JAR or FORMAL_ALLOY_BIN to the installed upstream tool location; no automatic install will occur"
+      ],
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "souffle",
+      "status": "MISSING_EXECUTABLE",
+      "launcher": "binary",
+      "diagnostics": [
+        "No matching executable found in the configured directory or PATH"
+      ],
+      "searched": 230,
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "rdf-shacl",
+      "status": "FOUND_NOT_PROBED",
+      "launcher": "python-module",
+      "executable": "C:\\msys64\\ucrt64\\bin\\python3.exe",
+      "argv": [
+        "C:\\msys64\\ucrt64\\bin\\python3.exe",
+        "-m",
+        "pyshacl",
+        "--help"
+      ],
+      "diagnostics": [
+        "Python module presence is not checked by PATH inspection; run a real version probe"
+      ],
+      "probe_status": "NOT_RUN",
+      "searched": 230
+    },
+    {
+      "tool": "vampire",
+      "status": "MISSING_EXECUTABLE",
+      "launcher": "binary",
+      "diagnostics": [
+        "No matching executable found in the configured directory or PATH"
+      ],
+      "searched": 230,
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "clingo",
+      "status": "FOUND_NOT_PROBED",
+      "launcher": "python-module",
+      "executable": "C:\\msys64\\ucrt64\\bin\\python3.exe",
+      "argv": [
+        "C:\\msys64\\ucrt64\\bin\\python3.exe",
+        "-m",
+        "clingo",
+        "--help"
+      ],
+      "diagnostics": [
+        "Python module presence is not checked by PATH inspection; run a real version probe"
+      ],
+      "probe_status": "NOT_RUN",
+      "searched": 230
+    },
+    {
+      "tool": "apache-jena",
+      "status": "MISSING_EXECUTABLE",
+      "launcher": "binary",
+      "diagnostics": [
+        "No matching executable found in the configured directory or PATH"
+      ],
+      "searched": 230,
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "prob",
+      "status": "MISSING_EXECUTABLE",
+      "launcher": "binary",
+      "diagnostics": [
+        "No matching executable found in the configured directory or PATH"
+      ],
+      "searched": 230,
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "dafny",
+      "status": "MISSING_EXECUTABLE",
+      "launcher": "binary",
+      "diagnostics": [
+        "No matching executable found in the configured directory or PATH"
+      ],
+      "searched": 230,
+      "probe_status": "NOT_RUN"
+    }
+  ],
+  "probes": [
+    {
+      "tool": "lean4",
+      "run_status": "NOT_RUN",
+      "reason": "MISSING_EXECUTABLE"
+    },
+    {
+      "tool": "z3",
+      "run_status": "NOT_RUN",
+      "reason": "MISSING_EXECUTABLE"
+    },
+    {
+      "tool": "cvc5",
+      "run_status": "NOT_RUN",
+      "reason": "MISSING_EXECUTABLE"
+    },
+    {
+      "tool": "tla-tlc",
+      "run_status": "NOT_RUN",
+      "reason": "NEEDS_CONFIGURATION"
+    },
+    {
+      "tool": "apalache",
+      "run_status": "NOT_RUN",
+      "reason": "MISSING_EXECUTABLE"
+    },
+    {
+      "tool": "alloy",
+      "run_status": "NOT_RUN",
+      "reason": "NEEDS_CONFIGURATION"
+    },
+    {
+      "tool": "souffle",
+      "run_status": "NOT_RUN",
+      "reason": "MISSING_EXECUTABLE"
+    },
+    {
+      "tool": "rdf-shacl",
+      "run_status": "EXECUTED",
+      "version_verdict": "UNVERIFIED",
+      "argv": [
+        "python3",
+        "-m",
+        "pyshacl",
+        "--help"
+      ],
+      "exit_code": 1,
+      "signal": null,
+      "elapsed_ms": 68,
+      "timed_out": false,
+      "stdout": "",
+      "stderr": "C:/msys64/ucrt64/bin/python3.exe: No module named pyshacl\r\n",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "d7a20167f94a4f44758785e618b4582e0466ae180f7f5effa50bae94beb104cb",
+      "error": null,
+      "output_truncated": false
+    },
+    {
+      "tool": "vampire",
+      "run_status": "NOT_RUN",
+      "reason": "MISSING_EXECUTABLE"
+    },
+    {
+      "tool": "clingo",
+      "run_status": "EXECUTED",
+      "version_verdict": "UNVERIFIED",
+      "argv": [
+        "python3",
+        "-m",
+        "clingo",
+        "--help"
+      ],
+      "exit_code": 1,
+      "signal": null,
+      "elapsed_ms": 26,
+      "timed_out": false,
+      "stdout": "",
+      "stderr": "C:/msys64/ucrt64/bin/python3.exe: No module named clingo\r\n",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "de2b98ecd88d986af206bc643582cee2bda1faaefed869c465d42a5b96826dfe",
+      "error": null,
+      "output_truncated": false
+    },
+    {
+      "tool": "apache-jena",
+      "run_status": "NOT_RUN",
+      "reason": "MISSING_EXECUTABLE"
+    },
+    {
+      "tool": "prob",
+      "run_status": "NOT_RUN",
+      "reason": "MISSING_EXECUTABLE"
+    },
+    {
+      "tool": "dafny",
+      "run_status": "NOT_RUN",
+      "reason": "MISSING_EXECUTABLE"
+    }
+  ],
+  "probe_status": "REAL_NATIVE_ATTEMPT"
+}
+EXIT=2

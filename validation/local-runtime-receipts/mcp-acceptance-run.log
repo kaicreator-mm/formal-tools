@@ -1,0 +1,15 @@
+PASS  initialize handshake — serverInfo={"name":"formal-tools-skill","version":"0.3.0"} protocol=2025-06-18
+PASS  tools/list exposes exactly the 9 registered tools — describe_native_cli,inspect_formal_tool,inspect_native_installation,list_formal_tools,plan_native_cli,probe_formal_tool,run_formal_fixture,validate_formal_source,verify_formal_model
+PASS  inspect_native_installation input schema is tool-only (no shell/argv/cwd passthrough) — {"type":"object","$schema":"https://json-schema.org/draft/2020-12/schema","properties":{"tool":{"type":"string"}},"required":["tool"]}
+PASS  list_formal_tools reports 13 native tools — native=13 pure=["dag","writers","cnf","states"]
+PASS  validate_formal_source returns STATIC_PASS — STATIC_PASS
+PASS  inspect_formal_tool describes z3 — {"id":"z3","skill":"skills/z3/SKILL.md","cwd":"skills/z3","doctor":"z3 -version","positive_command":"z3 -smt2 examples/p
+PASS  probe_formal_tool fails closed without fabricating a version — {"tool":"z3","run_status":"NOT_RUN","version_verdict":"UNVERIFIED","argv":["z3","-version"],"exit_code":null,"signal":null,"elapsed_ms":4,"timed_out":false,"std
+PASS  run_formal_fixture records honest non-PASS when binary missing — {"test_verdict":"INCONCLUSIVE"}
+PASS  describe_native_cli returns operations — operations=solve,dimacs
+PASS  inspect_native_installation is read-only (probe_status NOT_RUN, no execution) — {"status":"MISSING_EXECUTABLE","probe_status":"NOT_RUN"}
+PASS  plan_native_cli validates settings and returns argv without executing — {"tool":"z3","operation":"solve","entry":"z3","args":["-smt2","skills/z3/examples/positive.smt2"],"mode":"typed","runtime":"NOT_RUN"}
+PASS  verify_formal_model really verifies the DAG model in pure JS — {"tool_outcome":"ACYCLIC","test_verdict":"PASS","claim_verdict":"NOT_EVALUATED","execution":"PURE_JS","topological_order":["L1","L2","task"],"node_count":3,"edg
+PASS  unknown tool id is rejected by schema (no generic executable) — "Input validation error: Invalid arguments for tool inspect_native_installation: tool: Unknown registered formal tool"
+receipt: C:\xDev\kAiCreator\formal-tools\i7-r1-accept\validation\local-runtime-receipts\mcp-acceptance.json — 13/13 checks passed
+EXIT=0
