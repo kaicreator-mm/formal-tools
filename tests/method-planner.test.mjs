@@ -25,7 +25,7 @@ function fixture() {
   const method={
     schema:"formal-tools/method-proposal/0.1",method_id:"method01",problem_id:"ads.graph.r0",
     goal_claim_ids:["claim1"],oracle_ids:["heldout"],semantic_review:"PENDING",
-    steps:[{id:"step01",tool_id:"z3",operation:"solve",provides:["logic.smt"],
+    steps:[{id:"step01",tool_id:"z3",operation:"solve",claim_ids:["claim1"],provides:["logic.smt"],
       depends_on:[],source_refs:["requirements"],
       estimated_cost_units:2,timeout_ms:300,destination:"LOCAL",output_classification:"PUBLIC"}]
   };
@@ -49,7 +49,7 @@ test("G2: deterministic hash across object property ordering",()=>{
  const {problem,method}=fixture();
  const same=copy(method);
  same.steps[0]={output_classification:"PUBLIC",timeout_ms:300,source_refs:["requirements"],provides:["logic.smt"],
-  estimated_cost_units:2,id:"step01",depends_on:[],operation:"solve",tool_id:"z3",destination:"LOCAL"};
+  estimated_cost_units:2,id:"step01",depends_on:[],operation:"solve",claim_ids:["claim1"],tool_id:"z3",destination:"LOCAL"};
  assert.equal(assessMethod(problem,method).method_sha256,assessMethod(problem,same).method_sha256);
 });
 test("G2: only existing native typed operation may appear in a plan",()=>{
@@ -177,7 +177,7 @@ test("G2: restrictive inputs cannot be exported by a downstream derived artifact
  problem.policy.max_input_classification="RESTRICTED";
  method.steps[0].output_classification="RESTRICTED";
  method.steps.push({
-   id:"step02",tool_id:"z3",operation:"solve",provides:["logic.smt"],
+   id:"step02",tool_id:"z3",operation:"solve",claim_ids:["claim1"],provides:["logic.smt"],
    depends_on:["step01"],source_refs:[],estimated_cost_units:1,timeout_ms:100,
    destination:"LOCAL",output_classification:"PUBLIC"
  });
@@ -192,7 +192,7 @@ test("G2: a two-tool typed Method DAG is accepted only as a non-executable plan"
  problem.policy.allowed_tools=["z3","cvc5"];
  problem.policy.allowed_operations=/** @type {any} */ ({z3:["solve"],cvc5:["solve"]});
  method.steps.push({
-   id:"step02",tool_id:"cvc5",operation:"solve",provides:["logic.smt"],
+   id:"step02",tool_id:"cvc5",operation:"solve",claim_ids:["claim1"],provides:["logic.smt"],
    depends_on:["step01"],source_refs:[],estimated_cost_units:2,timeout_ms:300,
    destination:"LOCAL",output_classification:"PUBLIC"
  });
@@ -224,4 +224,44 @@ test("G2: cyclic untrusted Method data is rejected without throwing or certifyin
  assert.match(outcome.issues.join(" "),/unexpected fields|cyclic or non-JSON/);
  assert.equal(outcome.executable,false);
  assert.equal(outcome.solution_promotable,false);
+});
+
+
+test("G2: every checkable claim requires capability coverage bound to that claim",()=>{
+ const {problem,method}=fixture();
+ problem.claims.push({...copy(problem.claims[0]),id:"claim2",text:"Different requirement, same tool family"});
+ method.goal_claim_ids.push("claim2");
+ const missing=assessMethod(problem,method);
+ assert.equal(missing.status,"REJECTED");
+ assert.match(missing.issues.join(" "),/required claim capability uncovered: claim2/);
+ method.steps.push({
+   id:"step02",tool_id:"z3",operation:"solve",claim_ids:["claim2"],provides:["logic.smt"],
+   depends_on:["step01"],source_refs:[],estimated_cost_units:2,timeout_ms:300,
+   destination:"LOCAL",output_classification:"PUBLIC"
+ });
+ const valid=assessMethod(problem,method);
+ assert.equal(valid.status,"STRUCTURALLY_VALID",JSON.stringify(valid.issues));
+ assert.equal(valid.executable,false);
+});
+test("G2: forged claim binding, unbound step and empty checkable-claim capability fail closed",()=>{
+ const {problem,method}=fixture();
+ method.steps[0].claim_ids=["ghost_claim"];
+ assert.match(assessMethod(problem,method).issues.join(" "),/bind only declared, checkable/);
+ method.steps[0].claim_ids=[];
+ assert.match(assessMethod(problem,method).issues.join(" "),/required claim capability uncovered/);
+ const p2=fixture();
+ p2.problem.claims[0].capability_ids=[];
+ assert.equal(validateProblemSpec(p2.problem).ok,false);
+ assert.match(validateProblemSpec(p2.problem).errors.join(" "),/checkable claim must declare/);
+});
+test("G2: malformed claim IDs and oversized DAG return REJECTED without traversing input",()=>{
+ const {problem,method}=fixture();
+ method.goal_claim_ids=null;
+ assert.equal(assessMethod(problem,method).status,"REJECTED");
+ const many=fixture();
+ many.method.steps=Array.from({length:5000},(_,i)=>({...many.method.steps[0],id:"step"+i}));
+ const blocked=assessMethod(many.problem,many.method);
+ assert.equal(blocked.status,"REJECTED");
+ assert.match(blocked.issues.join(" "),/step count exceeds budget/);
+ assert.equal(blocked.tool_execution,"NOT_RUN");
 });
