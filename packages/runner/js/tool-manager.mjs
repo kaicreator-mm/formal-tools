@@ -20,6 +20,8 @@ const separators = platform=>platform==="win32"?";":":";
 /**
  * Return explicit, deterministic file probes. Never consult a caller's current
  * directory implicitly, and never claim version compatibility from a path hit.
+ * @param {string} tool Registry tool ID.
+ * @param {{ env?: NodeJS.ProcessEnv, platform?: NodeJS.Platform }} [options]
  */
 export function environmentSearchPlan(tool,{env={},platform="linux"}={}) {
   const toolProfile=toolRuntimeProfile(tool);
@@ -64,6 +66,12 @@ async function fileExists(path,platform,executable=true) {
  * Check installation coordinates without launching the tool. A found command
  * means FOUND_NOT_PROBED, not VERIFIED or PASS.
  * Injecting exists supports deterministic tests on Windows and Linux.
+ * @param {string} tool Registry tool ID.
+ * @param {{
+ *   env?: NodeJS.ProcessEnv,
+ *   platform?: NodeJS.Platform,
+ *   exists?: (path: string, executable?: boolean) => Promise<boolean>
+ * }} [options]
  */
 export async function inspectInstallation(tool,{env=process.env,platform=process.platform,exists}={}) {
   const check=exists??((p,exec=true)=>fileExists(p,platform,exec));
