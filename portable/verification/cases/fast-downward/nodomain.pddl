@@ -1,0 +1,10 @@
+;; Negative: domain has predicates but NO actions -> goal unreachable -> unsolvable
+(define (domain blocks-noop)
+  (:requirements :strips :typing)
+  (:types block)
+  (:predicates (on ?x - block ?y - block)
+               (ontable ?x - block)
+               (clear ?x - block)
+               (handempty)
+               (holding ?x - block))
+)

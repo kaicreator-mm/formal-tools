@@ -1,0 +1,177 @@
+#!/bin/bash
+# tool-runner — unified runner for the formal-tools portable bundle (Debian 13 x86_64).
+# Commands:
+#   list                     list tools with version/kind
+#   doctor [id|all]          environment + dependency self-check
+#   verify <id|all>          real-execution verification (positive/negative cases), writes receipts
+#   run <id> [args...]       run a tool entry point
+#   py <script> [args...]    run a script with the bundled Python 3.13 runtime
+#   node <script> [args...]  run a script with the bundled Node.js 22 runtime
+#   java [args...]           run with the bundled Java 21 JRE
+#   version <id>             recorded + probed version output
+set -uo pipefail
+
+FT_ROOT="$(cd "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+FT_EV="${FT_EVIDENCE_DIR:-$FT_ROOT/evidence}"
+FT_TMP="$(mktemp -d /tmp/ft-XXXXXX)"
+export FT_TMP
+trap 'rm -rf "$FT_TMP"' EXIT
+mkdir -p "$FT_EV"
+
+# ---- python runtime env (shared) -------------------------------------------
+py_env() {
+  export PYTHONHOME="$FT_ROOT/runtimes/python313"
+  export PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1
+  export MPLCONFIGDIR="$FT_TMP/mpl"
+  # pytensor/pymc: no system compiler in minimal runtime -> pure-python mode
+  export PYTENSOR_FLAGS="${PYTENSOR_FLAGS:-cxx=,compiledir=$FT_TMP/pytensor,base_compiledir=$FT_TMP/pytensor}"
+  [ -d "$FT_TMP/mpl" ] || mkdir -p "$FT_TMP/mpl"
+}
+
+tool_meta() { # id -> sources meta.sh into env
+  local m="$FT_ROOT/tools/$1/meta.sh"
+  [ -f "$m" ] || { echo "unknown tool: $1 (no meta)" >&2; return 1; }
+  # shellcheck disable=SC1090
+  . "$m"
+}
+
+list_ids() { for f in "$FT_ROOT"/tools/*/meta.sh; do [ -f "$f" ] && basename "$(dirname "$f")"; done | sort; }
+
+trow() { # verify TSV row: id phase exit duration_ms matched exit_ok label
+  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$1" "$2" "$3" "$4" "$5" "$6" "$7" >> "$FT_EV/verify-$1.tsv"
+}
+
+expand_arg() { # expand $BUNDLE $TOOL_DIR $FT_TMP in a single arg token
+  local a="$1"
+  a="${a//\$BUNDLE/$FT_ROOT}"; a="${a//\$TOOL_DIR/$FT_ROOT/tools/$VID}"; a="${a//\$FT_TMP/$FT_TMP}"
+  printf '%s' "$a"
+}
+
+# ---- verify ----------------------------------------------------------------
+run_case() { # id phase via args_string exit_ok_list regex label
+  local id="$1" phase="$2" via="$3" args_s="$4" ok_exits="$5" re="$6" label="$7"
+  local -a cmd=() args=()
+  case "$via" in
+    run)  cmd=("$FT_ROOT/bin/tool-runner" run "$id") ;;
+    py)   py_env; cmd=("$FT_ROOT/runtimes/python313/bin/python3.13" -s) ;;
+    node) cmd=("$FT_ROOT/runtimes/node22/bin/node") ;;
+    java) export JAVA_HOME="$FT_ROOT/runtimes/java21"; export PATH="$JAVA_HOME/bin:$PATH"; cmd=(java) ;;
+    *)    echo "bad via: $via" >&2; return 2 ;;
+  esac
+  local t
+  for t in $args_s; do cmd+=("$(expand_arg "$t")"); done
+  local t0 te rc out="$FT_EV/verify-$id.$phase.log"
+  t0=$(date +%s%3N)
+  timeout --kill-after=10 "${EXPECT_TIMEOUT:-120}" "${cmd[@]}" >"$out" 2>&1
+  rc=$?
+  te=$(( $(date +%s%3N) - t0 ))
+  # anchor line so tools with empty success output can still be judged
+  printf '\nPHASE_DONE phase=%s rc=%s\n' "$phase" "$rc" >> "$out"
+  local matched=0 exit_ok=0
+  grep -Eq "$re" "$out" && matched=1
+  local e
+  for e in $ok_exits; do [ "$rc" = "$e" ] && exit_ok=1; done
+  trow "$id" "$phase" "$rc" "$te" "$matched" "$exit_ok" "$label"
+  echo "   $id/$phase: exit=$rc dur=${te}ms matched=$matched exit_ok=$exit_ok label=$label (log: $out)"
+  [ "$matched" = 1 ] && [ "$exit_ok" = 1 ]
+}
+
+verify_one() {
+  local id="$1"
+  tool_meta "$id" || return 2
+  local ef="$FT_ROOT/tests/$id/expect.sh"
+  if [ ! -f "$ef" ]; then
+    echo "verify: $id SKIP (no expect.sh — tool unavailable or cases not defined)"
+    printf 'id\tphase\texit\tduration_ms\tmatched\texit_ok\tlabel\nSKIP\tunavailable\nverdict\tSKIP\n' > "$FT_EV/verify-$id.tsv"
+    return 0
+  fi
+  VID="$id"
+  # shellcheck disable=SC1090
+  . "$ef"
+  : "${EXPECT_TIMEOUT:=120}"
+  # optional setup phase (not judged)
+  if [ -n "${EXPECT_SETUP_VIA:-}" ]; then
+    run_case "$id" setup "$EXPECT_SETUP_VIA" "${EXPECT_SETUP_ARGS:-}" "0" "." "SETUP" || true
+  fi
+  local ok=1
+  if [ -n "${EXPECT_POS_REGEX:-}" ]; then
+    run_case "$id" pos "${EXPECT_POS_VIA:-run}" "${EXPECT_POS_ARGS:-}" "${EXPECT_POS_EXIT:-0}" \
+      "$EXPECT_POS_REGEX" "${EXPECT_POS_LABEL:-POS}" || ok=0
+  fi
+  if [ -n "${EXPECT_NEG_REGEX:-}" ]; then
+    run_case "$id" neg "${EXPECT_NEG_VIA:-run}" "${EXPECT_NEG_ARGS:-}" "${EXPECT_NEG_EXIT:-*}" \
+      "$EXPECT_NEG_REGEX" "${EXPECT_NEG_LABEL:-NEG}" || ok=0
+  fi
+  # optional invalid-input case (must fail loudly or report a typed error)
+  if [ -n "${EXPECT_ERR_REGEX:-}" ]; then
+    run_case "$id" err "${EXPECT_ERR_VIA:-run}" "${EXPECT_ERR_ARGS:-}" "${EXPECT_ERR_EXIT:-2 1 3}" \
+      "$EXPECT_ERR_REGEX" "${EXPECT_ERR_LABEL:-ERROR}" || ok=0
+  fi
+  if [ "$ok" = 1 ]; then printf 'verdict\tPASS\n' >> "$FT_EV/verify-$id.tsv"; else printf 'verdict\tFAIL\n' >> "$FT_EV/verify-$id.tsv"; fi
+  [ "$ok" = 1 ]
+}
+
+# ---- doctor ----------------------------------------------------------------
+doctor_one() {
+  local id="$1" fails=0
+  tool_meta "$id" || return 2
+  echo "doctor: $id kind=${TOOL_KIND:-?} version=${TOOL_VERSION:-?}"
+  if [ -n "${TOOL_MAIN_BIN:-}" ]; then
+    if [ -f "$FT_ROOT/$TOOL_MAIN_BIN" ]; then
+      echo "  binary: $TOOL_MAIN_BIN OK (glibc_max=${TOOL_GLIBC_MAX:-n/a})"
+      local miss
+      miss=$(ldd "$FT_ROOT/$TOOL_MAIN_BIN" 2>&1 | grep -c "not found" || true)
+      if [ "${miss:-0}" != 0 ]; then echo "  ldd missing libs: $miss FAIL"; fails=1; else echo "  ldd: no missing libs OK"; fi
+      [ "$(uname -m)" = x86_64 ] || { echo "  arch: host not x86_64 FAIL"; fails=1; }
+    else
+      echo "  binary MISSING: $TOOL_MAIN_BIN"; fails=1
+    fi
+  fi
+  case "${TOOL_KIND:-}" in
+    python*)
+      py_env
+      "$FT_ROOT/runtimes/python313/bin/python3.13" -s -c 'import sys; print("  python:", sys.version.split()[0], "OK")' || fails=1 ;;
+    jar*|java*)
+      "$FT_ROOT/runtimes/java21/bin/java" -version 2>&1 | head -1 | sed 's/^/  java /' || fails=1 ;;
+  esac
+  [ "$fails" = 0 ] && echo "  verdict: OK" || { echo "  verdict: FAIL"; return 1; }
+}
+
+# ---- dispatch --------------------------------------------------------------
+cmd="${1:-help}"
+case "$cmd" in
+  list)
+    printf '%-14s %-10s %-14s %s\n' ID KIND VERSION ENTRY
+    for id in $(list_ids); do
+      tool_meta "$id" 2>/dev/null || continue
+      printf '%-14s %-10s %-14s %s\n' "$id" "${TOOL_KIND:-?}" "${TOOL_VERSION:-?}" "${TOOL_MAIN_BIN:-($TOOL_KIND)}"
+    done
+    ;;
+  doctor)
+    if [ -n "${2:-}" ] && [ "$2" != all ]; then doctor_one "$2"; else
+      rc=0; for id in $(list_ids); do doctor_one "$id" || rc=1; done; exit $rc
+    fi ;;
+  verify)
+    [ -n "${2:-}" ] || { echo "usage: tool-runner verify <id|all>" >&2; exit 2; }
+    if [ "$2" = all ]; then rc=0; for id in $(list_ids); do
+        echo "verify: $id"; verify_one "$id" || rc=1
+      done
+      echo "verify-all verdict: $([ $rc = 0 ] && echo PASS || echo FAIL)"
+      printf 'verdict_all\t%s\n' "$([ $rc = 0 ] && echo PASS || echo FAIL)" >> "$FT_EV/verify-ALL.tsv"
+      exit $rc
+    else verify_one "$2"; fi ;;
+  run)
+    id="${2:?usage: tool-runner run <id> [args...]}"; shift 2
+    tool_meta "$id"
+    exec "$FT_ROOT/tools/$id/run" "$@" ;;
+  py)
+    shift; py_env; exec "$FT_ROOT/runtimes/python313/bin/python3.13" -s "$@" ;;
+  node)
+    shift; exec "$FT_ROOT/runtimes/node22/bin/node" "$@" ;;
+  java)
+    shift; export JAVA_HOME="$FT_ROOT/runtimes/java21"; export PATH="$JAVA_HOME/bin:$PATH"; exec java "$@" ;;
+  version)
+    tool_meta "${2:?}"; echo "tool: ${TOOL_ID}"; echo "version: ${TOOL_VERSION}"; echo "probe: ${TOOL_VERSION_OUTPUT:-n/a}" ;;
+  *)
+    sed -n '2,14p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
+esac

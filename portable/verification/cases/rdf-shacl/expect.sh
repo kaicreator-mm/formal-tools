@@ -1,0 +1,9 @@
+EXPECT_TIMEOUT=180
+EXPECT_POS_ARGS='--shacl tests/rdf-shacl/shape.ttl tests/rdf-shacl/pos.ttl'
+EXPECT_POS_EXIT=0
+EXPECT_POS_REGEX='Conforms: True'
+EXPECT_POS_LABEL=CONFORMS
+EXPECT_NEG_ARGS='--shacl tests/rdf-shacl/shape.ttl tests/rdf-shacl/neg.ttl'
+EXPECT_NEG_EXIT=*
+EXPECT_NEG_REGEX='Conforms: False'
+EXPECT_NEG_LABEL=VIOLATION

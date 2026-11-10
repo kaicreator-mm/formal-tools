@@ -1,0 +1,26 @@
+# All python-library tools share ONE python313 runtime + site-packages.
+# Single resolver pass keeps the closure consistent. Installed with --prefix into
+# runtimes/python313 (see build-runtimes.sh). Floors only — no upper pins on unknown
+# future majors; the recorded build receipt pins the resolved exact versions.
+numpy
+scipy
+pandas
+networkx
+sympy
+matplotlib
+joblib
+scikit-learn
+statsmodels
+patsy
+ortools
+highspy
+hypothesis
+pyshacl
+dowhy
+pymc
+causal-learn
+simpy
+mesa
+tree-sitter
+tree-sitter-language-pack
+pydot

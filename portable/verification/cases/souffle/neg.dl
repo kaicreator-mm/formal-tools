@@ -1,0 +1,4 @@
+// Invalid datalog: duplicate relation declaration must be rejected
+.decl edge(a:number, b:number)
+.decl edge(a:number, b:number)
+edge(1,2).

@@ -1,0 +1,8 @@
+// Positive: transitive closure over edges must derive path(1,3)
+.decl edge(a:number, b:number)
+.decl path(a:number, b:number)
+.output path
+edge(1,2).
+edge(2,3).
+path(a,b) :- edge(a,b).
+path(a,c) :- path(a,b), edge(b,c).

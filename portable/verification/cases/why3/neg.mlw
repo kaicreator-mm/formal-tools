@@ -1,0 +1,4 @@
+theory T
+  use int.Int
+  goal g: 1 + 1 = 3
+end

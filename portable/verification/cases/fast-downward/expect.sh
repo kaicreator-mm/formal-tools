@@ -1,0 +1,9 @@
+EXPECT_TIMEOUT=180
+EXPECT_POS_ARGS='tests/fast-downward/domain.pddl tests/fast-downward/problem.pddl --plan-file $FT_TMP/plan'
+EXPECT_POS_EXIT=0
+EXPECT_POS_REGEX='Solution found'
+EXPECT_POS_LABEL=PLAN_FOUND
+EXPECT_NEG_ARGS='tests/fast-downward/nodomain.pddl tests/fast-downward/problem.pddl --plan-file $FT_TMP/plan'
+EXPECT_NEG_EXIT=*
+EXPECT_NEG_REGEX='([Uu]nsolvable|no solution|Completely explored)'
+EXPECT_NEG_LABEL=UNSOLVABLE

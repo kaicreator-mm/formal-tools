@@ -1,0 +1,13 @@
+EXPECT_TIMEOUT=300
+EXPECT_POS_ARGS='-mc 100 tests/prob/pos.mch'
+EXPECT_POS_EXIT=0
+EXPECT_POS_REGEX='(No counter-example|invariant-violations: 0|ALL OPERATIONS|no counterexample)'
+EXPECT_POS_LABEL=PROPERTY_HOLDS
+EXPECT_NEG_ARGS='-mc 100 tests/prob/neg.mch'
+EXPECT_NEG_EXIT=*
+EXPECT_NEG_REGEX='(invariant-violations: [1-9]|Counter-example|counterexample|violated)'
+EXPECT_NEG_LABEL=COUNTEREXAMPLE
+EXPECT_ERR_ARGS='tests/prob/err.mch'
+EXPECT_ERR_EXIT=*
+EXPECT_ERR_REGEX='(Parse error|error|Error)'
+EXPECT_ERR_LABEL=ERROR
