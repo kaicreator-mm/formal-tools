@@ -9,7 +9,12 @@
 import { toolIds, describeNativeTool } from "./native-catalog.mjs";
 
 const isObject = x => x !== null && typeof x === "object" && !Array.isArray(x);
-const own = (x, fields) => isObject(x) && Object.keys(x).every(k => fields.includes(k));
+// The direct API must not interpret inherited tool approvals or accessor-backed
+// records as trustworthy JSON. An external caller may supply non-JSON objects.
+const dataRecord = x => isObject(x) &&
+  (Object.getPrototypeOf(x)===Object.prototype || Object.getPrototypeOf(x)===null) &&
+  Object.values(Object.getOwnPropertyDescriptors(x)).every(d=>Object.hasOwn(d,"value"));
+const own = (x, fields) => dataRecord(x) && Object.keys(x).every(k => fields.includes(k));
 const id = x => typeof x === "string" && /^[a-z][a-z0-9_.-]{0,79}$/.test(x);
 const sha = x => typeof x === "string" && /^[a-f0-9]{64}$/.test(x);
 const uniq = xs => Array.isArray(xs) && xs.length === new Set(xs).size;
@@ -35,7 +40,11 @@ const denied = (issues, status="BLOCKED") => ({
  *   claim_result:string,semantic_fidelity:string,independent_oracle_review:string,solution_promotable:boolean}}
  */
 export function inspectEvidenceBundle(bundle) {
-  if(!isObject(bundle))return denied(["evidence bundle must be an object"]);
+  try { return inspectEvidenceBundleData(bundle); }
+  catch { return denied(["malformed evidence bundle or unsafe object access"]); }
+}
+function inspectEvidenceBundleData(bundle) {
+  if(!dataRecord(bundle))return denied(["evidence bundle must be a plain data object"]);
   const issues=[];
   const fail=msg=>issues.push(msg);
   if(!own(bundle,["schema","claim","receipts","method_sha256","source_sha256","model_sha256","policy"]))
@@ -58,11 +67,12 @@ export function inspectEvidenceBundle(bundle) {
   if(!own(policy,["allowed_tool_ids","allowed_operations","classification","destination","network_allowed"])||
      !Array.isArray(policy?.allowed_tool_ids)||policy.allowed_tool_ids.length>toolIds.length||
      !uniq(policy.allowed_tool_ids)||policy.allowed_tool_ids.some(x=>!id(x))||
-     !isObject(policy?.allowed_operations)||
+     !dataRecord(policy?.allowed_operations)||
      Object.keys(policy.allowed_operations).length>toolIds.length||
      !Object.entries(policy.allowed_operations).every(([tool,ops])=>
        policy.allowed_tool_ids.includes(tool)&&Array.isArray(ops)&&ops.length<=64&&
        uniq(ops)&&ops.every(id))||
+     !policy.allowed_tool_ids.every(tool=>Object.hasOwn(policy.allowed_operations,tool))||
      !privacy.includes(policy?.classification)||policy?.destination!=="LOCAL"||
      policy?.network_allowed!==false)
     fail("invalid or unsafe execution policy");
@@ -93,7 +103,8 @@ export function inspectEvidenceBundle(bundle) {
        receipt.method_sha256!==bundle.method_sha256)fail("receipt source/model/method digest mismatch");
     if(!nativeIds.has(receipt.tool_id)||
        !policy?.allowed_tool_ids?.includes(receipt.tool_id))fail("unregistered or unpermitted native tool: "+receipt.tool_id);
-    else if(!policy.allowed_operations[receipt.tool_id]?.includes(receipt.operation))
+    else if(!Object.hasOwn(policy.allowed_operations,receipt.tool_id)||
+            !policy.allowed_operations[receipt.tool_id]?.includes(receipt.operation))
       fail("tool operation not permitted by execution policy: "+receipt.tool_id+"/"+receipt.operation);
     else{
       let operations;

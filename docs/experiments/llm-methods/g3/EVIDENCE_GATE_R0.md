@@ -26,6 +26,12 @@ A bundle declares an **atomic claim** (stable ID, verification kind, required st
 
 **Explicitly NOT ENOUGH for truth**: `tool_status=SAT/UNSAT/PROVED`, matching self-declared SHA values, `exit_code=0`, an independent-oracle *name* or an LLM-generated `PASS` flag. `LINKED_UNVERIFIED` is never `SUPPORTED_WITH_SCOPE`. Receipts are treated as **self-assertions** until a trusted runner attests their byte-level identities.
 
+## Fresh security review R1: hostile object and permission provenance limits
+
+- Incoming JavaScript records must be **plain data**, not accessor-bearing or prototype-inherited policy objects. Operation rights must be explicitly **own properties** of the permitted-tool operation map; a prototype's `z3.solve` entry is never an authorization. Malformed/proxy input is fail-closed, not a propagated exception containing untrusted text.
+- This checker still treats the entire declared `policy`, source/model/method hashes, tool binary hashes and receipts as **self-asserted metadata**. It does not inspect G2 ProblemSpec bytes or Method DAG execution results. A G2 plan with valid static SHA is **not** a trusted host attestation, an executed semantic Oracle, or a tool result. Operators must obtain host-owned authorization and a source-byte-verified model/Method attestation before any later component may consider `SUPPORTED_WITH_SCOPE`.
+- In particular, `LINKED_UNVERIFIED` is not a business `PASS`, no matter whether the claimed tool outcome is SAT, UNSAT, PROVED, COUNTEREXAMPLE, TEST_FAIL or OPTIMAL. G3 full runtime/Oracle proof and G4 Solution qualification remain separate gates.
+
 ## Next G3 runtime and semantic work (not implemented here)
 
 1. Bridge approved G2 typed method/operation and the existing runner's real invocation; verify binary and command identity at the host, enforce OS/process/network/time/size limits and input sensitivity, generate **actual** SHA receipts. Never pass arbitrary `argv`, shell or unsupported candidate tools.

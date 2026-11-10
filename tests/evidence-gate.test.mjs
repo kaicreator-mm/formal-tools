@@ -143,3 +143,41 @@ test("G3 prework: oversized claim step list and tool operation policy are reject
   c.policy.allowed_tool_ids=Array.from({length:1000},(_,i)=>"tool"+i);
   assert.equal(inspectEvidenceBundle(c).status,"BLOCKED");
 });
+
+test("G3 security: inherited operation allowlists do not grant permission",()=>{
+  const b=fixture();
+  b.policy.allowed_operations=Object.create({z3:["solve"]});
+  assert.equal(inspectEvidenceBundle(b).status,"BLOCKED");
+  const c=fixture();
+  c.policy.allowed_operations={};
+  assert.equal(inspectEvidenceBundle(c).status,"BLOCKED");
+});
+
+test("G3 security: accessors, forged prototypes and throwing proxies fail closed",()=>{
+  const a=fixture();
+  Object.defineProperty(a.policy,"destination",{enumerable:true,get(){throw Error("UNTRUSTED_ACCESSOR");}});
+  const ra=inspectEvidenceBundle(a);
+  assert.equal(ra.status,"BLOCKED");
+  assert.equal(ra.solution_promotable,false);
+  assert.ok(!JSON.stringify(ra).includes("UNTRUSTED_ACCESSOR"));
+  const b=fixture();
+  Object.setPrototypeOf(b.policy,{extraPermission:true});
+  assert.equal(inspectEvidenceBundle(b).status,"BLOCKED");
+  const c=fixture();
+  c.receipts=[new Proxy({}, {ownKeys(){throw Error("UNTRUSTED_PROXY");}})];
+  const rc=inspectEvidenceBundle(c);
+  assert.equal(rc.status,"BLOCKED");
+  assert.equal(rc.claim_result,"INCONCLUSIVE");
+});
+
+test("G3 security: all decisive reported tool outcomes remain unverified, never business PASS",()=>{
+  for(const tool_status of ["SAT","UNSAT","PROVED","COUNTEREXAMPLE","TEST_PASS","TEST_FAIL","OPTIMAL","FEASIBLE"]){
+    const b=fixture();b.receipts[0].tool_status=tool_status;
+    const r=inspectEvidenceBundle(b);
+    assert.equal(r.status,"LINKED_UNVERIFIED",tool_status);
+    assert.equal(r.claim_result,"UNVERIFIED",tool_status);
+    assert.equal(r.solution_promotable,false,tool_status);
+    assert.equal(r.semantic_fidelity,"NOT_EVALUATED",tool_status);
+    assert.equal(r.independent_oracle_review,"NOT_RUN",tool_status);
+  }
+});
