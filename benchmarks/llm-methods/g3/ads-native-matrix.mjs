@@ -83,7 +83,8 @@ export function renderAdsQuery(scenario,candidate){
  * Deterministic worklist. All 24 queries are GENERATED, never run here.
  * The original frozen verdict is retained as an oracle reference only.
  */
-export function generateAdsMatrix(fixtures=readFrozenAdsCases()){
+export function generateAdsMatrix(){
+ const fixtures=readFrozenAdsCases();
  assert(Array.isArray(fixtures.models)&&fixtures.models.length<=16&&
         Array.isArray(fixtures.cases)&&fixtures.cases.length<=32,
         "unbounded ADS matrix");
@@ -100,7 +101,7 @@ export function generateAdsMatrix(fixtures=readFrozenAdsCases()){
      smt2
    });
  }
- return {schema:"formal-tools/ads-native-matrix/0.1",source_case_sha256:digest(JSON.stringify(fixtures)),
+ return {schema:"formal-tools/ads-native-matrix/0.1",source_case_sha256:digest(readFileSync(ROOT)),
    entries,run_status:"NOT_RUN",semantic_review:"NOT_RUN",solution_promotable:false};
 }
 
