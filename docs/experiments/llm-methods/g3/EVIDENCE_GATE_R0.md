@@ -13,7 +13,7 @@ G3 must close two distinct loops: (1) controlled *real* solver invocation with e
 
 ## Contract v0.1
 
-A bundle declares an **atomic claim** (stable ID, verification kind, required step IDs), the exact source, model and method SHA-256 digests, a local-only policy, and up to 16 tool receipts. A receipt must independently repeat the claim/step/tool/typed operation, binary and invocation SHA, result SHA, source/model/method SHA, tool-specific status, OS exit and input/output privacy labels. IDs may not be reused. Claimed source/model/method digests must match the bundle, and all required steps need receipts.
+A bundle declares an **atomic claim** (stable ID, verification kind, required step IDs), the exact source, model and method SHA-256 digests, a local-only policy with a **tool-and-typed-operation allowlist**, and up to 16 tool receipts. A receipt must independently repeat the claim/step/tool/typed operation, binary and invocation SHA, result SHA, source/model/method SHA, tool-specific status, OS exit and input/output privacy labels. IDs may not be reused. Claimed source/model/method digests must match the bundle, and all required steps need receipts.
 
 **Outcome separation:**
 
@@ -36,6 +36,6 @@ A bundle declares an **atomic claim** (stable ID, verification kind, required st
 
 ## Test / acceptance
 
-At current source stage: 12 synthetic cases cover output forging, different claim/source/model SHA, wrong tool/operation/permission, duplicated or missing steps, unsupported statuses, privacy declassification, local-only policy and arbitrary-size malformed arrays.
+At current source stage: 13 synthetic cases cover output forging, different claim/source/model SHA, wrong tool/operation/permission, duplicated or missing steps, unsupported statuses, privacy declassification, local-only policy and arbitrary-size malformed arrays.
 
 **Gate:** exact final-SHA `node --test tests/evidence-gate.test.mjs`, `node --test tests/*.test.mjs`, `npm run typecheck`, Woodpecker push+PR, then source review. All this is **G3 PREP**, not G3 ACCEPTED. G2's independent review must not be bypassed by merging this PR prematurely.
