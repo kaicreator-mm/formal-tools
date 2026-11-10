@@ -128,10 +128,25 @@ function inspectByteBoundClaimData(input){
     return refused("G2 Method structure differs from evidence method digest");
   if(bundle?.claim?.id!==claimId)
     return refused("evidence bundle identifies a different claim");
+  if(bundle.claim.kind!==claim.kind)
+    return refused("evidence Claim kind differs from original G2 Claim kind");
+
+  // A receipt is never allowed to describe broader authority than the
+  // original ProblemSpec, including unused tools or operations. Checking only
+  // the tools that happened to emit receipts would launder extra approvals.
+  if(bundle.policy.allowed_tool_ids.some(tool=>!problem.policy.allowed_tools.includes(tool))||
+     Object.entries(bundle.policy.allowed_operations).some(([tool,ops])=>
+       !problem.policy.allowed_tools.includes(tool)||
+       ops.some(op=>!problem.policy.allowed_operations[tool]?.includes(op))))
+    return refused("evidence policy widens original G2 tool/operation authorization");
 
   if(privacy.indexOf(bundle.policy.classification)>
      privacy.indexOf(problem.policy.max_input_classification))
     return refused("evidence permission scope exceeds original G2 policy");
+  // G3's policy classification must not re-label the bytes of a sensitive
+  // original source as PUBLIC merely because all hashes still match.
+  if(privacy.indexOf(bundle.policy.classification)<privacy.indexOf(source.classification))
+    return refused("evidence policy underreports original source sensitivity");
   const stepIndex=new Map(method.steps.map(x=>[x.id,x]));
   const targets=method.steps.filter(x=>x.claim_ids.includes(claimId)).map(x=>x.id);
   if(!targets.length)return refused("no Method step bound to this Claim");
@@ -176,6 +191,14 @@ function inspectByteBoundClaimData(input){
        hex(data.invocation)!==r.invocation_sha256||
        hex(data.output)!==r.output_sha256)
       return refused("reported tool/invocation/output hash disagrees with provided bytes");
+    // Input taint comes from both the original source and upstream Method
+    // outputs, not a caller-declared receipt classification. G2 already
+    // validates this DAG and the step output labels, but G3 must compare its
+    // own receipts against that trusted structural floor.
+    const minimumInputRank=Math.max(privacy.indexOf(source.classification),
+      ...step.depends_on.map(dep=>privacy.indexOf(stepIndex.get(dep).output_classification)));
+    if(privacy.indexOf(r.input_classification)<minimumInputRank)
+      return refused("tool receipt underreports source or predecessor input sensitivity");
     if(privacy.indexOf(r.input_classification)>privacy.indexOf(problem.policy.max_input_classification))
       return refused("tool receipt input sensitivity exceeds original G2 policy");
     if(privacy.indexOf(r.output_classification)<privacy.indexOf(step.output_classification))
