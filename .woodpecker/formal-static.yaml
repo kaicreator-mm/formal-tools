@@ -11,11 +11,15 @@ steps:
     image: bash
     commands:
       - node --version
-      # M03: prepare the declared npm workspace dependencies BEFORE executing
-      # tests, avoiding accidental reliance on leftovers in the local agent.
-      # This remains npm install until a registry-generated lockfile passes
-      # a clean npm ci review; do not claim reproducibility prematurely.
-      - npm install --ignore-scripts --no-audit --no-fund --prefer-offline
+      # M03 INTERIM experiment only: resolve an ephemeral workspace lockfile
+      # on the actual Woodpecker host, then test a real clean npm ci install.
+      # Lockfile is NOT committed by this step: final acceptance still requires
+      # an npm-generated root package-lock.json checked into this PR and
+      # removal of the package-lock-only generation line below.
+      - npm --version
+      - npm install --package-lock-only --ignore-scripts --no-audit --no-fund --prefer-offline
+      - node -e 'const p=require("./package-lock.json").packages; if (!p || !p["packages/core"] || !p["packages/runner"]) process.exit(1)'
+      - npm ci --ignore-scripts --no-audit --no-fund --prefer-offline
       - node --test tests/*.test.mjs
       - npm run typecheck
       - node packages/runner/js/cli.mjs validate

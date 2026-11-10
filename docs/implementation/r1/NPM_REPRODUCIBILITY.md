@@ -17,7 +17,13 @@ Authority: [Issue #14](https://github.com/kaicreator-mm/formal-tools/issues/14),
 4. Capture exact source SHA, Node/npm versions, lockfile diff, clean install stdout/stderr and exit codes, 91+ affected Node tests, TypeScript checks, CLI smoke and both push / PR Woodpecker contexts. Repair real failures in the same PR; require source review and final Exact-SHA green gates before merging.
 5. If a reproducibility strategy must be rejected, document actual npm error/root cause and explicit risk acceptance with evidence. Do not weaken TypeScript checks or make unrelated packages public.
 
+## Interim real-host feasibility experiment (NOT final M03 acceptance)
+
+In this draft PR only, the Woodpecker job first asks npm to generate a **temporary** workspace lockfile using real package registry/cache metadata, checks that both private workspaces have lockfile entries, then runs a clean `npm ci` with the same flags before the Node test/typecheck/CLI suite. This tests npm registry resolution and clean-install feasibility on the actual local-backend agent without using an invented lockfile.
+
+**Do not merge this interim CI pipeline.** A generated file in the CI checkout is not Git-tracked evidence and cannot pin a source SHA. When the experiment returns a real PASS, capture the generated `package-lock.json` from a legitimate npm host, commit it to this same PR, remove the temporary `npm install --package-lock-only` step, keep strict `npm ci`, and obtain new Exact-SHA CI acceptance. If this experiment fails, examine the real failing step and repair in the same PR; do not interpret failure as a platform unsupported claim.
+
 ## Acceptance and separation
 
-- **Current interim state**: `M03=PARTIAL`; source CI order corrected, registry-generated lockfile + `npm ci` **NOT_RUN**. Do not mark this document as proof of a frozen dependency graph.
+- **Current interim state**: `M03=PARTIAL`; source CI order corrected; ephemeral registry-host lockfile + clean `npm ci` experiment **PENDING CI RECEIPT**; Git-tracked lockfile + strict `npm ci` **NOT_RUN**. Do not mark this document as proof of a frozen dependency graph.
 - This is a one-Writer maintenance branch. [Issue #7](https://github.com/kaicreator-mm/formal-tools/issues/7) remains `CLOSED/COMPLETED` at 12/12; native 13-engine/26-fixture acceptance stays Issue #4; new Method/Solution development stays Issue #11.
