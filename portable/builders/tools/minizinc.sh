@@ -15,7 +15,9 @@ ft_tool_build() {
   [ -x "$FT_TOOL_DIR/bin/minizinc" ] || ft::die "bin/minizinc missing"
   # bundle resolves share/solvers relative to binary; smoke it relocated
   "$FT_TOOL_DIR/bin/minizinc" --solvers >/dev/null 2>&1 || ft::die "minizinc cannot see solvers after relocation"
-  # some bundled solver backends (fzn-gecode) link GUI-era libs (libGL...) — ship their closure
+  # some bundled solver backends (fzn-gecode) link GUI-era libs (libGL...) — install then ship closure
+  apt-get update -qq >>"$FT_LOG" 2>&1 || true
+  apt-get install -y -qq --no-install-recommends libgl1 >>"$FT_LOG" 2>&1 || true
   for b in "$FT_TOOL_DIR"/bin/*; do
     [ -x "$b" ] && [ -f "$b" ] && file -b "$b" | grep -qi ELF || continue
     ft::copy_libs "$b" "$FT_TOOL_DIR/extralib" || true

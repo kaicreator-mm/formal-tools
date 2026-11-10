@@ -1,9 +1,9 @@
 EXPECT_TIMEOUT=180
-EXPECT_POS_ARGS='-s -i tests/elk/pos.ttl'
+EXPECT_POS_ARGS='-s -i tests/elk/pos.owl'
 EXPECT_POS_EXIT=0
 EXPECT_POS_REGEX='([Cc]onsistent)'
 EXPECT_POS_LABEL=CONSISTENT
-EXPECT_NEG_ARGS='-s -i tests/elk/neg.ttl'
+EXPECT_NEG_ARGS='-s -i tests/elk/neg.owl'
 EXPECT_NEG_EXIT=*
-EXPECT_NEG_REGEX='(Inconsistent|inconsistent)'
+EXPECT_NEG_REGEX='([Ii]nconsistent)'
 EXPECT_NEG_LABEL=INCONSISTENT

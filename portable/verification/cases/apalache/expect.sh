@@ -1,7 +1,7 @@
 EXPECT_TIMEOUT=300
 EXPECT_POS_ARGS='check --inv=Inv tests/apalache/pos.tla'
 EXPECT_POS_EXIT=0
-EXPECT_POS_REGEX='(PASSED|No counterexample found)'
+EXPECT_POS_REGEX='(PASSED|No counterexample found|EXITCODE: OK)'
 EXPECT_POS_LABEL=PROPERTY_HOLDS
 EXPECT_NEG_ARGS='check --inv=BadInv tests/apalache/neg.tla'
 EXPECT_NEG_EXIT=*

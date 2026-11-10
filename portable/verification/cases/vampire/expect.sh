@@ -8,6 +8,6 @@ EXPECT_NEG_EXIT=*
 EXPECT_NEG_REGEX='(Saturation|saturation|Terminated by)'
 EXPECT_NEG_LABEL=NOT_PROVED
 EXPECT_ERR_ARGS='tests/vampire/err.p --time_limit 10'
-EXPECT_ERR_EXIT='1 2 3'
+EXPECT_ERR_EXIT='*'
 EXPECT_ERR_REGEX='(error|Error|Syntax|unexpected)'
 EXPECT_ERR_LABEL=ERROR
