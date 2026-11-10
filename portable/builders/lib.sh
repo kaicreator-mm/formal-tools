@@ -101,7 +101,7 @@ ft::extract() {
     *.tar) tar -xf "$ar" -C "$dest" ;;
     *.zip|*.jar) unzip -qo "$ar" -d "$dest" ;;
     *.deb) ft::die "use ft::deb_extract for debs" ;;
-    *) ft::die "unknown archive type: $ar" ;;
+    *) tar -xf "$ar" -C "$dest" 2>/dev/null || ft::die "unknown archive type: $ar" ;;
   esac
 }
 

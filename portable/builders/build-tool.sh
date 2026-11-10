@@ -21,7 +21,7 @@ source "$FT_SRC/builders/lib.sh"
 rm -rf "$FT_TOOL_DIR"; mkdir -p "$FT_TOOL_DIR"
 # shellcheck disable=SC1090
 source "$spec"
-ft::log "building $id version=$FT_TOOL_VERSION kind=$FT_TOOL_KIND"
+ft::log "building $id version=${FT_TOOL_VERSION:-runtime-resolved} kind=${FT_TOOL_KIND:-binary}"
 
 ft_tool_build || { rc=$?; ft::log "spec build failed rc=$rc"; ft::note build_status FAILED; exit "$rc"; }
 

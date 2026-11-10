@@ -10,7 +10,7 @@ ft_tool_build() {
   local tgz; tgz=$(ft::fetch "$FT_UPSTREAM_URL")
   ft::extract "$tgz" /tmp/aflx
   local src; src=$(find /tmp/aflx -maxdepth 1 -type d -name 'AFLplusplus*' | head -1)
-  ( cd "$src" && make -j"$(nproc)" >>"$FT_LOG" 2>&1 ) || ft::die "AFL++ build failed"
+  ( cd "$src" && make source-only -j"$(nproc)" >>"$FT_LOG" 2>&1 ) || ft::die "AFL++ build failed (source-only)"
   mkdir -p "$FT_TOOL_DIR/bin" "$FT_TOOL_DIR/lib" "$FT_TOOL_DIR/testcases"
   cp "$src/afl-fuzz" "$src/afl-gcc" "$src/afl-compiler-rt.o" "$FT_TOOL_DIR/bin/" 2>/dev/null || true
   cp -a "$src/include" "$FT_TOOL_DIR/" 2>/dev/null || true

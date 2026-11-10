@@ -13,8 +13,8 @@ ft_tool_build() {
   cp "$jar" "$FT_TOOL_DIR/org.alloytools.alloy.dist.jar"
   local javasrc="$FT_SRC/builders/java-src/AlloyRunner.java"
   [ -f "$javasrc" ] || ft::die "AlloyRunner.java missing"
-  javac -cp "$FT_TOOL_DIR/org.alloytools.alloy.dist.jar" -d "$FT_TOOL_DIR" "$javasrc" \
-    || ft::die "AlloyRunner compile failed (check Alloy API surface)"
+  javac -cp "$FT_TOOL_DIR/org.alloytools.alloy.dist.jar" -d "$FT_TOOL_DIR" "$javasrc" >>"$FT_LOG" 2>&1 \
+    || ft::die "AlloyRunner compile failed (check Alloy API surface in $FT_LOG)"
   ft::make_shim 'export JAVA_HOME="$FT_ROOT/runtimes/java21"
 export PATH="$JAVA_HOME/bin:$PATH"
 exec java -cp "$TOOL_DIR/org.alloytools.alloy.dist.jar:$TOOL_DIR" AlloyRunner "$@"'
