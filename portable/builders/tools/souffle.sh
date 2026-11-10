@@ -32,5 +32,9 @@ ft_tool_build() {
   patchelf --set-rpath '$ORIGIN/../lib' "$FT_TOOL_DIR/bin/souffle" 2>/dev/null || true
   ft::make_shim 'export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 export PATH="$TOOL_DIR/bin:$PATH"
-exec "$TOOL_DIR/bin/souffle" "$@"'
+# .output writes CSV files to the output dir; default to stdout unless caller passes -D
+case " $* " in
+  *" -D "*) exec "$TOOL_DIR/bin/souffle" "$@" ;;
+  *) exec "$TOOL_DIR/bin/souffle" -D - "$@" ;;
+esac'
 }

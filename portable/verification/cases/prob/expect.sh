@@ -8,6 +8,6 @@ EXPECT_NEG_EXIT=*
 EXPECT_NEG_REGEX='(invariant-violations: [1-9]|Counter-example|counterexample|violated)'
 EXPECT_NEG_LABEL=COUNTEREXAMPLE
 EXPECT_ERR_ARGS='tests/prob/err.mch'
-EXPECT_ERR_EXIT=*
+EXPECT_ERR_EXIT='*'
 EXPECT_ERR_REGEX='(Parse error|error|Error)'
 EXPECT_ERR_LABEL=ERROR

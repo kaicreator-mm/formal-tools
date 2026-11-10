@@ -8,6 +8,6 @@ EXPECT_NEG_EXIT=*
 EXPECT_NEG_REGEX='(verify error|assertion violation|related violations|error)'
 EXPECT_NEG_LABEL=VERIFICATION_ERROR
 EXPECT_ERR_ARGS='verify tests/dafny/err.dfy'
-EXPECT_ERR_EXIT=*
+EXPECT_ERR_EXIT='*'
 EXPECT_ERR_REGEX='(error|Error|parse)'
 EXPECT_ERR_LABEL=ERROR

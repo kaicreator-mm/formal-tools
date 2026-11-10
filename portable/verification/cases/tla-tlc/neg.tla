@@ -1,8 +1,10 @@
 ---- MODULE neg ----
 EXTENDS Integers
-VARIABLES x
+VARIABLES
+  \* @type: Int;
+  x
 Init == x = 0
-Next == x' = x + 1
+Next == IF x < 5 THEN x' = x + 1 ELSE UNCHANGED x
 BadInv == x > 0
 Spec == Init /\ [][Next]_x
 ====

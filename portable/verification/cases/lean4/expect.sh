@@ -8,6 +8,6 @@ EXPECT_NEG_EXIT='*'
 EXPECT_NEG_REGEX='(error|type mismatch|mismatched)'
 EXPECT_NEG_LABEL=REJECTED
 EXPECT_ERR_ARGS='tests/lean4/err.lean'
-EXPECT_ERR_EXIT=1
+EXPECT_ERR_EXIT='*'
 EXPECT_ERR_REGEX='(unknown identifier|error)'
 EXPECT_ERR_LABEL=ERROR

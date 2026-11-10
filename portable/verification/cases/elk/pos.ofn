@@ -1,0 +1,6 @@
+Ontology(<http://example.org/pos>
+  Declaration(Class(<http://example.org/pos#Person>))
+  Declaration(Class(<http://example.org/pos#Parent>))
+  SubClassOf(<http://example.org/pos#Parent> <http://example.org/pos#Person>)
+  ClassAssertion(<http://example.org/pos#Parent> <http://example.org/pos#alice>)
+)

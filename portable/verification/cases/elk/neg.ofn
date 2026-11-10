@@ -1,0 +1,6 @@
+Ontology(<http://example.org/neg>
+  Declaration(Class(<http://example.org/neg#A>))
+  Declaration(Class(<http://example.org/neg#B>))
+  DisjointClasses(<http://example.org/neg#A> <http://example.org/neg#B>)
+  ClassAssertion(ObjectIntersectionOf(<http://example.org/neg#A> <http://example.org/neg#B>) <http://example.org/neg#x>)
+)

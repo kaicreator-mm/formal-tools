@@ -8,6 +8,6 @@ EXPECT_NEG_EXIT=*
 EXPECT_NEG_REGEX='(Inconsistent|inconsistent|Exception|error)'
 EXPECT_NEG_LABEL=INCONSISTENT
 EXPECT_ERR_ARGS='reason --reasoner ELK --input tests/robot/err.ttl'
-EXPECT_ERR_EXIT=*
+EXPECT_ERR_EXIT='*'
 EXPECT_ERR_REGEX='(Exception|error|Error|parse)'
 EXPECT_ERR_LABEL=ERROR

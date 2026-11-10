@@ -8,6 +8,6 @@ EXPECT_NEG_EXIT=*
 EXPECT_NEG_REGEX='(Failed|Exception|error|Error)'
 EXPECT_NEG_LABEL=RDF_INVALID
 EXPECT_ERR_ARGS='--validate tests/apache-jena/does-not-exist.ttl'
-EXPECT_ERR_EXIT=*
+EXPECT_ERR_EXIT='*'
 EXPECT_ERR_REGEX='(Failed|Exception|error|Error|not found|No such)'
 EXPECT_ERR_LABEL=ERROR

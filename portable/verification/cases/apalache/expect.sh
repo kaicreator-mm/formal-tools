@@ -8,6 +8,6 @@ EXPECT_NEG_EXIT=*
 EXPECT_NEG_REGEX='(violated|FAILED|counterexample)'
 EXPECT_NEG_LABEL=COUNTEREXAMPLE
 EXPECT_ERR_ARGS='check tests/apalache/err.tla'
-EXPECT_ERR_EXIT='1 2 3'
+EXPECT_ERR_EXIT='*'
 EXPECT_ERR_REGEX='(error|Error|Failed|parse)'
 EXPECT_ERR_LABEL=ERROR

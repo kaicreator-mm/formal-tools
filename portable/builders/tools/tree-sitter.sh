@@ -15,7 +15,26 @@ ft_tool_build() {
   gunzip -c "$gz" > "$FT_TOOL_DIR/bin/tree-sitter"
   chmod +x "$FT_TOOL_DIR/bin/tree-sitter"
   "$FT_TOOL_DIR/bin/tree-sitter" --version >/dev/null || ft::die "tree-sitter CLI not runnable"
+  # prefetch grammars for OFFLINE use into the shipped cache (language pack would
+  # otherwise hit the network at use time). Locate where it actually lands and
+  # normalize to runtimes/py-cache/tree-sitter-language-pack/<ver>/libs/
+  local PY="$FT_OUT/runtimes/python313/bin/python3.13"
+  export PYTHONHOME="$FT_OUT/runtimes/python313" PYTHONNOUSERSITE=1
+  export XDG_CACHE_HOME="$FT_OUT/runtimes/py-cache" HOME=/root
+  mkdir -p "$XDG_CACHE_HOME"
+  "$PY" -s -c "import tree_sitter_language_pack as t; t.get_parser('c'); t.get_parser('python')" >>"$FT_LOG" 2>&1 \
+    || ft::die "tree-sitter grammar prefetch failed"
+  local found
+  found=$(find "$FT_OUT/runtimes/py-cache" /tmp -name "libtree_sitter_c.so" 2>/dev/null | head -1)
+  [ -n "$found" ] || ft::die "grammar cache file not found after prefetch"
+  local base; base=$(dirname "$(dirname "$found")")   # .../tree-sitter-language-pack/<ver>
+  rm -rf "$FT_OUT/runtimes/py-cache"
+  mkdir -p "$FT_OUT/runtimes/py-cache/tree-sitter-language-pack"
+  cp -a "$base" "$FT_OUT/runtimes/py-cache/tree-sitter-language-pack/"
+  ft::note ts_grammar_cache "$(find "$FT_OUT/runtimes/py-cache" -name '*.so' | wc -l) grammars"
   ft::make_shim 'export PYTHONHOME="$FT_ROOT/runtimes/python313" PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1
+export LD_LIBRARY_PATH="$FT_ROOT/runtimes/python313/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export XDG_CACHE_HOME="$FT_ROOT/runtimes/py-cache"
 case "$1" in
   --py) shift; exec "$FT_ROOT/runtimes/python313/bin/python3.13" -s "$@" ;;
   *) exec "$TOOL_DIR/bin/tree-sitter" "$@" ;;
