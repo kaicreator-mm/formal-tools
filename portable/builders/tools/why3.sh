@@ -11,11 +11,12 @@ ft_tool_build() {
   local ver tgz=""
   for ver in 1.8.0 1.7.2 1.7.1; do
     for u in "https://why3.gitlabpages.inria.fr/releases/why3-$ver.tar.xz" \
-             "https://why3.gitlabpages.inria.fr/releases/why3-$ver.tar.gz"; do
+             "https://why3.gitlabpages.inria.fr/releases/why3-$ver.tar.gz" \
+             "https://gitlab.inria.fr/why3/why3/-/archive/$ver/why3-why3-$ver.tar.gz"; do
       tgz=$(ft::fetch "$u" 2>/dev/null) && break 2
     done
   done
-  [ -n "$tgz" ] || ft::unavailable "why3 release tarball unreachable on why3.gitlabpages.inria.fr (all candidates)"
+  [ -n "$tgz" ] || ft::unavailable "why3 release tarball unreachable (inria gitlabpages + gitlab.inria.fr, all candidates)"
   FT_TOOL_VERSION="$ver"
   ft::extract "$tgz" /tmp/why3x
   local src; src=$(find /tmp/why3x -maxdepth 1 -type d -name 'why3-*' | head -1)
