@@ -148,8 +148,8 @@ export function scoreAdsMatrix(matrix,outcomes){
    // A confirmed false-PASS is decisive even when another case is missing.
    // Incomplete results must never conceal a known dangerous classification.
    const kind=badPass.length?"REJECT_WEAK":
-     badReject.length?"REJECT_OVERSTRONG":
      vacuous?"REJECT_VACUOUS":
+     badReject.length?"REJECT_OVERSTRONG":
      classified.length<group.length?"INCONCLUSIVE":"MATCHES_FROZEN_SAMPLES_UNATTESTED";
    summaries.push({model_id:modelId,diagnostic_classification:kind,
      observed:classified.length,total:group.length,false_pass_ids:badPass,
