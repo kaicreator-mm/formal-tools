@@ -48,3 +48,29 @@ test("redactReceipt fails closed when a path survives in hash-anchored stdout",(
   const scrubbed=redactReceipt({evidence:[{installation:{diagnostics:["run C:/Users/x/z3.exe"]}}]});
   assert.equal(scrubbed.evidence[0].installation.diagnostics[0],"run …/Users/x/z3.exe");
 });
+
+test("redactReceipt handles Linux/WSL/macOS absolute metadata without leaking home paths",()=>{
+  const receipt={host_identity:{hostname:"private",tool_bin_dir:"/home/alice/work/formal/bin"},
+    evidence:[{tool:"z3",version:{argv:["/home/alice/tools/z3","--version"],
+      stdout:"Z3 version 4.13",stderr:""},
+      installation:{error:"spawn /home/alice/private/z3 ENOENT",
+        diagnostics:["at /Users/alice/Library/Logs/solver.log"]}}]};
+  const safe=redactReceipt(receipt);
+  assert.equal(safe.host_identity.tool_bin_dir,"…/work/formal/bin");
+  assert.equal(safe.evidence[0].version.argv[0],"…/alice/tools/z3");
+  assert.equal(safe.evidence[0].installation.error,"spawn …/alice/private/z3 ENOENT");
+  assert.equal(safe.evidence[0].installation.diagnostics[0],"at …/Library/Logs/solver.log");
+});
+
+test("receipt privacy guard refuses raw POSIX paths in stdout or stderr",()=>{
+  assert.throws(()=>redactReceipt({evidence:[{stdout:"failure at /home/alice/private/input.smt2"}]}),
+    /privacy invariant violated/);
+  assert.throws(()=>redactReceipt({evidence:[{stderr:"/tmp/tool-cache/secret.log"}]}),
+    /privacy invariant violated/);
+});
+
+test("redaction retains network URLs and rejects short absolute local paths",()=>{
+  assert.equal(redactString("https://github.com/kaicreator-mm/formal-tools"),"https://github.com/kaicreator-mm/formal-tools");
+  assert.equal(redactString("/home/user"),"…/home/user");
+  assert.equal(redactString("C:\\Users\\test"),"…\\Users\\test");
+});
