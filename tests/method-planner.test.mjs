@@ -209,6 +209,8 @@ test("G2: malformed capability array and unapproved tool selection fail closed",
  assert.equal(validateProblemSpec(problem).ok,false);
  assert.equal(assessMethod(problem,method).status,"REJECTED");
  const fresh=fixture();
- fresh.problem.policy.allowed_tools=[];
+ fresh.problem.policy.allowed_tools=["cvc5"];
+ fresh.problem.policy.allowed_operations={cvc5:["solve"]};
+ assert.equal(validateProblemSpec(fresh.problem).ok,true);
  assert.match(assessMethod(fresh.problem,fresh.method).issues.join(" "),/tool not permitted/);
 });
