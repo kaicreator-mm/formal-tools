@@ -1,10 +1,10 @@
-// @ts-nocheck — temporary diagnosis: new synthetic adversarial test typings only; runtime tests remain active.
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
   validateProblemSpec, assessMethod, proposeMethod
 } from "../packages/runner/js/method-planner.mjs";
 
+/** @returns {{problem:any, method:any}} Synthetic adversarial fixture intentionally permits malformed values. */
 function fixture() {
   const problem={
     schema:"formal-tools/problem-spec/0.1",
@@ -162,7 +162,6 @@ test("G2: forged semantic review, output claims and raw argv are rejected",()=>{
  method.semantic_review="PASSED";
  assert.match(assessMethod(problem,method).issues.join(" "),/cannot claim semantic review/);
  const injected=fixture();
- // @ts-expect-error intentional forged/unregistered method step property
  injected.method.steps[0].argv=["curl","https://outside.example"];
  assert.match(assessMethod(injected.problem,injected.method).issues.join(" "),/unexpected fields|invalid step fields/);
 });
@@ -206,7 +205,6 @@ test("G2: a two-tool typed Method DAG is accepted only as a non-executable plan"
 });
 test("G2: malformed capability array and unapproved tool selection fail closed",()=>{
  const {problem,method}=fixture();
- // @ts-expect-error deliberate malformed ProblemSpec
  problem.capability_ids={includes:true};
  assert.equal(validateProblemSpec(problem).ok,false);
  assert.equal(assessMethod(problem,method).status,"REJECTED");
