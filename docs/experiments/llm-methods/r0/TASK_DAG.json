@@ -1,0 +1,255 @@
+{
+  "schema": "formal-tools/llm-method-task-dag/0.1",
+  "authority": {
+    "repo": "kaicreator-mm/formal-tools",
+    "issue": 11,
+    "source_base_sha": "41925288dd5b777d49c4e442d9731581895cb037",
+    "scope": "NEW_DIRECTION_NOT_R1"
+  },
+  "status": "G0_G1_SOURCE_COMMITTED_CI_PENDING_RESEARCH_CONTRACT_COMMITTED_REVIEW_PENDING",
+  "gates": [
+    {
+      "id": "G0",
+      "name": "Product L1 + baseline audit + gates",
+      "depends_on": [],
+      "status": "SOURCE_COMMITTED_TEST_CI_PENDING",
+      "exit": "source-reviewed Product/L1 and complete dependency DAG, scope separated from Issue #7"
+    },
+    {
+      "id": "G1",
+      "name": "Capability-first registry and 13+23 matrix",
+      "depends_on": [
+        "G0"
+      ],
+      "status": "SOURCE_COMMITTED_TEST_CI_PENDING",
+      "exit": "23 canonical capability codes, 13 native references verified against source, 23 candidate records, negative contract checks"
+    },
+    {
+      "id": "RESEARCH-R0",
+      "name": "2025-2026 literature/practice design admission before G2",
+      "depends_on": [
+        "G0",
+        "G1"
+      ],
+      "status": "SOURCE_EVIDENCE_AND_CONTRACT_READY_FOR_INDEPENDENT_REVIEW",
+      "exit": "Research report readback, semantic fidelity and independent-claim oracle contracts reviewed; no G2 code until implementation admission"
+    },
+    {
+      "id": "G2",
+      "name": "LLM ProblemSpec -> Method plan + static verification",
+      "depends_on": [
+        "G0",
+        "G1",
+        "RESEARCH-R0"
+      ],
+      "status": "NOT_STARTED",
+      "exit": "model-independent typed DAG, budget/alternatives, cycles and missing contracts fail closed"
+    },
+    {
+      "id": "G3",
+      "name": "Bounded execution, claim-level Solve/Verify and evidence",
+      "depends_on": [
+        "G2"
+      ],
+      "status": "NOT_STARTED",
+      "exit": "native exact-tool receipts, negative/adversarial oracle, UNKNOWN not PASS"
+    },
+    {
+      "id": "G4",
+      "name": "Qualified immutable Solution package + AOT invalidation",
+      "depends_on": [
+        "G3"
+      ],
+      "status": "NOT_STARTED",
+      "exit": "independent semantics, replay/fingerprint and invalidation are required for reuse"
+    },
+    {
+      "id": "G5",
+      "name": "A/B ADS DKE DIS hallucination benchmark",
+      "depends_on": [
+        "G1",
+        "G3"
+      ],
+      "status": "NOT_STARTED",
+      "exit": "paired LLM-only vs LLM+tools with true accuracy, false-PASS, cost, semantic coverage, reuse"
+    },
+    {
+      "id": "G6",
+      "name": "Domain App / DIS qualified Solution consumer",
+      "depends_on": [
+        "G4",
+        "G5"
+      ],
+      "status": "NOT_STARTED",
+      "exit": "domain-app consumes qualified Solution; no parallel domain runtime"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T-G0-01",
+      "gate": "G0",
+      "title": "Audit true native catalog and frozen R1 exclusion boundary",
+      "depends_on": [],
+      "owner": "web",
+      "status": "SOURCE_COMMITTED_AWAIT_FINAL_SHA_REVIEW",
+      "evidence": [
+        "packages/runner/js/native-catalog.mjs",
+        "docs/PROJECT_SCOPE.md",
+        "packages/runner/js/sdk.mjs"
+      ]
+    },
+    {
+      "id": "T-G0-02",
+      "gate": "G0",
+      "title": "Version Product/L1 + quality/boundary gates",
+      "depends_on": [
+        "T-G0-01"
+      ],
+      "owner": "web",
+      "status": "SOURCE_COMMITTED_AWAIT_FINAL_SHA_REVIEW",
+      "evidence": [
+        "docs/experiments/llm-methods/r0/PRODUCT_L1.md"
+      ]
+    },
+    {
+      "id": "T-G0-03",
+      "gate": "G0",
+      "title": "Version cross-gate Task DAG, no redundant child Issues",
+      "depends_on": [
+        "T-G0-02"
+      ],
+      "owner": "web",
+      "status": "SOURCE_COMMITTED_AWAIT_FINAL_SHA_REVIEW",
+      "evidence": [
+        "docs/experiments/llm-methods/r0/TASK_DAG.json"
+      ]
+    },
+    {
+      "id": "T-G1-01",
+      "gate": "G1",
+      "title": "Canonical capability taxonomy and tool reference matrix",
+      "depends_on": [
+        "T-G0-01"
+      ],
+      "owner": "web",
+      "status": "SOURCE_COMMITTED_AWAIT_FINAL_SHA_REVIEW",
+      "evidence": [
+        "registry/PROBLEM_CAPABILITIES.json"
+      ]
+    },
+    {
+      "id": "T-G1-02",
+      "gate": "G1",
+      "title": "Read-only registry API, strict source matching and negative tests",
+      "depends_on": [
+        "T-G1-01"
+      ],
+      "owner": "web",
+      "status": "SOURCE_COMMITTED_AWAIT_FINAL_SHA_REVIEW",
+      "evidence": [
+        "packages/runner/js/problem-capabilities.mjs",
+        "tests/problem-capabilities.test.mjs"
+      ]
+    },
+    {
+      "id": "T-G1-03",
+      "gate": "G1",
+      "title": "Human matrix and evidence readiness, no native claim",
+      "depends_on": [
+        "T-G1-01",
+        "T-G1-02"
+      ],
+      "owner": "web",
+      "status": "SOURCE_COMMITTED_AWAIT_FINAL_SHA_REVIEW",
+      "evidence": [
+        "docs/experiments/llm-methods/r0/CAPABILITY_MATRIX.md"
+      ]
+    },
+    {
+      "id": "T-R0-01",
+      "gate": "RESEARCH-R0",
+      "title": "Literature/practice review and semantic-oracle constraints",
+      "depends_on": [
+        "T-G0-02",
+        "T-G1-02"
+      ],
+      "owner": "web",
+      "status": "SOURCE_CONTRACT_CASES_COMMITTED_INDEPENDENT_REVIEW_PENDING",
+      "evidence": [
+        "docs/experiments/llm-methods/r0/TECHNICAL_REVIEW_2026-11-10.md",
+        "docs/experiments/llm-methods/r0/SPEC_CLAIM_CONTRACT_R0.md",
+        "benchmarks/llm-methods/r0/spec-fidelity-cases.json",
+        "tests/spec-fidelity.test.mjs"
+      ]
+    },
+    {
+      "id": "T-G2-01",
+      "gate": "G2",
+      "title": "ProblemSpec and checkable ClaimSpec contracts with model provenance",
+      "depends_on": [
+        "T-G1-02",
+        "T-R0-01"
+      ],
+      "owner": "web",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "T-G2-02",
+      "gate": "G2",
+      "title": "LLM produces bounded Method DAG with alternatives and static gate",
+      "depends_on": [
+        "T-G2-01"
+      ],
+      "owner": "web",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "T-G3-01",
+      "gate": "G3",
+      "title": "Constrained tool orchestration with native receipt and semantic oracle",
+      "depends_on": [
+        "T-G2-02"
+      ],
+      "owner": "web+local-when-must",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "T-G4-01",
+      "gate": "G4",
+      "title": "Qualification and invalidatable Solution package",
+      "depends_on": [
+        "T-G3-01"
+      ],
+      "owner": "web",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "T-G5-01",
+      "gate": "G5",
+      "title": "Paired ADS/DKE/DIS/Hallucination adversarial demos",
+      "depends_on": [
+        "T-G3-01"
+      ],
+      "owner": "web+local-when-must",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "T-G6-01",
+      "gate": "G6",
+      "title": "Domain App DIS consumption demo",
+      "depends_on": [
+        "T-G4-01",
+        "T-G5-01"
+      ],
+      "owner": "web",
+      "status": "NOT_STARTED"
+    }
+  ],
+  "execution": {
+    "strategy": "ADS#1359 Delivery-First; Web-first, single Writer per write set",
+    "tool_downloads": "PARALLEL_NOT_BLOCKING_G0_G1",
+    "native_execution": "NOT_RUN",
+    "llm_ab_benchmarks": "NOT_RUN",
+    "old_issue7": "OUT_OF_SCOPE"
+  }
+}

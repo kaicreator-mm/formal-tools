@@ -1,0 +1,221 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kaicreator-mm/formal-tools/blob/experiment/llm-capability-method-g0-g1-r0/registry/PROBLEM_CAPABILITIES.schema.json",
+  "title": "Capability-first registry R0 (Issue #11)",
+  "description": "Extensible capability-first catalog. Exact current R0 counts checked by baseline tests, not schema; existing native-ref set checked against native-catalog.mjs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "authority",
+    "status",
+    "semantics",
+    "capabilities",
+    "tools"
+  ],
+  "properties": {
+    "schema": {
+      "const": "formal-tools/problem-capabilities/0.1"
+    },
+    "authority": {
+      "type": "object",
+      "required": [
+        "main_issue",
+        "native_catalog",
+        "baseline_main_sha"
+      ],
+      "properties": {
+        "main_issue": {
+          "const": 11
+        },
+        "native_catalog": {
+          "const": "packages/runner/js/native-catalog.mjs"
+        },
+        "baseline_main_sha": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "status": {
+      "const": "DISCOVERY_ONLY_NOT_NATIVE_VALIDATED"
+    },
+    "semantics": {
+      "type": "object",
+      "required": [
+        "tool_result_states",
+        "claim_result_states",
+        "availability_states",
+        "warning"
+      ],
+      "properties": {
+        "tool_result_states": {
+          "type": "array",
+          "uniqueItems": true,
+          "minItems": 6,
+          "maxItems": 6,
+          "items": {
+            "type": "string",
+            "enum": [
+              "SAT",
+              "UNSAT",
+              "UNKNOWN",
+              "ERROR",
+              "TIMEOUT",
+              "NOT_RUN"
+            ]
+          }
+        },
+        "claim_result_states": {
+          "type": "array",
+          "uniqueItems": true,
+          "minItems": 5,
+          "maxItems": 5,
+          "items": {
+            "type": "string",
+            "enum": [
+              "SUPPORTED_WITH_SCOPE",
+              "REFUTED",
+              "INCONCLUSIVE",
+              "UNVERIFIED",
+              "NEEDS_SOURCE"
+            ]
+          }
+        },
+        "availability_states": {
+          "type": "array",
+          "uniqueItems": true,
+          "minItems": 5,
+          "maxItems": 5,
+          "items": {
+            "type": "string",
+            "enum": [
+              "NOT_ASSESSED",
+              "DOWNLOADED",
+              "INSTALLED",
+              "NATIVE_VERIFIED",
+              "UNAVAILABLE"
+            ]
+          }
+        },
+        "warning": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "label",
+          "limitations",
+          "claim_scope"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limitations": {
+            "type": "string",
+            "minLength": 1
+          },
+          "claim_scope": {
+            "const": "FORMAL_CHECKABLE_WITH_EXPLICIT_MODEL"
+          }
+        }
+      }
+    },
+    "tools": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "origin",
+          "priority",
+          "capability_ids",
+          "official_url",
+          "distribution",
+          "availability",
+          "runtime_verified",
+          "version",
+          "evidence_ref",
+          "license_status",
+          "consumer_scope"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "origin": {
+            "enum": [
+              "native-ref",
+              "candidate"
+            ]
+          },
+          "priority": {
+            "enum": [
+              "existing",
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          "capability_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$"
+            },
+            "uniqueItems": true
+          },
+          "official_url": {
+            "type": "string",
+            "pattern": "^https://"
+          },
+          "distribution": {
+            "type": "string",
+            "minLength": 1
+          },
+          "availability": {
+            "const": "NOT_ASSESSED"
+          },
+          "runtime_verified": {
+            "const": false
+          },
+          "version": {
+            "type": "null"
+          },
+          "evidence_ref": {
+            "type": "null"
+          },
+          "license_status": {
+            "const": "REVIEW_REQUIRED"
+          },
+          "consumer_scope": {
+            "enum": [
+              "FORMAL_TOOLS_GENERIC",
+              "DOMAIN_SIMULATOR"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
