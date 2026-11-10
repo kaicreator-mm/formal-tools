@@ -380,3 +380,18 @@ test("G2 security: untrusted provider errors cannot disclose exception messages"
  assert.equal(result.provider_failure,"PROVIDER_OR_PARSE_ERROR");
  assert.ok(!JSON.stringify(result).includes("FAKE_SECRET_TOKEN"));
 });
+
+test("G2 security: bounded shallow preflight rejects giant direct Method arrays",()=>{
+ const {problem,method}=fixture();
+ method.steps[0].depends_on=new Array(200000).fill("ghost");
+ const result=assessMethod(problem,method);
+ assert.equal(result.status,"REJECTED");
+ assert.match(result.issues.join(" "),/step reference list exceeds structural budget/);
+});
+test("G2 security: direct assessed Method cannot bypass JSON transport budget",()=>{
+ const {problem,method}=fixture();
+ method.method_id="a".repeat(70000);
+ const result=assessMethod(problem,method);
+ assert.equal(result.status,"REJECTED");
+ assert.match(result.issues.join(" "),/JSON transport limit/);
+});

@@ -57,6 +57,12 @@ export function validateProblemSpec(problem) {
   const caps=problem.capability_ids;
   if(!Array.isArray(caps)||!caps.length||!unique(caps)||caps.some(x=>!knownCaps.has(x)))
     fail("unknown, duplicate or empty problem capabilities");
+  // Reject oversized collection lengths before serializing or iterating
+  // untrusted nested data (JSON transports may also be constructed in JS).
+  for(const [name,max] of [["source_refs",32],["requirements",64],["claims",64],["oracles",16]]){
+    if(Array.isArray(problem[name])&&problem[name].length>max)
+      return {ok:false,errors:["ProblemSpec collection exceeds structural budget: "+name]};
+  }
   const sources=Array.isArray(problem.source_refs)?problem.source_refs:[];
   if(!sources.length||sources.length>32)fail("source_refs required (1..32)");
   const sourceIds=new Set(),classByHash=new Map();
@@ -153,6 +159,22 @@ export function assessMethod(problem, method) {
   const budget=problem?.budget??{};
   if(!steps.length||steps.length>budget.max_steps)
     return rejected([...issues,"step count exceeds budget or is empty"]);
+  // A 12-step cap is insufficient if one step carries millions of deps,
+  // claims, sources or output capability refs. Bound lengths before Set,
+  // dependency walks, hashing, or JSON serialization.
+  if(Array.isArray(method.goal_claim_ids)&&method.goal_claim_ids.length>64)
+    return rejected([...issues,"goal claim reference list exceeds structural budget"]);
+  if(Array.isArray(method.oracle_ids)&&method.oracle_ids.length>16)
+    return rejected([...issues,"oracle reference list exceeds structural budget"]);
+  for(const step of steps){
+    if(!isObject(step))return rejected([...issues,"malformed step record"]);
+    for(const field of ["claim_ids","provides","depends_on","source_refs"]){
+      if(Array.isArray(step[field])&&step[field].length>64)
+        return rejected([...issues,"step reference list exceeds structural budget: "+field]);
+    }
+  }
+  if(!isBoundedJSON(method))
+    return rejected([...issues,"Method exceeds G2 JSON transport limit or is not JSON-safe"]);
   const catalog=readCapabilityRegistry(), tools=new Map(catalog.tools.map(t=>[t.id,t]));
   const capIds=new Set(problem?.capability_ids??[]);
   const sourceMap=new Map((problem?.source_refs??[]).filter(x=>isId(x?.id)).map(x=>[x.id,x]));
