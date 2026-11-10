@@ -7,13 +7,26 @@
  * or an LLM "reviewed" claim can NEVER grant business-level PASS here.
  */
 import { toolIds, describeNativeTool } from "./native-catalog.mjs";
+import { types as utilTypes } from "node:util";
 
 const isObject = x => x !== null && typeof x === "object" && !Array.isArray(x);
 // The direct API must not interpret inherited tool approvals or accessor-backed
 // records as trustworthy JSON. An external caller may supply non-JSON objects.
-const dataRecord = x => isObject(x) &&
+const dataRecord = x => isObject(x) && !utilTypes.isProxy(x) &&
   (Object.getPrototypeOf(x)===Object.prototype || Object.getPrototypeOf(x)===null) &&
   Object.values(Object.getOwnPropertyDescriptors(x)).every(d=>Object.hasOwn(d,"value"));
+// JSON arrays must be dense, ordinary, accessor-free arrays: instance methods,
+// symbols, subclasses and Proxies cannot override includes/every/some/iteration.
+function dataArray(x, max) {
+  if(!Array.isArray(x)||utilTypes.isProxy(x)||x.length>max||
+     Object.getPrototypeOf(x)!==Array.prototype)return false;
+  if(Reflect.ownKeys(x).length!==x.length+1)return false;
+  for(let i=0;i<x.length;i++){
+    const descriptor=Object.getOwnPropertyDescriptor(x,String(i));
+    if(!descriptor||!Object.hasOwn(descriptor,"value"))return false;
+  }
+  return true;
+}
 const own = (x, fields) => dataRecord(x) && Object.keys(x).every(k => fields.includes(k));
 const id = x => typeof x === "string" && /^[a-z][a-z0-9_.-]{0,79}$/.test(x);
 const sha = x => typeof x === "string" && /^[a-f0-9]{64}$/.test(x);
@@ -54,7 +67,7 @@ function inspectEvidenceBundleData(bundle) {
   if(!own(claim,["id","kind","source_sha256","model_sha256","method_sha256","required_step_ids"])||
      !id(claim?.id)||!kinds.has(claim?.kind)||!sha(claim?.source_sha256)||
      !sha(claim?.model_sha256)||!sha(claim?.method_sha256)||
-     !Array.isArray(claim?.required_step_ids)||claim.required_step_ids.length>16||
+     !dataArray(claim?.required_step_ids,16)||
      !uniq(claim.required_step_ids)||!claim.required_step_ids.length||
      claim?.required_step_ids?.some(step=>!id(step)))
     fail("invalid or empty atomic claim anchor");
@@ -65,12 +78,12 @@ function inspectEvidenceBundleData(bundle) {
     fail("source/model/method digest mismatch");
   const policy=bundle.policy;
   if(!own(policy,["allowed_tool_ids","allowed_operations","classification","destination","network_allowed"])||
-     !Array.isArray(policy?.allowed_tool_ids)||policy.allowed_tool_ids.length>toolIds.length||
+     !dataArray(policy?.allowed_tool_ids,toolIds.length)||
      !uniq(policy.allowed_tool_ids)||policy.allowed_tool_ids.some(x=>!id(x))||
      !dataRecord(policy?.allowed_operations)||
      Object.keys(policy.allowed_operations).length>toolIds.length||
      !Object.entries(policy.allowed_operations).every(([tool,ops])=>
-       policy.allowed_tool_ids.includes(tool)&&Array.isArray(ops)&&ops.length<=64&&
+       policy.allowed_tool_ids.includes(tool)&&dataArray(ops,64)&&
        uniq(ops)&&ops.every(id))||
      !policy.allowed_tool_ids.every(tool=>Object.hasOwn(policy.allowed_operations,tool))||
      !privacy.includes(policy?.classification)||policy?.destination!=="LOCAL"||
@@ -78,9 +91,9 @@ function inspectEvidenceBundleData(bundle) {
     fail("invalid or unsafe execution policy");
   // Fail closed before dereferencing any nested untrusted policy or claim shape.
   if(issues.length)return denied(issues);
-  const receipts=Array.isArray(bundle.receipts)?bundle.receipts:[];
-  if(!Array.isArray(bundle.receipts)||receipts.length>16)
+  if(!dataArray(bundle.receipts,16))
     return denied([...issues,"invalid or excessive tool receipts"]);
+  const receipts=bundle.receipts;
   const ids=new Set(),nativeIds=new Set(toolIds);
   for(const receipt of receipts) {
     if(!own(receipt,["step_id","claim_id","tool_id","operation","tool_binary_sha256",

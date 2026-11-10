@@ -29,6 +29,7 @@ A bundle declares an **atomic claim** (stable ID, verification kind, required st
 ## Fresh security review R1: hostile object and permission provenance limits
 
 - Incoming JavaScript records must be **plain data**, not accessor-bearing or prototype-inherited policy objects. Operation rights must be explicitly **own properties** of the permitted-tool operation map; a prototype's `z3.solve` entry is never an authorization. Malformed/proxy input is fail-closed, not a propagated exception containing untrusted text.
+- **Postmerge R1 hardening (follow-up to PR #15):** inbound arrays must also be dense, ordinary, own-data-index arrays with no custom methods, accessors, symbols, subclasses, or Proxies. Otherwise forged `includes/every/some` implementations can bypass an explicit allowed-tool list, a required Claim-step relation, or UNKNOWN detection even though no result can become business `PASS`. Four new adversarial tests enforce rejection. This is a static linkage integrity repair, not native tool attestation.
 - This checker still treats the entire declared `policy`, source/model/method hashes, tool binary hashes and receipts as **self-asserted metadata**. It does not inspect G2 ProblemSpec bytes or Method DAG execution results. A G2 plan with valid static SHA is **not** a trusted host attestation, an executed semantic Oracle, or a tool result. Operators must obtain host-owned authorization and a source-byte-verified model/Method attestation before any later component may consider `SUPPORTED_WITH_SCOPE`.
 - In particular, `LINKED_UNVERIFIED` is not a business `PASS`, no matter whether the claimed tool outcome is SAT, UNSAT, PROVED, COUNTEREXAMPLE, TEST_FAIL or OPTIMAL. G3 full runtime/Oracle proof and G4 Solution qualification remain separate gates.
 
@@ -42,6 +43,6 @@ A bundle declares an **atomic claim** (stable ID, verification kind, required st
 
 ## Test / acceptance
 
-At current source stage: 14 synthetic cases cover output forging, different claim/source/model SHA, wrong tool/operation/permission, duplicated or missing steps, unsupported statuses, privacy declassification, local-only policy and arbitrary-size malformed arrays.
+At PR #15 merge: 17 synthetic tests covered; this postmerge R1 adds 4 array/Proxy regression tests. Together they cover output forging, different claim/source/model SHA, wrong tool/operation/permission, duplicated or missing steps, unsupported statuses, privacy declassification, local-only policy and arbitrary-size malformed arrays.
 
 **Gate:** exact final-SHA `node --test tests/evidence-gate.test.mjs`, `node --test tests/*.test.mjs`, `npm run typecheck`, Woodpecker push+PR, then source review. All this is **G3 PREP**, not G3 ACCEPTED. G2's independent review must not be bypassed by merging this PR prematurely.
