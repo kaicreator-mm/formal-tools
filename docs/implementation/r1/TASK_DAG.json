@@ -3,7 +3,7 @@
   "source_main": "5bd8a552c61218d56408de12bb832a5b39f568a2",
   "product": "kaicreator-mm/formal-tools",
   "plan": "docs/implementation/r1/DEVELOPMENT_PLAN.md",
-  "status": "R1_PR9_IN_MAIN_PR10_STAGED_EXECUTION_SOURCE_READY",
+  "status": "ISSUE7_A_PR10_CI_FAILED_PRIORITY_B_PARTIAL_SOURCE_READY",
   "scope": "TOOL_MAINTENANCE_ONLY",
   "tasks": [
     {
@@ -95,20 +95,21 @@
     },
     {
       "id": "D08",
-      "title": "官方模拟与模型检查命令能力维护",
+      "title": "通用 CLI/MCP/SDK 能力与权限对等性",
       "depends_on": [
         "D06",
         "D07"
       ],
       "gate": "G2",
       "priority": "P1",
-      "status": "PLANNED",
-      "source_status": "NOT_STARTED",
-      "runtime_status": "NOT_RUN"
+      "status": "SOURCE_PARTIAL",
+      "source_status": "PARITY_SOURCE_TEST_ADDED",
+      "runtime_status": "NOT_RUN_ON_CURRENT_HEAD",
+      "remaining": "Final exact-SHA Node/TypeScript CI, public/permission contract smoke"
     },
     {
       "id": "D09",
-      "title": "多平台与版本兼容矩阵",
+      "title": "多平台/上游工具版本与 Exact-SHA 兼容清单",
       "depends_on": [
         "D06",
         "D07"
@@ -122,20 +123,21 @@
     },
     {
       "id": "D10",
-      "title": "Woodpecker 实际运行与收据",
+      "title": "Woodpecker Node+TypeScript 实际质量门禁",
       "depends_on": [
         "D08",
         "D09"
       ],
       "gate": "G3",
       "priority": "P1",
-      "status": "PLANNED",
-      "source_status": "CI_WORKFLOW_AVAILABLE_FROM_PR9",
-      "runtime_status": "PR9_CI_PASS_AT_PRIOR_SHA_PR10_PENDING"
+      "status": "SOURCE_PARTIAL",
+      "source_status": "TYPECHECK_GATE_ADDED",
+      "runtime_status": "PR10_BUILD_20_21_FAILED",
+      "remaining": "Root cause from actual CI log, repair and green final exact-SHA"
     },
     {
       "id": "D11",
-      "title": "外部工具 API 冒烟/文档",
+      "title": "真实 CI 收据与工具兼容性证据收口",
       "depends_on": [
         "D07",
         "D08",
@@ -145,11 +147,12 @@
       "priority": "P2",
       "status": "PLANNED",
       "source_status": "NOT_STARTED",
-      "runtime_status": "NOT_RUN"
+      "runtime_status": "NOT_RUN",
+      "remaining": "Final exact-SHA Node/TS/CI reports and true platform/runtime status"
     },
     {
       "id": "D12",
-      "title": "版本升级和 Release 资格",
+      "title": "至少一个外部消费者的通用工具接口冒烟",
       "depends_on": [
         "D10",
         "D11"
@@ -158,11 +161,23 @@
       "priority": "P2",
       "status": "PLANNED",
       "source_status": "NOT_STARTED",
-      "runtime_status": "NOT_RUN"
+      "runtime_status": "NOT_RUN",
+      "remaining": "Real external project integration of tool-only input/invoke/artifacts/failure/timeout; no business assertions"
     }
   ],
   "receipt": "validation/R1_TOOL_MANAGER_SOURCE_AUDIT.json",
   "last_prospective_tree": "08848a2b57cf3f9a0d7a6c1977bfee16ce3f0501",
   "sdk_receipt": "validation/R1_SDK_SOURCE_AUDIT.json",
-  "integration_note": "PR #9 merged main@41925288dd5b777d49c4e442d9731581895cb037. PR #10 rebases via two-parent merge commit, adds staged-tool SDK and technical artifact inventory. New final SHA needs CI/Node verification."
+  "integration_note": "PR #9 merged main@41925288dd5b777d49c4e442d9731581895cb037. PR #10 rebases via two-parent merge commit, adds staged-tool SDK and technical artifact inventory. New final SHA needs CI/Node verification.",
+  "product_scope_authority": "https://github.com/kaicreator-mm/formal-tools/issues/7",
+  "delivery_decision": "R1_TOOL_INFRASTRUCTURE_ONLY_FUTURE_METHOD_ENGINEERING_SEPARATE_PRODUCT",
+  "revision": "Issue #7 scope correction 2026-11-10",
+  "current_gate": {
+    "blocking_pr": 10,
+    "known_head": "65ecc5d694d0618e6986836efa9a8a883912b99f",
+    "push_build": 20,
+    "pr_build": 21,
+    "both": "FAILED",
+    "native_engine_blocking_for_source_merge": false
+  }
 }
