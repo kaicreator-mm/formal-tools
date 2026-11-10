@@ -1,0 +1,43 @@
+{
+  "schema": "formal-tools-r1-parallel-source-audit/1",
+  "repo": "kaicreator-mm/formal-tools",
+  "branch": "dev/r1-artifact-inventory-lane",
+  "base_main_exact_head": "5bd8a552c61218d56408de12bb832a5b39f568a2",
+  "independent_of": "PR #9 dev/r1-tool-manager-r0; zero overlapping changed paths with PR #9 as of creation",
+  "provisional_tree": "94dddcfb1db19d017629bd46e68bf007727cccf1",
+  "changed_blob_sha": {
+    "packages/runner/js/artifact-collector.mjs": "93f39b8e807bf9f39f0ff279790d4ae64ea98bb2",
+    "packages/runner/js/compatibility-matrix.mjs": "1cdd319da6bc3ccd0be23c1bdda0bbee7700d180",
+    "tests/artifact-collector.test.mjs": "ad048fa2f8ebbbc7a8372c8c2b1b3480d0c001dd",
+    "tests/compatibility-matrix.test.mjs": "8832d897456695b0596e13c2b7975a29692aef51",
+    "scripts/tool-compatibility.mjs": "5b42b3d8001917882cfdbb07e05cd5fc96586e4c"
+  },
+  "role": "D06/D07 artifact metadata primitive + D09 compatibility inventory, source-only lanes",
+  "observed_js_checks": {
+    "artifact_diff": {
+      "passed": 223,
+      "failed": 0,
+      "method": "Restricted pure JS evaluator, no node fs or native subprocess"
+    },
+    "compatibility_matrix": {
+      "passed": 131,
+      "failed": 0,
+      "method": "Restricted pure JS evaluator, no installation detection"
+    },
+    "syntax": {
+      "passed": 5,
+      "failed": 0,
+      "method": "V8 parsing after removing module import/export, not a Node module execution"
+    }
+  },
+  "runtime_pending": {
+    "node_artifact_workspace_tests": "NOT_RUN",
+    "node_compatibility_tests": "NOT_RUN",
+    "tsc": "NOT_RUN",
+    "native_formal_engines": "NOT_RUN",
+    "integration_with_pr9_sdk": "NOT_ATTEMPTED_AVOID_CONCURRENT_WRITER",
+    "woodpecker_remote": "NOT_RUN"
+  },
+  "safety": "Read-only workspace scanner, skips symlinks, bounded memory/hash work, no raw shell, no proof/business verdict, private host workspace still required",
+  "status": "PARALLEL_SOURCE_READY_HOST_AND_INTEGRATION_PENDING"
+}
