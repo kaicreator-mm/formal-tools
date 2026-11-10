@@ -6,13 +6,13 @@
     "source_base_sha": "41925288dd5b777d49c4e442d9731581895cb037",
     "scope": "NEW_DIRECTION_NOT_R1"
   },
-  "status": "G0_G1_SOURCE_COMMITTED_RESEARCH_R0_REVIEW_REQUIRED",
+  "status": "G0_G1_SOURCE_COMMITTED_CI_PENDING_RESEARCH_CONTRACT_COMMITTED_REVIEW_PENDING",
   "gates": [
     {
       "id": "G0",
       "name": "Product L1 + baseline audit + gates",
       "depends_on": [],
-      "status": "SOURCE_PROPOSED",
+      "status": "SOURCE_COMMITTED_TEST_CI_PENDING",
       "exit": "source-reviewed Product/L1 and complete dependency DAG, scope separated from Issue #7"
     },
     {
@@ -21,7 +21,7 @@
       "depends_on": [
         "G0"
       ],
-      "status": "SOURCE_IN_PROGRESS",
+      "status": "SOURCE_COMMITTED_TEST_CI_PENDING",
       "exit": "23 canonical capability codes, 13 native references verified against source, 23 candidate records, negative contract checks"
     },
     {
@@ -31,7 +31,7 @@
         "G0",
         "G1"
       ],
-      "status": "SOURCE_REVIEWED_DESIGN_CONDITIONAL",
+      "status": "SOURCE_EVIDENCE_AND_CONTRACT_READY_FOR_INDEPENDENT_REVIEW",
       "exit": "Research report readback, semantic fidelity and independent-claim oracle contracts reviewed; no G2 code until implementation admission"
     },
     {
@@ -91,7 +91,7 @@
       "title": "Audit true native catalog and frozen R1 exclusion boundary",
       "depends_on": [],
       "owner": "web",
-      "status": "SOURCE_COMPLETE",
+      "status": "SOURCE_COMMITTED_AWAIT_FINAL_SHA_REVIEW",
       "evidence": [
         "packages/runner/js/native-catalog.mjs",
         "docs/PROJECT_SCOPE.md",
@@ -106,7 +106,7 @@
         "T-G0-01"
       ],
       "owner": "web",
-      "status": "SOURCE_PROPOSED",
+      "status": "SOURCE_COMMITTED_AWAIT_FINAL_SHA_REVIEW",
       "evidence": [
         "docs/experiments/llm-methods/r0/PRODUCT_L1.md"
       ]
@@ -119,7 +119,7 @@
         "T-G0-02"
       ],
       "owner": "web",
-      "status": "SOURCE_PROPOSED",
+      "status": "SOURCE_COMMITTED_AWAIT_FINAL_SHA_REVIEW",
       "evidence": [
         "docs/experiments/llm-methods/r0/TASK_DAG.json"
       ]
@@ -132,7 +132,7 @@
         "T-G0-01"
       ],
       "owner": "web",
-      "status": "SOURCE_PROPOSED",
+      "status": "SOURCE_COMMITTED_AWAIT_FINAL_SHA_REVIEW",
       "evidence": [
         "registry/PROBLEM_CAPABILITIES.json"
       ]
@@ -145,7 +145,7 @@
         "T-G1-01"
       ],
       "owner": "web",
-      "status": "SOURCE_PROPOSED",
+      "status": "SOURCE_COMMITTED_AWAIT_FINAL_SHA_REVIEW",
       "evidence": [
         "packages/runner/js/problem-capabilities.mjs",
         "tests/problem-capabilities.test.mjs"
@@ -160,7 +160,7 @@
         "T-G1-02"
       ],
       "owner": "web",
-      "status": "SOURCE_PROPOSED",
+      "status": "SOURCE_COMMITTED_AWAIT_FINAL_SHA_REVIEW",
       "evidence": [
         "docs/experiments/llm-methods/r0/CAPABILITY_MATRIX.md"
       ]
@@ -174,9 +174,12 @@
         "T-G1-02"
       ],
       "owner": "web",
-      "status": "SOURCE_COMMITTED_REVIEW_REQUIRED",
+      "status": "SOURCE_CONTRACT_CASES_COMMITTED_INDEPENDENT_REVIEW_PENDING",
       "evidence": [
-        "docs/experiments/llm-methods/r0/TECHNICAL_REVIEW_2026-11-10.md"
+        "docs/experiments/llm-methods/r0/TECHNICAL_REVIEW_2026-11-10.md",
+        "docs/experiments/llm-methods/r0/SPEC_CLAIM_CONTRACT_R0.md",
+        "benchmarks/llm-methods/r0/spec-fidelity-cases.json",
+        "tests/spec-fidelity.test.mjs"
       ]
     },
     {
