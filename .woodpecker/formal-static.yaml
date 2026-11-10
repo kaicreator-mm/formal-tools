@@ -12,6 +12,7 @@ steps:
     commands:
       - node --version
       - node --test tests/*.test.mjs
+      - npm run typecheck
       - node packages/runner/js/cli.mjs validate
       - node packages/runner/js/cli.mjs pure dag --input validation/js/dag-positive.json
       - node packages/runner/js/cli.mjs catalog z3
