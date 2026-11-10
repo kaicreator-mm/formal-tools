@@ -92,8 +92,8 @@ verify_one() {
   local id="$1"
   tool_meta "$id" || return 2
   local ef="$FT_ROOT/tests/$id/expect.sh"
-  if [ ! -f "$ef" ]; then
-    echo "verify: $id SKIP (no expect.sh — tool unavailable or cases not defined)"
+  if [ ! -f "$ef" ] || [ ! -x "$FT_ROOT/tools/$id/run" ]; then
+    echo "verify: $id SKIP (no expect.sh or no run shim — tool unavailable)"
     printf 'id\tphase\texit\tduration_ms\tmatched\texit_ok\tlabel\nSKIP\tunavailable\nverdict\tSKIP\n' > "$FT_EV/verify-$id.tsv"
     return 0
   fi
