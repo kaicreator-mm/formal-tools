@@ -359,3 +359,24 @@ test("G2 security: non-JSON ProblemSpec and malformed source hash do not throw",
  cyclic.policy.extra=cyclic;
  assert.equal(validateProblemSpec(cyclic).ok,false);
 });
+
+test("G2 security: identical source bytes cannot acquire conflicting privacy aliases",()=>{
+ const {problem,method}=fixture();
+ problem.source_refs.push({
+   id:"weak_alias",sha256:problem.source_refs[0].sha256,classification:"USER_PRIVATE",
+   purpose:"same bytes claimed private under a second ID",consumer:"formal_tools"
+ });
+ assert.equal(validateProblemSpec(problem).ok,false);
+ const verdict=assessMethod(problem,method);
+ assert.equal(verdict.status,"REJECTED");
+ assert.match(verdict.issues.join(" "),/conflicting privacy classification/);
+});
+test("G2 security: untrusted provider errors cannot disclose exception messages",async()=>{
+ const {problem}=fixture();
+ const result=await proposeMethod(problem,async()=>{
+   throw Error("FAKE_SECRET_TOKEN_SHOULD_NOT_LEAK");
+ },{authorizePublicPayload:()=>true});
+ assert.equal(result.status,"REJECTED");
+ assert.equal(result.provider_failure,"PROVIDER_OR_PARSE_ERROR");
+ assert.ok(!JSON.stringify(result).includes("FAKE_SECRET_TOKEN"));
+});

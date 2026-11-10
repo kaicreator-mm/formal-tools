@@ -59,13 +59,18 @@ export function validateProblemSpec(problem) {
     fail("unknown, duplicate or empty problem capabilities");
   const sources=Array.isArray(problem.source_refs)?problem.source_refs:[];
   if(!sources.length||sources.length>32)fail("source_refs required (1..32)");
-  const sourceIds=new Set();
+  const sourceIds=new Set(),classByHash=new Map();
   for(const s of sources){
     if(!hasOnly(s,["id","sha256","classification","purpose","consumer"])||
        !isId(s?.id)||typeof s?.sha256!=="string"||!hexPattern.test(s.sha256)||!within(s?.classification,privacy)||
        typeof s?.purpose!=="string"||!s.purpose.trim()||!isId(s?.consumer))
       {fail("invalid source reference, hash, purpose or classification");continue;}
     if(sourceIds.has(s.id))fail("duplicate source id "+s.id);
+    // Identical bytes cannot be reintroduced under a weaker alias: privacy
+    // labels are attached to source content, not just planner-chosen IDs.
+    if(classByHash.has(s.sha256)&&classByHash.get(s.sha256)!==s.classification)
+      fail("conflicting privacy classification for identical source SHA: "+s.id);
+    classByHash.set(s.sha256,s.classification);
     sourceIds.add(s.id);
   }
   const reqs=Array.isArray(problem.requirements)?problem.requirements:[];
@@ -328,9 +333,11 @@ export async function proposeMethod(problem, generate, egressAuthority) {
     // bypassing the untrusted proposal transport and static shape checks.
     if(!isBoundedJSON(reply))throw new RangeError("LLM proposal is not bounded JSON");
     return assessMethod(snapshot,JSON.parse(JSON.stringify(reply)));
-  }catch(error){
+  }catch{
+    // Provider errors may contain API tokens, URLs, traces or user data.
+    // Never reflect an untrusted exception string into a public receipt.
     return {status:"REJECTED",issues:["proposal provider failed or returned invalid JSON"],
-      provider_failure:String(error?.message??error).slice(0,200),tool_execution:"NOT_RUN",
+      provider_failure:"PROVIDER_OR_PARSE_ERROR",tool_execution:"NOT_RUN",
       executable:false,solution_promotable:false};
   }
 }
