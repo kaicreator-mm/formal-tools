@@ -51,7 +51,7 @@ export async function invokeTool(request) {
  *  settings?:Record<string,string|number|boolean>,
  *  timeoutS?:number,
  *  workspaceOptions?:{maxFiles?:number,maxDepth?:number,maxBytes?:number},
- *  artifactOptions?:{maxFiles?:number,maxDepth?:number,maxBytes?:number}
+ *  artifactOptions?:{maxFiles?:number,maxDepth?:number,maxBytes?:number,maxDirectories?:number,maxEntries?:number,maxSkipped?:number}
  * }} request
  */
 // Only the explicitly declared input files are copied into the private cwd.
