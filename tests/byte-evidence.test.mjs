@@ -276,6 +276,7 @@ test("G3 independent P1: source sensitivity cannot be erased by receipt policy o
 
 test("G3 independent P1: downstream input taint includes upstream Method outputs",()=>{
  const a=fixture(), input=Buffer.from("upstream input");
+ a.problem.policy.max_input_classification="RESTRICTED";
  a.method.steps[0].depends_on=["step0"];
  a.method.steps[0].source_refs=[];
  a.method.steps[0].output_classification="RESTRICTED";
