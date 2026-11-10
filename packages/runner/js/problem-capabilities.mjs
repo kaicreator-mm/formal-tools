@@ -12,14 +12,29 @@ import { toolIds } from "./native-catalog.mjs";
 export const REGISTRY_PATH = new URL("../../../registry/PROBLEM_CAPABILITIES.json", import.meta.url);
 const availability = new Set(["NOT_ASSESSED","DOWNLOADED","INSTALLED","NATIVE_VERIFIED","UNAVAILABLE"]);
 const outcomes = new Set(["SAT","UNSAT","UNKNOWN","ERROR","TIMEOUT","NOT_RUN"]);
+const claimOutcomes = new Set(["SUPPORTED_WITH_SCOPE","REFUTED","INCONCLUSIVE","UNVERIFIED","NEEDS_SOURCE"]);
+const hasOnlyFields = (record, names) =>
+  record && typeof record==="object" && !Array.isArray(record) &&
+  Object.keys(record).every(name=>names.includes(name));
+const exactStates = (states, expected) =>
+  Array.isArray(states) && states.length===expected.size &&
+  states.every(value=>typeof value==="string" && expected.has(value)) &&
+  new Set(states).size===expected.size;
 
 export function validateCapabilityRegistry(input, nativeSourceIds=toolIds) {
   const issues = [];
   const fail = (message) => issues.push(message);
   if (!input || typeof input !== "object" || Array.isArray(input))
     return { ok:false, issues:["registry must be an object"] };
+  if (!hasOnlyFields(input,["schema","authority","status","semantics","capabilities","tools"]))
+    fail("unexpected registry fields");
   if (input.schema !== "formal-tools/problem-capabilities/0.1") fail("wrong schema");
+  if (!hasOnlyFields(input.authority,["main_issue","native_catalog","baseline_main_sha"]) ||
+      input.authority.main_issue!==11 || typeof input.authority.baseline_main_sha!=="string" ||
+      !/^[a-f0-9]{40}$/.test(input.authority.baseline_main_sha))
+    fail("invalid registry authority/provenance");
   if (input.authority?.native_catalog !== "packages/runner/js/native-catalog.mjs") fail("wrong native source authority");
+  if (input.status!=="DISCOVERY_ONLY_NOT_NATIVE_VALIDATED") fail("invalid discovery-only status");
   const capabilities = Array.isArray(input.capabilities) ? input.capabilities : [];
   const tools = Array.isArray(input.tools) ? input.tools : [];
   if (!Array.isArray(input.capabilities) || !Array.isArray(input.tools)) fail("capabilities/tools arrays required");
@@ -30,12 +45,19 @@ export function validateCapabilityRegistry(input, nativeSourceIds=toolIds) {
     if(!c || typeof c.id!=="string" || !/^[a-z][a-z0-9-]*\.[a-z][a-z0-9-]*$/.test(c.id) ||
         typeof c.label!=="string" || !c.label.trim() || typeof c.limitations!=="string" || !c.limitations.trim())
       {fail("invalid capability");continue;}
+    if(!hasOnlyFields(c,["id","label","limitations","claim_scope"]) ||
+       c.claim_scope!=="FORMAL_CHECKABLE_WITH_EXPLICIT_MODEL")
+      fail("invalid capability scope or unexpected fields: "+c.id);
     if(ids.has(c.id))fail("duplicate capability: "+c.id);
     ids.add(c.id);
   }
   const toolMap = new Set(); const nativeRefs=[];
   for(const t of tools) {
     if(!t || typeof t.id!=="string" || !/^[a-z][a-z0-9-]*$/.test(t.id)) {fail("invalid tool ID");continue;}
+    if(!hasOnlyFields(t,["id","origin","priority","capability_ids","official_url","distribution",
+        "availability","runtime_verified","version","evidence_ref","license_status","consumer_scope"]))
+      fail("unexpected tool fields: "+t.id);
+    if(typeof t.distribution!=="string"||!t.distribution.trim())fail("missing distribution: "+t.id);
     if(toolMap.has(t.id))fail("duplicate tool ID: "+t.id);
     toolMap.add(t.id);
     if(!["native-ref","candidate"].includes(t.origin))fail("invalid tool origin: "+t.id);
@@ -65,12 +87,16 @@ export function validateCapabilityRegistry(input, nativeSourceIds=toolIds) {
     fail("native tool references differ from native-catalog.mjs; never duplicate executable tool IDs");
   if(capabilities.some(c=>!c || typeof c.id!=="string" || !tools.some(t=>Array.isArray(t?.capability_ids)&&t.capability_ids.includes(c.id))))
     fail("at least one capability has no tool");
-  const toolStates=input.semantics?.tool_result_states;
-  const claimStates=input.semantics?.claim_result_states;
-  if(!Array.isArray(toolStates)||toolStates.some(x=>!outcomes.has(x))||!toolStates.includes("NOT_RUN"))
-    fail("tool result contract missing NOT_RUN or contains invalid states");
-  if(!Array.isArray(claimStates)||!claimStates.includes("NEEDS_SOURCE"))
-    fail("external claims must support NEEDS_SOURCE");
+  if(!hasOnlyFields(input.semantics,["tool_result_states","claim_result_states",
+      "availability_states","warning"]) ||
+      typeof input.semantics.warning!=="string" || !input.semantics.warning.trim())
+    fail("invalid semantic metadata");
+  if(!exactStates(input.semantics?.tool_result_states,outcomes))
+    fail("tool result contract must include exact SAT/UNSAT/UNKNOWN/ERROR/TIMEOUT/NOT_RUN states");
+  if(!exactStates(input.semantics?.claim_result_states,claimOutcomes))
+    fail("claim result contract must include exact SUPPORTED/REFUTED/INCONCLUSIVE/UNVERIFIED/NEEDS_SOURCE states");
+  if(!exactStates(input.semantics?.availability_states,availability))
+    fail("availability metadata must be exact and must not imply runtime verification");
   return {ok:issues.length===0,issues,counts:{capabilities:capabilities.length,tools:tools.length,native_refs:nativeRefs.length,candidates:tools.length-nativeRefs.length}};
 }
 

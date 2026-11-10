@@ -35,7 +35,8 @@
           "type": "string",
           "pattern": "^[a-f0-9]{40}$"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "status": {
       "const": "DISCOVERY_ONLY_NOT_NATIVE_VALIDATED"
@@ -51,27 +52,59 @@
       "properties": {
         "tool_result_states": {
           "type": "array",
+          "uniqueItems": true,
+          "minItems": 6,
+          "maxItems": 6,
           "items": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "SAT",
+              "UNSAT",
+              "UNKNOWN",
+              "ERROR",
+              "TIMEOUT",
+              "NOT_RUN"
+            ]
           }
         },
         "claim_result_states": {
           "type": "array",
+          "uniqueItems": true,
+          "minItems": 5,
+          "maxItems": 5,
           "items": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "SUPPORTED_WITH_SCOPE",
+              "REFUTED",
+              "INCONCLUSIVE",
+              "UNVERIFIED",
+              "NEEDS_SOURCE"
+            ]
           }
         },
         "availability_states": {
           "type": "array",
+          "uniqueItems": true,
+          "minItems": 5,
+          "maxItems": 5,
           "items": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "NOT_ASSESSED",
+              "DOWNLOADED",
+              "INSTALLED",
+              "NATIVE_VERIFIED",
+              "UNAVAILABLE"
+            ]
           }
         },
         "warning": {
           "type": "string",
           "minLength": 1
         }
-      }
+      },
+      "additionalProperties": false
     },
     "capabilities": {
       "type": "array",
@@ -149,7 +182,8 @@
             "items": {
               "type": "string",
               "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$"
-            }
+            },
+            "uniqueItems": true
           },
           "official_url": {
             "type": "string",

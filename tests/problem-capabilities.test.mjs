@@ -119,3 +119,45 @@ test("malformed result-state metadata is reported as invalid rather than crashin
  b.semantics.claim_result_states="NEEDS_SOURCE";
  assert.ok(validateCapabilityRegistry(b).issues.some(x=>x.includes("NEEDS_SOURCE")));
 });
+
+test("reject registry status or authority spoofing before discovery",()=>{
+  const base=readCapabilityRegistry();
+  const a=clone(base);a.status="NATIVE_VERIFIED";
+  assert.ok(validateCapabilityRegistry(a).issues.some(x=>x.includes("discovery-only")));
+  const b=clone(base);b.authority.main_issue=7;
+  assert.ok(validateCapabilityRegistry(b).issues.some(x=>x.includes("authority/provenance")));
+  const c=clone(base);c.authority.baseline_main_sha="not-a-sha";
+  assert.equal(validateCapabilityRegistry(c).ok,false);
+});
+test("fail closed on incomplete, duplicated, or forged semantic result enums",()=>{
+  const base=readCapabilityRegistry();
+  const cases=[
+    a=>a.semantics.tool_result_states=["NOT_RUN"],
+    a=>a.semantics.claim_result_states.push("BUSINESS_PROVED"),
+    a=>a.semantics.claim_result_states.push("NEEDS_SOURCE"),
+    a=>a.semantics.availability_states=["NATIVE_VERIFIED"],
+    a=>a.semantics.availability_states.push("EXECUTE_ANYTHING")
+  ];
+  for(const mutate of cases) {
+    const a=clone(base);mutate(a);
+    assert.equal(validateCapabilityRegistry(a).ok,false,JSON.stringify(a.semantics));
+  }
+});
+test("reject scope laundering, unexpected runner fields, and missing distribution",()=>{
+  const base=readCapabilityRegistry();
+  const a=clone(base);a.capabilities[0].claim_scope="PROVES_REAL_WORLD_TRUTH";
+  assert.ok(validateCapabilityRegistry(a).issues.some(x=>x.includes("capability scope")));
+  const b=clone(base);b.tools[0].command="arbitrary-shell";
+  assert.ok(validateCapabilityRegistry(b).issues.some(x=>x.includes("unexpected tool fields")));
+  const c=clone(base);c.tools[0].distribution="";
+  assert.ok(validateCapabilityRegistry(c).issues.some(x=>x.includes("distribution")));
+  const d=clone(base);d.executable=true;
+  assert.ok(validateCapabilityRegistry(d).issues.some(x=>x.includes("unexpected registry fields")));
+});
+test("semantic states are treated as sets, not dependent on display order",()=>{
+  const a=clone(readCapabilityRegistry());
+  a.semantics.tool_result_states.reverse();
+  a.semantics.claim_result_states.reverse();
+  a.semantics.availability_states.reverse();
+  assert.equal(validateCapabilityRegistry(a).ok,true);
+});
