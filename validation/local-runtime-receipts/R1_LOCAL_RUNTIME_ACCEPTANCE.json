@@ -83,6 +83,25 @@
       "exit_code": 2,
       "detail": "Upstream binaries absent → fail-closed INCONCLUSIVE, zero fabricated PASS. These are real spawn attempts per tool, not static checks.",
       "receipt": ["native-acceptance.json", "native-acceptance-run.log"]
+    },
+    "WOODPECKER": {
+      "result": "NOT_RUN — execution infrastructure blocked, activation + trigger path verified",
+      "repo_activation": {
+        "state_before": "kaicreator-mm/formal-tools was NOT registered in Woodpecker (38 repos listed, none formal-tools) — pushes could not trigger anything",
+        "action": "POST /api/repos?forge_remote_id=1451445651 → activated as repo_id=39 (server X-Woodpecker-Version: 3.18.1)",
+        "evidence": "webhook auto-triggers now work: sibling branch pipelines #1 (push) and #2 (pull_request) were created for commit 194a30d2"
+      },
+      "manual_trigger_attempt": {
+        "finding": "POST /api/repos/39/pipelines with {\"branch\":\"dev/r1-tool-manager-r0\"} returns 204: CreatePipeline decodes PipelineOptions from the JSON body (server/api/pipeline.go v3.18.1) and pipeline.Create returns nil because .woodpecker/formal-static.yaml `when: event: [push, pull_request]` filters EventManual; query-param form returns 400 (body is required)",
+        "consequence": "branch pipelines require a real push event; every push of this branch queues a pipeline"
+      },
+      "queue_state_at_receipt": {
+        "queue_info": "running=0, pending=8 (incl. 2x formal-static for repo_id 39), stats.worker_count=0",
+        "agents": "LAN200 (capacity 8) last_contact ~3.7d ago and host intermittently unreachable (ssh timeout, ping 50-66% loss); NILAR (capacity 1, local Docker container) last_contact ~1.8h ago; sudo disabled so no non-interactive elevation to recover local WSL",
+        "local_infra": "this host's Docker Desktop reports \"Docker Desktop is unable to start\"; WSL service wedged (vmmemWSL zombie ~4.5MB, wslservice.exe stop requires admin, `wsl --shutdown` intermittently hangs) — NILAR agent container cannot come back until an administrator clears WSL or the machine is rebooted"
+      },
+      "ci_equivalence_note": "Local cold-checkout simulation of the exact CI commands (node --test tests/*.test.mjs on a git archive of the branch, no node_modules) passed 52 tests / EXIT=0 — but per handoff rule this does NOT mark remote CI PASS.",
+      "next_step": "When any agent comes back online (LAN200 host restored, or local Docker Desktop/WSL recovered + NILAR container restarted), the queued pipelines run; record the build id for the FINAL_HEAD push pipeline. POSIX-gated workspace-isolation subtest runs on node:24-alpine there."
     }
   },
   "working_directory_isolation": {
@@ -98,8 +117,8 @@
   ],
   "remaining_blockers": [
     "No upstream formal engine installed on this host → NATIVE_13 verified=0 and NATIVE_26 all INCONCLUSIVE is the honest ceiling for Windows-only local acceptance; a host with the 13 tools (or per-tool subset) is required for real version receipts.",
-    "Woodpecker run pending at receipt-commit SHA; build id to be recorded after push (only remote run may mark CI PASS).",
-    "Linux self-test executed only via Woodpecker (WSL explicitly excluded by PR constraints)."
+    "Woodpecker: repo activated (repo_id=39) and trigger path verified, but zero agents are polling (worker_count=0); local Docker Desktop/WSL wedged (admin required), LAN200 host degraded — remote CI run still outstanding; build id to be recorded once an agent drains the queue.",
+    "Linux self-test executed only via Woodpecker (WSL explicitly excluded by PR constraints); POSIX-gated workspace-isolation subtest remains pending that run."
   ],
   "next_gate": "Woodpecker formal-static.yaml on Linux (node:24-alpine) incl. the POSIX-gated workspace-isolation subtest; then a host provisioned with the 13 engines for version-level receipts."
 }
