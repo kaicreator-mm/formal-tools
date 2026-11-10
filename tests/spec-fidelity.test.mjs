@@ -8,6 +8,10 @@ const fixtures = JSON.parse(readFileSync(new URL("../benchmarks/llm-methods/r0/s
  * Deliberately tiny, deterministic synthetic example; not native or LLM execution.
  */
 function satisfies(caseData, constraints){
+ const supported=new Set(["valid_windows","acyclic","precedence","writer_exclusive","all_nonoverlap","always_reject"]);
+ if(!Array.isArray(constraints)||!constraints.length||new Set(constraints).size!==constraints.length||
+   constraints.some(x=>typeof x!=="string"||!supported.has(x)))
+   throw new TypeError("unknown, duplicate or missing model constraint");
  const tasks=caseData.tasks;
  const values=Object.values(tasks);
  const edges=caseData.edges;
@@ -92,4 +96,23 @@ test("claim-level evidence is not the same as tool invocation success",()=>{
  assert.equal(validLink,false);
  const result=claim.kind==="external_fact"&&claim.source_refs.length===0?"NEEDS_SOURCE":validLink?"SUPPORTED_WITH_SCOPE":"INCONCLUSIVE";
  assert.equal(result,"NEEDS_SOURCE");
+});
+
+test("unsupported or duplicate generated constraints are never treated as verified models",()=>{
+ const base=fixtures.models.find(x=>x.id==="faithful");
+ assert.throws(()=>evaluateModel({...base,constraints:[...base.constraints,"nonexistent_property"]}),/model constraint/);
+ assert.throws(()=>evaluateModel({...base,constraints:[...base.constraints,"acyclic"]}),/model constraint/);
+ assert.throws(()=>evaluateModel({...base,constraints:[]}),/model constraint/);
+});
+test("unrelated evidence cannot certify even a claimed symbolic result",()=>{
+ const claim={id:"math-equation-1",kind:"symbolic",source_refs:["source#sha256:abc"],model_sha:"model-1"};
+ const unrelated={exit_code:0,claim_id:"unrelated-claim",model_sha:"model-1",tool_status:"UNSAT"};
+ const wrongModel={exit_code:0,claim_id:claim.id,model_sha:"model-other",tool_status:"UNSAT"};
+ const link=receipt=>receipt.claim_id===claim.id && receipt.model_sha===claim.model_sha;
+ assert.equal(link(unrelated),false);
+ assert.equal(link(wrongModel),false);
+ assert.equal(link({exit_code:0,claim_id:claim.id,model_sha:claim.model_sha}),true);
+ // Even a matching identity is only evidence association, NOT semantic verification.
+ const semanticOracleReviewed=false;
+ assert.equal(link({exit_code:0,claim_id:claim.id,model_sha:claim.model_sha})&&semanticOracleReviewed,false);
 });
