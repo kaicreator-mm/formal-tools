@@ -41,11 +41,12 @@
   },
   "new_source_checks": {
     "module_parsing": "PASS (V8 imports removed; not Node)",
-    "execution_mock": "NOT_RUN",
-    "node_tests": "NOT_RUN_ON_NEW_TREE",
-    "tsc": "NOT_RUN_ON_NEW_TREE",
+    "execution_mock": "14/14 PASS in restricted V8 with mocked native process/filesystem; not Node or real upstream tool",
+    "node_tests": "NOT_RUN_ON_CURRENT_TREE",
+    "tsc": "NOT_RUN_ON_CURRENT_TREE",
     "native_engines": "NOT_RUN",
-    "remote_ci": "NOT_RUN_ON_NEW_TREE"
+    "remote_ci": "PENDING_ON_PRIOR_PR10_HEAD_27cfa486",
+    "mock_exact_head": "27cfa486972a184d2be5f86b1e8704adaeaf28b8"
   },
   "test_files": [
     "tests/staged-sdk.test.mjs",

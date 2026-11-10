@@ -23,3 +23,7 @@ PR #9 was merged into main at `41925288dd5b777d49c4e442d9731581895cb037`. Window
 - Do not rerun all 26 native proof fixtures just because new artifact inventory code was added; use targeted tool tests if a real host with the selected engine exists. No GitHub Actions.
 
 **Ownership:** PR #9's local Agent Writer is complete and merged; PR #10 is now the sole integration Writer for these shared files.
+
+## Web 端技术契约模拟检查
+
+已对 `invokeStagedTool` 的执行顺序和失败分支进行 14/14 项受限 JS Mock 检查：非法操作或未暂存输入在运行前拒绝、正常结果归档、源输入记录、超时输出标 PARTIAL、未启动不标 COLLECTED、扫描错误降级及异常路径执行 cleanup。该测试不包含真实文件系统、Node 子进程或原生证明器运行；最终 Node/CI 的判定仍以对应新 HEAD 收据为准。
