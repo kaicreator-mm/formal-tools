@@ -14,6 +14,23 @@ const summarize=items=>({
   STALE_SHA:items.filter(x=>x.observation_status==="STALE_SHA").length,
   REPORTED_UNREVIEWED:items.filter(x=>x.observation_status==="REPORTED_UNREVIEWED").length
 });
+/**
+ * One host-recorded compatibility observation. `git_head` must be the exact
+ * commit the observation was made at: matching `targetHead` stays
+ * REPORTED_UNREVIEWED, anything else is STALE_SHA.
+ * @typedef {Object} CompatibilityObservation
+ * @property {string} tool_id Registry tool ID.
+ * @property {string} git_head Exact 40-character SHA of the observed source.
+ * @property {string} platform Host platform identifier.
+ * @property {string} arch Host architecture identifier.
+ * @property {string} [tool_version] Self-reported upstream tool version.
+ * @property {string} [evidence_sha256] SHA-256 of the stored evidence artifact.
+ * @property {string} [run_status] Declared technical run status, never a business verdict.
+ */
+/**
+ * Builds the read-only compatibility inventory for the exact target commit.
+ * @param {{ targetHead?: string, observations?: CompatibilityObservation[] }} [input]
+ */
 export function buildCompatibilityMatrix({targetHead,observations=[]}={}){
   if(typeof targetHead!=="string"||!sha40.test(targetHead))
     throw new TypeError("targetHead must be a full 40-character Git commit SHA");
