@@ -68,7 +68,7 @@ test("G2: candidate tool is discoverable but cannot claim executable adapter",()
  problem.capability_ids=["graph.algorithms"];
  problem.claims[0].capability_ids=["graph.algorithms"];
  problem.policy.allowed_tools=["networkx"];
- problem.policy.allowed_operations={};
+ problem.policy.allowed_operations=/** @type {any} */ ({});
  method.steps[0].provides=["graph.algorithms"];
  method.steps[0].tool_id="networkx";
  method.steps[0].operation="UNRESOLVED";
@@ -161,6 +161,7 @@ test("G2: forged semantic review, output claims and raw argv are rejected",()=>{
  method.semantic_review="PASSED";
  assert.match(assessMethod(problem,method).issues.join(" "),/cannot claim semantic review/);
  const injected=fixture();
+ // @ts-expect-error intentional forged/unregistered method step property
  injected.method.steps[0].argv=["curl","https://outside.example"];
  assert.match(assessMethod(injected.problem,injected.method).issues.join(" "),/unexpected fields|invalid step fields/);
 });
@@ -189,7 +190,7 @@ test("G2: restrictive inputs cannot be exported by a downstream derived artifact
 test("G2: a two-tool typed Method DAG is accepted only as a non-executable plan",()=>{
  const {problem,method}=fixture();
  problem.policy.allowed_tools=["z3","cvc5"];
- problem.policy.allowed_operations={z3:["solve"],cvc5:["solve"]};
+ problem.policy.allowed_operations=/** @type {any} */ ({z3:["solve"],cvc5:["solve"]});
  method.steps.push({
    id:"step02",tool_id:"cvc5",operation:"solve",provides:["logic.smt"],
    depends_on:["step01"],source_refs:[],estimated_cost_units:2,timeout_ms:300,
@@ -210,7 +211,7 @@ test("G2: malformed capability array and unapproved tool selection fail closed",
  assert.equal(assessMethod(problem,method).status,"REJECTED");
  const fresh=fixture();
  fresh.problem.policy.allowed_tools=["cvc5"];
- fresh.problem.policy.allowed_operations={cvc5:["solve"]};
+ fresh.problem.policy.allowed_operations=/** @type {any} */ ({cvc5:["solve"]});
  assert.equal(validateProblemSpec(fresh.problem).ok,true);
  assert.match(assessMethod(fresh.problem,fresh.method).issues.join(" "),/tool not permitted/);
 });
