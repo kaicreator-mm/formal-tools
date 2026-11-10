@@ -33,7 +33,7 @@ import { pathToFileURL } from "node:url";
  */
 const WIN_PATH=/[A-Za-z]:[\\/][^\s"'`]*/g;
 // Also cover Linux/WSL/macOS absolute paths; "https://" URLs do not match.
-const POSIX_PATH=/(^|[\s"'=(:])\/(?!\/)[^\s"'`<>]+/g;
+const POSIX_PATH=/(^|[\s"'=(])\/(?!\/)[^\s"'`<>]+/g;
 
 export function redactPath(p,keep=3){
   const original=String(p);
