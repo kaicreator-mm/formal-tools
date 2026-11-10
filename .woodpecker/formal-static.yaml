@@ -11,13 +11,9 @@ steps:
     image: bash
     commands:
       - node --version
-      # M03 INTERIM experiment only: resolve an ephemeral workspace lockfile
-      # on the actual Woodpecker host, then test a real clean npm ci install.
-      # Lockfile is NOT committed by this step: final acceptance still requires
-      # an npm-generated root package-lock.json checked into this PR and
-      # removal of the package-lock-only generation line below.
+      # M03 FINAL: install strictly from the Git-tracked, registry-generated
+      # monorepo lockfile. Do not regenerate lock data on the CI agent.
       - npm --version
-      - npm install --package-lock-only --ignore-scripts --no-audit --no-fund --prefer-offline
       - node -e 'const p=require("./package-lock.json").packages; if (!p || !p["packages/core"] || !p["packages/runner"]) process.exit(1)'
       - npm ci --ignore-scripts --no-audit --no-fund --prefer-offline
       - node --test tests/*.test.mjs

@@ -181,3 +181,49 @@ test("G3 security: all decisive reported tool outcomes remain unverified, never 
     assert.equal(r.independent_oracle_review,"NOT_RUN",tool_status);
   }
 });
+
+test("G3 P1: overridden array methods cannot forge tool authorization",()=>{
+  const b=fixture();
+  b.policy.allowed_tool_ids=[];
+  b.policy.allowed_tool_ids.includes=()=>true;
+  b.policy.allowed_tool_ids.every=()=>true;
+  assert.equal(inspectEvidenceBundle(b).status,"BLOCKED");
+  const c=fixture();
+  c.policy.allowed_operations.z3=[];
+  c.policy.allowed_operations.z3.includes=()=>true;
+  assert.equal(inspectEvidenceBundle(c).status,"BLOCKED");
+});
+
+test("G3 P1: overridden claim-step and receipt arrays cannot launder unrelated evidence",()=>{
+  const b=fixture();
+  b.receipts[0].step_id="unrelated";
+  b.claim.required_step_ids.includes=()=>true;
+  b.claim.required_step_ids.some=()=>false;
+  assert.equal(inspectEvidenceBundle(b).status,"BLOCKED");
+  const c=fixture();
+  c.receipts[0].tool_status="UNKNOWN";
+  c.receipts.some=()=>false;
+  assert.equal(inspectEvidenceBundle(c).status,"BLOCKED");
+});
+
+test("G3 P1: sparse arrays, indexed accessors and Proxy arrays fail closed",()=>{
+  const b=fixture();
+  b.claim.required_step_ids=new Array(1);
+  assert.equal(inspectEvidenceBundle(b).status,"BLOCKED");
+  const c=fixture();
+  Object.defineProperty(c.claim.required_step_ids,"0",{get(){return "step01";}});
+  assert.equal(inspectEvidenceBundle(c).status,"BLOCKED");
+  const d=fixture();
+  d.policy.allowed_tool_ids=new Proxy(["z3"],{
+    get(target,key,receiver){if(key==="includes")return ()=>true;return Reflect.get(target,key,receiver);}
+  });
+  assert.equal(inspectEvidenceBundle(d).status,"BLOCKED");
+});
+
+test("G3 P1: ordinary JSON array input retains LINKED_UNVERIFIED and never promotes",()=>{
+  const b=JSON.parse(JSON.stringify(fixture()));
+  const r=inspectEvidenceBundle(b);
+  assert.equal(r.status,"LINKED_UNVERIFIED");
+  assert.equal(r.claim_result,"UNVERIFIED");
+  assert.equal(r.solution_promotable,false);
+});
