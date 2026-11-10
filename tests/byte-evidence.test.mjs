@@ -223,3 +223,82 @@ test("G3 security P1: ordinary parsed JSON Method and ProblemSpec retain unverif
  assert.equal(result.native_host_attested,false);
  assert.equal(result.solution_promotable,false);
 });
+
+
+test("G3 independent P1: receipt Claim kind cannot differ from original G2 Claim",()=>{
+ const a=fixture();
+ a.bundle.claim.kind="symbolic";
+ const result=inspectByteBoundClaim(a);
+ assert.equal(result.status,"BLOCKED");
+ assert.match(result.issues.join(" "),/Claim kind/);
+ assert.equal(result.solution_promotable,false);
+});
+
+test("G3 independent P1: even unused G3 tool/operation permissions cannot widen G2",()=>{
+ const a=fixture();
+ a.bundle.policy.allowed_operations.z3.push("dimacs");
+ assert.equal(inspectByteBoundClaim(a).status,"BLOCKED");
+ const b=fixture();
+ b.bundle.policy.allowed_tool_ids.push("cvc5");
+ b.bundle.policy.allowed_operations.cvc5=["solve"];
+ assert.equal(inspectByteBoundClaim(b).status,"BLOCKED");
+});
+
+test("G3 independent P1: source sensitivity cannot be erased by receipt policy or input labels",()=>{
+ const makeSensitive=()=>{
+  const a=fixture();
+  a.problem.source_refs[0].classification="USER_PRIVATE";
+  a.problem.policy.max_input_classification="USER_PRIVATE";
+  a.method.steps[0].output_classification="USER_PRIVATE";
+  const checked=assessMethod(a.problem,a.method);
+  assert.equal(checked.status,"STRUCTURALLY_VALID",JSON.stringify(checked.issues));
+  a.bundle.method_sha256=checked.method_sha256;
+  a.bundle.claim.method_sha256=checked.method_sha256;
+  a.bundle.receipts[0].method_sha256=checked.method_sha256;
+  a.bundle.receipts[0].output_classification="USER_PRIVATE";
+  return a;
+ };
+ const a=makeSensitive();
+ // Existing G3 permits this syntactically, but it launders a private source
+ // into a PUBLIC evidence policy while every SHA still matches.
+ assert.equal(inspectByteBoundClaim(a).status,"BLOCKED");
+ const b=makeSensitive();
+ b.bundle.policy.classification="USER_PRIVATE";
+ assert.equal(inspectByteBoundClaim(b).status,"BLOCKED",
+   "input label PUBLIC must not describe USER_PRIVATE source bytes");
+ b.bundle.receipts[0].input_classification="USER_PRIVATE";
+ const ok=inspectByteBoundClaim(b);
+ assert.equal(ok.status,"BYTES_BOUND_UNATTESTED",JSON.stringify(ok.issues));
+ assert.equal(ok.claim_result,"UNVERIFIED");
+ assert.equal(ok.native_host_attested,false);
+ assert.equal(ok.solution_promotable,false);
+});
+
+test("G3 independent P1: downstream input taint includes upstream Method outputs",()=>{
+ const a=fixture(), input=Buffer.from("upstream input");
+ a.method.steps[0].depends_on=["step0"];
+ a.method.steps[0].source_refs=[];
+ a.method.steps[0].output_classification="RESTRICTED";
+ a.method.steps.unshift({id:"step0",tool_id:"z3",operation:"solve",claim_ids:[],
+  provides:["logic.smt"],source_refs:["req"],depends_on:[],
+  estimated_cost_units:1,timeout_ms:1000,destination:"LOCAL",
+  output_classification:"RESTRICTED"});
+ const checked=assessMethod(a.problem,a.method);
+ assert.equal(checked.status,"STRUCTURALLY_VALID",JSON.stringify(checked.issues));
+ a.bundle.method_sha256=checked.method_sha256;
+ a.bundle.claim.method_sha256=checked.method_sha256;
+ a.bundle.claim.required_step_ids=["step0","step1"];
+ a.bundle.policy.classification="RESTRICTED";
+ a.bundle.receipts[0].method_sha256=checked.method_sha256;
+ a.bundle.receipts[0].output_classification="RESTRICTED";
+ a.bundle.receipts.push({...a.bundle.receipts[0],step_id:"step0",
+  invocation_sha256:digest(input)});
+ a.artifacts.steps.step0={binary:a.artifacts.steps.step1.binary,
+  invocation:input,output:a.artifacts.steps.step1.output};
+ assert.equal(inspectByteBoundClaim(a).status,"BLOCKED",
+   "downstream PUBLIC input label must not hide RESTRICTED predecessor");
+ a.bundle.receipts[0].input_classification="RESTRICTED";
+ const ok=inspectByteBoundClaim(a);
+ assert.equal(ok.status,"BYTES_BOUND_UNATTESTED",JSON.stringify(ok.issues));
+ assert.equal(ok.claim_result,"UNVERIFIED");
+});
