@@ -47,6 +47,14 @@ export function validateProblemSpec(problem) {
   const errors = [];
   const fail = message => errors.push(message);
   if (!isObject(problem)) return {ok:false,errors:["ProblemSpec must be an object"]};
+  // Cheap structural caps before JSON serialization of untrusted inputs.
+  for(const [name,max] of [["source_refs",32],["requirements",64],["claims",64],
+                           ["oracles",16],["capability_ids",64]]){
+    if(Array.isArray(problem[name])&&problem[name].length>max)
+      return {ok:false,errors:["ProblemSpec collection exceeds structural budget: "+name]};
+  }
+  if(Array.isArray(problem.policy?.allowed_tools)&&problem.policy.allowed_tools.length>64)
+    return {ok:false,errors:["ProblemSpec allowed tool list exceeds structural budget"]};
   if(!isBoundedJSON(problem))
     return {ok:false,errors:["ProblemSpec exceeds G2 JSON transport limit or is not JSON-safe"]};
   if (!hasOnly(problem,["schema","problem_id","source_refs","requirements","claims","oracles","capability_ids","budget","policy"]))
@@ -57,12 +65,6 @@ export function validateProblemSpec(problem) {
   const caps=problem.capability_ids;
   if(!Array.isArray(caps)||!caps.length||!unique(caps)||caps.some(x=>!knownCaps.has(x)))
     fail("unknown, duplicate or empty problem capabilities");
-  // Reject oversized collection lengths before serializing or iterating
-  // untrusted nested data (JSON transports may also be constructed in JS).
-  for(const [name,max] of [["source_refs",32],["requirements",64],["claims",64],["oracles",16]]){
-    if(Array.isArray(problem[name])&&problem[name].length>max)
-      return {ok:false,errors:["ProblemSpec collection exceeds structural budget: "+name]};
-  }
   const sources=Array.isArray(problem.source_refs)?problem.source_refs:[];
   if(!sources.length||sources.length>32)fail("source_refs required (1..32)");
   const sourceIds=new Set(),classByHash=new Map();
