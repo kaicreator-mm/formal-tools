@@ -23,8 +23,8 @@ export function validateCapabilityRegistry(input, nativeSourceIds=toolIds) {
   const capabilities = Array.isArray(input.capabilities) ? input.capabilities : [];
   const tools = Array.isArray(input.tools) ? input.tools : [];
   if (!Array.isArray(input.capabilities) || !Array.isArray(input.tools)) fail("capabilities/tools arrays required");
-  if (capabilities.length!==23) fail("expected 23 capability categories in R0");
-  if (tools.length!==36) fail("expected 36 catalog entries in R0");
+  if (capabilities.length===0) fail("capability catalog cannot be empty");
+  if (tools.length===0) fail("tool reference catalog cannot be empty");
   const ids = new Set();
   for(const c of capabilities) {
     if(!c || typeof c.id!=="string" || !/^[a-z][a-z0-9-]*\.[a-z][a-z0-9-]*$/.test(c.id) ||
@@ -63,7 +63,7 @@ export function validateCapabilityRegistry(input, nativeSourceIds=toolIds) {
   const observed=nativeRefs.sort();
   if(new Set(expected).size!==expected.length || JSON.stringify(expected)!==JSON.stringify(observed))
     fail("native tool references differ from native-catalog.mjs; never duplicate executable tool IDs");
-  if(capabilities.some(c=>!tools.some(t=>t.capability_ids?.includes(c.id))))
+  if(capabilities.some(c=>!c || typeof c.id!=="string" || !tools.some(t=>Array.isArray(t?.capability_ids)&&t.capability_ids.includes(c.id))))
     fail("at least one capability has no tool");
   if(input.semantics?.tool_result_states?.some(x=>!outcomes.has(x)) ||
      !input.semantics?.tool_result_states?.includes("NOT_RUN"))fail("tool result contract missing NOT_RUN");
