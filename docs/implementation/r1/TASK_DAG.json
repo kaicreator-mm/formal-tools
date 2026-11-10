@@ -1,0 +1,166 @@
+{
+  "schema": "formal-tools-development-dag/1",
+  "source_main": "5bd8a552c61218d56408de12bb832a5b39f568a2",
+  "product": "kaicreator-mm/formal-tools",
+  "plan": "docs/implementation/r1/DEVELOPMENT_PLAN.md",
+  "status": "D01_D05_SOURCE_DONE_D06_D07_PARTIAL_PENDING_NODE_NATIVE",
+  "scope": "TOOL_MAINTENANCE_ONLY",
+  "tasks": [
+    {
+      "id": "D01",
+      "title": "定位/兼容/现状基线",
+      "depends_on": [],
+      "gate": "G0",
+      "priority": "P0",
+      "status": "SOURCE_IMPLEMENTED",
+      "source_status": "SOURCE_IMPLEMENTED",
+      "runtime_status": "SOURCE_ONLY"
+    },
+    {
+      "id": "D02",
+      "title": "唯一 Tool Registry 和运行 Profile",
+      "depends_on": [
+        "D01"
+      ],
+      "gate": "G1",
+      "priority": "P0",
+      "status": "STATIC_TESTED",
+      "source_status": "STATIC_TESTED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "D03",
+      "title": "工具发现/环境与依赖诊断",
+      "depends_on": [
+        "D02"
+      ],
+      "gate": "G1",
+      "priority": "P0",
+      "status": "STATIC_TESTED",
+      "source_status": "STATIC_TESTED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "D04",
+      "title": "CLI info/where/doctor-all",
+      "depends_on": [
+        "D03"
+      ],
+      "gate": "G1",
+      "priority": "P0",
+      "status": "SOURCE_IMPLEMENTED",
+      "source_status": "SOURCE_IMPLEMENTED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "D05",
+      "title": "MCP 只读诊断对齐",
+      "depends_on": [
+        "D03",
+        "D04"
+      ],
+      "gate": "G2",
+      "priority": "P1",
+      "status": "SOURCE_IMPLEMENTED",
+      "source_status": "SOURCE_IMPLEMENTED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "D06",
+      "title": "可靠运行/技术状态/产物隔离",
+      "depends_on": [
+        "D03",
+        "D04"
+      ],
+      "gate": "G2",
+      "priority": "P0",
+      "status": "SOURCE_PARTIAL",
+      "source_status": "SOURCE_IMPLEMENTED_EXPERIMENTAL",
+      "runtime_status": "NOT_RUN",
+      "remaining": "Sandboxed execution of arbitrary native input dependencies; generated output artifacts, resource guards, real Node tests"
+    },
+    {
+      "id": "D07",
+      "title": "JS/TS SDK 公开接口",
+      "depends_on": [
+        "D05",
+        "D06"
+      ],
+      "gate": "G2",
+      "priority": "P1",
+      "status": "SOURCE_PARTIAL",
+      "source_status": "SOURCE_IMPLEMENTED_EXPERIMENTAL",
+      "runtime_status": "NOT_RUN",
+      "remaining": "SDK packaging/export stability, CLI/MCP interoperability and host runtime validation"
+    },
+    {
+      "id": "D08",
+      "title": "官方模拟与模型检查命令能力维护",
+      "depends_on": [
+        "D06",
+        "D07"
+      ],
+      "gate": "G2",
+      "priority": "P1",
+      "status": "PLANNED",
+      "source_status": "NOT_STARTED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "D09",
+      "title": "多平台与版本兼容矩阵",
+      "depends_on": [
+        "D06",
+        "D07"
+      ],
+      "gate": "G3",
+      "priority": "P1",
+      "status": "PLANNED",
+      "source_status": "NOT_STARTED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "D10",
+      "title": "Woodpecker 实际运行与收据",
+      "depends_on": [
+        "D08",
+        "D09"
+      ],
+      "gate": "G3",
+      "priority": "P1",
+      "status": "PLANNED",
+      "source_status": "NOT_STARTED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "D11",
+      "title": "外部工具 API 冒烟/文档",
+      "depends_on": [
+        "D07",
+        "D08",
+        "D09"
+      ],
+      "gate": "G4",
+      "priority": "P2",
+      "status": "PLANNED",
+      "source_status": "NOT_STARTED",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "D12",
+      "title": "版本升级和 Release 资格",
+      "depends_on": [
+        "D10",
+        "D11"
+      ],
+      "gate": "G4",
+      "priority": "P2",
+      "status": "PLANNED",
+      "source_status": "NOT_STARTED",
+      "runtime_status": "NOT_RUN"
+    }
+  ],
+  "receipt": "validation/R1_TOOL_MANAGER_SOURCE_AUDIT.json",
+  "last_prospective_tree": "08848a2b57cf3f9a0d7a6c1977bfee16ce3f0501",
+  "sdk_receipt": "validation/R1_SDK_SOURCE_AUDIT.json"
+}

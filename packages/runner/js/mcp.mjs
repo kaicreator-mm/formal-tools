@@ -7,7 +7,8 @@ import { serveStdio } from "@modelcontextprotocol/server/stdio";
 import * as z from "zod/v4";
 import { verifyPure } from "../../core/src/finite.mjs";
 import { knownTools, validateSource, inspectTool, doctor, runFixture } from "./native.mjs";
-import { describeNativeTool, planNative } from "./native-catalog.mjs";
+import { describeNativeTool, planNative, toolIds } from "./native-catalog.mjs";
+import { inspectInstallation } from "./tool-manager.mjs";
 
 /** @typedef {{type:"text",text:string}} TextBlock */
 /** @type {(x:unknown)=>{content:TextBlock[]}} */
@@ -17,7 +18,7 @@ const handle=async callback=>{
   try{return txt(await callback());}
   catch(e){return {content:[{type:"text",text:JSON.stringify({status:"ERROR",message:String(e)})}],isError:true};}
 };
-const toolId=z.enum(["lean4","z3","tla-tlc","apalache","alloy","souffle","rdf-shacl","cvc5","vampire","clingo","apache-jena","prob","dafny"]);
+const toolId=z.string().refine(value=>toolIds.includes(value),{message:"Unknown registered formal tool"});
 serveStdio(()=>{
   const server=new McpServer({name:"formal-tools-skill",version:"0.3.0"});
   server.registerTool("list_formal_tools",{
@@ -44,6 +45,10 @@ serveStdio(()=>{
     description:"Describe a tool and its named CLI operations, without executing anything.",
     inputSchema:z.object({tool:toolId})
   },async({tool})=>handle(()=>describeNativeTool(tool)));
+  server.registerTool("inspect_native_installation",{
+    description:"Read-only installed executable/JAR discovery and missing dependency diagnostics. Does NOT launch native tools.",
+    inputSchema:z.object({tool:toolId})
+  },async({tool})=>handle(()=>inspectInstallation(tool)));
   server.registerTool("plan_native_cli",{
     description:"Validate native CLI option values, return planned argv; NO execution and NO raw passthrough.",
     inputSchema:z.object({tool:toolId,operation:z.string().min(1),settings:z.record(z.string(),z.union([z.string(),z.number(),z.boolean()])).default({})})

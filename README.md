@@ -56,3 +56,23 @@ node packages/runner/js/cli.mjs native lean4 --entry lake -- build
 ```
 
 See [13-tool operations matrix](docs/NATIVE_CLI_COVERAGE.md) and [local acceptance handoff](validation/LOCAL_NATIVE_ACCEPTANCE.md). MCP can describe and plan these operations, but **does not expose raw native execution**. The assistant performed source-level command-planning validation; native CLI, Node host and MCP protocol runtime acceptance remain open.
+
+## R1 工具管理开发线
+
+R1 仅改善工具维护与易用性：单一工具 Registry、运行 Profile、安装/依赖/启动诊断、CLI/MCP/SDK 的通用接口。**不编排业务验证或模拟**。当前新增命令是开发版本，Node 宿主验收之前不视为正式稳定发布。
+
+```sh
+node packages/runner/js/cli.mjs info z3
+node packages/runner/js/cli.mjs where z3
+node packages/runner/js/cli.mjs doctor-all
+# 只有显式加 --probe 才真正执行原生工具探测
+node packages/runner/js/cli.mjs doctor-all --probe --timeout 12
+```
+
+[工具诊断说明](docs/TOOL_MANAGER.md) · [R1 开发计划](docs/implementation/r1/DEVELOPMENT_PLAN.md)
+
+## R1 通用工具 SDK（实验接口）
+
+`packages/runner/js/sdk.mjs` 提供 `listTools`、`toolDetails`、`planTool`、`whereTool`、`whereAll`、`invokeTool`。它仅包装**工具本身**的技术状态，不判断业务性质。CLI 新增 `invoke TOOL OP --option value`，返回一致的机器可读 `ToolExecutionResult`；原来的 `exec` 原样保留避免破坏兼容性。
+
+[SDK 开发文档](docs/TOOL_SDK.md)。本接口尚须 Node/TypeScript/原生运行验收；MCP 仍不开放任意执行。

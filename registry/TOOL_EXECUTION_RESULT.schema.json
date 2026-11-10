@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kaicreator-mm/formal-tools/blob/main/registry/TOOL_EXECUTION_RESULT.schema.json",
+  "title": "formal-tools technical upstream execution result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "tool_id",
+    "operation",
+    "invocation",
+    "process",
+    "tool_status",
+    "streams",
+    "artifacts",
+    "scope"
+  ],
+  "properties": {
+    "schema": {
+      "const": "formal-tools/tool-execution/1"
+    },
+    "tool_id": {
+      "type": "string"
+    },
+    "operation": {
+      "type": "string"
+    },
+    "invocation": {
+      "type": "object",
+      "required": [
+        "entry",
+        "args",
+        "mode"
+      ],
+      "properties": {
+        "entry": {
+          "type": "string"
+        },
+        "args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "mode": {
+          "const": "typed"
+        }
+      }
+    },
+    "process": {
+      "type": "object",
+      "required": [
+        "run_status",
+        "status",
+        "exit_code",
+        "timed_out",
+        "output_truncated"
+      ],
+      "properties": {
+        "run_status": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "EXIT_ZERO",
+            "NONZERO_EXIT",
+            "NOT_STARTED",
+            "TIMEOUT",
+            "OUTPUT_LIMIT"
+          ]
+        },
+        "exit_code": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "signal": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "elapsed_ms": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "timed_out": {
+          "type": "boolean"
+        },
+        "output_truncated": {
+          "type": "boolean"
+        },
+        "error": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "tool_status": {
+      "type": "string"
+    },
+    "streams": {
+      "type": "object",
+      "required": [
+        "stdout",
+        "stderr"
+      ],
+      "properties": {
+        "stdout": {
+          "type": "object",
+          "required": [
+            "text",
+            "sha256"
+          ],
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "sha256": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "stderr": {
+          "type": "object",
+          "required": [
+            "text",
+            "sha256"
+          ],
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "sha256": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "required": [
+        "status",
+        "items"
+      ],
+      "properties": {
+        "status": {
+          "const": "NOT_COLLECTED"
+        },
+        "items": {
+          "type": "array"
+        }
+      }
+    },
+    "scope": {
+      "const": "UPSTREAM_TOOL_TECHNICAL_RESULT_ONLY"
+    }
+  }
+}

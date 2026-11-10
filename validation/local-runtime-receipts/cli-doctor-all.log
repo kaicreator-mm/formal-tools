@@ -1,0 +1,160 @@
+{
+  "status": "STATIC_ENVIRONMENT_INSPECTION_ONLY",
+  "tools": 13,
+  "counts": {
+    "MISSING_EXECUTABLE": 9,
+    "NEEDS_CONFIGURATION": 2,
+    "FOUND_NOT_PROBED": 2
+  },
+  "checks": [
+    {
+      "tool": "lean4",
+      "status": "MISSING_EXECUTABLE",
+      "launcher": "binary",
+      "diagnostics": [
+        "No matching executable found in the configured directory or PATH"
+      ],
+      "searched": 230,
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "z3",
+      "status": "MISSING_EXECUTABLE",
+      "launcher": "binary",
+      "diagnostics": [
+        "No matching executable found in the configured directory or PATH"
+      ],
+      "searched": 230,
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "cvc5",
+      "status": "MISSING_EXECUTABLE",
+      "launcher": "binary",
+      "diagnostics": [
+        "No matching executable found in the configured directory or PATH"
+      ],
+      "searched": 230,
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "tla-tlc",
+      "status": "NEEDS_CONFIGURATION",
+      "launcher": "java-jar",
+      "missing": [
+        "TLA2TOOLS_JAR"
+      ],
+      "diagnostics": [
+        "Set TLA2TOOLS_JAR to the installed upstream tool location; no automatic install will occur"
+      ],
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "apalache",
+      "status": "MISSING_EXECUTABLE",
+      "launcher": "binary",
+      "diagnostics": [
+        "No matching executable found in the configured directory or PATH"
+      ],
+      "searched": 230,
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "alloy",
+      "status": "NEEDS_CONFIGURATION",
+      "launcher": "alloy",
+      "missing": [
+        "FORMAL_ALLOY_JAR or FORMAL_ALLOY_BIN"
+      ],
+      "diagnostics": [
+        "Set FORMAL_ALLOY_JAR or FORMAL_ALLOY_BIN to the installed upstream tool location; no automatic install will occur"
+      ],
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "souffle",
+      "status": "MISSING_EXECUTABLE",
+      "launcher": "binary",
+      "diagnostics": [
+        "No matching executable found in the configured directory or PATH"
+      ],
+      "searched": 230,
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "rdf-shacl",
+      "status": "FOUND_NOT_PROBED",
+      "launcher": "python-module",
+      "executable": "C:\\msys64\\ucrt64\\bin\\python3.exe",
+      "argv": [
+        "C:\\msys64\\ucrt64\\bin\\python3.exe",
+        "-m",
+        "pyshacl",
+        "--help"
+      ],
+      "diagnostics": [
+        "Python module presence is not checked by PATH inspection; run a real version probe"
+      ],
+      "probe_status": "NOT_RUN",
+      "searched": 230
+    },
+    {
+      "tool": "vampire",
+      "status": "MISSING_EXECUTABLE",
+      "launcher": "binary",
+      "diagnostics": [
+        "No matching executable found in the configured directory or PATH"
+      ],
+      "searched": 230,
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "clingo",
+      "status": "FOUND_NOT_PROBED",
+      "launcher": "python-module",
+      "executable": "C:\\msys64\\ucrt64\\bin\\python3.exe",
+      "argv": [
+        "C:\\msys64\\ucrt64\\bin\\python3.exe",
+        "-m",
+        "clingo",
+        "--help"
+      ],
+      "diagnostics": [
+        "Python module presence is not checked by PATH inspection; run a real version probe"
+      ],
+      "probe_status": "NOT_RUN",
+      "searched": 230
+    },
+    {
+      "tool": "apache-jena",
+      "status": "MISSING_EXECUTABLE",
+      "launcher": "binary",
+      "diagnostics": [
+        "No matching executable found in the configured directory or PATH"
+      ],
+      "searched": 230,
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "prob",
+      "status": "MISSING_EXECUTABLE",
+      "launcher": "binary",
+      "diagnostics": [
+        "No matching executable found in the configured directory or PATH"
+      ],
+      "searched": 230,
+      "probe_status": "NOT_RUN"
+    },
+    {
+      "tool": "dafny",
+      "status": "MISSING_EXECUTABLE",
+      "launcher": "binary",
+      "diagnostics": [
+        "No matching executable found in the configured directory or PATH"
+      ],
+      "searched": 230,
+      "probe_status": "NOT_RUN"
+    }
+  ]
+}
+EXIT=2

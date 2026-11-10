@@ -1,7 +1,7 @@
 /**
  * Node.js adapter: exposes the same allowlisted formal tool operations to CLI/MCP.
- * Only fixed, Git-tracked example inputs may reach native binaries.
- * Real binary/MCP integration remains NOT_RUN until executed with receipts.
+ * Fixed committed fixtures are used for acceptance; curated typed operations
+ * can execute on a trusted local host. Runtime proof is always SHA-scoped.
  */
 import { readFile, readdir, mkdtemp, mkdir, rm, stat, copyFile } from "node:fs/promises";
 import { spawn } from "node:child_process";
@@ -9,10 +9,10 @@ import { tmpdir } from "node:os";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
-import { describeNativeTool } from "./native-catalog.mjs";
+import { describeNativeTool, toolIds, planToolProbe } from "./native-catalog.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
-const TOOLS = Object.freeze(["lean4","z3","tla-tlc","apalache","alloy","souffle","rdf-shacl","cvc5","vampire","clingo","apache-jena","prob","dafny"]);
+const TOOLS = toolIds; // the sole tool ID registry is native-catalog.mjs
 const MAX_TIMEOUT = 120_000;
 const MAX_OUTPUT = 1_048_576;
 const sha = input => createHash("sha256").update(input).digest("hex");
@@ -32,23 +32,39 @@ export async function inspectTool(tool) {
   return entry;
 }
 export async function validateSource() {
-  const issues = [];
-  const reg = JSON.parse(await textFile("registry","SKILL_REGISTRY.json"));
-  const ids = reg.tools.map(x=>x.id);
-  if (ids.length !== 13 || new Set(ids).size !== 13 || ids.some(id=>!TOOLS.includes(id))) issues.push("registry tool set mismatch");
-  for (const tool of TOOLS) {
-    const skill = await textFile("skills",tool,"SKILL.md").catch(()=>null);
-    if (!skill || !skill.startsWith("---\nname: " + tool + "\n")) issues.push("invalid skill header: "+tool);
-    const entry = await inspectTool(tool);
-    for (const key of ["positive_command","negative_command"]) {
-      const names = inputNames(entry[key]);
-      if (!names.length) issues.push("missing input: "+tool+" "+key);
-      for (const name of names) {
+  const issues=[],warnings=[];
+  // Catalog is the tool registry. Legacy Skill metadata is only optional
+  // integration guidance and must not become the authority for tool support.
+  if(TOOLS.length!==13||new Set(TOOLS).size!==TOOLS.length)
+    issues.push("native catalog tool set mismatch");
+  const skillReg=await textFile("registry","SKILL_REGISTRY.json")
+    .then(JSON.parse).catch(()=>null);
+  if(skillReg){
+    const skillIds=(skillReg.tools??[]).map(x=>x.id);
+    if(skillIds.some(id=>!TOOLS.includes(id)))
+      warnings.push("Skill integration registry references unknown tool IDs");
+  } else warnings.push("Optional Skill integration registry is not available");
+  for(const tool of TOOLS){
+    const descriptor=describeNativeTool(tool);
+    if(!descriptor.entries?.length||!Object.keys(descriptor.operations??{}).length||!descriptor.runtime?.kind)
+      issues.push("incomplete registered tool profile: "+tool);
+    // Existing acceptance fixtures are tools-level regression inputs, despite
+    // their historical storage location underneath skills/<tool>/examples.
+    const entry=await inspectTool(tool).catch(()=>null);
+    if(!entry){issues.push("missing tool acceptance fixture manifest: "+tool);continue;}
+    for(const key of ["positive_command","negative_command"]){
+      const names=inputNames(entry[key]??"");
+      if(!names.length)issues.push("missing input: "+tool+" "+key);
+      for(const name of names)
         await stat(fixture(tool,name)).catch(()=>issues.push("missing file "+tool+"/"+name));
-      }
     }
+    const skill=await textFile("skills",tool,"SKILL.md").catch(()=>null);
+    if(!skill)warnings.push("optional Skill not installed for "+tool);
+    else if(!skill.startsWith("---\nname: "+tool+"\n"))
+      warnings.push("optional Skill header mismatch for "+tool);
   }
-  return {status:issues.length?"STATIC_FAIL":"STATIC_PASS",count:TOOLS.length,issues,native_runtime:"NOT_RUN"};
+  return {status:issues.length?"STATIC_FAIL":"STATIC_PASS",count:TOOLS.length,
+    issues,warnings,native_runtime:"NOT_RUN"};
 }
 function executable(name) {
   const directory=process.env.FORMAL_TOOLS_BIN_DIR;
@@ -76,7 +92,13 @@ function commands(tool,which,output,inputDir) {
   if (tool==="tla-tlc") return [[executable("java"),"-cp",jar("TLA2TOOLS_JAR"),"tlc2.TLC","-config",model("Toggle.cfg"),model(positive?"TogglePositive.tla":"ToggleNegative.tla")]];
   if (tool==="apalache") return [[executable("apalache-mc"),"check","--init=Init","--next=Next","--inv=Inv","--length=3",model(positive?"TogglePositive.tla":"ToggleNegative.tla")]];
   if (tool==="alloy") {
-    const prefix=process.env.FORMAL_ALLOY_JAR?[executable("java"),"-jar",jar("FORMAL_ALLOY_JAR")]:[executable("alloy")];
+    // "alloy" can resolve to unrelated Grafana Alloy. Require explicit
+    // official Alloy Analyzer JAR/bin for every native execution path.
+    const prefix=process.env.FORMAL_ALLOY_JAR
+      ?[executable("java"),"-jar",jar("FORMAL_ALLOY_JAR")]
+      :process.env.FORMAL_ALLOY_BIN?[resolve(process.env.FORMAL_ALLOY_BIN)]
+      :null;
+    if(!prefix)throw new TypeError("Configure FORMAL_ALLOY_JAR or FORMAL_ALLOY_BIN for Alloy Analyzer");
     return [[...prefix,"exec","-c","0",model(stem+".als")]];
   }
   if (tool==="prob") return [[executable("probcli"),model(positive?"Positive.mch":"Negative.mch"),"-model_check"]];
@@ -87,22 +109,14 @@ function commands(tool,which,output,inputDir) {
   throw new TypeError("unknown tool");
 }
 function versionCommand(tool) {
-  const version={
-    lean4:["lean","--version"], z3:["z3","-version"], cvc5:["cvc5","--version"],
-    souffle:["souffle","--version"], vampire:["vampire","--help"], prob:["probcli","-version"],
-    dafny:["dafny","--version"], apalache:["apalache-mc","version"],
-    "apache-jena":["riot","--help"], alloy:["alloy","help"]
-  };
-  if (tool==="alloy"){
-    if (process.env.FORMAL_ALLOY_JAR)
-      return [executable("java"),"-jar",resolve(process.env.FORMAL_ALLOY_JAR),"help"];
-    if (process.env.FORMAL_ALLOY_BIN)
-      return [resolve(process.env.FORMAL_ALLOY_BIN),"help"];
-    throw new TypeError("Alloy Analyzer binary is ambiguous; configure FORMAL_ALLOY_JAR or FORMAL_ALLOY_BIN");
-  }
-  if (tool==="tla-tlc") return [executable("java"),"-cp",jar("TLA2TOOLS_JAR"),"tlc2.TLC","-help"];
-  if (tool==="clingo"||tool==="rdf-shacl") return [toolPython(tool),"-m",tool==="clingo"?"clingo":"pyshacl","--help"];
-  return [executable(version[tool][0]),...version[tool].slice(1)];
+  // Keep doctor() and the read-only environment inspector on the same catalog.
+  const probe=planToolProbe(tool,process.env);
+  if(probe.status!=="PLANNED"||!probe.argv)throw new TypeError(
+    "Missing tool configuration for "+tool+": "+(probe.missing??[]).join(", "));
+  const argv=[...probe.argv];
+  if(["binary","java-jar","alloy-jar"].includes(probe.launcher))
+    argv[0]=executable(argv[0]);
+  return argv;
 }
 async function capture(argv,{cwd,timeoutMs}) {
   if (!Array.isArray(argv)||!argv.length) throw new TypeError("empty command");
