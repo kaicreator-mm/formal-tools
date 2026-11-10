@@ -48,8 +48,9 @@ export function validateProblemSpec(problem) {
   const fail = message => errors.push(message);
   if (!isObject(problem)) return {ok:false,errors:["ProblemSpec must be an object"]};
   // Cheap structural caps before JSON serialization of untrusted inputs.
-  for(const [name,max] of [["source_refs",32],["requirements",64],["claims",64],
-                           ["oracles",16],["capability_ids",64]]){
+  for(const {name,max} of [{name:"source_refs",max:32},{name:"requirements",max:64},
+                             {name:"claims",max:64},{name:"oracles",max:16},
+                             {name:"capability_ids",max:64}]){
     if(Array.isArray(problem[name])&&problem[name].length>max)
       return {ok:false,errors:["ProblemSpec collection exceeds structural budget: "+name]};
   }
