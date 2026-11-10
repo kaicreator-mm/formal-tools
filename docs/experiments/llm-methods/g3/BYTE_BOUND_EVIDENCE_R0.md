@@ -1,6 +1,6 @@
 # Issue #11 — G3 Byte-Bound Evidence Preflight R0
 
-**Authority:** [Issue #11](https://github.com/kaicreator-mm/formal-tools/issues/11) · **Base:** `main@74130272c114c2ff4266b9caec7b5603d7a19a6f` (accepted G2 PR #13, G3 static gate PR #15 + security repair PR #19). **Status:** source implementation, not native execution or business-claim verification.
+**Authority:** [Issue #11](https://github.com/kaicreator-mm/formal-tools/issues/11) · **Branch seed:** `main@74130272c114c2ff4266b9caec7b5603d7a19a6f` (accepted G2 PR #13, G3 static gate PR #15 + security repair PR #19). **Status:** source implementation, not native execution or business-claim verification.
 
 ## Why this is needed
 
@@ -25,6 +25,6 @@ G2 `assessMethod` validates a Method DAG but does not execute it. G3 `inspectEvi
 
 ## Validation
 
-`tests/byte-evidence.test.mjs` contains 13 adversarial declarations: matching simulated bytes remain unverified, modified source/model/binary/argv/output fails, Method digest and claimed step closure mismatch, unauthorized tool choice, missing or unrelated evidence, UNKNOWN/ERROR/TIMEOUT, privacy/policy misuse, multi-source refusal, transitive upstream step, malformed and oversized payloads.
+`tests/byte-evidence.test.mjs` contains 15 adversarial declarations: matching simulated bytes remain unverified, modified source/model/binary/argv/output fails, Method digest and claimed step closure mismatch, unauthorized tool choice, missing or unrelated evidence, UNKNOWN/ERROR/TIMEOUT, privacy/policy misuse, multi-source refusal, transitive upstream step, malformed and oversized payloads.
 
 **Mandatory gate:** exact final-SHA `node --test tests/*.test.mjs`, `npm run typecheck`, Woodpecker push+PR, independent source/security review and P0/P1 repair. This PR should be reviewed as G3 incremental source, not prematurely merged as fully validated Solve+Verify. Do not modify Issue #7.
