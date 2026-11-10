@@ -33,6 +33,8 @@ ft_tool_build() {
   cp -a "$base" "$stage/tree-sitter-language-pack/"
   rm -rf "$FT_OUT/runtimes/py-cache"
   mv "$stage" "$FT_OUT/runtimes/py-cache"
+  # pack runs as a non-root host user — grant read access to the root-owned cache
+  chmod -R a+rX "$FT_OUT/runtimes/py-cache"
   ft::note ts_grammar_cache "$(find "$FT_OUT/runtimes/py-cache" -name '*.so' | wc -l) grammars"
   ft::make_shim 'export PYTHONHOME="$FT_ROOT/runtimes/python313" PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1
 export LD_LIBRARY_PATH="$FT_ROOT/runtimes/python313/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
