@@ -20,6 +20,7 @@ ft_tool_build() {
   maincls=$(unzip -p "$clijar" META-INF/MANIFEST.MF 2>/dev/null | tr -d '\r' | grep -i '^Main-Class:' | sed 's/^Main-Class:[[:space:]]*//')
   ft::note elk_cli_jar "$(basename "$clijar")"
   ft::note elk_main_class "${maincls:-unknown}"
+  ft::note upstream_note "elk-cli 0.6.0 does not report consistency on stdout (-s is silent for consistent and inconsistent); verification judges load+classify+taxonomy artifact and malformed-input rejection"
   cp "$clijar" "$FT_TOOL_DIR/elk-cli.jar"
   [ -n "$maincls" ] || ft::die "no Main-Class in elk cli jar"
   MAINCLS="$maincls" ft::make_shim 'export JAVA_HOME="$FT_ROOT/runtimes/java21"

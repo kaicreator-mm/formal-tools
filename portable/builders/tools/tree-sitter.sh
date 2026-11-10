@@ -28,9 +28,11 @@ ft_tool_build() {
   found=$(find "$FT_OUT/runtimes/py-cache" /tmp -name "libtree_sitter_c.so" 2>/dev/null | head -1)
   [ -n "$found" ] || ft::die "grammar cache file not found after prefetch"
   local base; base=$(dirname "$(dirname "$found")")   # .../tree-sitter-language-pack/<ver>
+  # copy to staging FIRST (source may live inside py-cache), then replace py-cache
+  local stage="$FT_OUT/.ts-stage"; rm -rf "$stage"; mkdir -p "$stage/tree-sitter-language-pack"
+  cp -a "$base" "$stage/tree-sitter-language-pack/"
   rm -rf "$FT_OUT/runtimes/py-cache"
-  mkdir -p "$FT_OUT/runtimes/py-cache/tree-sitter-language-pack"
-  cp -a "$base" "$FT_OUT/runtimes/py-cache/tree-sitter-language-pack/"
+  mv "$stage" "$FT_OUT/runtimes/py-cache"
   ft::note ts_grammar_cache "$(find "$FT_OUT/runtimes/py-cache" -name '*.so' | wc -l) grammars"
   ft::make_shim 'export PYTHONHOME="$FT_ROOT/runtimes/python313" PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1
 export LD_LIBRARY_PATH="$FT_ROOT/runtimes/python313/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"

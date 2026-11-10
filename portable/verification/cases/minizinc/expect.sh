@@ -1,9 +1,9 @@
 EXPECT_TIMEOUT=120
-EXPECT_POS_ARGS='tests/minizinc/pos.mzn'
+EXPECT_POS_ARGS='tests/minizinc/pos.mzn --solver Chuffed'
 EXPECT_POS_EXIT=0
 EXPECT_POS_REGEX='x = [0-9]+'
 EXPECT_POS_LABEL=SATISFIED
-EXPECT_NEG_ARGS='tests/minizinc/neg.mzn'
+EXPECT_NEG_ARGS='tests/minizinc/neg.mzn --solver Chuffed'
 EXPECT_NEG_EXIT=0
 EXPECT_NEG_REGEX='=====UNSATISFIABLE====='
 EXPECT_NEG_LABEL=UNSATISFIABLE
