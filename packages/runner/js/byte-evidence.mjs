@@ -21,6 +21,37 @@ const dataRecord = x => x!==null && typeof x==="object" && !Array.isArray(x) &&
   (Object.getPrototypeOf(x)===Object.prototype || Object.getPrototypeOf(x)===null) &&
   Object.values(Object.getOwnPropertyDescriptors(x)).every(d=>Object.hasOwn(d,"value"));
 const hasOnly = (x, names) => dataRecord(x) && Object.keys(x).every(k=>names.includes(k));
+// G2 checks JSON-like contracts, but direct JS callers may pass arrays whose
+// instance-owned includes/every/some methods misrepresent permissions and DAG
+// closure. Validate the entire ProblemSpec, Method and bundle as inert JSON
+// before trusting their behavior or handing them to G2/G3.
+function inertJsonData(root) {
+  const seen=new WeakSet();
+  let budget=20_000;
+  const visit=(value,depth)=>{
+    if(--budget<0||depth>32)return false;
+    if(value===null||typeof value==="string"||typeof value==="boolean")return true;
+    if(typeof value==="number")return Number.isFinite(value);
+    if(typeof value!=="object"||utilTypes.isProxy(value)||seen.has(value))return false;
+    seen.add(value);
+    if(Array.isArray(value)){
+      if(Object.getPrototypeOf(value)!==Array.prototype||
+         value.length>4096||Reflect.ownKeys(value).length!==value.length+1)return false;
+      for(let i=0;i<value.length;i++){
+        const d=Object.getOwnPropertyDescriptor(value,String(i));
+        if(!d||!Object.hasOwn(d,"value")||!visit(d.value,depth+1))return false;
+      }
+      return true;
+    }
+    if(!dataRecord(value))return false;
+    const keys=Reflect.ownKeys(value);
+    if(keys.length>4096||keys.some(k=>typeof k!=="string"))return false;
+    const descriptors=Object.getOwnPropertyDescriptors(value);
+    return keys.every(k=>visit(descriptors[k].value,depth+1));
+  };
+  try{return visit(root,0);}catch{return false;}
+}
+
 // Read the intrinsic typed-array byte length: subclasses may spoof a
 // byteLength getter to bypass naive size checks. Reject custom buffer types.
 const typedByteLength=Object.getOwnPropertyDescriptor(
@@ -60,6 +91,8 @@ function inspectByteBoundClaimData(input){
   const {problem,method,claim_id:claimId,source_id:sourceId,bundle,artifacts}=input;
   if(!validId(claimId)||!validId(sourceId))
     return refused("invalid atomic claim or source ID");
+  if(!inertJsonData(problem)||!inertJsonData(method)||!inertJsonData(bundle))
+    return refused("ProblemSpec, Method and evidence bundle must be bounded inert JSON data");
   const claim=Array.isArray(problem?.claims)?problem.claims.find(x=>x?.id===claimId):null;
   if(claim?.kind==="external_fact"||claim?.kind==="not_formalizable")
     return refused("external or non-formalizable claims require independent external evidence","NEEDS_SOURCE");
