@@ -9,6 +9,15 @@ import { createHash } from "node:crypto";
 import { readCapabilityRegistry } from "./problem-capabilities.mjs";
 import { describeNativeTool } from "./native-catalog.mjs";
 
+// Keep G2 proposals bounded independently from downstream tool-run budgets.
+// These are transport limits, not promises about a future provider's timeout.
+const MAX_PROPOSAL_JSON_BYTES = 65536;
+const isBoundedJSON = value => {
+  try {
+    const json = JSON.stringify(value);
+    return typeof json === "string" && Buffer.byteLength(json, "utf8") <= MAX_PROPOSAL_JSON_BYTES;
+  } catch { return false; }
+};
 const privacy = ["PUBLIC", "USER_PRIVATE", "RESTRICTED"];
 const kinds = new Set(["symbolic", "bounded_model", "program", "statistical", "external_fact", "not_formalizable"]);
 const idPattern = /^[a-z][a-z0-9_.-]{0,79}$/;
@@ -38,6 +47,8 @@ export function validateProblemSpec(problem) {
   const errors = [];
   const fail = message => errors.push(message);
   if (!isObject(problem)) return {ok:false,errors:["ProblemSpec must be an object"]};
+  if(!isBoundedJSON(problem))
+    return {ok:false,errors:["ProblemSpec exceeds G2 JSON transport limit or is not JSON-safe"]};
   if (!hasOnly(problem,["schema","problem_id","source_refs","requirements","claims","oracles","capability_ids","budget","policy"]))
     fail("ProblemSpec has unexpected fields");
   if(problem.schema!=="formal-tools/problem-spec/0.1"||!isId(problem.problem_id))fail("invalid ProblemSpec identity");
@@ -51,7 +62,7 @@ export function validateProblemSpec(problem) {
   const sourceIds=new Set();
   for(const s of sources){
     if(!hasOnly(s,["id","sha256","classification","purpose","consumer"])||
-       !isId(s?.id)||!hexPattern.test(s?.sha256)||!within(s?.classification,privacy)||
+       !isId(s?.id)||typeof s?.sha256!=="string"||!hexPattern.test(s.sha256)||!within(s?.classification,privacy)||
        typeof s?.purpose!=="string"||!s.purpose.trim()||!isId(s?.consumer))
       {fail("invalid source reference, hash, purpose or classification");continue;}
     if(sourceIds.has(s.id))fail("duplicate source id "+s.id);
@@ -260,38 +271,63 @@ export function assessMethod(problem, method) {
  * no provider dependency, retries, executable tool calls or self-verification.
  * Callback receives read-only metadata and must return JSON or JSON object.
  */
-export async function proposeMethod(problem, generate) {
-  const checked=validateProblemSpec(problem);
-  if(!checked.ok)return {status:"REJECTED",issues:checked.errors,tool_execution:"NOT_RUN",executable:false,solution_promotable:false};
+export async function proposeMethod(problem, generate, egressAuthority) {
+  // Snapshot *before* callbacks: an untrusted proposal/provider must not
+  // change the sources, tool policy, or approved payload between checks.
+  if(!isBoundedJSON(problem))
+    return {status:"REJECTED",issues:["unbounded or non-JSON ProblemSpec"],
+      tool_execution:"NOT_RUN",executable:false,solution_promotable:false};
+  const snapshot=JSON.parse(JSON.stringify(problem));
+  const checked=validateProblemSpec(snapshot);
+  if(!checked.ok)return {status:"REJECTED",issues:checked.errors,
+    tool_execution:"NOT_RUN",executable:false,solution_promotable:false};
   if(typeof generate!=="function")throw new TypeError("generate must be an injected LLM proposal callback");
-  // No provider trust/egress proof exists in G2. Fail closed before calling a
-  // potentially remote callback with USER_PRIVATE or RESTRICTED material.
-  if(problem.source_refs.some(x=>x.classification!=="PUBLIC"))
+  if(snapshot.source_refs.some(x=>x.classification!=="PUBLIC"))
     return {status:"BLOCKED_BY_POLICY",issues:["G2 LLM provider boundary is unverified for non-public sources"],
       tool_execution:"NOT_RUN",executable:false,solution_promotable:false};
-  if(problem.claims.every(x=>x.kind==="external_fact"||x.kind==="not_formalizable"))
+  if(snapshot.claims.every(x=>x.kind==="external_fact"||x.kind==="not_formalizable"))
     return {status:"NEEDS_SOURCE",issues:["No checkable claim; require external factual sources or other evaluation"],
       claim_result:"NEEDS_SOURCE",tool_execution:"NOT_RUN",executable:false,solution_promotable:false};
+  // PUBLIC is self-declared in ProblemSpec. Its label/hash is NOT an egress
+  // permission. A separate host-owned callback must approve the entire
+  // exact public payload, including free-text claims and requirements.
+  if(typeof egressAuthority?.authorizePublicPayload!=="function")
+    return {status:"BLOCKED_BY_POLICY",issues:["host public-payload egress approval missing"],
+      tool_execution:"NOT_RUN",executable:false,solution_promotable:false};
+  let approved=false;
+  try {
+    approved=(await egressAuthority.authorizePublicPayload({
+      problem:structuredClone(snapshot),problem_sha256:digest(snapshot)
+    }))===true;
+  } catch { /* no provider call if host attestation failed */ }
+  if(!approved)
+    return {status:"BLOCKED_BY_POLICY",issues:["host did not approve exact public proposal payload"],
+      tool_execution:"NOT_RUN",executable:false,solution_promotable:false};
   const catalog=readCapabilityRegistry();
-  const wanted=new Set(problem.capability_ids);
+  const wanted=new Set(snapshot.capability_ids);
   const options=catalog.tools.filter(t=>t.capability_ids.some(c=>wanted.has(c)))
     .map(t=>({id:t.id,origin:t.origin,capability_ids:t.capability_ids.filter(c=>wanted.has(c)),
               availability:t.availability,operation_policy:"native-typed-allowlist-or-candidate-UNRESOLVED",
               allowed_operations:t.origin==="native-ref"
                 ? Object.keys(describeNativeTool(t.id).operations)
-                   .filter(op=>problem.policy.allowed_tools.includes(t.id)
-                     && (problem.policy.allowed_operations[t.id]??[]).includes(op))
+                   .filter(op=>snapshot.policy.allowed_tools.includes(t.id)
+                     && (snapshot.policy.allowed_operations[t.id]??[]).includes(op))
                 : ["UNRESOLVED"]}));
-  const prompt={mode:"UNTRUSTED_PROPOSAL_ONLY",problem:structuredClone(problem),
-                candidates:options,max_steps:problem.budget.max_steps,
+  const prompt={mode:"UNTRUSTED_PROPOSAL_ONLY",problem:structuredClone(snapshot),
+                candidates:options,max_steps:snapshot.budget.max_steps,
                 warning:"No execution authority. Do not invent claim verification, model equivalence or tool receipts."};
   try {
     let reply=await generate(prompt);
     if(typeof reply==="string"){
-      if(reply.length>65536)throw new RangeError("LLM proposal too long");
+      if(Buffer.byteLength(reply,"utf8")>MAX_PROPOSAL_JSON_BYTES)
+        throw new RangeError("LLM proposal too long");
       reply=JSON.parse(reply);
     }
-    return assessMethod(problem,reply);
+    // A callback returning an object is held to the same limit as JSON text.
+    // JSON roundtrip prevents executable/accessor-bearing values from
+    // bypassing the untrusted proposal transport and static shape checks.
+    if(!isBoundedJSON(reply))throw new RangeError("LLM proposal is not bounded JSON");
+    return assessMethod(snapshot,JSON.parse(JSON.stringify(reply)));
   }catch(error){
     return {status:"REJECTED",issues:["proposal provider failed or returned invalid JSON"],
       provider_failure:String(error?.message??error).slice(0,200),tool_execution:"NOT_RUN",

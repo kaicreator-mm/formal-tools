@@ -8,7 +8,7 @@
 
 - `validateProblemSpec(problem)`: checks original source hashes and classifications, requirement anchors, atomic Claim specs, positive/negative frozen-oracle references, normalized required capabilities and bounded execution/permission budgets.
 - `assessMethod(problem, method)`: evaluates an **untrusted** LLM-proposed typed Method DAG. It rejects forged IDs, unsupported native operations, candidate-only executable claims, missing capability coverage, incorrect provenance, dependency cycles, excess budgets, absent input lineage, unsafe privacy classification and unsupported destinations.
-- `proposeMethod(problem, generate)`: injected **one-shot** LLM adapter interface. Any provider can supply a JSON proposal, but no external call or provider SDK is hard-coded. Strictly disallows sending `USER_PRIVATE`/`RESTRICTED` source data to an unverified LLM adapter; only public inputs may reach `generate`. This is intentionally conservative until host-authorized local-provider approval is specified.
+- `proposeMethod(problem, generate, egressAuthority)`: injected **one-shot** LLM adapter interface. Before `generate` can run, a separate trusted host callback `egressAuthority.authorizePublicPayload({problem,problem_sha256})` must explicitly approve the **entire bounded exact PUBLIC payload**, including potentially sensitive free-text requirements/claims; merely declaring a source `PUBLIC` or giving a SHA string is not an egress grant. Missing/denied/failed host approval blocks provider invocation. All inputs are snapshotted before callbacks to prevent approval-vs-assessment TOCTOU. `USER_PRIVATE`/`RESTRICTED` always block at G2. ProblemSpec and both JSON/object replies have 64 KiB transport ceilings; this is not an LLM provider timeout guarantee.
 
 The authoritative native typed operation set is still `native-catalog.mjs`; the 36-tool/23-capability registry is read-only discovery metadata. All native/candidate tools currently remain unverified. Even `STRUCTURALLY_VALID` always returns `tool_execution=NOT_RUN`, `executable=false`, `semantic_fidelity=NOT_EVALUATED`, `independent_oracle_review=NOT_RUN` and `solution_promotable=false`.
 
@@ -18,7 +18,12 @@ The authoritative native typed operation set is still `native-catalog.mjs`; the 
 import { proposeMethod, assessMethod } from "./packages/runner/js/method-planner.mjs";
 // problem = original source-anchored ProblemSpec, not just free-text question
 // generate = trusted caller-supplied LLM adapter returning JSON Method proposal
-const result = await proposeMethod(problem, async prompt => llmAdapter(prompt));
+const result = await proposeMethod(problem, async prompt => llmAdapter(prompt), {
+  // Host-owned: verify actual contents/scope and explicit PUBLIC egress permission.
+  // Reject if source bytes are missing, changed, confidential or unapproved.
+  authorizePublicPayload: async ({problem,problem_sha256}) =>
+    trustedHostApprovals.isAllowed(problem, problem_sha256)
+});
 // no tool/process is run; result.status = STRUCTURALLY_VALID | REJECTED |
 // BLOCKED_BY_POLICY | NEEDS_SOURCE
 ```
@@ -34,7 +39,7 @@ The synthetic test corpus checks typed Z3 operation selection, `NetworkX` candid
 ## Remaining G2 acceptance / risks
 
 - Run `node --test tests/method-planner.test.mjs`, full `node --test tests/*.test.mjs`, and `npm run typecheck` on **final Exact-SHA**. Any failing CI becomes same-PR repair + new checks; no validation-only follow-up.
-- Reviewability: verify that proposal callback cannot turn private data into remote tool/LLM invocation, and that allowed operations remain **typed** and bound to `native-catalog.mjs` (no raw args or arbitrary shell). R4 DP1–DP5 design requirements must become G2/G3 executable negative tests.
+- Reviewability: verify that proposal callback cannot turn private data into remote tool/LLM invocation, including public-label spoofing, nonpublic text hidden in a nominally PUBLIC ProblemSpec, unapproved source bytes and mutation between approval and proposal. Host approval is **host-asserted**, not an independently verified proof of public provenance; G3 must bind actual source bytes and permissions at execution. Allowed operations remain **typed** and bound to `native-catalog.mjs` (no raw args or arbitrary shell). R4 DP1–DP5 remain G2/G3 adversarial gates.
 - A valid structural plan does not prove semantic faithfulness. Before G3 uses it, require an independent source-anchored verifier and a separate execution permit with actual host identity and least privilege.
 - Exact typed specifications / JSON Schema for portable provider adapters remain a refinement step after this first JS contract; do not freeze G2 as fully delivered merely because the mock adapter works.
 

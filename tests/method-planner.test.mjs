@@ -131,7 +131,11 @@ test("G2: public LLM proposal callback is isolated and executed once",async()=>{
    assert.deepEqual(prompt.candidates.find(x=>x.id==="z3").allowed_operations,["solve"]);
    assert.ok(prompt.candidates.every(x=>x.operation_policy.includes("allowlist")));
    return JSON.stringify(method);
- });
+ },{authorizePublicPayload:async ({problem:submitted,problem_sha256})=>{
+   assert.equal(submitted.problem_id,problem.problem_id);
+   assert.match(problem_sha256,/^[a-f0-9]{64}$/);
+   return true;
+ }});
  assert.equal(calls,1);
  assert.equal(result.status,"STRUCTURALLY_VALID",JSON.stringify(result.issues));
  assert.equal(result.executable,false);
@@ -139,11 +143,11 @@ test("G2: public LLM proposal callback is isolated and executed once",async()=>{
 test("G2: non-JSON, giant responses and provider failures are rejected",async()=>{
  const {problem}=fixture();
  for(const value of ["{", "x".repeat(70000)]){
-   const result=await proposeMethod(problem,async()=>value);
+   const result=await proposeMethod(problem,async()=>value,{authorizePublicPayload:()=>true});
    assert.equal(result.status,"REJECTED");
    assert.equal(result.tool_execution,"NOT_RUN");
  }
- const error=await proposeMethod(problem,async()=>{throw Error("provider unavailable");});
+ const error=await proposeMethod(problem,async()=>{throw Error("provider unavailable");},{authorizePublicPayload:()=>true});
  assert.equal(error.status,"REJECTED");
 });
 test("G2: external fact without source never becomes a symbolic proof",async()=>{
@@ -284,4 +288,74 @@ test("G2: a tool step cannot claim proof about a different source even with corr
  const valid=assessMethod(problem,method);
  assert.equal(valid.status,"STRUCTURALLY_VALID",JSON.stringify(valid.issues));
  assert.equal(valid.tool_execution,"NOT_RUN");
+});
+
+test("G2 security: self-declared PUBLIC is not LLM egress authorization",async()=>{
+ const {problem,method}=fixture();
+ let generated=false;
+ const unapproved=await proposeMethod(problem,async()=>{generated=true;return method;});
+ assert.equal(unapproved.status,"BLOCKED_BY_POLICY");
+ assert.equal(generated,false);
+ const denied=await proposeMethod(problem,async()=>{generated=true;return method;},
+   {authorizePublicPayload:()=>false});
+ assert.equal(denied.status,"BLOCKED_BY_POLICY");
+ assert.equal(generated,false);
+ const thrown=await proposeMethod(problem,async()=>{generated=true;return method;},
+   {authorizePublicPayload:()=>{throw Error("untrusted source bytes");}});
+ assert.equal(thrown.status,"BLOCKED_BY_POLICY");
+ assert.equal(generated,false);
+});
+test("G2 security: approval covers actual free-text payload, not only asserted source SHA",async()=>{
+ const {problem,method}=fixture();
+ problem.claims[0].text="synthetic private phrase in free text";
+ let approvedHash;
+ let generated=false;
+ const outcome=await proposeMethod(problem,async()=>{generated=true;return method;},
+   {authorizePublicPayload:({problem:submitted,problem_sha256})=>{
+     approvedHash=problem_sha256;
+     assert.match(submitted.claims[0].text,/private phrase/);
+     return false;
+   }});
+ assert.match(approvedHash,/^[a-f0-9]{64}$/);
+ assert.equal(outcome.status,"BLOCKED_BY_POLICY");
+ assert.equal(generated,false);
+});
+test("G2 security: callback mutations cannot change source/permission after approval",async()=>{
+ const {problem,method}=fixture();
+ const initialText=problem.claims[0].text;
+ const result=await proposeMethod(problem,async prompt=>{
+   assert.equal(prompt.problem.claims[0].text,initialText);
+   problem.policy.allowed_tools=[]; // mutate original caller object
+   problem.claims[0].text="attacker-overridden assertion";
+   prompt.problem.claims[0].text="untrusted provider mutation";
+   return method;
+ },{authorizePublicPayload:payload=>{
+   assert.equal(payload.problem.claims[0].text,initialText);
+   return true;
+ }});
+ assert.equal(result.status,"STRUCTURALLY_VALID",JSON.stringify(result.issues));
+ assert.equal(result.executable,false);
+});
+test("G2 security: public request and object reply size limits fail closed",async()=>{
+ const {problem,method}=fixture();
+ let called=false;
+ problem.requirements[0].text="x".repeat(70000);
+ assert.equal(validateProblemSpec(problem).ok,false);
+ const rejected=await proposeMethod(problem,async()=>{called=true;return method;},{authorizePublicPayload:()=>true});
+ assert.equal(rejected.status,"REJECTED");
+ assert.equal(called,false);
+ const fresh=fixture();
+ const oversized=await proposeMethod(fresh.problem,async()=>{
+   return {...fresh.method,untrusted_padding:"x".repeat(70000)};
+ },{authorizePublicPayload:()=>true});
+ assert.equal(oversized.status,"REJECTED");
+ assert.equal(oversized.executable,false);
+});
+test("G2 security: non-JSON ProblemSpec and malformed source hash do not throw",()=>{
+ const {problem}=fixture();
+ problem.source_refs[0].sha256=Symbol("not_json");
+ assert.equal(validateProblemSpec(problem).ok,false);
+ const cyclic=fixture().problem;
+ cyclic.policy.extra=cyclic;
+ assert.equal(validateProblemSpec(cyclic).ok,false);
 });
