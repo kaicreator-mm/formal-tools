@@ -74,3 +74,29 @@ test("redaction retains network URLs and rejects short absolute local paths",()=
   assert.equal(redactString("/home/user"),"…/home/user");
   assert.equal(redactString("C:\\Users\\test"),"…\\Users\\test");
 });
+
+test("punctuation-prefix metadata paths are scrubbed without corrupting web URLs",()=>{
+  const safe=redactReceipt({
+    evidence:[{installation:{diagnostics:[
+      "error:C:\\Users\\alice\\private\\trace.log",
+      "x,/home/alice/private/trace.log",
+      "[C:\\Users\\alice\\private\\trace.log]",
+      "https://github.com/Z3Prover/z3/releases"
+    ]}}]
+  });
+  assert.deepEqual(safe.evidence[0].installation.diagnostics,[
+    "error:…\\alice\\private\\trace.log",
+    "x,…/alice/private/trace.log",
+    "[…\\alice\\private\\trace.log]",
+    "https://github.com/Z3Prover/z3/releases"
+  ]);
+});
+
+test("punctuation-prefix private paths in hash-anchored stdout/stderr fail closed",()=>{
+  assert.throws(()=>redactReceipt({
+    evidence:[{positive:{executions:[{stdout:"error:C:\\Users\\alice\\private\\trace.log"}]}}]
+  }),/privacy invariant violated/);
+  assert.throws(()=>redactReceipt({
+    evidence:[{positive:{executions:[{stderr:"error:/home/alice/private/trace.log"}]}}]
+  }),/privacy invariant violated/);
+});
