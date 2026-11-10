@@ -1,6 +1,6 @@
 # G3 PREP R0 — Evidence/Claim Linkage Gate
 
-**Authority:** [Issue #11](https://github.com/kaicreator-mm/formal-tools/issues/11) · **Depends on:** G2 PR #13 independent source/security review and integration · **Status:** isolated preparation, not native verification.
+**Authority:** [Issue #11](https://github.com/kaicreator-mm/formal-tools/issues/11) · **G2 dependency SATISFIED:** reviewed PR #13 merged into main at `ad35fd2b38f67664c74316aed2b81a06fc150ec1` · **G3 status:** source/CI-ready for independent review, not native verification or reusable Solution.
 
 ## Decision and component boundary
 
@@ -9,7 +9,7 @@ G3 must close two distinct loops: (1) controlled *real* solver invocation with e
 - `packages/runner/js/evidence-gate.mjs` exports `inspectEvidenceBundle(bundle)`.
 - `tests/evidence-gate.test.mjs` provides adversarial contract cases.
 - Existing `native-catalog.mjs` remains the tool-ID/typed-operation authority. This component **never executes a tool** or spawns any process.
-- It is independent of G2 code at build time and must be integrated onto the G2-reviewed mainline **only after G2 acceptance**.
+- It is independent of G2 code at build time. **G2 acceptance is now complete**; PR #15 remains pending its own independent security/semantics review and final exact-SHA integrated CI before merge.
 
 ## Contract v0.1
 
