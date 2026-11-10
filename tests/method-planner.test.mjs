@@ -1,3 +1,4 @@
+// @ts-nocheck — temporary diagnosis: new synthetic adversarial test typings only; runtime tests remain active.
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
