@@ -1,7 +1,11 @@
-import tree_sitter_language_pack as tlp
+import tree_sitter
+import tree_sitter_c
+
+lang = tree_sitter.Language(tree_sitter_c.language())
+parser = tree_sitter.Parser(lang)
 
 src = b"int main(void) { return 0; }\n"
-tree = tlp.get_parser("c").parse(src)
+tree = parser.parse(src)
 root = tree.root_node
 assert root.type == "translation_unit", root.type
 

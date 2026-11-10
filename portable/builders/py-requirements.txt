@@ -22,5 +22,7 @@ causal-learn
 simpy
 mesa
 tree-sitter
+tree-sitter-c
+# tree-sitter-language-pack (kept installed; cases use the per-language wheels offline)
 tree-sitter-language-pack
 pydot
