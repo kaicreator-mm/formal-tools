@@ -80,6 +80,8 @@ export function validateProblemSpec(problem) {
        x.capability_ids.some(y=>!knownCaps.has(y)||!Array.isArray(caps)||!caps.includes(y)))
       {fail("invalid claim/anchors/capability mappings");continue;}
     if(claimIds.has(x.id))fail("duplicate claim "+x.id);
+    if(!["external_fact","not_formalizable"].includes(x.kind) && !x.capability_ids.length)
+      fail("checkable claim must declare at least one capability: "+x.id);
     claimIds.add(x.id);
   }
   const oracles=Array.isArray(problem.oracles)?problem.oracles:[];
@@ -133,15 +135,17 @@ export function assessMethod(problem, method) {
      method.oracle_ids.some(x=>!reference(x,validOracleIds)))fail("unknown, duplicate or missing frozen oracle references");
   const steps=Array.isArray(method.steps)?method.steps:[];
   const budget=problem?.budget??{};
-  if(!steps.length||steps.length>budget.max_steps)fail("step count exceeds budget or is empty");
+  if(!steps.length||steps.length>budget.max_steps)
+    return rejected([...issues,"step count exceeds budget or is empty"]);
   const catalog=readCapabilityRegistry(), tools=new Map(catalog.tools.map(t=>[t.id,t]));
   const capIds=new Set(problem?.capability_ids??[]);
   const sourceMap=new Map((problem?.source_refs??[]).filter(x=>isId(x?.id)).map(x=>[x.id,x]));
   const permissions=problem?.policy??{};
-  const stepMap=new Map(),coverage=new Set();
+  const stepMap=new Map(),claimCoverage=new Map();
+  const targetClaimMap=new Map((problem.claims??[]).filter(x=>target.includes(x.id)).map(x=>[x.id,x]));
   let cost=0, totalTime=0, hasCandidate=false;
   for(const s of steps){
-    if(!hasOnly(s,["id","tool_id","operation","provides","depends_on","source_refs","estimated_cost_units","timeout_ms","destination","output_classification"])) {fail("invalid step fields");continue;}
+    if(!hasOnly(s,["id","tool_id","operation","claim_ids","provides","depends_on","source_refs","estimated_cost_units","timeout_ms","destination","output_classification"])) {fail("invalid step fields");continue;}
     if(!isId(s.id)||stepMap.has(s.id)){fail("invalid/duplicate step id");continue;}
     stepMap.set(s.id,s);
     const tool=tools.get(s.tool_id);
@@ -150,7 +154,19 @@ export function assessMethod(problem, method) {
     if(!Array.isArray(s.provides)||!s.provides.length||!unique(s.provides)||
        s.provides.some(x=>!capIds.has(x)||!tool.capability_ids.includes(x)))
       fail("tool does not provide claimed required capabilities: "+s.id);
-    else s.provides.forEach(x=>coverage.add(x));
+    const claimBindings=Array.isArray(s.claim_ids)?s.claim_ids:null;
+    if(!claimBindings||!unique(claimBindings)||claimBindings.some(x=>!targetClaimMap.has(x)||!method.goal_claim_ids.includes(x)))
+      fail("step must bind only declared, checkable goal claims: "+s.id);
+    else for(const id of claimBindings){
+      const claim=targetClaimMap.get(id);
+      const claimsCapabilities=new Set(claim.capability_ids);
+      const provided=Array.isArray(s.provides)?s.provides.filter(c=>claimsCapabilities.has(c)):[];
+      if(!provided.length)fail("step claim binding lacks matching capability: "+s.id+" -> "+id);
+      else {
+        const bound=claimCoverage.get(id)??new Set();
+        provided.forEach(c=>bound.add(c));claimCoverage.set(id,bound);
+      }
+    }
     if(!Array.isArray(s.depends_on)||!unique(s.depends_on)||s.depends_on.some(x=>!isId(x)||x===s.id))
       fail("bad dependencies: "+s.id);
     if(!Array.isArray(s.source_refs)||!unique(s.source_refs)||s.source_refs.some(x=>!reference(x,new Set(sourceMap.keys()))))
@@ -173,8 +189,12 @@ export function assessMethod(problem, method) {
     }
   }
   if(steps.some(s=>!isObject(s)))fail("malformed step record");
-  for(const needed of target.flatMap(id=>(problem.claims.find(x=>x.id===id)?.capability_ids??[]))){
-    if(!coverage.has(needed))fail("required checkable-claim capability uncovered: "+needed);
+  for(const id of target){
+    const claim=targetClaimMap.get(id);
+    for(const capability of claim.capability_ids){
+      if(!claimCoverage.get(id)?.has(capability))
+        fail("required claim capability uncovered: "+id+" -> "+capability);
+    }
   }
   if(cost>budget.max_cost_units||totalTime>budget.max_total_time_ms)fail("total method budget exceeded");
   const levels=new Map(),visiting=new Set();
