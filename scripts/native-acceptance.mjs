@@ -28,19 +28,26 @@ import { pathToFileURL } from "node:url";
  *   diagnostics lists, error messages) are collapsed to their last 3 segments.
  * - stdout/stderr stay verbatim: they are hash-anchored evidence and must not be
  *   rewritten (their SHA-256 is computed over raw bytes).
- * - fail-closed: the receipt is only written when no absolute drive-letter path
+ * - fail-closed: the receipt is only written when no absolute local path
  *   survives anywhere in the JSON; a leak aborts the run instead of publishing.
  */
 const WIN_PATH=/[A-Za-z]:[\\/][^\s"'`]*/g;
+// Also cover Linux/WSL/macOS absolute paths; "https://" URLs do not match.
+const POSIX_PATH=/(^|[\s"'=(:])\/(?!\/)[^\s"'`<>]+/g;
 
 export function redactPath(p,keep=3){
-  const parts=String(p).split(/[\\/]/).filter(Boolean);
-  if(parts.length<=keep)return p;
-  const sep=String(p).includes("\\")?"\\":"/";
+  const original=String(p);
+  const isAbsolute=/^[A-Za-z]:[\\/]/.test(original)||original.startsWith("/");
+  if(!isAbsolute)return p;
+  const parts=original.split(/[\\/]/).filter(Boolean);
+  if(/^[A-Za-z]:$/.test(parts[0]??""))parts.shift();
+  const sep=original.includes("\\")?"\\":"/";
   return "…"+sep+parts.slice(-keep).join(sep);
 }
 export function redactString(s){
-  return String(s).replace(WIN_PATH,m=>redactPath(m));
+  return String(s)
+    .replace(WIN_PATH,m=>redactPath(m))
+    .replace(POSIX_PATH,(text,prefix)=>prefix+redactPath(text.slice(prefix.length)));
 }
 const REDACTED_KEYS=new Set(["hostname"]);
 const STRING_PATH_KEYS=new Set(["tool_bin_dir","executable","path","error","cwd"]);
@@ -63,7 +70,7 @@ export function redactReceipt(summary){
   (function scan(node,p=""){
     if(node===null||typeof node!=="object")return;
     for(const [k,v] of Object.entries(node)){
-      if(typeof v==="string"&&v.match(WIN_PATH))violations.push(p?`${p}.${k}`:k);
+      if(typeof v==="string"&&(v.match(WIN_PATH)||v.match(POSIX_PATH)))violations.push(p?`${p}.${k}`:k);
       else scan(v,p?`${p}.${k}`:k);
     }
   })(safe);
