@@ -143,6 +143,7 @@ export function assessMethod(problem, method) {
   const permissions=problem?.policy??{};
   const stepMap=new Map(),claimCoverage=new Map();
   const targetClaimMap=new Map((problem.claims??[]).filter(x=>target.includes(x.id)).map(x=>[x.id,x]));
+  const declaredGoalIds=Array.isArray(method.goal_claim_ids)?method.goal_claim_ids:[];
   let cost=0, totalTime=0, hasCandidate=false;
   for(const s of steps){
     if(!hasOnly(s,["id","tool_id","operation","claim_ids","provides","depends_on","source_refs","estimated_cost_units","timeout_ms","destination","output_classification"])) {fail("invalid step fields");continue;}
@@ -155,7 +156,7 @@ export function assessMethod(problem, method) {
        s.provides.some(x=>!capIds.has(x)||!tool.capability_ids.includes(x)))
       fail("tool does not provide claimed required capabilities: "+s.id);
     const claimBindings=Array.isArray(s.claim_ids)?s.claim_ids:null;
-    if(!claimBindings||!unique(claimBindings)||claimBindings.some(x=>!targetClaimMap.has(x)||!method.goal_claim_ids.includes(x)))
+    if(!claimBindings||!unique(claimBindings)||claimBindings.some(x=>!targetClaimMap.has(x)||!declaredGoalIds.includes(x)))
       fail("step must bind only declared, checkable goal claims: "+s.id);
     else for(const id of claimBindings){
       const claim=targetClaimMap.get(id);
