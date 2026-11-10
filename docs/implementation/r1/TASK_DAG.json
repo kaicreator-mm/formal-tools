@@ -3,7 +3,7 @@
   "source_main": "5bd8a552c61218d56408de12bb832a5b39f568a2",
   "product": "kaicreator-mm/formal-tools",
   "plan": "docs/implementation/r1/DEVELOPMENT_PLAN.md",
-  "status": "ISSUE7_A_PR10_CI_FAILED_PRIORITY_B_PARTIAL_SOURCE_READY",
+  "status": "ISSUE7_MAIN_5_PR10_SOURCE_PROGRESS_CI_P1_REMAINS",
   "scope": "TOOL_MAINTENANCE_ONLY",
   "tasks": [
     {
@@ -119,7 +119,7 @@
       "status": "SOURCE_PARTIAL",
       "source_status": "MULTI_OS_COMPATIBILITY_REPORT_SOURCE_READY",
       "runtime_status": "NOT_RUN",
-      "remaining": "Windows/Linux real tool version compatibility evidence and historical receipt import"
+      "remaining": "Real upstream engine versions across representative OS still unverified (Issue #4); historical Windows exact-SHA observations imported as D11 source"
     },
     {
       "id": "D10",
@@ -132,8 +132,8 @@
       "priority": "P1",
       "status": "SOURCE_PARTIAL",
       "source_status": "TYPECHECK_GATE_ADDED",
-      "runtime_status": "PR10_BUILD_20_21_FAILED",
-      "remaining": "Root cause from actual CI log, repair and green final exact-SHA"
+      "runtime_status": "PR10_BUILDS_23_24_FAILED_LATEST_SHA_CI_PENDING",
+      "remaining": "Diagnose exact failed Woodpecker command from private host logs, repair same PR, obtain final exact-SHA Node+TS+CI SUCCESS"
     },
     {
       "id": "D11",
@@ -145,10 +145,12 @@
       ],
       "gate": "G4",
       "priority": "P2",
-      "status": "PLANNED",
-      "source_status": "NOT_STARTED",
-      "runtime_status": "NOT_RUN",
-      "remaining": "Final exact-SHA Node/TS/CI reports and true platform/runtime status"
+      "status": "SOURCE_PARTIAL",
+      "source_status": "ACTUAL_HISTORICAL_HOST_OBSERVATIONS_IMPORTED",
+      "runtime_status": "SOURCE_AUDIT_ONLY_FINAL_CI_PENDING",
+      "remaining": "Final-HEAD Node/TypeScript/Woodpecker and actual installed-tool/version evidence; 13 historic observations remain STALE_SHA on PR #10",
+      "evidence_path": "validation/r1/windows-host-observations.json",
+      "source_blob": "e2b2021d2afea6d14ff8837a4827a4aef27759db"
     },
     {
       "id": "D12",
@@ -159,10 +161,12 @@
       ],
       "gate": "G4",
       "priority": "P2",
-      "status": "PLANNED",
-      "source_status": "NOT_STARTED",
-      "runtime_status": "NOT_RUN",
-      "remaining": "Real external project integration of tool-only input/invoke/artifacts/failure/timeout; no business assertions"
+      "status": "SOURCE_PARTIAL",
+      "source_status": "REAL_EXTERNAL_REPO_SMOKE_SCRIPT_IN_PR263",
+      "runtime_status": "EXTERNAL_HOST_SMOKE_NOT_RUN",
+      "remaining": "Execute on real external checkout against formal-tools final exact SHA and preserve receipt; no business model or production Z3 adapter changes",
+      "external_pr": "https://github.com/kaicreator-mm/domain-simulator/pull/263",
+      "external_head": "c195767689ff1d524765934c52ee9a2eb43b34c5"
     }
   ],
   "receipt": "validation/R1_TOOL_MANAGER_SOURCE_AUDIT.json",
@@ -174,10 +178,34 @@
   "revision": "Issue #7 scope correction 2026-11-10",
   "current_gate": {
     "blocking_pr": 10,
-    "known_head": "65ecc5d694d0618e6986836efa9a8a883912b99f",
-    "push_build": 20,
-    "pr_build": 21,
-    "both": "FAILED",
+    "previous_failed_head": "30b4313cb3f0755f6a25c8b673ad96e4ec981a0b",
+    "previous_failed_builds": [
+      23,
+      24
+    ],
+    "new_source_head": "ce33235b4529f5fc39a3e3d6b2019e2298664866",
+    "source_acceptance": "PENDING",
     "native_engine_blocking_for_source_merge": false
+  },
+  "progress_evidence": {
+    "integrated_main": [
+      "D01",
+      "D02",
+      "D03",
+      "D04",
+      "D05"
+    ],
+    "in_progress": [
+      "D06",
+      "D07",
+      "D08",
+      "D09",
+      "D10",
+      "D11",
+      "D12"
+    ],
+    "node_ts_final_exact_sha": "PENDING",
+    "external_consumer_host": "NOT_RUN",
+    "native_13_engine_host": "NOT_RUN_ISSUE_4"
   }
 }

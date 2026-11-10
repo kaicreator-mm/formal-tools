@@ -32,3 +32,11 @@
 - 已在受限 JS 中验证 Result 10/10 状态和边界，以及 SDK mock dispatch 7/7；12 个 JS 模块/测试文件仅做 V8 语法解析，不是 Node 原生测试。
 - 尚需真实 Node/TypeScript/原生工具跑 `tests/tool-sdk.test.mjs` 和 CLI `invoke` 冒烟。完整资源/工作目录隔离与产物发现待 D06 后续修复。
 - 细节见 `validation/R1_SDK_SOURCE_AUDIT.json`。
+
+## Issue #7 新范围：D11/D12 可并行的 Web-first 实际进展（2026-11-10）
+
+- **D11 真实来源证据标准化**：新增 `validation/r1/windows-host-observations.json`，由已提交的 PR #9 Windows `native-acceptance.json` 生成；13 工具中 11 次 `NOT_RUN`、2 次 Python 解释器 `EXECUTED`，但**全部没有得到可验证的官方工具版本**，26 fixture 均 `INCONCLUSIVE`。保留真实代码 SHA `61bf9e29ba519d02849cad8fe6fdb421fc3f1fed` 和原始 Git Blob SHA，避免历史收据越过新 SHA 被冒充 PASS。
+- **D11 可执行回归**：`tests/compatibility-evidence.test.mjs` 检查 13 个 ID 与 Registry 一致、原始未实测状态、旧 SHA 的 `REPORTED_UNREVIEWED` / 新 SHA 的 `STALE_SHA`。仅静态 V8 逻辑自检完成，当前 PR 的 Node/TypeScript/Woodpecker 验收仍待通过。
+- **D12 真实外部仓库**：`kaicreator-mm/domain-simulator` <https://github.com/kaicreator-mm/domain-simulator/pull/263>，source HEAD `c195767689ff1d524765934c52ee9a2eb43b34c5`，已提供非生产 SDK 工具接口烟测脚本；实际主机运行 `NOT_RUN`，其原有业务 Z3 适配器不变。
+- **首要 P1 不变**：PR #10 Woodpecker 编译/依赖失败。Web Builder 已补 CI 依赖准备步骤，但 Build #23/#24 仍失败；当前新源码 SHA 的 CI 尚无通过证据。真实日志尚不可由 GitHub 状态接口读取，只保留一项最小本地需求：读取失败步骤/错误/退出码，不承担研发。
+- 进度解释：D01–D05 已合入 main（5/12）；D06–D12 均有不同程度源码/独立消费准备，但无一项因本次新增而直接标 DONE。R1 完成仍以 #7 的 final Exact-SHA Node+TS+CI、真实外部 smoke 和 P0/P1=0 为准。
