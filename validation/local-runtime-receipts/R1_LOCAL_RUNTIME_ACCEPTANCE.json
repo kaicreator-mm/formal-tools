@@ -85,23 +85,25 @@
       "receipt": ["native-acceptance.json", "native-acceptance-run.log"]
     },
     "WOODPECKER": {
-      "result": "NOT_RUN — execution infrastructure blocked, activation + trigger path verified",
+      "result": "PASS (build #7 push + build #8 pull_request, both success at bef38db)",
+      "history": [
+        {"build": "#5 (push d307999) / #6 (PR d307999)", "status": "failure", "cause": "local backend (v3.18.1 pipeline/backend/local/command.go execCommands) uses step.Image AS THE STEP SHELL — exec(image,[\"-e\",\"-c\",script]) after LookPath; `node:24-alpine` is not an executable in the agent container"},
+        {"build": "#7 (push bef38db) / #8 (PR bef38db)", "status": "success", "fix": "bef38db — image: bash (agent ships bash 5.3.9 + node 24.21.0, same node major as node:24-alpine); `manual` event added to when-list so API body trigger is no longer filtered to 204"}
+      ],
+      "build_7_evidence": {
+        "repo_id": 39, "server": "X-Woodpecker-Version: 3.18.1", "agent": "NILAR (woodpecker-agent-local, backend=local)",
+        "steps": "clone success exit=0; formal-js-source-and-finite-model success exit=0",
+        "wall_clock": "started 2026-11-10T06:49:36Z finished 06:49:44Z (~8s)",
+        "node": "v24.21.0",
+        "node_test": "52 tests / 52 pass / 0 fail / 0 skipped — the POSIX-gated tests/native-workspace.test.mjs workspace-isolation subtest EXECUTED on Linux (54.9ms) and passed",
+        "cli_validate": "STATIC_PASS count=13 issues=[]",
+        "log": ["woodpecker-run7-bef38db-formal-js-source-and-finite-model.log"]
+      },
       "repo_activation": {
         "state_before": "kaicreator-mm/formal-tools was NOT registered in Woodpecker (38 repos listed, none formal-tools) — pushes could not trigger anything",
-        "action": "POST /api/repos?forge_remote_id=1451445651 → activated as repo_id=39 (server X-Woodpecker-Version: 3.18.1)",
-        "evidence": "webhook auto-triggers now work: sibling branch pipelines #1 (push) and #2 (pull_request) were created for commit 194a30d2"
+        "action": "POST /api/repos?forge_remote_id=1451445651 → activated as repo_id=39 (server X-Woodpecker-Version: 3.18.1)"
       },
-      "manual_trigger_attempt": {
-        "finding": "POST /api/repos/39/pipelines with {\"branch\":\"dev/r1-tool-manager-r0\"} returns 204: CreatePipeline decodes PipelineOptions from the JSON body (server/api/pipeline.go v3.18.1) and pipeline.Create returns nil because .woodpecker/formal-static.yaml `when: event: [push, pull_request]` filters EventManual; query-param form returns 400 (body is required)",
-        "consequence": "branch pipelines require a real push event; every push of this branch queues a pipeline"
-      },
-      "queue_state_at_receipt": {
-        "queue_info": "running=0, pending=8 (incl. 2x formal-static for repo_id 39), stats.worker_count=0",
-        "agents": "LAN200 (capacity 8) last_contact ~3.7d ago and host intermittently unreachable (ssh timeout, ping 50-66% loss); NILAR (capacity 1, local Docker container) last_contact ~1.8h ago; sudo disabled so no non-interactive elevation to recover local WSL",
-        "local_infra": "this host's Docker Desktop reports \"Docker Desktop is unable to start\"; WSL service wedged (vmmemWSL zombie ~4.5MB, wslservice.exe stop requires admin, `wsl --shutdown` intermittently hangs) — NILAR agent container cannot come back until an administrator clears WSL or the machine is rebooted"
-      },
-      "ci_equivalence_note": "Local cold-checkout simulation of the exact CI commands (node --test tests/*.test.mjs on a git archive of the branch, no node_modules) passed 52 tests / EXIT=0 — but per handoff rule this does NOT mark remote CI PASS.",
-      "next_step": "When any agent comes back online (LAN200 host restored, or local Docker Desktop/WSL recovered + NILAR container restarted), the queued pipelines run; record the build id for the FINAL_HEAD push pipeline. POSIX-gated workspace-isolation subtest runs on node:24-alpine there."
+      "manual_trigger_note": "POST /api/repos/39/pipelines with {\"branch\":...} requires the `manual` event in the when-list (EventManual pipelines are filtered otherwise → 204); allowed since bef38db. Query-param-only form returns 400 (JSON body is required by CreatePipeline)."
     }
   },
   "working_directory_isolation": {
@@ -117,8 +119,7 @@
   ],
   "remaining_blockers": [
     "No upstream formal engine installed on this host → NATIVE_13 verified=0 and NATIVE_26 all INCONCLUSIVE is the honest ceiling for Windows-only local acceptance; a host with the 13 tools (or per-tool subset) is required for real version receipts.",
-    "Woodpecker: repo activated (repo_id=39) and trigger path verified, but zero agents are polling (worker_count=0); local Docker Desktop/WSL wedged (admin required), LAN200 host degraded — remote CI run still outstanding; build id to be recorded once an agent drains the queue.",
-    "Linux self-test executed only via Woodpecker (WSL explicitly excluded by PR constraints); POSIX-gated workspace-isolation subtest remains pending that run."
+    "Linux self-test now covered by the real Woodpecker run (#7/#8, node 24.21.0 in the agent container): all 52 tests pass including the POSIX-gated workspace-isolation subtest. Remaining Linux work is limited to future native-engine verification."
   ],
-  "next_gate": "Woodpecker formal-static.yaml on Linux (node:24-alpine) incl. the POSIX-gated workspace-isolation subtest; then a host provisioned with the 13 engines for version-level receipts."
+  "next_gate": "Woodpecker build #7/#8 green at bef38db (incl. POSIX-gated workspace-isolation subtest on Linux); the FINAL_HEAD receipts commit re-triggers its own pipeline — that run id is recorded in the PR/Issue comments as authoritative. Next substantive gate: a host provisioned with the 13 engines for version-level receipts."
 }
