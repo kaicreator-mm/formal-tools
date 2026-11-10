@@ -1,7 +1,7 @@
 EXPECT_TIMEOUT=120
 EXPECT_POS_ARGS='--validate tests/apache-jena/pos.ttl'
 EXPECT_POS_EXIT=0
-EXPECT_POS_REGEX='PHASE_DONE rc=0'
+EXPECT_POS_REGEX='PHASE_DONE.*rc=0'
 EXPECT_POS_LABEL=RDF_VALID
 EXPECT_NEG_ARGS='--validate tests/apache-jena/neg.ttl'
 EXPECT_NEG_EXIT=*

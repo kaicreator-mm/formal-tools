@@ -15,9 +15,12 @@ ft_tool_build() {
     || ft::die "clingo cmake configure failed"
   cmake --build /tmp/clingob -j"$(nproc)" >>"$FT_LOG" 2>&1 || ft::die "clingo build failed"
   cmake --install /tmp/clingob --prefix /tmp/clingoinst >>"$FT_LOG" 2>&1 || ft::die "clingo install failed"
-  mkdir -p "$FT_TOOL_DIR/bin"
+  mkdir -p "$FT_TOOL_DIR/bin" "$FT_TOOL_DIR/lib"
   cp /tmp/clingoinst/bin/clingo "$FT_TOOL_DIR/bin/clingo" || ft::die "clingo binary missing"
+  cp -a /tmp/clingoinst/lib/libclingo*.so* /tmp/clingoinst/lib/libgringo*.so* /tmp/clingoinst/lib/libpotassco*.so* \
+    "$FT_TOOL_DIR/lib/" 2>/dev/null || true
   ft::copy_libs "$FT_TOOL_DIR/bin/clingo" "$FT_TOOL_DIR/lib" || true
+  LD_LIBRARY_PATH="$FT_TOOL_DIR/lib" ft::copy_libs "$FT_TOOL_DIR/bin/clingo" "$FT_TOOL_DIR/lib" || true
   patchelf --set-rpath '$ORIGIN/../lib' "$FT_TOOL_DIR/bin/clingo" 2>/dev/null || true
   ft::make_shim 'export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 exec "$TOOL_DIR/bin/clingo" "$@"'

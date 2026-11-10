@@ -1,9 +1,9 @@
 EXPECT_TIMEOUT=180
-EXPECT_POS_ARGS='tests/tla-tlc/pos.tla -config tests/tla-tlc/pos.cfg'
+EXPECT_POS_ARGS='tests/tla-tlc/pos.tla -config tests/tla-tlc/pos.cfg -tmpdir $FT_TMP'
 EXPECT_POS_EXIT=0
 EXPECT_POS_REGEX='Model checking completed'
 EXPECT_POS_LABEL=PROPERTY_HOLDS
-EXPECT_NEG_ARGS='tests/tla-tlc/neg.tla -config tests/tla-tlc/neg.cfg'
+EXPECT_NEG_ARGS='tests/tla-tlc/neg.tla -config tests/tla-tlc/neg.cfg -tmpdir $FT_TMP'
 EXPECT_NEG_EXIT=*
 EXPECT_NEG_REGEX='Invariant BadInv is violated'
 EXPECT_NEG_LABEL=COUNTEREXAMPLE

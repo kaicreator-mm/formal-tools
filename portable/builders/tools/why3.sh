@@ -12,7 +12,7 @@ ft_tool_build() {
   for ver in 1.8.0 1.7.2 1.7.1; do
     for u in "https://why3.gitlabpages.inria.fr/releases/why3-$ver.tar.xz" \
              "https://why3.gitlabpages.inria.fr/releases/why3-$ver.tar.gz" \
-             "https://gitlab.inria.fr/why3/why3/-/archive/$ver/why3-why3-$ver.tar.gz"; do
+             "https://gitlab.inria.fr/why3/why3/-/archive/why3-$ver/why3-why3-$ver.tar.gz"; do
       tgz=$(ft::fetch "$u" 2>/dev/null) && break 2
     done
   done

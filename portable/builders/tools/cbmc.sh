@@ -11,10 +11,20 @@ ft_tool_build() {
   ft::deb_extract "$deb" /tmp/cbmcx
   local binp; binp=$(find /tmp/cbmcx -type f -name cbmc | head -1)
   [ -n "$binp" ] || ft::die "cbmc binary not found in deb"
+  local gccp; gccp=$(find /tmp/cbmcx -type f -name goto-cc | head -1)
+  [ -n "$gccp" ] || ft::die "goto-cc not found in deb (needed as offline C front end)"
   mkdir -p "$FT_TOOL_DIR/bin"
   cp "$binp" "$FT_TOOL_DIR/bin/cbmc"
+  cp "$gccp" "$FT_TOOL_DIR/bin/goto-cc"
+  ln -sf goto-cc "$FT_TOOL_DIR/bin/goto-gcc" 2>/dev/null || true
   ft::copy_libs "$FT_TOOL_DIR/bin/cbmc" "$FT_TOOL_DIR/lib" || true
-  patchelf --set-rpath '$ORIGIN/../lib' "$FT_TOOL_DIR/bin/cbmc" 2>/dev/null || true
+  patchelf --set-rpath '$ORIGIN/../lib' "$FT_TOOL_DIR/bin/cbmc" "$FT_TOOL_DIR/bin/goto-cc" 2>/dev/null || true
   ft::make_shim 'export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-exec "$TOOL_DIR/bin/cbmc" "$@"'
+case "$1" in
+  *.c)
+    src="$1"; shift
+    "$TOOL_DIR/bin/goto-cc" "$src" -o "$FT_TMP/prog.gb" || exit 3
+    exec "$TOOL_DIR/bin/cbmc" "$FT_TMP/prog.gb" "$@" ;;
+  *) exec "$TOOL_DIR/bin/cbmc" "$@" ;;
+esac'
 }

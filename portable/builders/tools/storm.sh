@@ -10,7 +10,7 @@ FT_PROBE=(bin/storm --version)
 
 ft_tool_build() {
   local stage="$FT_OUT/staging/storm"
-  [ -f "$stage/env" ] && [ -f "$stage/payload"/* ] || ft::unavailable "storm image payload missing (host prepare failed)"
+  [ -f "$stage/env" ] && [ -d "$stage/payload" ] || ft::unavailable "storm image payload missing (host prepare failed)"
   # shellcheck disable=SC1091
   . "$stage/env"
   local inner="$stage/payload$STORM_DIR"

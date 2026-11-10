@@ -69,6 +69,11 @@ fi
 PY="$FT_OUT/runtimes/python313/bin/python3.13"
 export PYTHONHOME="$FT_OUT/runtimes/python313"
 export PYTHONNOUSERSITE=1
+# ship private libffi (minimal debian:13 runtime containers do not carry it)
+mkdir -p "$FT_OUT/runtimes/python313/lib"
+cp -a /usr/lib/x86_64-linux-gnu/libffi.so.8* "$FT_OUT/runtimes/python313/lib/" 2>/dev/null \
+  || log "WARN: libffi.so.8 not found in builder (ctypes will fail in runtime)"
+export LD_LIBRARY_PATH="$FT_OUT/runtimes/python313/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 "$PY" -s -c 'import ssl, sqlite3, ctypes, zlib, bz2, lzma, hashlib; print("PYOK", __import__("sys").version)' \
   || { log "FATAL python relocation self-test failed"; exit 3; }
 "$PY" -s -m pip --version >>"$LOG" 2>&1 || { log "FATAL pip missing"; exit 3; }
@@ -141,4 +146,14 @@ for m in sympy networkx ortools highspy hypothesis pyshacl dowhy pymc causallear
     log "IMPORT_FAILED: $m"
   fi
 done
+# prefetch tree-sitter grammars into a shipped cache (language pack would otherwise
+# download from the network at USE time — impossible offline)
+export XDG_CACHE_HOME="$FT_OUT/runtimes/py-cache" HOME=/tmp
+mkdir -p "$XDG_CACHE_HOME"
+if "$PY" -s -c "import tree_sitter_language_pack as t; t.get_parser('c'); t.get_parser('python'); print('TS_PREFETCH_OK')" >>"$LOG" 2>&1; then
+  printf 'TS_PREFETCH_OK\tc,python\n' >> "$FT_OUT/receipts/py-deps.events"
+else
+  log "WARN: tree-sitter grammar prefetch failed (offline parse verify will fail)"
+  printf 'TS_PREFETCH_FAILED\t\n' >> "$FT_OUT/receipts/py-deps.events"
+fi
 log "runtimes build complete"

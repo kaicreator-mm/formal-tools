@@ -1,7 +1,7 @@
 EXPECT_TIMEOUT=180
 EXPECT_POS_ARGS='reason --reasoner ELK --input tests/robot/pos.ttl --output $FT_TMP/reasoned.ttl'
 EXPECT_POS_EXIT=0
-EXPECT_POS_REGEX='PHASE_DONE rc=0'
+EXPECT_POS_REGEX='PHASE_DONE.*rc=0'
 EXPECT_POS_LABEL=CONSISTENT
 EXPECT_NEG_ARGS='reason --reasoner ELK --input tests/robot/neg.ttl'
 EXPECT_NEG_EXIT=*

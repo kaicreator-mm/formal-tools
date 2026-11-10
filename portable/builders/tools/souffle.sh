@@ -22,8 +22,13 @@ ft_tool_build() {
   [ -n "$binp" ] || ft::die "souffle binary not found in deb"
   mkdir -p "$FT_TOOL_DIR/bin"
   cp "$binp" "$FT_TOOL_DIR/bin/souffle"
+  # souffle shells out to a C preprocessor (mcpp or gcc) — ship mcpp, it is tiny
+  apt-get update -qq >>"$FT_LOG" 2>&1 || true
+  apt-get install -y -qq --no-install-recommends mcpp >>"$FT_LOG" 2>&1 || ft::die "mcpp install failed (souffle preprocessor)"
+  cp /usr/bin/mcpp "$FT_TOOL_DIR/bin/mcpp"
   ft::copy_libs "$FT_TOOL_DIR/bin/souffle" "$FT_TOOL_DIR/lib" || true
   patchelf --set-rpath '$ORIGIN/../lib' "$FT_TOOL_DIR/bin/souffle" 2>/dev/null || true
   ft::make_shim 'export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export PATH="$TOOL_DIR/bin:$PATH"
 exec "$TOOL_DIR/bin/souffle" "$@"'
 }

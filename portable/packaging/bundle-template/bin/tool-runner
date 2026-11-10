@@ -23,6 +23,9 @@ py_env() {
   export PYTHONHOME="$FT_ROOT/runtimes/python313"
   export PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1
   export MPLCONFIGDIR="$FT_TMP/mpl"
+  # shipped private libffi (debian:13 base image lacks it) + grammar cache for tree-sitter
+  export LD_LIBRARY_PATH="$FT_ROOT/runtimes/python313/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+  export XDG_CACHE_HOME="$FT_ROOT/runtimes/py-cache"
   # pytensor/pymc: no system compiler in minimal runtime -> pure-python mode
   export PYTENSOR_FLAGS="${PYTENSOR_FLAGS:-cxx=,compiledir=$FT_TMP/pytensor,base_compiledir=$FT_TMP/pytensor}"
   [ -d "$FT_TMP/mpl" ] || mkdir -p "$FT_TMP/mpl"
@@ -74,8 +77,12 @@ run_case() { # id phase via args_string exit_ok_list regex label
   printf '\nPHASE_DONE phase=%s rc=%s\n' "$phase" "$rc" >> "$out"
   local matched=0 exit_ok=0
   grep -Eq "$re" "$out" && matched=1
-  local e
-  for e in $ok_exits; do [ "$rc" = "$e" ] && exit_ok=1; done
+  if [ "$ok_exits" = "*" ]; then
+    exit_ok=1   # exit code not judged (output semantics decide)
+  else
+    local e
+    for e in $ok_exits; do [ "$rc" = "$e" ] && exit_ok=1; done
+  fi
   trow "$id" "$phase" "$rc" "$te" "$matched" "$exit_ok" "$label"
   echo "   $id/$phase: exit=$rc dur=${te}ms matched=$matched exit_ok=$exit_ok label=$label (log: $out)"
   [ "$matched" = 1 ] && [ "$exit_ok" = 1 ]
@@ -109,7 +116,8 @@ verify_one() {
   fi
   # optional invalid-input case (must fail loudly or report a typed error)
   if [ -n "${EXPECT_ERR_REGEX:-}" ]; then
-    run_case "$id" err "${EXPECT_ERR_VIA:-run}" "${EXPECT_ERR_ARGS:-}" "${EXPECT_ERR_EXIT:-2 1 3}" \
+    # invalid input: judged on the typed error text; exit code is tool-specific (default: any)
+    run_case "$id" err "${EXPECT_ERR_VIA:-run}" "${EXPECT_ERR_ARGS:-}" "${EXPECT_ERR_EXIT:-*}" \
       "$EXPECT_ERR_REGEX" "${EXPECT_ERR_LABEL:-ERROR}" || ok=0
   fi
   if [ "$ok" = 1 ]; then printf 'verdict\tPASS\n' >> "$FT_EV/verify-$id.tsv"; else printf 'verdict\tFAIL\n' >> "$FT_EV/verify-$id.tsv"; fi
