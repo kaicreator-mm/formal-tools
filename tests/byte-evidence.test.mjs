@@ -156,3 +156,25 @@ test("G3: malformed and oversized artifact bytes never become evidence",()=>{
  const c=fixture();c.bundle.policy.allowed_operations.z3=Object.create(null);
  assert.equal(inspectByteBoundClaim(c).status,"BLOCKED");
 });
+
+
+test("G3: custom typed-array subclass cannot spoof byte length to skip size policy",()=>{
+ const a=fixture();
+ class SpoofedBytes extends Uint8Array { get byteLength(){return 1;} }
+ a.artifacts.model=new SpoofedBytes(a.artifacts.model);
+ assert.equal(inspectByteBoundClaim(a).status,"BLOCKED");
+});
+test("G3: G3 receipts cannot widen original G2 privacy policy or downgrade step output",()=>{
+ const a=fixture();
+ a.bundle.policy.classification="RESTRICTED";
+ assert.equal(inspectByteBoundClaim(a).status,"BLOCKED");
+ const b=fixture();
+ b.method.steps[0].output_classification="RESTRICTED";
+ const newSHA=assessMethod(b.problem,b.method).method_sha256;
+ b.bundle.method_sha256=newSHA;
+ b.bundle.claim.method_sha256=newSHA;
+ b.bundle.receipts[0].method_sha256=newSHA;
+ const r=inspectByteBoundClaim(b);
+ assert.equal(r.status,"BLOCKED");
+ assert.match(r.issues.join(" "),/downgrades G2 step sensitivity/);
+});
