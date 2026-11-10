@@ -19,7 +19,9 @@ export function buildCompatibilityMatrix({targetHead,observations=[]}={}){
     throw new TypeError("targetHead must be a full 40-character Git commit SHA");
   if(!Array.isArray(observations)||observations.length>10000)
     throw new TypeError("observations must be an array of at most 10000 entries");
-  const byTool=new Map(toolIds.map(id=>[id,[]]));
+  /** @type {Map<string,Array<any>>} */
+  const byTool=new Map();
+  for(const id of toolIds)byTool.set(id,[]);
   const unique=new Set();
   for(const obs of observations){
     if(!obs||typeof obs!=="object"||!byTool.has(obs.tool_id))

@@ -56,7 +56,9 @@ export function artifactDelta(baseline,after){
     throw new TypeError("invalid post-run artifact inventory");
   validateEntries(before.files,"baseline.files");
   validateEntries(newer.files,"after.files");
-  const previous=new Map(before.files.map(e=>[e.path,e.sha256]));
+  /** @type {Map<string,string>} */
+  const previous=new Map();
+  for(const entry of before.files)previous.set(entry.path,entry.sha256);
   const addedOrModified=newer.files.filter(e=>previous.get(e.path)!==e.sha256)
     .map(e=>({path:e.path,bytes:e.bytes,sha256:e.sha256}))
     .sort(sortByPath);
