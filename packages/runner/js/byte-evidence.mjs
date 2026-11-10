@@ -47,7 +47,7 @@ function inertJsonData(root) {
     const keys=Reflect.ownKeys(value);
     if(keys.length>4096||keys.some(k=>typeof k!=="string"))return false;
     const descriptors=Object.getOwnPropertyDescriptors(value);
-    return keys.every(k=>visit(descriptors[k].value,depth+1));
+    return keys.every(k=>visit(descriptors[String(k)].value,depth+1));
   };
   try{return visit(root,0);}catch{return false;}
 }
