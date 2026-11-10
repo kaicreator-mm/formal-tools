@@ -59,7 +59,16 @@ do_build() {
     if is_serial "$id"; then serial+=("$id"); else parallel+=("$id"); fi
   done
   build_jobs "${parallel[@]}"
-  build_jobs "${serial[@]}"   # python tools: one at a time (shared site-packages)
+  if [ "${#serial[@]}" -gt 0 ]; then
+    echo ">> python-lib batch (single container, sequential: shared site-packages)"
+    docker run --rm "${container_env[@]}" \
+      -v "$FT_SRC:/src:ro" -v "$FT_OUT:/out" -v "$FT_CACHE:/cache" \
+      "$FT_IMG" bash -c 'for id in "$@"; do bash /src/builders/build-tool.sh "$id" || echo "spec rc=$? for $id"; done' _ "${serial[@]}" >/dev/null 2>&1
+    for id in "${serial[@]}"; do
+      local st=FAIL; [ -f "$FT_OUT/tools/$id/meta.json" ] && st=OK
+      echo "   $id: $st (log: $FT_OUT/logs/$id.build.log)"
+    done
+  fi
 }
 
 build_one() {
