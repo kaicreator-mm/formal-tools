@@ -1,36 +1,38 @@
-# builders/tools/kani.sh — Kani Rust verifier (official release bundle, self-contained).
+# builders/tools/kani.sh — Kani Rust verifier via the official kani-verifier crate.
+# The release tarball does NOT ship the pinned rust toolchain; `cargo kani setup`
+# materializes it into HOME/.kani, which we ship inside the tool directory.
 FT_TOOL_ID=kani
 FT_TOOL_VERSION=0.68.0
 FT_TOOL_KIND=rust-bundle
 FT_MAIN_BIN=""
-FT_UPSTREAM_URL="https://github.com/model-checking/kani/releases/download/kani-0.68.0/kani-0.68.0-x86_64-unknown-linux-gnu.tar.gz"
+FT_UPSTREAM_URL="crates.io:kani-verifier (resolved at build; setup downloads pinned toolchain)"
 FT_PROBE=(bin/cargo-kani --version)
 
 ft_tool_build() {
-  local tgz; tgz=$(ft::fetch "$FT_UPSTREAM_URL")
-  ft::extract "$tgz" /tmp/kanix
-  local src; src=$(find /tmp/kanix -maxdepth 2 -type d -name 'kani-*' | head -1)
-  [ -n "$src" ] || src=/tmp/kanix
-  mkdir -p "$FT_TOOL_DIR"
-  cp -a "$src/." "$FT_TOOL_DIR/"
-  # kani 0.68 releases ship bin/kani-driver (+ kani-compiler, goto-*, kissat); cargo-kani
-  # wrapper is not part of the bundle — kani-driver is the real entry point.
-  [ -x "$FT_TOOL_DIR/bin/kani-driver" ] || ft::die "bin/kani-driver missing in release bundle"
-  # the bundle locates its toolchain relative to its own dir; give it a writable HOME inside itself
-  mkdir -p "$FT_TOOL_DIR/home"
-  ( cd "$FT_TOOL_DIR" && HOME="$FT_TOOL_DIR/home" PATH="$FT_TOOL_DIR/bin:$PATH" \
-      timeout 1200 ./bin/kani-driver setup >>"$FT_LOG" 2>&1 ) \
-    || ft::log "WARN: kani-driver setup returned nonzero (bundle may be fully self-contained; verification will decide)"
+  export HOME=/root
+  curl -fsSL --retry 3 --http1.1 https://sh.rustup.rs -o /tmp/rustup-init.sh \
+    || ft::die "rustup-init fetch failed"
+  sh /tmp/rustup-init.sh -y --profile minimal --default-toolchain stable >>"$FT_LOG" 2>&1 \
+    || ft::die "rustup install failed"
+  export PATH="/root/.cargo/bin:$PATH"
+  cargo install --locked kani-verifier >>"$FT_LOG" 2>&1 || ft::die "cargo install kani-verifier failed"
+  mkdir -p "$FT_TOOL_DIR/home" "$FT_TOOL_DIR/bin"
+  HOME="$FT_TOOL_DIR/home" timeout 3000 cargo kani setup >>"$FT_LOG" 2>&1 \
+    || ft::die "cargo kani setup failed"
+  [ -d "$FT_TOOL_DIR/home/.kani" ] || ft::die "no .kani after setup"
+  cp /root/.cargo/bin/cargo-kani "$FT_TOOL_DIR/bin/"
+  local v
+  v=$("$FT_TOOL_DIR/bin/cargo-kani" --version 2>/dev/null | head -1)
+  [ -n "$v" ] && FT_TOOL_VERSION=$(printf '%s' "$v" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+  ft::note upstream_note "kani-verifier crate via crates.io; cargo kani setup materialized toolchain into home/.kani (shipped)"
   ft::make_shim 'export PATH="$TOOL_DIR/bin:$PATH"
-# kani needs a writable HOME + crate dir at verify time: redirect HOME, symlink toolchain state
-W="$FT_TMP/kani-home"; mkdir -p "$W/.kani" 2>/dev/null || true
+# cargo-kani needs a writable HOME + crate dir at verify time: redirect HOME, symlink toolchain state
+W="$FT_TMP/kani-home"; mkdir -p "$W" 2>/dev/null || true
 [ -d "$TOOL_DIR/home/.kani" ] && ln -sfn "$TOOL_DIR/home/.kani" "$W/.kani" 2>/dev/null || true
 export HOME="$W"
 if [ -d "$1" ] && [ -f "$1/Cargo.toml" ]; then
   rm -rf "$FT_TMP/crate"; cp -r "$1" "$FT_TMP/crate" || exit 3
-  INPUT="$FT_TMP/crate/src/main.rs"; [ -f "$INPUT" ] || INPUT="$FT_TMP/crate"
-  shift
-  exec "$TOOL_DIR/bin/kani-driver" "$@" "$INPUT"
+  cd "$FT_TMP/crate" || exit 3; shift
 fi
-exec "$TOOL_DIR/bin/kani-driver" "$@"'
+exec "$TOOL_DIR/bin/cargo-kani" "$@"'
 }
