@@ -1,0 +1,11 @@
+{
+  "tool": "z3",
+  "status": "MISSING_EXECUTABLE",
+  "launcher": "binary",
+  "diagnostics": [
+    "No matching executable found in the configured directory or PATH"
+  ],
+  "searched": 230,
+  "probe_status": "NOT_RUN"
+}
+EXIT=2

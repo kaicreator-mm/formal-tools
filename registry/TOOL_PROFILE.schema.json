@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kaicreator-mm/formal-tools/blob/main/registry/TOOL_PROFILE.schema.json",
+  "title": "formal-tools native tool catalog profile",
+  "description": "Schema for the JS catalog descriptor. This is a shape contract, not an independent list of tool IDs or an installer.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "source",
+    "entries",
+    "help",
+    "runtime",
+    "operationCount"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "type": "string",
+      "format": "uri"
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "help": {
+      "type": "object",
+      "required": [
+        "entry",
+        "args"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "entry": {
+          "type": "string"
+        },
+        "args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "command",
+        "probeArgs"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "binary",
+            "java-jar",
+            "python-module",
+            "alloy"
+          ]
+        },
+        "command": {
+          "type": "string",
+          "minLength": 1
+        },
+        "probeArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "jarEnv": {
+          "type": "string"
+        },
+        "mainClass": {
+          "type": "string"
+        },
+        "binEnv": {
+          "type": "string"
+        },
+        "pythonEnv": {
+          "type": "string"
+        },
+        "module": {
+          "type": "string"
+        },
+        "windowsWrapperWarning": {
+          "type": "boolean"
+        }
+      }
+    },
+    "operationCount": {
+      "type": "integer",
+      "minimum": 1
+    }
+  }
+}

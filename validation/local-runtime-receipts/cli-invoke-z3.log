@@ -1,0 +1,40 @@
+{
+  "schema": "formal-tools/tool-execution/1",
+  "tool_id": "z3",
+  "operation": "solve",
+  "invocation": {
+    "entry": "z3",
+    "args": [
+      "-smt2",
+      "skills/z3/examples/positive.smt2"
+    ],
+    "mode": "typed"
+  },
+  "process": {
+    "run_status": "NOT_RUN",
+    "status": "NOT_STARTED",
+    "exit_code": null,
+    "signal": null,
+    "elapsed_ms": 4,
+    "timed_out": false,
+    "output_truncated": false,
+    "error": "spawn z3 ENOENT"
+  },
+  "tool_status": "INCONCLUSIVE",
+  "streams": {
+    "stdout": {
+      "text": "",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr": {
+      "text": "",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "artifacts": {
+    "status": "NOT_COLLECTED",
+    "items": []
+  },
+  "scope": "UPSTREAM_TOOL_TECHNICAL_RESULT_ONLY"
+}
+EXIT=2

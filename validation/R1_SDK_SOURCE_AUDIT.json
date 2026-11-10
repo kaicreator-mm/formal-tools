@@ -1,0 +1,51 @@
+{
+  "schema": "formal-tools-sdk-source-audit/1",
+  "repo": "kaicreator-mm/formal-tools",
+  "branch": "dev/r1-tool-manager-r0",
+  "based_on_tree": "a4c35ede3d0fbcdbe3d8382c45a94dbaf6d2f6a5",
+  "files": {
+    "packages/runner/js/tool-result.mjs": "a2c61c50658fc3d7e578ffbf7ee018f707e15841",
+    "packages/runner/js/sdk.mjs": "98922bdbf17e4a6e9598d078a61d0e098eaa74b0",
+    "packages/runner/js/cli.mjs": "342fde8c813fd40a4fc026e946d1a7cbd39abec5",
+    "tests/tool-sdk.test.mjs": "4f524317849cfc67a817a2da2ab6193d73194ee8",
+    "registry/TOOL_EXECUTION_RESULT.schema.json": "10c26ecd9da86efd1051743fadd7eaf1a164bfee"
+  },
+  "actual_js_checks": {
+    "result_normalization": {
+      "passed": 10,
+      "failed": 0,
+      "observes": [
+        "tool outcome separate from consumer claims",
+        "timeout/output limit inconclusive",
+        "NOT_STARTED",
+        "NO raw mode",
+        "hash and artifact placeholder"
+      ]
+    },
+    "sdk_mock_dispatch": {
+      "passed": 7,
+      "failed": 0,
+      "observes": [
+        "13 registered tools",
+        "typed plan",
+        "technically scoped normalized result",
+        "raw disallowed",
+        "invalid timeout rejected"
+      ]
+    },
+    "es_module_source_parse": {
+      "passed": 12,
+      "failed": 0,
+      "method": "restricted JS parse after removing ESM import/export, not Node runtime"
+    }
+  },
+  "runtime_gates": {
+    "node_tests": "NOT_RUN",
+    "tsc": "NOT_RUN",
+    "native_sdk_invocation": "NOT_RUN",
+    "mcp_protocol": "NOT_RUN",
+    "complete_artifact_collection": "NOT_IMPLEMENTED",
+    "input_isolation_for_general_caller": "NOT_IMPLEMENTED"
+  },
+  "verdict": "D06_D07_SOURCE_PARTIAL_NODE_AND_HOST_REQUIRED"
+}

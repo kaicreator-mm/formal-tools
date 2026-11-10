@@ -1,0 +1,57 @@
+{
+  "schema": "formal-tools-r1-integration-source-audit/1",
+  "repository": "kaicreator-mm/formal-tools",
+  "previous_native_runner": "PR #9 merged exact SHA fc8899a6b3fc69636fffdfbd17fc74f8b4fb63e4",
+  "previous_main_merge": "41925288dd5b777d49c4e442d9731581895cb037",
+  "previous_ci": "Woodpecker #9/#10 SUCCESS; 52/52 Linux Node tests, exact SHA fc8899a6b3fc69636fffdfbd17fc74f8b4fb63e4",
+  "integration_source_tree": "a74a1615380fef75609fdf8f1e3a47275e724c10",
+  "modules": [
+    "packages/runner/js/tool-workspace.mjs",
+    "packages/runner/js/artifact-collector.mjs",
+    "packages/runner/js/compatibility-matrix.mjs",
+    "packages/runner/js/sdk.mjs"
+  ],
+  "tool_only": true,
+  "input_staging": {
+    "source": "explicit caller-provided relative files",
+    "no_auto_dependencies": true,
+    "symlinks": "reject",
+    "limits": "maxFiles/maxDepth/maxBytes",
+    "cleanup": "finally",
+    "os_sandbox": false
+  },
+  "artifact_inventory": {
+    "before": "COMPLETE required",
+    "after": "COMPLETE/PARTIAL",
+    "never_started": "NOT_COLLECTED",
+    "timeout": "PARTIAL",
+    "files": "relative paths and hashes only"
+  },
+  "sdk": {
+    "public_method": "invokeStagedTool",
+    "native_raw_passthrough": false,
+    "mcp_raw_passthrough": false,
+    "platform": "trusted Node host",
+    "business_claims": false
+  },
+  "previous_pure_checks": {
+    "input_manifest_and_deltas": 917,
+    "artifact_deltas_prior": 223,
+    "compatibility_prior": 210
+  },
+  "new_source_checks": {
+    "module_parsing": "PASS (V8 imports removed; not Node)",
+    "execution_mock": "NOT_RUN",
+    "node_tests": "NOT_RUN_ON_NEW_TREE",
+    "tsc": "NOT_RUN_ON_NEW_TREE",
+    "native_engines": "NOT_RUN",
+    "remote_ci": "NOT_RUN_ON_NEW_TREE"
+  },
+  "test_files": [
+    "tests/staged-sdk.test.mjs",
+    "tests/tool-workspace.test.mjs",
+    "tests/artifact-collector.test.mjs",
+    "tests/compatibility-matrix.test.mjs"
+  ],
+  "decision": "SOURCE_INTEGRATION_READY_PENDING_NODE_CI_AND_TYPECHECK_AT_EXACT_SHA"
+}

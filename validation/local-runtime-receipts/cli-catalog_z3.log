@@ -1,0 +1,53 @@
+{
+  "id": "z3",
+  "title": "Z3",
+  "entries": [
+    "z3"
+  ],
+  "operations": {
+    "solve": {
+      "entry": "z3",
+      "required": [
+        "input"
+      ],
+      "options": {
+        "timeout": {
+          "type": "integer",
+          "values": null,
+          "min": 1,
+          "max": 120000
+        },
+        "seed": {
+          "type": "integer",
+          "values": null,
+          "min": 0,
+          "max": 2147483647
+        }
+      }
+    },
+    "dimacs": {
+      "entry": "z3",
+      "required": [
+        "input"
+      ],
+      "options": {
+        "timeout": {
+          "type": "integer",
+          "values": null,
+          "min": 1,
+          "max": 120000
+        }
+      }
+    }
+  },
+  "documentation": "https://github.com/Z3Prover/z3",
+  "coverage": "typed operations plus trusted-local upstream argument pass-through; runtime depends on installed release",
+  "runtime": {
+    "kind": "binary",
+    "command": "z3",
+    "probeArgs": [
+      "-version"
+    ]
+  }
+}
+EXIT=0

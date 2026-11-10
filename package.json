@@ -16,7 +16,9 @@
     "formal:test": "node --test tests/*.test.mjs",
     "formal:mcp": "node packages/runner/js/mcp.mjs",
     "typecheck": "tsc --noEmit",
-    "formal:native-acceptance": "node scripts/native-acceptance.mjs"
+    "formal:native-acceptance": "node scripts/native-acceptance.mjs",
+    "formal:info": "node packages/runner/js/cli.mjs info",
+    "formal:where": "node packages/runner/js/cli.mjs where"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "^2.0.0",
@@ -25,5 +27,6 @@
   "devDependencies": {
     "typescript": "^5.9.0",
     "@types/node": "^24.0.0"
-  }
+  },
+  "description": "General-purpose maintenance, diagnostics, CLI/MCP, and JS tooling for formal and logic engines"
 }

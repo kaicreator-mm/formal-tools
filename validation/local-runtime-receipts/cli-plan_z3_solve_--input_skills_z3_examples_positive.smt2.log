@@ -1,0 +1,12 @@
+{
+  "tool": "z3",
+  "operation": "solve",
+  "entry": "z3",
+  "args": [
+    "-smt2",
+    "skills/z3/examples/positive.smt2"
+  ],
+  "mode": "typed",
+  "runtime": "NOT_RUN"
+}
+EXIT=0

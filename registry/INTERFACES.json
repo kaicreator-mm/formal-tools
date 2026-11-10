@@ -23,7 +23,8 @@
     "run_formal_fixture",
     "verify_formal_model",
     "describe_native_cli",
-    "plan_native_cli"
+    "plan_native_cli",
+    "inspect_native_installation"
   ],
   "pure_engines": [
     "dag",
@@ -70,7 +71,11 @@
     "doctor",
     "run",
     "suite",
-    "pure"
+    "pure",
+    "info",
+    "where",
+    "doctor-all",
+    "invoke"
   ],
   "native_cli": {
     "catalog": "packages/runner/js/native-catalog.mjs",
@@ -80,5 +85,21 @@
     "mcp_raw_execution": false,
     "local_acceptance": "validation/LOCAL_NATIVE_ACCEPTANCE.md",
     "status": "PLAN_TESTED_NATIVE_NOT_RUN"
+  },
+  "tool_manager": {
+    "profile_source": "packages/runner/js/native-catalog.mjs",
+    "module": "packages/runner/js/tool-manager.mjs",
+    "static_diagnostics": "FOUND_NOT_PROBED|MISSING_EXECUTABLE|NEEDS_CONFIGURATION|MISSING_DEPENDENCY_FILE|WINDOWS_WRAPPER_UNSUPPORTED",
+    "status": "SOURCE_IMPLEMENTED_JS_PLANNING_TESTED_NODE_NOT_RUN",
+    "development_plan": "docs/implementation/r1/DEVELOPMENT_PLAN.md"
+  },
+  "tool_sdk": {
+    "source": "packages/runner/js/sdk.mjs",
+    "interface": "ToolInvocation / ToolExecutionResult",
+    "schema": "registry/TOOL_EXECUTION_RESULT.schema.json",
+    "maturity": "EXPERIMENTAL_SOURCE_ONLY_NODE_NOT_RUN",
+    "native_raw_command": false,
+    "mcp_raw_command": false,
+    "execution_environment": "TRUSTED_NODE_HOST"
   }
 }

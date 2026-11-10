@@ -1,0 +1,1066 @@
+{
+  "schema": "formal-native-local-acceptance/1",
+  "written_at": "2026-11-10T04:32:25.765Z",
+  "tool_runtime": "ACTUAL_HOST_ATTEMPT",
+  "tool_count": 13,
+  "candidate": 0,
+  "blocked": 13,
+  "evidence": [
+    {
+      "tool": "lean4",
+      "version": {
+        "tool": "lean4",
+        "run_status": "NOT_RUN",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "lean",
+          "--version"
+        ],
+        "exit_code": null,
+        "signal": null,
+        "elapsed_ms": 4,
+        "timed_out": false,
+        "stdout": "",
+        "stderr": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": "spawn lean ENOENT",
+        "output_truncated": false
+      },
+      "positive": {
+        "tool": "lean4",
+        "case": "positive",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "Negative.lean": "94004fe7effd819763915d2bf22d1878622e7712e21da89aa4fcd5c0bf5314cd",
+          "Positive.lean": "e63b7a1da0241153cff46ed4dda3ffa58531d3d5db1c7eeca70ea71ac6736c29"
+        },
+        "executions": [
+          {
+            "argv": [
+              "lean",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-TLnHSR\\examples\\Positive.lean"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 3,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn lean ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "lean4",
+        "case": "negative",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "Negative.lean": "94004fe7effd819763915d2bf22d1878622e7712e21da89aa4fcd5c0bf5314cd",
+          "Positive.lean": "e63b7a1da0241153cff46ed4dda3ffa58531d3d5db1c7eeca70ea71ac6736c29"
+        },
+        "executions": [
+          {
+            "argv": [
+              "lean",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-rKFxai\\examples\\Negative.lean"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 2,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn lean ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "acceptance": "BLOCK_OR_REPAIR"
+    },
+    {
+      "tool": "z3",
+      "version": {
+        "tool": "z3",
+        "run_status": "NOT_RUN",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "z3",
+          "-version"
+        ],
+        "exit_code": null,
+        "signal": null,
+        "elapsed_ms": 3,
+        "timed_out": false,
+        "stdout": "",
+        "stderr": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": "spawn z3 ENOENT",
+        "output_truncated": false
+      },
+      "positive": {
+        "tool": "z3",
+        "case": "positive",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.smt2": "137366ea277f3908fd6f9d7e50d9ed48729d0c1f95e7d9c76ed9fd51852e3b8f",
+          "positive.smt2": "ad656e3f970926420c3cb999f34b64593a020844cf4fcde79b7ed391e8ac5b4c"
+        },
+        "executions": [
+          {
+            "argv": [
+              "z3",
+              "-smt2",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-gvep45\\examples\\positive.smt2"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 3,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn z3 ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "z3",
+        "case": "negative",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.smt2": "137366ea277f3908fd6f9d7e50d9ed48729d0c1f95e7d9c76ed9fd51852e3b8f",
+          "positive.smt2": "ad656e3f970926420c3cb999f34b64593a020844cf4fcde79b7ed391e8ac5b4c"
+        },
+        "executions": [
+          {
+            "argv": [
+              "z3",
+              "-smt2",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-60hjYI\\examples\\negative.smt2"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 3,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn z3 ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "acceptance": "BLOCK_OR_REPAIR"
+    },
+    {
+      "tool": "cvc5",
+      "version": {
+        "tool": "cvc5",
+        "run_status": "NOT_RUN",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "cvc5",
+          "--version"
+        ],
+        "exit_code": null,
+        "signal": null,
+        "elapsed_ms": 3,
+        "timed_out": false,
+        "stdout": "",
+        "stderr": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": "spawn cvc5 ENOENT",
+        "output_truncated": false
+      },
+      "positive": {
+        "tool": "cvc5",
+        "case": "positive",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.smt2": "137366ea277f3908fd6f9d7e50d9ed48729d0c1f95e7d9c76ed9fd51852e3b8f",
+          "positive.smt2": "ad656e3f970926420c3cb999f34b64593a020844cf4fcde79b7ed391e8ac5b4c"
+        },
+        "executions": [
+          {
+            "argv": [
+              "cvc5",
+              "--lang",
+              "smt2",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-whme7q\\examples\\positive.smt2"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 3,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn cvc5 ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "cvc5",
+        "case": "negative",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.smt2": "137366ea277f3908fd6f9d7e50d9ed48729d0c1f95e7d9c76ed9fd51852e3b8f",
+          "positive.smt2": "ad656e3f970926420c3cb999f34b64593a020844cf4fcde79b7ed391e8ac5b4c"
+        },
+        "executions": [
+          {
+            "argv": [
+              "cvc5",
+              "--lang",
+              "smt2",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-l4OqBq\\examples\\negative.smt2"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 3,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn cvc5 ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "acceptance": "BLOCK_OR_REPAIR"
+    },
+    {
+      "tool": "tla-tlc",
+      "version": {
+        "tool": "tla-tlc",
+        "run_status": "NOT_RUN",
+        "version_verdict": "UNVERIFIED",
+        "error": "TypeError: Missing tool configuration for tla-tlc: TLA2TOOLS_JAR"
+      },
+      "positive": {
+        "tool": "tla-tlc",
+        "case": "positive",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "ERROR",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "error": "TypeError: TLA2TOOLS_JAR must point to an installed jar"
+      },
+      "negative": {
+        "tool": "tla-tlc",
+        "case": "negative",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "ERROR",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "error": "TypeError: TLA2TOOLS_JAR must point to an installed jar"
+      },
+      "acceptance": "BLOCK_OR_REPAIR"
+    },
+    {
+      "tool": "apalache",
+      "version": {
+        "tool": "apalache",
+        "run_status": "NOT_RUN",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "apalache-mc",
+          "version"
+        ],
+        "exit_code": null,
+        "signal": null,
+        "elapsed_ms": 2,
+        "timed_out": false,
+        "stdout": "",
+        "stderr": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": "spawn apalache-mc ENOENT",
+        "output_truncated": false
+      },
+      "positive": {
+        "tool": "apalache",
+        "case": "positive",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "ToggleNegative.tla": "8ac58dcb2bb867f910339f7ed0b0b60b074c29c533dd90adff554d958ce0b6ee",
+          "TogglePositive.tla": "d184695edd8eb3b74d3d9f05b41269a6fddc4dbb355028f845fb23e5c61fc7c2"
+        },
+        "executions": [
+          {
+            "argv": [
+              "apalache-mc",
+              "check",
+              "--init=Init",
+              "--next=Next",
+              "--inv=Inv",
+              "--length=3",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-g9uUuF\\examples\\TogglePositive.tla"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 3,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn apalache-mc ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "apalache",
+        "case": "negative",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "ToggleNegative.tla": "8ac58dcb2bb867f910339f7ed0b0b60b074c29c533dd90adff554d958ce0b6ee",
+          "TogglePositive.tla": "d184695edd8eb3b74d3d9f05b41269a6fddc4dbb355028f845fb23e5c61fc7c2"
+        },
+        "executions": [
+          {
+            "argv": [
+              "apalache-mc",
+              "check",
+              "--init=Init",
+              "--next=Next",
+              "--inv=Inv",
+              "--length=3",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-3C9mGO\\examples\\ToggleNegative.tla"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 3,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn apalache-mc ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "acceptance": "BLOCK_OR_REPAIR"
+    },
+    {
+      "tool": "alloy",
+      "version": {
+        "tool": "alloy",
+        "run_status": "NOT_RUN",
+        "version_verdict": "UNVERIFIED",
+        "error": "TypeError: Missing tool configuration for alloy: FORMAL_ALLOY_JAR or FORMAL_ALLOY_BIN"
+      },
+      "positive": {
+        "tool": "alloy",
+        "case": "positive",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "ERROR",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "error": "TypeError: Configure FORMAL_ALLOY_JAR or FORMAL_ALLOY_BIN for Alloy Analyzer"
+      },
+      "negative": {
+        "tool": "alloy",
+        "case": "negative",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "ERROR",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "error": "TypeError: Configure FORMAL_ALLOY_JAR or FORMAL_ALLOY_BIN for Alloy Analyzer"
+      },
+      "acceptance": "BLOCK_OR_REPAIR"
+    },
+    {
+      "tool": "souffle",
+      "version": {
+        "tool": "souffle",
+        "run_status": "NOT_RUN",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "souffle",
+          "--version"
+        ],
+        "exit_code": null,
+        "signal": null,
+        "elapsed_ms": 2,
+        "timed_out": false,
+        "stdout": "",
+        "stderr": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": "spawn souffle ENOENT",
+        "output_truncated": false
+      },
+      "positive": {
+        "tool": "souffle",
+        "case": "positive",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.dl": "f1a67b8c6f7cf450432ac235fefaf11921ca262f237e7484ac162c161201eadd",
+          "positive.dl": "2843f65dbd8156b02bd5eddbd99d5980d955372541cb69f317e981a0afe6db44"
+        },
+        "executions": [
+          {
+            "argv": [
+              "souffle",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-gNZkXM\\examples\\positive.dl",
+              "-D",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-gNZkXM"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 3,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn souffle ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "souffle",
+        "case": "negative",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.dl": "f1a67b8c6f7cf450432ac235fefaf11921ca262f237e7484ac162c161201eadd",
+          "positive.dl": "2843f65dbd8156b02bd5eddbd99d5980d955372541cb69f317e981a0afe6db44"
+        },
+        "executions": [
+          {
+            "argv": [
+              "souffle",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-TtchpR\\examples\\negative.dl",
+              "-D",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-TtchpR"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 3,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn souffle ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "acceptance": "BLOCK_OR_REPAIR"
+    },
+    {
+      "tool": "rdf-shacl",
+      "version": {
+        "tool": "rdf-shacl",
+        "run_status": "EXECUTED",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "python3",
+          "-m",
+          "pyshacl",
+          "--help"
+        ],
+        "exit_code": 1,
+        "signal": null,
+        "elapsed_ms": 26,
+        "timed_out": false,
+        "stdout": "",
+        "stderr": "C:/msys64/ucrt64/bin/python3.exe: No module named pyshacl\r\n",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "d7a20167f94a4f44758785e618b4582e0466ae180f7f5effa50bae94beb104cb",
+        "error": null,
+        "output_truncated": false
+      },
+      "positive": {
+        "tool": "rdf-shacl",
+        "case": "positive",
+        "run_status": "EXECUTED",
+        "tool_outcome": "UNPARSED",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.ttl": "32e90bcbeec669fe0c588c74210f75d4e711cc3b33ff3ce9fb932062a6f5ac74",
+          "positive.ttl": "7748872b8800e4a4897df14dde576a2573ca0c73fb5913997574bfb93b3fe033",
+          "shapes.ttl": "2b36cb370f4d1630103d111a77e8cf53bbd00746a552528f524af712f52e2adc"
+        },
+        "executions": [
+          {
+            "argv": [
+              "python3",
+              "-m",
+              "pyshacl",
+              "-s",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-phA3cI\\examples\\shapes.ttl",
+              "-df",
+              "turtle",
+              "-sf",
+              "turtle",
+              "-f",
+              "human",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-phA3cI\\examples\\positive.ttl"
+            ],
+            "exit_code": 1,
+            "signal": null,
+            "elapsed_ms": 25,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "C:/msys64/ucrt64/bin/python3.exe: No module named pyshacl\r\n",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "d7a20167f94a4f44758785e618b4582e0466ae180f7f5effa50bae94beb104cb",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "rdf-shacl",
+        "case": "negative",
+        "run_status": "EXECUTED",
+        "tool_outcome": "UNPARSED",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.ttl": "32e90bcbeec669fe0c588c74210f75d4e711cc3b33ff3ce9fb932062a6f5ac74",
+          "positive.ttl": "7748872b8800e4a4897df14dde576a2573ca0c73fb5913997574bfb93b3fe033",
+          "shapes.ttl": "2b36cb370f4d1630103d111a77e8cf53bbd00746a552528f524af712f52e2adc"
+        },
+        "executions": [
+          {
+            "argv": [
+              "python3",
+              "-m",
+              "pyshacl",
+              "-s",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-oSzbNG\\examples\\shapes.ttl",
+              "-df",
+              "turtle",
+              "-sf",
+              "turtle",
+              "-f",
+              "human",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-oSzbNG\\examples\\negative.ttl"
+            ],
+            "exit_code": 1,
+            "signal": null,
+            "elapsed_ms": 28,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "C:/msys64/ucrt64/bin/python3.exe: No module named pyshacl\r\n",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "d7a20167f94a4f44758785e618b4582e0466ae180f7f5effa50bae94beb104cb",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "acceptance": "BLOCK_OR_REPAIR"
+    },
+    {
+      "tool": "vampire",
+      "version": {
+        "tool": "vampire",
+        "run_status": "NOT_RUN",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "vampire",
+          "--help"
+        ],
+        "exit_code": null,
+        "signal": null,
+        "elapsed_ms": 3,
+        "timed_out": false,
+        "stdout": "",
+        "stderr": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": "spawn vampire ENOENT",
+        "output_truncated": false
+      },
+      "positive": {
+        "tool": "vampire",
+        "case": "positive",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.p": "6718f38aafa23cc217acb9557f3d44019227ece581035f9851c96a971530ffa0",
+          "positive.p": "f580353cbc5a6f67a52419bacc91fce8c35c40fab2009735fa868deae232101d"
+        },
+        "executions": [
+          {
+            "argv": [
+              "vampire",
+              "--mode",
+              "casc",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-cihcO9\\examples\\positive.p"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 2,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn vampire ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "vampire",
+        "case": "negative",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.p": "6718f38aafa23cc217acb9557f3d44019227ece581035f9851c96a971530ffa0",
+          "positive.p": "f580353cbc5a6f67a52419bacc91fce8c35c40fab2009735fa868deae232101d"
+        },
+        "executions": [
+          {
+            "argv": [
+              "vampire",
+              "--mode",
+              "casc",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-xV6om7\\examples\\negative.p"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 2,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn vampire ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "acceptance": "BLOCK_OR_REPAIR"
+    },
+    {
+      "tool": "clingo",
+      "version": {
+        "tool": "clingo",
+        "run_status": "EXECUTED",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "python3",
+          "-m",
+          "clingo",
+          "--help"
+        ],
+        "exit_code": 1,
+        "signal": null,
+        "elapsed_ms": 25,
+        "timed_out": false,
+        "stdout": "",
+        "stderr": "C:/msys64/ucrt64/bin/python3.exe: No module named clingo\r\n",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "de2b98ecd88d986af206bc643582cee2bda1faaefed869c465d42a5b96826dfe",
+        "error": null,
+        "output_truncated": false
+      },
+      "positive": {
+        "tool": "clingo",
+        "case": "positive",
+        "run_status": "EXECUTED",
+        "tool_outcome": "UNPARSED",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.lp": "47279060e2df8260348e6449efb0138307fbe0c9bc0f67bee93afa141af19cd2",
+          "positive.lp": "90855bc8b78d7d780be341df93882f0b5ee9e432c1410a24ce03671d0eb39575"
+        },
+        "executions": [
+          {
+            "argv": [
+              "python3",
+              "-m",
+              "clingo",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-DcvF7r\\examples\\positive.lp",
+              "0"
+            ],
+            "exit_code": 1,
+            "signal": null,
+            "elapsed_ms": 26,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "C:/msys64/ucrt64/bin/python3.exe: No module named clingo\r\n",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "de2b98ecd88d986af206bc643582cee2bda1faaefed869c465d42a5b96826dfe",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "clingo",
+        "case": "negative",
+        "run_status": "EXECUTED",
+        "tool_outcome": "UNPARSED",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.lp": "47279060e2df8260348e6449efb0138307fbe0c9bc0f67bee93afa141af19cd2",
+          "positive.lp": "90855bc8b78d7d780be341df93882f0b5ee9e432c1410a24ce03671d0eb39575"
+        },
+        "executions": [
+          {
+            "argv": [
+              "python3",
+              "-m",
+              "clingo",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-PeTjIa\\examples\\negative.lp",
+              "0"
+            ],
+            "exit_code": 1,
+            "signal": null,
+            "elapsed_ms": 25,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "C:/msys64/ucrt64/bin/python3.exe: No module named clingo\r\n",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "de2b98ecd88d986af206bc643582cee2bda1faaefed869c465d42a5b96826dfe",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "acceptance": "BLOCK_OR_REPAIR"
+    },
+    {
+      "tool": "apache-jena",
+      "version": {
+        "tool": "apache-jena",
+        "run_status": "NOT_RUN",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "riot",
+          "--help"
+        ],
+        "exit_code": null,
+        "signal": null,
+        "elapsed_ms": 3,
+        "timed_out": false,
+        "stdout": "",
+        "stderr": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": "spawn riot ENOENT",
+        "output_truncated": false
+      },
+      "positive": {
+        "tool": "apache-jena",
+        "case": "positive",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "data.ttl": "4b8b0ee3bec844001e072cb3026e339cda45f5254a59b5d1a2d94eaf784e413e",
+          "invalid.ttl": "29e2e7a26aeb20bb5ccfd1904ca4f792cbd487a34905ea52f14df2d0e10dc033",
+          "query.rq": "adbe1b3fb0e14542ce6ffa0f6d90d9a3e6c5bba08d7d3259d1b72a825bf0e71a"
+        },
+        "executions": [
+          {
+            "argv": [
+              "riot",
+              "--validate",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-96Youd\\examples\\data.ttl"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 2,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn riot ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "apache-jena",
+        "case": "negative",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "data.ttl": "4b8b0ee3bec844001e072cb3026e339cda45f5254a59b5d1a2d94eaf784e413e",
+          "invalid.ttl": "29e2e7a26aeb20bb5ccfd1904ca4f792cbd487a34905ea52f14df2d0e10dc033",
+          "query.rq": "adbe1b3fb0e14542ce6ffa0f6d90d9a3e6c5bba08d7d3259d1b72a825bf0e71a"
+        },
+        "executions": [
+          {
+            "argv": [
+              "riot",
+              "--validate",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-YgxXOt\\examples\\invalid.ttl"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 2,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn riot ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "acceptance": "BLOCK_OR_REPAIR"
+    },
+    {
+      "tool": "prob",
+      "version": {
+        "tool": "prob",
+        "run_status": "NOT_RUN",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "probcli",
+          "-version"
+        ],
+        "exit_code": null,
+        "signal": null,
+        "elapsed_ms": 2,
+        "timed_out": false,
+        "stdout": "",
+        "stderr": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": "spawn probcli ENOENT",
+        "output_truncated": false
+      },
+      "positive": {
+        "tool": "prob",
+        "case": "positive",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "Negative.mch": "9a84b949ec8f94bf19e353446c0de6f5829329439c7c4e91d78a3cf2e82ce081",
+          "Positive.mch": "a0641019aed858f64eef99d696c08f2cb67be0bc975a699325de01fb13449718"
+        },
+        "executions": [
+          {
+            "argv": [
+              "probcli",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-BPGKUY\\examples\\Positive.mch",
+              "-model_check"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 3,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn probcli ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "prob",
+        "case": "negative",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "Negative.mch": "9a84b949ec8f94bf19e353446c0de6f5829329439c7c4e91d78a3cf2e82ce081",
+          "Positive.mch": "a0641019aed858f64eef99d696c08f2cb67be0bc975a699325de01fb13449718"
+        },
+        "executions": [
+          {
+            "argv": [
+              "probcli",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-0NlrwM\\examples\\Negative.mch",
+              "-model_check"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 2,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn probcli ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "acceptance": "BLOCK_OR_REPAIR"
+    },
+    {
+      "tool": "dafny",
+      "version": {
+        "tool": "dafny",
+        "run_status": "NOT_RUN",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "dafny",
+          "--version"
+        ],
+        "exit_code": null,
+        "signal": null,
+        "elapsed_ms": 2,
+        "timed_out": false,
+        "stdout": "",
+        "stderr": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": "spawn dafny ENOENT",
+        "output_truncated": false
+      },
+      "positive": {
+        "tool": "dafny",
+        "case": "positive",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "Negative.dfy": "1bac9dad70d7fbbe96b0de4045cbdbb1b9f1614560758aff529af2eb4d8a4938",
+          "Positive.dfy": "65498e80ba1c161820723d045afbc45fec9c9cb5be3f7b2452519ea9f739d691"
+        },
+        "executions": [
+          {
+            "argv": [
+              "dafny",
+              "verify",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-m0u2Ru\\examples\\Positive.dfy"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 3,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn dafny ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "dafny",
+        "case": "negative",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "Negative.dfy": "1bac9dad70d7fbbe96b0de4045cbdbb1b9f1614560758aff529af2eb4d8a4938",
+          "Positive.dfy": "65498e80ba1c161820723d045afbc45fec9c9cb5be3f7b2452519ea9f739d691"
+        },
+        "executions": [
+          {
+            "argv": [
+              "dafny",
+              "verify",
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-O8blxy\\examples\\Negative.dfy"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 3,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn dafny ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "acceptance": "BLOCK_OR_REPAIR"
+    }
+  ],
+  "warning": "CANDIDATE_FOR_REVIEW requires exact SHA/version and independent CLI semantics review; this script does not claim project-level proof."
+}

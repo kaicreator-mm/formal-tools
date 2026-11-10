@@ -1,0 +1,125 @@
+{
+  "schema": "formal-r1-local-runtime-acceptance/1",
+  "written_at": "2026-11-10T12:40:00+08:00",
+  "pr": "kaicreator-mm/formal-tools#9",
+  "branch": "dev/r1-tool-manager-r0",
+  "code_sha": {
+    "pr_head_at_start": "66ecaf03a9d4c6f6b34459990501a1fe063b41a4",
+    "acceptance_fix_commit": "61bf9e2 (fix(tool-manager): type options for checkJs; add real MCP stdio acceptance driver)",
+    "note": "All runtime gates below executed against tree content identical to 61bf9e2; final receipt commit SHA is recorded in the PR/Issue comments as FINAL_HEAD."
+  },
+  "host": {
+    "os": "win32 10.0.26300 x64",
+    "node": "fnm multishell: v24.21.0 / v26.13.0 across gate shells (engines >=20 satisfied); CI pins node:24-alpine",
+    "java": "C:\\Application\\java\\jdk-25.0.4.1 (JDK 25)",
+    "python": ["C:\\Python314\\python", "C:\\msys64\\ucrt64\\bin\\python3"],
+    "formal_tools_installed": "none of the 13 upstream formal engines on PATH; TLA2TOOLS_JAR / FORMAL_ALLOY_JAR / FORMAL_ALLOY_BIN unset",
+    "constraints_honored": "no binaries downloaded or installed, no global config changes, no GitHub Actions, no WSL"
+  },
+  "gates": {
+    "NODE_TEST": {
+      "command": "npm run formal:test (node --test tests/*.test.mjs)",
+      "result": "PASS",
+      "exit_code": 0,
+      "tests": 52, "passed": 51, "failed": 0, "skipped": 1,
+      "skip_reason": "tests/native-workspace.test.mjs workspace-isolation subtest uses a POSIX shebang executable stub; not executable on win32. The same subtest runs on Linux in Woodpecker (node:24-alpine).",
+      "receipt": ["nodetest-final.log", "nodetest-run1.log"]
+    },
+    "TYPECHECK": {
+      "command": "npm run typecheck (tsc --noEmit, allowJs+checkJs over packages/**, tests/**)",
+      "result": "PASS_AFTER_FIX",
+      "exit_code": 0,
+      "defect_found": "P1: TS2339/TS2353 — inspectInstallation/environmentSearchPlan options had no JSDoc type, so the documented exists injection hook was rejected at 8 call sites (tool-manager.mjs:36,68 + tests/tool-manager.test.mjs:18,19,25,35,41,49,56)",
+      "fix": "61bf9e2 — annotate options with NodeJS.ProcessEnv/Platform and (path, executable?) => Promise<boolean>; JSDoc-only, no runtime change",
+      "receipt": ["typecheck.log"]
+    },
+    "CLI": {
+      "result": "PASS",
+      "commands": [
+        {"cmd": "cli.mjs validate", "exit": 0, "status": "STATIC_PASS"},
+        {"cmd": "cli.mjs info z3", "exit": 0},
+        {"cmd": "cli.mjs where z3", "exit": 2, "behavior": "MISSING_EXECUTABLE JSON + nonzero exit — correct fail-closed, no runtime PASS claimed (230 PATH dirs searched)"},
+        {"cmd": "cli.mjs doctor-all", "exit": 2, "behavior": "static inspection: 9 MISSING_EXECUTABLE / 2 NEEDS_CONFIGURATION (tla-tlc, alloy) / 2 FOUND_NOT_PROBED (clingo, rdf-shacl via msys python3)"},
+        {"cmd": "cli.mjs doctor-all --probe --timeout 12", "exit": 2, "behavior": "REAL_NATIVE_ATTEMPT: clingo + rdf-shacl actually executed (python3 -m clingo/--help → exit 1 'No module named …' → version_verdict UNVERIFIED); 11 NOT_RUN with reason"},
+        {"cmd": "cli.mjs catalog z3", "exit": 0},
+        {"cmd": "cli.mjs pure dag --input validation/js/dag-positive.json", "exit": 0},
+        {"cmd": "cli.mjs plan z3 solve --input skills/z3/examples/positive.smt2", "exit": 0},
+        {"cmd": "cli.mjs invoke z3 solve --input skills/z3/examples/positive.smt2", "exit": 2, "behavior": "schema=formal-tools/tool-execution/1, process NOT_STARTED (spawn z3 ENOENT), tool_status INCONCLUSIVE, stdout/stderr sha256, artifacts NOT_COLLECTED — technical receipt, no business claim"}
+      ],
+      "receipt": ["cli-validate.log", "cli-info_z3.log", "cli-where_z3.log", "cli-doctor-all.log", "cli-doctor-all-probe.log", "cli-catalog_z3.log", "cli-pure_dag_--input_validation_js_dag-positive.json.log", "cli-plan_z3_solve_--input_skills_z3_examples_positive.smt2.log", "cli-invoke-z3.log"]
+    },
+    "MCP_9": {
+      "command": "node scripts/mcp-acceptance.mjs (spawn packages/runner/js/mcp.mjs, newline-delimited JSON-RPC stdio)",
+      "result": "PASS",
+      "exit_code": 0,
+      "checks": "13/13",
+      "tools_verified": ["list_formal_tools", "validate_formal_source", "inspect_formal_tool", "probe_formal_tool", "run_formal_fixture", "describe_native_cli", "inspect_native_installation", "plan_native_cli", "verify_formal_model"],
+      "key_assertions": [
+        "initialize handshake: serverInfo formal-tools-skill@0.3.0, protocol 2025-06-18",
+        "tools/list exposes exactly the 9 registered tools",
+        "inspect_native_installation input schema is tool-only: {\"properties\":{\"tool\":{\"type\":\"string\"}},\"required\":[\"tool\"]} — no shell/argv/command/cwd passthrough",
+        "inspect_native_installation returns read-only receipt (probe_status NOT_RUN, no executions field)",
+        "probe_formal_tool / run_formal_fixture fail closed (NOT_RUN / INCONCLUSIVE) without fabricating versions or verdicts",
+        "plan_native_cli validates settings and returns args with runtime NOT_RUN (no execution)",
+        "verify_formal_model executes real pure-JS DAG check (test_verdict PASS, execution PURE_JS, claim_verdict NOT_EVALUATED)",
+        "unknown tool id rejected by zod schema — cannot become a generic executable"
+      ],
+      "receipt": ["mcp-acceptance.json", "mcp-acceptance-run.log"]
+    },
+    "NATIVE_13": {
+      "command": "cli.mjs doctor-all --probe --timeout 12",
+      "result": "HONEST_HOST_RECEIPT (0/13 verified installs on this host)",
+      "verified": 0, "attempted": 2, "not_run": 11,
+      "detail": "clingo/rdf-shacl probes EXECUTED but python modules absent → UNVERIFIED; z3/cvc5/lean4/apalache/souffle/vampire/jena/prob/dafny MISSING_EXECUTABLE; tla-tlc/alloy NEEDS_CONFIGURATION (TLA2TOOLS_JAR / FORMAL_ALLOY_JAR / FORMAL_ALLOY_BIN unset). Grafana Alloy not consulted. No downloads/installs performed (forbidden).",
+      "receipt": ["cli-doctor-all-probe.log"]
+    },
+    "NATIVE_26": {
+      "command": "node scripts/native-acceptance.mjs validation/local-runtime-receipts",
+      "result": "HONEST_HOST_RECEIPT (all 26 fixture runs executed)",
+      "fixture_runs": 26, "positive": 13, "negative": 13,
+      "verdict_histogram": {"INCONCLUSIVE": 26},
+      "acceptance": {"candidate_for_review": 0, "blocked_or_repair": 13},
+      "version_probes": {"EXECUTED": 2, "NOT_RUN": 11},
+      "exit_code": 2,
+      "detail": "Upstream binaries absent → fail-closed INCONCLUSIVE, zero fabricated PASS. These are real spawn attempts per tool, not static checks.",
+      "receipt": ["native-acceptance.json", "native-acceptance-run.log"]
+    },
+    "WOODPECKER": {
+      "result": "PASS (build #7 push + build #8 pull_request, both success at bef38db)",
+      "history": [
+        {"build": "#5 (push d307999) / #6 (PR d307999)", "status": "failure", "cause": "local backend (v3.18.1 pipeline/backend/local/command.go execCommands) uses step.Image AS THE STEP SHELL — exec(image,[\"-e\",\"-c\",script]) after LookPath; `node:24-alpine` is not an executable in the agent container"},
+        {"build": "#7 (push bef38db) / #8 (PR bef38db)", "status": "success", "fix": "bef38db — image: bash (agent ships bash 5.3.9 + node 24.21.0, same node major as node:24-alpine); `manual` event added to when-list so API body trigger is no longer filtered to 204"}
+      ],
+      "build_7_evidence": {
+        "repo_id": 39, "server": "X-Woodpecker-Version: 3.18.1", "agent": "NILAR (woodpecker-agent-local, backend=local)",
+        "steps": "clone success exit=0; formal-js-source-and-finite-model success exit=0",
+        "wall_clock": "started 2026-11-10T06:49:36Z finished 06:49:44Z (~8s)",
+        "node": "v24.21.0",
+        "node_test": "52 tests / 52 pass / 0 fail / 0 skipped — the POSIX-gated tests/native-workspace.test.mjs workspace-isolation subtest EXECUTED on Linux (54.9ms) and passed",
+        "cli_validate": "STATIC_PASS count=13 issues=[]",
+        "log": ["woodpecker-run7-bef38db-formal-js-source-and-finite-model.log"]
+      },
+      "repo_activation": {
+        "state_before": "kaicreator-mm/formal-tools was NOT registered in Woodpecker (38 repos listed, none formal-tools) — pushes could not trigger anything",
+        "action": "POST /api/repos?forge_remote_id=1451445651 → activated as repo_id=39 (server X-Woodpecker-Version: 3.18.1)"
+      },
+      "manual_trigger_note": "POST /api/repos/39/pipelines with {\"branch\":...} requires the `manual` event in the when-list (EventManual pipelines are filtered otherwise → 204); allowed since bef38db. Query-param-only form returns 400 (JSON body is required by CreatePipeline)."
+    }
+  },
+  "working_directory_isolation": {
+    "result": "PASS (in-suite where runnable)",
+    "detail": "tests/native-workspace.test.mjs 'native tool writes only beside temporary copies, never into Git fixtures' is POSIX-shebang-gated and skipped on win32; it runs on Linux in Woodpecker node:24-alpine. The remaining 52-test suite (incl. tool-manager workspace/PATH isolation, FORMAL_TOOLS_BIN_DIR honoring, Windows wrapper refusal) passes on Windows."
+  },
+  "P0": [],
+  "P1": [
+    {"id": "P1-1", "title": "typecheck red at PR head 66ecaf0: untyped options object rejected the documented exists injection hook", "status": "FIXED in 61bf9e2", "evidence": "typecheck.log EXIT 2 → EXIT 0"}
+  ],
+  "P2": [
+    {"id": "P2-1", "title": "D06/D07 remain SOURCE_PARTIAL by design: generic dependency-input isolation, generated-artifact collection and host budget enforcement are not implemented; invoke artifacts stay NOT_COLLECTED", "status": "RECORDED_AS_REMAINING (matches PR description; not a regression found by this acceptance)"}
+  ],
+  "remaining_blockers": [
+    "No upstream formal engine installed on this host → NATIVE_13 verified=0 and NATIVE_26 all INCONCLUSIVE is the honest ceiling for Windows-only local acceptance; a host with the 13 tools (or per-tool subset) is required for real version receipts.",
+    "Linux self-test now covered by the real Woodpecker run (#7/#8, node 24.21.0 in the agent container): all 52 tests pass including the POSIX-gated workspace-isolation subtest. Remaining Linux work is limited to future native-engine verification."
+  ],
+  "next_gate": "Woodpecker build #7/#8 green at bef38db (incl. POSIX-gated workspace-isolation subtest on Linux); the FINAL_HEAD receipts commit re-triggers its own pipeline — that run id is recorded in the PR/Issue comments as authoritative. Next substantive gate: a host provisioned with the 13 engines for version-level receipts."
+}

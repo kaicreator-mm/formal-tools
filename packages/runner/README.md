@@ -30,3 +30,13 @@ node packages/runner/js/cli.mjs native z3 -- -h
 ```
 
 New MCP interfaces `describe_native_cli` and `plan_native_cli` **return metadata/argv only**. Raw native execution remains local CLI only. Run `node --test tests/native-catalog.test.mjs` on a Node host; native acceptance uses `node scripts/native-acceptance.mjs` and requires actual binaries.
+
+## R1 Tool Manager and experimental SDK
+
+- `js/native-catalog.mjs` is the sole authoritative registry for the 13 tool IDs, upstream CLI entrypoints, 53 typed operations and runtime probe profiles.
+- `js/tool-manager.mjs` provides read-only PATH/JAR/Python/Windows-wrapper diagnostics; it does **not** install or launch any tool.
+- `js/sdk.mjs` is an **experimental trusted-Node** facade: `listTools`, `toolDetails`, `planTool`, `whereTool`, `whereAll`, `invokeTool`; its normalized technical result is in `js/tool-result.mjs`.
+- `js/cli.mjs invoke` uses the same SDK facade. It is **not** exposed as arbitrary native execution through MCP.
+- This experimental SDK is currently **source-only**. There is no stable npm export promise until Node/TS/native host acceptance and packaging review. Callers must prepare existing working directories and understand upstream tools may write beside input files; no general model dependency copy or artifact collection is claimed yet.
+
+[Tool Manager guide](../../docs/TOOL_MANAGER.md) · [Experimental SDK contract](../../docs/TOOL_SDK.md) · [R1 development plan](../../docs/implementation/r1/DEVELOPMENT_PLAN.md)

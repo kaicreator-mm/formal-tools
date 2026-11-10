@@ -1,12 +1,19 @@
 # Woodpecker 3.18 JS-only checks. No native proof binaries are required.
+# Our agents run backend=local: the local backend executes steps directly in the
+# agent container and uses `image` AS THE STEP SHELL binary (v3.18.1
+# execCommands → exec(image, ["-e","-c",script])), so it must be a shell that
+# exists on the agent's PATH. The agent image ships bash 5.3 + node 24.21.0 —
+# the same node major version node:24-alpine would provide.
 when:
-  - event: [push, pull_request]
+  - event: [push, pull_request, manual]
 steps:
   - name: formal-js-source-and-finite-model
-    image: node:24-alpine
+    image: bash
     commands:
-      - node --test tests/finite.test.mjs tests/runner.test.mjs tests/property.test.mjs tests/native-catalog.test.mjs
+      - node --version
+      - node --test tests/*.test.mjs
       - node packages/runner/js/cli.mjs validate
       - node packages/runner/js/cli.mjs pure dag --input validation/js/dag-positive.json
       - node packages/runner/js/cli.mjs catalog z3
+      - node packages/runner/js/cli.mjs info z3
       - node packages/runner/js/cli.mjs plan z3 solve --input skills/z3/examples/positive.smt2

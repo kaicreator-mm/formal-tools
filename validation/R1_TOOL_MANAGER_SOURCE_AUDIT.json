@@ -1,0 +1,64 @@
+{
+  "schema": "formal-tools-source-audit/1",
+  "repository": "kaicreator-mm/formal-tools",
+  "base_main_sha": "5bd8a552c61218d56408de12bb832a5b39f568a2",
+  "source_tree_before_receipt": "08848a2b57cf3f9a0d7a6c1977bfee16ce3f0501",
+  "files": {
+    ".woodpecker/formal-static.yaml": "b063295bfead624bd0914e53d6a135464d64d90e",
+    "packages/runner/js/cli.mjs": "ef0e969fa13f6ed556f5040e2cc96a3118f1fa31",
+    "packages/runner/js/mcp.mjs": "b852a2797e1af38964ca0a52628e7f3b9b78a73b",
+    "packages/runner/js/native-catalog.mjs": "ea3c7c93ba0be5fd3e2ed6de9d0e93ff58c1e88e",
+    "packages/runner/js/native.mjs": "9a90ebc59a5686685ce37ec8184945ada8d9c524",
+    "packages/runner/js/tool-manager.mjs": "da33129cc672e1fde612cd735c51d3764ce493fb",
+    "tests/tool-cli.test.mjs": "72cdf346969b2516856f37911d17bba3f4408f21",
+    "tests/tool-manager.test.mjs": "bc9be32b185163ad8371b8354ea66477b5cecfa5"
+  },
+  "scope": "D01-D05 source implementation; D06-D12 still planned",
+  "observations": {
+    "registry": {
+      "tool_ids": 13,
+      "typed_operations_preserved": 53,
+      "command_planning_checks": {
+        "passed": 139,
+        "failed": 0
+      }
+    },
+    "env_detection": {
+      "mocked_pure_js_checks": {
+        "passed": 35,
+        "failed": 0
+      },
+      "cases": [
+        "Linux PATH",
+        "FORMAL_TOOLS_BIN_DIR",
+        "Windows script-wrapper fail closed",
+        "TLA JAR missing",
+        "Alloy identity missing",
+        "Python module interpreter detection",
+        "13-tool static inventory"
+      ]
+    },
+    "syntax": {
+      "modules": 9,
+      "passed": 9,
+      "failed": 0,
+      "method": "Restricted V8 Function parse of source after import/export stripping; NOT native Node module evaluation"
+    },
+    "safety": {
+      "mcp_raw_passthrough": "NOT_EXPOSED",
+      "alloy_fixtures": "REQUIRE_OFFICIAL_ALLOY_JAR_OR_BIN",
+      "skill_metadata": "OPTIONAL_NOT_TOOL_ID_AUTHORITY"
+    },
+    "runtime": {
+      "node_unit_tests": "NOT_RUN",
+      "typescript_typecheck": "NOT_RUN",
+      "cli_spawn": "NOT_RUN",
+      "mcp_stdio": "NOT_RUN",
+      "native_13_doctors": "NOT_RUN_ON_THIS_TREE",
+      "native_26_fixture_cases": "NOT_RUN_ON_THIS_TREE",
+      "woodpecker_pipeline": "NOT_RUN"
+    }
+  },
+  "evidence_integrity": "Old R4 native receipts belong to prior exact Git SHA and are not carried forward as a new runtime PASS.",
+  "decision": "BATCH_1_SOURCE_ACCEPTABLE_PENDING_HOST_EXECUTION"
+}
