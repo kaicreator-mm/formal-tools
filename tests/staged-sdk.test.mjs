@@ -79,3 +79,27 @@ test("fake POSIX solver writes generated artifacts only within private workspace
     await rm(bin,{recursive:true,force:true});
   }
 }));
+
+test("staged SDK refuses optional input files that were not staged",()=>withSource(async root=>{
+  await writeFile(join(root,"model.tla"),"---- MODULE model ----");
+  const base={tool:"tla-tlc",operation:"check",sourceRoot:root,inputs:["model.tla"]};
+  await assert.rejects(invokeStagedTool({
+    ...base,settings:{input:"model.tla",config:"config.cfg"}
+  }),/file option config.*explicitly staged/);
+  await assert.rejects(invokeStagedTool({
+    tool:"rdf-shacl",operation:"validate",sourceRoot:root,inputs:["data.ttl"],
+    settings:{input:"data.ttl",shapes:"shapes.ttl"}
+  }),/file option shapes.*explicitly staged/);
+}));
+test("staged SDK rejects absolute and traversal paths from optional output settings",()=>withSource(async root=>{
+  const base={tool:"apalache",operation:"check",sourceRoot:root,inputs:["model.tla"]};
+  for(const unsafe of ["../../escape","/tmp/external","C:/external","..\\external","\\\\server\\share\\bad"]){
+    await assert.rejects(invokeStagedTool({
+      ...base,settings:{input:"model.tla",output:unsafe}
+    }),/staged option output.*outside/);
+  }
+  await assert.rejects(invokeStagedTool({
+    tool:"souffle",operation:"run",sourceRoot:root,inputs:["rules.dl"],
+    settings:{input:"rules.dl",output:"../outside"}
+  }),/staged option output.*outside/);
+}));

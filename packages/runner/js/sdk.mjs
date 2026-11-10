@@ -54,6 +54,27 @@ export async function invokeTool(request) {
  *  artifactOptions?:{maxFiles?:number,maxDepth?:number,maxBytes?:number}
  * }} request
  */
+// Only the explicitly declared input files are copied into the private cwd.
+// Known file-backed options must point to one of those staged files. All
+// string options reject obvious absolute/traversal paths even when an upstream
+// engine happens to interpret them as filenames rather than ordinary symbols.
+const STAGED_INPUT_OPTIONS=new Set(["input","config","facts","shapes","ontology","data","query"]);
+/**
+ * @param {Record<string,string|number|boolean>} settings
+ * @param {string[]} namedInputs
+ */
+function assertStagedOptionPaths(settings,namedInputs){
+  for(const [name,value] of Object.entries(settings)){
+    if(typeof value!=="string")continue;
+    if(value.startsWith("/")||value.startsWith("\\")||
+       /^[A-Za-z]:/.test(value)||value.includes("\0")||
+       value.split(/[\\/]/).some(part=>part===".."))
+      throw new TypeError("staged option "+name+" may not access paths outside the private workspace");
+    if(STAGED_INPUT_OPTIONS.has(name)&&!namedInputs.includes(value))
+      throw new TypeError("file option "+name+" must reference an explicitly staged input");
+  }
+}
+
 export async function invokeStagedTool(request) {
   if(!request||typeof request!=="object")throw new TypeError("staged tool request is required");
   const {tool,operation,sourceRoot,inputs,settings={},timeoutS=30,
@@ -64,6 +85,7 @@ export async function invokeStagedTool(request) {
   if(!operationSpec.required.length)
     throw new TypeError("staged API only supports operations with declared input file arguments");
   const namedInputs=validateInputManifest(inputs,workspaceOptions);
+  assertStagedOptionPaths(settings,namedInputs);
   for(const name of operationSpec.required) {
     if(typeof settings[name]!=="string"||!namedInputs.includes(settings[name]))
       throw new TypeError("required file option "+name+" must reference an explicitly staged input");
