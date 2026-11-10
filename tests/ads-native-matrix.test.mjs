@@ -117,3 +117,33 @@ test("G3 D-ADS: forged native statuses cannot silently become business acceptanc
  const values=synthetic(m);values[m.entries[0].id]="PROVED";
  assert.throws(()=>scoreAdsMatrix(m,values),/unrecognized native solver outcome/);
 });
+
+
+test("G3 D-ADS: scoring cannot be cheated by rewriting frozen reference verdicts or solver input",()=>{
+ const m=generateAdsMatrix();
+ const forged=structuredClone(m);
+ forged.entries[0].oracle_case_verdict="PASS";
+ if(m.entries[0].oracle_case_verdict==="PASS")forged.entries[0].oracle_case_verdict="FAIL";
+ assert.throws(()=>scoreAdsMatrix(forged,{}),/source-frozen/);
+ const different=structuredClone(m);
+ different.entries[0].smt2+="(assert false)\n";
+ assert.throws(()=>scoreAdsMatrix(different,{}),/source-frozen/);
+});
+test("G3 D-ADS: known false-PASS is not concealed by another unavailable solver outcome",()=>{
+ const m=generateAdsMatrix();
+ const outs=synthetic(m);
+ outs["weak-omits-writer__negative-overlap-same-writer"]="SAT";
+ outs["weak-omits-writer__positive-sequential-same-writer"]="NOT_RUN";
+ const a=scoreAdsMatrix(m,outs).summaries.find(x=>x.model_id==="weak-omits-writer");
+ assert.equal(a.diagnostic_classification,"REJECT_WEAK");
+ assert.equal(a.observed,5);
+ assert.equal(a.false_pass_ids.length,1);
+ assert.equal(scoreAdsMatrix(m,outs).original_claim_verdict,"UNVERIFIED");
+});
+test("G3 D-ADS: extra result keys and getter-based native statuses are refused",()=>{
+ const m=generateAdsMatrix();
+ assert.throws(()=>scoreAdsMatrix(m,{"not-a-frozen-case":"SAT"}),/accessor key/);
+ const x={};
+ Object.defineProperty(x,m.entries[0].id,{get(){return "SAT";},enumerable:true});
+ assert.throws(()=>scoreAdsMatrix(m,x),/accessor key/);
+});
