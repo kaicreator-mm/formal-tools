@@ -129,3 +129,17 @@ test("G3 prework: approved tool identity never grants arbitrary typed operation"
   const d=fixture();delete d.policy.allowed_operations;
   assert.equal(inspectEvidenceBundle(d).status,"BLOCKED");
 });
+
+test("G3 prework: oversized claim step list and tool operation policy are rejected early",()=>{
+  const a=fixture();
+  a.claim.required_step_ids=Array.from({length:20000},(_,i)=>"s"+i);
+  const ra=inspectEvidenceBundle(a);
+  assert.equal(ra.status,"BLOCKED");
+  assert.match(ra.issues.join(" "),/invalid or empty atomic claim anchor/);
+  const b=fixture();
+  b.policy.allowed_operations.z3=Array.from({length:1000},(_,i)=>"op"+i);
+  assert.equal(inspectEvidenceBundle(b).status,"BLOCKED");
+  const c=fixture();
+  c.policy.allowed_tool_ids=Array.from({length:1000},(_,i)=>"tool"+i);
+  assert.equal(inspectEvidenceBundle(c).status,"BLOCKED");
+});
