@@ -21,8 +21,17 @@ const dataRecord = x => x!==null && typeof x==="object" && !Array.isArray(x) &&
   (Object.getPrototypeOf(x)===Object.prototype || Object.getPrototypeOf(x)===null) &&
   Object.values(Object.getOwnPropertyDescriptors(x)).every(d=>Object.hasOwn(d,"value"));
 const hasOnly = (x, names) => dataRecord(x) && Object.keys(x).every(k=>names.includes(k));
-const bytesOk = (x,max) => x instanceof Uint8Array && x.byteLength>=0 && x.byteLength<=max &&
-  !utilTypes.isProxy(x);
+// Read the intrinsic typed-array byte length: subclasses may spoof a
+// byteLength getter to bypass naive size checks. Reject custom buffer types.
+const typedByteLength=Object.getOwnPropertyDescriptor(
+  Object.getPrototypeOf(Uint8Array.prototype),"byteLength").get;
+const bytesOk = (x,max) => {
+  if(!(x instanceof Uint8Array)||utilTypes.isProxy(x))return false;
+  if(Object.getPrototypeOf(x)!==Uint8Array.prototype &&
+     Object.getPrototypeOf(x)!==Buffer.prototype)return false;
+  const actual=typedByteLength.call(x);
+  return Number.isSafeInteger(actual)&&actual<=max;
+};
 const hex = value => createHash("sha256").update(value).digest("hex");
 const sameSet = (a,b) => a.length===b.length && new Set(a).size===a.length &&
   a.every(x=>b.includes(x));
@@ -87,6 +96,9 @@ function inspectByteBoundClaimData(input){
   if(bundle?.claim?.id!==claimId)
     return refused("evidence bundle identifies a different claim");
 
+  if(privacy.indexOf(bundle.policy.classification)>
+     privacy.indexOf(problem.policy.max_input_classification))
+    return refused("evidence permission scope exceeds original G2 policy");
   const stepIndex=new Map(method.steps.map(x=>[x.id,x]));
   const targets=method.steps.filter(x=>x.claim_ids.includes(claimId)).map(x=>x.id);
   if(!targets.length)return refused("no Method step bound to this Claim");
@@ -133,6 +145,8 @@ function inspectByteBoundClaimData(input){
       return refused("reported tool/invocation/output hash disagrees with provided bytes");
     if(privacy.indexOf(r.input_classification)>privacy.indexOf(problem.policy.max_input_classification))
       return refused("tool receipt input sensitivity exceeds original G2 policy");
+    if(privacy.indexOf(r.output_classification)<privacy.indexOf(step.output_classification))
+      return refused("receipt output silently downgrades G2 step sensitivity");
     if(!step.source_refs.every(id=>id===sourceId))
       return refused("tool step has unbound source identities in single-source profile");
   }
