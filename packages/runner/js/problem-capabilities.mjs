@@ -65,9 +65,12 @@ export function validateCapabilityRegistry(input, nativeSourceIds=toolIds) {
     fail("native tool references differ from native-catalog.mjs; never duplicate executable tool IDs");
   if(capabilities.some(c=>!c || typeof c.id!=="string" || !tools.some(t=>Array.isArray(t?.capability_ids)&&t.capability_ids.includes(c.id))))
     fail("at least one capability has no tool");
-  if(input.semantics?.tool_result_states?.some(x=>!outcomes.has(x)) ||
-     !input.semantics?.tool_result_states?.includes("NOT_RUN"))fail("tool result contract missing NOT_RUN");
-  if(!input.semantics?.claim_result_states?.includes("NEEDS_SOURCE"))fail("external claims must support NEEDS_SOURCE");
+  const toolStates=input.semantics?.tool_result_states;
+  const claimStates=input.semantics?.claim_result_states;
+  if(!Array.isArray(toolStates)||toolStates.some(x=>!outcomes.has(x))||!toolStates.includes("NOT_RUN"))
+    fail("tool result contract missing NOT_RUN or contains invalid states");
+  if(!Array.isArray(claimStates)||!claimStates.includes("NEEDS_SOURCE"))
+    fail("external claims must support NEEDS_SOURCE");
   return {ok:issues.length===0,issues,counts:{capabilities:capabilities.length,tools:tools.length,native_refs:nativeRefs.length,candidates:tools.length-nativeRefs.length}};
 }
 
