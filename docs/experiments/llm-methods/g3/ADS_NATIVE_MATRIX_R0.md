@@ -8,8 +8,8 @@ The frozen Research R0 example in `benchmarks/llm-methods/r0/spec-fidelity-cases
 
 `benchmarks/llm-methods/g3/ads-native-matrix.mjs` exports:
 - `renderAdsQuery(case,model)`: declares time variables fixed to each source case; encodes finite-window, directed dependency acyclicity via integer ranking, temporal precedence, same-resource writer nonoverlap and optional global nonoverlap; emits `(check-sat)`.
-- `generateAdsMatrix()`: deterministic 6 cases × 4 candidate models = **24 queries** with per-input SHA256, tool `z3`, typed `solve` operation, `NOT_RUN` execution.
-- `scoreAdsMatrix(matrix,nativeResults)`: compares **provided native statuses** SAT/UNSAT against frozen case outcomes; tracks per-model false-PASS, false-reject, vacuous, and `INCONCLUSIVE` for UNKNOWN/TIMEOUT/ERROR/missing results. The score is `SCORED_UNATTESTED` and `original_claim_verdict=UNVERIFIED` even with 24/24 synthetically matching cases.
+- `generateAdsMatrix()`: deterministic 6 cases × 4 candidate models = **24 queries** with per-input SHA256 and the **exact frozen JSON file bytes' SHA256**, tool `z3`, typed `solve` operation, `NOT_RUN` execution. It does not accept caller-replaced reference fixtures.
+- `scoreAdsMatrix(matrix,nativeResults)`: first rejects any manifest or original sample verdict that differs from the frozen exact worklist; compares **provided native statuses** SAT/UNSAT against frozen case outcomes; tracks per-model false-PASS, false-reject, vacuous, and `INCONCLUSIVE` for UNKNOWN/TIMEOUT/ERROR/missing results. A known false-PASS is never hidden by incomplete outcomes. The score is `SCORED_UNATTESTED` and `original_claim_verdict=UNVERIFIED` even with 24/24 synthetically matching cases.
 - `emitAdsMatrix(outputDirectory)`: writes 24 versioned-query .smt2 files plus manifest for an existing **trusted local native Runner** to consume. Generating queries does NOT spawn Z3.
 
 ### Minimal host usage (local agent only)
@@ -28,7 +28,7 @@ The frozen source verdicts have **not yet received independent source-first sema
 
 ### Acceptance and boundaries
 
-`tests/ads-native-matrix.test.mjs` contains 12 source/SMT/result-classification cases. Test doubles feed manufactured native outcomes to the scorer; they are **not** Z3 runs.
+`tests/ads-native-matrix.test.mjs` contains 15 source/SMT/result-classification cases. Test doubles feed manufactured native outcomes to the scorer; they are **not** Z3 runs.
 
 Require final exact-SHA Woodpecker Node, TypeScript and CLI gates; an independent reviewer checks that SMT encoding matches the source language (especially edge-direction, resource equality, non-vacuity and the difference between SAT and original Claim truth). No G3 complete, G4 Solution qualification, or LLM-vs-tool improvement claim follows from CI alone.
 
