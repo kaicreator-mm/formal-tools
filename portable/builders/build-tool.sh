@@ -64,7 +64,7 @@ export M_VERSION_OUTPUT="$ver_out" M_UPSTREAM_URL="${FT_UPSTREAM_URL:-}" M_UPSTR
 export M_BUILD_TS="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
 python3 "$FT_SRC/builders/make_meta.py" "$FT_TOOL_DIR" || ft::die "meta generation failed"
 
-if [ "${FT_TOOL_UNAVAILABLE:-0}" = 1 ]; then
+if [ -f "$FT_TOOL_DIR/UNAVAILABLE" ]; then
   ft::log "build UNAVAILABLE (recorded, not failed): $id"
 else
   ft::note build_status SUCCESS
