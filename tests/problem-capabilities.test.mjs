@@ -110,3 +110,12 @@ test("fail closed for malformed null capability and null tool records",()=>{
   assert.equal(validateCapabilityRegistry(a).ok,false);
   assert.equal(validateCapabilityRegistry(b).ok,false);
 });
+
+test("malformed result-state metadata is reported as invalid rather than crashing",()=>{
+ const a=clone(readCapabilityRegistry());
+ a.semantics.tool_result_states="SAT UNSAT";
+ assert.ok(validateCapabilityRegistry(a).issues.some(x=>x.includes("NOT_RUN")));
+ const b=clone(readCapabilityRegistry());
+ b.semantics.claim_result_states="NEEDS_SOURCE";
+ assert.ok(validateCapabilityRegistry(b).issues.some(x=>x.includes("NEEDS_SOURCE")));
+});
