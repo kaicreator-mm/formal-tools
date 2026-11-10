@@ -20,14 +20,15 @@ ft_tool_build() {
   ft::copy_libs "$FT_TOOL_DIR/bin/cbmc" "$FT_TOOL_DIR/lib" || true
   patchelf --set-rpath '$ORIGIN/../lib' "$FT_TOOL_DIR/bin/cbmc" "$FT_TOOL_DIR/bin/goto-cc" 2>/dev/null || true
   # goto-cc preprocesses .c by execvp'ing `gcc` — ship the gcc driver + cc1 (relative layout)
-  gccver=$(gcc -dumpfullversion 2>/dev/null || gcc -dumpversion)
-  mkdir -p "$FT_TOOL_DIR/gccroot/bin" "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccver"
-  cp /usr/bin/gcc-$gccver "$FT_TOOL_DIR/gccroot/bin/gcc-14" 2>/dev/null || cp "$(readlink -f /usr/bin/gcc)" "$FT_TOOL_DIR/gccroot/bin/gcc-14"
+  gccfull=$(gcc -dumpfullversion 2>/dev/null || gcc -dumpversion)
+  gccmajor=$(gcc -dumpversion)
+  mkdir -p "$FT_TOOL_DIR/gccroot/bin" "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccmajor"
+  cp "/usr/bin/gcc-$gccmajor" "$FT_TOOL_DIR/gccroot/bin/gcc-14" 2>/dev/null || cp "$(readlink -f /usr/bin/gcc)" "$FT_TOOL_DIR/gccroot/bin/gcc-14"
   ln -sf gcc-14 "$FT_TOOL_DIR/gccroot/bin/gcc"
-  cp "/usr/lib/gcc/x86_64-linux-gnu/$gccver/cc1" "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccver/cc1" \
-    || ft::die "cc1 not found for gcc $gccver"
+  cp "/usr/lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" \
+    || ft::die "cc1 not found for gcc $gccmajor"
   ft::copy_libs "$FT_TOOL_DIR/gccroot/bin/gcc-14" "$FT_TOOL_DIR/lib" || true
-  ft::copy_libs "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccver/cc1" "$FT_TOOL_DIR/lib" || true
+  ft::copy_libs "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" "$FT_TOOL_DIR/lib" || true
   ft::make_shim 'export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 export PATH="$TOOL_DIR/gccroot/bin:$PATH"
 case "$1" in
