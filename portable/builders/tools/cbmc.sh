@@ -25,7 +25,8 @@ ft_tool_build() {
   mkdir -p "$FT_TOOL_DIR/gccroot/bin" "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccmajor"
   cp "/usr/bin/gcc-$gccmajor" "$FT_TOOL_DIR/gccroot/bin/gcc-14" 2>/dev/null || cp "$(readlink -f /usr/bin/gcc)" "$FT_TOOL_DIR/gccroot/bin/gcc-14"
   ln -sf gcc-14 "$FT_TOOL_DIR/gccroot/bin/gcc"
-  cp "/usr/lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" \
+  cp "/usr/lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" 2>/dev/null \
+    || cp "/usr/libexec/gcc/x86_64-linux-gnu/$gccmajor/cc1" "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" \
     || ft::die "cc1 not found for gcc $gccmajor"
   ft::copy_libs "$FT_TOOL_DIR/gccroot/bin/gcc-14" "$FT_TOOL_DIR/lib" || true
   ft::copy_libs "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" "$FT_TOOL_DIR/lib" || true

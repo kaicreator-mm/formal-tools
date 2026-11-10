@@ -12,8 +12,10 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 source "$HERE/../env.sh"
 
 B="$FT_BUNDLE"
-mkdir -p "$B"/{bin,tools,runtimes,tests,registry,evidence,licenses,docs}
 [ -d "$FT_OUT/runtimes" ] || { echo "no runtimes built; run 'runtimes' phase first" >&2; exit 1; }
+# clean re-assemble: container-written files are root-owned; stale copies would silently win
+rm -rf "$B"
+mkdir -p "$B"/{bin,tools,runtimes,tests,registry,evidence,licenses,docs}
 
 echo "== assemble bundle tree =="
 rm -rf "$B/tools"; mkdir -p "$B/tools"
