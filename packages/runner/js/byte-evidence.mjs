@@ -51,14 +51,20 @@ function inspectByteBoundClaimData(input){
   const {problem,method,claim_id:claimId,source_id:sourceId,bundle,artifacts}=input;
   if(!validId(claimId)||!validId(sourceId))
     return refused("invalid atomic claim or source ID");
+  const claim=Array.isArray(problem?.claims)?problem.claims.find(x=>x?.id===claimId):null;
+  if(claim?.kind==="external_fact"||claim?.kind==="not_formalizable")
+    return refused("external or non-formalizable claims require independent external evidence","NEEDS_SOURCE");
   const check=assessMethod(problem,method);
   if(check.status!=="STRUCTURALLY_VALID"||check.candidate_tools_present)
     return refused("Method is not an accepted native-only G2 structural proposal");
-  const claim=problem.claims.find(x=>x.id===claimId);
   if(!claim||!method.goal_claim_ids.includes(claimId))
     return refused("claim not in the approved G2 goal list");
-  if(claim.kind==="external_fact"||claim.kind==="not_formalizable")
-    return refused("external or non-formalizable claims require independent external evidence","NEEDS_SOURCE");
+  // The existing G3 gate already rejects hostile arrays, Proxies, inherited
+  // allowlist permissions, inconsistent claim/step metadata and forged states.
+  // Require its fail-closed structural boundary before dereferencing receipts.
+  const linkage=inspectEvidenceBundle(bundle);
+  if(linkage.status==="BLOCKED")
+    return refused("G3 structural evidence linkage blocked");
   // Current R1 deliberately supports exactly one source input; multi-source
   // semantics or mixed privacy labels must never be silently collapsed.
   const claimSources=new Set([...claim.source_refs,
@@ -130,10 +136,9 @@ function inspectByteBoundClaimData(input){
     if(!step.source_refs.every(id=>id===sourceId))
       return refused("tool step has unbound source identities in single-source profile");
   }
-  const metadata=inspectEvidenceBundle(bundle);
-  if(metadata.status==="INCONCLUSIVE")
+  if(linkage.status==="INCONCLUSIVE")
     return refused("tool results remain UNKNOWN/ERROR/TIMEOUT/NOT_RUN","INCONCLUSIVE");
-  if(metadata.status!=="LINKED_UNVERIFIED")
+  if(linkage.status!=="LINKED_UNVERIFIED")
     return refused("G3 static evidence linkage did not pass");
   return {
     status:"BYTES_BOUND_UNATTESTED",issues:[],
