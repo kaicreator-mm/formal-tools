@@ -18,8 +18,9 @@ ft_tool_build() {
   export PATH="/root/.cargo/bin:$PATH"
   cargo install --locked kani-verifier >>"$FT_LOG" 2>&1 || ft::die "cargo install kani-verifier failed"
   mkdir -p "$FT_TOOL_DIR/home" "$FT_TOOL_DIR/bin"
-  HOME="$FT_TOOL_DIR/home" timeout 3000 cargo kani setup >>"$FT_LOG" 2>&1 \
-    || ft::die "cargo kani setup failed"
+  # HOME moves to the tool dir for setup; pin rustup/cargo homes so the shim still resolves
+  HOME="$FT_TOOL_DIR/home" RUSTUP_HOME=/root/.rustup CARGO_HOME=/root/.cargo \
+    timeout 3000 cargo kani setup >>"$FT_LOG" 2>&1 || ft::die "cargo kani setup failed"
   [ -d "$FT_TOOL_DIR/home/.kani" ] || ft::die "no .kani after setup"
   cp /root/.cargo/bin/cargo-kani "$FT_TOOL_DIR/bin/"
   local v
