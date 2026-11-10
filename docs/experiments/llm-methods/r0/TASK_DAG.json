@@ -6,7 +6,7 @@
     "source_base_sha": "41925288dd5b777d49c4e442d9731581895cb037",
     "scope": "NEW_DIRECTION_NOT_R1"
   },
-  "status": "G0_G1_SOURCE_IN_PROGRESS",
+  "status": "G0_G1_SOURCE_COMMITTED_RESEARCH_R0_REVIEW_REQUIRED",
   "gates": [
     {
       "id": "G0",
@@ -25,11 +25,22 @@
       "exit": "23 canonical capability codes, 13 native references verified against source, 23 candidate records, negative contract checks"
     },
     {
+      "id": "RESEARCH-R0",
+      "name": "2025-2026 literature/practice design admission before G2",
+      "depends_on": [
+        "G0",
+        "G1"
+      ],
+      "status": "SOURCE_REVIEWED_DESIGN_CONDITIONAL",
+      "exit": "Research report readback, semantic fidelity and independent-claim oracle contracts reviewed; no G2 code until implementation admission"
+    },
+    {
       "id": "G2",
       "name": "LLM ProblemSpec -> Method plan + static verification",
       "depends_on": [
         "G0",
-        "G1"
+        "G1",
+        "RESEARCH-R0"
       ],
       "status": "NOT_STARTED",
       "exit": "model-independent typed DAG, budget/alternatives, cycles and missing contracts fail closed"
@@ -155,11 +166,26 @@
       ]
     },
     {
+      "id": "T-R0-01",
+      "gate": "RESEARCH-R0",
+      "title": "Literature/practice review and semantic-oracle constraints",
+      "depends_on": [
+        "T-G0-02",
+        "T-G1-02"
+      ],
+      "owner": "web",
+      "status": "SOURCE_COMMITTED_REVIEW_REQUIRED",
+      "evidence": [
+        "docs/experiments/llm-methods/r0/TECHNICAL_REVIEW_2026-11-10.md"
+      ]
+    },
+    {
       "id": "T-G2-01",
       "gate": "G2",
       "title": "ProblemSpec and checkable ClaimSpec contracts with model provenance",
       "depends_on": [
-        "T-G1-02"
+        "T-G1-02",
+        "T-R0-01"
       ],
       "owner": "web",
       "status": "NOT_STARTED"
