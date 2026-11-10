@@ -103,3 +103,25 @@ test("staged SDK rejects absolute and traversal paths from optional output setti
     settings:{input:"rules.dl",output:"../outside"}
   }),/staged option output.*outside/);
 }));
+
+test("staged SDK treats Apalache positional state names as symbols, not input files",()=>withSource(async root=>{
+  await writeFile(join(root,"model.tla"),"---- MODULE model ----");
+  const old=process.env.FORMAL_TOOLS_BIN_DIR;
+  process.env.FORMAL_TOOLS_BIN_DIR=join(root,"missing-native-binaries");
+  const base={
+    tool:"apalache",operation:"test",sourceRoot:root,inputs:["model.tla"],
+    settings:{input:"model.tla",before:"Init",action:"Next",assertion:"Invariant"}
+  };
+  try{
+    const result=await invokeStagedTool(base);
+    assert.equal(result.process.status,"NOT_STARTED");
+    assert.equal(result.artifacts.status,"NOT_COLLECTED");
+    assert.deepEqual(result.invocation.args,["test","model.tla","Init","Next","Invariant"]);
+    assert.deepEqual(result.staging.inputs.map(x=>x.path),["model.tla"]);
+    await assert.rejects(invokeStagedTool({...base,settings:{...base.settings,input:"unstaged.tla"}}),/explicitly staged/);
+    await assert.rejects(invokeStagedTool({...base,settings:{...base.settings,before:"../outside"}}),/outside/);
+  }finally{
+    if(old===undefined)delete process.env.FORMAL_TOOLS_BIN_DIR;
+    else process.env.FORMAL_TOOLS_BIN_DIR=old;
+  }
+}));
