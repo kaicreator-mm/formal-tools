@@ -218,7 +218,6 @@ test("G2: malformed capability array and unapproved tool selection fail closed",
 
 test("G2: cyclic untrusted Method data is rejected without throwing or certifying claims",()=>{
  const {problem,method}=fixture();
- // @ts-expect-error deliberate circular/unregistered model property
  method.self=method;
  const outcome=assessMethod(problem,method);
  assert.equal(outcome.status,"REJECTED");
