@@ -58,6 +58,11 @@ ft_tool_build() {
   [ -n "$v" ] && FT_TOOL_VERSION=$(printf '%s' "$v" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
   ft::note upstream_note "kani-verifier crate via crates.io; cargo kani setup materialized toolchain into home/.kani (shipped)"
   ft::make_shim 'export PATH="$TOOL_DIR/bin:$PATH"
+# cargo metadata spawns bare `rustc` before kani sets up its env — put the shipped
+# toolchain bin on PATH first
+KB=$(echo "$TOOL_DIR"/home/.kani/kani-*/toolchain)
+[ -d "$KB/bin" ] && export PATH="$KB/bin:$PATH"
+export RUSTC="${KB}/bin/rustc"
 # cargo-kani needs a writable HOME + crate dir at verify time: redirect HOME, symlink toolchain state
 W="$FT_TMP/kani-home"; mkdir -p "$W" 2>/dev/null || true
 [ -d "$TOOL_DIR/home/.kani" ] && ln -sfn "$TOOL_DIR/home/.kani" "$W/.kani" 2>/dev/null || true
