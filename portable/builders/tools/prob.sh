@@ -17,6 +17,8 @@ ft_tool_build() {
   [ -n "$src" ] || ft::unavailable "probcli binary not found in bundle"
   mkdir -p "$FT_TOOL_DIR/bin"
   cp -a "$src/." "$FT_TOOL_DIR/bin/"
+  # zip payloads do not preserve the exec bit
+  find "$FT_TOOL_DIR/bin" -maxdepth 1 -type f -exec chmod +x {} +
   # version probe (records actual; expects the fetched series)
   local v
   v=$( ( cd "$FT_TOOL_DIR/bin" && ./probcli -version 2>/dev/null | head -1 ) || true)

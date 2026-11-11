@@ -103,8 +103,8 @@ do_verify() {
   local ids=() id rc_all=0
   if [ "${1:-all}" = "all" ]; then mapfile -t ids < <(all_tool_ids); else ids=("$@"); fi
   for id in "${ids[@]}"; do
-    echo ">> verify $id (fresh offline debian:13, non-root)"
-    docker run --rm --network none --user "$(id -u):$(id -g)" \
+    echo ">> verify $id (fresh offline debian:13)"
+    docker run --rm --network none \
       -v "$FT_BUNDLE:/bundle:ro" -v "$FT_EV_DIR:/evidence" \
       -e FT_EVIDENCE_DIR=/evidence -e HOME=/tmp \
       "$FT_RT_IMG" /bundle/bin/tool-runner verify "$id" || rc_all=1

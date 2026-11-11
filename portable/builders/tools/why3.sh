@@ -35,5 +35,11 @@ export WHY3DATA="$TOOL_DIR/share/why3"
 # Debian trixie ocaml stdlib lives in the multiarch dir; why3 resolves why3/commands under it
 export OCAMLLIB="$TOOL_DIR/usr/lib/x86_64-linux-gnu/ocaml/5.3.0:${OCAMLLIB:-}"
 export PATH="$TOOL_DIR/usr/bin:$FT_ROOT/tools/z3/bin:$PATH"
+# why3 prove spawns sub-command binaries from its compiled-in libdir (absolute Debian
+# path). Link the shipped tree there when the filesystem allows (root containers);
+# degraded mode (WHY3DATA only) otherwise — recorded as a known limitation.
+if mkdir -p /usr/lib/x86_64-linux-gnu/ocaml 2>/dev/null; then
+  ln -sfn "$TOOL_DIR/usr/lib/x86_64-linux-gnu/ocaml/5.3.0" /usr/lib/x86_64-linux-gnu/ocaml/5.3.0 2>/dev/null || true
+fi
 exec "$TOOL_DIR/usr/bin/why3" "$@"'
 }
