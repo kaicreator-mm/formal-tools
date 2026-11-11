@@ -10,14 +10,14 @@
     },
     "neg": {
       "exit": 0,
-      "duration_ms": 71,
+      "duration_ms": 76,
       "output_matched": true,
       "exit_ok": true,
       "label": "UNSATISFIABLE"
     },
     "err": {
-      "exit": 0,
-      "duration_ms": 42,
+      "exit": 1,
+      "duration_ms": 43,
       "output_matched": true,
       "exit_ok": true,
       "label": "ERROR"

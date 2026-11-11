@@ -3,14 +3,14 @@
   "phases": {
     "pos": {
       "exit": 0,
-      "duration_ms": 10,
+      "duration_ms": 3021,
       "output_matched": true,
       "exit_ok": true,
       "label": "FUZZER_EXECS"
     },
     "neg": {
-      "exit": 0,
-      "duration_ms": 12,
+      "exit": 1,
+      "duration_ms": 8,
       "output_matched": true,
       "exit_ok": true,
       "label": "ERROR"
