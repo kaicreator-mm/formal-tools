@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 # portable/builders/host/storm-prepare.sh — runs on the DOCKER HOST (build server).
-# Layout-agnostic extraction of the official Storm image payload:
-#   - locate the dir containing the `storm` binary (works for /opt/storm and /usr/local layouts)
-#   - export <prefix>/bin -> staging/payload/bin, <prefix>/lib -> staging/payload/lib
-#   - copy the shared-lib closure of every storm binary into staging/libs
+# Layout-agnostic extraction of the official Storm image payload. The export|tar and
+# normalization run INSIDE a root container (tar preserves image ownership; a plain
+# user on the host cannot traverse/rename those dirs).
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")/.." && pwd)"
 # shellcheck source=../../env.sh
@@ -19,32 +18,37 @@ if ! docker image inspect "$IMG" >/dev/null 2>&1; then
   docker tag "$IMG_SRC" "$IMG"
 fi
 
-# locate storm binary paths inside the image
 STORM_BIN=$(docker run --rm --entrypoint /bin/sh "$IMG" -c 'for d in /usr/local/bin /usr/bin /opt/storm/bin /opt/storm/inner/bin; do [ -x "$d/storm" ] && echo "$d/storm" && break; done')
 [ -n "${STORM_BIN:-}" ] || { echo "FATAL: storm binary not found in image"; exit 3; }
 PREFIX=$(dirname "$STORM_BIN"); PREFIX=${PREFIX%/bin}
 echo "storm prefix in image: $PREFIX"
+V=$(docker run --rm --entrypoint /bin/sh "$IMG" -c "$STORM_BIN --version 2>/dev/null | head -1 || true")
+echo "storm version line: $V"
 
 CID=$(docker create "$IMG")
 trap 'docker rm -f "$CID" >/dev/null 2>&1 || true' EXIT
 
-mkdir -p "$STAGE/payload/bin" "$STAGE/payload/lib"
-# docker export archives carry members WITHOUT leading slash — strip ours to match
+mkdir -p "$STAGE/payload"
 MBIN="$PREFIX/bin"; MBIN=${MBIN#/}
 MLIB="$PREFIX/lib"; MLIB=${MLIB#/}
-if ! docker export "$CID" | tar -xf - -C "$STAGE/payload" "$MBIN" "$MLIB"; then
-  echo "FATAL: docker export | tar failed for $MBIN $MLIB"
+# export + extract + normalize + open perms, all as root inside the builder image
+if ! docker export "$CID" | docker run --rm -i \
+      -v "$STAGE:/stage" -v "$FT_SRC/builders:/src-builders:ro" \
+      "$FT_IMG" bash -c "
+set -e
+mkdir -p /stage/payload/bin /stage/payload/lib
+tar -xf - -C /stage/payload '$MBIN' '$MLIB'
+mv /stage/payload/'$MBIN'/. /stage/payload/bin/
+mv /stage/payload/'$MLIB'/. /stage/payload/lib/ 2>/dev/null || true
+rm -rf /stage/payload/'$MBIN' /stage/payload/'$MLIB'
+chmod -R a+rX /stage/payload
+chown -R $(id -u):$(id -g) /stage/payload
+[ -f /stage/payload/bin/storm ] || { echo 'FATAL: bin/storm missing after extraction'; exit 3; }
+echo EXTRACT_OK
+"; then
+  echo "FATAL: storm payload extraction failed"
   exit 3
 fi
-if [ ! -f "$STAGE/payload/$PREFIX/bin/storm" ]; then
-  echo "FATAL: export did not yield $PREFIX/bin/storm"
-  docker export "$CID" | tar -tf - 2>/dev/null | grep -m3 "bin/storm" || true
-  exit 3
-fi
-# normalize to payload/bin, payload/lib
-mv "$STAGE/payload/$PREFIX/bin/." "$STAGE/payload/bin/" 2>/dev/null || true
-mv "$STAGE/payload/$PREFIX/lib/." "$STAGE/payload/lib/" 2>/dev/null || true
-rm -rf "$STAGE/payload/$PREFIX"
 
 # shared-lib closure for all storm ELF binaries, via the image's own ldd
 mkdir -p "$STAGE/libs"
@@ -63,8 +67,6 @@ while IFS= read -r so; do
 done < "$STAGE/so-list.txt"
 rm -f "$STAGE/so-list.txt"
 
-V=$(docker run --rm --entrypoint /bin/sh "$IMG" -c '/usr/local/bin/storm --version 2>/dev/null | head -1 || true')
-echo "storm version line: $V"
 printf 'STORM_VERSION=%s\n' "$(printf '%s' "$V" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)" > "$STAGE/env"
 echo "staged: bin=$(ls "$STAGE/payload/bin" | wc -l) payload_lib=$(ls "$STAGE/payload/lib" 2>/dev/null | wc -l) closure_libs=$(ls "$STAGE/libs" | wc -l)"
 echo "storm staging OK"
