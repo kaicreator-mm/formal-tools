@@ -3,7 +3,7 @@ EXPECT_POS_ARGS='tests/prism/pos.pm -pf "P>=0.1 [ F s=7 ]"'
 EXPECT_POS_EXIT=0
 EXPECT_POS_REGEX='Result: true'
 EXPECT_POS_LABEL=PROPERTY_HOLDS
-EXPECT_NEG_ARGS='tests/prism/pos.pm -pf "P>=0.9 [ F s=7 ]"'
+EXPECT_NEG_ARGS='tests/prism/pos.pm -pf "P<=0.5 [ F s=7 ]"'
 EXPECT_NEG_EXIT=0
 EXPECT_NEG_REGEX='Result: false'
 EXPECT_NEG_LABEL=PROPERTY_FAILS
