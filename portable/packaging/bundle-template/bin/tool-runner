@@ -85,7 +85,7 @@ run_case() { # id phase via args_string exit_ok_list regex label
   local t0 te rc out="$FT_EV/verify-$id.$phase.log"
   t0=$(date +%s%3N)
   cd "$FT_TMP" || cd /tmp
-  timeout --kill-after=10 "${EXPECT_TIMEOUT:-120}" "${cmd[@]}" >"$out" 2>&1
+  timeout -k 10 "${EXPECT_TIMEOUT:-120}" "${cmd[@]}" >"$out" 2>&1
   rc=$?  # capture the actual tool/timeout status BEFORE any cleanup cd
   cd - >/dev/null 2>&1 || true
   te=$(( $(date +%s%3N) - t0 ))
