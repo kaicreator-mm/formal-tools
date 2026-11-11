@@ -28,7 +28,7 @@ ft_tool_build() {
   find "$FT_TOOL_DIR/lib" -maxdepth 1 -type f \( -name 'libc.so*' -o -name 'libm.so*' -o -name 'ld-linux*' -o -name 'libpthread*' -o -name 'libdl*' -o -name 'librt*' \) -delete
   ft::copy_libs "$FT_TOOL_DIR/bin/nuXmv" "$FT_TOOL_DIR/lib" || true
   patchelf --set-rpath '$ORIGIN/../lib' "$FT_TOOL_DIR/bin/nuXmv" 2>/dev/null || true
-  ( export LD_LIBRARY_PATH="$FT_TOOL_DIR/lib"; "$FT_TOOL_DIR/bin/nuXmv" -h >/dev/null 2>&1 ) \
+  ( export LD_LIBRARY_PATH="$FT_TOOL_DIR/lib"; "$FT_TOOL_DIR/bin/nuXmv" -h >/dev/null 2>&1; [ $? -le 2 ] ) \
     || ft::die "nuXmv not runnable after relocation"
   ft::make_shim 'export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 # after batch-processing the model file nuXmv drops into an interactive shell; feed
