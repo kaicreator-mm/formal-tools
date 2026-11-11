@@ -1,0 +1,10 @@
+MODULE main
+VAR
+  s : 0..7;
+ASSIGN
+  init(s) := 0;
+  next(s) := case
+    s < 7 : s + 1;
+    TRUE : 7;
+  esac;
+SPEC AG s <= 5

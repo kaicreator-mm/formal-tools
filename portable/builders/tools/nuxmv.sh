@@ -5,7 +5,7 @@ FT_TOOL_VERSION=2.2.0
 FT_TOOL_KIND=binary
 FT_MAIN_BIN="tools/nuxmv/bin/nuXmv"
 FT_UPSTREAM_URL="https://nuxmv.fbk.eu/downloads/2.2.0/nuXmv-2.2.0-linux64.tar.xz"
-FT_PROBE=(bin/nuXmv --version)
+FT_PROBE=(bin/nuXmv -h)
 
 ft_tool_build() {
   # official .sha256sum sibling: `hash *nuXmv-2.2.0-linux64.tar.xz`
@@ -28,8 +28,11 @@ ft_tool_build() {
   find "$FT_TOOL_DIR/lib" -maxdepth 1 -type f \( -name 'libc.so*' -o -name 'libm.so*' -o -name 'ld-linux*' -o -name 'libpthread*' -o -name 'libdl*' -o -name 'librt*' \) -delete
   ft::copy_libs "$FT_TOOL_DIR/bin/nuXmv" "$FT_TOOL_DIR/lib" || true
   patchelf --set-rpath '$ORIGIN/../lib' "$FT_TOOL_DIR/bin/nuXmv" 2>/dev/null || true
-  ( export LD_LIBRARY_PATH="$FT_TOOL_DIR/lib"; "$FT_TOOL_DIR/bin/nuXmv" --version >/dev/null 2>&1 ) \
+  ( export LD_LIBRARY_PATH="$FT_TOOL_DIR/lib"; "$FT_TOOL_DIR/bin/nuXmv" -h >/dev/null 2>&1 ) \
     || ft::die "nuXmv not runnable after relocation"
   ft::make_shim 'export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-exec "$TOOL_DIR/bin/nuXmv" "$@"'
+# after batch-processing the model file nuXmv drops into an interactive shell; feed
+# it a clean quit so batch invocations exit 0 instead of hanging
+printf quit | "$TOOL_DIR/bin/nuXmv" "$@"
+'
 }
