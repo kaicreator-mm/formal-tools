@@ -23,9 +23,22 @@ ft_tool_build() {
   export PATH="/root/.cargo/bin:$PATH"
   cargo install --locked kani-verifier >>"$FT_LOG" 2>&1 || ft::die "cargo install kani-verifier failed"
   mkdir -p "$FT_TOOL_DIR/home" "$FT_TOOL_DIR/bin"
-  # HOME moves to the tool dir for setup; pin rustup/cargo homes so the shim still resolves
-  HOME="$FT_TOOL_DIR/home" RUSTUP_HOME=/root/.rustup CARGO_HOME=/root/.cargo \
-    timeout 3000 cargo kani setup >>"$FT_LOG" 2>&1 || ft::die "cargo kani setup failed"
+  # HOME moves to the tool dir for setup; pin rustup/cargo homes so the shim still resolves.
+  # Pre-seed the release bundle from the build cache (GitHub resets connections intermittently;
+  # setup skips the download when the file is already present and checksum-valid), retry 3x.
+  mkdir -p "$FT_TOOL_DIR/home/.kani"
+  for c in "$FT_CACHE"/*kani-$FT_TOOL_VERSION-x86_64-unknown-linux-gnu.tar.gz; do
+    [ -f "$c" ] && cp "$c" "$FT_TOOL_DIR/home/.kani/kani-$FT_TOOL_VERSION-x86_64-unknown-linux-gnu.tar.gz" \
+      && ft::note setup_bundle_preseeded "from $(basename "$c")"
+  done
+  local ok=0 attempt
+  for attempt in 1 2 3; do
+    if HOME="$FT_TOOL_DIR/home" RUSTUP_HOME=/root/.rustup CARGO_HOME=/root/.cargo \
+        timeout 3000 cargo kani setup >>"$FT_LOG" 2>&1; then ok=1; break; fi
+    ft::log "cargo kani setup attempt $attempt failed; retrying"
+    sleep 10
+  done
+  [ "$ok" = 1 ] || ft::die "cargo kani setup failed (3 attempts)"
   [ -d "$FT_TOOL_DIR/home/.kani" ] || ft::die "no .kani after setup"
   cp /root/.cargo/bin/cargo-kani "$FT_TOOL_DIR/bin/"
   local v
