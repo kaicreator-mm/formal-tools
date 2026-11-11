@@ -27,11 +27,13 @@ ft_tool_build() {
   ft::note why3_share_rel "${share#$FT_TOOL_DIR/}"
   # probe relocated
   ( export LD_LIBRARY_PATH="$FT_TOOL_DIR/usr/lib/x86_64-linux-gnu:$FT_TOOL_DIR/lib" \
+      OCAMLLIB="$FT_TOOL_DIR/usr/lib/x86_64-linux-gnu/ocaml/5.3.0" \
       WHY3DATA="$FT_TOOL_DIR/share/why3"; "$FT_TOOL_DIR/usr/bin/why3" --version >/dev/null 2>&1 ) \
     || ft::die "why3 not runnable after relocation"
   ft::make_shim 'export LD_LIBRARY_PATH="$TOOL_DIR/usr/lib/x86_64-linux-gnu:$TOOL_DIR/lib:${LD_LIBRARY_PATH:-}"
 export WHY3DATA="$TOOL_DIR/share/why3"
-export OCAMLLIB="$TOOL_DIR/usr/lib/ocaml:${OCAMLLIB:-}"
+# Debian trixie ocaml stdlib lives in the multiarch dir; why3 resolves why3/commands under it
+export OCAMLLIB="$TOOL_DIR/usr/lib/x86_64-linux-gnu/ocaml/5.3.0:${OCAMLLIB:-}"
 export PATH="$TOOL_DIR/usr/bin:$FT_ROOT/tools/z3/bin:$PATH"
 exec "$TOOL_DIR/usr/bin/why3" "$@"'
 }

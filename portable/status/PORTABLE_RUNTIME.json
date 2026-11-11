@@ -1,6 +1,6 @@
 {
   "schema": "formal-tools/portable-runtime/0.1",
-  "generated_at": "2026-11-11T10:12:26+00:00",
+  "generated_at": "2026-11-11T13:37:31+00:00",
   "source_head": null,
   "target": {
     "os": "debian-13",
@@ -258,8 +258,8 @@
       "portable_availability": "UNAVAILABLE",
       "runtime_verified": false,
       "verify_verdict": "SKIP",
-      "version": "1.14.0",
-      "blocker_reason": "no reachable official prob-cli linux64 download channel (GitHub release API empty; www3 patterns 404) — needs manual license/download page interaction"
+      "version": "1.16.1",
+      "blocker_reason": "probcli_linux64.zip unreachable at stups.hhu-hosting.de"
     },
     {
       "id": "pymc",
@@ -315,11 +315,11 @@
       "id": "storm",
       "capability_ids": [],
       "official_url": null,
-      "portable_availability": "UNAVAILABLE",
-      "runtime_verified": false,
-      "verify_verdict": "SKIP",
-      "version": "1.8.0",
-      "blocker_reason": "staged storm dir missing: usr/local"
+      "portable_availability": "PACKAGED",
+      "runtime_verified": true,
+      "verify_verdict": "PASS",
+      "version": "2.0.0",
+      "blocker_reason": null
     },
     {
       "id": "sympy",
@@ -365,11 +365,11 @@
       "id": "why3",
       "capability_ids": [],
       "official_url": null,
-      "portable_availability": "UNAVAILABLE",
+      "portable_availability": "PACKAGED",
       "runtime_verified": false,
-      "verify_verdict": "SKIP",
+      "verify_verdict": "FAIL",
       "version": "1.8.0",
-      "blocker_reason": "why3 release tarball unreachable (inria gitlabpages + gitlab.inria.fr, all candidates)"
+      "blocker_reason": null
     },
     {
       "id": "z3",

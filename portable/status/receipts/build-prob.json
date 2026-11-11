@@ -1,21 +1,16 @@
 {
   "tool_id": "prob",
   "status": "UNAVAILABLE",
-  "failure_reason": "no reachable official prob-cli linux64 download channel (GitHub release API empty; www3 patterns 404) — needs manual license/download page interaction",
-  "version": "1.14.0",
+  "failure_reason": "probcli_linux64.zip unreachable at stups.hhu-hosting.de",
+  "version": "1.16.1",
   "kind": "java-bundle",
   "glibc_max": null,
   "elf_arch": null,
   "needed_libs": null,
   "version_output": "(unavailable)",
   "upstream": null,
-  "build_ts": "2026-11-10T22:34:32Z",
+  "build_ts": "2026-11-11T10:40:29Z",
   "log_tail": [
-    "[19:13:52] [prob] FATAL: download failed: https://www3.hhu.de/stups/downloads/prob/cli/prob-cli-1.14.0-linux64.tar.gz",
-    "[19:13:52] [prob] fetch: https://www3.hhu.de/stups/downloads/prob/cli/prob-cli-linux64-1.13.1.tar.gz",
-    "[19:13:54] [prob] FATAL: download failed: https://www3.hhu.de/stups/downloads/prob/cli/prob-cli-linux64-1.13.1.tar.gz",
-    "[19:13:54] [prob] fetch: https://www3.hhu.de/stups/downloads/prob/cli/prob-cli-1.13.1-linux64.tar.gz",
-    "[19:13:56] [prob] FATAL: download failed: https://www3.hhu.de/stups/downloads/prob/cli/prob-cli-1.13.1-linux64.tar.gz",
     "[19:13:56] [prob] UNAVAILABLE: no reachable official prob-cli linux64 download channel (GitHub release API empty; www3 patterns 404) — needs manual license/download page interaction",
     "[19:13:56] [prob] build OK: prob 1.14.0 glibc_max=n/a",
     "[19:16:06] [prob] building prob version=1.14.0 kind=java-bundle",
@@ -50,10 +45,15 @@
     "[22:32:43] [prob] fetch: https://www3.hhu.de/stups/downloads/prob/cli/prob-cli-1.13.1-linux64.tar.gz",
     "[22:34:32] [prob] FATAL: download failed: https://www3.hhu.de/stups/downloads/prob/cli/prob-cli-1.13.1-linux64.tar.gz",
     "[22:34:32] [prob] UNAVAILABLE: no reachable official prob-cli linux64 download channel (GitHub release API empty; www3 patterns 404) — needs manual license/download page interaction",
-    "[22:34:32] [prob] build UNAVAILABLE (recorded, not failed): prob"
+    "[22:34:32] [prob] build UNAVAILABLE (recorded, not failed): prob",
+    "[10:37:22] [prob] building prob version=1.16.1 kind=java-bundle",
+    "[10:37:22] [prob] fetch: https://stups.hhu-hosting.de/downloads/prob/cli/releases/1.16.1/probcli_linux64.zip",
+    "[10:40:29] [prob] FATAL: download failed: https://stups.hhu-hosting.de/downloads/prob/cli/releases/1.16.1/probcli_linux64.zip",
+    "[10:40:29] [prob] UNAVAILABLE: probcli_linux64.zip unreachable at stups.hhu-hosting.de",
+    "[10:40:29] [prob] build UNAVAILABLE (recorded, not failed): prob"
   ],
   "package": {
     "path": "packages/tools/prob.tar.gz",
-    "sha256": "0c680ac82023a86d820757a47f73385fa99518d80b617a55183afa6d7c7d9e32"
+    "sha256": "3f06a460d1820caa94fc9ad46bb5c977682f62f08f8b9d6ea969c52033afd0e5"
   }
 }

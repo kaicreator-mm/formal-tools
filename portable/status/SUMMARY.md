@@ -1,15 +1,15 @@
 # Portable Runtime Build Summary (Debian 13 x86_64)
 
-Generated: 2026-11-11T10:12:26+00:00  ·  source HEAD: `unknown`
+Generated: 2026-11-11T13:37:31+00:00  ·  source HEAD: `unknown`
 Target: Debian 13 (trixie) x86_64, glibc <= 2.41 · runtimes: Python 3.13.5 / Node 22.16.0 / Java 21.0.13+9
 
 | metric | count |
 |---|---|
 | tools registered | 36 |
-| build PACKAGED | 32 |
-| runtime_verified PASS | 32 |
+| build PACKAGED | 34 |
+| runtime_verified PASS | 33 |
 | BUILD_FAILED | 0 (-) |
-| UNAVAILABLE | 4 (nuxmv, prob, storm, why3) |
+| UNAVAILABLE | 2 (nuxmv, prob) |
 
 | tool | availability | version | verify | blocker |
 |---|---|---|---|---|
@@ -36,18 +36,18 @@ Target: Debian 13 (trixie) x86_64, glibc <= 2.41 · runtimes: Python 3.13.5 / No
 | nuxmv | UNAVAILABLE | 2.1.0 | SKIP | nuXmv binaries require manual license acceptance on nuxmv.fbk.eu (form-gated); no automatable official channel — candidates tried all failed |
 | ortools | PACKAGED | unknown | PASS | - |
 | prism | PACKAGED | 4.11 | PASS | - |
-| prob | UNAVAILABLE | 1.14.0 | SKIP | no reachable official prob-cli linux64 download channel (GitHub release API empty; www3 patterns 404) — needs manual license/download page interaction |
+| prob | UNAVAILABLE | 1.16.1 | SKIP | probcli_linux64.zip unreachable at stups.hhu-hosting.de |
 | pymc | PACKAGED | unknown | PASS | - |
 | rdf-shacl | PACKAGED | unknown | PASS | - |
 | robot | PACKAGED | 1.9.11 | PASS | - |
 | simpy | PACKAGED | unknown | PASS | - |
 | souffle | PACKAGED | 2.5 | PASS | - |
-| storm | UNAVAILABLE | 1.8.0 | SKIP | staged storm dir missing: usr/local |
+| storm | PACKAGED | 2.0.0 | PASS | - |
 | sympy | PACKAGED | unknown | PASS | - |
 | tla-tlc | PACKAGED | 1.8.0 | PASS | - |
 | tree-sitter | PACKAGED | 0.27.2 | PASS | - |
 | vampire | PACKAGED | 5.1.0 | PASS | - |
-| why3 | UNAVAILABLE | 1.8.0 | SKIP | why3 release tarball unreachable (inria gitlabpages + gitlab.inria.fr, all candidates) |
+| why3 | PACKAGED | 1.8.0 | FAIL | - |
 | z3 | PACKAGED | 5.4.0 | PASS | - |
 
 Per-tool receipts: receipts/build-<id>.json, receipts/verify-<id>.json.
