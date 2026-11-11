@@ -1,9 +1,9 @@
 #!/bin/sh
-# unpack.sh — reassemble + verify + extract the split portable package.
+# unpack.sh — reassemble + verify + extract the split portable package (zstd format).
 # Usage:  sh unpack.sh [--parts-dir DIR] [--dest DIR]
 #   --parts-dir  directory containing the split parts + SHA256SUMS (default: this script's dir)
 #   --dest       extraction target (default: ./formal-tools-portable-debian13-x86_64)
-# Steps: sha256-verify every part against SHA256SUMS -> cat parts -> tar -xzf -> print next steps.
+# Requires: sha256sum, zstd, tar (Debian: apt install zstd).
 set -eu
 HERE=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 PARTS_DIR=""
@@ -24,13 +24,15 @@ echo "== verify SHA256SUMS =="
 sha256sum -c SHA256SUMS
 
 echo "== reassemble =="
-cat "$BASE.tar.gz.split-"* > "/tmp/$BASE.tar.gz"
+cat "$BASE.tar.zst.split-"* > "/tmp/$BASE.tar.zst"
+echo "== integrity =="
+zstd -t "/tmp/$BASE.tar.zst"
 echo "== extract to $DEST =="
 mkdir -p "$DEST"
-tar -xzf "/tmp/$BASE.tar.gz" -C "$DEST"
-rm -f "/tmp/$BASE.tar.gz"
+tar --zstd -xf "/tmp/$BASE.tar.zst" -C "$DEST"
+rm -f "/tmp/$BASE.tar.zst"
 echo "== done =="
 echo "Next steps:"
 echo "  $DEST/$BASE/bin/tool-runner list"
 echo "  $DEST/$BASE/bin/tool-runner doctor all"
-echo "  $DEST/$BASE/bin/tool-runner verify all   # needs writable evidence dir: FT_EVIDENCE_DIR=... "
+echo "  $DEST/$BASE/bin/tool-runner verify all   # FT_EVIDENCE_DIR=<writable dir> recommended"

@@ -2,10 +2,12 @@
 # portable/packaging/pack.sh — assemble the portable bundle on the build server (host side).
 # Produces:
 #   $FT_BUNDLE/                          assembled bundle tree (also the verify input)
-#   $FT_PKG_DIR/formal-tools-portable-debian13-x86_64.tar.gz.split-*  (<=190MiB parts)
-#   $FT_PKG_DIR/tools/<id>.tar.gz        per-tool incremental packages
-#   $FT_PKG_DIR/runtimes/*.tar.gz        shared runtime packages
+#   $FT_PKG_DIR/formal-tools-portable-debian13-x86_64.tar.zst.split-*  (<=190MiB parts, zstd -22)
+#   $FT_PKG_DIR/tools/<id>-<version>-linux-x86_64.tar.zst        per-tool packages (zstd -22)
+#   $FT_PKG_DIR/runtimes/<rt>-<version>-linux-x86_64.tar.zst     shared runtime packages
 #   $FT_PKG_DIR/manifest.json, SHA256SUMS, unpack.sh
+# Every archive is integrity-verified after compression: zstd -t + tar entry count
+# vs source file count (mismatch = hard fail).
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 # shellcheck source=../env.sh
@@ -18,7 +20,6 @@ rm -rf "$B"
 mkdir -p "$B"/{bin,tools,runtimes,tests,registry,evidence,licenses,docs}
 
 echo "== assemble bundle tree =="
-rm -rf "$B/tools"; mkdir -p "$B/tools"
 cp -a "$FT_OUT/runtimes/." "$B/runtimes/"
 for d in "$FT_OUT"/tools/*/; do
   id=$(basename "$d")
@@ -50,28 +51,72 @@ else
   "$PY" "$HERE/make-manifest.py" "$B"
 fi
 
-echo "== per-tool + runtime packages =="
+# ---- compression: zstd ultra -22 (smallest), multithreaded, long window -------------
+ZSTD_FLAGS=(--ultra -22 -T16 --long=31 -q)
+PKG_FAILS=0
+
+verify_pkg() { # src_dir archive -> hard integrity check after compression
+  local src="$1" ar="$2"
+  zstd -t "$ar" || { echo "VERIFY FAIL(zstd -t): $ar"; PKG_FAILS=$((PKG_FAILS+1)); return 1; }
+  local a s
+  a=$(zstd -dc "$ar" 2>/dev/null | tar -tf - 2>/dev/null | wc -l)
+  s=$(find "$src" | wc -l)
+  if [ "$a" != "$s" ]; then
+    echo "VERIFY FAIL(entries): $ar tar=$a source=$s"
+    PKG_FAILS=$((PKG_FAILS+1)); return 1
+  fi
+  echo "verify OK: $(basename "$ar") ($a entries)"
+}
+
+echo "== per-tool packages (zstd -22, versioned names) =="
 mkdir -p "$FT_PKG_DIR/tools" "$FT_PKG_DIR/runtimes"
-( cd "$B" && for id in tools/*/; do
-    id=${id#tools/}; id=${id%/}
-    tar -czf "$FT_PKG_DIR/tools/$id.tar.gz" "tools/$id"
-  done )
-( cd "$B" && for rt in runtimes/*/; do
-    rt=${rt#runtimes/}; rt=${rt%/}
-    tar -czf "$FT_PKG_DIR/runtimes/$rt.tar.gz" "runtimes/$rt"
+rm -f "$FT_PKG_DIR"/tools/*.tar.gz "$FT_PKG_DIR"/tools/*.tar.zst
+( cd "$B" || exit 1
+  for d in tools/*/; do
+    id=${d#tools/}; id=${id%/}
+    ver=""
+    # shellcheck disable=SC1091
+    . "$B/tools/$id/meta.sh" 2>/dev/null && ver="${TOOL_VERSION:-}"
+    out="$FT_PKG_DIR/tools/${id}-${ver}-linux-x86_64.tar.zst"
+    tar -cf - "tools/$id" | zstd "${ZSTD_FLAGS[@]}" -o "$out"
+    verify_pkg "$B/tools/$id" "$out"
   done )
 
-echo "== whole-bundle split archive (<=190MiB parts) =="
-TARBALL="$FT_PKG_DIR/formal-tools-portable-debian13-x86_64.tar.gz"
-( cd "$FT_OUT/bundle" && tar -czf "$TARBALL" "$(basename "$B")" )
-rm -f "$TARBALL".split-*
-split -b 190m -d -a 3 "$TARBALL" "$TARBALL.split-"
-rm -f "$TARBALL"   # keep only parts; unpack.sh reassembles
+echo "== runtime packages (zstd -22, versioned names) =="
+rm -f "$FT_PKG_DIR"/runtimes/*.tar.gz "$FT_PKG_DIR"/runtimes/*.tar.zst
+( cd "$B" || exit 1
+  for d in runtimes/*/; do
+    rt=${d#runtimes/}; rt=${rt%/}
+    case "$rt" in
+      python313) ver=3.13.5 ;;
+      node22)    ver=22.16.0 ;;
+      java21)    ver=21.0.13.9 ;;
+      dotnet8)   ver=8.0 ;;
+      py-cache)  ver=1.25.0 ;;
+      *)         ver="" ;;
+    esac
+    out="$FT_PKG_DIR/runtimes/${rt}-${ver}-linux-x86_64.tar.zst"
+    tar -cf - "runtimes/$rt" | zstd "${ZSTD_FLAGS[@]}" -o "$out"
+    verify_pkg "$B/runtimes/$rt" "$out"
+  done )
+
+echo "== whole-bundle split archive (zstd -22, <=190MiB parts) =="
+rm -f "$FT_PKG_DIR"/formal-tools-portable-debian13-x86_64.tar.gz* \
+      "$FT_PKG_DIR"/formal-tools-portable-debian13-x86_64.tar.zst*
+BZ="$FT_PKG_DIR/formal-tools-portable-debian13-x86_64.tar.zst"
+( cd "$FT_OUT/bundle" && tar -cf - "$(basename "$B")" | zstd "${ZSTD_FLAGS[@]}" -o "$BZ" )
+verify_pkg "$FT_OUT/bundle" "$BZ"
+split -b 190m -d -a 3 "$BZ" "$BZ.split-"
+rm -f "$BZ"
 
 echo "== SHA256SUMS + unpack script =="
-( cd "$FT_PKG_DIR" && find . -type f \( -name '*.tar.gz.split-*' -o -name 'tools/*.tar.gz' -o -name 'runtimes/*.tar.gz' \) -printf '%P\n' | sort | xargs sha256sum > SHA256SUMS )
+( cd "$FT_PKG_DIR" && find . -type f \( -name '*.tar.zst.split-*' -o -name 'tools/*.tar.zst' -o -name 'runtimes/*.tar.zst' \) -printf '%P\n' | sort | xargs sha256sum > SHA256SUMS )
 cp "$HERE/unpack-template/unpack.sh" "$FT_PKG_DIR/unpack.sh" && chmod +x "$FT_PKG_DIR/unpack.sh"
 
 echo "bundle: $B"
 du -sh "$B" "$FT_PKG_DIR" 2>/dev/null || true
-echo "pack OK"
+if [ "$PKG_FAILS" -gt 0 ]; then
+  echo "pack FAILED: $PKG_FAILS archive(s) failed post-compression verification"
+  exit 1
+fi
+echo "pack OK (all archives verified)"

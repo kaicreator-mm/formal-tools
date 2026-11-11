@@ -68,7 +68,10 @@ for tid in tool_ids:
     meta = {}
     if os.path.isfile(meta_p):
         meta = json.load(open(meta_p, encoding="utf-8"))
-    pkg = os.path.join(out_dir, "packages", "tools", f"{tid}.tar.gz")
+    pkg = None
+    pkg_matches = sorted(glob.glob(os.path.join(out_dir, "packages", "tools", f"{tid}-*-linux-x86_64.tar.zst")))
+    if pkg_matches:
+        pkg = pkg_matches[-1]
     build = {
         "tool_id": tid,
         "status": ev.get("build_status", "NOT_RUN"),
@@ -83,9 +86,9 @@ for tid in tool_ids:
         "build_ts": meta.get("build_ts"),
         "log_tail": tail(os.path.join(out_dir, "logs", f"{tid}.build.log")),
     }
-    if os.path.isfile(pkg):
+    if pkg and os.path.isfile(pkg):
         h = hashlib.sha256(open(pkg, "rb").read()).hexdigest()
-        build["package"] = {"path": f"packages/tools/{tid}.tar.gz", "sha256": h}
+        build["package"] = {"path": "packages/tools/" + os.path.basename(pkg), "sha256": h}
     builds[tid] = build
     json.dump(build, open(os.path.join(status_dir, "receipts", f"build-{tid}.json"), "w", encoding="utf-8"),
               indent=2, ensure_ascii=False)
