@@ -66,6 +66,7 @@ ft_tool_build() {
     || cp "/usr/libexec/gcc/x86_64-linux-gnu/$gccmajor/cc1" "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" \
     || ft::die "cc1 not found for gcc $gccmajor"
   ln -sf "../lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" "$FT_TOOL_DIR/gccroot/bin/cc1"
+  ft::copy_libs "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" "$FT_TOOL_DIR/lib" || true
   ft::note upstream_note "kani-verifier crate via crates.io; cargo kani setup materialized toolchain into home/.kani (shipped)"
   ft::make_shim 'export PATH="$TOOL_DIR/bin:$TOOL_DIR/gccroot/bin:$PATH"
 export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
