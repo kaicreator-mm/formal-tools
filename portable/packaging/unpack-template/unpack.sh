@@ -1,38 +1,37 @@
 #!/bin/sh
-# unpack.sh — reassemble + verify + extract the split portable package (zstd format).
-# Usage:  sh unpack.sh [--parts-dir DIR] [--dest DIR]
-#   --parts-dir  directory containing the split parts + SHA256SUMS (default: this script's dir)
-#   --dest       extraction target (default: ./formal-tools-portable-debian13-x86_64)
+# unpack.sh — verify + extract the per-tool archives into a complete bundle tree.
+# Distribution layout: one .tar.zst per tool + one per shared runtime + one core archive
+# (bin/tool-runner, tests/, registry/, manifest.json, evidence/). All zstd -22.
+# Usage:  sh unpack.sh [--src DIR] [--dest DIR]
 # Requires: sha256sum, zstd, tar (Debian: apt install zstd).
 set -eu
 HERE=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-PARTS_DIR=""
+SRC=""
 DEST=""
 while [ $# -gt 0 ]; do
   case "$1" in
-    --parts-dir) PARTS_DIR="$2"; shift 2 ;;
+    --src) SRC="$2"; shift 2 ;;
     --dest) DEST="$2"; shift 2 ;;
     *) echo "unknown arg: $1" >&2; exit 2 ;;
   esac
 done
-PARTS_DIR="${PARTS_DIR:-$HERE}"
+SRC="${SRC:-$HERE}"
 BASE="formal-tools-portable-debian13-x86_64"
 DEST="${DEST:-./$BASE}"
 
-cd "$PARTS_DIR"
+cd "$SRC"
 echo "== verify SHA256SUMS =="
 sha256sum -c SHA256SUMS
 
-echo "== reassemble =="
-cat "$BASE.tar.zst.split-"* > "/tmp/$BASE.tar.zst"
-echo "== integrity =="
-zstd -t "/tmp/$BASE.tar.zst"
-echo "== extract to $DEST =="
+echo "== extract core + runtimes + tools into $DEST =="
 mkdir -p "$DEST"
-tar --zstd -xf "/tmp/$BASE.tar.zst" -C "$DEST"
-rm -f "/tmp/$BASE.tar.zst"
+for ar in formal-tools-portable-core-linux-x86_64.tar.zst runtimes/*.tar.zst tools/*.tar.zst; do
+  [ -f "$ar" ] || continue
+  tar --zstd -xf "$ar" -C "$DEST"
+done
+
 echo "== done =="
 echo "Next steps:"
-echo "  $DEST/$BASE/bin/tool-runner list"
-echo "  $DEST/$BASE/bin/tool-runner doctor all"
-echo "  $DEST/$BASE/bin/tool-runner verify all   # FT_EVIDENCE_DIR=<writable dir> recommended"
+echo "  $DEST/bin/tool-runner list"
+echo "  $DEST/bin/tool-runner doctor all"
+echo "  $DEST/bin/tool-runner verify all   # FT_EVIDENCE_DIR=<writable dir> recommended"

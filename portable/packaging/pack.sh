@@ -103,17 +103,29 @@ rm -f "$FT_PKG_DIR"/runtimes/*.tar.gz "$FT_PKG_DIR"/runtimes/*.tar.zst
     verify_pkg "$B/runtimes/$rt" "$out"
   done )
 
-echo "== whole-bundle split archive (zstd -22, <=190MiB parts) =="
+echo "== core archive (zstd -22): runner + tests + registry + manifest + evidence =="
 rm -f "$FT_PKG_DIR"/formal-tools-portable-debian13-x86_64.tar.gz* \
-      "$FT_PKG_DIR"/formal-tools-portable-debian13-x86_64.tar.zst*
-BZ="$FT_PKG_DIR/formal-tools-portable-debian13-x86_64.tar.zst"
-( cd "$FT_OUT/bundle" && tar -cf - "$(basename "$B")" | zstd "${ZSTD_FLAGS[@]}" -o "$BZ" )
-verify_pkg "$FT_OUT/bundle" "$BZ"
-split -b 190m -d -a 3 "$BZ" "$BZ.split-"
-rm -f "$BZ"
+      "$FT_PKG_DIR"/formal-tools-portable-debian13-x86_64.tar.zst* \
+      "$FT_PKG_DIR"/formal-tools-portable-core-*
+CORE="$FT_PKG_DIR/formal-tools-portable-core-linux-x86_64.tar.zst"
+( cd "$B" && tar -cf - bin tests registry licenses docs manifest.json evidence \
+    | zstd "${ZSTD_FLAGS[@]}" -o "$CORE" )
+verify_pkg_core() { # src paths are inside $B; entry parity against same list
+  zstd -t "$CORE" || { echo "VERIFY FAIL(zstd -t): core"; PKG_FAILS=$((PKG_FAILS+1)); return 1; }
+  local a s
+  a=$(zstd -dc "$CORE" 2>/dev/null | tar -tf - 2>/dev/null | wc -l)
+  s=$(cd "$B" && find bin tests registry licenses docs manifest.json evidence | wc -l)
+  if [ "$a" != "$s" ]; then
+    echo "VERIFY FAIL(entries): core tar=$a src=$s"
+    PKG_FAILS=$((PKG_FAILS+1)); return 1
+  fi
+  echo "verify OK: formal-tools-portable-core-linux-x86_64.tar.zst ($a entries)"
+}
+verify_pkg_core
 
 echo "== SHA256SUMS + unpack script =="
-( cd "$FT_PKG_DIR" && find . -type f \( -name '*.tar.zst.split-*' -o -name 'tools/*.tar.zst' -o -name 'runtimes/*.tar.zst' \) -printf '%P\n' | sort | xargs sha256sum > SHA256SUMS )
+( cd "$FT_PKG_DIR" && find . -type f \( -name '*.tar.zst' -o -name 'tools/*.tar.zst' -o -name 'runtimes/*.tar.zst' \) -printf '%P\n' \
+    | grep -v '^SHA256SUMS$' | sort | xargs sha256sum > SHA256SUMS )
 cp "$HERE/unpack-template/unpack.sh" "$FT_PKG_DIR/unpack.sh" && chmod +x "$FT_PKG_DIR/unpack.sh"
 
 echo "bundle: $B"
