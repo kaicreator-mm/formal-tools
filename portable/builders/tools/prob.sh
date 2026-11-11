@@ -26,6 +26,9 @@ ft_tool_build() {
   FT_TOOL_VERSION=$(printf '%s' "$v" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "$FT_TOOL_VERSION")
   ft::make_shim 'export JAVA_HOME="$FT_ROOT/runtimes/java21"
 export PATH="$JAVA_HOME/bin:$TOOL_DIR/bin:$PATH"
-export PROB_HOME="$TOOL_DIR"
+# probcli resolves foreign libs (counter.so etc.) under $PROB_HOME/lib — the zip
+# layout keeps lib/ next to the bin/ dir
+export PROB_HOME="$TOOL_DIR/bin"
+export LD_LIBRARY_PATH="$TOOL_DIR/bin/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 exec "$TOOL_DIR/bin/probcli" "$@"'
 }
