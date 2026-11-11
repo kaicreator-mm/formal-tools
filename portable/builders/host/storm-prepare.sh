@@ -11,11 +11,18 @@ mkdir -p "$FT_OUT/staging"
 STAGE="$FT_OUT/staging/storm"
 rm -rf "$STAGE"; mkdir -p "$STAGE"
 
-IMG_SRC="docker.m.daocloud.io/movesrwth/storm:stable"
-IMG="movesrwth/storm:stable"
+IMG_SRC="docker.m.daocloud.io/movesrwth/storm:1.8.0"
+IMG="movesrwth/storm:1.8.0"
 if ! docker image inspect "$IMG" >/dev/null 2>&1; then
   docker pull -q "$IMG_SRC" || { echo "FATAL: storm image pull failed"; exit 3; }
   docker tag "$IMG_SRC" "$IMG"
+fi
+# glibc ceiling guard: image base must be <= Debian 13 (2.41) or the payload cannot run here
+IMG_GLIBC=$(docker run --rm --entrypoint /bin/sh "$IMG" -c 'ldd --version | head -1' | grep -oE '[0-9]+\.[0-9]+$')
+echo "image glibc: $IMG_GLIBC"
+if [ "$(printf '%s\n2.41\n' "$IMG_GLIBC" | sort -V | head -1)" != "$IMG_GLIBC" ]; then
+  echo "FATAL: image glibc $IMG_GLIBC exceeds target ceiling 2.41"
+  exit 3
 fi
 
 STORM_BIN=$(docker run --rm --entrypoint /bin/sh "$IMG" -c 'for d in /usr/local/bin /usr/bin /opt/storm/bin /opt/storm/inner/bin; do [ -x "$d/storm" ] && echo "$d/storm" && break; done')
