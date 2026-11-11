@@ -39,6 +39,9 @@ ft_tool_build() {
     sleep 10
   done
   [ "$ok" = 1 ] || ft::die "cargo kani setup failed (3 attempts)"
+  # setup ran as root in the builder container -> toolchain dirs are 0700; the offline
+  # verify containers run as a non-root uid and need read+traverse access
+  chmod -R a+rX "$FT_TOOL_DIR/home"
   [ -d "$FT_TOOL_DIR/home/.kani" ] || ft::die "no .kani after setup"
   cp /root/.cargo/bin/cargo-kani "$FT_TOOL_DIR/bin/"
   local v
