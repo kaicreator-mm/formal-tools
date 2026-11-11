@@ -7,4 +7,4 @@ ASSIGN
     s < 7 : s + 1;
     TRUE : 7;
   esac;
-SPEC EF s = 7
+CTLSPEC EF s = 7

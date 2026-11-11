@@ -15,7 +15,7 @@ set -euo pipefail
 rm -rf /b/tools/nuxmv && mkdir -p /b/tools/nuxmv
 cp -a /src-tool/. /b/tools/nuxmv/
 chmod -R a+rX /b/tools/nuxmv
-grep -q "nuXmv 2.2.0" /b/tools/nuxmv/bin/nuXmv 2>/dev/null || strings /b/tools/nuxmv/bin/nuXmv | grep -q "nuXmv" || { echo "BIN MISSING"; exit 3; }
+[ -x /b/tools/nuxmv/bin/nuXmv ] || { echo "BIN MISSING"; exit 3; }
 rm -rf /b/tests/nuxmv && mkdir -p /b/tests/nuxmv && cp -a /src-cases/. /b/tests/nuxmv/
 cd /b
 tar -cf - tools/nuxmv | zstd --ultra -22 -T16 -q -f -o /pkg/tools/nuxmv-2.2.0-linux-x86_64.tar.zst

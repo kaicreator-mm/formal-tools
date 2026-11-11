@@ -7,4 +7,4 @@ ASSIGN
     s < 7 : s + 1;
     TRUE : 7;
   esac;
-SPEC AG s <= 5
+CTLSPEC AG s <= 5
