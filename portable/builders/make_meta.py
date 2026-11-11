@@ -25,7 +25,8 @@ with open(meta_json, "w", encoding="utf-8") as f:
     json.dump(fields, f, indent=2, ensure_ascii=False)
 meta_sh = os.path.join(tool_dir, "meta.sh")
 with open(meta_sh, "w", encoding="utf-8") as f:
+    # TOOL_-prefixed names as consumed by bin/tool-runner (tool_meta)
     for k in ("tool_id", "version", "kind", "main_bin", "glibc_max", "elf_arch"):
-        f.write("%s=%s\n" % (k.upper(), shlex.quote(fields[k] or "")))
+        f.write("TOOL_%s=%s\n" % (k.upper(), shlex.quote(fields[k] or "")))
     f.write("UNAVAILABLE=%s\n" % ("1" if fields["unavailable"] else "0"))
 print("meta written:", meta_json)
