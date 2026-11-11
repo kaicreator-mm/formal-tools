@@ -1,0 +1,27 @@
+{
+  "tool_id": "dowhy",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "unknown",
+  "kind": "python-lib",
+  "glibc_max": null,
+  "elf_arch": null,
+  "needed_libs": null,
+  "version_output": null,
+  "upstream": null,
+  "build_ts": "2026-11-10T22:34:36Z",
+  "log_tail": [
+    "[18:14:28] [dowhy] building dowhy version=runtime-resolved kind=python-lib",
+    "[18:14:31] [dowhy] build OK: dowhy 0.14 glibc_max=n/a",
+    "[18:33:22] [dowhy] building dowhy version=runtime-resolved kind=python-lib",
+    "[18:33:25] [dowhy] build OK: dowhy 0.14 glibc_max=n/a",
+    "[19:14:53] [dowhy] building dowhy version=runtime-resolved kind=python-lib",
+    "[19:21:58] [dowhy] building dowhy version=runtime-resolved kind=python-lib",
+    "[19:25:44] [dowhy] building dowhy version=runtime-resolved kind=python-lib",
+    "[22:34:33] [dowhy] building dowhy version=runtime-resolved kind=python-lib"
+  ],
+  "package": {
+    "path": "packages/tools/dowhy.tar.gz",
+    "sha256": "f2191538c18916aa96ba9917be617c8f4c840d8f45b251efd1c8ee7581329fc7"
+  }
+}

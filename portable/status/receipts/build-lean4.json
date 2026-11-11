@@ -1,0 +1,30 @@
+{
+  "tool_id": "lean4",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "4.35.0",
+  "kind": "binary",
+  "glibc_max": "2.2",
+  "elf_arch": "Advanced",
+  "needed_libs": "libInit_shared.so,libleanshared_2.so,libleanshared_1.so,libleanshared.so,libc.so.6,libpthread.so.0,libdl.so.2,libm.so.6",
+  "version_output": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)",
+  "upstream": null,
+  "build_ts": "2026-11-10T22:27:25Z",
+  "log_tail": [
+    "[17:51:02] [lean4] building lean4 version=4.35.0 kind=binary",
+    "[17:51:02] [lean4] fetch: https://github.com/leanprover/lean4/releases/download/v4.35.0/lean-4.35.0-linux.tar.zst",
+    "[17:58:37] [lean4] build OK: lean4 4.35.0 glibc_max=2.2",
+    "[18:31:27] [lean4] building lean4 version=4.35.0 kind=binary",
+    "[18:31:40] [lean4] build OK: lean4 4.35.0 glibc_max=2.2",
+    "[19:12:57] [lean4] building lean4 version=4.35.0 kind=binary",
+    "[19:13:12] [lean4] build OK: lean4 4.35.0 glibc_max=2.2",
+    "[19:15:35] [lean4] building lean4 version=4.35.0 kind=binary",
+    "[19:15:52] [lean4] build OK: lean4 4.35.0 glibc_max=2.2",
+    "[22:27:10] [lean4] building lean4 version=4.35.0 kind=binary",
+    "[22:27:25] [lean4] build OK: lean4 4.35.0 glibc_max=2.2"
+  ],
+  "package": {
+    "path": "packages/tools/lean4.tar.gz",
+    "sha256": "493450db52f0f4029b7dc37a9c5a78e677c46b3032d5b3827ed546caef7ec2dc"
+  }
+}

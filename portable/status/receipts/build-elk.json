@@ -1,0 +1,30 @@
+{
+  "tool_id": "elk",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "0.6.0",
+  "kind": "java-bundle",
+  "glibc_max": null,
+  "elf_arch": null,
+  "needed_libs": null,
+  "version_output": null,
+  "upstream": null,
+  "build_ts": "2026-11-10T22:27:01Z",
+  "log_tail": [
+    "[17:50:28] [elk] building elk version=0.6.0 kind=java-bundle",
+    "[17:50:28] [elk] fetch: https://github.com/liveontologies/elk-reasoner/releases/download/v0.6.0/elk-distribution-cli-0.6.0.zip",
+    "[17:50:41] [elk] build OK: elk 0.6.0 glibc_max=n/a",
+    "[18:31:18] [elk] building elk version=0.6.0 kind=java-bundle",
+    "[18:31:18] [elk] build OK: elk 0.6.0 glibc_max=n/a",
+    "[19:12:49] [elk] building elk version=0.6.0 kind=java-bundle",
+    "[19:12:49] [elk] build OK: elk 0.6.0 glibc_max=n/a",
+    "[19:15:27] [elk] building elk version=0.6.0 kind=java-bundle",
+    "[19:15:28] [elk] build OK: elk 0.6.0 glibc_max=n/a",
+    "[22:27:01] [elk] building elk version=0.6.0 kind=java-bundle",
+    "[22:27:01] [elk] build OK: elk 0.6.0 glibc_max=n/a"
+  ],
+  "package": {
+    "path": "packages/tools/elk.tar.gz",
+    "sha256": "55fb9f33f635faa9fb66d53c9815c6280a2b3b1caaad2091c9968dbd0ddc1f88"
+  }
+}

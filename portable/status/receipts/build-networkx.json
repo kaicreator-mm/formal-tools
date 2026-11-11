@@ -1,0 +1,26 @@
+{
+  "tool_id": "networkx",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "unknown",
+  "kind": "python-lib",
+  "glibc_max": null,
+  "elf_arch": null,
+  "needed_libs": null,
+  "version_output": null,
+  "upstream": null,
+  "build_ts": "2026-11-10T22:34:37Z",
+  "log_tail": [
+    "[18:14:27] [networkx] building networkx version=runtime-resolved kind=python-lib",
+    "[18:14:27] [networkx] build OK: networkx 3.7 glibc_max=n/a",
+    "[18:33:23] [networkx] building networkx version=runtime-resolved kind=python-lib",
+    "[18:33:23] [networkx] build OK: networkx 3.7 glibc_max=n/a",
+    "[19:21:59] [networkx] building networkx version=runtime-resolved kind=python-lib",
+    "[19:25:43] [networkx] building networkx version=runtime-resolved kind=python-lib",
+    "[22:34:37] [networkx] building networkx version=runtime-resolved kind=python-lib"
+  ],
+  "package": {
+    "path": "packages/tools/networkx.tar.gz",
+    "sha256": "0ca298f6bd8306c77480b49c1bf0963d872187498f497674f9399d3e7fcdb580"
+  }
+}

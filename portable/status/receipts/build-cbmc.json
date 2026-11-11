@@ -1,0 +1,42 @@
+{
+  "tool_id": "cbmc",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "6.11.0",
+  "kind": "binary",
+  "glibc_max": "2.38",
+  "elf_arch": "Advanced",
+  "needed_libs": "libstdc++.so.6,libm.so.6,libgcc_s.so.1,libc.so.6",
+  "version_output": "6.11.0 (cbmc-6.11.0)",
+  "upstream": null,
+  "build_ts": "2026-11-10T22:26:53Z",
+  "log_tail": [
+    "[17:48:22] [cbmc] building cbmc version=6.11.0 kind=binary",
+    "[17:48:22] [cbmc] fetch: https://github.com/diffblue/cbmc/releases/download/cbmc-6.11.0/ubuntu-24.04-cbmc-6.11.0-Linux.deb",
+    "[17:50:21] [cbmc] build OK: cbmc 6.11.0 glibc_max=2.38",
+    "[18:31:10] [cbmc] building cbmc version=6.11.0 kind=binary",
+    "[18:31:11] [cbmc] build OK: cbmc 6.11.0 glibc_max=2.38",
+    "[19:12:41] [cbmc] building cbmc version=6.11.0 kind=binary",
+    "[19:12:42] [cbmc] build OK: cbmc 6.11.0 glibc_max=2.38",
+    "[19:15:19] [cbmc] building cbmc version=6.11.0 kind=binary",
+    "[19:15:20] [cbmc] build OK: cbmc 6.11.0 glibc_max=2.38",
+    "[19:53:19] [cbmc] building cbmc version=6.11.0 kind=binary",
+    "[19:53:20] [cbmc] build OK: cbmc 6.11.0 glibc_max=2.38",
+    "[20:15:52] [cbmc] building cbmc version=6.11.0 kind=binary",
+    "[20:15:52] [cbmc] FATAL: cc1 not found for gcc 14.2.0",
+    "[20:15:52] [cbmc] spec build failed rc=0",
+    "[20:20:28] [cbmc] building cbmc version=6.11.0 kind=binary",
+    "[20:20:29] [cbmc] FATAL: cc1 not found for gcc 14",
+    "[20:20:29] [cbmc] spec build failed rc=0",
+    "[21:16:16] [cbmc] building cbmc version=6.11.0 kind=binary",
+    "[21:16:17] [cbmc] build OK: cbmc 6.11.0 glibc_max=2.38",
+    "[21:26:44] [cbmc] building cbmc version=6.11.0 kind=binary",
+    "[21:26:45] [cbmc] build OK: cbmc 6.11.0 glibc_max=2.38",
+    "[22:26:52] [cbmc] building cbmc version=6.11.0 kind=binary",
+    "[22:26:53] [cbmc] build OK: cbmc 6.11.0 glibc_max=2.38"
+  ],
+  "package": {
+    "path": "packages/tools/cbmc.tar.gz",
+    "sha256": "504222b6443e5431ba1eb30147e6d996b5743e1a2293de83a24d34f74b612fe0"
+  }
+}

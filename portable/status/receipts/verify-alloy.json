@@ -1,0 +1,28 @@
+{
+  "verdict": "PASS",
+  "phases": {
+    "pos": {
+      "exit": 0,
+      "duration_ms": 281,
+      "output_matched": true,
+      "exit_ok": true,
+      "label": "SATISFIABLE"
+    },
+    "neg": {
+      "exit": 0,
+      "duration_ms": 278,
+      "output_matched": true,
+      "exit_ok": true,
+      "label": "NO_COUNTEREXAMPLE"
+    },
+    "err": {
+      "exit": 0,
+      "duration_ms": 110,
+      "output_matched": true,
+      "exit_ok": true,
+      "label": "ERROR"
+    }
+  },
+  "skip": false,
+  "tool_id": "alloy"
+}

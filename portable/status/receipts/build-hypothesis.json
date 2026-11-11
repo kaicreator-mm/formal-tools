@@ -1,0 +1,27 @@
+{
+  "tool_id": "hypothesis",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "unknown",
+  "kind": "python-lib",
+  "glibc_max": null,
+  "elf_arch": null,
+  "needed_libs": null,
+  "version_output": null,
+  "upstream": null,
+  "build_ts": "2026-11-10T22:34:36Z",
+  "log_tail": [
+    "[18:14:28] [hypothesis] building hypothesis version=runtime-resolved kind=python-lib",
+    "[18:14:28] [hypothesis] build OK: hypothesis 6.170.15 glibc_max=n/a",
+    "[18:33:22] [hypothesis] building hypothesis version=runtime-resolved kind=python-lib",
+    "[18:33:22] [hypothesis] build OK: hypothesis 6.170.15 glibc_max=n/a",
+    "[19:14:53] [hypothesis] building hypothesis version=runtime-resolved kind=python-lib",
+    "[19:21:59] [hypothesis] building hypothesis version=runtime-resolved kind=python-lib",
+    "[19:25:44] [hypothesis] building hypothesis version=runtime-resolved kind=python-lib",
+    "[22:34:36] [hypothesis] building hypothesis version=runtime-resolved kind=python-lib"
+  ],
+  "package": {
+    "path": "packages/tools/hypothesis.tar.gz",
+    "sha256": "4502394f1e34bacf2a27012d73496c95134c32777872be1a33133afc8ba98ced"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "tool_id": "highs",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "unknown",
+  "kind": "python-lib",
+  "glibc_max": null,
+  "elf_arch": null,
+  "needed_libs": null,
+  "version_output": null,
+  "upstream": null,
+  "build_ts": "2026-11-10T22:34:36Z",
+  "log_tail": [
+    "[18:14:28] [highs] building highs version=runtime-resolved kind=python-lib",
+    "[18:14:28] [highs] build OK: highs 1.15.1 glibc_max=n/a",
+    "[18:33:22] [highs] building highs version=runtime-resolved kind=python-lib",
+    "[18:33:22] [highs] build OK: highs 1.15.1 glibc_max=n/a",
+    "[19:14:53] [highs] building highs version=runtime-resolved kind=python-lib",
+    "[19:21:58] [highs] building highs version=runtime-resolved kind=python-lib",
+    "[19:25:44] [highs] building highs version=runtime-resolved kind=python-lib",
+    "[22:34:36] [highs] building highs version=runtime-resolved kind=python-lib"
+  ],
+  "package": {
+    "path": "packages/tools/highs.tar.gz",
+    "sha256": "333563daf91bc09da93d499624c01e07fc79af35ae72215bc29075a815429b0b"
+  }
+}

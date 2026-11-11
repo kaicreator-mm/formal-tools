@@ -1,0 +1,6 @@
+{
+  "verdict": "SKIP",
+  "phases": {},
+  "skip": true,
+  "tool_id": "prob"
+}

@@ -1,0 +1,27 @@
+{
+  "tool_id": "rdf-shacl",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "unknown",
+  "kind": "python-lib",
+  "glibc_max": null,
+  "elf_arch": null,
+  "needed_libs": null,
+  "version_output": null,
+  "upstream": null,
+  "build_ts": "2026-11-10T22:34:39Z",
+  "log_tail": [
+    "[18:14:30] [rdf-shacl] building rdf-shacl version=runtime-resolved kind=python-lib",
+    "[18:14:31] [rdf-shacl] build OK: rdf-shacl 0.40.2 glibc_max=n/a",
+    "[18:33:24] [rdf-shacl] building rdf-shacl version=runtime-resolved kind=python-lib",
+    "[18:33:24] [rdf-shacl] build OK: rdf-shacl 0.40.2 glibc_max=n/a",
+    "[19:14:55] [rdf-shacl] building rdf-shacl version=runtime-resolved kind=python-lib",
+    "[19:22:01] [rdf-shacl] building rdf-shacl version=runtime-resolved kind=python-lib",
+    "[19:25:50] [rdf-shacl] building rdf-shacl version=runtime-resolved kind=python-lib",
+    "[22:34:39] [rdf-shacl] building rdf-shacl version=runtime-resolved kind=python-lib"
+  ],
+  "package": {
+    "path": "packages/tools/rdf-shacl.tar.gz",
+    "sha256": "49b06e5d7ec1746140a46f786c383a652961d959927ab88884ad0ac61ec13377"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "verdict": "PASS",
+  "phases": {
+    "pos": {
+      "exit": 0,
+      "duration_ms": 52,
+      "output_matched": true,
+      "exit_ok": true,
+      "label": "PARSED"
+    },
+    "neg": {
+      "exit": 0,
+      "duration_ms": 52,
+      "output_matched": true,
+      "exit_ok": true,
+      "label": "PARSE_ERROR_DETECTED"
+    }
+  },
+  "skip": false,
+  "tool_id": "tree-sitter"
+}

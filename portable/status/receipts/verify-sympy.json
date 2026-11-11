@@ -1,0 +1,21 @@
+{
+  "verdict": "PASS",
+  "phases": {
+    "pos": {
+      "exit": 0,
+      "duration_ms": 569,
+      "output_matched": true,
+      "exit_ok": true,
+      "label": "SOLVED"
+    },
+    "neg": {
+      "exit": 0,
+      "duration_ms": 371,
+      "output_matched": true,
+      "exit_ok": true,
+      "label": "REFUTED"
+    }
+  },
+  "skip": false,
+  "tool_id": "sympy"
+}

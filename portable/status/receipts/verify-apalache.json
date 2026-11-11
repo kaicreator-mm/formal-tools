@@ -1,0 +1,28 @@
+{
+  "verdict": "PASS",
+  "phases": {
+    "pos": {
+      "exit": 0,
+      "duration_ms": 1541,
+      "output_matched": true,
+      "exit_ok": true,
+      "label": "PROPERTY_HOLDS"
+    },
+    "neg": {
+      "exit": 0,
+      "duration_ms": 1655,
+      "output_matched": true,
+      "exit_ok": true,
+      "label": "COUNTEREXAMPLE"
+    },
+    "err": {
+      "exit": 0,
+      "duration_ms": 740,
+      "output_matched": true,
+      "exit_ok": true,
+      "label": "ERROR"
+    }
+  },
+  "skip": false,
+  "tool_id": "apalache"
+}

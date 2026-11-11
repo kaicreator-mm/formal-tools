@@ -1,0 +1,40 @@
+{
+  "tool_id": "tree-sitter",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "0.27.2",
+  "kind": "binary",
+  "glibc_max": "2.39",
+  "elf_arch": "Advanced",
+  "needed_libs": "libgcc_s.so.1,libm.so.6,libc.so.6,ld-linux-x86-64.so.2",
+  "version_output": "tree-sitter 0.27.2",
+  "upstream": null,
+  "build_ts": "2026-11-10T22:29:49Z",
+  "log_tail": [
+    "[17:56:04] [tree-sitter] building tree-sitter version=0.27.2 kind=binary",
+    "[17:56:04] [tree-sitter] fetch: https://github.com/tree-sitter/tree-sitter/releases/download/v0.27.2/tree-sitter-linux-x64.gz",
+    "[17:57:56] [tree-sitter] FATAL: download failed: https://github.com/tree-sitter/tree-sitter/releases/download/v0.27.2/tree-sitter-linux-x64.gz",
+    "[17:57:56] [tree-sitter] build OK: tree-sitter 0.27.2 glibc_max=n/a",
+    "[18:33:01] [tree-sitter] building tree-sitter version=0.27.2 kind=binary",
+    "[18:33:01] [tree-sitter] fetch: https://github.com/tree-sitter/tree-sitter/releases/download/v0.27.2/tree-sitter-linux-x64.gz",
+    "[18:33:11] [tree-sitter] build OK: tree-sitter 0.27.2 glibc_max=2.39",
+    "[19:14:24] [tree-sitter] building tree-sitter version=0.27.2 kind=binary",
+    "[19:14:24] [tree-sitter] build OK: tree-sitter 0.27.2 glibc_max=2.39",
+    "[19:17:20] [tree-sitter] building tree-sitter version=0.27.2 kind=binary",
+    "[19:17:20] [tree-sitter] build OK: tree-sitter 0.27.2 glibc_max=2.39",
+    "[20:49:55] [tree-sitter] building tree-sitter version=0.27.2 kind=binary",
+    "[20:49:55] [tree-sitter] build OK: tree-sitter 0.27.2 glibc_max=2.39",
+    "[21:01:54] [tree-sitter] building tree-sitter version=0.27.2 kind=binary",
+    "[21:02:07] [tree-sitter] build OK: tree-sitter 0.27.2 glibc_max=2.39",
+    "[21:11:45] [tree-sitter] building tree-sitter version=0.27.2 kind=binary",
+    "[21:11:45] [tree-sitter] build OK: tree-sitter 0.27.2 glibc_max=2.39",
+    "[22:08:37] [tree-sitter] building tree-sitter version=0.27.2 kind=binary",
+    "[22:08:37] [tree-sitter] build OK: tree-sitter 0.27.2 glibc_max=2.39",
+    "[22:29:49] [tree-sitter] building tree-sitter version=0.27.2 kind=binary",
+    "[22:29:49] [tree-sitter] build OK: tree-sitter 0.27.2 glibc_max=2.39"
+  ],
+  "package": {
+    "path": "packages/tools/tree-sitter.tar.gz",
+    "sha256": "76367c8ea33c6adc3bfbe043b09db9f25affdcf4a184453218a96cbf60c122d7"
+  }
+}

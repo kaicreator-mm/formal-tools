@@ -1,0 +1,30 @@
+{
+  "tool_id": "robot",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "1.9.11",
+  "kind": "jar",
+  "glibc_max": null,
+  "elf_arch": null,
+  "needed_libs": null,
+  "version_output": "ROBOT version 1.9.11",
+  "upstream": null,
+  "build_ts": "2026-11-10T22:28:40Z",
+  "log_tail": [
+    "[17:54:28] [robot] building robot version=1.9.11 kind=jar",
+    "[17:54:28] [robot] fetch: https://github.com/ontodev/robot/releases/download/v1.9.11/robot.jar",
+    "[17:55:22] [robot] build OK: robot 1.9.11 glibc_max=n/a",
+    "[18:32:27] [robot] building robot version=1.9.11 kind=jar",
+    "[18:32:29] [robot] build OK: robot 1.9.11 glibc_max=n/a",
+    "[19:13:57] [robot] building robot version=1.9.11 kind=jar",
+    "[19:13:59] [robot] build OK: robot 1.9.11 glibc_max=n/a",
+    "[19:16:43] [robot] building robot version=1.9.11 kind=jar",
+    "[19:16:45] [robot] build OK: robot 1.9.11 glibc_max=n/a",
+    "[22:28:38] [robot] building robot version=1.9.11 kind=jar",
+    "[22:28:40] [robot] build OK: robot 1.9.11 glibc_max=n/a"
+  ],
+  "package": {
+    "path": "packages/tools/robot.tar.gz",
+    "sha256": "cbfc8c3315ecdafd5fe3da377fcc64bc0a343fffa4ef4bb7aa3b4c0c1a9434ab"
+  }
+}
