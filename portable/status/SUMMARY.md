@@ -1,13 +1,13 @@
 # Portable Runtime Build Summary (Debian 13 x86_64)
 
-Generated: 2026-11-11T22:24:57+00:00  ·  source HEAD: `unknown`
+Generated: 2026-11-11T22:27:37+00:00  ·  source HEAD: `unknown`
 Target: Debian 13 (trixie) x86_64, glibc <= 2.41 · runtimes: Python 3.13.5 / Node 22.16.0 / Java 21.0.13+9
 
 | metric | count |
 |---|---|
 | tools registered | 36 |
 | build PACKAGED | 34 |
-| runtime_verified PASS | 33 |
+| runtime_verified PASS | 34 |
 | BUILD_FAILED | 0 (-) |
 | UNAVAILABLE | 2 (nuxmv, prob) |
 
@@ -41,7 +41,7 @@ Target: Debian 13 (trixie) x86_64, glibc <= 2.41 · runtimes: Python 3.13.5 / No
 | rdf-shacl | PACKAGED | 0.40.2 | PASS | - |
 | robot | PACKAGED | 1.9.11 | PASS | - |
 | simpy | PACKAGED | 4.1.2 | PASS | - |
-| souffle | PACKAGED | 2.5 | STALE_REVERIFY_REQUIRED | - |
+| souffle | PACKAGED | 2.5 | PASS | - |
 | storm | PACKAGED | 1.8.0 | PASS | - |
 | sympy | PACKAGED | 1.14.0 | PASS | - |
 | tla-tlc | PACKAGED | 1.8.0 | PASS | - |
