@@ -35,11 +35,18 @@ if os.path.isfile(prt):
         if t.get("blocker_reason"):
             reasons[t["id"]] = t["blocker_reason"]
 
+import re
+NAME_RE = re.compile(r"^(.*)-([^-]+)-linux-x86_64\.tar\.zst$")
+
+def parse_name(base):
+    m = NAME_RE.match(base)
+    return (m.group(1), m.group(2)) if m else (None, None)
+
 tool_files = sorted(glob.glob(os.path.join(pkg, "tools", "*.tar.zst")))
 rt_files = sorted(glob.glob(os.path.join(pkg, "runtimes", "*.tar.zst")))
 core = os.path.join(pkg, "formal-tools-portable-core-linux-x86_64.tar.zst")
 
-names = {"python313": "CPython 3.13.5", "node22": "Node.js 22.16.0",
+names = {"python313": "CPython 3.13.5", "node22": "Node.js 22.16.0", "py-cache": "tree-sitter 语法缓存",
          "java21": "Temurin JRE 21.0.13+9", "dotnet8": ".NET 8 runtime",
          "py-cache": "tree-sitter grammar cache"}
 
@@ -74,12 +81,12 @@ c = os.path.basename(core); s = os.path.getsize(core)
 L.append(f"| `{c}` | {human(s)} | **骨架包**: bin/tool-runner + tests/ 全部用例 + registry/ + manifest.json + evidence/ 收据 + licenses/ docs/ |")
 for f in rt_files:
     base = os.path.basename(f)
-    rt = base.split("-")[0]
+    rt, _ = parse_name(base)
     L.append(f"| `{base}` | {human(os.path.getsize(f))} | 共享运行时: {names.get(rt, rt)} |")
 for f in tool_files:
     base = os.path.basename(f)
-    tid = base.split("-")[0]
-    ver = version_of(tid)
+    tid, fname_ver = parse_name(base)
+    ver = version_of(tid) or fname_ver
     v = verdicts.get(tid, "?")
     mark = "✅" if v == "PASS" else ("⚠️" if v in ("SKIP", "UNAVAILABLE") else v)
     L.append(f"| `{base}` | {human(os.path.getsize(f))} | {tid} {ver} [{mark} {v}] |")
