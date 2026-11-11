@@ -180,3 +180,12 @@ ft::unavailable() {
   ft::log "UNAVAILABLE: $1"
   exit 0
 }
+
+# ft::set_version <v> — record a resolved tool version from INSIDE ft_tool_build.
+# The spec runs in a subshell, so env vars set there are lost to the driver; the
+# .version marker file is the channel that survives.
+ft::set_version() {
+  FT_TOOL_VERSION="${1:-}"
+  [ -n "${FT_TOOL_VERSION:-}" ] || return 1
+  printf '%s' "$FT_TOOL_VERSION" > "$FT_TOOL_DIR/.version"
+}

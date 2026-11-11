@@ -32,6 +32,12 @@ if [ "$rc" != 0 ]; then
   fi
 fi
 
+# ---- version resolution -----------------------------------------------------
+# specs may resolve versions inside ft_tool_build (subshell) — pick up the .version marker
+if [ -f "$FT_TOOL_DIR/.version" ]; then
+  FT_TOOL_VERSION=$(cat "$FT_TOOL_DIR/.version")
+fi
+
 # ---- version probe (best effort) ------------------------------------------
 FT_PROBE=("${FT_PROBE[@]:-}")
 ver_out=""

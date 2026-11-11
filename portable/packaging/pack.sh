@@ -51,8 +51,11 @@ else
   "$PY" "$HERE/make-manifest.py" "$B"
 fi
 
-# ---- compression: zstd ultra -22 (smallest), multithreaded, long window -------------
-ZSTD_FLAGS=(--ultra -22 -T16 --long=31 -q)
+# ---- compression: zstd ultra -22 (smallest), multithreaded ---------------------------
+# NOTE: no --long — piped streaming frames would then declare a huge decode window,
+# forcing --long=31 on every consumer (incl. plain `zstd -t`). -22 without --long keeps
+# archives decodable by any stock zstd >= 1.4.
+ZSTD_FLAGS=(--ultra -22 -T16 -q)
 PKG_FAILS=0
 
 verify_pkg() { # src_dir archive -> hard integrity check after compression

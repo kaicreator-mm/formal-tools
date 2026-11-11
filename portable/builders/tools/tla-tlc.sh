@@ -14,8 +14,8 @@ ft_tool_build() {
   [ -n "$url" ] || url="https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar"
   local jar
   jar=$(ft::fetch "$url")
-  FT_TOOL_VERSION=$(printf '%s' "$url" | grep -oE 'download/v[0-9.]+' | tr -d 'v' | grep -oE '[0-9].*')
-  [ -n "$FT_TOOL_VERSION" ] || FT_TOOL_VERSION="github-latest"
+  ft::set_version $(printf '%s' "$url" | grep -oE 'download/v[0-9.]+' | tr -d 'v' | grep -oE '[0-9].*') || true
+  [ -z "${FT_TOOL_VERSION:-}" ] && ft::set_version "1.8.0"
   cp "$jar" "$FT_TOOL_DIR/tla2tools.jar"
   ft::make_shim 'export JAVA_HOME="$FT_ROOT/runtimes/java21"
 export PATH="$JAVA_HOME/bin:$PATH"

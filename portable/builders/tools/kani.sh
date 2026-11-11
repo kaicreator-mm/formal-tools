@@ -55,7 +55,7 @@ ft_tool_build() {
   cp /root/.cargo/bin/cargo-kani "$FT_TOOL_DIR/bin/"
   local v
   v=$("$FT_TOOL_DIR/bin/cargo-kani" --version 2>/dev/null | head -1)
-  [ -n "$v" ] && FT_TOOL_VERSION=$(printf '%s' "$v" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+  [ -n "$v" ] && ft::set_version $(printf '%s' "$v" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
   # goto-cc (CBMC front end inside kani) execs `gcc` for preprocessing — ship a private
   # gccroot (driver + cc1), same recipe as the cbmc tool
   gccmajor=$(gcc -dumpversion)

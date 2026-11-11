@@ -11,11 +11,12 @@ ft_tool_build() {
   local ver tgz
   for ver in 5.5.0 5.4.0 5.3.0 5.2.0; do
     for host in archive.apache.org/dist mirrors.aliyun.com mirrors.ustc.edu.cn dlcdn.apache.org; do
-      FT_TOOL_VERSION="$ver"
+      ft::set_version "$ver" || true
       FT_UPSTREAM_URL="https://$host/jena/binaries/apache-jena-$ver.tar.gz"
       if tgz=$(ft::fetch "$FT_UPSTREAM_URL" 2>/dev/null); then break 2; fi
     done
   done
+  if [ -z "${FT_TOOL_VERSION:-}" ]; then ft::set_version "5.5.0"; fi
   [ -n "${tgz:-}" ] || ft::die "no apache-jena tarball found on mirrors (archive/aliyun/ustc/dlcdn)"
   ft::extract "$tgz" /tmp/jenax
   local src; src=$(find /tmp/jenax -maxdepth 1 -type d -name 'apache-jena-*' | head -1)

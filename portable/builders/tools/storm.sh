@@ -18,7 +18,7 @@ ft_tool_build() {
   [ -x "$FT_TOOL_DIR/bin/storm" ] || ft::unavailable "storm binary missing after staging copy"
   # version from staging env (probed host-side against the image)
   # shellcheck disable=SC1091
-  [ -f "$stage/env" ] && . "$stage/env" && [ -n "${STORM_VERSION:-}" ] && FT_TOOL_VERSION="$STORM_VERSION"
+  [ -f "$stage/env" ] && . "$stage/env" && [ -n "${STORM_VERSION:-}" ] && ft::set_version "$STORM_VERSION"
   for b in "$FT_TOOL_DIR"/bin/storm* "$FT_TOOL_DIR"/lib/*.so*; do
     [ -e "$b" ] || continue
     patchelf --set-rpath '$ORIGIN/../lib' "$b" 2>/dev/null || true

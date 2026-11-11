@@ -12,7 +12,7 @@ ft_tool_build() {
     local meta ver tgz
     meta=$(curl -fsSL --retry 3 "https://registry.npmjs.org/$pkg") || ft::die "npm registry unreachable for $pkg"
     ver=$(printf '%s' "$meta" | python3 -c 'import json,sys; print(json.load(sys.stdin)["dist-tags"]["latest"])')
-    [ "$pkg" = fast-check ] && FT_TOOL_VERSION="$ver"
+    [ "$pkg" = fast-check ] && ft::set_version "$ver"
     tgz=$(ft::fetch "https://registry.npmjs.org/$pkg/-/$pkg-$ver.tgz")
     local want
     want=$(printf '%s' "$meta" | python3 -c 'import json,sys; print(json.load(sys.stdin)["versions"]["'"$ver"'"]["dist"]["shasum"])')
