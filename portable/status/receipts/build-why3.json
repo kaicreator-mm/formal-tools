@@ -9,7 +9,7 @@
   "needed_libs": "libz.so.1,libgmp.so.10,libm.so.6,libc.so.6,ld-linux-x86-64.so.2",
   "version_output": "Why3 platform, version 1.8.0",
   "upstream": null,
-  "build_ts": "2026-11-11T10:48:51Z",
+  "build_ts": "2026-11-11T14:50:58Z",
   "log_tail": [
     "Get:51 http://mirrors.ustc.edu.cn/debian trixie/main amd64 libxcb-render0 amd64 1.17.0-2+b1 [115 kB]",
     "Get:52 http://mirrors.ustc.edu.cn/debian trixie/main amd64 libxcb-shm0 amd64 1.17.0-2+b1 [105 kB]",
@@ -48,12 +48,12 @@
     "Get:85 http://mirrors.ustc.edu.cn/debian trixie/main amd64 liblablgtk3-ocaml amd64 3.1.5-1+b3 [3449 kB]",
     "Get:86 http://mirrors.ustc.edu.cn/debian trixie/main amd64 liblablgtksourceview3-ocaml amd64 3.1.5-1+b3 [337 kB]",
     "Get:87 http://mirrors.ustc.edu.cn/debian trixie/main amd64 why3 amd64 1.8.0-2+b1 [12.4 MB]",
-    "Fetched 44.4 MB in 14s (3089 kB/s)",
+    "Fetched 44.4 MB in 35s (1275 kB/s)",
     "Download complete and in download only mode",
-    "[10:48:51] [why3] build OK: why3 1.8.0 glibc_max=2.38"
+    "[14:50:58] [why3] build OK: why3 1.8.0 glibc_max=2.38"
   ],
   "package": {
     "path": "packages/tools/why3.tar.gz",
-    "sha256": "a7a3d97cbb95025e97a5ca7638474c3dd80e8cbab59d9c9358df6b6f8f665366"
+    "sha256": "3d6268cb9255a70fc7793be8c1f03acdaa6d220fc326b75fddd63da669ac433d"
   }
 }

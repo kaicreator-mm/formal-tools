@@ -1,6 +1,6 @@
 {
   "schema": "formal-tools/portable-runtime/0.1",
-  "generated_at": "2026-11-11T13:37:31+00:00",
+  "generated_at": "2026-11-11T15:00:31+00:00",
   "source_head": null,
   "target": {
     "os": "debian-13",
@@ -259,7 +259,7 @@
       "runtime_verified": false,
       "verify_verdict": "SKIP",
       "version": "1.16.1",
-      "blocker_reason": "probcli_linux64.zip unreachable at stups.hhu-hosting.de"
+      "blocker_reason": "probcli zips (1.16.1/1.15.1/nightly) lack probcliparser.jar — no public release channel for the parser artifact (maven/github probed); manual upstream support needed"
     },
     {
       "id": "pymc",
@@ -366,8 +366,8 @@
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": false,
-      "verify_verdict": "FAIL",
+      "runtime_verified": true,
+      "verify_verdict": "PASS",
       "version": "1.8.0",
       "blocker_reason": null
     },

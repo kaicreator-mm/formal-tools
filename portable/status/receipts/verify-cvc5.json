@@ -10,14 +10,14 @@
     },
     "neg": {
       "exit": 0,
-      "duration_ms": 10,
+      "duration_ms": 14,
       "output_matched": true,
       "exit_ok": true,
       "label": "UNSAT"
     },
     "err": {
       "exit": 0,
-      "duration_ms": 17,
+      "duration_ms": 18,
       "output_matched": true,
       "exit_ok": true,
       "label": "ERROR"

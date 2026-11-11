@@ -1,7 +1,7 @@
 {
   "tool_id": "prob",
   "status": "UNAVAILABLE",
-  "failure_reason": "probcli_linux64.zip unreachable at stups.hhu-hosting.de",
+  "failure_reason": "probcli zips (1.16.1/1.15.1/nightly) lack probcliparser.jar — no public release channel for the parser artifact (maven/github probed); manual upstream support needed",
   "version": "1.16.1",
   "kind": "java-bundle",
   "glibc_max": null,
@@ -9,16 +9,8 @@
   "needed_libs": null,
   "version_output": "(unavailable)",
   "upstream": null,
-  "build_ts": "2026-11-11T10:40:29Z",
+  "build_ts": "2026-11-11T14:50:10Z",
   "log_tail": [
-    "[19:13:56] [prob] UNAVAILABLE: no reachable official prob-cli linux64 download channel (GitHub release API empty; www3 patterns 404) — needs manual license/download page interaction",
-    "[19:13:56] [prob] build OK: prob 1.14.0 glibc_max=n/a",
-    "[19:16:06] [prob] building prob version=1.14.0 kind=java-bundle",
-    "[19:16:28] [prob] fetch: https://www3.hhu.de/stups/downloads/prob/cli/prob-cli-linux64-1.14.0.tar.gz",
-    "[19:16:31] [prob] FATAL: download failed: https://www3.hhu.de/stups/downloads/prob/cli/prob-cli-linux64-1.14.0.tar.gz",
-    "[19:16:31] [prob] fetch: https://www3.hhu.de/stups/downloads/prob/cli/prob-cli-1.14.0-linux64.tar.gz",
-    "[19:18:20] [prob] FATAL: download failed: https://www3.hhu.de/stups/downloads/prob/cli/prob-cli-1.14.0-linux64.tar.gz",
-    "[19:18:20] [prob] fetch: https://www3.hhu.de/stups/downloads/prob/cli/prob-cli-linux64-1.13.1.tar.gz",
     "[19:20:09] [prob] FATAL: download failed: https://www3.hhu.de/stups/downloads/prob/cli/prob-cli-linux64-1.13.1.tar.gz",
     "[19:20:09] [prob] fetch: https://www3.hhu.de/stups/downloads/prob/cli/prob-cli-1.13.1-linux64.tar.gz",
     "[19:21:58] [prob] FATAL: download failed: https://www3.hhu.de/stups/downloads/prob/cli/prob-cli-1.13.1-linux64.tar.gz",
@@ -50,10 +42,18 @@
     "[10:37:22] [prob] fetch: https://stups.hhu-hosting.de/downloads/prob/cli/releases/1.16.1/probcli_linux64.zip",
     "[10:40:29] [prob] FATAL: download failed: https://stups.hhu-hosting.de/downloads/prob/cli/releases/1.16.1/probcli_linux64.zip",
     "[10:40:29] [prob] UNAVAILABLE: probcli_linux64.zip unreachable at stups.hhu-hosting.de",
-    "[10:40:29] [prob] build UNAVAILABLE (recorded, not failed): prob"
+    "[10:40:29] [prob] build UNAVAILABLE (recorded, not failed): prob",
+    "[13:52:42] [prob] building prob version=1.16.1 kind=java-bundle",
+    "[13:52:42] [prob] fetch: https://stups.hhu-hosting.de/downloads/prob/cli/releases/1.16.1/probcli_linux64.zip",
+    "[13:53:05] [prob] build OK: prob 1.16.1 glibc_max=n/a",
+    "[14:37:04] [prob] building prob version=1.16.1 kind=java-bundle",
+    "[14:37:06] [prob] build OK: prob 1.16.1 glibc_max=n/a",
+    "[14:50:10] [prob] building prob version=1.16.1 kind=java-bundle",
+    "[14:50:10] [prob] UNAVAILABLE: probcli zips (1.16.1/1.15.1/nightly) lack probcliparser.jar — no public release channel for the parser artifact (maven/github probed); manual upstream support needed",
+    "[14:50:10] [prob] build UNAVAILABLE (recorded, not failed): prob"
   ],
   "package": {
     "path": "packages/tools/prob.tar.gz",
-    "sha256": "3f06a460d1820caa94fc9ad46bb5c977682f62f08f8b9d6ea969c52033afd0e5"
+    "sha256": "850c3aab661fe722d53a2a556dc3011efa5c23353a5c734ed178c456d7ba412a"
   }
 }

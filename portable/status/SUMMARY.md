@@ -1,13 +1,13 @@
 # Portable Runtime Build Summary (Debian 13 x86_64)
 
-Generated: 2026-11-11T13:37:31+00:00  ·  source HEAD: `unknown`
+Generated: 2026-11-11T15:00:31+00:00  ·  source HEAD: `unknown`
 Target: Debian 13 (trixie) x86_64, glibc <= 2.41 · runtimes: Python 3.13.5 / Node 22.16.0 / Java 21.0.13+9
 
 | metric | count |
 |---|---|
 | tools registered | 36 |
 | build PACKAGED | 34 |
-| runtime_verified PASS | 33 |
+| runtime_verified PASS | 34 |
 | BUILD_FAILED | 0 (-) |
 | UNAVAILABLE | 2 (nuxmv, prob) |
 
@@ -36,7 +36,7 @@ Target: Debian 13 (trixie) x86_64, glibc <= 2.41 · runtimes: Python 3.13.5 / No
 | nuxmv | UNAVAILABLE | 2.1.0 | SKIP | nuXmv binaries require manual license acceptance on nuxmv.fbk.eu (form-gated); no automatable official channel — candidates tried all failed |
 | ortools | PACKAGED | unknown | PASS | - |
 | prism | PACKAGED | 4.11 | PASS | - |
-| prob | UNAVAILABLE | 1.16.1 | SKIP | probcli_linux64.zip unreachable at stups.hhu-hosting.de |
+| prob | UNAVAILABLE | 1.16.1 | SKIP | probcli zips (1.16.1/1.15.1/nightly) lack probcliparser.jar — no public release channel for the parser artifact (maven/github probed); manual upstream support needed |
 | pymc | PACKAGED | unknown | PASS | - |
 | rdf-shacl | PACKAGED | unknown | PASS | - |
 | robot | PACKAGED | 1.9.11 | PASS | - |
@@ -47,7 +47,7 @@ Target: Debian 13 (trixie) x86_64, glibc <= 2.41 · runtimes: Python 3.13.5 / No
 | tla-tlc | PACKAGED | 1.8.0 | PASS | - |
 | tree-sitter | PACKAGED | 0.27.2 | PASS | - |
 | vampire | PACKAGED | 5.1.0 | PASS | - |
-| why3 | PACKAGED | 1.8.0 | FAIL | - |
+| why3 | PACKAGED | 1.8.0 | PASS | - |
 | z3 | PACKAGED | 5.4.0 | PASS | - |
 
 Per-tool receipts: receipts/build-<id>.json, receipts/verify-<id>.json.
