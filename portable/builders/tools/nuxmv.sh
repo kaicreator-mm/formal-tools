@@ -1,30 +1,33 @@
-# builders/tools/nuxmv.sh — nuXmv symbolic model checker (FBK).
-# Distribution is behind a license-acceptance form; probe the known direct URLs and
-# record an honest UNAVAILABLE when they are not automatable.
+# builders/tools/nuxmv.sh — nuXmv symbolic model checker 2.2.0 (FBK official direct download).
+# download.html publishes direct links + official .sha256sum siblings (no form gate for 2.2.0).
 FT_TOOL_ID=nuxmv
-FT_TOOL_VERSION=2.1.0
+FT_TOOL_VERSION=2.2.0
 FT_TOOL_KIND=binary
-FT_MAIN_BIN=""
-FT_UPSTREAM_URL="https://nuxmv.fbk.eu/ (license-gated download)"
-FT_PROBE=()
+FT_MAIN_BIN="tools/nuxmv/bin/nuXmv"
+FT_UPSTREAM_URL="https://nuxmv.fbk.eu/downloads/2.2.0/nuXmv-2.2.0-linux64.tar.xz"
+FT_PROBE=(bin/nuXmv --version)
 
 ft_tool_build() {
-  local f=""
-  for u in \
-    "https://nuxmv.fbk.eu/releases/nuxmv-2.1.0-linux64.tar.gz" \
-    "https://nuxmv.fbk.eu/index.php?page=download&file=nuxmv-2.1.0-linux64.tar.gz" \
-    "https://es-static.fbk.eu/tools/nuxmv/index.php?page=download&file=nuxmv-2.1.0-linux64.tar.gz"; do
-    if f=$(ft::fetch "$u" 2>/dev/null); then break; fi
-  done
-  if [ -z "$f" ]; then
-    ft::unavailable "nuXmv binaries require manual license acceptance on nuxmv.fbk.eu (form-gated); no automatable official channel — candidates tried all failed"
-  fi
-  ft::extract "$f" /tmp/nuxmvx
-  local binp; binp=$(find /tmp/nuxmvx -type f -name nuXmv | head -1)
-  [ -n "$binp" ] || ft::unavailable "nuXmv binary not found in bundle"
-  mkdir -p "$FT_TOOL_DIR/bin"
-  cp "$binp" "$FT_TOOL_DIR/bin/nuXmv"
+  # official .sha256sum sibling: `hash *nuXmv-2.2.0-linux64.tar.xz`
+  local shafile want
+  shafile=$(ft::fetch "${FT_UPSTREAM_URL}.sha256sum")
+  want=$(grep -oE '^[0-9a-f]{64}' "$shafile" | head -1)
+  local tarball
+  tarball=$(ft::fetch "$FT_UPSTREAM_URL" "$want")
+  ft::extract "$tarball" /tmp/nuxmvx
+  local src; src=$(find /tmp/nuxmvx -maxdepth 1 -type d -name 'nuXmv-*' | head -1)
+  [ -n "$src" ] || ft::die "nuXmv dir not found in tarball"
+  # Debian-style layout: usr/local/{bin,lib/…}
+  mkdir -p "$FT_TOOL_DIR/bin" "$FT_TOOL_DIR/lib"
+  cp -a "$src/usr/local/bin/." "$FT_TOOL_DIR/bin/"
+  cp -a "$src/usr/local/lib/." "$FT_TOOL_DIR/lib/" 2>/dev/null || true
+  [ -x "$FT_TOOL_DIR/bin/nuXmv" ] || ft::die "bin/nuXmv missing after extraction"
+  # ship the bundled private libs (libedit/libgmp/libbsd/… are in usr/local/lib)
+  cp -a "$src/usr/local/lib/." "$FT_TOOL_DIR/lib/" 2>/dev/null || true
   ft::copy_libs "$FT_TOOL_DIR/bin/nuXmv" "$FT_TOOL_DIR/lib" || true
+  patchelf --set-rpath '$ORIGIN/../lib' "$FT_TOOL_DIR/bin/nuXmv" 2>/dev/null || true
+  ( export LD_LIBRARY_PATH="$FT_TOOL_DIR/lib"; "$FT_TOOL_DIR/bin/nuXmv" --version >/dev/null 2>&1 ) \
+    || ft::die "nuXmv not runnable after relocation"
   ft::make_shim 'export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 exec "$TOOL_DIR/bin/nuXmv" "$@"'
 }
