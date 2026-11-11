@@ -1,0 +1,300 @@
+{
+  "schema": "formal-native-local-acceptance/1.2",
+  "written_at": "2026-11-10T18:00:39.567Z",
+  "host_identity": {
+    "hostname": "REDACTED",
+    "platform": "win32",
+    "release": "10.0.26300",
+    "arch": "x64",
+    "node": "v26.13.0",
+    "cpu": "AMD Ryzen 7 7840HS w/ Radeon 780M Graphics",
+    "tool_bin_dir": "…\\dx-service\\.venv\\bin"
+  },
+  "tool_runtime": "ACTUAL_HOST_ATTEMPT",
+  "tool_count": 2,
+  "candidate": 1,
+  "blocked": 1,
+  "evidence": [
+    {
+      "tool": "z3",
+      "version": {
+        "tool": "z3",
+        "run_status": "EXECUTED",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "…\\.venv\\bin\\z3",
+          "-version"
+        ],
+        "exit_code": 0,
+        "signal": null,
+        "elapsed_ms": 9,
+        "timed_out": false,
+        "stdout": "Z3 version 5.1.0 - 64 bit\r\n",
+        "stderr": "",
+        "stdout_sha256": "cd085680cf0db5914a6d059e4e84826145d9c0c2a7817da7edccebba4eb754ee",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null,
+        "output_truncated": false
+      },
+      "installation": {
+        "tool": "z3",
+        "status": "FOUND_NOT_PROBED",
+        "launcher": "binary",
+        "executable": "…\\.venv\\bin\\z3.exe",
+        "argv": [
+          "…\\.venv\\bin\\z3.exe",
+          "-version"
+        ],
+        "diagnostics": [],
+        "probe_status": "NOT_RUN",
+        "searched": 5
+      },
+      "binary_identity": {
+        "path": "…\\.venv\\bin\\z3.exe",
+        "sha256": "c638e6b8d066a5ad6ea2712dcd5e2eff5c57eba501b98e7fa8487f7daf0e863d",
+        "bytes": 18842624,
+        "mtime": "2026-09-06T18:07:26.170Z",
+        "provenance": "binary inherited from local host; supply-chain audit NOT performed by this script"
+      },
+      "positive": {
+        "tool": "z3",
+        "case": "positive",
+        "run_status": "EXECUTED",
+        "tool_outcome": "UNSAT",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.smt2": "137366ea277f3908fd6f9d7e50d9ed48729d0c1f95e7d9c76ed9fd51852e3b8f",
+          "positive.smt2": "ad656e3f970926420c3cb999f34b64593a020844cf4fcde79b7ed391e8ac5b4c"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…\\.venv\\bin\\z3",
+              "-smt2",
+              "…\\formal-js-7MoWeY\\examples\\positive.smt2"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 16,
+            "timed_out": false,
+            "stdout": "unsat\r\n",
+            "stderr": "",
+            "stdout_sha256": "0780b4e2af99bfa55dcdbc1acc86c95a347b161df44f1955678492470bcb4002",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "z3",
+        "case": "negative",
+        "run_status": "EXECUTED",
+        "tool_outcome": "SAT",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.smt2": "137366ea277f3908fd6f9d7e50d9ed48729d0c1f95e7d9c76ed9fd51852e3b8f",
+          "positive.smt2": "ad656e3f970926420c3cb999f34b64593a020844cf4fcde79b7ed391e8ac5b4c"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…\\.venv\\bin\\z3",
+              "-smt2",
+              "…\\formal-js-1boUdn\\examples\\negative.smt2"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 20,
+            "timed_out": false,
+            "stdout": "sat\r\n",
+            "stderr": "",
+            "stdout_sha256": "d93754ec870a0e515da98b40a273539a8a33efe826f2eff13b82d122f428704f",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "extra_cases": {
+        "error_input": {
+          "case": "error_input",
+          "expectation": "ERROR/UNPARSED, never a sat/unsat verdict",
+          "input_sha256": "ddbc4618a0f8286db7dc02052b4ec65fbb0384545aa872c070f6d65fa2c2502b",
+          "input_text": "(assert (assert\n",
+          "tool": "z3",
+          "operation": "solve",
+          "mode": "typed",
+          "run_status": "EXECUTED",
+          "tool_outcome": "UNPARSED",
+          "process_outcome": "NONZERO_EXIT",
+          "test_verdict": "NOT_EVALUATED",
+          "claim_verdict": "NOT_EVALUATED",
+          "note": "Native command output only; solver result is not an acceptance verdict",
+          "executions": [
+            {
+              "argv": [
+                "…\\.venv\\bin\\z3",
+                "-smt2",
+                "…\\Temp\\formal-accept-extra-nDwXTi\\error_input.smt2"
+              ],
+              "exit_code": 1,
+              "signal": null,
+              "elapsed_ms": 13,
+              "timed_out": false,
+              "stdout": "(error \"line 2 column 0: invalid expression, unexpected input\")\r\n",
+              "stderr": "",
+              "stdout_sha256": "cc5a24374ec02052b22a2d60521f0f41f23da549eaf6bdb2db0782ff20347a08",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "error": null,
+              "output_truncated": false
+            }
+          ],
+          "scope": "local native CLI; not an independently validated project claim"
+        },
+        "unknown_scope": {
+          "case": "unknown_scope",
+          "expectation": "tool_outcome UNKNOWN (solver scope limit), exit 0 or bounded timeout",
+          "input_sha256": "afa0104a573d4d8d7c329b168fbf3ca77d695d00a9d90920dac7098a80b47fa8",
+          "input_text": "(declare-const x Real)\n(assert (> (sin x) 0.9))\n(check-sat)\n",
+          "tool": "z3",
+          "operation": "solve",
+          "mode": "typed",
+          "run_status": "EXECUTED",
+          "tool_outcome": "UNKNOWN",
+          "process_outcome": "EXIT_ZERO",
+          "test_verdict": "NOT_EVALUATED",
+          "claim_verdict": "NOT_EVALUATED",
+          "note": "Native command output only; solver result is not an acceptance verdict",
+          "executions": [
+            {
+              "argv": [
+                "…\\.venv\\bin\\z3",
+                "-smt2",
+                "…\\Temp\\formal-accept-extra-nDwXTi\\unknown_scope.smt2"
+              ],
+              "exit_code": 0,
+              "signal": null,
+              "elapsed_ms": 14,
+              "timed_out": false,
+              "stdout": "unknown\r\n",
+              "stderr": "",
+              "stdout_sha256": "ff0a7d8548aef17f9bba7e3dc1b4017b0513f9ce60f8c2908f1d06f249a6e497",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "error": null,
+              "output_truncated": false
+            }
+          ],
+          "scope": "local native CLI; not an independently validated project claim"
+        }
+      },
+      "acceptance": "CANDIDATE_FOR_REVIEW"
+    },
+    {
+      "tool": "cvc5",
+      "version": {
+        "tool": "cvc5",
+        "run_status": "NOT_RUN",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "…\\.venv\\bin\\cvc5",
+          "--version"
+        ],
+        "exit_code": null,
+        "signal": null,
+        "elapsed_ms": 1,
+        "timed_out": false,
+        "stdout": "",
+        "stderr": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": "spawn …\\.venv\\bin\\cvc5 ENOENT",
+        "output_truncated": false
+      },
+      "installation": {
+        "tool": "cvc5",
+        "status": "MISSING_EXECUTABLE",
+        "launcher": "binary",
+        "diagnostics": [
+          "No matching executable found in the configured directory or PATH"
+        ],
+        "searched": 5,
+        "probe_status": "NOT_RUN"
+      },
+      "binary_identity": null,
+      "positive": {
+        "tool": "cvc5",
+        "case": "positive",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.smt2": "137366ea277f3908fd6f9d7e50d9ed48729d0c1f95e7d9c76ed9fd51852e3b8f",
+          "positive.smt2": "ad656e3f970926420c3cb999f34b64593a020844cf4fcde79b7ed391e8ac5b4c"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…\\.venv\\bin\\cvc5",
+              "--lang",
+              "smt2",
+              "…\\formal-js-hnpmYq\\examples\\positive.smt2"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 0,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn …\\.venv\\bin\\cvc5 ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "cvc5",
+        "case": "negative",
+        "run_status": "NOT_RUN",
+        "tool_outcome": "UNKNOWN",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.smt2": "137366ea277f3908fd6f9d7e50d9ed48729d0c1f95e7d9c76ed9fd51852e3b8f",
+          "positive.smt2": "ad656e3f970926420c3cb999f34b64593a020844cf4fcde79b7ed391e8ac5b4c"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…\\.venv\\bin\\cvc5",
+              "--lang",
+              "smt2",
+              "…\\formal-js-bijz1G\\examples\\negative.smt2"
+            ],
+            "exit_code": null,
+            "signal": null,
+            "elapsed_ms": 1,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": "spawn …\\.venv\\bin\\cvc5 ENOENT",
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "extra_cases": "NOT_RUN",
+      "acceptance": "BLOCK_OR_REPAIR"
+    }
+  ],
+  "warning": "CANDIDATE_FOR_REVIEW requires exact SHA/version and independent CLI semantics review; this script does not claim project-level proof."
+}
