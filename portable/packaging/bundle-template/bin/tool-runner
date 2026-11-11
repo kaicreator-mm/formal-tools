@@ -86,8 +86,8 @@ run_case() { # id phase via args_string exit_ok_list regex label
   t0=$(date +%s%3N)
   cd "$FT_TMP" || cd /tmp
   timeout --kill-after=10 "${EXPECT_TIMEOUT:-120}" "${cmd[@]}" >"$out" 2>&1
+  rc=$?  # capture the actual tool/timeout status BEFORE any cleanup cd
   cd - >/dev/null 2>&1 || true
-  rc=$?
   te=$(( $(date +%s%3N) - t0 ))
   # anchor line so tools with empty success output can still be judged
   printf '\nPHASE_DONE phase=%s rc=%s\n' "$phase" "$rc" >> "$out"
@@ -111,7 +111,7 @@ verify_one() {
   if [ ! -f "$ef" ] || [ ! -x "$FT_ROOT/tools/$id/run" ]; then
     echo "verify: $id SKIP (no expect.sh or no run shim — tool unavailable)"
     printf 'id\tphase\texit\tduration_ms\tmatched\texit_ok\tlabel\nSKIP\tunavailable\nverdict\tSKIP\n' > "$FT_EV/verify-$id.tsv"
-    return 0
+    return 1 # no executed cases => never PASS at verify-all
   fi
   VID="$id"
   # isolate judgment contracts: expect vars leak across tools when verifying many
@@ -125,7 +125,10 @@ verify_one() {
   : "${EXPECT_TIMEOUT:=120}"
   # optional setup phase (not judged)
   if [ -n "${EXPECT_SETUP_VIA:-}" ]; then
-    run_case "$id" setup "$EXPECT_SETUP_VIA" "${EXPECT_SETUP_ARGS:-}" "0" "." "SETUP" || true
+    run_case "$id" setup "$EXPECT_SETUP_VIA" "${EXPECT_SETUP_ARGS:-}" "0" "." "SETUP" || {
+      printf 'verdict\tFAIL\n' >> "$FT_EV/verify-$id.tsv"
+      return 1 # required setup failure invalidates downstream positive/negative cases
+    }
   fi
   local ok=1
   if [ -n "${EXPECT_POS_REGEX:-}" ]; then
