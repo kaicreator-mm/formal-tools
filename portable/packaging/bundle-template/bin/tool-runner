@@ -75,11 +75,12 @@ run_case() { # id phase via args_string exit_ok_list regex label
     : # command string already assembled
   else
     # expand bundle vars in the raw string first (set -u would kill bare $BUNDLE inside eval),
-    # then eval-split so quoted args (e.g. --prop "P>=0.1 [F done]") survive
+    # then eval-split so quoted args (e.g. --prop "P>=0.1 [F done]") survive; per-token pass
+    # still normalizes bare tests/ paths (idempotent for already-expanded values)
     local ex; ex=$(expand_arg "$args_s")
     eval "args=($ex)" || return 2
     local t
-    for t in ${args[@]+"${args[@]}"}; do cmd+=("$t"); done
+    for t in ${args[@]+"${args[@]}"}; do cmd+=("$(expand_arg "$t")"); done
   fi
   local t0 te rc out="$FT_EV/verify-$id.$phase.log"
   t0=$(date +%s%3N)
