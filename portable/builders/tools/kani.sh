@@ -65,8 +65,10 @@ ft_tool_build() {
   cp "/usr/lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" 2>/dev/null \
     || cp "/usr/libexec/gcc/x86_64-linux-gnu/$gccmajor/cc1" "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" \
     || ft::die "cc1 not found for gcc $gccmajor"
-  # cc1 resolves its builtin headers (stddef.h, ...) relative to its own dir
+  # cc1 resolves its builtin headers (stddef.h, ...) relative to its own dir; the
+  # include_next chain (stdint.h etc.) needs libc headers — vendor /usr/include as include-fixed
   cp -a "/usr/lib/gcc/x86_64-linux-gnu/$gccmajor/include" "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccmajor/include"
+  cp -a /usr/include "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccmajor/include-fixed"
   ln -sf "../lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" "$FT_TOOL_DIR/gccroot/bin/cc1"
   ft::copy_libs "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" "$FT_TOOL_DIR/lib" || true
   ft::note upstream_note "kani-verifier crate via crates.io; cargo kani setup materialized toolchain into home/.kani (shipped)"
