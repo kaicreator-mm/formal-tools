@@ -6,9 +6,12 @@
     "source_base_sha": "41925288dd5b777d49c4e442d9731581895cb037",
     "scope": "NEW_DIRECTION_NOT_R1",
     "accepted_pr_12_head": "b07318af910cbeedae6228a180b06e5bce153ab8",
-    "main_integrated_sha": "e1d172ec7f3b2743993f6b4004fe3b5b03007150"
+    "main_integrated_sha": "e1d172ec7f3b2743993f6b4004fe3b5b03007150",
+    "latest_reconciled_main_sha": "c6a042174341828141d8445e1ddc639d2fef5393",
+    "reconciled_from_issue": 11,
+    "reconciliation_note": "G3 PR18/20/21 merged with scoped qualification; no native ADS24 or business Oracle. G4 candidate-only preflight is not G4 QUALIFIED."
   },
-  "status": "G0_G1_RESEARCH_R0_ACCEPTED_G2_SOURCE_IMPLEMENTATION_IN_REVIEW",
+  "status": "G0_G1_RESEARCH_G2_ACCEPTED_G3_STATIC_INTEGRATED_G4_CANDIDATE_IN_REVIEW",
   "gates": [
     {
       "id": "G0",
@@ -44,7 +47,7 @@
         "G1",
         "RESEARCH-R0"
       ],
-      "status": "SOURCE_IMPLEMENTED_CI_AND_REVIEW_PENDING",
+      "status": "ACCEPTED_INTEGRATED_STATIC",
       "exit": "model-independent typed DAG, budget/alternatives, cycles and missing contracts fail closed"
     },
     {
@@ -53,7 +56,7 @@
       "depends_on": [
         "G2"
       ],
-      "status": "NOT_STARTED",
+      "status": "PARTIAL_STATIC_INTEGRATED_NATIVE_ORACLE_BLOCKED",
       "exit": "native exact-tool receipts, negative/adversarial oracle, UNKNOWN not PASS"
     },
     {
@@ -62,7 +65,7 @@
       "depends_on": [
         "G3"
       ],
-      "status": "NOT_STARTED",
+      "status": "CANDIDATE_REPLAY_PREFLIGHT_SOURCE_IN_REVIEW",
       "exit": "independent semantics, replay/fingerprint and invalidation are required for reuse"
     },
     {
@@ -193,7 +196,7 @@
         "T-R0-01"
       ],
       "owner": "web",
-      "status": "SOURCE_IMPLEMENTED_CI_PENDING",
+      "status": "ACCEPTED_INTEGRATED_STATIC",
       "evidence": [
         "packages/runner/js/method-planner.mjs",
         "tests/method-planner.test.mjs",
@@ -208,7 +211,7 @@
         "T-G2-01"
       ],
       "owner": "web",
-      "status": "SOURCE_PARTIAL_LLM_ADAPTER_MOCKED",
+      "status": "STATIC_ACCEPTED_INTEGRATED_LIVE_LLM_AB_NOT_RUN",
       "evidence": [
         "packages/runner/js/method-planner.mjs",
         "tests/method-planner.test.mjs"
@@ -222,7 +225,12 @@
         "T-G2-02"
       ],
       "owner": "web+local-when-must",
-      "status": "NOT_STARTED"
+      "status": "PARTIAL_SOURCE_INTEGRATED_NATIVE_ORACLE_PENDING",
+      "evidence": [
+        "PR #18 merge c6a042174341828141d8445e1ddc639d2fef5393: Z3 host smoke receipt candidate only",
+        "PR #20 merge a12982e034796a02a2ea7d32fbf5c47c977a7bbd: byte-bound preflight untrusted",
+        "PR #21 merge dd541eeea4baec167092ea77e3c86dfddf3725ba: frozen ADS 24 static SMT only"
+      ]
     },
     {
       "id": "T-G4-01",
@@ -232,7 +240,11 @@
         "T-G3-01"
       ],
       "owner": "web",
-      "status": "NOT_STARTED"
+      "status": "CANDIDATE_REPLAY_PREFLIGHT_IN_REVIEW_NOT_QUALIFIED",
+      "evidence": [
+        "packages/runner/js/solution-candidate.mjs",
+        "tests/solution-candidate.test.mjs"
+      ]
     },
     {
       "id": "T-G5-01",
@@ -259,10 +271,12 @@
   "execution": {
     "strategy": "ADS#1359 Delivery-First; Web-first, single Writer per write set",
     "tool_downloads": "PARALLEL_NOT_BLOCKING_G0_G1",
-    "native_execution": "NOT_RUN",
+    "native_execution": "PR18_Z3_SMOKE_RECORDED_UNATTESTED; ADS24_NOT_RUN",
     "llm_ab_benchmarks": "NOT_RUN",
     "old_issue7": "OUT_OF_SCOPE",
     "g2_native_execution": "NOT_RUN",
-    "g2_llm_live_integration": "NOT_RUN"
+    "g2_llm_live_integration": "NOT_RUN",
+    "portable_runtime": "PR22_PACKAGED_34_LEGACY_VERIFY_STALE_CORRECTED_RUNNER_REPLAY_REQUIRED",
+    "solution_reuse": "BLOCKED_NOT_QUALIFIED"
   }
 }
