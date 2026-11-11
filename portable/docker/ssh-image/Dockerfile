@@ -25,6 +25,11 @@ COPY formal-tools-portable-debian13-x86_64 /opt/formal-tools-portable-debian13-x
 RUN ln -sf /opt/formal-tools-portable-debian13-x86_64 /home/cc/formal-tools \
     && mkdir -p /opt/formal-tools-portable-debian13-x86_64/evidence \
     && chown -R cc:cc /opt/formal-tools-portable-debian13-x86_64/evidence /home/cc
+# why3's compiled-in libdir is an absolute Debian path; at this fixed install path we
+# can link the shipped tree so `why3 prove` works fully for the cc account
+RUN mkdir -p /usr/lib/x86_64-linux-gnu/ocaml \
+    && ln -sfn /opt/formal-tools-portable-debian13-x86_64/tools/why3/usr/lib/x86_64-linux-gnu/ocaml/5.3.0 \
+         /usr/lib/x86_64-linux-gnu/ocaml/5.3.0
 
 # sshd: public-key only
 RUN sed -i \
