@@ -41,12 +41,14 @@ def tail(path, n=40):
 
 
 def parse_verify_tsv(path):
-    res = {"verdict": "UNKNOWN", "phases": {}, "skip": False}
+    res = {"verdict": "UNKNOWN", "phases": {}, "skip": False, "runner_schema": None}
     if not os.path.isfile(path):
         return None
     for line in open(path, encoding="utf-8"):
         c = line.rstrip("\n").split("\t")
-        if len(c) >= 2 and c[0] == "verdict":
+        if len(c) >= 2 and c[0] == "runner_schema":
+            res["runner_schema"] = c[1]
+        elif len(c) >= 2 and c[0] == "verdict":
             res["verdict"] = c[1]
             if c[1] == "SKIP":
                 res["skip"] = True
@@ -57,6 +59,17 @@ def parse_verify_tsv(path):
                 "exit": int(c[2]), "duration_ms": int(c[3]),
                 "output_matched": c[4] == "1", "exit_ok": c[5] == "1", "label": c[6],
             }
+    # The legacy runner overwrote the true timeout/tool exit code with the
+    # succeeding 'cd -' status. Its old PASS TSV cannot support qualification.
+    # Require the corrected runner's version marker and actual pos/neg phases.
+    if res["verdict"] == "PASS":
+        phases = res["phases"]
+        good = (res["runner_schema"] == "formal-tools/portable-verify/0.2"
+                and {"pos", "neg"}.issubset(phases)
+                and all(p["output_matched"] and p["exit_ok"] for p in phases.values()))
+        if not good:
+            res["verdict"] = "STALE_REVERIFY_REQUIRED"
+            res["verification_reason"] = "missing corrected exit-code recorder or valid pos/neg evidence"
     return res
 
 

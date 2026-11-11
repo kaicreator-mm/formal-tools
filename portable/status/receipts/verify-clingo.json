@@ -3,26 +3,27 @@
   "phases": {
     "pos": {
       "exit": 10,
-      "duration_ms": 10,
+      "duration_ms": 9,
       "output_matched": true,
       "exit_ok": true,
       "label": "SAT"
     },
     "neg": {
       "exit": 20,
-      "duration_ms": 9,
+      "duration_ms": 14,
       "output_matched": true,
       "exit_ok": true,
       "label": "UNSAT"
     },
     "err": {
       "exit": 65,
-      "duration_ms": 20,
+      "duration_ms": 30,
       "output_matched": true,
       "exit_ok": true,
       "label": "ERROR"
     }
   },
   "skip": false,
+  "runner_schema": "formal-tools/portable-verify/0.2",
   "tool_id": "clingo"
 }

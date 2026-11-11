@@ -1,6 +1,6 @@
 {
   "schema": "formal-tools/portable-runtime/0.1",
-  "generated_at": "2026-11-11T22:10:00+00:00",
+  "generated_at": "2026-11-11T22:24:57+00:00",
   "source_head": null,
   "target": {
     "os": "debian-13",
@@ -306,8 +306,8 @@
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "2.5",
       "blocker_reason": null
     },

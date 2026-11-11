@@ -85,7 +85,7 @@ run_case() { # id phase via args_string exit_ok_list regex label
   local t0 te rc out="$FT_EV/verify-$id.$phase.log"
   t0=$(date +%s%3N)
   cd "$FT_TMP" || cd /tmp
-  timeout --kill-after=10 "${EXPECT_TIMEOUT:-120}" "${cmd[@]}" >"$out" 2>&1
+  timeout -k 10 "${EXPECT_TIMEOUT:-120}" "${cmd[@]}" >"$out" 2>&1
   rc=$?  # capture the actual tool/timeout status BEFORE any cleanup cd
   cd - >/dev/null 2>&1 || true
   te=$(( $(date +%s%3N) - t0 ))
@@ -108,9 +108,11 @@ verify_one() {
   local id="$1"
   tool_meta "$id" || return 2
   local ef="$FT_ROOT/tests/$id/expect.sh"
+  # Reset stale TSV data and bind all verdicts to the corrected exit recorder.
+  printf 'runner_schema\tformal-tools/portable-verify/0.2\n' > "$FT_EV/verify-$id.tsv"
   if [ ! -f "$ef" ] || [ ! -x "$FT_ROOT/tools/$id/run" ]; then
     echo "verify: $id SKIP (no expect.sh or no run shim — tool unavailable)"
-    printf 'id\tphase\texit\tduration_ms\tmatched\texit_ok\tlabel\nSKIP\tunavailable\nverdict\tSKIP\n' > "$FT_EV/verify-$id.tsv"
+    printf 'verdict\tSKIP\n' >> "$FT_EV/verify-$id.tsv"
     return 1 # no executed cases => never PASS at verify-all
   fi
   VID="$id"
@@ -191,7 +193,9 @@ case "$cmd" in
     fi ;;
   verify)
     [ -n "${2:-}" ] || { echo "usage: tool-runner verify <id|all>" >&2; exit 2; }
-    if [ "$2" = all ]; then rc=0; for id in $(list_ids); do
+    if [ "$2" = all ]; then
+      : > "$FT_EV/verify-ALL.tsv"
+      rc=0; for id in $(list_ids); do
         echo "verify: $id"; verify_one "$id" || rc=1
       done
       echo "verify-all verdict: $([ $rc = 0 ] && echo PASS || echo FAIL)"

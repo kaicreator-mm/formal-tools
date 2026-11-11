@@ -3,19 +3,20 @@
   "phases": {
     "pos": {
       "exit": 0,
-      "duration_ms": 3021,
+      "duration_ms": 3060,
       "output_matched": true,
       "exit_ok": true,
       "label": "FUZZER_EXECS"
     },
     "neg": {
       "exit": 1,
-      "duration_ms": 8,
+      "duration_ms": 31,
       "output_matched": true,
       "exit_ok": true,
       "label": "ERROR"
     }
   },
   "skip": false,
+  "runner_schema": "formal-tools/portable-verify/0.2",
   "tool_id": "aflpp"
 }

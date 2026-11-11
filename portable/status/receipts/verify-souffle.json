@@ -1,21 +1,23 @@
 {
-  "verdict": "PASS",
+  "verdict": "STALE_REVERIFY_REQUIRED",
   "phases": {
     "pos": {
       "exit": 0,
-      "duration_ms": 11,
+      "duration_ms": 12,
       "output_matched": true,
       "exit_ok": true,
       "label": "DERIVED"
     },
     "err": {
       "exit": 1,
-      "duration_ms": 17,
+      "duration_ms": 21,
       "output_matched": true,
       "exit_ok": true,
       "label": "ERROR"
     }
   },
   "skip": false,
+  "runner_schema": "formal-tools/portable-verify/0.2",
+  "verification_reason": "missing corrected exit-code recorder or valid pos/neg evidence",
   "tool_id": "souffle"
 }

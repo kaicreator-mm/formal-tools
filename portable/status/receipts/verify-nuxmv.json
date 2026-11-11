@@ -2,5 +2,6 @@
   "verdict": "SKIP",
   "phases": {},
   "skip": true,
+  "runner_schema": "formal-tools/portable-verify/0.2",
   "tool_id": "nuxmv"
 }
