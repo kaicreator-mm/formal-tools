@@ -114,6 +114,12 @@ verify_one() {
     return 0
   fi
   VID="$id"
+  # isolate judgment contracts: expect vars leak across tools when verifying many
+  # tools in one process (single-container deployments)
+  unset EXPECT_TIMEOUT EXPECT_SETUP_VIA EXPECT_SETUP_ARGS \
+        EXPECT_POS_VIA EXPECT_POS_ARGS EXPECT_POS_EXIT EXPECT_POS_REGEX EXPECT_POS_LABEL \
+        EXPECT_NEG_VIA EXPECT_NEG_ARGS EXPECT_NEG_EXIT EXPECT_NEG_REGEX EXPECT_NEG_LABEL \
+        EXPECT_ERR_VIA EXPECT_ERR_ARGS EXPECT_ERR_EXIT EXPECT_ERR_REGEX EXPECT_ERR_LABEL
   # shellcheck disable=SC1090
   . "$ef"
   : "${EXPECT_TIMEOUT:=120}"
