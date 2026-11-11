@@ -41,7 +41,8 @@ if [ "$1" = "--fuzz-smoke" ]; then
   out="$FT_TMP/afl-out"; rm -rf "$out"; mkdir -p "$out"
   timeout 40 "$TOOL_DIR/bin/afl-fuzz" -n -V 3 -t 200 -i "$TOOL_DIR/testcases" -o "$out" "$TOOL_DIR/test-target" "$TOOL_DIR/testcases/seed" >/dev/null 2>&1
   st=$?
-  n=$(grep -oE "execs_done *: *[0-9]+" "$out/default/fuzzer_stats" 2>/dev/null | grep -oE "[0-9]+" | head -1)
+  # AFL++ 5.x: stats live in plot_data (no default/fuzzer_stats); total_execs = field 12
+  n=$(tail -1 "$out/plot_data" 2>/dev/null | awk -F, '{print $12}' | tr -d " ")
   n="${n:-0}"
   echo "AFL_RESULT: EXECS_DONE=$n fuzzer_exit=$st"
   [ "$n" -gt 0 ] || exit 4
