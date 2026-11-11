@@ -19,8 +19,15 @@ ft_tool_build() {
   # version from staging env (probed host-side against the image)
   # shellcheck disable=SC1091
   [ -f "$stage/env" ] && . "$stage/env" && [ -n "${STORM_VERSION:-}" ] && FT_TOOL_VERSION="$STORM_VERSION"
-  for b in "$FT_TOOL_DIR"/bin/storm*; do
-    [ -x "$b" ] && patchelf --set-rpath '$ORIGIN/../lib' "$b" 2>/dev/null || true
+  for b in "$FT_TOOL_DIR"/bin/storm* "$FT_TOOL_DIR"/lib/*.so*; do
+    [ -e "$b" ] || continue
+    patchelf --set-rpath '$ORIGIN/../lib' "$b" 2>/dev/null || true
+    # some NEEDED entries are absolute image paths (e.g. /opt/gurobi/linux/lib/...):
+    # glibc loads absolute NEEDEDs literally (no search fallback) — rewrite to bare sonames
+    readelf -d "$b" 2>/dev/null | grep -oE 'Shared library: \[/[^]]+\]' \
+      | sed 's/.*\[\(.*\)\]/\1/' | while read -r need; do
+        patchelf --replace-needed "$need" "$(basename "$need")" "$b" 2>/dev/null || true
+      done
   done
   ft::make_shim 'export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 export PATH="$TOOL_DIR/bin:$PATH"
