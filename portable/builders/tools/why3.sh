@@ -4,9 +4,9 @@
 FT_TOOL_ID=why3
 FT_TOOL_VERSION=1.8.0
 FT_TOOL_KIND=binary
-FT_MAIN_BIN="tools/why3/bin/why3"
+FT_MAIN_BIN="tools/why3/usr/bin/why3"
 FT_UPSTREAM_URL="deb:mirrors.ustc.edu.cn/debian trixie main (why3 1.8.0-2 + dep closure)"
-FT_PROBE=(bin/why3 --version)
+FT_PROBE=(usr/bin/why3 --version)
 
 ft_tool_build() {
   mkdir -p /tmp/why3debs
@@ -20,18 +20,18 @@ ft_tool_build() {
   local d
   for d in /tmp/why3debs/*.deb; do dpkg-deb -x "$d" /tmp/why3root; done
   cp -a /tmp/why3root/. "$FT_TOOL_DIR/"
-  [ -x "$FT_TOOL_DIR/bin/why3" ] || ft::die "why3 binary missing after extraction"
+  [ -x "$FT_TOOL_DIR/usr/bin/why3" ] || ft::die "why3 binary missing after extraction"
   local share
   share=$(find "$FT_TOOL_DIR" -type d -name drivers | head -1 | xargs dirname)
   [ -n "$share" ] || ft::die "why3 drivers dir not found"
   ft::note why3_share_rel "${share#$FT_TOOL_DIR/}"
   # probe relocated
-  ( export LD_LIBRARY_PATH="$FT_TOOL_DIR/lib:$FT_TOOL_DIR/usr/lib/x86_64-linux-gnu" \
-      WHY3DATA="$FT_TOOL_DIR/share/why3"; "$FT_TOOL_DIR/bin/why3" --version >/dev/null 2>&1 ) \
+  ( export LD_LIBRARY_PATH="$FT_TOOL_DIR/usr/lib/x86_64-linux-gnu:$FT_TOOL_DIR/lib" \
+      WHY3DATA="$FT_TOOL_DIR/share/why3"; "$FT_TOOL_DIR/usr/bin/why3" --version >/dev/null 2>&1 ) \
     || ft::die "why3 not runnable after relocation"
-  ft::make_shim 'export LD_LIBRARY_PATH="$TOOL_DIR/lib:$TOOL_DIR/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+  ft::make_shim 'export LD_LIBRARY_PATH="$TOOL_DIR/usr/lib/x86_64-linux-gnu:$TOOL_DIR/lib:${LD_LIBRARY_PATH:-}"
 export WHY3DATA="$TOOL_DIR/share/why3"
 export OCAMLLIB="$TOOL_DIR/usr/lib/ocaml:${OCAMLLIB:-}"
-export PATH="$TOOL_DIR/bin:$FT_ROOT/tools/z3/bin:$PATH"
-exec "$TOOL_DIR/bin/why3" "$@"'
+export PATH="$TOOL_DIR/usr/bin:$FT_ROOT/tools/z3/bin:$PATH"
+exec "$TOOL_DIR/usr/bin/why3" "$@"'
 }

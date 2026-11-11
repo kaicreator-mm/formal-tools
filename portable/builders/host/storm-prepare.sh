@@ -29,9 +29,14 @@ CID=$(docker create "$IMG")
 trap 'docker rm -f "$CID" >/dev/null 2>&1 || true' EXIT
 
 mkdir -p "$STAGE/payload/bin" "$STAGE/payload/lib"
-docker export "$CID" | tar -xf - -C "$STAGE/payload" "$PREFIX/bin" "$PREFIX/lib" 2>/dev/null || true
+if ! docker export "$CID" | tar -xf - -C "$STAGE/payload" "$PREFIX/bin" "$PREFIX/lib"; then
+  echo "FATAL: docker export | tar failed for $PREFIX/{bin,lib}"
+  exit 3
+fi
 if [ ! -f "$STAGE/payload/$PREFIX/bin/storm" ]; then
-  echo "FATAL: export did not yield $PREFIX/bin/storm"; exit 3
+  echo "FATAL: export did not yield $PREFIX/bin/storm"
+  docker export "$CID" | tar -tf - 2>/dev/null | grep -m3 "bin/storm" || true
+  exit 3
 fi
 # normalize to payload/bin, payload/lib
 mv "$STAGE/payload/$PREFIX/bin/." "$STAGE/payload/bin/" 2>/dev/null || true
