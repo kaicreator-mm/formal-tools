@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # portable/builders/host/storm-prepare.sh — runs on the DOCKER HOST (build server).
-# Extracts the official Storm checker image payload + its shared-library closure into
-# $FT_OUT/staging/storm/{payload,libs}; the in-container spec then relocates it.
-# (Kept host-side deliberately: no docker socket mounted into builder containers.)
+# Layout-agnostic extraction of the official Storm image payload:
+#   - locate the dir containing the `storm` binary (works for /opt/storm and /usr/local layouts)
+#   - export <prefix>/bin -> staging/payload/bin, <prefix>/lib -> staging/payload/lib
+#   - copy the shared-lib closure of every storm binary into staging/libs
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")/.." && pwd)"
 # shellcheck source=../../env.sh
@@ -17,44 +18,45 @@ if ! docker image inspect "$IMG" >/dev/null 2>&1; then
   docker pull -q "$IMG_SRC" || { echo "FATAL: storm image pull failed"; exit 3; }
   docker tag "$IMG_SRC" "$IMG"
 fi
+
+# locate storm binary paths inside the image
+STORM_BIN=$(docker run --rm --entrypoint /bin/sh "$IMG" -c 'for d in /usr/local/bin /usr/bin /opt/storm/bin /opt/storm/inner/bin; do [ -x "$d/storm" ] && echo "$d/storm" && break; done')
+[ -n "${STORM_BIN:-}" ] || { echo "FATAL: storm binary not found in image"; exit 3; }
+PREFIX=$(dirname "$STORM_BIN"); PREFIX=${PREFIX%/bin}
+echo "storm prefix in image: $PREFIX"
+
 CID=$(docker create "$IMG")
 trap 'docker rm -f "$CID" >/dev/null 2>&1 || true' EXIT
 
-# locate storm install inside image (usually /opt/storm)
-STORM_DIR=$(docker start -a "$CID" >/dev/null 2>&1; docker export "$CID" | tar -tf - 2>/dev/null | grep -m1 'opt/storm/bin/storm$' | xargs dirname 2>/dev/null | xargs dirname 2>/dev/null)
-if [ -z "${STORM_DIR:-}" ]; then
-  # fallback: search
-  STORM_DIR=$(docker export "$CID" | tar -tf - 2>/dev/null | grep -E 'bin/storm(-dft)?$' | head -1 | xargs dirname | xargs dirname)
+mkdir -p "$STAGE/payload/bin" "$STAGE/payload/lib"
+docker export "$CID" | tar -xf - -C "$STAGE/payload" "$PREFIX/bin" "$PREFIX/lib" 2>/dev/null || true
+if [ ! -f "$STAGE/payload/$PREFIX/bin/storm" ]; then
+  echo "FATAL: export did not yield $PREFIX/bin/storm"; exit 3
 fi
-[ -n "${STORM_DIR:-}" ] || { echo "FATAL: cannot locate storm dir in image"; exit 3; }
-echo "storm dir in image: $STORM_DIR"
+# normalize to payload/bin, payload/lib
+mv "$STAGE/payload/$PREFIX/bin/." "$STAGE/payload/bin/" 2>/dev/null || true
+mv "$STAGE/payload/$PREFIX/lib/." "$STAGE/payload/lib/" 2>/dev/null || true
+rm -rf "$STAGE/payload/$PREFIX"
 
-mkdir -p "$STAGE/payload"
-docker export "$CID" | tar -xf - -C "$STAGE/payload" \
-  "$STORM_DIR" $( [ -d /dev/null ] && true ) 2>/dev/null || true
-# also grab z3 if the image ships a private copy
-docker export "$CID" | tar -tf - 2>/dev/null | grep -E 'bin/z3$' | while read -r z; do
-  docker export "$CID" | tar -xf - -C "$STAGE/payload" "$z" || true
-done
-
-# shared-library closure for every storm binary (host-side ldd via image's own tools)
+# shared-lib closure for all storm ELF binaries, via the image's own ldd
 mkdir -p "$STAGE/libs"
-for b in $(find "$STAGE/payload" -type f -name 'storm*'); do
-  docker run --rm --entrypoint /bin/sh -v "$STAGE:/stage" "$IMG" -c "
-    for f in $b /opt/storm/bin/*; do
-      [ -x \$f ] || continue
-      ldd \$f 2>/dev/null | awk '/=> \//{print \$3} /^\\//{print \$1}'
-    done | sort -u" >> "$STAGE/so-list.txt" || true
-done
-sort -u "$STAGE/so-list.txt" 2>/dev/null | while read -r so; do
+docker run --rm --entrypoint /bin/sh -v "$STAGE:/stage" "$IMG" -c '
+  for f in /usr/local/bin/storm* /usr/bin/storm* /opt/storm/bin/* ; do
+    [ -x "$f" ] || continue
+    ldd "$f" 2>/dev/null | awk "/=> \//{print \$3}"
+  done | sort -u' > "$STAGE/so-list.txt" || true
+while IFS= read -r so; do
+  [ -n "$so" ] || continue
   case "$so" in
-    */libc.so*|*/libm.so*|*/ld-linux*|*/libpthread*|*/libdl*|*/librt*) continue ;;
+    */libc.so*|*/libm.so*|*/ld-linux*|*/libpthread*|*/libdl*|*/librt*|*/libstdc*|*/libgcc_s*) continue ;;
   esac
   base=$(basename "$so")
-  docker run --rm --entrypoint /bin/sh -v "$STAGE:/stage" "$IMG" -c "cp -L '$so' /stage/libs/'$base'" || true
-done
+  docker run --rm --entrypoint /bin/sh -v "$STAGE:/stage" "$IMG" -c "cp -L '$so' '/stage/libs/$base'" || true
+done < "$STAGE/so-list.txt"
 rm -f "$STAGE/so-list.txt"
-echo "staged payload: $(find "$STAGE/payload" -type f | wc -l) files; libs: $(ls "$STAGE/libs" 2>/dev/null | wc -l)"
-[ -f "$STAGE/payload/$STORM_DIR/bin/storm" ] || { echo "FATAL: storm binary missing after extraction"; exit 3; }
-echo "STORM_DIR=$STORM_DIR" > "$STAGE/env"
+
+V=$(docker run --rm --entrypoint /bin/sh "$IMG" -c '/usr/local/bin/storm --version 2>/dev/null | head -1 || true')
+echo "storm version line: $V"
+printf 'STORM_VERSION=%s\n' "$(printf '%s' "$V" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)" > "$STAGE/env"
+echo "staged: bin=$(ls "$STAGE/payload/bin" | wc -l) payload_lib=$(ls "$STAGE/payload/lib" 2>/dev/null | wc -l) closure_libs=$(ls "$STAGE/libs" | wc -l)"
 echo "storm staging OK"
