@@ -76,3 +76,7 @@ else
   ft::note build_status SUCCESS
   ft::log "build OK: $id ${FT_TOOL_VERSION} glibc_max=${glibc_max:-n/a}"
 fi
+
+# container runs as root; downstream pack/verify run as the host user — guarantee
+# read+traverse on the whole payload (in-place fixups often create root-owned dirs)
+chmod -R a+rX "$FT_TOOL_DIR" 2>/dev/null || true
