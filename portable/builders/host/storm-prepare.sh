@@ -38,9 +38,9 @@ if ! docker export "$CID" | docker run --rm -i \
 set -e
 mkdir -p /stage/payload/bin /stage/payload/lib
 tar -xf - -C /stage/payload '$MBIN' '$MLIB'
-mv /stage/payload/'$MBIN'/. /stage/payload/bin/
-mv /stage/payload/'$MLIB'/. /stage/payload/lib/ 2>/dev/null || true
-rm -rf /stage/payload/'$MBIN' /stage/payload/'$MLIB'
+cp -a /stage/payload/'$MBIN'/. /stage/payload/bin/
+cp -a /stage/payload/'$MLIB'/. /stage/payload/lib/ 2>/dev/null || true
+rm -rf /stage/payload/usr
 chmod -R a+rX /stage/payload
 chown -R $(id -u):$(id -g) /stage/payload
 [ -f /stage/payload/bin/storm ] || { echo 'FATAL: bin/storm missing after extraction'; exit 3; }
