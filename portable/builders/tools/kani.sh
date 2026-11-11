@@ -10,15 +10,16 @@ FT_PROBE=(bin/cargo-kani --version)
 
 ft_tool_build() {
   export HOME=/root
-  # static.rust-lang.org is unreachable from the build network; rsproxy mirrors it
-  # under rsproxy.cn/rustup/ (probed: /rustup/dist/<triple>/rustup-init = 200)
-  export RUSTUP_DIST_SERVER="https://rsproxy.cn/rustup"
-  export RUSTUP_UPDATE_ROOT="https://rsproxy.cn/rustup"
+  # static.rust-lang.org is unreachable from the build network; route ONLY the rustup
+  # phase through the operator's LAN proxy (crates.io/GitHub are reachable directly —
+  # verified by earlier cargo install success in build logs).
+  export http_proxy="http://192.168.100.245:10808" https_proxy="http://192.168.100.245:10808"
   curl -fsSL --retry 3 --http1.1 https://sh.rustup.rs -o /tmp/rustup-init.sh \
     || ft::die "rustup-init fetch failed"
   sh /tmp/rustup-init.sh -y --profile minimal --default-toolchain stable >>"$FT_LOG" 2>&1 \
     || ft::die "rustup install failed"
   rustup default stable >>"$FT_LOG" 2>&1 || true
+  unset http_proxy https_proxy
   export PATH="/root/.cargo/bin:$PATH"
   cargo install --locked kani-verifier >>"$FT_LOG" 2>&1 || ft::die "cargo install kani-verifier failed"
   mkdir -p "$FT_TOOL_DIR/home" "$FT_TOOL_DIR/bin"
