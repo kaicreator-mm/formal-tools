@@ -1,15 +1,15 @@
 # Portable Runtime Build Summary (Debian 13 x86_64)
 
-Generated: 2026-11-11T22:27:37+00:00  ·  source HEAD: `unknown`
+Generated: 2026-11-11T23:35:32+00:00  ·  source HEAD: `unknown`
 Target: Debian 13 (trixie) x86_64, glibc <= 2.41 · runtimes: Python 3.13.5 / Node 22.16.0 / Java 21.0.13+9
 
 | metric | count |
 |---|---|
 | tools registered | 36 |
-| build PACKAGED | 34 |
-| runtime_verified PASS | 34 |
+| build PACKAGED | 36 |
+| runtime_verified PASS | 36 |
 | BUILD_FAILED | 0 (-) |
-| UNAVAILABLE | 2 (nuxmv, prob) |
+| UNAVAILABLE | 0 (-) |
 
 | tool | availability | version | verify | blocker |
 |---|---|---|---|---|
@@ -33,10 +33,10 @@ Target: Debian 13 (trixie) x86_64, glibc <= 2.41 · runtimes: Python 3.13.5 / No
 | mesa | PACKAGED | 3.5.2 | PASS | - |
 | minizinc | PACKAGED | 2.10.1 | PASS | - |
 | networkx | PACKAGED | 3.7 | PASS | - |
-| nuxmv | UNAVAILABLE | 2.1.0 | SKIP | nuXmv binaries require manual license acceptance on nuxmv.fbk.eu (form-gated); no automatable official channel — candidates tried all failed |
+| nuxmv | PACKAGED | 2.2.0 | PASS | - |
 | ortools | PACKAGED | 9.15.6755 | PASS | - |
 | prism | PACKAGED | 4.11 | PASS | - |
-| prob | UNAVAILABLE | 1.16.1 | SKIP | probcli zips (1.16.1/1.15.1/nightly) lack probcliparser.jar — no public release channel for the parser artifact (maven/github probed); manual upstream support needed |
+| prob | PACKAGED | 1.16.1 | PASS | - |
 | pymc | PACKAGED | 6.4.0 | PASS | - |
 | rdf-shacl | PACKAGED | 0.40.2 | PASS | - |
 | robot | PACKAGED | 1.9.11 | PASS | - |

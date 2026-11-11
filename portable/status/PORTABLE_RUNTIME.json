@@ -1,6 +1,6 @@
 {
   "schema": "formal-tools/portable-runtime/0.1",
-  "generated_at": "2026-11-11T22:27:37+00:00",
+  "generated_at": "2026-11-11T23:35:32+00:00",
   "source_head": null,
   "target": {
     "os": "debian-13",
@@ -225,11 +225,11 @@
       "id": "nuxmv",
       "capability_ids": [],
       "official_url": null,
-      "portable_availability": "UNAVAILABLE",
-      "runtime_verified": false,
-      "verify_verdict": "SKIP",
-      "version": "2.1.0",
-      "blocker_reason": "nuXmv binaries require manual license acceptance on nuxmv.fbk.eu (form-gated); no automatable official channel — candidates tried all failed"
+      "portable_availability": "PACKAGED",
+      "runtime_verified": true,
+      "verify_verdict": "PASS",
+      "version": "2.2.0",
+      "blocker_reason": null
     },
     {
       "id": "ortools",
@@ -255,11 +255,11 @@
       "id": "prob",
       "capability_ids": [],
       "official_url": null,
-      "portable_availability": "UNAVAILABLE",
-      "runtime_verified": false,
-      "verify_verdict": "SKIP",
+      "portable_availability": "PACKAGED",
+      "runtime_verified": true,
+      "verify_verdict": "PASS",
       "version": "1.16.1",
-      "blocker_reason": "probcli zips (1.16.1/1.15.1/nightly) lack probcliparser.jar — no public release channel for the parser artifact (maven/github probed); manual upstream support needed"
+      "blocker_reason": null
     },
     {
       "id": "pymc",
