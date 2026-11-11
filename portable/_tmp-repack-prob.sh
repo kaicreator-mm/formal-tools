@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# One-off: single-tool repackage for prob (SICStus full distribution).
+# One-off: single-tool repackage for prob — full 1.16.1 distribution (tcltk releases).
+# Channel: stups.hhu-hosting.de/downloads/prob/tcltk/releases/1.16.1/ProB.linux64.tar.gz
+# (contains probcliparser.jar + non-expired SICStus runtime; slim cli zips lack the jar).
 set -uo pipefail
 source /home/cc/formal-tools-build/src/portable/env.sh
 cd /home/cc/formal-tools-build
