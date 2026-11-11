@@ -29,8 +29,11 @@ CID=$(docker create "$IMG")
 trap 'docker rm -f "$CID" >/dev/null 2>&1 || true' EXIT
 
 mkdir -p "$STAGE/payload/bin" "$STAGE/payload/lib"
-if ! docker export "$CID" | tar -xf - -C "$STAGE/payload" "$PREFIX/bin" "$PREFIX/lib"; then
-  echo "FATAL: docker export | tar failed for $PREFIX/{bin,lib}"
+# docker export archives carry members WITHOUT leading slash — strip ours to match
+MBIN="$PREFIX/bin"; MBIN=${MBIN#/}
+MLIB="$PREFIX/lib"; MLIB=${MLIB#/}
+if ! docker export "$CID" | tar -xf - -C "$STAGE/payload" "$MBIN" "$MLIB"; then
+  echo "FATAL: docker export | tar failed for $MBIN $MLIB"
   exit 3
 fi
 if [ ! -f "$STAGE/payload/$PREFIX/bin/storm" ]; then
