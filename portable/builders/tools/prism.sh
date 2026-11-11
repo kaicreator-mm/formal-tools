@@ -13,6 +13,8 @@ ft_tool_build() {
   [ -n "$src" ] || ft::die "prism dir not found"
   cp -a "$src/." "$FT_TOOL_DIR/"
   [ -f "$FT_TOOL_DIR/bin/prism" ] || ft::die "bin/prism missing"
+  # release launcher hardcodes the CI build path — relocalize to the shipped layout
+  sed -i 's|^PRISM_DIR=.*|PRISM_DIR="$(CDPATH= cd -- "$(dirname -- "$0")/.." \&\& pwd)"|' "$FT_TOOL_DIR/bin/prism"
   if [ ! -d "$FT_TOOL_DIR/jre" ] && [ ! -d "$FT_TOOL_DIR/jdk" ]; then
     ft::log "prism tarball ships no JRE — wrapper will use bundled java21"
   fi
