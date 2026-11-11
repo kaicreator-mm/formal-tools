@@ -10,9 +10,10 @@ FT_PROBE=(bin/cargo-kani --version)
 
 ft_tool_build() {
   export HOME=/root
-  # static.rust-lang.org is unreachable from the build network; rsproxy mirror
-  export RUSTUP_DIST_SERVER="https://rsproxy.cn"
-  export RUSTUP_UPDATE_ROOT="https://rsproxy.cn/rustup/rustup"
+  # static.rust-lang.org is unreachable from the build network; rsproxy mirrors it
+  # under rsproxy.cn/rustup/ (probed: /rustup/dist/<triple>/rustup-init = 200)
+  export RUSTUP_DIST_SERVER="https://rsproxy.cn/rustup"
+  export RUSTUP_UPDATE_ROOT="https://rsproxy.cn/rustup"
   curl -fsSL --retry 3 --http1.1 https://sh.rustup.rs -o /tmp/rustup-init.sh \
     || ft::die "rustup-init fetch failed"
   sh /tmp/rustup-init.sh -y --profile minimal --default-toolchain stable >>"$FT_LOG" 2>&1 \
