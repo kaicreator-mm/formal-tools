@@ -53,7 +53,7 @@
     "[22:28:37] [nuxmv] build UNAVAILABLE (recorded, not failed): nuxmv"
   ],
   "package": {
-    "path": "packages/tools/nuxmv.tar.gz",
-    "sha256": "537efb1be982afd70912cfcab1a72a2b978405b34e0cef8b29dd1d282560054b"
+    "path": "packages/tools/nuxmv-2.1.0-linux-x86_64.tar.zst",
+    "sha256": "86074f007a3bb10d408ac69707a1e7750fca36e7a6eec2e2ddfadd9e61841b39"
   }
 }

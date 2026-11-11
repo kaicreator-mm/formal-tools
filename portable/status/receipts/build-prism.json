@@ -29,7 +29,7 @@
     "[22:28:37] [prism] build OK: prism 4.11 glibc_max=n/a"
   ],
   "package": {
-    "path": "packages/tools/prism.tar.gz",
-    "sha256": "08888b1c6ef28af0b151902f988683eaa4809bc26fed05969a248cce1d82b71b"
+    "path": "packages/tools/prism-4.11-linux-x86_64.tar.zst",
+    "sha256": "d1e4582e26aadf485817f6930f6f5f6ecbc13c0f185335c97db9c40aca8751dc"
   }
 }

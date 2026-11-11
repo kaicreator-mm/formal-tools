@@ -2,7 +2,7 @@
   "tool_id": "networkx",
   "status": "SUCCESS",
   "failure_reason": null,
-  "version": "unknown",
+  "version": "3.7",
   "kind": "python-lib",
   "glibc_max": null,
   "elf_arch": null,
@@ -20,7 +20,7 @@
     "[22:34:37] [networkx] building networkx version=runtime-resolved kind=python-lib"
   ],
   "package": {
-    "path": "packages/tools/networkx.tar.gz",
-    "sha256": "0ca298f6bd8306c77480b49c1bf0963d872187498f497674f9399d3e7fcdb580"
+    "path": "packages/tools/networkx-3.7-linux-x86_64.tar.zst",
+    "sha256": "320fb0e76c4ec2ee2b2353327b8047d6532b559ac3c4ea6ede2e5acbf5cf8631"
   }
 }

@@ -53,7 +53,7 @@
     "[14:50:58] [why3] build OK: why3 1.8.0 glibc_max=2.38"
   ],
   "package": {
-    "path": "packages/tools/why3.tar.gz",
-    "sha256": "3d6268cb9255a70fc7793be8c1f03acdaa6d220fc326b75fddd63da669ac433d"
+    "path": "packages/tools/why3-1.8.0-linux-x86_64.tar.zst",
+    "sha256": "6a0e3cc7a3664529ed9573613359bb0e9019d2dd38ffd521a6b4251dcf5802d1"
   }
 }

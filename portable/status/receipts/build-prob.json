@@ -53,7 +53,7 @@
     "[14:50:10] [prob] build UNAVAILABLE (recorded, not failed): prob"
   ],
   "package": {
-    "path": "packages/tools/prob.tar.gz",
-    "sha256": "850c3aab661fe722d53a2a556dc3011efa5c23353a5c734ed178c456d7ba412a"
+    "path": "packages/tools/prob-1.16.1-linux-x86_64.tar.zst",
+    "sha256": "84e28b68f39b3a2b72556f17b878d2b2a8ed38bea72192eb53e6539971099269"
   }
 }

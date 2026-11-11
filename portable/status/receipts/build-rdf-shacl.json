@@ -2,7 +2,7 @@
   "tool_id": "rdf-shacl",
   "status": "SUCCESS",
   "failure_reason": null,
-  "version": "unknown",
+  "version": "0.40.2",
   "kind": "python-lib",
   "glibc_max": null,
   "elf_arch": null,
@@ -21,7 +21,7 @@
     "[22:34:39] [rdf-shacl] building rdf-shacl version=runtime-resolved kind=python-lib"
   ],
   "package": {
-    "path": "packages/tools/rdf-shacl.tar.gz",
-    "sha256": "49b06e5d7ec1746140a46f786c383a652961d959927ab88884ad0ac61ec13377"
+    "path": "packages/tools/rdf-shacl-0.40.2-linux-x86_64.tar.zst",
+    "sha256": "4cdc892065e76d88cb41f40b54853fadc19e71fc947ef0d08422b0c7e999eb0e"
   }
 }

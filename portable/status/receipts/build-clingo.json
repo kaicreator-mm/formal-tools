@@ -53,7 +53,7 @@
     "[22:28:35] [clingo] build OK: clingo 5.8.3 glibc_max=2.34"
   ],
   "package": {
-    "path": "packages/tools/clingo.tar.gz",
-    "sha256": "b2fad5367a0e329fcb8aff958f6fea835e38360b9b6628772347b036c744aa55"
+    "path": "packages/tools/clingo-5.8.3-linux-x86_64.tar.zst",
+    "sha256": "496254a850cb3dd988aaf3662845f0fe97cf2b2d33535ef6eed44274f140ea3d"
   }
 }

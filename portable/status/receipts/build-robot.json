@@ -24,7 +24,7 @@
     "[22:28:40] [robot] build OK: robot 1.9.11 glibc_max=n/a"
   ],
   "package": {
-    "path": "packages/tools/robot.tar.gz",
-    "sha256": "cbfc8c3315ecdafd5fe3da377fcc64bc0a343fffa4ef4bb7aa3b4c0c1a9434ab"
+    "path": "packages/tools/robot-1.9.11-linux-x86_64.tar.zst",
+    "sha256": "14c2680ededcccaa47edf7b793d4625c3b18a312cc91ee1ffb4757c771b7c23b"
   }
 }

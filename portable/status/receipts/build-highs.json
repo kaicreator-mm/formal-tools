@@ -2,7 +2,7 @@
   "tool_id": "highs",
   "status": "SUCCESS",
   "failure_reason": null,
-  "version": "unknown",
+  "version": "1.15.1",
   "kind": "python-lib",
   "glibc_max": null,
   "elf_arch": null,
@@ -21,7 +21,7 @@
     "[22:34:36] [highs] building highs version=runtime-resolved kind=python-lib"
   ],
   "package": {
-    "path": "packages/tools/highs.tar.gz",
-    "sha256": "333563daf91bc09da93d499624c01e07fc79af35ae72215bc29075a815429b0b"
+    "path": "packages/tools/highs-1.15.1-linux-x86_64.tar.zst",
+    "sha256": "563211011344ded2991e0dfa49fb9856a7bbe5f8589a0e3d33f7176b41cbe386"
   }
 }

@@ -24,7 +24,7 @@
     "[22:29:50] [vampire] build OK: vampire 5.1.0 glibc_max=2.34"
   ],
   "package": {
-    "path": "packages/tools/vampire.tar.gz",
-    "sha256": "7b0ddb902f698565f12bc89b9c93ca71387101589c5d04ee0a59cd1afb7bada6"
+    "path": "packages/tools/vampire-5.1.0-linux-x86_64.tar.zst",
+    "sha256": "42bee465d15da2c38d0c21531ba78a0fdcd6c80014c14ac956eaf6e6ce1c6671"
   }
 }

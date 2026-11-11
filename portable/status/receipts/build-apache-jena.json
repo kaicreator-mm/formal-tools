@@ -45,7 +45,7 @@
     "[22:26:52] [apache-jena] build OK: apache-jena 5.5.0 glibc_max=n/a"
   ],
   "package": {
-    "path": "packages/tools/apache-jena.tar.gz",
-    "sha256": "014d755b8e69dbf2bee5eb2a24d6d9f35026d9348e49e017930be4f18ee825c7"
+    "path": "packages/tools/apache-jena-5.5.0-linux-x86_64.tar.zst",
+    "sha256": "6cf2dff4e97a946534428c679af7da4c80e832a0e496f3f6306114118a432855"
   }
 }

@@ -24,7 +24,7 @@
     "[22:27:01] [elk] build OK: elk 0.6.0 glibc_max=n/a"
   ],
   "package": {
-    "path": "packages/tools/elk.tar.gz",
-    "sha256": "55fb9f33f635faa9fb66d53c9815c6280a2b3b1caaad2091c9968dbd0ddc1f88"
+    "path": "packages/tools/elk-0.6.0-linux-x86_64.tar.zst",
+    "sha256": "c98892d52e46a03a6e2c354cf7cc78b9f0c3d9dfb8b24a9cfa3e00e226b12fdf"
   }
 }

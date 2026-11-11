@@ -2,7 +2,7 @@
   "tool_id": "dowhy",
   "status": "SUCCESS",
   "failure_reason": null,
-  "version": "unknown",
+  "version": "0.14",
   "kind": "python-lib",
   "glibc_max": null,
   "elf_arch": null,
@@ -21,7 +21,7 @@
     "[22:34:33] [dowhy] building dowhy version=runtime-resolved kind=python-lib"
   ],
   "package": {
-    "path": "packages/tools/dowhy.tar.gz",
-    "sha256": "f2191538c18916aa96ba9917be617c8f4c840d8f45b251efd1c8ee7581329fc7"
+    "path": "packages/tools/dowhy-0.14-linux-x86_64.tar.zst",
+    "sha256": "0491f2b2676abda932e31ed1a0d2d5b98e58c4e82de553fd8210d5dccc2fa047"
   }
 }

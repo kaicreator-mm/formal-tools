@@ -2,7 +2,7 @@
   "tool_id": "fast-check",
   "status": "SUCCESS",
   "failure_reason": null,
-  "version": "4.3.0",
+  "version": "4.10.2",
   "kind": "node-lib",
   "glibc_max": null,
   "elf_arch": null,
@@ -25,7 +25,7 @@
     "[22:27:04] [fast-check] build OK: fast-check 4.3.0 glibc_max=n/a"
   ],
   "package": {
-    "path": "packages/tools/fast-check.tar.gz",
-    "sha256": "a11e027c1d76030020a55241ac138496fa733868fc83f8090e753d2b1fb973e6"
+    "path": "packages/tools/fast-check-4.10.2-linux-x86_64.tar.zst",
+    "sha256": "781ccef57d6249d08b347356eec82c6c44822a3107c01a1048a80f112d77a128"
   }
 }

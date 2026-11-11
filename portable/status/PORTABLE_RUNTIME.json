@@ -1,6 +1,6 @@
 {
   "schema": "formal-tools/portable-runtime/0.1",
-  "generated_at": "2026-11-11T15:00:31+00:00",
+  "generated_at": "2026-11-11T19:42:21+00:00",
   "source_head": null,
   "target": {
     "os": "debian-13",
@@ -68,7 +68,7 @@
       "portable_availability": "PACKAGED",
       "runtime_verified": true,
       "verify_verdict": "PASS",
-      "version": "unknown",
+      "version": "0.1.4.8",
       "blocker_reason": null
     },
     {
@@ -118,7 +118,7 @@
       "portable_availability": "PACKAGED",
       "runtime_verified": true,
       "verify_verdict": "PASS",
-      "version": "unknown",
+      "version": "0.14",
       "blocker_reason": null
     },
     {
@@ -138,7 +138,7 @@
       "portable_availability": "PACKAGED",
       "runtime_verified": true,
       "verify_verdict": "PASS",
-      "version": "4.3.0",
+      "version": "4.10.2",
       "blocker_reason": null
     },
     {
@@ -158,7 +158,7 @@
       "portable_availability": "PACKAGED",
       "runtime_verified": true,
       "verify_verdict": "PASS",
-      "version": "unknown",
+      "version": "1.15.1",
       "blocker_reason": null
     },
     {
@@ -168,7 +168,7 @@
       "portable_availability": "PACKAGED",
       "runtime_verified": true,
       "verify_verdict": "PASS",
-      "version": "unknown",
+      "version": "6.170.15",
       "blocker_reason": null
     },
     {
@@ -198,7 +198,7 @@
       "portable_availability": "PACKAGED",
       "runtime_verified": true,
       "verify_verdict": "PASS",
-      "version": "unknown",
+      "version": "3.5.2",
       "blocker_reason": null
     },
     {
@@ -218,7 +218,7 @@
       "portable_availability": "PACKAGED",
       "runtime_verified": true,
       "verify_verdict": "PASS",
-      "version": "unknown",
+      "version": "3.7",
       "blocker_reason": null
     },
     {
@@ -238,7 +238,7 @@
       "portable_availability": "PACKAGED",
       "runtime_verified": true,
       "verify_verdict": "PASS",
-      "version": "unknown",
+      "version": "9.15.6755",
       "blocker_reason": null
     },
     {
@@ -268,7 +268,7 @@
       "portable_availability": "PACKAGED",
       "runtime_verified": true,
       "verify_verdict": "PASS",
-      "version": "unknown",
+      "version": "6.4.0",
       "blocker_reason": null
     },
     {
@@ -278,7 +278,7 @@
       "portable_availability": "PACKAGED",
       "runtime_verified": true,
       "verify_verdict": "PASS",
-      "version": "unknown",
+      "version": "0.40.2",
       "blocker_reason": null
     },
     {
@@ -298,7 +298,7 @@
       "portable_availability": "PACKAGED",
       "runtime_verified": true,
       "verify_verdict": "PASS",
-      "version": "unknown",
+      "version": "4.1.2",
       "blocker_reason": null
     },
     {
@@ -318,7 +318,7 @@
       "portable_availability": "PACKAGED",
       "runtime_verified": true,
       "verify_verdict": "PASS",
-      "version": "2.0.0",
+      "version": "1.8.0",
       "blocker_reason": null
     },
     {
@@ -328,7 +328,7 @@
       "portable_availability": "PACKAGED",
       "runtime_verified": true,
       "verify_verdict": "PASS",
-      "version": "unknown",
+      "version": "1.14.0",
       "blocker_reason": null
     },
     {

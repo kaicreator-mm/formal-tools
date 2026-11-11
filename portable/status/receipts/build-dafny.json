@@ -28,7 +28,7 @@
     "[22:27:00] [dafny] build OK: dafny 4.11.0 glibc_max=2.16"
   ],
   "package": {
-    "path": "packages/tools/dafny.tar.gz",
-    "sha256": "3ba36c6ce39e02b85f604ba390cc930f234db3206d95a9e4ee466e795730c17c"
+    "path": "packages/tools/dafny-4.11.0-linux-x86_64.tar.zst",
+    "sha256": "068b3111a5a5c842e5f5bed51c576cf4ed5c966503e97916a53c2a72eac43d5a"
   }
 }

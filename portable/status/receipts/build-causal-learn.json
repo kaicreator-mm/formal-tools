@@ -2,7 +2,7 @@
   "tool_id": "causal-learn",
   "status": "SUCCESS",
   "failure_reason": null,
-  "version": "unknown",
+  "version": "0.1.4.8",
   "kind": "python-lib",
   "glibc_max": null,
   "elf_arch": null,
@@ -21,7 +21,7 @@
     "[22:34:33] [causal-learn] building causal-learn version=runtime-resolved kind=python-lib"
   ],
   "package": {
-    "path": "packages/tools/causal-learn.tar.gz",
-    "sha256": "1926f7d1bfd2b2884f8c33e9114602149f64e1e5fcc3e48f21f5b24158e1847f"
+    "path": "packages/tools/causal-learn-0.1.4.8-linux-x86_64.tar.zst",
+    "sha256": "96e5e195d1214c2e755fd07ff8070a37e3f91a94100c8ab64ec238f7ab4d49ec"
   }
 }

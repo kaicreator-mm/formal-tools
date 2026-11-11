@@ -2,7 +2,7 @@
   "tool_id": "pymc",
   "status": "SUCCESS",
   "failure_reason": null,
-  "version": "unknown",
+  "version": "6.4.0",
   "kind": "python-lib",
   "glibc_max": null,
   "elf_arch": null,
@@ -21,7 +21,7 @@
     "[22:34:38] [pymc] building pymc version=runtime-resolved kind=python-lib"
   ],
   "package": {
-    "path": "packages/tools/pymc.tar.gz",
-    "sha256": "f8e984f1c2fc289223c3c0f4730fb8385ce3f5b56b5e1bc517269b9833ecf7f4"
+    "path": "packages/tools/pymc-6.4.0-linux-x86_64.tar.zst",
+    "sha256": "59a50d03a0b6246e32bfca5b6989ab99435c3ae388a10045920432cb106fff72"
   }
 }

@@ -53,7 +53,7 @@
     "[22:29:46] [fast-downward] build OK: fast-downward 24.06 glibc_max=n/a"
   ],
   "package": {
-    "path": "packages/tools/fast-downward.tar.gz",
-    "sha256": "c4e65822edda4f1c37a2a3ae6f0a62d05e9617330652d62a9e4994dc3cd30e51"
+    "path": "packages/tools/fast-downward-24.06-linux-x86_64.tar.zst",
+    "sha256": "909f427d559965709adf9725899a3512f3c81ca88d0cae17619412cd810de503"
   }
 }

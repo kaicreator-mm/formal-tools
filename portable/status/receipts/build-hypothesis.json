@@ -2,7 +2,7 @@
   "tool_id": "hypothesis",
   "status": "SUCCESS",
   "failure_reason": null,
-  "version": "unknown",
+  "version": "6.170.15",
   "kind": "python-lib",
   "glibc_max": null,
   "elf_arch": null,
@@ -21,7 +21,7 @@
     "[22:34:36] [hypothesis] building hypothesis version=runtime-resolved kind=python-lib"
   ],
   "package": {
-    "path": "packages/tools/hypothesis.tar.gz",
-    "sha256": "4502394f1e34bacf2a27012d73496c95134c32777872be1a33133afc8ba98ced"
+    "path": "packages/tools/hypothesis-6.170.15-linux-x86_64.tar.zst",
+    "sha256": "fab7082f1fdf1f9a5ad8b880e514d03d79888eaff92c2151712eb514c697c963"
   }
 }

@@ -24,7 +24,7 @@
     "[22:26:56] [apalache] build OK: apalache 0.63.0 glibc_max=n/a"
   ],
   "package": {
-    "path": "packages/tools/apalache.tar.gz",
-    "sha256": "e2a0cae21469d7eda874c0f9b3aa5c2b077f423984cc052ae0cc10fc3bfbb8f5"
+    "path": "packages/tools/apalache-0.63.0-linux-x86_64.tar.zst",
+    "sha256": "1c4cb32d52e94c264f5d84b8373623408c9db0e558a474f87a8b703f32f9774d"
   }
 }

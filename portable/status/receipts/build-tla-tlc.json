@@ -26,7 +26,7 @@
     "[22:29:48] [tla-tlc] build OK: tla-tlc 1.8.0 glibc_max=n/a"
   ],
   "package": {
-    "path": "packages/tools/tla-tlc.tar.gz",
-    "sha256": "2d8689a25198489fd1f946fda535ab014c2a46ba5d4cf4aa86a4e6ca05ab2eb7"
+    "path": "packages/tools/tla-tlc-1.8.0-linux-x86_64.tar.zst",
+    "sha256": "3fbc410808b4daf915d9c5ddf1500b67f65d0b97a7777b56f8d9c6cbc7573fd5"
   }
 }

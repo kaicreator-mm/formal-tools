@@ -36,7 +36,7 @@
     "[22:26:53] [cbmc] build OK: cbmc 6.11.0 glibc_max=2.38"
   ],
   "package": {
-    "path": "packages/tools/cbmc.tar.gz",
-    "sha256": "504222b6443e5431ba1eb30147e6d996b5743e1a2293de83a24d34f74b612fe0"
+    "path": "packages/tools/cbmc-6.11.0-linux-x86_64.tar.zst",
+    "sha256": "eaa049099a7a515631b4c82699b264e4bea1e677d9f65e8374cf212d30306369"
   }
 }

@@ -24,7 +24,7 @@
     "[22:26:58] [cvc5] build OK: cvc5 1.4.2 glibc_max=n/a"
   ],
   "package": {
-    "path": "packages/tools/cvc5.tar.gz",
-    "sha256": "97473e7d2c89eab962c592354a19a01c0354b543615a70ba7521c94874332f61"
+    "path": "packages/tools/cvc5-1.4.2-linux-x86_64.tar.zst",
+    "sha256": "b7a5f6d1740086347d8055dab7fd1216960e19ab7a769fa2b15c1ec76ed0c193"
   }
 }

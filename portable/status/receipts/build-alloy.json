@@ -37,7 +37,7 @@
     "[22:26:51] [alloy] build OK: alloy 6.2.0 glibc_max=n/a"
   ],
   "package": {
-    "path": "packages/tools/alloy.tar.gz",
-    "sha256": "917ab8f84dd47a046eb6f647400007c39651fc714181115e5e634696562f523d"
+    "path": "packages/tools/alloy-6.2.0-linux-x86_64.tar.zst",
+    "sha256": "639176fa9bb357015af2a62fdf6da61cacfa9a471c99a1235070c4ec7e610672"
   }
 }

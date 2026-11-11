@@ -53,7 +53,7 @@
     "[22:27:00] [aflpp] build OK: aflpp 5.03c glibc_max=2.38"
   ],
   "package": {
-    "path": "packages/tools/aflpp.tar.gz",
-    "sha256": "d81572d87660364bcf6efa145bc2d103a07a2619ed4f3a72b853e215b5988561"
+    "path": "packages/tools/aflpp-5.03c-linux-x86_64.tar.zst",
+    "sha256": "c9b9f6a6eae19d2040ac4a56c2fabffa37d6046bab14200e8f2a7226d0fd5d2f"
   }
 }

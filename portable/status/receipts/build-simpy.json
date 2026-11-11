@@ -2,7 +2,7 @@
   "tool_id": "simpy",
   "status": "SUCCESS",
   "failure_reason": null,
-  "version": "unknown",
+  "version": "4.1.2",
   "kind": "python-lib",
   "glibc_max": null,
   "elf_arch": null,
@@ -21,7 +21,7 @@
     "[22:34:39] [simpy] building simpy version=runtime-resolved kind=python-lib"
   ],
   "package": {
-    "path": "packages/tools/simpy.tar.gz",
-    "sha256": "46b7942ac9598ee4ceb462caef39622d3fc4f3f0a617c8064e9c5fbe9faf6a2a"
+    "path": "packages/tools/simpy-4.1.2-linux-x86_64.tar.zst",
+    "sha256": "d9f094ab97a83fb543fe8e4261d99a8f8c4f10722e6e71be8f21842dbf5eeb15"
   }
 }

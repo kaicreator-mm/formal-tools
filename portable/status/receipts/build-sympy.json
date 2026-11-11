@@ -2,7 +2,7 @@
   "tool_id": "sympy",
   "status": "SUCCESS",
   "failure_reason": null,
-  "version": "unknown",
+  "version": "1.14.0",
   "kind": "python-lib",
   "glibc_max": null,
   "elf_arch": null,
@@ -21,7 +21,7 @@
     "[22:34:39] [sympy] building sympy version=runtime-resolved kind=python-lib"
   ],
   "package": {
-    "path": "packages/tools/sympy.tar.gz",
-    "sha256": "b13c802e1cb5f28552262f58c4d7fe88c2a1dd459c2a69b4d5ab41e3ce698ea2"
+    "path": "packages/tools/sympy-1.14.0-linux-x86_64.tar.zst",
+    "sha256": "10af6466e7362db6e233073a9d6fe841e4c2d52e49b1105d8f9e5fd57f7dbc1a"
   }
 }

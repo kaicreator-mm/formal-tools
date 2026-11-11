@@ -2,7 +2,7 @@
   "tool_id": "storm",
   "status": "SUCCESS",
   "failure_reason": null,
-  "version": "2.0.0",
+  "version": "1.8.0",
   "kind": "bundle",
   "glibc_max": "2.34",
   "elf_arch": "Advanced",
@@ -53,7 +53,7 @@
     "[12:53:09] [storm] build OK: storm 2.0.0 glibc_max=2.34"
   ],
   "package": {
-    "path": "packages/tools/storm.tar.gz",
-    "sha256": "54cd50ae65d90047ed241654e0c5cb6712d51aff64d5665a0b985f79213a01b0"
+    "path": "packages/tools/storm-1.8.0-linux-x86_64.tar.zst",
+    "sha256": "3958dd3c800a2e1fbcf471a10d3917945ed39f66c60c40ad94ec295a5ca9f71a"
   }
 }
