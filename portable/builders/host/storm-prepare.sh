@@ -50,19 +50,22 @@ echo EXTRACT_OK
   exit 3
 fi
 
-# shared-lib closure for all storm ELF binaries, via the image's own ldd
+# shared-lib closure for all storm ELF binaries, via the image's own ldd; plus the
+# image's bundled solver trees (/opt/gurobi, /opt/mathsat5) which storm dlopen's at runtime
 mkdir -p "$STAGE/libs"
 docker run --rm --entrypoint /bin/sh -v "$STAGE:/stage" "$IMG" -c '
   for f in /usr/local/bin/storm* /usr/bin/storm* /opt/storm/bin/* ; do
     [ -x "$f" ] || continue
     ldd "$f" 2>/dev/null | awk "/=> \//{print \$3}"
-  done | sort -u' > "$STAGE/so-list.txt" || true
+  done | sort -u
+  find /opt -name "*.so*" 2>/dev/null' > "$STAGE/so-list.txt" || true
 while IFS= read -r so; do
   [ -n "$so" ] || continue
   case "$so" in
     */libc.so*|*/libm.so*|*/ld-linux*|*/libpthread*|*/libdl*|*/librt*|*/libstdc*|*/libgcc_s*) continue ;;
   esac
   base=$(basename "$so")
+  # keep versioned sonames distinct (libgurobi.so.13 vs libgurobi.so.13.0.3)
   docker run --rm --entrypoint /bin/sh -v "$STAGE:/stage" "$IMG" -c "cp -L '$so' '/stage/libs/$base'" || true
 done < "$STAGE/so-list.txt"
 rm -f "$STAGE/so-list.txt"
