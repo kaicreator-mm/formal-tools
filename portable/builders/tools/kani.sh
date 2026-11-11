@@ -39,7 +39,16 @@ ft_tool_build() {
     sleep 10
   done
   [ "$ok" = 1 ] || ft::die "cargo kani setup failed (3 attempts)"
-  # setup ran as root in the builder container -> toolchain dirs are 0700; the offline
+  # setup may symlink the toolchain to the builder's rustup store (/root/.rustup) — a
+  # dangling link inside the bundle. Materialize it into the tree.
+  tc="$FT_TOOL_DIR/home/.kani/kani-$FT_TOOL_VERSION/toolchain"
+  tc_target=$(readlink -f "$tc" 2>/dev/null || true)
+  if [ -L "$tc" ] && [ -n "$tc_target" ] && [ -d "$tc_target" ]; then
+    rm "$tc"
+    cp -a "$tc_target" "$tc"
+    ft::note toolchain_materialized "from $tc_target"
+  fi
+  # setup ran as root in the builder container -> toolchain dirs may be 0700; the offline
   # verify containers run as a non-root uid and need read+traverse access
   chmod -R a+rX "$FT_TOOL_DIR/home"
   [ -d "$FT_TOOL_DIR/home/.kani" ] || ft::die "no .kani after setup"
