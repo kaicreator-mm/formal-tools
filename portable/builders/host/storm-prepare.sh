@@ -25,7 +25,7 @@ if [ "$(printf '%s\n2.41\n' "$IMG_GLIBC" | sort -V | head -1)" != "$IMG_GLIBC" ]
   exit 3
 fi
 
-STORM_BIN=$(docker run --rm --entrypoint /bin/sh "$IMG" -c 'for d in /usr/local/bin /usr/bin /opt/storm/bin /opt/storm/inner/bin; do [ -x "$d/storm" ] && echo "$d/storm" && break; done')
+STORM_BIN=$(docker run --rm --entrypoint /bin/sh "$IMG" -c 'for d in /usr/local/bin /usr/bin /opt/storm/build/bin /opt/storm/bin /opt/storm/inner/bin; do [ -x "$d/storm" ] && echo "$d/storm" && break; done')
 [ -n "${STORM_BIN:-}" ] || { echo "FATAL: storm binary not found in image"; exit 3; }
 PREFIX=$(dirname "$STORM_BIN"); PREFIX=${PREFIX%/bin}
 echo "storm prefix in image: $PREFIX"
@@ -61,7 +61,7 @@ fi
 # image's bundled solver trees (/opt/gurobi, /opt/mathsat5) which storm dlopen's at runtime
 mkdir -p "$STAGE/libs"
 docker run --rm --entrypoint /bin/sh -v "$STAGE:/stage" "$IMG" -c '
-  for f in /usr/local/bin/storm* /usr/bin/storm* /opt/storm/bin/* ; do
+  for f in /usr/local/bin/storm* /usr/bin/storm* /opt/storm/build/bin/* /opt/storm/bin/* ; do
     [ -x "$f" ] || continue
     ldd "$f" 2>/dev/null | awk "/=> \//{print \$3}"
   done | sort -u
