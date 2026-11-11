@@ -26,200 +26,220 @@
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "5.03c",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "alloy",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "6.2.0",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "apache-jena",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "5.5.0",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "apalache",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "0.63.0",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "causal-learn",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "unknown",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "cbmc",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "6.11.0",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "clingo",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "5.8.3",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "cvc5",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "1.4.2",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "dafny",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "4.11.0",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "dowhy",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "unknown",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "elk",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "0.6.0",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "fast-check",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "4.3.0",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "fast-downward",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "24.06",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "highs",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "unknown",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "hypothesis",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "unknown",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "kani",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "0.68.0",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "lean4",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "4.35.0",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "mesa",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "unknown",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "minizinc",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "2.10.1",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "networkx",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "unknown",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "nuxmv",
@@ -236,20 +256,22 @@
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "unknown",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "prism",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "4.11",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "prob",
@@ -266,120 +288,135 @@
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "unknown",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "rdf-shacl",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "unknown",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "robot",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "1.9.11",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "simpy",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "unknown",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "souffle",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "2.5",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "storm",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "2.0.0",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "sympy",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "unknown",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "tla-tlc",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "1.8.0",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "tree-sitter",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "0.27.2",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "vampire",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "5.1.0",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "why3",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "1.8.0",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     },
     {
       "id": "z3",
       "capability_ids": [],
       "official_url": null,
       "portable_availability": "PACKAGED",
-      "runtime_verified": true,
-      "verify_verdict": "PASS",
+      "runtime_verified": false,
+      "verify_verdict": "STALE_REVERIFY_REQUIRED",
       "version": "5.4.0",
-      "blocker_reason": null
+      "blocker_reason": null,
+      "historical_verify_verdict": "PASS"
     }
-  ]
+  ],
+  "evidence_qualification": "LEGACY_EXIT_CODE_RECORDER_INVALIDATED_PENDING_V0.2_NATIVE_REPLAY",
+  "evidence_qualification_reason": "Legacy verify TSV captured cd command status instead of the real tool/timeout exit status. Previous tool-output pattern checks are historical evidence, not fresh exit-checked PASS. Run corrected v0.2 runner on native Debian 13 bundle and regenerate receipts.",
+  "historical_pass_count": 34
 }
