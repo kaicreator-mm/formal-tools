@@ -59,3 +59,8 @@ portable/deploy.sh fetch
   优化判 OPTIMAL/INFEASIBLE;`err` 用例要求无效输入产生非零退出或类型化错误。
   退出码 0 从不单独作为通过依据。
 - **不入包**:任何形式的构建缓存/凭据;大文件只进分包产物,仓库只收收据与清单。
+
+## 经验技能
+
+本目录方法论已提炼为 ZCode 技能：`~/.zcode/skills/portable-toolchain-deb13/SKILL.md`
+（镜像墙绕行、打包配方、验证契约设计、远程 shell 纪律、诚实收据规则）。新会话做同类任务前先读它。
