@@ -36,8 +36,8 @@ test("portable runner records real nonzero exit even when stdout matches SAT", {
   try {
     const p = f.run();
     assert.equal(p.status, 1, p.stderr);
-    assert.match(f.receipt(), /mock\\tpos\\t7\\t[^\\n]*\\t1\\t0\\tSAT/);
-    assert.match(f.receipt(), /verdict\\tFAIL/);
+    assert.match(f.receipt(), /mock\tpos\t7\t[^\n]*\t1\t0\tSAT/);
+    assert.match(f.receipt(), /verdict\tFAIL/);
   } finally { f.cleanup(); }
 });
 
@@ -46,8 +46,8 @@ test("portable runner accepts correct typed stdout and zero exit", { skip: !onLi
   try {
     const p = f.run();
     assert.equal(p.status, 0, p.stderr);
-    assert.match(f.receipt(), /mock\\tpos\\t0\\t[^\\n]*\\t1\\t1\\tSAT/);
-    assert.match(f.receipt(), /verdict\\tPASS/);
+    assert.match(f.receipt(), /mock\tpos\t0\t[^\n]*\t1\t1\tSAT/);
+    assert.match(f.receipt(), /verdict\tPASS/);
   } finally { f.cleanup(); }
 });
 
@@ -56,7 +56,7 @@ test("missing verification contract is SKIP and makes verify all nonzero", { ski
   try {
     const p = f.run("all");
     assert.equal(p.status, 1, p.stderr);
-    assert.match(f.receipt(), /verdict\\tSKIP/);
+    assert.match(f.receipt(), /verdict\tSKIP/);
     assert.match(p.stdout, /verify-all verdict: FAIL/);
   } finally { f.cleanup(); }
 });
@@ -67,8 +67,8 @@ test("failed mandatory setup cannot be hidden by a passing positive case", { ski
   try {
     const p = f.run();
     assert.equal(p.status, 1, p.stderr);
-    assert.match(f.receipt(), /mock\\tsetup\\t3\\t[^\\n]*\\t1\\t0\\tSETUP/);
-    assert.match(f.receipt(), /verdict\\tFAIL/);
-    assert.doesNotMatch(f.receipt(), /mock\\tpos/);
+    assert.match(f.receipt(), /mock\tsetup\t3\t[^\n]*\t1\t0\tSETUP/);
+    assert.match(f.receipt(), /verdict\tFAIL/);
+    assert.doesNotMatch(f.receipt(), /mock\tpos/);
   } finally { f.cleanup(); }
 });
