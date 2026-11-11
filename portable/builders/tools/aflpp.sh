@@ -17,6 +17,9 @@ ft_tool_build() {
   # 5.x links afl-fuzz against libpython3.13 (USE_PYTHON) — ship the shared lib
   cp -L /usr/lib/x86_64-linux-gnu/libpython3.13.so.1.0 "$FT_TOOL_DIR/lib/" 2>/dev/null \
     || ft::die "libpython3.13.so.1.0 not found in builder (python3-dev)"
+  # libpython pulls libexpat - ship it explicitly (ldd is blind past a missing lib)
+  cp -L /usr/lib/x86_64-linux-gnu/libexpat.so.1 "$FT_TOOL_DIR/lib/" 2>/dev/null \
+    || ft::die "libexpat.so.1 not found in builder"
   cp -a "$src/include" "$FT_TOOL_DIR/" 2>/dev/null || true
   # plain-compiled smoke target; fuzzed in non-instrumented mode (-n), so no compiler plugin needed
   cat > /tmp/smoke.c <<'EOF'
