@@ -36,7 +36,10 @@ function provenanceValid(p) {
     ["NOT_RUN","BYTES_BOUND_UNATTESTED"].includes(p.evidence_gate);
 }
 
-/** Accept only JSON strings, not getter-bearing JS records or spoofable arrays. */
+/** Accept only JSON strings, not getter-bearing JS records or spoofable arrays.
+ * @param {{problem_json?:string,method_json?:string,provenance_json?:string}} input
+ * @returns {any}
+ */
 export function sealSolutionCandidate({problem_json,method_json,provenance_json}={}) {
   try {
     const problem=parse(problem_json), method=parse(method_json), provenance=parse(provenance_json);
@@ -68,6 +71,7 @@ export function sealSolutionCandidate({problem_json,method_json,provenance_json}
  * Compare a candidate's sealed provenance against a new exact environment
  * snapshot. Even an exact match is ONLY a preflight, not a trusted replay.
  */
+/** @param {string} candidate_json @param {string} current_provenance_json @returns {any} */
 export function inspectCandidateReplay(candidate_json,current_provenance_json) {
   try {
     const c=parse(candidate_json),now=parse(current_provenance_json);
