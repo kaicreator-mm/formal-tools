@@ -20,10 +20,12 @@ ft_tool_build() {
   # Debian-style layout: usr/local/{bin,lib/…}
   mkdir -p "$FT_TOOL_DIR/bin" "$FT_TOOL_DIR/lib"
   cp -a "$src/usr/local/bin/." "$FT_TOOL_DIR/bin/"
-  cp -a "$src/usr/local/lib/." "$FT_TOOL_DIR/lib/" 2>/dev/null || true
   [ -x "$FT_TOOL_DIR/bin/nuXmv" ] || ft::die "bin/nuXmv missing after extraction"
-  # ship the bundled private libs (libedit/libgmp/libbsd/… are in usr/local/lib)
+  # vendored libs live in usr/local/lib/x86_64-linux-gnu/ — flatten into lib/, but drop
+  # their bundled glibc core (libc.so.6/libm/ld-linux) to avoid loader conflicts
+  cp -a "$src/usr/local/lib/x86_64-linux-gnu/." "$FT_TOOL_DIR/lib/" 2>/dev/null || true
   cp -a "$src/usr/local/lib/." "$FT_TOOL_DIR/lib/" 2>/dev/null || true
+  find "$FT_TOOL_DIR/lib" -maxdepth 1 -type f \( -name 'libc.so*' -o -name 'libm.so*' -o -name 'ld-linux*' -o -name 'libpthread*' -o -name 'libdl*' -o -name 'librt*' \) -delete
   ft::copy_libs "$FT_TOOL_DIR/bin/nuXmv" "$FT_TOOL_DIR/lib" || true
   patchelf --set-rpath '$ORIGIN/../lib' "$FT_TOOL_DIR/bin/nuXmv" 2>/dev/null || true
   ( export LD_LIBRARY_PATH="$FT_TOOL_DIR/lib"; "$FT_TOOL_DIR/bin/nuXmv" --version >/dev/null 2>&1 ) \
