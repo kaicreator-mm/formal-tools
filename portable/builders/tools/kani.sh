@@ -56,8 +56,19 @@ ft_tool_build() {
   local v
   v=$("$FT_TOOL_DIR/bin/cargo-kani" --version 2>/dev/null | head -1)
   [ -n "$v" ] && FT_TOOL_VERSION=$(printf '%s' "$v" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+  # goto-cc (CBMC front end inside kani) execs `gcc` for preprocessing — ship a private
+  # gccroot (driver + cc1), same recipe as the cbmc tool
+  gccmajor=$(gcc -dumpversion)
+  mkdir -p "$FT_TOOL_DIR/gccroot/bin" "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccmajor"
+  cp "/usr/bin/gcc-$gccmajor" "$FT_TOOL_DIR/gccroot/bin/gcc-14" 2>/dev/null || cp "$(readlink -f /usr/bin/gcc)" "$FT_TOOL_DIR/gccroot/bin/gcc-14"
+  ln -sf gcc-14 "$FT_TOOL_DIR/gccroot/bin/gcc"
+  cp "/usr/lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" 2>/dev/null \
+    || cp "/usr/libexec/gcc/x86_64-linux-gnu/$gccmajor/cc1" "$FT_TOOL_DIR/gccroot/lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" \
+    || ft::die "cc1 not found for gcc $gccmajor"
+  ln -sf "../lib/gcc/x86_64-linux-gnu/$gccmajor/cc1" "$FT_TOOL_DIR/gccroot/bin/cc1"
   ft::note upstream_note "kani-verifier crate via crates.io; cargo kani setup materialized toolchain into home/.kani (shipped)"
-  ft::make_shim 'export PATH="$TOOL_DIR/bin:$PATH"
+  ft::make_shim 'export PATH="$TOOL_DIR/bin:$TOOL_DIR/gccroot/bin:$PATH"
+export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 # cargo metadata spawns bare `rustc` before kani sets up its env — put the shipped
 # toolchain bin on PATH first
 KB=$(echo "$TOOL_DIR"/home/.kani/kani-*/toolchain)
