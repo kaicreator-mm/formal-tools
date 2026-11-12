@@ -1,18 +1,18 @@
 {
-  "verdict": "FAIL",
+  "verdict": "PASS",
   "phases": {
     "pos": {
-      "exit": 1,
-      "duration_ms": 82,
-      "output_matched": false,
-      "exit_ok": false,
+      "exit": 0,
+      "duration_ms": 118,
+      "output_matched": true,
+      "exit_ok": true,
       "label": "PASS"
     },
     "neg": {
-      "exit": 1,
-      "duration_ms": 24,
-      "output_matched": false,
-      "exit_ok": false,
+      "exit": 0,
+      "duration_ms": 44,
+      "output_matched": true,
+      "exit_ok": true,
       "label": "COUNTEREXAMPLE"
     }
   },

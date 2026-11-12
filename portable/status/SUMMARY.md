@@ -1,13 +1,13 @@
 # Portable Runtime Build Summary (Debian 13 x86_64)
 
-Generated: 2026-11-12T20:34:35+00:00  ·  source HEAD: `unknown`
+Generated: 2026-11-12T20:41:40+00:00  ·  source HEAD: `unknown`
 Target: Debian 13 (trixie) x86_64, glibc <= 2.41 · runtimes: Python 3.13.5 / Node 22.16.0 / Java 21.0.13+9
 
 | metric | count |
 |---|---|
 | tools registered | 36 |
 | build PACKAGED | 36 |
-| runtime_verified PASS | 35 |
+| runtime_verified PASS | 36 |
 | BUILD_FAILED | 0 (-) |
 | UNAVAILABLE | 0 (-) |
 
@@ -24,7 +24,7 @@ Target: Debian 13 (trixie) x86_64, glibc <= 2.41 · runtimes: Python 3.13.5 / No
 | dafny | PACKAGED | 4.11.0 | PASS | - |
 | dowhy | PACKAGED | 0.14 | PASS | - |
 | elk | PACKAGED | 0.6.0 | PASS | - |
-| fast-check | PACKAGED | 4.10.2 | FAIL | - |
+| fast-check | PACKAGED | 4.10.2 | PASS | - |
 | fast-downward | PACKAGED | 24.06 | PASS | - |
 | highs | PACKAGED | 1.15.1 | PASS | - |
 | hypothesis | PACKAGED | 6.170.15 | PASS | - |

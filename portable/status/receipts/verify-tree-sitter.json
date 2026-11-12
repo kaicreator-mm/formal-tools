@@ -3,14 +3,14 @@
   "phases": {
     "pos": {
       "exit": 0,
-      "duration_ms": 47,
+      "duration_ms": 63,
       "output_matched": true,
       "exit_ok": true,
       "label": "PARSED"
     },
     "neg": {
       "exit": 0,
-      "duration_ms": 48,
+      "duration_ms": 51,
       "output_matched": true,
       "exit_ok": true,
       "label": "PARSE_ERROR_DETECTED"
