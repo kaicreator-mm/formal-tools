@@ -3,7 +3,7 @@
 # fix meta.sh keys, re-tar all tool archives into out/packages (zstd -22),
 # integrity check each, regenerate tool lines in SHA256SUMS.
 set -euo pipefail
-docker run --rm \
+docker run --rm -i \
   -v /home/cc/formal-tools-build/out:/out \
   ft-builder:deb13 bash -s <<'INNER'
 set -euo pipefail
