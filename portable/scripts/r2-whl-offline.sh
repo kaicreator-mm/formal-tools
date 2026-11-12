@@ -29,16 +29,10 @@ REQS[pymc]="pymc"
 for t in sympy networkx hypothesis simpy mesa causal-learn rdf-shacl ortools highs dowhy pymc; do
   echo "== download: $t"
   mkdir -p "$WH/$t"
+  # no --platform restriction: pip on linux x86_64 auto-selects compatible manylinux wheels
   "$PY" -m pip download --no-cache-dir --dest "$WH/$t" \
-    --only-binary=:all: --platform manylinux2014_x86_64 \
-    --platform manylinux_2_39_x86_64 --implementation cp --python-version 3.13 \
-    --abi cp313 ${REQS[$t]} > "$WH/$t.log" 2>&1 || {
-    # retry without abi pin (some wheels are abi3/py3-none)
-    "$PY" -m pip download --no-cache-dir --dest "$WH/$t" \
-      --only-binary=:all: --platform manylinux2014_x86_64 \
-      --platform manylinux_2_39_x86_64 --implementation cp --python-version 3.13 \
-      ${REQS[$t]} > "$WH/$t.log" 2>&1 || { echo "DOWNLOAD FAIL: $t"; exit 1; }
-  }
+    --only-binary=:all: --implementation cp --python-version 3.13 \
+    ${REQS[$t]} > "$WH/$t.log" 2>&1 || { echo "DOWNLOAD FAIL: $t"; exit 1; }
   n=$(ls "$WH/$t"/*.whl 2>/dev/null | wc -l)
   sz=$(du -sh "$WH/$t" | cut -f1)
   echo "   $t: $n whls, $sz"
