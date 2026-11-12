@@ -81,6 +81,19 @@ rm -f "$FT_PKG_DIR"/tools/*.tar.gz "$FT_PKG_DIR"/tools/*.tar.zst
     # shellcheck disable=SC1091
     . "$B/tools/$id/meta.sh" 2>/dev/null && ver="${TOOL_VERSION:-}"
     out="$FT_PKG_DIR/tools/${id}-${ver}-linux-x86_64.tar.zst"
+    # self-describing package for shim-only archives (python-lib tools share the
+    # python313 runtime; a ~1KB package must explain itself or it looks broken)
+    if [ "${TOOL_KIND:-}" = "python-lib" ] && [ ! -f "tools/$id/PACKAGE-INFO.txt" ]; then
+      cat > "tools/$id/PACKAGE-INFO.txt" <<PIEOF
+PACKAGE-INFO - $id ($ver)
+This archive contains only the run shim + metadata. $id is a Python library tool:
+its payload is installed in the shared runtime
+runtimes/python313-3.13.5-linux-x86_64.tar.zst (site-packages).
+Run via bin/tool-runner (sets PYTHONHOME/LD_LIBRARY_PATH), e.g.
+  ./bin/tool-runner verify $id
+~1KB size is by design, not corruption.
+PIEOF
+    fi
     tar -cf - "tools/$id" | zstd "${ZSTD_FLAGS[@]}" -o "$out"
     verify_pkg "$B/tools/$id" "$out"
   done )
