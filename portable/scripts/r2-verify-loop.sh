@@ -28,7 +28,7 @@ res_for() {
 echo "stageA: archive integrity (per-archive container)"
 : > "$EV/stageA-archive.tsv"
 cd "$PKG"
-while IFS=$'\t' read -r hash path; do
+while read -r hash path; do
   path=${path#\./}
   [ -f "$path" ] || { echo -e "$path\tMISSING" >> "$EV/stageA-archive.tsv"; continue; }
   zt=$(docker run --rm --network none -v "/home/cc/formal-tools-build/out/packages:/pkg:ro" \
@@ -48,7 +48,7 @@ docker run --rm --network none --cpus 4 --memory 8g \
     cd /pkg
     sha256sum -c SHA256SUMS > /u/unpack-sha.log 2>&1; echo "sha_rc=$?" >> /u/unpack-sha.log
     err=0
-    while IFS=$'"'"'\t'"'"' read -r hash path; do
+    while read -r hash path; do
       path=${path#\./}
       case "$path" in
         *.tar.zst)
