@@ -35,6 +35,6 @@
   ],
   "package": {
     "path": "packages/tools/tree-sitter-0.27.2-linux-x86_64.tar.zst",
-    "sha256": "03d9454d2b7914e37d9cba3d50d8a0250ee3408e65e79c4c43749e836ba3ca5d"
+    "sha256": "2976a5d1c49c6fb95348792a1d8c63fecc038cf04af34d6dcfc4dc1f49227327"
   }
 }

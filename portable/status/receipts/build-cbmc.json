@@ -37,6 +37,6 @@
   ],
   "package": {
     "path": "packages/tools/cbmc-6.11.0-linux-x86_64.tar.zst",
-    "sha256": "eaa049099a7a515631b4c82699b264e4bea1e677d9f65e8374cf212d30306369"
+    "sha256": "d4931a5aba77dd033bf553a8754429bdcd0e5ffa308dfc03d67fdf6f685871d2"
   }
 }

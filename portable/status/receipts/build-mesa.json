@@ -22,6 +22,6 @@
   ],
   "package": {
     "path": "packages/tools/mesa-3.5.2-linux-x86_64.tar.zst",
-    "sha256": "2db07494f1916d3152bd346155d0e58621a730ab966521a1e3963451df69f23c"
+    "sha256": "25d2142fec782ec8bff177b7649adede0282cd48beb4495aa780be6c91925bc3"
   }
 }

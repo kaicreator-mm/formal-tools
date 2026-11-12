@@ -54,6 +54,6 @@
   ],
   "package": {
     "path": "packages/tools/storm-1.8.0-linux-x86_64.tar.zst",
-    "sha256": "3958dd3c800a2e1fbcf471a10d3917945ed39f66c60c40ad94ec295a5ca9f71a"
+    "sha256": "be66e1e9fc9ccd3944d149f20184f4c19521a93582624ecac8c6c3574c55f751"
   }
 }

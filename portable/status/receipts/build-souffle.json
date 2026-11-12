@@ -54,6 +54,6 @@
   ],
   "package": {
     "path": "packages/tools/souffle-2.5-linux-x86_64.tar.zst",
-    "sha256": "e3b04c0491998c51c69172d2f2fec6c1896c74a1aaab3750e56e831935648e71"
+    "sha256": "fe62860d32d62746dce8c8bb95793984d19593989ca647546b8b6c9d86bebb7f"
   }
 }

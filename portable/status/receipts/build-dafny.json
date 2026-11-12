@@ -29,6 +29,6 @@
   ],
   "package": {
     "path": "packages/tools/dafny-4.11.0-linux-x86_64.tar.zst",
-    "sha256": "068b3111a5a5c842e5f5bed51c576cf4ed5c966503e97916a53c2a72eac43d5a"
+    "sha256": "0558ca31b7fbd085fbff732303c063ff8f37464bc0347c10d24da5549fdc672f"
   }
 }

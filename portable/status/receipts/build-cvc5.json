@@ -25,6 +25,6 @@
   ],
   "package": {
     "path": "packages/tools/cvc5-1.4.2-linux-x86_64.tar.zst",
-    "sha256": "b7a5f6d1740086347d8055dab7fd1216960e19ab7a769fa2b15c1ec76ed0c193"
+    "sha256": "1af0cfec8eab662d181ab76b7c7eb20167560f7e58264dfb4ce448e6e0225b4a"
   }
 }

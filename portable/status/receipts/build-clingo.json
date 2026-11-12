@@ -54,6 +54,6 @@
   ],
   "package": {
     "path": "packages/tools/clingo-5.8.3-linux-x86_64.tar.zst",
-    "sha256": "496254a850cb3dd988aaf3662845f0fe97cf2b2d33535ef6eed44274f140ea3d"
+    "sha256": "1d9fa98030d3ab2ae349f70fad0c845fcf740e0e3e6367632c8c72457ea0dfcb"
   }
 }
