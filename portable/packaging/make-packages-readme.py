@@ -88,8 +88,11 @@ for f in tool_files:
     v = verdicts.get(tid, "?")
     mark = "✅" if v == "PASS" else ("⚠️" if v in ("SKIP", "UNAVAILABLE") else v)
     note = ""
+    pl = os.path.join(bundle, "tools", tid, "pylib")
     pi = os.path.join(bundle, "tools", tid, "PACKAGE-INFO.txt")
-    if os.path.isfile(pi):
+    if os.path.isdir(pl):
+        note = " — 内含本工具 site-packages 子集 (pylib/)；共享数值依赖在 python313 运行时包内"
+    elif os.path.isfile(pi):
         note = " — 仅含启动 shim；本体在 python313 运行时包内（包内有 PACKAGE-INFO.txt 说明）"
     L.append(f"| `{base}` | {human(os.path.getsize(f))} | {tid} {ver} [{mark} {v}]{note} |")
 L.append("")
