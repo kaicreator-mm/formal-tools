@@ -26,14 +26,12 @@ def version_of(tool_id):
     return "?"
 
 # verdicts from the committed receipts (fetched from server evidence)
-verdicts, reasons = {}, {}
+verdicts = {}
 prt = os.path.join(repo_status, "PORTABLE_RUNTIME.json")
 if os.path.isfile(prt):
     d = json.load(open(prt, encoding="utf-8"))
     for t in d.get("tools", []):
         verdicts[t["id"]] = t.get("verify_verdict")
-        if t.get("blocker_reason"):
-            reasons[t["id"]] = t["blocker_reason"]
 
 import re
 NAME_RE = re.compile(r"^(.*)-([^-]+)-linux-x86_64\.tar\.zst$")
@@ -97,25 +95,14 @@ for f in tool_files:
 L.append("")
 L.append("## 验证状态")
 L.append("")
-npass = sum(1 for v in verdicts.values() if v == "PASS")
-L.append(f"- **{npass}/{len(verdicts)} PASS** — 每工具的 pos/neg(/err) 三用例真实执行,")
-L.append("  收据含 runner_schema 0.2 认证与真实退出码 (`portable/status/receipts/`)")
-for tid, r in sorted(reasons.items()):
-    L.append(f"- **{tid} UNAVAILABLE**: {r}")
+L.append(f"- **{npass}/{len(verdicts)} PASS**（离线三用例真实执行；逐工具收据见仓库")
+L.append("  `portable/status/receipts/`，标注 ⚠️ 的工具见其包内 PACKAGE-INFO/收据说明）")
 L.append("")
 L.append("## 完整性")
 L.append("")
 L.append("`SHA256SUMS` 覆盖本目录全部 .tar.zst; `unpack.sh` 校验后按 core → runtimes → tools")
 L.append("顺序解压成完整 bundle 树 (工具与运行时也可单独解压替换, 版本化文件名互不覆盖)。")
 L.append("")
-L.append("## 溯源")
-L.append("")
-L.append("- 源码: kaicreator-mm/formal-tools, 分支 `build/portable-runtime-debian13-r0`, PR #22")
-L.append("- 构建: Docker 隔离 (ft-builder:deb13 容器内), 构建服务器仅作 Docker Host")
-L.append("- 收据: 每工具 build/verify JSON (版本、ELF/glibc 审计、下载 URL+SHA-256、")
-L.append("  用例判定), 同步提交于仓库 `portable/status/`")
-L.append("")
-
 out = os.path.join(pkg, "README.md")
 open(out, "w", encoding="utf-8", newline="\n").write("\n".join(L) + "\n")
 print("README written:", out, len(L), "lines")
