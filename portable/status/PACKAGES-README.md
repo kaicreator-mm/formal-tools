@@ -69,18 +69,11 @@ sh unpack.sh --dest /opt    # 解出完整 bundle 树
 
 ## 验证状态
 
-- **36/36 PASS** — 每工具的 pos/neg(/err) 三用例真实执行,
-  收据含 runner_schema 0.2 认证与真实退出码 (`portable/status/receipts/`)
+- **36/36 PASS**（离线三用例真实执行；逐工具收据见仓库
+  `portable/status/receipts/`，标注 ⚠️ 的工具见其包内 PACKAGE-INFO/收据说明）
 
 ## 完整性
 
 `SHA256SUMS` 覆盖本目录全部 .tar.zst; `unpack.sh` 校验后按 core → runtimes → tools
 顺序解压成完整 bundle 树 (工具与运行时也可单独解压替换, 版本化文件名互不覆盖)。
-
-## 溯源
-
-- 源码: kaicreator-mm/formal-tools, 分支 `build/portable-runtime-debian13-r0`, PR #22
-- 构建: Docker 隔离 (ft-builder:deb13 容器内), 构建服务器仅作 Docker Host
-- 收据: 每工具 build/verify JSON (版本、ELF/glibc 审计、下载 URL+SHA-256、
-  用例判定), 同步提交于仓库 `portable/status/`
 
