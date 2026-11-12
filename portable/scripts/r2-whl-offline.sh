@@ -4,7 +4,7 @@
 #   pip install --no-index --find-links wheels/<tool> <tool>
 # Uses the VERIFIED version set (pip freeze from the shared runtime).
 set -euo pipefail
-docker run --rm \
+docker run --rm -i \
   -v /home/cc/formal-tools-build/out:/out \
   ft-builder:deb13 bash -s <<'INNER'
 set -euo pipefail
