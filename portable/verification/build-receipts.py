@@ -106,7 +106,9 @@ for tid in tool_ids:
     json.dump(build, open(os.path.join(status_dir, "receipts", f"build-{tid}.json"), "w", encoding="utf-8"),
               indent=2, ensure_ascii=False)
 
-    v = parse_verify_tsv(os.path.join(out_dir, "evidence", f"verify-{tid}.tsv"))
+    r2_dir = os.path.join(out_dir, "evidence", "r2")
+    cand = os.path.join(r2_dir, f"verify-{tid}.tsv")
+    v = parse_verify_tsv(cand if os.path.isfile(cand) else os.path.join(out_dir, "evidence", f"verify-{tid}.tsv"))
     if v:
         v["tool_id"] = tid
         verifies[tid] = v
