@@ -83,7 +83,7 @@ for t in $TOOLS; do
       echo '== cases ==';    /bundle/bin/tool-runner verify $t 2>&1
       echo RUNNER_RC=\$?
     " > "$EV/$t/session.log" 2>&1
-  tsv="$EV/verify-$t.tsv"
+  tsv="$EV/$t/verify-$t.tsv"
   verdict=FAIL; schema=absent
   if [ -f "$tsv" ]; then
     schema=$(awk -F'\t' '$1=="runner_schema"{print $2}' "$tsv" | tail -1)

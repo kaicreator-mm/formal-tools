@@ -4,7 +4,7 @@
 set -euo pipefail
 source /home/cc/formal-tools-build/src/portable/env.sh
 SRC=/home/cc/formal-tools-build/src/portable
-B="$FT_BUNDLE/formal-tools-portable-debian13-x86_64"
+B="$FT_BUNDLE"
 
 # 1) meta.sh: TOOL_TOOL_* -> TOOL_* (out/tools + bundle), root container for perms
 docker run --rm -v /home/cc/formal-tools-build/out:/out -v "$B:/b" -v "$SRC:/src:ro" \
