@@ -32,6 +32,14 @@ cd "$PKG"
 while read -r hash path; do
   path=${path#\./}
   [ -f "$path" ] || { echo -e "$path\tMISSING" >> "$EV/stageA-archive.tsv"; continue; }
+  parts=$(ls "$path".part-?? 2>/dev/null | wc -l)
+  if [ "$parts" -gt 0 ]; then
+    cat "$path".part-?? > /tmp/r2-rejoin.tar.zst
+    zt=$(zstd -t /tmp/r2-rejoin.tar.zst >/dev/null 2>&1 && echo OK || echo BAD)
+    sha_now=$(sha256sum /tmp/r2-rejoin.tar.zst | cut -d' ' -f1)
+    sha_ok=$([ "$sha_now" = "$hash" ] && echo OK || echo BAD)
+    rm -f /tmp/r2-rejoin.tar.zst
+  fi
   zt=$(docker run --rm --network none -v "/home/cc/formal-tools-build/out/packages:/pkg:ro" \
         "$IMG" zstd -t "/pkg/$path" >/dev/null 2>&1 && echo OK || echo BAD)
   sha_ok=$(echo "$hash  $path" | sha256sum -c --quiet >/dev/null 2>&1 && echo OK || echo BAD)
@@ -54,7 +62,13 @@ docker run --rm --network none --cpus 4 --memory 8g \
       case "$path" in
         *.tar.zst)
           mkdir -p "/u/$(dirname "$path")"
-          tar --zstd -xf "$path" -C /u 2>> /u/unpack-errors.log || { echo "UNPACK FAIL: $path" >> /u/unpack-errors.log; err=1; }
+          if [ -f "$path" ]; then
+                      tar --zstd -xf "$path" -C /u 2>> /u/unpack-errors.log
+          elif [ -f "$path.part-00" ]; then
+            cat "$path".part-?? | tar --zstd -xf - -C /u 2>> /u/unpack-errors.log || { echo "UNPACK FAIL(split): $path" >> /u/unpack-errors.log; err=1; }
+          else
+            echo "MISSING: $path" >> /u/unpack-errors.log; err=1
+          fi || { echo "UNPACK FAIL: $path" >> /u/unpack-errors.log; err=1; }
         ;;
       esac
     done < SHA256SUMS
