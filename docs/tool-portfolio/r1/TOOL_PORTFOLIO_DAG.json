@@ -1,0 +1,945 @@
+{
+  "schema": "formal-tools/tool-portfolio-dag/1.0",
+  "snapshot_date": "2026-11-12",
+  "authority": {
+    "repository": "kaicreator-mm/formal-tools",
+    "portfolio_issue": 24,
+    "product_issue": 11,
+    "existing_r2_runtime_issue": 4,
+    "excluded_issue": 7
+  },
+  "source": {
+    "drive_packages": "https://drive.google.com/drive/folders/1DsQtN4Ei3F8YGyDxUGiXCWNuIU8mS2wp",
+    "r3_receipt": "https://github.com/kaicreator-mm/formal-tools/issues/11#issuecomment-6824089200",
+    "verified_archive_folder": "https://drive.google.com/drive/folders/1RH31lRIMZHWp5OluomuVTu479lquiMFD",
+    "r3_environment": "Debian 13.3 x86_64 / ChatGPT host",
+    "note": "R3 receipt belongs to original App/packages archive SHA, not necessarily PR#22 current rebuilt artifact, not a business Oracle PASS"
+  },
+  "snapshot_counts": {
+    "tools": 36,
+    "ENV_PASS": 16,
+    "NOT_RUN_EXECUTION_SERVICE": 3,
+    "NOT_RUN_RUNTIME_UNAVAILABLE": 13,
+    "NOT_RUN_TRANSPORT_413": 1,
+    "MANUAL_PARTIAL": 1,
+    "REWORK_NOT_VERIFIED": 1,
+    "PRECHECK_REJECTED": 1,
+    "fully_qualified_T5": 0
+  },
+  "valid_gate_order": [
+    {
+      "id": "T0",
+      "name": "Source/archive/license/provenance",
+      "depends_on": []
+    },
+    {
+      "id": "T1",
+      "name": "Reproducible portable build",
+      "depends_on": [
+        "T0"
+      ]
+    },
+    {
+      "id": "T2",
+      "name": "Safe isolated installation/doctor",
+      "depends_on": [
+        "T1"
+      ]
+    },
+    {
+      "id": "T3",
+      "name": "Native positive/negative/error verification",
+      "depends_on": [
+        "T2"
+      ]
+    },
+    {
+      "id": "T4",
+      "name": "Registry/Runner/CLI/MCP integration",
+      "depends_on": [
+        "T3"
+      ]
+    },
+    {
+      "id": "T5",
+      "name": "Real source-backed Solve/independent Verify",
+      "depends_on": [
+        "T4"
+      ]
+    },
+    {
+      "id": "T6",
+      "name": "Maintained/versioned regression and stale invalidation",
+      "depends_on": [
+        "T5"
+      ]
+    }
+  ],
+  "shared_runtimes": [
+    {
+      "id": "core",
+      "name": "portable core",
+      "status": "SOURCE_HASH_MATCH_R3"
+    },
+    {
+      "id": "java21",
+      "name": "JRE21",
+      "status": "R3_AVAILABLE_IN_VERIFIED"
+    },
+    {
+      "id": "node22",
+      "name": "Node 22.16.0",
+      "status": "R3_AVAILABLE_IN_VERIFIED"
+    },
+    {
+      "id": "python313",
+      "name": "CPython 3.13.5",
+      "status": "NOT_RUN_TRANSPORT_413",
+      "archive_bytes": 294346075
+    },
+    {
+      "id": "dotnet8",
+      "name": ".NET8",
+      "status": "SOURCE_LISTED_NOT_TREATED_AS_PASSED"
+    },
+    {
+      "id": "py-cache",
+      "name": "Tree-sitter grammar cache",
+      "status": "SOURCE_LISTED_NOT_TREATED_AS_PASSED"
+    }
+  ],
+  "status_rule": "No transition to PASS without exact tool/fixture SHA, native output/exit and independent scope; missing input/error/UNKNOWN never silently promoted; tool ENV_PASS does not imply product G3–G6 or Solution REUSABLE.",
+  "tools": [
+    {
+      "id": "FT-T01",
+      "slug": "aflpp",
+      "version": "5.03c",
+      "issue": 25,
+      "package": "aflpp-5.03c-linux-x86_64.tar.zst",
+      "requires": [
+        "core"
+      ],
+      "observed_r3_status": "ENV_PASS",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "PASS_SCOPED_R3",
+        "T3": "PASS_SCOPED_R3_FIXTURES",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "fuzz-smoke + invalid directory 2-case"
+    },
+    {
+      "id": "FT-T02",
+      "slug": "alloy",
+      "version": "6.2.0",
+      "issue": 26,
+      "package": "alloy-6.2.0-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "java21"
+      ],
+      "observed_r3_status": "ENV_PASS",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "PASS_SCOPED_R3",
+        "T3": "PASS_SCOPED_R3_FIXTURES",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "SAT/UNSAT/malformed"
+    },
+    {
+      "id": "FT-T03",
+      "slug": "apache-jena",
+      "version": "5.5.0",
+      "issue": 27,
+      "package": "apache-jena-5.5.0-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "java21"
+      ],
+      "observed_r3_status": "ENV_PASS",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "PASS_SCOPED_R3",
+        "T3": "PASS_SCOPED_R3_FIXTURES",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "valid RDF/invalid RDF/no file"
+    },
+    {
+      "id": "FT-T04",
+      "slug": "apalache",
+      "version": "0.63.0",
+      "issue": 28,
+      "package": "apalache-0.63.0-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "java21"
+      ],
+      "observed_r3_status": "NOT_RUN_EXECUTION_SERVICE",
+      "gate_status": {
+        "T0": "NOT_QUALIFIED",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "Host ClientError interrupted heavy tool phase, no native result"
+    },
+    {
+      "id": "FT-T05",
+      "slug": "causal-learn",
+      "version": "0.1.4.8",
+      "issue": 29,
+      "package": "causal-learn-0.1.4.8-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "python313"
+      ],
+      "observed_r3_status": "NOT_RUN_RUNTIME_UNAVAILABLE",
+      "gate_status": {
+        "T0": "NOT_QUALIFIED",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "Python313 >268435456-B transport ceiling"
+    },
+    {
+      "id": "FT-T06",
+      "slug": "cbmc",
+      "version": "6.11.0",
+      "issue": 30,
+      "package": "cbmc-6.11.0-linux-x86_64.tar.zst",
+      "requires": [
+        "core"
+      ],
+      "observed_r3_status": "ENV_PASS",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "PASS_SCOPED_R3",
+        "T3": "PASS_SCOPED_R3_FIXTURES",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "verified/counterexample/syntax"
+    },
+    {
+      "id": "FT-T07",
+      "slug": "clingo",
+      "version": "5.8.3",
+      "issue": 31,
+      "package": "clingo-5.8.3-linux-x86_64.tar.zst",
+      "requires": [
+        "core"
+      ],
+      "observed_r3_status": "ENV_PASS",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "PASS_SCOPED_R3",
+        "T3": "PASS_SCOPED_R3_FIXTURES",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "SAT/UNSAT/error"
+    },
+    {
+      "id": "FT-T08",
+      "slug": "cvc5",
+      "version": "1.4.2",
+      "issue": 32,
+      "package": "cvc5-1.4.2-linux-x86_64.tar.zst",
+      "requires": [
+        "core"
+      ],
+      "observed_r3_status": "ENV_PASS",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "PASS_SCOPED_R3",
+        "T3": "PASS_SCOPED_R3_FIXTURES",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "SAT/UNSAT/malformed"
+    },
+    {
+      "id": "FT-T09",
+      "slug": "dafny",
+      "version": "4.11.0",
+      "issue": 33,
+      "package": "dafny-4.11.0-linux-x86_64.tar.zst",
+      "requires": [
+        "core"
+      ],
+      "observed_r3_status": "ENV_PASS",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "PASS_SCOPED_R3",
+        "T3": "PASS_SCOPED_R3_FIXTURES",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "verified/violated/parse; successful bounded retry"
+    },
+    {
+      "id": "FT-T10",
+      "slug": "dowhy",
+      "version": "0.14",
+      "issue": 34,
+      "package": "dowhy-0.14-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "python313"
+      ],
+      "observed_r3_status": "NOT_RUN_RUNTIME_UNAVAILABLE",
+      "gate_status": {
+        "T0": "NOT_QUALIFIED",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "Python313 transport blocker"
+    },
+    {
+      "id": "FT-T11",
+      "slug": "elk",
+      "version": "0.6.0",
+      "issue": 35,
+      "package": "elk-0.6.0-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "java21"
+      ],
+      "observed_r3_status": "ENV_PASS",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "PASS_SCOPED_R3",
+        "T3": "PASS_SCOPED_R3_FIXTURES",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "classification + invalid ontology 2-case"
+    },
+    {
+      "id": "FT-T12",
+      "slug": "fast-check",
+      "version": "4.10.2",
+      "issue": 36,
+      "package": "fast-check-4.10.2-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "node22"
+      ],
+      "observed_r3_status": "ENV_PASS",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "PASS_SCOPED_R3",
+        "T3": "PASS_SCOPED_R3_FIXTURES",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "historical valid positive/counterexample 2-case reused"
+    },
+    {
+      "id": "FT-T13",
+      "slug": "fast-downward",
+      "version": "24.06",
+      "issue": 37,
+      "package": "fast-downward-24.06-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "python313"
+      ],
+      "observed_r3_status": "NOT_RUN_RUNTIME_UNAVAILABLE",
+      "gate_status": {
+        "T0": "NOT_QUALIFIED",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "Python313 transport blocker"
+    },
+    {
+      "id": "FT-T14",
+      "slug": "highs",
+      "version": "1.15.1",
+      "issue": 38,
+      "package": "highs-1.15.1-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "python313"
+      ],
+      "observed_r3_status": "NOT_RUN_RUNTIME_UNAVAILABLE",
+      "gate_status": {
+        "T0": "NOT_QUALIFIED",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "Python313 transport blocker"
+    },
+    {
+      "id": "FT-T15",
+      "slug": "hypothesis",
+      "version": "6.170.15",
+      "issue": 39,
+      "package": "hypothesis-6.170.15-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "python313"
+      ],
+      "observed_r3_status": "NOT_RUN_RUNTIME_UNAVAILABLE",
+      "gate_status": {
+        "T0": "NOT_QUALIFIED",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "Python313 transport blocker"
+    },
+    {
+      "id": "FT-T16",
+      "slug": "kani",
+      "version": "0.68.0",
+      "issue": 40,
+      "package": "kani-0.68.0-linux-x86_64.tar.zst",
+      "requires": [
+        "core"
+      ],
+      "observed_r3_status": "NOT_RUN_EXECUTION_SERVICE",
+      "gate_status": {
+        "T0": "NOT_QUALIFIED",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "Archive downloaded; no independent native invocation"
+    },
+    {
+      "id": "FT-T17",
+      "slug": "lean4",
+      "version": "4.35.0",
+      "issue": 41,
+      "package": "lean4-4.35.0-linux-x86_64.tar.zst",
+      "requires": [
+        "core"
+      ],
+      "observed_r3_status": "NOT_RUN_TRANSPORT_413",
+      "gate_status": {
+        "T0": "NOT_QUALIFIED",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "567187865-B source exceeds connector limit"
+    },
+    {
+      "id": "FT-T18",
+      "slug": "mesa",
+      "version": "3.5.2",
+      "issue": 42,
+      "package": "mesa-3.5.2-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "python313"
+      ],
+      "observed_r3_status": "NOT_RUN_RUNTIME_UNAVAILABLE",
+      "gate_status": {
+        "T0": "NOT_QUALIFIED",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "Python313 transport blocker"
+    },
+    {
+      "id": "FT-T19",
+      "slug": "minizinc",
+      "version": "2.10.1",
+      "issue": 43,
+      "package": "minizinc-2.10.1-linux-x86_64.tar.zst",
+      "requires": [
+        "core"
+      ],
+      "observed_r3_status": "ENV_PASS",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "PASS_SCOPED_R3",
+        "T3": "PASS_SCOPED_R3_FIXTURES",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "SAT/UNSAT/invalid"
+    },
+    {
+      "id": "FT-T20",
+      "slug": "networkx",
+      "version": "3.7",
+      "issue": 44,
+      "package": "networkx-3.7-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "python313"
+      ],
+      "observed_r3_status": "NOT_RUN_RUNTIME_UNAVAILABLE",
+      "gate_status": {
+        "T0": "NOT_QUALIFIED",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "Python313 transport blocker"
+    },
+    {
+      "id": "FT-T21",
+      "slug": "nuxmv",
+      "version": "2.2.0",
+      "issue": 45,
+      "package": "nuxmv-2.2.0-linux-x86_64.tar.zst",
+      "requires": [
+        "core"
+      ],
+      "observed_r3_status": "MANUAL_PARTIAL",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "Manual CTL 3-case; missing tests/nuxmv/expect.sh; doctor LD_LIBRARY_PATH false negative"
+    },
+    {
+      "id": "FT-T22",
+      "slug": "ortools",
+      "version": "9.15.6755",
+      "issue": 46,
+      "package": "ortools-9.15.6755-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "python313"
+      ],
+      "observed_r3_status": "NOT_RUN_RUNTIME_UNAVAILABLE",
+      "gate_status": {
+        "T0": "NOT_QUALIFIED",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "Python313 transport blocker"
+    },
+    {
+      "id": "FT-T23",
+      "slug": "prism",
+      "version": "4.11",
+      "issue": 47,
+      "package": "prism-4.11-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "java21"
+      ],
+      "observed_r3_status": "ENV_PASS",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "PASS_SCOPED_R3",
+        "T3": "PASS_SCOPED_R3_FIXTURES",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "property true/false 2-case"
+    },
+    {
+      "id": "FT-T24",
+      "slug": "prob",
+      "version": "1.16.1",
+      "issue": 48,
+      "package": "prob-1.16.1-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "java21"
+      ],
+      "observed_r3_status": "REWORK_NOT_VERIFIED",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "Read-only .inprogress.prob, Java parser/thread errors and misleading exit 0"
+    },
+    {
+      "id": "FT-T25",
+      "slug": "pymc",
+      "version": "6.4.0",
+      "issue": 49,
+      "package": "pymc-6.4.0-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "python313"
+      ],
+      "observed_r3_status": "NOT_RUN_RUNTIME_UNAVAILABLE",
+      "gate_status": {
+        "T0": "NOT_QUALIFIED",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "Python313 transport blocker"
+    },
+    {
+      "id": "FT-T26",
+      "slug": "rdf-shacl",
+      "version": "0.40.2",
+      "issue": 50,
+      "package": "rdf-shacl-0.40.2-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "python313"
+      ],
+      "observed_r3_status": "NOT_RUN_RUNTIME_UNAVAILABLE",
+      "gate_status": {
+        "T0": "NOT_QUALIFIED",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "Python313 transport blocker"
+    },
+    {
+      "id": "FT-T27",
+      "slug": "robot",
+      "version": "1.9.11",
+      "issue": 51,
+      "package": "robot-1.9.11-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "java21"
+      ],
+      "observed_r3_status": "ENV_PASS",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "PASS_SCOPED_R3",
+        "T3": "PASS_SCOPED_R3_FIXTURES",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "reasoner success/inconsistent/invalid bounded retry"
+    },
+    {
+      "id": "FT-T28",
+      "slug": "simpy",
+      "version": "4.1.2",
+      "issue": 52,
+      "package": "simpy-4.1.2-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "python313"
+      ],
+      "observed_r3_status": "NOT_RUN_RUNTIME_UNAVAILABLE",
+      "gate_status": {
+        "T0": "NOT_QUALIFIED",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "Python313 transport blocker"
+    },
+    {
+      "id": "FT-T29",
+      "slug": "souffle",
+      "version": "2.5",
+      "issue": 53,
+      "package": "souffle-2.5-linux-x86_64.tar.zst",
+      "requires": [
+        "core"
+      ],
+      "observed_r3_status": "ENV_PASS",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "PASS_SCOPED_R3",
+        "T3": "PASS_SCOPED_R3_FIXTURES",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "rule derivation/invalid rule 2-case"
+    },
+    {
+      "id": "FT-T30",
+      "slug": "storm",
+      "version": "1.8.0",
+      "issue": 54,
+      "package": "storm-1.8.0-linux-x86_64.tar.zst",
+      "requires": [
+        "core"
+      ],
+      "observed_r3_status": "NOT_RUN_EXECUTION_SERVICE",
+      "gate_status": {
+        "T0": "NOT_QUALIFIED",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "Runtime ClientError on heavy step; root cause unknown"
+    },
+    {
+      "id": "FT-T31",
+      "slug": "sympy",
+      "version": "1.14.0",
+      "issue": 55,
+      "package": "sympy-1.14.0-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "python313"
+      ],
+      "observed_r3_status": "NOT_RUN_RUNTIME_UNAVAILABLE",
+      "gate_status": {
+        "T0": "NOT_QUALIFIED",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "Python313 transport blocker"
+    },
+    {
+      "id": "FT-T32",
+      "slug": "tla-tlc",
+      "version": "1.8.0",
+      "issue": 56,
+      "package": "tla-tlc-1.8.0-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "java21"
+      ],
+      "observed_r3_status": "ENV_PASS",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "PASS_SCOPED_R3",
+        "T3": "PASS_SCOPED_R3_FIXTURES",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "invariant holds/violated plus setup"
+    },
+    {
+      "id": "FT-T33",
+      "slug": "tree-sitter",
+      "version": "0.27.2",
+      "issue": 57,
+      "package": "tree-sitter-0.27.2-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "python313"
+      ],
+      "observed_r3_status": "NOT_RUN_RUNTIME_UNAVAILABLE",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "CLI --version works; verification Python binding requires python313"
+    },
+    {
+      "id": "FT-T34",
+      "slug": "vampire",
+      "version": "5.1.0",
+      "issue": 58,
+      "package": "vampire-5.1.0-linux-x86_64.tar.zst",
+      "requires": [
+        "core"
+      ],
+      "observed_r3_status": "ENV_PASS",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "PASS_SCOPED_R3",
+        "T3": "PASS_SCOPED_R3_FIXTURES",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "proved/not proved/malformed"
+    },
+    {
+      "id": "FT-T35",
+      "slug": "why3",
+      "version": "1.8.0",
+      "issue": 59,
+      "package": "why3-1.8.0-linux-x86_64.tar.zst",
+      "requires": [
+        "core",
+        "tool:z3"
+      ],
+      "observed_r3_status": "PRECHECK_REJECTED",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "NOT_QUALIFIED",
+        "T3": "NOT_QUALIFIED",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "Archive absolute symlinks target /etc/environment and /dev/null; safe preflight rejects"
+    },
+    {
+      "id": "FT-T36",
+      "slug": "z3",
+      "version": "5.4.0",
+      "issue": 60,
+      "package": "z3-5.4.0-linux-x86_64.tar.zst",
+      "requires": [
+        "core"
+      ],
+      "observed_r3_status": "ENV_PASS",
+      "gate_status": {
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T1": "NOT_QUALIFIED_INDEPENDENT_BUILD",
+        "T2": "PASS_SCOPED_R3",
+        "T3": "PASS_SCOPED_R3_FIXTURES",
+        "T4": "NOT_QUALIFIED_PR22",
+        "T5": "NOT_QUALIFIED_REAL_SEMANTICS",
+        "T6": "OPEN_MAINTENANCE"
+      },
+      "note": "historical native SAT/UNSAT/malformed reused without rerun"
+    }
+  ],
+  "shared_tasks": [
+    {
+      "id": "FT-X01",
+      "owner_issue": 24,
+      "depends_on": [],
+      "scope": "Pack Python313 and Lean4 into <=128 MiB individually hashed chunks with full-archive SHA"
+    },
+    {
+      "id": "FT-X02",
+      "owner_issue": 24,
+      "depends_on": [],
+      "scope": "Portable core nuXmv doctor environment and missing expect.sh regression (tool issue #45)"
+    },
+    {
+      "id": "FT-X03",
+      "owner_issue": 24,
+      "depends_on": [],
+      "scope": "Why3 archive external symlink safety repackage (tool issue #59)"
+    },
+    {
+      "id": "FT-X04",
+      "owner_issue": 24,
+      "depends_on": [],
+      "scope": "ProB writable fixture, JVM parser/exit propagation repair (tool issue #48)"
+    },
+    {
+      "id": "FT-X05",
+      "owner_issue": 24,
+      "depends_on": [],
+      "scope": "Diagnose host ClientError with actual telemetry before heavy Storm/Apalache/Kani rechecks"
+    },
+    {
+      "id": "FT-X06",
+      "owner_issue": 24,
+      "depends_on": [
+        "FT-X01",
+        "FT-X05"
+      ],
+      "scope": "Serial bounded source-first per-tool native rechecks of unqualified tools"
+    },
+    {
+      "id": "FT-X07",
+      "owner_issue": 24,
+      "depends_on": [
+        "FT-X02",
+        "FT-X03",
+        "FT-X04",
+        "FT-X06"
+      ],
+      "scope": "Reconcile changed package/runner exact-SHA with PR#22, scoped review and G3 input readiness; do not auto-promote product gates"
+    }
+  ]
+}
