@@ -22,9 +22,5 @@
     "[19:15:52] [lean4] build OK: lean4 4.35.0 glibc_max=2.2",
     "[22:27:10] [lean4] building lean4 version=4.35.0 kind=binary",
     "[22:27:25] [lean4] build OK: lean4 4.35.0 glibc_max=2.2"
-  ],
-  "package": {
-    "path": "packages/tools/lean4-4.35.0-linux-x86_64.tar.zst",
-    "sha256": "4ed1c0822d8ddf96cbb56a01ab29c1ae53787969090f59b1d7014bf018965b49"
-  }
+  ]
 }

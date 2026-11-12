@@ -51,9 +51,5 @@
     "[12:41:59] [storm] build UNAVAILABLE (recorded, not failed): storm",
     "[12:53:08] [storm] building storm version=2.0.0 kind=bundle",
     "[12:53:09] [storm] build OK: storm 2.0.0 glibc_max=2.34"
-  ],
-  "package": {
-    "path": "packages/tools/storm-1.8.0-linux-x86_64.tar.zst",
-    "sha256": "be66e1e9fc9ccd3944d149f20184f4c19521a93582624ecac8c6c3574c55f751"
-  }
+  ]
 }

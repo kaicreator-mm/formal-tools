@@ -22,9 +22,5 @@
     "[19:15:22] [apalache] build OK: apalache 0.63.0 glibc_max=n/a",
     "[22:26:52] [apalache] building apalache version=0.63.0 kind=java-bundle",
     "[22:26:56] [apalache] build OK: apalache 0.63.0 glibc_max=n/a"
-  ],
-  "package": {
-    "path": "packages/tools/apalache-0.63.0-linux-x86_64.tar.zst",
-    "sha256": "fed7143e6abf3f7fc34d2922beb5be7d4c8e8fec8fc59adfc8df97eb487a834c"
-  }
+  ]
 }

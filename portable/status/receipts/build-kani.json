@@ -51,9 +51,5 @@
     "info: checking for self-update (current version: 1.29.3)",
     "[5/5] Successfully completed Kani first-time setup.",
     "[01:12:18] [kani] build OK: kani 0.68.0 glibc_max=n/a"
-  ],
-  "package": {
-    "path": "packages/tools/kani-0.68.0-linux-x86_64.tar.zst",
-    "sha256": "4de9713964e46e0c507ec925127cd1d22be0c7788e0dbe7f707675c2ed146faa"
-  }
+  ]
 }
