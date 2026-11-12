@@ -24,18 +24,17 @@ done
 sed -i "s/^TOOL_TOOL_/TOOL_/" /b/tools/*/meta.sh
 chmod -R a+rX /b/tools
 
-# 3) re-tar all 36 tool archives (zstd -22) + integrity check
-cd /b
-for f in tools/*.tar.zst; do
-  t=$(basename "$f" | sed "s/-[0-9][^-]*-linux-x86_64.tar.zst//")
-  ar=/pkg/$f
+# 3) re-tar all 36 tool archives (zstd -22) + integrity check — iterate the ARCHIVES
+#    under /pkg (bundle tools/ holds directories, not tarballs)
+for ar in /pkg/tools/*.tar.zst; do
+  t=$(basename "$ar" | sed "s/-[0-9][^-]*-linux-x86_64.tar.zst//")
   rm -f "$ar"
   tar -cf - "tools/$t" | zstd --ultra -22 -T16 -q -f -o "$ar"
   zstd -t "$ar"
   a=$(zstd -dc "$ar" | tar -tf - | wc -l)
   s=$(find "tools/$t" | wc -l)
   [ "$a" = "$s" ] || { echo "MISMATCH $t tar=$a src=$s"; exit 1; }
-  echo "REPACK $f entries=$a"
+  echo "REPACK $(basename "$ar") entries=$a"
 done
 
 # 4) regenerate tool lines in SHA256SUMS
