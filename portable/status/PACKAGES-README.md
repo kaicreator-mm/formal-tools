@@ -50,10 +50,10 @@ sh unpack.sh --dest /opt    # 解出完整 bundle 树
 | `mesa-3.5.2-linux-x86_64.tar.zst` | 717 B | mesa 3.5.2 [✅ PASS] |
 | `minizinc-2.10.1-linux-x86_64.tar.zst` | 75.7 MB | minizinc 2.10.1 [✅ PASS] |
 | `networkx-3.7-linux-x86_64.tar.zst` | 700 B | networkx 3.7 [✅ PASS] |
-| `nuxmv-2.1.0-linux-x86_64.tar.zst` | 635 B | nuxmv 2.1.0 [⚠️ SKIP] |
+| `nuxmv-2.2.0-linux-x86_64.tar.zst` | 18.8 MB | nuxmv 2.2.0 [✅ PASS] |
 | `ortools-9.15.6755-linux-x86_64.tar.zst` | 700 B | ortools 9.15.6755 [✅ PASS] |
 | `prism-4.11-linux-x86_64.tar.zst` | 36.6 MB | prism 4.11 [✅ PASS] |
-| `prob-1.16.1-linux-x86_64.tar.zst` | 676 B | prob 1.16.1 [⚠️ SKIP] |
+| `prob-1.16.1-linux-x86_64.tar.zst` | 32.7 MB | prob 1.16.1 [✅ PASS] |
 | `pymc-6.4.0-linux-x86_64.tar.zst` | 771 B | pymc 6.4.0 [✅ PASS] |
 | `rdf-shacl-0.40.2-linux-x86_64.tar.zst` | 710 B | rdf-shacl 0.40.2 [✅ PASS] |
 | `robot-1.9.11-linux-x86_64.tar.zst` | 69.4 MB | robot 1.9.11 [✅ PASS] |
@@ -69,10 +69,8 @@ sh unpack.sh --dest /opt    # 解出完整 bundle 树
 
 ## 验证状态
 
-- **34/36 PASS** — 每工具的 pos/neg(/err) 三用例真实执行,
+- **36/36 PASS** — 每工具的 pos/neg(/err) 三用例真实执行,
   收据含 runner_schema 0.2 认证与真实退出码 (`portable/status/receipts/`)
-- **nuxmv UNAVAILABLE**: nuXmv binaries require manual license acceptance on nuxmv.fbk.eu (form-gated); no automatable official channel — candidates tried all failed
-- **prob UNAVAILABLE**: probcli zips (1.16.1/1.15.1/nightly) lack probcliparser.jar — no public release channel for the parser artifact (maven/github probed); manual upstream support needed
 
 ## 完整性
 
