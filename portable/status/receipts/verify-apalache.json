@@ -3,21 +3,21 @@
   "phases": {
     "pos": {
       "exit": 0,
-      "duration_ms": 1564,
+      "duration_ms": 1737,
       "output_matched": true,
       "exit_ok": true,
       "label": "PROPERTY_HOLDS"
     },
     "neg": {
       "exit": 12,
-      "duration_ms": 1597,
+      "duration_ms": 1755,
       "output_matched": true,
       "exit_ok": true,
       "label": "COUNTEREXAMPLE"
     },
     "err": {
       "exit": 255,
-      "duration_ms": 739,
+      "duration_ms": 782,
       "output_matched": true,
       "exit_ok": true,
       "label": "ERROR"

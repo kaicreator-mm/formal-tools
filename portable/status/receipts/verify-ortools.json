@@ -3,14 +3,14 @@
   "phases": {
     "pos": {
       "exit": 0,
-      "duration_ms": 505,
+      "duration_ms": 558,
       "output_matched": true,
       "exit_ok": true,
       "label": "OPTIMAL"
     },
     "neg": {
       "exit": 0,
-      "duration_ms": 538,
+      "duration_ms": 484,
       "output_matched": true,
       "exit_ok": true,
       "label": "INFEASIBLE"

@@ -3,14 +3,14 @@
   "phases": {
     "pos": {
       "exit": 0,
-      "duration_ms": 72,
+      "duration_ms": 74,
       "output_matched": true,
       "exit_ok": true,
       "label": "SIMULATED"
     },
     "neg": {
       "exit": 0,
-      "duration_ms": 72,
+      "duration_ms": 71,
       "output_matched": true,
       "exit_ok": true,
       "label": "REFUTED"
