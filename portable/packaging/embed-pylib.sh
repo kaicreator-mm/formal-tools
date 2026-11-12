@@ -8,7 +8,7 @@ docker run --rm -i \
   -v "$FT_BUNDLE:/b" \
   -v "$FT_PKG_DIR:/pkg" \
   ft-builder:deb13 python3 - <<'PYEOF'
-import glob, os, shutil, subprocess, json
+import glob, os, shutil, subprocess, json, sys
 
 OUT = "/out"
 SITE = os.path.join(OUT, "runtimes", "python313", "lib", "python3.13", "site-packages")
@@ -30,6 +30,19 @@ DISTS = {
     "simpy": ["simpy"],
     "mesa": ["mesa"],
 }
+
+# per-tool notes about what is deliberately NOT in this archive (heavy shared deps
+# live in the python313 runtime archive)
+EXTRA_NOTES = {
+    "pymc": "注意: 本包只含 PyMC 的模型定义代码 (pymc 包本体)。\n"
+            "重计算依赖不在本包: pytensor 编译后端、numpy/scipy 数值栈、\n"
+            "matplotlib/arviz 等都在 runtimes/python313-3.13.5-linux-x86_64.tar.zst\n"
+            "(site-packages)，解压运行时后即可完整使用。\n"
+            "采样时的 C 编译已被禁用 (PYTENSOR_FLAGS=cxx=, 纯 Python 模式)。",
+}
+
+SELECTED = sys.argv[1:] or sorted(DISTS)
+SELECTED_HOST = " ".join(SELECTED)
 
 def sh(cmd):
     r = subprocess.run(cmd, shell=True, capture_output=True, text=True)
@@ -64,6 +77,8 @@ for tid, dists in DISTS.items():
 runtimes/python313-3.13.5-linux-x86_64.tar.zst 内，需一并解压。
 运行方式: bin/tool-runner run {tid} … 或 bin/tool-runner py <script>
 """
+    if tid in EXTRA_NOTES:
+        info += "\n" + EXTRA_NOTES[tid] + "\n"
     open(os.path.join(tdir, "PACKAGE-INFO.txt"), "w", encoding="utf-8", newline="\n").write(info)
     # shim: add PYTHONPATH line if missing
     run_p = os.path.join(tdir, "run")
@@ -74,7 +89,7 @@ runtimes/python313-3.13.5-linux-x86_64.tar.zst 内，需一并解压。
     print("embedded:", tid, "pylib dirs:", len(copied))
 
 # refresh bundle copies + recompress per-tool archives
-for tid, dists in DISTS.items():
+for tid in SELECTED:
     bdir = os.path.join(B, "tools", tid)
     if os.path.exists(bdir):
         shutil.rmtree(bdir)
@@ -89,9 +104,9 @@ for tid, dists in DISTS.items():
     print(f"REPACK {tid}-{ver}: entries={a} src={s} size={os.path.getsize(ar)//1024}KB")
 PYEOF
 echo EMBED_DONE
-# SHA256SUMS lines for the 11 (host side)
+# SHA256SUMS lines for the embedded tools (host side)
 cd /home/cc/formal-tools-build/out/packages
-for t in rdf-shacl ortools sympy networkx hypothesis highs dowhy pymc causal-learn simpy mesa; do
+for t in $SELECTED_HOST; do
   grep -v "tools/$t-" SHA256SUMS > S.tmp
   sha256sum tools/$t-*linux-x86_64.tar.zst >> S.tmp
   mv S.tmp SHA256SUMS
