@@ -93,6 +93,7 @@ for f in tool_files:
         note = " — 仅含启动 shim；本体在 python313 运行时包内（包内有 PACKAGE-INFO.txt 说明）"
     L.append(f"| `{base}` | {human(os.path.getsize(f))} | {tid} {ver} [{mark} {v}]{note} |")
 L.append("")
+npass = sum(1 for v in verdicts.values() if v == "PASS")
 L.append("## 验证状态")
 L.append("")
 L.append(f"- **{npass}/{len(verdicts)} PASS**（离线三用例真实执行；逐工具收据见仓库")
