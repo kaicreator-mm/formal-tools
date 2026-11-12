@@ -7,7 +7,7 @@ docker run --rm -i \
   -v "$FT_OUT:/out" \
   -v "$FT_BUNDLE:/b" \
   -v "$FT_PKG_DIR:/pkg" \
-  ft-builder:deb13 python3 - <<'PYEOF'
+  ft-builder:deb13 python3 - "$@" <<'PYEOF'
 import glob, os, shutil, subprocess, json, sys
 
 OUT = "/out"
@@ -106,7 +106,7 @@ PYEOF
 echo EMBED_DONE
 # SHA256SUMS lines for the embedded tools (host side)
 cd /home/cc/formal-tools-build/out/packages
-for t in $SELECTED_HOST; do
+for t in "$@"; do
   grep -v "tools/$t-" SHA256SUMS > S.tmp
   sha256sum tools/$t-*linux-x86_64.tar.zst >> S.tmp
   mv S.tmp SHA256SUMS
