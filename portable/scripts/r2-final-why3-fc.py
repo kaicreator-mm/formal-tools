@@ -70,7 +70,7 @@ if os.path.exists(updir):
     shutil.rmtree(updir)
 os.makedirs(updir)
 import tarfile
-with tarfile.open(ar) as tf:
-    tf.extractall(UNPACK)
+subprocess.run(
+    f'zstd -dc {ar} | tar -xf - -C ' + UNPACK, shell=True, check=True)
 subprocess.run(["chmod", "-R", "a+rX", updir], check=True)
 print("4 unpack refreshed")
