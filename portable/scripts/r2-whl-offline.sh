@@ -13,10 +13,6 @@ PY="$OUT/runtimes/python313/bin/python3.13"
 WH="$OUT/whl-offline"
 mkdir -p "$WH"
 
-# constraints: freeze the VERIFIED shared-runtime version set
-"$PY" -m pip freeze --all > "$WH/constraints.txt" 2>/dev/null
-echo "constraints pins: $(wc -l < "$WH/constraints.txt")"
-
 declare -A REQS
 REQS[sympy]="sympy"
 REQS[networkx]="networkx"
@@ -34,12 +30,12 @@ for t in sympy networkx hypothesis simpy mesa causal-learn rdf-shacl ortools hig
   echo "== download: $t"
   mkdir -p "$WH/$t"
   "$PY" -m pip download --no-cache-dir --dest "$WH/$t" \
-    -c "$WH/constraints.txt" --only-binary=:all: --platform manylinux2014_x86_64 \
+    --only-binary=:all: --platform manylinux2014_x86_64 \
     --platform manylinux_2_39_x86_64 --implementation cp --python-version 3.13 \
     --abi cp313 ${REQS[$t]} > "$WH/$t.log" 2>&1 || {
     # retry without abi pin (some wheels are abi3/py3-none)
     "$PY" -m pip download --no-cache-dir --dest "$WH/$t" \
-      -c "$WH/constraints.txt" --only-binary=:all: --platform manylinux2014_x86_64 \
+      --only-binary=:all: --platform manylinux2014_x86_64 \
       --platform manylinux_2_39_x86_64 --implementation cp --python-version 3.13 \
       ${REQS[$t]} > "$WH/$t.log" 2>&1 || { echo "DOWNLOAD FAIL: $t"; exit 1; }
   }
