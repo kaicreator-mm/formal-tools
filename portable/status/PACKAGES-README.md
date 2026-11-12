@@ -34,33 +34,33 @@ sh unpack.sh --dest /opt    # 解出完整 bundle 树
 | `alloy-6.2.0-linux-x86_64.tar.zst` | 19.4 MB | alloy 6.2.0 [✅ PASS] |
 | `apache-jena-5.5.0-linux-x86_64.tar.zst` | 21.7 MB | apache-jena 5.5.0 [✅ PASS] |
 | `apalache-0.63.0-linux-x86_64.tar.zst` | 182.5 MB | apalache 0.63.0 [✅ PASS] |
-| `causal-learn-0.1.4.8-linux-x86_64.tar.zst` | 704 B | causal-learn 0.1.4.8 [✅ PASS] |
+| `causal-learn-0.1.4.8-linux-x86_64.tar.zst` | 1.2 KB | causal-learn 0.1.4.8 [✅ PASS] — 仅含启动 shim；本体在 python313 运行时包内（包内有 PACKAGE-INFO.txt 说明） |
 | `cbmc-6.11.0-linux-x86_64.tar.zst` | 19.6 MB | cbmc 6.11.0 [✅ PASS] |
 | `clingo-5.8.3-linux-x86_64.tar.zst` | 4.7 MB | clingo 5.8.3 [✅ PASS] |
 | `cvc5-1.4.2-linux-x86_64.tar.zst` | 8.4 MB | cvc5 1.4.2 [✅ PASS] |
 | `dafny-4.11.0-linux-x86_64.tar.zst` | 44.3 MB | dafny 4.11.0 [✅ PASS] |
-| `dowhy-0.14-linux-x86_64.tar.zst` | 699 B | dowhy 0.14 [✅ PASS] |
+| `dowhy-0.14-linux-x86_64.tar.zst` | 1.2 KB | dowhy 0.14 [✅ PASS] — 仅含启动 shim；本体在 python313 运行时包内（包内有 PACKAGE-INFO.txt 说明） |
 | `elk-0.6.0-linux-x86_64.tar.zst` | 5.1 MB | elk 0.6.0 [✅ PASS] |
 | `fast-check-4.10.2-linux-x86_64.tar.zst` | 121.5 KB | fast-check 4.10.2 [✅ PASS] |
 | `fast-downward-24.06-linux-x86_64.tar.zst` | 93.6 MB | fast-downward 24.06 [✅ PASS] |
-| `highs-1.15.1-linux-x86_64.tar.zst` | 702 B | highs 1.15.1 [✅ PASS] |
-| `hypothesis-6.170.15-linux-x86_64.tar.zst` | 705 B | hypothesis 6.170.15 [✅ PASS] |
+| `highs-1.15.1-linux-x86_64.tar.zst` | 1.2 KB | highs 1.15.1 [✅ PASS] — 仅含启动 shim；本体在 python313 运行时包内（包内有 PACKAGE-INFO.txt 说明） |
+| `hypothesis-6.170.15-linux-x86_64.tar.zst` | 1.2 KB | hypothesis 6.170.15 [✅ PASS] — 仅含启动 shim；本体在 python313 运行时包内（包内有 PACKAGE-INFO.txt 说明） |
 | `kani-0.68.0-linux-x86_64.tar.zst` | 233.7 MB | kani 0.68.0 [✅ PASS] |
 | `lean4-4.35.0-linux-x86_64.tar.zst` | 540.9 MB | lean4 4.35.0 [✅ PASS] |
-| `mesa-3.5.2-linux-x86_64.tar.zst` | 717 B | mesa 3.5.2 [✅ PASS] |
+| `mesa-3.5.2-linux-x86_64.tar.zst` | 1.2 KB | mesa 3.5.2 [✅ PASS] — 仅含启动 shim；本体在 python313 运行时包内（包内有 PACKAGE-INFO.txt 说明） |
 | `minizinc-2.10.1-linux-x86_64.tar.zst` | 75.7 MB | minizinc 2.10.1 [✅ PASS] |
-| `networkx-3.7-linux-x86_64.tar.zst` | 700 B | networkx 3.7 [✅ PASS] |
+| `networkx-3.7-linux-x86_64.tar.zst` | 1.2 KB | networkx 3.7 [✅ PASS] — 仅含启动 shim；本体在 python313 运行时包内（包内有 PACKAGE-INFO.txt 说明） |
 | `nuxmv-2.2.0-linux-x86_64.tar.zst` | 18.8 MB | nuxmv 2.2.0 [✅ PASS] |
-| `ortools-9.15.6755-linux-x86_64.tar.zst` | 700 B | ortools 9.15.6755 [✅ PASS] |
+| `ortools-9.15.6755-linux-x86_64.tar.zst` | 1.2 KB | ortools 9.15.6755 [✅ PASS] — 仅含启动 shim；本体在 python313 运行时包内（包内有 PACKAGE-INFO.txt 说明） |
 | `prism-4.11-linux-x86_64.tar.zst` | 36.6 MB | prism 4.11 [✅ PASS] |
 | `prob-1.16.1-linux-x86_64.tar.zst` | 32.7 MB | prob 1.16.1 [✅ PASS] |
-| `pymc-6.4.0-linux-x86_64.tar.zst` | 771 B | pymc 6.4.0 [✅ PASS] |
-| `rdf-shacl-0.40.2-linux-x86_64.tar.zst` | 710 B | rdf-shacl 0.40.2 [✅ PASS] |
+| `pymc-6.4.0-linux-x86_64.tar.zst` | 1.3 KB | pymc 6.4.0 [✅ PASS] — 仅含启动 shim；本体在 python313 运行时包内（包内有 PACKAGE-INFO.txt 说明） |
+| `rdf-shacl-0.40.2-linux-x86_64.tar.zst` | 1.2 KB | rdf-shacl 0.40.2 [✅ PASS] — 仅含启动 shim；本体在 python313 运行时包内（包内有 PACKAGE-INFO.txt 说明） |
 | `robot-1.9.11-linux-x86_64.tar.zst` | 69.4 MB | robot 1.9.11 [✅ PASS] |
-| `simpy-4.1.2-linux-x86_64.tar.zst` | 694 B | simpy 4.1.2 [✅ PASS] |
+| `simpy-4.1.2-linux-x86_64.tar.zst` | 1.2 KB | simpy 4.1.2 [✅ PASS] — 仅含启动 shim；本体在 python313 运行时包内（包内有 PACKAGE-INFO.txt 说明） |
 | `souffle-2.5-linux-x86_64.tar.zst` | 4.5 MB | souffle 2.5 [✅ PASS] |
 | `storm-1.8.0-linux-x86_64.tar.zst` | 129.2 MB | storm 1.8.0 [✅ PASS] |
-| `sympy-1.14.0-linux-x86_64.tar.zst` | 699 B | sympy 1.14.0 [✅ PASS] |
+| `sympy-1.14.0-linux-x86_64.tar.zst` | 1.2 KB | sympy 1.14.0 [✅ PASS] — 仅含启动 shim；本体在 python313 运行时包内（包内有 PACKAGE-INFO.txt 说明） |
 | `tla-tlc-1.8.0-linux-x86_64.tar.zst` | 4.0 MB | tla-tlc 1.8.0 [✅ PASS] |
 | `tree-sitter-0.27.2-linux-x86_64.tar.zst` | 6.2 MB | tree-sitter 0.27.2 [✅ PASS] |
 | `vampire-5.1.0-linux-x86_64.tar.zst` | 15.5 MB | vampire 5.1.0 [✅ PASS] |
