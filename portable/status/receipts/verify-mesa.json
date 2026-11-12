@@ -3,14 +3,14 @@
   "phases": {
     "pos": {
       "exit": 0,
-      "duration_ms": 782,
+      "duration_ms": 1114,
       "output_matched": true,
       "exit_ok": true,
       "label": "STEPS"
     },
     "neg": {
       "exit": 0,
-      "duration_ms": 789,
+      "duration_ms": 1109,
       "output_matched": true,
       "exit_ok": true,
       "label": "REFUTED"

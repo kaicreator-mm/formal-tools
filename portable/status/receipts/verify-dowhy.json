@@ -3,14 +3,14 @@
   "phases": {
     "pos": {
       "exit": 0,
-      "duration_ms": 2717,
+      "duration_ms": 3031,
       "output_matched": true,
       "exit_ok": true,
       "label": "ATE_ESTIMATED"
     },
     "neg": {
       "exit": 0,
-      "duration_ms": 2644,
+      "duration_ms": 3138,
       "output_matched": true,
       "exit_ok": true,
       "label": "REFUTED"

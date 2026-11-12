@@ -1,26 +1,12 @@
 {
-  "verdict": "PASS",
+  "verdict": "FAIL",
   "phases": {
     "setup": {
-      "exit": 0,
-      "duration_ms": 21,
+      "exit": 1,
+      "duration_ms": 16,
       "output_matched": true,
-      "exit_ok": true,
+      "exit_ok": false,
       "label": "SETUP"
-    },
-    "pos": {
-      "exit": 0,
-      "duration_ms": 293,
-      "output_matched": true,
-      "exit_ok": true,
-      "label": "PROVED"
-    },
-    "neg": {
-      "exit": 2,
-      "duration_ms": 281,
-      "output_matched": true,
-      "exit_ok": true,
-      "label": "NOT_PROVED"
     }
   },
   "skip": false,
