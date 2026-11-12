@@ -44,8 +44,9 @@ print("2 bundle refreshed")
 ar = os.path.join(PKG, "tools", f"{TOOL}-1.8.0-linux-x86_64.tar.zst")
 if os.path.exists(ar):
     os.remove(ar)
-with tarfile.open(ar, "w:zst") as tf:
-    tf.add(os.path.join(B, "tools", TOOL), arcname=f"tools/{TOOL}")
+r = subprocess.run(
+    f"cd {B} && tar -cf - 'tools/{TOOL}' | zstd --ultra -22 -T16 -q -f -o {ar}",
+    shell=True, check=True)
 print("3 archive re-tarred", os.path.getsize(ar) // 1048576, "MB")
 
 # 4) re-extract into the unpack tree (fresh + complete)
@@ -53,8 +54,8 @@ updir = os.path.join(UNPACK, "tools", TOOL)
 if os.path.exists(updir):
     shutil.rmtree(updir)
 os.makedirs(updir)
-with tarfile.open(ar, "r:zst") as tf:
-    tf.extractall(os.path.join(UNPACK, "tools"))
+r2 = subprocess.run(
+    f"zstd -dc {ar} | tar -xf - -C {updir}", shell=True, check=True)
 subprocess.run(["chmod", "-R", "a+rX", updir], check=True)
 print("4 unpack refreshed, usr/bin/why3 exists:", os.path.isfile(os.path.join(updir, "usr/bin/why3")))
 
