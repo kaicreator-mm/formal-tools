@@ -10,7 +10,7 @@ HERE="$(cd "$(dirname "$0")/.." && pwd)"
 source "$HERE/env.sh"
 
 PKG="$FT_PKG_DIR"
-BUNDLE_HOST="$FT_EV_DIR/r2/unpack/formal-tools-portable-debian13-x86_64"
+BUNDLE_HOST="$FT_EV_DIR/r2/unpack"  # per-tool archives extract directly to this root
 EV="$FT_EV_DIR/r2"
 IMG="ft-builder:deb13"
 mkdir -p "$EV"
@@ -24,6 +24,7 @@ res_for() {
   esac
 }
 
+if [ "${SKIP_AB:-0}" != 1 ]; then
 # ---- stage A: per-archive integrity (sha + zstd -t), own container per archive ----
 echo "stageA: archive integrity (per-archive container)"
 : > "$EV/stageA-archive.tsv"
@@ -61,6 +62,7 @@ docker run --rm --network none --cpus 4 --memory 8g \
     echo BATCH_DONE' > "$EV/stageB.log" 2>&1
 grep -E "sha_rc|BATCH_ERR" "$EV/stageB.log" || true
 head -8 "$EV/r2/unpack/unpack-errors.log" 2>/dev/null || true
+fi
 
 [ -x "$BUNDLE_HOST/bin/tool-runner" ] || { echo "FATAL: bundle tree missing after stage B"; exit 1; }
 
