@@ -1,0 +1,21 @@
+{
+  "tool": "clingo",
+  "run_status": "EXECUTED",
+  "version_verdict": "UNVERIFIED",
+  "argv": [
+    "/tmp/fti4/python3",
+    "-m",
+    "clingo",
+    "--help"
+  ],
+  "exit_code": 1,
+  "signal": null,
+  "elapsed_ms": 17,
+  "timed_out": false,
+  "stdout": "",
+  "stderr": "/tmp/fti4/python3: No module named clingo\n",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "bb1c55542ff8ca7dcf64e4330cdc4d0976f54efe7bd4ef65b821ccc9d9ecde90",
+  "error": null,
+  "output_truncated": false
+}

@@ -1,0 +1,19 @@
+{
+  "tool": "vampire",
+  "run_status": "EXECUTED",
+  "version_verdict": "UNVERIFIED",
+  "argv": [
+    "/tmp/fti4/bin/vampire",
+    "--help"
+  ],
+  "exit_code": 0,
+  "signal": null,
+  "elapsed_ms": 6,
+  "timed_out": false,
+  "stdout": "Usage: vampire [OPTIONS] PROBLEM\n\nSupported options:\n\n\t--mode portfolio (execute a schedule of many different proof attempts)\n\t--schedule <schedule> (in portfolio mode, use the builtin <schedule>)\n\t--input_syntax {tptp,smtlib2} (read TPTP or SMT-LIB 2.x input)\n\t--proof tptp (use the TSTP proof format)\n\t--output_mode {smtcomp,ucore} (output only sat/unsat with an optional core)\n\t--time_limit <seconds> (limit Vampire's runtime)\n\nUse '--show_options on' to see all available options.\n",
+  "stderr": "",
+  "stdout_sha256": "7a32200963bac8f1afb167e0cc3cfc5e8439d3fb463add20735e0bc2d5ab5bcb",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "error": null,
+  "output_truncated": false
+}

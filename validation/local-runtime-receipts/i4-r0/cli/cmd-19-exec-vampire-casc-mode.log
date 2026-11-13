@@ -1,0 +1,32 @@
+{
+  "tool": "vampire",
+  "operation": "casc",
+  "mode": "typed",
+  "run_status": "EXECUTED",
+  "tool_outcome": "THEOREM",
+  "process_outcome": "EXIT_ZERO",
+  "test_verdict": "NOT_EVALUATED",
+  "claim_verdict": "NOT_EVALUATED",
+  "note": "Native command output only; solver result is not an acceptance verdict",
+  "executions": [
+    {
+      "argv": [
+        "/tmp/fti4/bin/vampire",
+        "--mode",
+        "casc",
+        "positive.p"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "elapsed_ms": 9,
+      "timed_out": false,
+      "stdout": "% Running in auto input_syntax mode. Trying TPTP\n% Detected 'Essentially Bernays–Schönfinkel–Ramsey OR Essentially ground' problem, will run a specialized EPR schedule (with support for satisfiability detection).\n% WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time\n% ott+21_1_sil=128000:fs=off:lcm=predicate:random_seed=1656913610:i=102:av=off:fsr=off_1 on positive for (1ds/102Mi)\n%  found proof, printing to \"/tmp/fti4/tmp/vampire-proof-122539-122541\"...\n% ...printing done.\n% Refutation found. Thanks to Tanya!\n% SZS status Theorem for positive\n% SZS output start Proof for positive\nfof(f1,axiom,(\n  ! [X0] : (p(X0) => q(X0))),\n  file('positive.p','a1')).\nfof(f2,axiom,(\n  p(a)),\n  file('positive.p','a2')).\nfof(f3,conjecture,(\n  q(a)),\n  file('positive.p','goal')).\nfof(f4,negated_conjecture,(\n  ~ q(a)),\n  inference(negated_conjecture,[status(cth)],[f3])).\nfof(f5,plain,(\n  ~q(a)),\n  inference(flattening,[],[f4])).\nfof(f6,plain,(\n  ! [X0] : (q(X0) | ~p(X0))),\n  inference(ennf_transformation,[],[f1])).\nfof(f7,plain,(\n  ( ! [X0] : (q(X0) | ~p(X0)) )),\n  inference(cnf_transformation,[],[f6])).\nfof(f8,plain,(\n  p(a)),\n  inference(cnf_transformation,[],[f2])).\nfof(f9,plain,(\n  ~q(a)),\n  inference(cnf_transformation,[],[f5])).\nfof(f10,plain,(\n  ~p(a)),\n  inference(resolution,[],[f7,f9])).\nfof(f11,plain,(\n  $false),\n  inference(resolution,[],[f10,f8])).\n% SZS output end Proof for positive\n% ------------------------------\n% Version: Vampire 5.1.0 (Release build, commit 7b2f410 on 2026-08-13 10:17:34 +0200)\n% Linked with Z3 4.14.0.0 3c47fd96cf5645d0c42b2c819d9e9a84380aa721 NOTFOUND\n% CaDiCaL version: 2.1.3\n% Termination reason: Refutation\n% Time elapsed: 0.0000 s\n% Peak memory usage: 12 MB\n% Success in time 0.003 s\n",
+      "stderr": "",
+      "stdout_sha256": "088e6f6dc01c0d30499c279a519d9a1184685cf4f9e85b0bbfd92fb528ea2dc0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null,
+      "output_truncated": false
+    }
+  ],
+  "scope": "local native CLI; not an independently validated project claim"
+}

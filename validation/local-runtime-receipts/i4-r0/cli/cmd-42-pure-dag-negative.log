@@ -1,0 +1,15 @@
+{
+  "tool_outcome": "CYCLE_FOUND",
+  "test_verdict": "COUNTEREXAMPLE",
+  "claim_verdict": "NOT_EVALUATED",
+  "execution": "PURE_JS",
+  "cycle": [
+    "L1",
+    "L2",
+    "task",
+    "L1"
+  ],
+  "node_count": 3,
+  "edge_count": 3,
+  "scope": "complete supplied finite graph"
+}

@@ -1,0 +1,31 @@
+{
+  "tool": "dafny",
+  "operation": "verify",
+  "mode": "typed",
+  "run_status": "EXECUTED",
+  "tool_outcome": "UNPARSED",
+  "process_outcome": "EXIT_ZERO",
+  "test_verdict": "NOT_EVALUATED",
+  "claim_verdict": "NOT_EVALUATED",
+  "note": "Native command output only; solver result is not an acceptance verdict",
+  "executions": [
+    {
+      "argv": [
+        "/tmp/fti4/bin/dafny",
+        "verify",
+        "Positive.dfy"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "elapsed_ms": 1355,
+      "timed_out": false,
+      "stdout": "\nDafny program verifier finished with 1 verified, 0 errors\n",
+      "stderr": "",
+      "stdout_sha256": "8ce85ec7ed890383d7cae79018d16a2f81d68d7398f2e3a2e914ba64cf174ff5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null,
+      "output_truncated": false
+    }
+  ],
+  "scope": "local native CLI; not an independently validated project claim"
+}

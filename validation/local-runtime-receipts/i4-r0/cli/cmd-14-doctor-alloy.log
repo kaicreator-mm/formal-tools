@@ -1,0 +1,21 @@
+{
+  "tool": "alloy",
+  "run_status": "EXECUTED",
+  "version_verdict": "UNVERIFIED",
+  "argv": [
+    "/tmp/fti4/bin/java",
+    "-jar",
+    "/tmp/fti4/alloy.jar",
+    "help"
+  ],
+  "exit_code": 0,
+  "signal": null,
+  "elapsed_ms": 169,
+  "timed_out": false,
+  "stdout": "\nThe Alloy dispatcher\n\n\nMAIN OPTIONS\n\n   [ -d, --debug ]            -         Activate debugging mode\n   [ -D, --defaultLevel <levels> ] -    Set the default log level: off, trace,\n                                        debug, info, warn, error. If not set,\n                                        defaults to error\n   [ -l, --log <string;> ]    -         Set per logger log level. The syntax is\n                                        <logger-prefix>=<level>, where level is\n                                        off, trace, debug, info, warn, error\n\nAvailable sub-commands: \n\n  natives                     -         Show all the native solvers for all\n                                        supported platforms \n  prefs                       -         Show the preferences or modify them \n  solvers                     -         Show the list of solvers \n  version                     -         Display the current version \n\n\n  gui                         -         Opens up the Graphic User Interface of\n                                        Alloy \n\n  commands                    -         Show all commands in an Alloy program \n  exec                        -         Execute an Alloy program. This will\n                                        create a directory with the name of the\n                                        source file minus the extension. You\n                                        will find the solutions in this\n                                        directory. This directory will also\n                                        contain a receipt.json file that\n                                        contains the solutions. \n\n  ls                          -         Language Server for Alloy. \n  lsp                         -         Language Server for Alloy. \n\n\n",
+  "stderr": "",
+  "stdout_sha256": "2c183390a89bb4280fcb5427816c121bffb9e7551ba66bfc6cbc9fd7c31c0fc1",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "error": null,
+  "output_truncated": false
+}
