@@ -52,23 +52,40 @@ await record({
   ld_library_path_set: Boolean(process.env.LD_LIBRARY_PATH)
 });
 
-// 1. Staged typed solve, positive fixture: SATISFIABLE with all models
-//    enumerated (official clingo exits 30 for satisfiable all-model
-//    enumeration; recorded verbatim, never normalized to zero).
-await check("staged-clingo-positive-satisfiable-exit-30", async () => {
+// 1. Staged typed solve, positive fixture, default options: ONE answer set,
+//    official exit 10 (single-model semantics of the typed `solve` operation).
+await check("staged-clingo-positive-satisfiable-exit-10", async () => {
   const r = await invokeStagedTool({
     tool: "clingo", operation: "solve", sourceRoot: ROOT,
     inputs: ["skills/clingo/examples/positive.lp"],
     settings: { input: "skills/clingo/examples/positive.lp" },
     timeoutS: 45
   });
-  assert(r.process.exit_code === 30, "expected true upstream exit 30, got " + JSON.stringify(r.process));
-  assert(r.process.status === "NONZERO_EXIT", "30 must stay NONZERO_EXIT (honest), got " + r.process.status);
+  assert(r.process.exit_code === 10, "expected official single-model exit 10, got " + JSON.stringify(r.process));
+  assert(r.process.status === "NONZERO_EXIT", "10 must stay NONZERO_EXIT (honest), got " + r.process.status);
   assert(r.tool_status === "SATISFIABLE", "expected SATISFIABLE, got " + r.tool_status);
   assert(/SATISFIABLE/.test(r.streams.stdout.text), "stdout missing verdict");
-  assert((r.streams.stdout.text.match(/^Answer:/gm) ?? []).length === 2, "expected exactly 2 answer sets");
+  assert((r.streams.stdout.text.match(/^Answer:/gm) ?? []).length === 1, "default solve must stop at 1 answer set");
   assert(shaOk(r.streams.stdout.sha256) && shaOk(r.streams.stderr.sha256), "stream hashes missing");
   return { exit_code: r.process.exit_code, tool_status: r.tool_status, stdout_sha256: r.streams.stdout.sha256, stderr_sha256: r.streams.stderr.sha256 };
+});
+
+// 1b. Staged typed solve with models:0 (all models): SATISFIABLE with exactly
+//     two enumerated answer sets and the official all-models exit 30 carried
+//     verbatim (the same semantics the committed fixture command exercises).
+await check("staged-clingo-positive-all-models-exit-30", async () => {
+  const r = await invokeStagedTool({
+    tool: "clingo", operation: "solve", sourceRoot: ROOT,
+    inputs: ["skills/clingo/examples/positive.lp"],
+    settings: { input: "skills/clingo/examples/positive.lp", models: 0 },
+    timeoutS: 45
+  });
+  assert(r.process.exit_code === 30, "expected true upstream all-models exit 30, got " + JSON.stringify(r.process));
+  assert(r.process.status === "NONZERO_EXIT", "30 must stay NONZERO_EXIT (honest), got " + r.process.status);
+  assert(r.tool_status === "SATISFIABLE", "expected SATISFIABLE, got " + r.tool_status);
+  assert((r.streams.stdout.text.match(/^Answer:/gm) ?? []).length === 2, "expected exactly 2 answer sets");
+  assert(/SATISFIABLE/.test(r.streams.stdout.text), "stdout missing verdict");
+  return { exit_code: r.process.exit_code, tool_status: r.tool_status, stdout_sha256: r.streams.stdout.sha256 };
 });
 
 // 2. Staged typed solve, negative fixture: UNSATISFIABLE exit 20.
@@ -216,9 +233,9 @@ await check("bounded-budget-completes-within-1s", async () => {
     settings: { input: "skills/clingo/examples/positive.lp" },
     timeoutS: 1
   });
-  assert(r.process.status === "NONZERO_EXIT" && r.process.exit_code === 30,
+  assert(r.process.status === "NONZERO_EXIT" && r.process.exit_code === 10,
     "1s budget must be enough for the committed fixture: " + JSON.stringify(r.process));
-  return { status: r.process.status, elapsed_ms: r.process.elapsed_ms };
+  return { status: r.process.status, exit_code: r.process.exit_code, elapsed_ms: r.process.elapsed_ms };
 });
 
 await record({ event: "driver_done", out: OUT, checks: events.filter(x => x.event === "check").length });

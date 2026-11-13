@@ -158,7 +158,8 @@ await check("mcp-plan-native-cli-clingo-valid-and-invalid", async () => {
   assert(good.result && !good.result.isError, "valid clingo plan rejected: " + JSON.stringify(good.result).slice(0, 200));
   const plan = JSON.parse(good.result.content[0].text);
   assert(plan.mode === "typed" && plan.entry === "clingo", "plan shape wrong: " + JSON.stringify(plan));
-  assert.deepEqual(plan.args, ["--models=0", "x.lp"], "clingo solve argv wrong: " + JSON.stringify(plan.args));
+  assert(JSON.stringify(plan.args) === JSON.stringify(["--models=0", "x.lp"]),
+    "clingo solve argv wrong: " + JSON.stringify(plan.args));
   const badOp = await request("tools/call", { name: "plan_native_cli", arguments: { tool: "clingo", operation: "no_such_operation", settings: {} } });
   assert(badOp.result?.isError === true, "unknown operation must be an MCP error result");
   const badEnum = await request("tools/call", { name: "plan_native_cli", arguments: { tool: "clingo", operation: "solve", settings: { input: "x.lp", opt: "shell" } } });

@@ -103,15 +103,38 @@ run cli-doctor-clingo 0 $CLI doctor clingo --timeout 30
 # ---- engine-native help on the pinned binary ---------------------------------
 run cli-nativehelp-clingo 0 $CLI native-help clingo --timeout 20
 
+expect_in_file() { # name pattern file
+  local name="$1" pattern="$2" file="$3"
+  IDX=$((IDX+1))
+  if grep -q -- "$pattern" "$file" 2>/dev/null; then
+    printf '{"i":%s,"name":"%s","verdict":"PASS","pattern":"%s"}\n' "$IDX" "$name" "${pattern//\"/\\\"}" >> "$EV"
+    echo "ok: $name"
+  else
+    printf '{"i":%s,"name":"%s","verdict":"FAIL","pattern":"%s","file":"%s"}\n' "$IDX" "$name" "${pattern//\"/\\\"}" "$file" >> "$EV"
+    echo "FAIL: $name pattern not found in $file" >&2
+    FAILS=$((FAILS+1))
+  fi
+}
+
 # ---- typed exec + committed fixtures (runner paths) --------------------------
 run cli-run-positive 0 $CLI run clingo --case positive --timeout 45
 run cli-run-negative 0 $CLI run clingo --case negative --timeout 45
-run cli-suite-clingo 0 $CLI run clingo --case suite --timeout 45
+# "suite" is the separate all-13-tools action (out of this clingo-only lane);
+# an invalid --case value must fail closed:
+run err-invalid-case 2 $CLI run clingo --case bogus
 mkdir -p "$SCRATCH/exec"; cp skills/clingo/examples/*.lp "$SCRATCH/exec/"
-run cli-exec-solve-positive 0 $CLI exec clingo solve --timeout 45 --cwd "$SCRATCH/exec" --input positive.lp
-run cli-invoke-solve-negative 0 $CLI invoke clingo solve --timeout 45 --cwd "$SCRATCH/exec" --input negative.lp
-# true upstream exit codes stay inside the receipt logs (30 SAT / 20 UNSAT);
-# the SDK driver asserts them programmatically.
+# The CLI propagates nonzero solver outcomes as its own exit 2 with a technical
+# receipt carrying the TRUE upstream exit codes (30 all-model SAT fixture /
+# 20 UNSAT); "counterexample is a meaningful observation" per cli.mjs mapping.
+run cli-exec-solve-positive 2 $CLI exec clingo solve --timeout 45 --cwd "$SCRATCH/exec" --input positive.lp
+EXEC_LOG="$OUT/cmd-$((IDX-1))-cli-exec-solve-positive.log"
+expect_in_file cli-exec-true-exit-30 '"exit_code":30' "$EXEC_LOG"
+expect_in_file cli-exec-run-executed '"run_status":"EXECUTED"' "$EXEC_LOG"
+expect_in_file cli-exec-satisfiable '"tool_outcome":"SATISFIABLE"' "$EXEC_LOG"
+run cli-invoke-solve-negative 2 $CLI invoke clingo solve --timeout 45 --cwd "$SCRATCH/exec" --input negative.lp
+INVOKE_LOG="$OUT/cmd-$((IDX-1))-cli-invoke-solve-negative.log"
+expect_in_file cli-invoke-true-exit-20 '"exit_code":20' "$INVOKE_LOG"
+expect_in_file cli-invoke-unsatisfiable '"tool_status":"UNSATISFIABLE"' "$INVOKE_LOG"
 
 # ---- fail-closed error paths (expected exit 2) --------------------------------
 run err-unknown-operation 2 $CLI exec clingo no_such_operation --input positive.lp
@@ -119,7 +142,6 @@ run err-invalid-enum-optmode 2 $CLI plan clingo solve --opt-mode shell
 run err-range-models-negative 2 $CLI plan clingo solve --models -3
 run err-range-timelimit-zero 2 $CLI plan clingo solve --time-limit 0
 run err-unknown-tool 2 $CLI doctor no_such_tool
-run err-invalid-case 2 $CLI run clingo --case bogus
 run err-pinned-missing 2 env -u FORMAL_CLINGO_BIN FORMAL_CLINGO_BIN=/nonexistent/clingo $CLI where clingo
 
 # ---- isolation ----------------------------------------------------------------
