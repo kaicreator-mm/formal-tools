@@ -1,0 +1,114 @@
+{
+  "schema": "formal-tools/g4-real-store-lifecycle/0.1",
+  "issue": 11,
+  "driver": "benchmarks/llm-methods/g4/real-store-lifecycle.mjs",
+  "started_at": "2026-11-13T14:55:05.563Z",
+  "finished_at": "2026-11-13T14:55:05.643Z",
+  "node": "v24.22.3",
+  "platform": "linux/x64",
+  "store_dir": "g4-store",
+  "candidate_sha256": "ba06f7e0ebc3ba7d39e4f9adf07561cb9ed2f1304c960e6090d4a64d06746aed",
+  "fixture_sha256": "46447f8ad807fef1551da6ba7ca08fcfc310a20fc3d7a7e526f3dcd1f92de50b",
+  "nat_pair_sha256": "174c3f54fde02850251f17a2093a26597fb00f81b08628bf54de6bd7ebc8005b",
+  "oracle_content_sha256": "460c8a42332bcd7bc0f239a64d183499074ce719e703fcb57265a97c84c275e6",
+  "model_sha256": "10bbc29ecb1eba218e15f05647d8ec4811309e7edf8d4edd721a6a80b2860970",
+  "g4_reusable": false,
+  "claim_result": "UNVERIFIED",
+  "phases": [
+    {
+      "phase": "persist",
+      "at": "2026-11-13T14:55:05.607Z",
+      "ok": true,
+      "actual": {
+        "response": {
+          "status": "CANDIDATE_PERSISTED",
+          "claim_result": "UNVERIFIED",
+          "replay_allowed": false,
+          "solution_promotable": false,
+          "candidate_sha256": "ba06f7e0ebc3ba7d39e4f9adf07561cb9ed2f1304c960e6090d4a64d06746aed",
+          "record_write": "NEW"
+        },
+        "stored_file_sha256": "9b5aa5a97436e7adc8a156c656fa583343f2918d89e6986b60864fb7fa8603b7",
+        "stored_candidate_sha256": "ba06f7e0ebc3ba7d39e4f9adf07561cb9ed2f1304c960e6090d4a64d06746aed"
+      }
+    },
+    {
+      "phase": "re-persist",
+      "at": "2026-11-13T14:55:05.620Z",
+      "ok": true,
+      "actual": {
+        "status": "CANDIDATE_PERSISTED",
+        "claim_result": "UNVERIFIED",
+        "replay_allowed": false,
+        "solution_promotable": false,
+        "candidate_sha256": "ba06f7e0ebc3ba7d39e4f9adf07561cb9ed2f1304c960e6090d4a64d06746aed",
+        "record_write": "EXISTING"
+      }
+    },
+    {
+      "phase": "inspect",
+      "at": "2026-11-13T14:55:05.621Z",
+      "ok": true,
+      "actual": {
+        "status": "REPLAY_BLOCKED_UNQUALIFIED",
+        "changed_fields": [],
+        "fingerprint": "ba06f7e0ebc3ba7d39e4f9adf07561cb9ed2f1304c960e6090d4a64d06746aed",
+        "claim_result": "UNVERIFIED",
+        "replay_allowed": false,
+        "solution_promotable": false
+      }
+    },
+    {
+      "phase": "drift",
+      "at": "2026-11-13T14:55:05.622Z",
+      "ok": true,
+      "actual": {
+        "status": "STALE",
+        "changed_fields": [
+          "tool_version"
+        ],
+        "claim_result": "UNVERIFIED",
+        "replay_allowed": false,
+        "solution_promotable": false
+      }
+    },
+    {
+      "phase": "revoke",
+      "at": "2026-11-13T14:55:05.632Z",
+      "ok": true,
+      "actual": {
+        "status": "INVALIDATED",
+        "claim_result": "UNVERIFIED",
+        "replay_allowed": false,
+        "solution_promotable": false,
+        "reason": "OPERATOR_REVOKED",
+        "record_write": "NEW"
+      }
+    },
+    {
+      "phase": "inspect-after-revoke",
+      "at": "2026-11-13T14:55:05.633Z",
+      "ok": true,
+      "actual": {
+        "status": "INVALIDATED",
+        "claim_result": "UNVERIFIED",
+        "replay_allowed": false,
+        "solution_promotable": false,
+        "reason": "EXPLICIT_REVOCATION"
+      }
+    },
+    {
+      "phase": "no-resurrection",
+      "at": "2026-11-13T14:55:05.643Z",
+      "ok": true,
+      "actual": {
+        "status": "INVALIDATED",
+        "claim_result": "UNVERIFIED",
+        "replay_allowed": false,
+        "solution_promotable": false,
+        "reason": "EXPLICIT_REVOCATION"
+      }
+    }
+  ],
+  "run_status": "PASSED_ENGINEERING_ONLY"
+}

@@ -1,0 +1,39 @@
+Using Node v24.22.3
+=== node v24.22.3 @ x86_64 / Linux ===
+=== git head: f21514deb0a4b5b4b2d6e3dae2cd5e8ec2f71120 / blob: e44e2be5b66ad9e6b8961c4ec2cfdedadc0467c9 ===
+{
+  "schema": "dis.v0.2.bounded-engineering-demo/1",
+  "selectedTarget": "linux/x64/node",
+  "aotDigest": "9828a888f27e186815ce6533c172ceb7b2efc1462942336118613ef793ac59cc",
+  "sourcePins": 6,
+  "typedFunctionProfiles": 9,
+  "appInit": "READY",
+  "tally": {
+    "kind": "OBSERVATION",
+    "authority": "NONE",
+    "state": "UNQUALIFIED_INPUT",
+    "taskClaimAttested": false
+  },
+  "xdownload": {
+    "kind": "OBSERVATION",
+    "authority": "NONE",
+    "policyDomain": "downloads",
+    "acquisitionExecuted": false
+  },
+  "orders": {
+    "kind": "KDP_RECEIPT",
+    "authority": "KDP",
+    "receiptStatus": "admitted",
+    "effectExecutionProven": false
+  },
+  "qualification": {
+    "engineeringOnly": true,
+    "independentSAP": false,
+    "qualifiedEcpProducer": false,
+    "trustedProductionAnchor": false,
+    "externalHostEffectExecuted": false,
+    "formalConformance": false,
+    "releaseEligible": false
+  }
+}
+DEMO_EXIT=0
