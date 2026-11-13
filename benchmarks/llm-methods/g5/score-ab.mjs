@@ -5,6 +5,7 @@
  */
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
+import {readHardCases} from "./hard-oracle.mjs";
 
 const SHA=/^[a-f0-9]{64}$/;
 const PRED=new Set(["PASS","FAIL","UNKNOWN"]);
@@ -38,8 +39,15 @@ const MAX_CASE_COST_USD=1_000_000;
 const MAX_CASE_LATENCY_MS=3_600_000;
 const MAX_CASE_TOKENS=1_000_000_000;
 function validNumber(x,max){return typeof x==="number"&&Number.isFinite(x)&&x>=0&&x<=max;}
+// Reject unexpected sampling controls instead of silently comparing metadata
+// that was never submitted to the model endpoint.
+const CONFIG_KEYS=["model_id","model_version","prompt_template_sha256","seed",
+  "temperature","max_output_tokens"];
+const normalizedConfig=c=>JSON.stringify(Object.fromEntries(
+  CONFIG_KEYS.map(k=>[k,c[k]])));
 function goodConfig(c){
-  return isPlain(c)&&typeof c.model_id==="string"&&c.model_id.length>0&&c.model_id.length<=100&&
+  return isPlain(c)&&Object.keys(c).length===CONFIG_KEYS.length&&
+    CONFIG_KEYS.every(k=>Object.hasOwn(c,k))&&typeof c.model_id==="string"&&c.model_id.length>0&&c.model_id.length<=100&&
     typeof c.model_version==="string"&&c.model_version.length>0&&c.model_version.length<=100&&
     SHA.test(c.prompt_template_sha256)&&Number.isSafeInteger(c.seed)&&
     validNumber(c.temperature,2)&&
@@ -110,12 +118,11 @@ function measure(arm,manifest){
 /** Fairness requires identical frozen cases, base model and prompt controls.
  * Declared measurements remain self-reported until independent trace review.
  */
-export function scoreFrozenPairedAB(baseline_json,augmented_json){
+function scorePairedAB(baseline_json,augmented_json,manifest,oracleScope){
   try{
-    const manifest=frozenABManifest();
     const baseline=validArm(parse(baseline_json),"LLM_ONLY",manifest);
     const augmented=validArm(parse(augmented_json),"LLM_TOOLS",manifest);
-    if(JSON.stringify(baseline.config)!==JSON.stringify(augmented.config)||
+    if(normalizedConfig(baseline.config)!==normalizedConfig(augmented.config)||
        typeof baseline.protocol_id!=="string"||!baseline.protocol_id||
        baseline.protocol_id!==augmented.protocol_id)
       return denied("different LLM model/prompt/sampling/protocol controls");
@@ -130,7 +137,29 @@ export function scoreFrozenPairedAB(baseline_json,augmented_json){
       status:"SCORED_UNATTESTED",source_sha256:manifest.source_sha256,
       protocol_id:baseline.protocol_id,baseline:b,augmented:a,
       deltas,
-      independent_raw_trace_review:"NOT_RUN",business_oracle:"SOURCE_AUTHORED_SYNTHETIC",
+      independent_raw_trace_review:"NOT_RUN",business_oracle:oracleScope,
       g5_accepted:false};
   }catch {return denied("invalid, unfair, incomplete or unbounded A/B observations");}
+}
+
+/** Existing six-case API/receipts stay 100% backward compatible. */
+export function scoreFrozenPairedAB(baseline_json,augmented_json){
+  return scorePairedAB(baseline_json,augmented_json,frozenABManifest(),
+    "SOURCE_AUTHORED_SYNTHETIC");
+}
+/** Distinct new 20-case G5 hard-r1 suite: author-frozen labels, NOT a certified
+ * independent semantic Oracle, native result or actual LLM experiment.
+ */
+export function hardABManifest(){
+  const f=readHardCases();
+  return {schema:"formal-tools/llm-ab-hard/0.1",source_sha256:f.source_sha256,
+    cases:f.cases.map(c=>({id:c.id,expected:c.expected,
+      case_sha256:hash(JSON.stringify(c))}))};
+}
+export function scoreHardPairedAB(baseline_json,augmented_json){
+  const measured=scorePairedAB(baseline_json,augmented_json,hardABManifest(),
+    "SOURCE_AUTHORED_HARD_R1_NOT_INDEPENDENTLY_QUALIFIED");
+  if(measured.status==="BLOCKED")return measured;
+  return {...measured,source_suite:"HARD_R1",independent_raw_trace_review:"NOT_RUN",
+    g5_accepted:false};
 }

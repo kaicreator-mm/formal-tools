@@ -1,0 +1,707 @@
+{
+  "schema": "formal-tools/ads-hard-scenarios/0.1",
+  "authority": {
+    "issue": 11,
+    "source_fixture": "benchmarks/llm-methods/r0/spec-fidelity-cases.json",
+    "source_requirements": [
+      "R1",
+      "R2",
+      "R3"
+    ],
+    "scope": "source-authored, synthetic scheduling mini-domain; not independently credentialed ADS Product or professional Oracle",
+    "independent_semantic_qualification": "NOT_RUN",
+    "native_execution": "NOT_RUN",
+    "llm_ab_execution": "NOT_RUN"
+  },
+  "version": "hard-r1-frozen-before-new-tool-model-experiments",
+  "semantics": {
+    "time": "bounded signed integer, start < end, end-exclusive",
+    "precedence": "A -> B means A.end <= B.start",
+    "resources": "exact case-sensitive identity",
+    "concurrency": "different-resource writers may overlap; same-resource writers may not overlap"
+  },
+  "cases": [
+    {
+      "id": "p-adjacent-multiwriter",
+      "description": "End-exclusive adjacency is nonoverlapping",
+      "requirements": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "tasks": {
+        "A": {
+          "start": 0,
+          "end": 2,
+          "resource": "r"
+        },
+        "B": {
+          "start": 2,
+          "end": 5,
+          "resource": "r"
+        },
+        "C": {
+          "start": 5,
+          "end": 6,
+          "resource": "r"
+        }
+      },
+      "edges": [
+        [
+          "A",
+          "B"
+        ],
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "expected": "PASS"
+    },
+    {
+      "id": "p-parallel-three-distinct",
+      "description": "Same-time writers on distinct resources are allowed",
+      "requirements": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "tasks": {
+        "A": {
+          "start": 0,
+          "end": 10,
+          "resource": "r1"
+        },
+        "B": {
+          "start": 0,
+          "end": 10,
+          "resource": "r2"
+        },
+        "C": {
+          "start": 0,
+          "end": 10,
+          "resource": "r3"
+        }
+      },
+      "edges": [],
+      "expected": "PASS"
+    },
+    {
+      "id": "p-fork-join-boundary",
+      "description": "Two independent predecessors may join at latest end",
+      "requirements": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "tasks": {
+        "A": {
+          "start": 0,
+          "end": 1,
+          "resource": "r1"
+        },
+        "B": {
+          "start": 0,
+          "end": 2,
+          "resource": "r2"
+        },
+        "C": {
+          "start": 2,
+          "end": 3,
+          "resource": "r3"
+        },
+        "D": {
+          "start": 3,
+          "end": 4,
+          "resource": "r4"
+        }
+      },
+      "edges": [
+        [
+          "A",
+          "C"
+        ],
+        [
+          "B",
+          "C"
+        ],
+        [
+          "C",
+          "D"
+        ]
+      ],
+      "expected": "PASS"
+    },
+    {
+      "id": "p-negative-time-adjacent",
+      "description": "Negative integer timestamps remain valid finite intervals",
+      "requirements": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "tasks": {
+        "A": {
+          "start": -6,
+          "end": -4,
+          "resource": "r"
+        },
+        "B": {
+          "start": -4,
+          "end": -1,
+          "resource": "r"
+        },
+        "C": {
+          "start": -1,
+          "end": 1,
+          "resource": "r"
+        }
+      },
+      "edges": [
+        [
+          "A",
+          "B"
+        ],
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "expected": "PASS"
+    },
+    {
+      "id": "p-overlap-unrelated-only",
+      "description": "Only different-resource spans overlap",
+      "requirements": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "tasks": {
+        "A": {
+          "start": 0,
+          "end": 2,
+          "resource": "r"
+        },
+        "B": {
+          "start": 0,
+          "end": 4,
+          "resource": "q"
+        },
+        "C": {
+          "start": 2,
+          "end": 5,
+          "resource": "r"
+        },
+        "D": {
+          "start": 5,
+          "end": 6,
+          "resource": "r"
+        }
+      },
+      "edges": [
+        [
+          "A",
+          "C"
+        ],
+        [
+          "C",
+          "D"
+        ]
+      ],
+      "expected": "PASS"
+    },
+    {
+      "id": "p-same-writer-separated-by-other",
+      "description": "A and C share resource but do not overlap despite unrelated intervals",
+      "requirements": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "tasks": {
+        "A": {
+          "start": 0,
+          "end": 1,
+          "resource": "r"
+        },
+        "B": {
+          "start": 0,
+          "end": 3,
+          "resource": "other"
+        },
+        "C": {
+          "start": 3,
+          "end": 6,
+          "resource": "r"
+        },
+        "D": {
+          "start": 1,
+          "end": 5,
+          "resource": "third"
+        }
+      },
+      "edges": [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      "expected": "PASS"
+    },
+    {
+      "id": "p-eight-interleaved-writers",
+      "description": "Eight interleaved tasks: only within-resource intervals must be disjoint",
+      "requirements": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "tasks": {
+        "A": {
+          "start": 0,
+          "end": 2,
+          "resource": "r1"
+        },
+        "B": {
+          "start": 0,
+          "end": 2,
+          "resource": "r2"
+        },
+        "C": {
+          "start": 2,
+          "end": 4,
+          "resource": "r1"
+        },
+        "D": {
+          "start": 2,
+          "end": 4,
+          "resource": "r2"
+        },
+        "E": {
+          "start": 4,
+          "end": 6,
+          "resource": "r1"
+        },
+        "F": {
+          "start": 4,
+          "end": 6,
+          "resource": "r2"
+        },
+        "G": {
+          "start": 6,
+          "end": 8,
+          "resource": "r1"
+        },
+        "H": {
+          "start": 6,
+          "end": 8,
+          "resource": "r2"
+        }
+      },
+      "edges": [],
+      "expected": "PASS"
+    },
+    {
+      "id": "p-upper-time-bound",
+      "description": "Valid integer time near supported domain upper bound",
+      "requirements": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "tasks": {
+        "A": {
+          "start": 999990,
+          "end": 999995,
+          "resource": "r"
+        },
+        "B": {
+          "start": 999995,
+          "end": 1000000,
+          "resource": "r"
+        }
+      },
+      "edges": [
+        [
+          "A",
+          "B"
+        ]
+      ],
+      "expected": "PASS"
+    },
+    {
+      "id": "p-no-edge-same-writer-sequence",
+      "description": "Resource exclusion is independent of explicit DAG edges",
+      "requirements": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "tasks": {
+        "A": {
+          "start": 0,
+          "end": 1,
+          "resource": "r"
+        },
+        "B": {
+          "start": 1,
+          "end": 2,
+          "resource": "r"
+        },
+        "C": {
+          "start": 2,
+          "end": 3,
+          "resource": "r"
+        },
+        "D": {
+          "start": 3,
+          "end": 4,
+          "resource": "r"
+        }
+      },
+      "edges": [],
+      "expected": "PASS"
+    },
+    {
+      "id": "p-case-sensitive-resource",
+      "description": "Resource identifiers are exact-case-sensitive under this bounded contract",
+      "requirements": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "tasks": {
+        "A": {
+          "start": 0,
+          "end": 5,
+          "resource": "Queue"
+        },
+        "B": {
+          "start": 0,
+          "end": 5,
+          "resource": "queue"
+        },
+        "C": {
+          "start": 5,
+          "end": 6,
+          "resource": "Queue"
+        }
+      },
+      "edges": [],
+      "expected": "PASS"
+    },
+    {
+      "id": "n-one-tick-writer-intersection",
+      "description": "One tick overlap on same resource violates R2",
+      "requirements": [
+        "R2"
+      ],
+      "tasks": {
+        "A": {
+          "start": 1,
+          "end": 4,
+          "resource": "r"
+        },
+        "B": {
+          "start": 3,
+          "end": 5,
+          "resource": "r"
+        },
+        "C": {
+          "start": 0,
+          "end": 2,
+          "resource": "q"
+        }
+      },
+      "edges": [],
+      "expected": "FAIL"
+    },
+    {
+      "id": "n-eight-task-hidden-race",
+      "description": "F and H collide despite six unrelated valid tasks",
+      "requirements": [
+        "R2"
+      ],
+      "tasks": {
+        "A": {
+          "start": 0,
+          "end": 2,
+          "resource": "r1"
+        },
+        "B": {
+          "start": 0,
+          "end": 2,
+          "resource": "r2"
+        },
+        "C": {
+          "start": 2,
+          "end": 4,
+          "resource": "r1"
+        },
+        "D": {
+          "start": 2,
+          "end": 4,
+          "resource": "r2"
+        },
+        "E": {
+          "start": 4,
+          "end": 6,
+          "resource": "r1"
+        },
+        "F": {
+          "start": 2,
+          "end": 6,
+          "resource": "r3"
+        },
+        "G": {
+          "start": 6,
+          "end": 8,
+          "resource": "r1"
+        },
+        "H": {
+          "start": 5,
+          "end": 7,
+          "resource": "r3"
+        }
+      },
+      "edges": [],
+      "expected": "FAIL"
+    },
+    {
+      "id": "n-precedence-off-by-one",
+      "description": "A ends one tick after B starts",
+      "requirements": [
+        "R1"
+      ],
+      "tasks": {
+        "A": {
+          "start": 1,
+          "end": 4,
+          "resource": "x"
+        },
+        "B": {
+          "start": 3,
+          "end": 5,
+          "resource": "y"
+        }
+      },
+      "edges": [
+        [
+          "A",
+          "B"
+        ]
+      ],
+      "expected": "FAIL"
+    },
+    {
+      "id": "n-three-cycle",
+      "description": "Three-node dependency cycle",
+      "requirements": [
+        "R1"
+      ],
+      "tasks": {
+        "A": {
+          "start": 0,
+          "end": 1,
+          "resource": "x"
+        },
+        "B": {
+          "start": 1,
+          "end": 2,
+          "resource": "y"
+        },
+        "C": {
+          "start": 2,
+          "end": 3,
+          "resource": "z"
+        }
+      },
+      "edges": [
+        [
+          "A",
+          "B"
+        ],
+        [
+          "B",
+          "C"
+        ],
+        [
+          "C",
+          "A"
+        ]
+      ],
+      "expected": "FAIL"
+    },
+    {
+      "id": "n-self-loop",
+      "description": "Self-dependent task is cyclic",
+      "requirements": [
+        "R1"
+      ],
+      "tasks": {
+        "A": {
+          "start": 0,
+          "end": 1,
+          "resource": "r"
+        }
+      },
+      "edges": [
+        [
+          "A",
+          "A"
+        ]
+      ],
+      "expected": "FAIL"
+    },
+    {
+      "id": "n-hidden-zero-length",
+      "description": "One zero-length interval among valid tasks violates R3",
+      "requirements": [
+        "R3"
+      ],
+      "tasks": {
+        "A": {
+          "start": 0,
+          "end": 1,
+          "resource": "r"
+        },
+        "B": {
+          "start": 2,
+          "end": 2,
+          "resource": "q"
+        },
+        "C": {
+          "start": 3,
+          "end": 4,
+          "resource": "s"
+        }
+      },
+      "edges": [],
+      "expected": "FAIL"
+    },
+    {
+      "id": "n-reversed-window",
+      "description": "Reverse timestamp order violates strict duration",
+      "requirements": [
+        "R3"
+      ],
+      "tasks": {
+        "A": {
+          "start": 5,
+          "end": 2,
+          "resource": "r"
+        },
+        "B": {
+          "start": 0,
+          "end": 1,
+          "resource": "q"
+        }
+      },
+      "edges": [],
+      "expected": "FAIL"
+    },
+    {
+      "id": "n-long-interval-tail-overlap",
+      "description": "Long two-task resource overlap hidden behind irrelevant concurrency",
+      "requirements": [
+        "R2"
+      ],
+      "tasks": {
+        "A": {
+          "start": 0,
+          "end": 100,
+          "resource": "r"
+        },
+        "B": {
+          "start": 99,
+          "end": 101,
+          "resource": "r"
+        },
+        "C": {
+          "start": 0,
+          "end": 100,
+          "resource": "q"
+        }
+      },
+      "edges": [],
+      "expected": "FAIL"
+    },
+    {
+      "id": "n-disjoint-writers-wrong-edge",
+      "description": "First dependency violates temporal precedence though resources distinct",
+      "requirements": [
+        "R1"
+      ],
+      "tasks": {
+        "A": {
+          "start": 0,
+          "end": 2,
+          "resource": "r1"
+        },
+        "B": {
+          "start": 1,
+          "end": 3,
+          "resource": "r2"
+        },
+        "C": {
+          "start": 3,
+          "end": 5,
+          "resource": "r3"
+        }
+      },
+      "edges": [
+        [
+          "A",
+          "B"
+        ],
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "expected": "FAIL"
+    },
+    {
+      "id": "n-hidden-writer-fork-collision",
+      "description": "D races with A despite valid A-B-C chain",
+      "requirements": [
+        "R2"
+      ],
+      "tasks": {
+        "A": {
+          "start": 0,
+          "end": 1,
+          "resource": "r"
+        },
+        "B": {
+          "start": 1,
+          "end": 2,
+          "resource": "q"
+        },
+        "C": {
+          "start": 2,
+          "end": 3,
+          "resource": "r"
+        },
+        "D": {
+          "start": 0,
+          "end": 2,
+          "resource": "r"
+        }
+      },
+      "edges": [
+        [
+          "A",
+          "B"
+        ],
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "expected": "FAIL"
+    }
+  ],
+  "notes": "20 source-frozen nontrivial scenarios (10 PASS/10 FAIL), more tasks, boundary and hidden conflicts than six original easy cases. Frozen labels are author-declared, deterministically checked by a separately implemented source-only oracle. This is NOT an independent human semantic Owner certification, real solver run, or real LLM A/B outcome."
+}

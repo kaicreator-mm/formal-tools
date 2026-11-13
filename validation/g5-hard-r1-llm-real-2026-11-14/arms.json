@@ -1,0 +1,479 @@
+{
+  "schema": "formal-tools/g5-hard-real-arms/0.1",
+  "protocol_id": "g5-hard-r1-20-cases-deepseek-flash-v1",
+  "generated_at": "2026-11-13T17:17:31.898Z",
+  "baseline": {
+    "schema": "formal-tools/llm-ab-observations/0.1",
+    "arm": "LLM_ONLY",
+    "source_sha256": "b4dce007e9ef1f85e52364a15558c21560e05fe38a1641509ff575fd801fa6ba",
+    "protocol_id": "g5-hard-r1-20-cases-deepseek-flash-v1",
+    "config": {
+      "model_id": "deepseek-flash",
+      "model_version": "deepseek-flash-deepseek-v4.1-flash-1017",
+      "prompt_template_sha256": "5a3d05d703031cd439f7e438fa5f4410653dc675595c9987fb1de768a89860fb",
+      "seed": 0,
+      "temperature": 0,
+      "max_output_tokens": 4096
+    },
+    "observations": [
+      {
+        "case_id": "p-adjacent-multiwriter",
+        "case_sha256": "175c076b41419cd4b68a64a3a933cb5527021203fcd2454f8d6eed9f1175a3fc",
+        "prediction": "PASS",
+        "raw_trace_sha256": "ae6fb9d61485466aebb1838a4854379812e0af22069ca12607cda6d87c3c8c76",
+        "cost_usd": 0.0016032,
+        "latency_ms": 7819,
+        "input_tokens": 308,
+        "output_tokens": 1259
+      },
+      {
+        "case_id": "p-parallel-three-distinct",
+        "case_sha256": "fb3ea272ea1db9eb1e3cd23b75eafe14807a1bcec61c944de905a416921fe596",
+        "prediction": "PASS",
+        "raw_trace_sha256": "c2f3c1d5857f31edd29d79de246906dc9d1277bfd51e0c811ceb80773806ee03",
+        "cost_usd": 0.0003588,
+        "latency_ms": 1698,
+        "input_tokens": 300,
+        "output_tokens": 224
+      },
+      {
+        "case_id": "p-fork-join-boundary",
+        "case_sha256": "c22a09f6d650d3b4a07ecc04683489a5f3e9186dbe3b6cf323b5cb3be9ab18ad",
+        "prediction": "PASS",
+        "raw_trace_sha256": "4d9e3770b29af0be36c609b3c3c0a3ee302dc0ef8bae8bfa8c1a313922f7d3e2",
+        "cost_usd": 0.0013344,
+        "latency_ms": 6371,
+        "input_tokens": 332,
+        "output_tokens": 1029
+      },
+      {
+        "case_id": "p-negative-time-adjacent",
+        "case_sha256": "46ddf9c4d92ad4def45c7a34c7072b2a0274eb55027c320a7ce0c9363b5750e0",
+        "prediction": "PASS",
+        "raw_trace_sha256": "bd38eb9c217c74b8a6fc42e748d8c4ee32ec71c3cf245d2f2c6e78f0872dd6a8",
+        "cost_usd": 0.0004983,
+        "latency_ms": 2229,
+        "input_tokens": 313,
+        "output_tokens": 337
+      },
+      {
+        "case_id": "p-overlap-unrelated-only",
+        "case_sha256": "3b83b5f8b8d855d0a707c3851c121f4e4dcaf1507d8e3173d51f104e3de85ccc",
+        "prediction": "PASS",
+        "raw_trace_sha256": "d92a275902b92b2d5235f9bf02150200aa6ca2bb8ce012c439ee1db5eb1b6d57",
+        "cost_usd": 0.0012093,
+        "latency_ms": 5509,
+        "input_tokens": 323,
+        "output_tokens": 927
+      },
+      {
+        "case_id": "p-same-writer-separated-by-other",
+        "case_sha256": "0e4044a6873db32771348631f084ee386f48c1b67812d2a76b950ae7ccf0477d",
+        "prediction": "PASS",
+        "raw_trace_sha256": "f8f4a16a6e0e513c4f85240b3ea219bcdb6a244a9eb2f9e84e47353c1ac59b36",
+        "cost_usd": 0.0005586,
+        "latency_ms": 2530,
+        "input_tokens": 318,
+        "output_tokens": 386
+      },
+      {
+        "case_id": "p-eight-interleaved-writers",
+        "case_sha256": "7a1f907fb197baeee7b69ec9940b549c7a9cac03b6e1ecff51faab56dfcc429e",
+        "prediction": "PASS",
+        "raw_trace_sha256": "9a140e18103f0f14f2b1ec05ce839b6dbfa5ef9c4b941a8df562a22d6e3e3808",
+        "cost_usd": 0.0005184,
+        "latency_ms": 2028,
+        "input_tokens": 380,
+        "output_tokens": 337
+      },
+      {
+        "case_id": "p-upper-time-bound",
+        "case_sha256": "caa7aa3b8c8edbc9bd885ceb935138902b1925945301258c866486917b6ff26e",
+        "prediction": "PASS",
+        "raw_trace_sha256": "d3d86e878de2b0d22b5efaf0503113c92c063584a37b56c7b440958faf249970",
+        "cost_usd": 0.0031035,
+        "latency_ms": 15280,
+        "input_tokens": 293,
+        "output_tokens": 2513
+      },
+      {
+        "case_id": "p-no-edge-same-writer-sequence",
+        "case_sha256": "1812269719fe435b85539ead37d109930a29f6e3412a47fbba64ad6762e56989",
+        "prediction": "PASS",
+        "raw_trace_sha256": "853c945c306e087e2a1e1b4ac8d67fa1f383c1eac1aae0ee347b5e38ca4eb2ff",
+        "cost_usd": 0.0004644,
+        "latency_ms": 2369,
+        "input_tokens": 312,
+        "output_tokens": 309
+      },
+      {
+        "case_id": "p-case-sensitive-resource",
+        "case_sha256": "c0e538037d987c9358a908d38de1bb32fa533826aae618552a3d710bb667fa36",
+        "prediction": "PASS",
+        "raw_trace_sha256": "c9a1d693824b2f843317652140ad56fe8f3653fcdd3951baef015318d32a45a3",
+        "cost_usd": 0.0009219,
+        "latency_ms": 4219,
+        "input_tokens": 297,
+        "output_tokens": 694
+      },
+      {
+        "case_id": "n-one-tick-writer-intersection",
+        "case_sha256": "8610a7033977f12a1ad9b60adba0a29010563f28351f727058882e4a8418cabf",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "aa2eb10fd4bb2afc695ec85cd1fdffda4d902c43cba0ebc7d30ac35734d406f4",
+        "cost_usd": 0.0003051,
+        "latency_ms": 1425,
+        "input_tokens": 297,
+        "output_tokens": 180
+      },
+      {
+        "case_id": "n-eight-task-hidden-race",
+        "case_sha256": "31e5be0f9e75a9b4e070cccb7f7faa0e5f3bf33ec29197e11db72741aefe2601",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "d774e0012cc8751b2cb854ff2da15f2852a083eb0c3c32ea4bd68fee1e3c215a",
+        "cost_usd": 0.0007692,
+        "latency_ms": 3299,
+        "input_tokens": 380,
+        "output_tokens": 546
+      },
+      {
+        "case_id": "n-precedence-off-by-one",
+        "case_sha256": "b930cb6cc20aecba0f86a880626dfbc5b1dfb05865c0d075adfebe339bcc4285",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "95a914d86ca7a58d6f91f30c0331a5fac29e0bc9499c5e6224195bff2d74d865",
+        "cost_usd": 0.0005136,
+        "latency_ms": 2164,
+        "input_tokens": 288,
+        "output_tokens": 356
+      },
+      {
+        "case_id": "n-three-cycle",
+        "case_sha256": "5cf396fc4c316a38229ed8f1b45b5efd925133be05239bfcda478938cc58b00f",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "951470cc7385c0530181ebcea3037290934ab1ea431e9573571a2383bca187cc",
+        "cost_usd": 0.0004287,
+        "latency_ms": 2127,
+        "input_tokens": 313,
+        "output_tokens": 279
+      },
+      {
+        "case_id": "n-self-loop",
+        "case_sha256": "54e90ba1302525da84df0ae4cfeb34a47f96ab157d480ece722072fc5840be0c",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "1630a0d58f6f1500708bcca58ea663cd728d3575e4e630b1a046bb5b2c665a88",
+        "cost_usd": 0.0003387,
+        "latency_ms": 1578,
+        "input_tokens": 273,
+        "output_tokens": 214
+      },
+      {
+        "case_id": "n-hidden-zero-length",
+        "case_sha256": "09e663080f99f87c1755a74ab1007843409ee3db8c8f4ba4745429108e244e57",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "10f4ffea7821056a0cfd0a01a7cb8085db4fa0b16fc45a234fd8b13dc5b2c15f",
+        "cost_usd": 0.0004695,
+        "latency_ms": 2352,
+        "input_tokens": 297,
+        "output_tokens": 317
+      },
+      {
+        "case_id": "n-reversed-window",
+        "case_sha256": "915018ba91956a6f6bd45b8ce4f32770de9cccf563e4893a37f227f80dbe0010",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "32226386482bd540028b408f407453620a06b81eb9a65c5dddf3ece3a7e53c4f",
+        "cost_usd": 0.0002886,
+        "latency_ms": 1454,
+        "input_tokens": 282,
+        "output_tokens": 170
+      },
+      {
+        "case_id": "n-long-interval-tail-overlap",
+        "case_sha256": "b1a9c8fc89505be18b2a72a3bd7b98d7953f2c1ab9638e02c901fe0c6485d48e",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "2ab0e9cc4656e5319b046e0f88c2e8bdfb0d2a70bf8b2389f8528d229b859e1f",
+        "cost_usd": 0.0004863,
+        "latency_ms": 2345,
+        "input_tokens": 297,
+        "output_tokens": 331
+      },
+      {
+        "case_id": "n-disjoint-writers-wrong-edge",
+        "case_sha256": "9e7b55fa6173aa4da3a03ee6287a658c89bf74153a9763b0bf56c7411f32a81c",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "99442257cfb88547e5fadd81a264950cf2954767356c7c86a2eb94881f26c1b7",
+        "cost_usd": 0.0004953,
+        "latency_ms": 2480,
+        "input_tokens": 311,
+        "output_tokens": 335
+      },
+      {
+        "case_id": "n-hidden-writer-fork-collision",
+        "case_sha256": "f55d2bb027d86a4260113b7a2028925f72b5a805c96d64b4038197a4ff0bd177",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "fd7dbeb2416cb2e427d1c47ccef2bb12ed427b318f5542de89cf373fcaf01aaf",
+        "cost_usd": 0.0008541,
+        "latency_ms": 3927,
+        "input_tokens": 323,
+        "output_tokens": 631
+      }
+    ]
+  },
+  "augmented": {
+    "schema": "formal-tools/llm-ab-observations/0.1",
+    "arm": "LLM_TOOLS",
+    "source_sha256": "b4dce007e9ef1f85e52364a15558c21560e05fe38a1641509ff575fd801fa6ba",
+    "protocol_id": "g5-hard-r1-20-cases-deepseek-flash-v1",
+    "config": {
+      "model_id": "deepseek-flash",
+      "model_version": "deepseek-flash-deepseek-v4.1-flash-1017",
+      "prompt_template_sha256": "5a3d05d703031cd439f7e438fa5f4410653dc675595c9987fb1de768a89860fb",
+      "seed": 0,
+      "temperature": 0,
+      "max_output_tokens": 4096
+    },
+    "observations": [
+      {
+        "case_id": "p-adjacent-multiwriter",
+        "case_sha256": "175c076b41419cd4b68a64a3a933cb5527021203fcd2454f8d6eed9f1175a3fc",
+        "prediction": "PASS",
+        "raw_trace_sha256": "10e4deb542ea048628fe6bbd4e5681fad4c1a96282998c74540ab25eb38a4552",
+        "cost_usd": 0.0007473,
+        "latency_ms": 2841,
+        "input_tokens": 659,
+        "output_tokens": 458,
+        "tool_status": "SAT",
+        "tool_receipt_sha256": "ec61a81f8f03176c8a374667b935b1932b153fa24378b16244abde250b2248de"
+      },
+      {
+        "case_id": "p-parallel-three-distinct",
+        "case_sha256": "fb3ea272ea1db9eb1e3cd23b75eafe14807a1bcec61c944de905a416921fe596",
+        "prediction": "PASS",
+        "raw_trace_sha256": "ee037c105a474a2a0d19b2a1e00f14afa72ed01ae7588178046957e1953a8057",
+        "cost_usd": 0.0005907,
+        "latency_ms": 2173,
+        "input_tokens": 573,
+        "output_tokens": 349,
+        "tool_status": "SAT",
+        "tool_receipt_sha256": "7bec18853c47e494d3c0c367b59572f7512d8d8916c0cb74667f354eefde4e65"
+      },
+      {
+        "case_id": "p-fork-join-boundary",
+        "case_sha256": "c22a09f6d650d3b4a07ecc04683489a5f3e9186dbe3b6cf323b5cb3be9ab18ad",
+        "prediction": "PASS",
+        "raw_trace_sha256": "c57e4030e9f01c37a03d5605edcb81e9b0fea688362ba9766d0b2bf1ae0480ff",
+        "cost_usd": 0.0006834,
+        "latency_ms": 2597,
+        "input_tokens": 702,
+        "output_tokens": 394,
+        "tool_status": "SAT",
+        "tool_receipt_sha256": "7525c510a9db81a3d9518e38f1cfdb9de626baf37e082ef927cb40cb608b1e37"
+      },
+      {
+        "case_id": "p-negative-time-adjacent",
+        "case_sha256": "46ddf9c4d92ad4def45c7a34c7072b2a0274eb55027c320a7ce0c9363b5750e0",
+        "prediction": "PASS",
+        "raw_trace_sha256": "6d7b0e6ccdc6ba4c41aac02d3bf8d94cbafb799562df11cb2bcdf966a2d03e22",
+        "cost_usd": 0.001218,
+        "latency_ms": 4978,
+        "input_tokens": 676,
+        "output_tokens": 846,
+        "tool_status": "SAT",
+        "tool_receipt_sha256": "9a0ca7067d31c00dc658c1bd112e6ed2458ef97eaff447a03dcfe4766c7307c3"
+      },
+      {
+        "case_id": "p-overlap-unrelated-only",
+        "case_sha256": "3b83b5f8b8d855d0a707c3851c121f4e4dcaf1507d8e3173d51f104e3de85ccc",
+        "prediction": "PASS",
+        "raw_trace_sha256": "a93c1c885f67bd4bb60e21b6a4f66a512868bdb450a9fd86955454c941bd826f",
+        "cost_usd": 0.0007743,
+        "latency_ms": 2868,
+        "input_tokens": 725,
+        "output_tokens": 464,
+        "tool_status": "SAT",
+        "tool_receipt_sha256": "8c51f2400aa29c2ef0b0ff703694a9dfb2618d70964180e62297142569006344"
+      },
+      {
+        "case_id": "p-same-writer-separated-by-other",
+        "case_sha256": "0e4044a6873db32771348631f084ee386f48c1b67812d2a76b950ae7ccf0477d",
+        "prediction": "PASS",
+        "raw_trace_sha256": "98d0c07feb804c8680ed556599c1b2f415ce52cdc611e608f88ff2ac20db4dbc",
+        "cost_usd": 0.0008943,
+        "latency_ms": 3206,
+        "input_tokens": 669,
+        "output_tokens": 578,
+        "tool_status": "SAT",
+        "tool_receipt_sha256": "0de4619a0e161ec6d93eb41b4233a464c09b44a60c9e61fee3fdef09a3b64591"
+      },
+      {
+        "case_id": "p-eight-interleaved-writers",
+        "case_sha256": "7a1f907fb197baeee7b69ec9940b549c7a9cac03b6e1ecff51faab56dfcc429e",
+        "prediction": "PASS",
+        "raw_trace_sha256": "982f2a68975d13500d03ca64e587b9ada748e407c6f0992f0bc4f4a52103a23c",
+        "cost_usd": 0.0008589,
+        "latency_ms": 2550,
+        "input_tokens": 1103,
+        "output_tokens": 440,
+        "tool_status": "SAT",
+        "tool_receipt_sha256": "46fa2b94b44c2db4059292fb84ccddb8b1d90bd220ff9506b6fd62b24e63e9f4"
+      },
+      {
+        "case_id": "p-upper-time-bound",
+        "case_sha256": "caa7aa3b8c8edbc9bd885ceb935138902b1925945301258c866486917b6ff26e",
+        "prediction": "PASS",
+        "raw_trace_sha256": "1211da6a15128724f0a4beff6cc8e1f878e34d6f2081a8f5f51fbacbf6380acc",
+        "cost_usd": 0.0009135,
+        "latency_ms": 4203,
+        "input_tokens": 553,
+        "output_tokens": 623,
+        "tool_status": "SAT",
+        "tool_receipt_sha256": "09944c6b4d975511c98f9cc25224f78d16cd666a9824c6ea7c376812bb0861ad"
+      },
+      {
+        "case_id": "p-no-edge-same-writer-sequence",
+        "case_sha256": "1812269719fe435b85539ead37d109930a29f6e3412a47fbba64ad6762e56989",
+        "prediction": "PASS",
+        "raw_trace_sha256": "89f82e98ffeaf3f3b9d3e42401fe46e66a06a9dff014f7d015ae48f06e4d16ee",
+        "cost_usd": 0.0007554,
+        "latency_ms": 2935,
+        "input_tokens": 738,
+        "output_tokens": 445,
+        "tool_status": "SAT",
+        "tool_receipt_sha256": "447795416773cda6166e192f48448b554eec733d75bf74820064f75f16bf9180"
+      },
+      {
+        "case_id": "p-case-sensitive-resource",
+        "case_sha256": "c0e538037d987c9358a908d38de1bb32fa533826aae618552a3d710bb667fa36",
+        "prediction": "PASS",
+        "raw_trace_sha256": "bc3f4b4e982c5555312d89c67376a306fe403fc59a086e29144a27ea8cb6bbd5",
+        "cost_usd": 0.0012228,
+        "latency_ms": 5505,
+        "input_tokens": 584,
+        "output_tokens": 873,
+        "tool_status": "SAT",
+        "tool_receipt_sha256": "f48dad8dfd31d1577b6f4c286d8d13f0c61204d46c21527122c1258f6dbd32c5"
+      },
+      {
+        "case_id": "n-one-tick-writer-intersection",
+        "case_sha256": "8610a7033977f12a1ad9b60adba0a29010563f28351f727058882e4a8418cabf",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "576fbc0fdb298ecf54afc9567539ed64c385d2e7130b97635abaef06714f4b0b",
+        "cost_usd": 0.0006366,
+        "latency_ms": 2264,
+        "input_tokens": 582,
+        "output_tokens": 385,
+        "tool_status": "UNSAT",
+        "tool_receipt_sha256": "76ef3ec7acd6b717dc60716d561f37a86c2960e848edfab95cd82dabeacc4ef5"
+      },
+      {
+        "case_id": "n-eight-task-hidden-race",
+        "case_sha256": "31e5be0f9e75a9b4e070cccb7f7faa0e5f3bf33ec29197e11db72741aefe2601",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "dbb5c78bfae37bdd0be08f4778dd1a01c7225a4303e95e85d9db061102b39a72",
+        "cost_usd": 0.0009939,
+        "latency_ms": 3087,
+        "input_tokens": 1037,
+        "output_tokens": 569,
+        "tool_status": "UNSAT",
+        "tool_receipt_sha256": "e5f36743ccaedffbfa3098f7ec747959c3d1e4b1920737f8d4c87430b3794245"
+      },
+      {
+        "case_id": "n-precedence-off-by-one",
+        "case_sha256": "b930cb6cc20aecba0f86a880626dfbc5b1dfb05865c0d075adfebe339bcc4285",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "2571c88d32c2a4fe3f006f8188e061952cdf6621809948fdd1870460a875eec7",
+        "cost_usd": 0.0005118,
+        "latency_ms": 2404,
+        "input_tokens": 526,
+        "output_tokens": 295,
+        "tool_status": "UNSAT",
+        "tool_receipt_sha256": "3d7760eb0793e9b4e0d6ced7d39e5a29c2cd40fa2368b91b538c37bb8c29d99c"
+      },
+      {
+        "case_id": "n-three-cycle",
+        "case_sha256": "5cf396fc4c316a38229ed8f1b45b5efd925133be05239bfcda478938cc58b00f",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "191c93b72e71435819d5dd003058aa9a05311124495715439b2e2f4824332e14",
+        "cost_usd": 0.000516,
+        "latency_ms": 2136,
+        "input_tokens": 636,
+        "output_tokens": 271,
+        "tool_status": "UNSAT",
+        "tool_receipt_sha256": "68473cde4098652d7d55c25e9e212f3b5788595aa02855e4160161fb90f8d0bb"
+      },
+      {
+        "case_id": "n-self-loop",
+        "case_sha256": "54e90ba1302525da84df0ae4cfeb34a47f96ab157d480ece722072fc5840be0c",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "f6bc74178a5679b7ec77be067d60bbb06206ef3e8243e4c3cd0a2e1b186f9472",
+        "cost_usd": 0.0006045,
+        "latency_ms": 2788,
+        "input_tokens": 467,
+        "output_tokens": 387,
+        "tool_status": "UNSAT",
+        "tool_receipt_sha256": "930d9bf5be2b2c61b06887b351cd3308368897373a51d45c5b9d731979560bcf"
+      },
+      {
+        "case_id": "n-hidden-zero-length",
+        "case_sha256": "09e663080f99f87c1755a74ab1007843409ee3db8c8f4ba4745429108e244e57",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "e5ba416e821de63d8e7df05d70286d7b09a9a242150d699b8e7a2c14a9f378bc",
+        "cost_usd": 0.0004056,
+        "latency_ms": 1712,
+        "input_tokens": 568,
+        "output_tokens": 196,
+        "tool_status": "UNSAT",
+        "tool_receipt_sha256": "2a489844883c05097c20481ce49a0875b87d10f438c27c3dae2ae1bc7d69a522"
+      },
+      {
+        "case_id": "n-reversed-window",
+        "case_sha256": "915018ba91956a6f6bd45b8ce4f32770de9cccf563e4893a37f227f80dbe0010",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "6644ea8c886cc7d70258faf5947455b38bf54739a01641e16e59c3f4ca20213e",
+        "cost_usd": 0.0003108,
+        "latency_ms": 1413,
+        "input_tokens": 508,
+        "output_tokens": 132,
+        "tool_status": "UNSAT",
+        "tool_receipt_sha256": "4a0e4d8be499eb724a931c58a9623ba78ad713720c9f0b0bcfce79bd016005f3"
+      },
+      {
+        "case_id": "n-long-interval-tail-overlap",
+        "case_sha256": "b1a9c8fc89505be18b2a72a3bd7b98d7953f2c1ab9638e02c901fe0c6485d48e",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "b2cbbebf7087b5a5aeac1109c1300081c2c47e4f3f1ff4be27382c0aca423191",
+        "cost_usd": 0.0009744,
+        "latency_ms": 4234,
+        "input_tokens": 588,
+        "output_tokens": 665,
+        "tool_status": "UNSAT",
+        "tool_receipt_sha256": "693b539f966770bd38e533c03a6e56bcf33e5fb92c7365805a65bb0cea68d8d7"
+      },
+      {
+        "case_id": "n-disjoint-writers-wrong-edge",
+        "case_sha256": "9e7b55fa6173aa4da3a03ee6287a658c89bf74153a9763b0bf56c7411f32a81c",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "8f23d6dee9af7417df7f6a9f36e72826079f608626717d3c7170a4c0b76c3ed2",
+        "cost_usd": 0.0006843,
+        "latency_ms": 2835,
+        "input_tokens": 613,
+        "output_tokens": 417,
+        "tool_status": "UNSAT",
+        "tool_receipt_sha256": "0b6d897e486ee5ddfd7f069eb976337749d7cd7c2e2cde5c23b9c0feada11109"
+      },
+      {
+        "case_id": "n-hidden-writer-fork-collision",
+        "case_sha256": "f55d2bb027d86a4260113b7a2028925f72b5a805c96d64b4038197a4ff0bd177",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "5e7c628457b7fbad1617b9e0f181f396db8f829ee9eedcfc8674c7fa9fade197",
+        "cost_usd": 0.0009465,
+        "latency_ms": 3696,
+        "input_tokens": 731,
+        "output_tokens": 606,
+        "tool_status": "UNSAT",
+        "tool_receipt_sha256": "b8b242da6e3cb807e6f68211f83c76c9349a653903e94cc2b69e8d07054afd7e"
+      }
+    ]
+  },
+  "calls": 40,
+  "g5_accepted": false
+}
