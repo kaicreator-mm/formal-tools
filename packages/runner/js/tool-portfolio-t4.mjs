@@ -88,9 +88,11 @@ async function installed(id){
   await regular(shim,true);
   await regular(contract);
   const meta=JSON.parse(await readFile(metaPath,"utf8"));
-  if(meta.id!==undefined&&meta.id!==id)throw new Error("PORTABLE_META_TOOL_ID_MISMATCH");
-  if(meta.version!==undefined&&String(meta.version)!==String(versionById.get(id)))
+  if(meta.tool_id!==id)throw new Error("PORTABLE_META_TOOL_ID_MISMATCH");
+  if(typeof meta.version!=="string"||meta.version!==String(versionById.get(id)))
     throw new Error("PORTABLE_VERSION_DRIFT_EXPECTED_"+versionById.get(id));
+  if(typeof meta.kind!=="string"||!meta.kind||meta.unavailable===true)
+    throw new Error("PORTABLE_META_KIND_OR_AVAILABILITY_INVALID");
   return {ctx,meta,meta_sha256:digest(await readFile(metaPath)),
     fixture_contract_sha256:digest(await readFile(contract))};
 }
