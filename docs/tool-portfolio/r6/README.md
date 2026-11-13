@@ -9,7 +9,7 @@ Authority and invalidation boundaries: main `12032f1d5a759dca5a1b24eedbefae2dfe0
 * Debian 13 x86_64, glibc 2.41, non-root UID 1000, tool bundle non-writable to user. Host Node 22.16.0; original supplied portable Node22 / Java21 and native ELFs; host CPython3.13 for explicitly marked alternatives. No Docker isolation.
 * The complete **main** `tool-portfolio-t4.mjs` file was copied verbatim to a temporary worktree; independently checked with `git hash-object` = **`615b55bb0f2e15a209bb13bff18094f56039bd7b3f7`**, identical to main blob. The already reconstructed PR #22 runner has Git blob `94909a645eee266549a6b17e42e5f4478d72aaee`, SHA256 `066674ca41414d1e80019218a5d20f404c0fef75785fb348fed313634720c1d3`, `runner_schema formal-tools/portable-verify/0.2`.
 * Since GitHub source archive cannot be cloned from this container (no GitHub DNS/network), the gateway's **36-row Registry and DAG runtime inputs were projected** from exact main Registry/DAG fields: `id`, `origin`, `capability_ids`, `expected_version` (original blob IDs `faa89997…`, `250b84ae…`); the original 13 native ids were projected. This is a faithful input-field test of the actual gateway module, **not a full checkout or the original CLI/MCP/SDK binaries**.
-* Six actual candidate tools, under a **separately staged** overlay with additive `err` fixtures, returned gateway `FIXTURE_TECHNICAL_PASS_UNREVIEWED`, true runner exit 0, three TSV phases `pos/neg/err`, matching technical patterns and exit contracts. Per-tool metadata/fixture and receipt SHA256 in [R6 JSON](./T4_GATEWAY_NATIVE_SCOPED.json).
+* Eight actual candidate tools, under a **separately staged** overlay with additive `err` fixtures, returned gateway `FIXTURE_TECHNICAL_PASS_UNREVIEWED`, true runner exit 0, three TSV phases `pos/neg/err`, matching technical patterns and exit contracts. Per-tool metadata/fixture and receipt SHA256 in [R6 JSON](./T4_GATEWAY_NATIVE_SCOPED.json).
 
 | Tool | Native/host execution context | pos/neg/err exits | T4 caveat |
 | --- | --- | --- | --- |
@@ -19,8 +19,10 @@ Authority and invalidation boundaries: main `12032f1d5a759dca5a1b24eedbefae2dfe0
 | Hypothesis 6.170.15 #39 | Verified Drive alternate wheelhouse, host CPython3.13 | 0/0/1 | original tool tar alone lacks `_hypothesis_globals` extension (import error); alternate source differs |
 | Mesa 3.5.2 #42 | Original Mesa payload with host numpy/pandas site packages | 0/0/1 | absent from standalone minimal CPython; not self-contained |
 | SimPy 4.1.2 #52 | Original package + host CPython3.13 | 0/0/1 | original Python runtime 294MB fetch blocked by 256MiB connector cap |
+| NetworkX 3.7 #44 | SHA-verified original tar + host CPython3.13/site packages | 0/0/1 | staged `NodeNotFound` for unknown node, not original fixture |
+| SymPy 1.14.0 #55 | SHA-verified original tar + host CPython3.13/site packages | 0/0/1 | staged `SympifyError` on malformed expression, not original fixture |
 
-Previously recorded **CBMC #30** had a complete unmodified positive/negative/error original native Runner observation, still not independently T4 accepted. Altogether, seven tools have **scoped** three-phase technical data, only one using unmodified source fixture. This is **not** seven qualified T4 tools.
+Previously recorded **CBMC #30** had a complete unmodified positive/negative/error original native Runner observation, still not independently T4 accepted. Altogether, nine tools have **scoped** three-phase technical data, only one using unmodified source fixture. This is **not** seven qualified T4 tools.
 
 ## Real fail-closed checks against exact gateway module
 
@@ -43,12 +45,14 @@ The original PR #22 Writer should add the following changes under `portable/veri
 * `mesa`: `err.py` calls `mesa.Agent('not-a-model')`; expect `AttributeError:.*register_agent`, exit 1. Repair/version-pin bundled numpy/pandas dependencies before portable T4.
 * `aflpp`: `EXPECT_ERR_ARGS='--definitely-not-an-afl-flag'`, expect `invalid option`, exit 1.
 * `elk`: `EXPECT_ERR_ARGS='-c -i tests/elk/does-not-exist.ofn -o $FT_TMP/invalid.ttl'`, expect `FileNotFoundException`, exit 1. Separately improve ontology semantic negative beyond parser rejection.
+* `networkx`: stage `err.py` with `G=nx.Graph(); G.add_edge(1,2); nx.shortest_path(G,source='missing-node',target=2)`; expect `networkx.exception.NodeNotFound:`, exit 1.
+* `sympy`: stage `err.py` with `import sympy as sp; sp.sympify('sin(')`; expect `sympy.core.sympify.SympifyError:`, exit 1.
 
 **Do not merge these local fixture edits into PR #77**: they belong to the separate PR #22 Writer and need fresh Native, CI, Source-First review at the actual changed package SHA. Reuse originals for unchanged tests. The signed input/metadata hashes for each staged fixture cannot attest independent publisher provenance.
 
 ## Qualification
 
 * Source T4 interface: merged in main; original 13 = 53 typed ops, 23 candidate bounded `doctor/verify-fixture` routes. Existing JS tests / Woodpecker separate.
-* This container: real exact gateway **module**, with projected Registry/DAG and staged fixtures, 6/6 scoped technical execution observations; **not** full original main CLI/MCP/SDK gateway replay.
+* This container: real exact gateway **module**, with projected Registry/DAG and staged fixtures, 8/8 scoped technical execution observations; **not** full original main CLI/MCP/SDK gateway replay.
 * Newly independently qualified Native T4 = **0/23**, independent semantic T5 = **0/36**, T6 remains open. Historical 19/36 original tar and 34/36 alternate-callable stats stay separate.
 * Container execution should remain preferred; external/local handoff only for unmet runtime/download/host gates (no unnecessary duplicate validation).
