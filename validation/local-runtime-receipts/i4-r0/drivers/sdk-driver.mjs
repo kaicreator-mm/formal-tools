@@ -101,12 +101,14 @@ await check("staged-z3-error-input-nonzero", async () => {
   } finally { await rm(scratch, { recursive: true, force: true }); }
 });
 
-// 4. Timeout semantics: 1s budget on a JVM model checker that cannot finish.
-await check("staged-tlc-timeout-partial", async () => {
+// 4. Timeout semantics: 1s budget on a Dafny verification that cannot finish
+//    (full verify takes tens of seconds; even JVM-based TLC can beat 1s on a
+//    small model on a fast host, so Dafny is the deterministic slow target).
+await check("staged-dafny-timeout-partial", async () => {
   const r = await invokeStagedTool({
-    tool: "tla-tlc", operation: "check", sourceRoot: ROOT,
-    inputs: ["skills/tla-tlc/examples/TogglePositive.tla", "skills/tla-tlc/examples/Toggle.cfg"],
-    settings: { input: "skills/tla-tlc/examples/TogglePositive.tla", config: "skills/tla-tlc/examples/Toggle.cfg" },
+    tool: "dafny", operation: "verify", sourceRoot: ROOT,
+    inputs: ["skills/dafny/examples/Positive.dfy"],
+    settings: { input: "skills/dafny/examples/Positive.dfy" },
     timeoutS: 1
   });
   assert(r.process.status === "TIMEOUT", "expected TIMEOUT, got " + r.process.status);
@@ -171,10 +173,13 @@ await check("deny-unstaged-shapes-option", async () => {
   return { denied: String(thrown.message) };
 });
 
-// 9. Missing engine fail-closed: without FORMAL_TOOLS_BIN_DIR, dafny is absent on PATH.
+// 9. Missing engine fail-closed: with no configured bin dir and a sanitized
+//    PATH that does not contain the engine, dafny cannot resolve at all.
 await check("missing-engine-fail-closed-not-started", async () => {
-  const saved = process.env.FORMAL_TOOLS_BIN_DIR;
+  const savedBin = process.env.FORMAL_TOOLS_BIN_DIR;
+  const savedPath = process.env.PATH;
   delete process.env.FORMAL_TOOLS_BIN_DIR;
+  process.env.PATH = "/usr/bin:/bin";
   try {
     const r = await invokeTool({
       tool: "dafny", operation: "verify",
@@ -184,7 +189,8 @@ await check("missing-engine-fail-closed-not-started", async () => {
     assert(r.tool_status === "INCONCLUSIVE", "missing engine must be INCONCLUSIVE: " + r.tool_status);
     return { status: r.process.status, error: r.process.error };
   } finally {
-    if (saved !== undefined) process.env.FORMAL_TOOLS_BIN_DIR = saved;
+    if (savedBin !== undefined) process.env.FORMAL_TOOLS_BIN_DIR = savedBin;
+    process.env.PATH = savedPath;
   }
 });
 

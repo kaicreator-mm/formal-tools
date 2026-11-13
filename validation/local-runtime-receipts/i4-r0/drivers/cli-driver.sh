@@ -79,7 +79,7 @@ run exec-apalache-check-length-init 0 $CLI exec apalache check --length 3 --init
 stage alloy
 run exec-alloy-command-flag 0 $CLI exec alloy exec --command 0 --timeout 90 --cwd "$SCRATCH/alloy" --input positive.als
 stage souffle
-run exec-souffle-run-output-dir 0 $CLI exec souffle run --output "$SCRATCH/souffle/out" --timeout 60 --cwd "$SCRATCH/souffle" --input positive.dl
+run exec-souffle-run-output-dir 0 $CLI exec souffle run --output . --timeout 60 --cwd "$SCRATCH/souffle" --input positive.dl
 stage prob
 run exec-prob-bounded-mc 0 $CLI exec prob check --bounded 5 --timeout 60 --cwd "$SCRATCH/prob" --input Positive.mch
 stage apache-jena
