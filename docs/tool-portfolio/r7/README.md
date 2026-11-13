@@ -28,15 +28,17 @@ The eight actual process observations and their previously recorded exit codes r
 
 Machine-readable source of truth: [`EXACT_PR22_NATIVE.json`](./EXACT_PR22_NATIVE.json).
 
-## Raw receipt durability — still blocked
+## Raw receipt durability — stable Drive archive SHA verified
 
-The earlier record declared `formal-tools-i24-r7-exact-pr22-native.zip` SHA256:
+The original **15,753-byte** archive `formal-tools-i24-r7-exact-pr22-native.zip` has now been retrieved from the current container (not reconstructed from index data), uploaded to the canonical Drive **App/10-formal-tools/validation/receipts**, then **read back** and checked again byte-for-byte.
 
-`d14e288853b9607aeb7bb0062a0984b68d5d2fa8a41cc3c2955c9e3c90ed7682`
+- [Authenticated, stable Drive raw receipt ZIP](https://drive.google.com/file/d/1-Kqdc_kff6DpBOWAN65nnR3cTiPp-NVc/view?usp=drivesdk) (file ID `1-Kqdc_kff6DpBOWAN65nnR3cTiPp-NVc`).
+- Archive SHA256: `d14e288853b9607aeb7bb0062a0984b68d5d2fa8a41cc3c2955c9e3c90ed7682`, **MATCH** before and after upload.
+- ZIP CRC test: PASS; 19 entries, including `SUMMARY.json`, eight Gateway stdout logs, eight empty Gateway stderr files, one initial failed SymPy stdout, and the exact-head Python replay driver. [Per-entry SHA256 and byte index](./RAW_RECEIPTS_INDEX.json).
+- **Scope:** These are the original **Gateway-level** stdout/stderr and summary, *not* the temporary underlying per-phase native child stdout/stderr files (those were removed by the Runner temp-workdir cleanup). Do not claim native child logs were preserved. The original tool exit codes, phase labels, receipt hashes and the preceding incomplete matcher issues are recorded, not fixed retroactively.
+- **Freshness:** this archive is bound to the historical source `31ef3f359996ee54b346bc2c0a1c7841fe8a4ec2`. The live source PR #22 has since advanced to `7fbe3b69114d7f34b9b0296757cdca43fde07412` with ELK/AFL/negative-script repairs; those changed assertions **require distinct new-head technical evidence and independent review**. The ZIP cannot be re-labeled as evidence for the later source head.
 
-A matching-named 15,753-byte artifact exists in the ChatGPT Library at `/fm-tools/formal-tools-i24-r7-exact-pr22-native.zip`, but its raw bytes are not retrievable from the current execution context and no stable external archive URL is available. The declared SHA256 has therefore **not** been reverified here. The archive has **not** been represented as Git-versioned.
-
-Required to close this item: provide the original ZIP bytes in the current task context or place them in the canonical Drive `validation/receipts` folder. Verify SHA256, extract the original per-case receipts/stdout/stderr, then commit those exact bytes under `docs/tool-portfolio/r7/raw-receipts/`. Missing output must not be reconstructed or invented.
+This closes the former P2 *raw archive inaccessible* issue by providing a stable pinned archive, without inventing missing underlying child logs or upgrading the two incomplete original assertions.
 
 ## CI and qualification boundary
 
