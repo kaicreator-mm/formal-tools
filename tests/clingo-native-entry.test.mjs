@@ -47,6 +47,8 @@ test("Explicit native Clingo drives doctor, fixed fixture, typed CLI and staged 
       const neg=await runFixture("clingo","negative",5);
       assert.equal(pos.test_verdict,"PASS",JSON.stringify(pos));
       assert.equal(neg.test_verdict,"PASS",JSON.stringify(neg));
+      if (!("executions" in pos) || !("executions" in neg))
+        throw new Error("real Clingo fixture did not return execution receipts");
       assert.equal(pos.executions[0].exit_code,30);
       assert.equal(neg.executions[0].exit_code,20);
       const plan=planNative("clingo","solve",{input:source,models:0});
