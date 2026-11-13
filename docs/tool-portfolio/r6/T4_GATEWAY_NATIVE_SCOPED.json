@@ -133,6 +133,42 @@
       "fixture_sha256": "3278a78e14397a60540bf80946062af935f44d1ba7278dd7ac132e07c986b5d2",
       "t4_qualified": false,
       "t5_qualified": false
+    },
+    {
+      "id": "networkx",
+      "issue": 44,
+      "version": "3.7",
+      "mode": "original networkx tar verified SHA 0f01a999... + host CPython3.13 dependencies + local err fixture",
+      "gateway_status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "gateway_process_rc": 0,
+      "runner_schema": "formal-tools/portable-verify/0.2",
+      "phase_exit_codes": {
+        "pos": 0,
+        "neg": 0,
+        "err": 1
+      },
+      "receipt_sha256": "13ed29398efe4a84069ac1bffebb996083666f4a7f5fbf8643ecf0dd4848dc3e",
+      "fixture_sha256": "aec7ff17663917d58a2bcbf4df0984b68b3ba2966809b3f03f7d2847e5d2248e",
+      "t4_qualified": false,
+      "t5_qualified": false
+    },
+    {
+      "id": "sympy",
+      "issue": 55,
+      "version": "1.14.0",
+      "mode": "original SymPy tar verified SHA 6ec71ba8... + host CPython3.13 dependencies + local err fixture",
+      "gateway_status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "gateway_process_rc": 0,
+      "runner_schema": "formal-tools/portable-verify/0.2",
+      "phase_exit_codes": {
+        "pos": 0,
+        "neg": 0,
+        "err": 1
+      },
+      "receipt_sha256": "2d0ba53f7e9a2a851181bfe1f9475f5067183ab2516e74f8b6ea0f6cbd3a8607",
+      "fixture_sha256": "c115b21f309e3a1f1edfaacacb528b2c78a7339663230a053825455c99ac2a02",
+      "t4_qualified": false,
+      "t5_qualified": false
     }
   ],
   "fail_closed": [
@@ -173,7 +209,7 @@
     "catalog_tools": 36,
     "existing_native_ref": 13,
     "candidate_routes": 23,
-    "in_container_candidate_technical_pass_local_patch": 6,
+    "in_container_candidate_technical_pass_local_patch": 8,
     "earlier_unmodified_CBMC_3phase_technical": 1,
     "independently_qualified_T4_new": 0,
     "independently_qualified_T5": 0
@@ -184,6 +220,7 @@
     "Mesa requires host numpy/pandas dependencies; SimPy host Python fallback",
     "ELK neg is parser rejection, not independent ontology inconsistency Oracle",
     "Original runner 0.2 matches SHA but full repo CLI/MCP/SDK E2E not executed in this local container",
-    "PR #77 docs-only evidence cannot approve source PR #22 or Product #11"
+    "PR #77 docs-only evidence cannot approve source PR #22 or Product #11",
+    "NetworkX and SymPy used original SHA-verified archives with host CPython3.13 site dependencies and local error fixtures; the full portable Python runtime remains unverified."
   ]
 }
