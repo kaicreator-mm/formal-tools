@@ -1,0 +1,73 @@
+{
+  "schema": "formal-tools/t07-clingo-chatgpt-native-receipt/1",
+  "generated_on": "2026-11-13",
+  "source_checkout": {
+    "sha": "625933dec9016ac10a0c113561c3e3e9d045475d",
+    "mode": "GITHUB_CONNECTOR_TEXT_SNAPSHOT",
+    "clean_git_checkout": false
+  },
+  "host": {
+    "os": "Debian 13",
+    "node": "v22.16.0",
+    "arch": "x64",
+    "uid": 65534
+  },
+  "assets": {
+    "native_binary_sha256": "d6250068a6cb2c931f952f5554f7aa3a07491975c10832b577be322f8371ad41",
+    "launcher_shim_sha256": "0082798ca3075daeeddcaf7b55162cdf7518baad8442621a38754c8d01ee287f",
+    "fixtures_sha256": {
+      "positive.lp": "cfc913da42ce5a4f5cbc342658570eeed64cddcf68e6f504918dc544608bd5b1",
+      "negative.lp": "daefe8db8080b104b3884a515fee1c988760475ba00f26ccd461ba2fd3540520"
+    }
+  },
+  "observations": {
+    "doctor": {
+      "status": "EXECUTED",
+      "exit_code": 0,
+      "stdout_sha256": "2ca35b3978fa377b4851b96928c7c2260ef1fd52ea1ed00afb89d9d6356ec9e2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "positive": {
+      "verdict": "PASS",
+      "outcome": "SATISFIABLE",
+      "exit_code": 30,
+      "stdout_sha256": "bd0d8dc4337eb1b5e49e444e646787267f6d5bcd7da1823a68b4552cc02ce2f7",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "negative": {
+      "verdict": "PASS",
+      "outcome": "UNSATISFIABLE",
+      "exit_code": 20,
+      "stdout_sha256": "16cc4e8e80573c63894b623efb23afe25fc5bbfa225c2d78aba0e3c5abd9dd14",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "sdk": {
+      "run_status": "EXECUTED",
+      "tool_outcome": "SATISFIABLE",
+      "status": "NONZERO_EXIT",
+      "exit": 30,
+      "stdout_sha": "ad024f750e693b6e6b454acaeecadd81a0325f8b39897b0e1e6f6d84595fd9a5"
+    },
+    "staged_sdk": {
+      "tool_status": "SATISFIABLE",
+      "exit": 30,
+      "status": "NONZERO_EXIT",
+      "staging": "STAGED_IN_PRIVATE_WORKSPACE",
+      "artifacts": "COMPLETE"
+    },
+    "typed": {
+      "run_status": "EXECUTED",
+      "tool_outcome": "SATISFIABLE",
+      "process": "NONZERO_EXIT",
+      "exit": 30,
+      "stdout_sha": "2406996dce7efe824fccf9af0d85d76f45a3e04423a9fdd3e0d679a77687cbee"
+    }
+  },
+  "local_receipt_sha256": "c50f4c2a1021ce7c25fa205ffc878d1923d225a9c9839b63aff393b482a0e239",
+  "limit": {
+    "mcp_stdio_native": false,
+    "independent_reviewer": false,
+    "product_semantic_oracle": false,
+    "current_clean_git_sha": false
+  }
+}
