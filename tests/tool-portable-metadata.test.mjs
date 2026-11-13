@@ -19,7 +19,7 @@ function withFixture(meta, run) {
     writeFileSync(join(dir,'meta.sh'),meta);
     return run((command,extraEnv={}) => spawnSync('bash',[join(bin,'tool-runner'),command,'highs'], {
       encoding:'utf8',timeout:5000,env:{...process.env,FT_EVIDENCE_DIR:join(root,'receipts'),...extraEnv}
-    }));
+    }), root);
   } finally {
     rmSync(root,{recursive:true,force:true});
   }
@@ -68,4 +68,35 @@ test('portable metadata: missing version or kind is rejected', () => {
       assert.match(p.stderr,/invalid tool metadata/);
     });
   }
+});
+
+test('doctor uses bundled native library directory while still failing on truly absent dependency', () => {
+  const meta = good + 'TOOL_MAIN_BIN=tools/highs/bin/highs\n';
+  withFixture(meta, (exe, root) => {
+    const lib = join(root, 'tools', 'highs', 'lib');
+    const binary = join(root, 'tools', 'highs', 'bin');
+    const mocks = join(root, 'mockbin');
+    mkdirSync(lib, {recursive:true});
+    mkdirSync(binary, {recursive:true});
+    mkdirSync(mocks, {recursive:true});
+    writeFileSync(join(binary, 'highs'), 'test-only binary placeholder');
+    const ldd = join(mocks, 'ldd');
+    writeFileSync(ldd, [
+      '#!/bin/sh',
+      'case ":${LD_LIBRARY_PATH:-}:" in',
+      '  *:"' + lib + '":*) echo "libsolver.so => ' + lib + '/libsolver.so";;',
+      '  *) echo "libsolver.so => not found";;',
+      'esac',
+      ''
+    ].join('\n'));
+    chmodSync(ldd, 0o755);
+    const env = {PATH:mocks + ':' + process.env.PATH};
+    const pass = exe('doctor',env);
+    assert.equal(pass.status,0, pass.stdout+pass.stderr);
+    assert.match(pass.stdout,/ldd: no missing libs OK/);
+    rmSync(lib,{recursive:true,force:true});
+    const fail = exe('doctor',env);
+    assert.equal(fail.status,1,fail.stdout+fail.stderr);
+    assert.match(fail.stdout,/ldd missing libs: 1 FAIL/);
+  });
 });
