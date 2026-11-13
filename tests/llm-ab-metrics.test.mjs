@@ -66,3 +66,32 @@ test("G5 fake fairness, missing cases, forged evidence and unbounded inputs fail
       {...x,case_sha256:"f".repeat(64)}:x)}}).status,"BLOCKED");
   assert.equal(scoreFrozenPairedAB("x".repeat(300000),encode(f.augmented)).status,"BLOCKED");
 });
+
+
+test("G5 rejects finite-looking per-case numeric overflow and unsafe token counters",()=>{
+ const f=fixture();
+ const massiveCost=structuredClone(f);
+ for(const row of massiveCost.augmented.observations)row.cost_usd=1e308;
+ assert.equal(score(massiveCost).status,"BLOCKED","cost Infinity aggregate prohibited");
+ const massiveLatency=structuredClone(f);
+ for(const row of massiveLatency.baseline.observations)row.latency_ms=1e308;
+ assert.equal(score(massiveLatency).status,"BLOCKED","latency Infinity aggregate prohibited");
+ const massiveTokens=structuredClone(f);
+ for(const row of massiveTokens.augmented.observations){
+   row.input_tokens=Number.MAX_SAFE_INTEGER;
+   row.output_tokens=Number.MAX_SAFE_INTEGER;
+ }
+ assert.equal(score(massiveTokens).status,"BLOCKED","unsafe token aggregation prohibited");
+ const badSeed=structuredClone(f);
+ badSeed.baseline.config={...badSeed.baseline.config,seed:Number.MAX_SAFE_INTEGER+1};
+ badSeed.augmented.config={...badSeed.augmented.config,seed:Number.MAX_SAFE_INTEGER+1};
+ assert.equal(score(badSeed).status,"BLOCKED");
+ const good=fixture();
+ good.augmented.observations[0].prediction="UNKNOWN";
+ const report=score(good);
+ assert.equal(report.status,"SCORED_UNATTESTED");
+ assert.ok(Number.isFinite(report.baseline.cost_usd));
+ assert.ok(Number.isFinite(report.augmented.latency_ms));
+ assert.equal(report.augmented.unknown,1);
+ assert.equal(report.g5_accepted,false);
+});
