@@ -18,10 +18,7 @@ Controller-run; this directory only commits the resulting evidence afterwards.
 - `RECEIPT.json` — the driver-written receipt, byte-exact as produced on the
   POSIX host. sha256
   `8a9d6e26688c5772d8bc1917fa4cd90469fa9f34e35d6bc0c482c2121311574b`.
-- `DIS_BOUNDED_DEMO_RUN.log` — byte-exact copy of the controller-captured log
-  of the real G4+G6 run (node banner, both driver exit codes, per-receipt phase
-  summaries). sha256
-  `8bdfba04d5ae00d00fe16b2accfcbdbe6ca15dd8136e7e86ab20eaccedbed125`.
+- `DIS_BOUNDED_DEMO_RUN.log` — byte-exact output of the real bounded DIS demo (`examples/dis-v020-native-sdk/bounded-engineering-demo.mjs` run at domain-harness `f21514de`, linux/x64/node), the log the receipt's `bounded_demo_log_sha256` binds: sha256 `c56f2f9398cb7daf62b0f081f708defc5ac365d32bbdc52ff3738092ea4fb4e5`; `REAL_CONSUME_DRIVER_RUN.log` — console log of the real G4+G6 lifecycle-driver run (node banner, both driver exit codes, per-receipt phase summaries): sha256 `00413bb92e4ea03fe946cded5b58ce61570d3fe92cb58392340e1940ea3854d4`.
 
 ## Outcome
 
