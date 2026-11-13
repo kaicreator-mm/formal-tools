@@ -105,3 +105,48 @@ export function whereAll(options?: Record<string, unknown>): Promise<{
 export function planTool(tool: string, operation: string, settings?: ToolSettings): ToolPlan;
 export function invokeTool(request: ToolInvokeRequest): Promise<ToolExecutionResult>;
 export function invokeStagedTool(request: StagedToolRequest): Promise<ToolExecutionResult>;
+
+/** Issue #24 T4 portfolio is discovery + fixed-fixture only, not T5 semantics. */
+export interface PortfolioTool {
+  id: string;
+  origin: "native-ref" | "candidate";
+  expected_version: string;
+  capability_ids: string[];
+  execution_adapter: string;
+  t4_status: string;
+  t5_status: string;
+}
+export interface PortfolioFixturePlan {
+  tool: string;
+  operation: "verify-fixture";
+  entry: "portable/bin/tool-runner";
+  args: string[];
+  mode: "typed";
+  scope: string;
+}
+export interface PortfolioGateReceipt {
+  schema: "formal-tools/portfolio-t4-technical/0.1";
+  tool: string;
+  operation: string;
+  status: string;
+  process?: { exit_code: number | null; signal: string | null; timed_out: boolean;
+    output_limit: boolean; elapsed_ms: number; error: string | null };
+  reason?: string;
+  runner_sha256?: string;
+  metadata_sha256?: string;
+  fixture_contract_sha256?: string;
+  streams?: { stdout: string; stderr: string; stdout_sha256: string; stderr_sha256: string };
+  cases?: { phase: string; exit_code: number; duration_ms: number;
+    semantic_pattern_matched: boolean; exit_contract_matched: boolean; label: string }[];
+  scope: string;
+}
+export function listPortfolioTools(): PortfolioTool[];
+export function describePortfolioTool(tool: string): PortfolioTool & {
+  official_url: string; operations: string[]; raw_argv_allowed: false };
+export function inspectPortfolioTool(tool: string): Promise<PortfolioTool & {
+  status: string; reason?: string; runner_sha256?: string;
+  metadata_sha256?: string; fixture_contract_sha256?: string }>;
+export function planPortfolioFixture(tool: string): PortfolioFixturePlan;
+export function runPortableGate(tool: string, options?: {
+  mode?: "verify-fixture" | "doctor"; timeoutS?: number
+}): Promise<PortfolioGateReceipt>;
