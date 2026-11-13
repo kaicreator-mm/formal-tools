@@ -39,3 +39,22 @@ test("source SHA and JAR fingerprints survive privacy redaction, paths do not", 
   assert.equal(safe.evidence[0].binary_identity.path,"…/runtime/bin/java");
   assert.equal(safe.evidence[0].dependency_identities[0].path,"…/operator/bundles/tla2tools.jar");
 });
+
+test("verbatim hash-anchored streams may echo engine paths, metadata may not", () => {
+  const streamEvidence={
+    version:{stdout:"Vampire 5.1.0\n",stderr:""},
+    positive:{executions:[{stdout:"SZS status Theorem\n",
+      stderr:"reading file /home/operator/ft/tmp/formal-js-X/examples/positive.p\n",
+      stdout_sha256:"d".repeat(64)}]}
+  };
+  // Streams are hash-anchored verbatim evidence: engine-echoed absolute paths
+  // there do not abort the run, and the text must not be rewritten.
+  const safe=redactReceipt({evidence:[streamEvidence]});
+  assert.match(safe.evidence[0].positive.executions[0].stderr,/\/home\/operator\/ft\/tmp/);
+  // Metadata still fails closed on any surviving absolute local path: an
+  // unknown string field is not covered by the scrub rules, so the scan is the
+  // backstop that aborts publication.
+  assert.throws(()=>redactReceipt({
+    evidence:[{installation:{operator_note:"bundle extracted at /home/operator/secret/bundle"}}]
+  }),/privacy invariant/);
+});

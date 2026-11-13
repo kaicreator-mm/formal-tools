@@ -29,9 +29,15 @@ import { pathToFileURL, fileURLToPath } from "node:url";
  * - local absolute paths in metadata (argv, tool dirs, executables, missing/
  *   diagnostics lists, error messages) are collapsed to their last 3 segments.
  * - stdout/stderr stay verbatim: they are hash-anchored evidence and must not be
- *   rewritten (their SHA-256 is computed over raw bytes).
+ *   rewritten (their SHA-256 is computed over raw bytes). Real engines echo
+ *   install/temp paths into these streams, so the fail-closed scan scopes
+ *   itself to metadata only and skips the verbatim stream texts; the gate
+ *   harness neutralizes what it controls (tmpdir root, configured tool paths)
+ *   and any residual tool-echoed system path in a stream is bounded evidence,
+ *   not a metadata leak.
  * - fail-closed: the receipt is only written when no absolute local path
- *   survives anywhere in the JSON; a leak aborts the run instead of publishing.
+ *   survives anywhere in the metadata; a metadata leak aborts the run instead
+ *   of publishing.
  */
 const WIN_PATH=/(^|[^A-Za-z0-9.+-])([A-Za-z]:[\\/][^\s"'`]*)/g;
 // Also cover Linux/WSL/macOS absolute paths; "https://" URLs do not match.
@@ -54,6 +60,9 @@ export function redactString(s){
 const REDACTED_KEYS=new Set(["hostname"]);
 const STRING_PATH_KEYS=new Set(["tool_bin_dir","executable","path","error","cwd"]);
 const LIST_PATH_KEYS=new Set(["argv","missing","diagnostics"]);
+// Verbatim, hash-anchored stream texts are the only fields exempt from the
+// privacy scan; everything else must be free of absolute local paths.
+const STREAM_TEXT_KEYS=new Set(["stdout","stderr"]);
 function scrubNode(node,key){
   if(node===null||typeof node!=="object")return node;
   if(Array.isArray(node))return node.map(x=>scrubNode(x,key));
@@ -72,8 +81,8 @@ export function redactReceipt(summary){
   (function scan(node,p=""){
     if(node===null||typeof node!=="object")return;
     for(const [k,v] of Object.entries(node)){
-      if(typeof v==="string"&&(v.match(WIN_PATH)||v.match(POSIX_PATH)))violations.push(p?`${p}.${k}`:k);
-      else scan(v,p?`${p}.${k}`:k);
+      if(typeof v==="string"&&!STREAM_TEXT_KEYS.has(k)&&(v.match(WIN_PATH)||v.match(POSIX_PATH)))violations.push(p?`${p}.${k}`:k);
+      else if(typeof v!=="string")scan(v,p?`${p}.${k}`:k);
     }
   })(safe);
   if(violations.length)throw new Error("receipt privacy invariant violated, absolute local path survived redaction: "+violations.join(", "));

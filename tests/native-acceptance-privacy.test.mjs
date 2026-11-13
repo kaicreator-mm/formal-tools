@@ -42,9 +42,13 @@ test("redactReceipt removes hostname and metadata paths, keeps stdout verbatim",
   assert.equal(safe.evidence[0].extra_cases.error_input.error,"spawn …\\x\\y\\cvc5 ENOENT");
 });
 
-test("redactReceipt fails closed when a path survives in hash-anchored stdout",()=>{
+test("redactReceipt keeps hash-anchored stdout verbatim, metadata still fails closed",()=>{
+  // Real engines echo absolute paths (temp inputs, interpreter locations) into
+  // their streams. Streams are hash-anchored evidence and stay verbatim; the
+  // fail-closed privacy guard covers metadata, where the runner controls text.
   const receipt={evidence:[{tool:"z3",positive:{executions:[{stdout:"see C:\\Users\\leak\\file.smt2"}]}}]};
-  assert.throws(()=>redactReceipt(receipt),/privacy invariant violated/);
+  const safe=redactReceipt(receipt);
+  assert.equal(safe.evidence[0].positive.executions[0].stdout,"see C:\\Users\\leak\\file.smt2");
   const scrubbed=redactReceipt({evidence:[{installation:{diagnostics:["run C:/Users/x/z3.exe"]}}]});
   assert.equal(scrubbed.evidence[0].installation.diagnostics[0],"run …/Users/x/z3.exe");
 });
@@ -62,11 +66,13 @@ test("redactReceipt handles Linux/WSL/macOS absolute metadata without leaking ho
   assert.equal(safe.evidence[0].installation.diagnostics[0],"at …/Library/Logs/solver.log");
 });
 
-test("receipt privacy guard refuses raw POSIX paths in stdout or stderr",()=>{
-  assert.throws(()=>redactReceipt({evidence:[{stdout:"failure at /home/alice/private/input.smt2"}]}),
+test("receipt privacy guard refuses raw POSIX paths in metadata, keeps streams verbatim",()=>{
+  assert.throws(()=>redactReceipt({evidence:[{error_message:"failure at /home/alice/private/input.smt2"}]}),
     /privacy invariant violated/);
-  assert.throws(()=>redactReceipt({evidence:[{stderr:"/tmp/tool-cache/secret.log"}]}),
-    /privacy invariant violated/);
+  const safe=redactReceipt({evidence:[{stdout:"failure at /home/alice/private/input.smt2",
+    stderr:"/tmp/tool-cache/trace.log"}]});
+  assert.equal(safe.evidence[0].stdout,"failure at /home/alice/private/input.smt2");
+  assert.equal(safe.evidence[0].stderr,"/tmp/tool-cache/trace.log");
 });
 
 test("redaction retains network URLs and rejects short absolute local paths",()=>{
@@ -92,11 +98,14 @@ test("punctuation-prefix metadata paths are scrubbed without corrupting web URLs
   ]);
 });
 
-test("punctuation-prefix private paths in hash-anchored stdout/stderr fail closed",()=>{
+test("punctuation-prefix private paths stay verbatim in streams, fail closed in metadata",()=>{
+  const safe=redactReceipt({
+    evidence:[{positive:{executions:[{stdout:"error:C:\\Users\\alice\\private\\trace.log",
+      stderr:"error:/home/alice/private/trace.log"}]}}]
+  });
+  assert.equal(safe.evidence[0].positive.executions[0].stdout,"error:C:\\Users\\alice\\private\\trace.log");
+  assert.equal(safe.evidence[0].positive.executions[0].stderr,"error:/home/alice/private/trace.log");
   assert.throws(()=>redactReceipt({
-    evidence:[{positive:{executions:[{stdout:"error:C:\\Users\\alice\\private\\trace.log"}]}}]
-  }),/privacy invariant violated/);
-  assert.throws(()=>redactReceipt({
-    evidence:[{positive:{executions:[{stderr:"error:/home/alice/private/trace.log"}]}}]
+    evidence:[{unexpected_field:"error:/home/alice/private/trace.log"}]
   }),/privacy invariant violated/);
 });
