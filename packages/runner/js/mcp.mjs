@@ -9,6 +9,7 @@ import { verifyPure } from "../../core/src/finite.mjs";
 import { knownTools, validateSource, inspectTool, doctor, runFixture } from "./native.mjs";
 import { describeNativeTool, planNative, toolIds } from "./native-catalog.mjs";
 import { inspectInstallation } from "./tool-manager.mjs";
+import { listPortfolioTools, describePortfolioTool, inspectPortfolioTool, runPortableGate } from "./tool-portfolio-t4.mjs";
 
 /** @typedef {{type:"text",text:string}} TextBlock */
 /** @type {(x:unknown)=>{content:TextBlock[]}} */
@@ -18,13 +19,17 @@ const handle=async callback=>{
   try{return txt(await callback());}
   catch(e){return {content:[{type:"text",text:JSON.stringify({status:"ERROR",message:String(e)})}],isError:true};}
 };
+const candidateId=z.string().refine(value=>listPortfolioTools().some(t=>t.id===value&&t.origin==="candidate"),
+  {message:"Unknown candidate tool or existing native tool; use the original native adapter"});
+const portfolioId=z.string().refine(value=>listPortfolioTools().some(t=>t.id===value),
+  {message:"Unknown portfolio tool"});
 const toolId=z.string().refine(value=>toolIds.includes(value),{message:"Unknown registered formal tool"});
 serveStdio(()=>{
-  const server=new McpServer({name:"formal-tools-skill",version:"0.3.0"});
+  const server=new McpServer({name:"formal-tools-skill",version:"0.4.0"});
   server.registerTool("list_formal_tools",{
-    description:"List 13 native tools, 4 pure JS model checkers and source status.",
+    description:"List original 13 native adapters, 23 candidate portfolio tools, and 4 pure JS model checkers.",
     inputSchema:z.object({})
-  },async()=>txt({native:knownTools(),pure:["dag","writers","cnf","states"]}));
+  },async()=>txt({native:knownTools(),portfolio:listPortfolioTools(),pure:["dag","writers","cnf","states"]}));
   server.registerTool("validate_formal_source",{
     description:"Validate Skill names and repository inputs; does NOT run proof engines.",
     inputSchema:z.object({})
@@ -53,6 +58,27 @@ serveStdio(()=>{
     description:"Validate native CLI option values, return planned argv; NO execution and NO raw passthrough.",
     inputSchema:z.object({tool:toolId,operation:z.string().min(1),settings:z.record(z.string(),z.union([z.string(),z.number(),z.boolean()])).default({})})
   },async({tool,operation,settings})=>handle(()=>planNative(tool,operation,settings)));
+  server.registerTool("list_portfolio_tools",{
+    description:"Read-only capability and tool metadata for all 36 tools. Never implies a T3/T4/T5 PASS.",
+    inputSchema:z.object({})
+  },async()=>txt({tools:listPortfolioTools(),status:"DISCOVERY_NOT_T4_QUALIFIED"}));
+  server.registerTool("inspect_portfolio_tool",{
+    description:"Read-only pinned portable installation metadata; no process launch.",
+    inputSchema:z.object({tool:portfolioId})
+  },async({tool})=>handle(()=>inspectPortfolioTool(tool)));
+  server.registerTool("verify_portable_fixture",{
+    description:"Run ONLY the candidate tool's committed portable pos/neg/err fixture through a SHA-pinned runner. No user input/raw argv/shell. Technical evidence only, not business verification.",
+    inputSchema:z.object({tool:candidateId,timeout_s:z.number().int().min(1).max(120).default(120)})
+  },async({tool,timeout_s})=>{
+    const response=await handle(()=>runPortableGate(tool,{mode:"verify-fixture",timeoutS:timeout_s}));
+    // A returned NOT_RUN/NOT_QUALIFIED is an MCP tool error, not a successful
+    // native execution. Keep the technical receipt itself in the content.
+    try{
+      const receipt=JSON.parse(response.content[0]?.text??"{}");
+      if(receipt.status!=="FIXTURE_TECHNICAL_PASS_UNREVIEWED")return {...response,isError:true};
+    }catch{return {...response,isError:true};}
+    return response;
+  });
   server.registerTool("verify_formal_model",{
     description:"Run real finite-model checks in pure JS: DAG, writer exclusivity, CNF or finite state.",
     inputSchema:z.object({engine:z.enum(["dag","writers","cnf","states"]),model:z.record(z.string(),z.unknown())})

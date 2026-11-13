@@ -8,6 +8,7 @@ import { knownTools, inspectTool, validateSource, doctor, runFixture, executeNat
 import { describeNativeTool, planNative, planRawNative, planNativeHelp, toolIds } from "./native-catalog.mjs";
 import { toolInfo, inspectInstallation, inspectAllInstallations } from "./tool-manager.mjs";
 import { invokeTool } from "./sdk.mjs";
+import { listPortfolioTools, describePortfolioTool, inspectPortfolioTool, runPortableGate } from "./tool-portfolio-t4.mjs";
 
 function localParams(args) {
   /** @type {{[key:string]:string|number|boolean}} */
@@ -115,6 +116,13 @@ export async function main(args=process.argv.slice(2)) {
       const entry=opts.entry??describeNativeTool(arg).entries[0];
       result=await executeNativePlan(planRawNative(arg,entry,rest.slice(split+1)),
         {allowRaw:true,cwd:optString(opts.cwd,process.cwd()),timeout:optNumber(opts.timeout,30)});
+    } else if (action==="portfolio") {
+      if(arg==="list"&&rest.length===0)result={tools:listPortfolioTools(),status:"DISCOVERY_NOT_T4_QUALIFIED"};
+      else if(arg==="describe"&&rest.length===1)result=describePortfolioTool(rest[0]);
+      else if(arg==="inspect"&&rest.length===1)result=await inspectPortfolioTool(rest[0]);
+      else if(["doctor","verify"].includes(arg)&&rest.length===1)
+        result=await runPortableGate(rest[0],{mode:arg==="doctor"?"doctor":"verify-fixture"});
+      else throw new TypeError("portfolio usage: list | describe TOOL | inspect TOOL | doctor CANDIDATE | verify CANDIDATE");
     } else if (action==="pure") {
       const path=flag(rest,"--input");
       if (!path) throw new TypeError("pure requires --input <JSON-file>");
@@ -136,6 +144,12 @@ export async function main(args=process.argv.slice(2)) {
     if(action==="doctor-all"){
       if(result.probes)return result.probes.every(x=>x.run_status==="EXECUTED")?0:2;
       return result.checks.every(x=>x.status==="FOUND_NOT_PROBED")?0:2;
+    }
+    if(action==="portfolio"){
+      if(arg==="inspect")return result.status==="FOUND_PINNED_NOT_EXECUTED"||result.status==="EXISTING_NATIVE_ADAPTER_NOT_PROBED"?0:2;
+      if(arg==="doctor")return result.status==="DOCTOR_EXECUTED_NOT_T3"?0:2;
+      if(arg==="verify")return result.status==="FIXTURE_TECHNICAL_PASS_UNREVIEWED"?0:2;
+      return 0;
     }
     if(action==="pure")return result.tool_outcome==="UNKNOWN"?2:0;
     if(action==="invoke")return result.process.status==="EXIT_ZERO"?0:2;
