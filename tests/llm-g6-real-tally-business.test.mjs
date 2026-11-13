@@ -1,5 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import {spawnSync} from "node:child_process";
+import {fileURLToPath} from "node:url";
 import {mkdtempSync,rmSync} from "node:fs";
 import {tmpdir} from "node:os";
 import {join} from "node:path";
@@ -75,3 +77,24 @@ test("G6 fail-closed real call refuses missing or malformed source head",async()
      formal_head:"ABCDEF123456789012345678901234567890ABCD"}),/exact formal-tools source HEAD/);
  }finally{rmSync(dir,{recursive:true,force:true});}
 });
+
+test("G6 real two-argument CLI executes the exact pinned Tally Function and refuses malformed invocation",
+  {skip:process.platform!=="linux"?"POSIX durable directory required":false},
+  ()=>{
+    const dir=mkdtempSync(join(tmpdir(),"ft-g6-tally-cli-"));
+    const script=fileURLToPath(new URL(
+      "../benchmarks/llm-methods/g6/real-tally-business-consumer.mjs",import.meta.url));
+    try{
+      const good=spawnSync(process.execPath,[script,dir,HEAD],
+        {encoding:"utf8",timeout:10000,maxBuffer:131072});
+      assert.equal(good.status,0,good.stderr);
+      const result=JSON.parse(good.stdout);
+      assert.equal(result.status,"PASSED_ENGINEERING_ONLY");
+      assert.equal(result.function_calls,4);
+      assert.equal(result.g6_accepted,false);
+      const bad=spawnSync(process.execPath,[script,dir],
+        {encoding:"utf8",timeout:3000,maxBuffer:8192});
+      assert.equal(bad.status,1);
+      assert.match(bad.stderr,/usage:/);
+    }finally{rmSync(dir,{recursive:true,force:true});}
+  });
