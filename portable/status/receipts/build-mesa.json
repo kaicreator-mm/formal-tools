@@ -1,0 +1,27 @@
+{
+  "tool_id": "mesa",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "3.5.2",
+  "kind": "python-lib",
+  "glibc_max": null,
+  "elf_arch": null,
+  "needed_libs": null,
+  "version_output": null,
+  "upstream": null,
+  "build_ts": "2026-11-10T22:34:37Z",
+  "log_tail": [
+    "[18:14:30] [mesa] building mesa version=runtime-resolved kind=python-lib",
+    "[18:14:31] [mesa] build OK: mesa 3.5.2 glibc_max=n/a",
+    "[18:33:23] [mesa] building mesa version=runtime-resolved kind=python-lib",
+    "[18:33:24] [mesa] build OK: mesa 3.5.2 glibc_max=n/a",
+    "[19:14:53] [mesa] building mesa version=runtime-resolved kind=python-lib",
+    "[19:21:59] [mesa] building mesa version=runtime-resolved kind=python-lib",
+    "[19:25:49] [mesa] building mesa version=runtime-resolved kind=python-lib",
+    "[22:34:36] [mesa] building mesa version=runtime-resolved kind=python-lib"
+  ],
+  "package": {
+    "path": "packages/tools/mesa-3.5.2-linux-x86_64.tar.zst",
+    "sha256": "25d2142fec782ec8bff177b7649adede0282cd48beb4495aa780be6c91925bc3"
+  }
+}

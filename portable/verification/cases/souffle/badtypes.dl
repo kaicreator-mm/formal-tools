@@ -1,0 +1,5 @@
+// Invalid datalog: relation used with undeclared attribute name — must be rejected
+.decl edge(a:number, b:number)
+edge(1,2).
+path(1,notanumber).
+.output path

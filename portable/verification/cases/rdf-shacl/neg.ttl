@@ -1,0 +1,4 @@
+@prefix ex: <http://example.org/> .
+
+ex:bob a ex:Person ;
+    ex:age "not-a-number" .   # datatype violation

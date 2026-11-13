@@ -1,0 +1,30 @@
+{
+  "tool_id": "cvc5",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "1.4.2",
+  "kind": "binary",
+  "glibc_max": null,
+  "elf_arch": "Advanced",
+  "needed_libs": null,
+  "version_output": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]\ncompiled as a unrestricted build with GCC version 11.4.0 on Oct  8 2026 01:24:07\n\nCopyright (c) 2009-2026 by the authors and their institutional\naffiliations listed at https://cvc5.github.io/people.html\n\ncvc5 is open-source and is covered by the BSD license (modified).\n\nTHIS SOFTWARE IS PROVIDED AS-IS, WITHOUT ANY WARRANTIES.\nUSE AT YOUR OWN RISK.\n\nThis vers",
+  "upstream": null,
+  "build_ts": "2026-11-10T22:26:57Z",
+  "log_tail": [
+    "[17:49:53] [cvc5] building cvc5 version=1.4.2 kind=binary",
+    "[17:49:53] [cvc5] fetch: https://github.com/cvc5/cvc5/releases/download/cvc5-1.4.2/cvc5-Linux-x86_64-static.zip",
+    "[17:50:28] [cvc5] build OK: cvc5 1.4.2 glibc_max=n/a",
+    "[18:31:14] [cvc5] building cvc5 version=1.4.2 kind=binary",
+    "[18:31:15] [cvc5] build OK: cvc5 1.4.2 glibc_max=n/a",
+    "[19:12:45] [cvc5] building cvc5 version=1.4.2 kind=binary",
+    "[19:12:46] [cvc5] build OK: cvc5 1.4.2 glibc_max=n/a",
+    "[19:15:23] [cvc5] building cvc5 version=1.4.2 kind=binary",
+    "[19:15:24] [cvc5] build OK: cvc5 1.4.2 glibc_max=n/a",
+    "[22:26:57] [cvc5] building cvc5 version=1.4.2 kind=binary",
+    "[22:26:58] [cvc5] build OK: cvc5 1.4.2 glibc_max=n/a"
+  ],
+  "package": {
+    "path": "packages/tools/cvc5-1.4.2-linux-x86_64.tar.zst",
+    "sha256": "1af0cfec8eab662d181ab76b7c7eb20167560f7e58264dfb4ce448e6e0225b4a"
+  }
+}

@@ -1,0 +1,20 @@
+# Floor constraints documented for the single resolver pass (see py-requirements.txt).
+# Lower bounds = oldest versions with confirmed CPython 3.13 manylinux wheels.
+numpy>=2.1
+scipy>=1.14.1
+pandas>=2.2.3
+networkx>=3.4
+sympy>=1.13.3
+matplotlib>=3.9.2
+scikit-learn>=1.6
+statsmodels>=0.14.4
+ortools>=9.10
+highspy>=1.8
+hypothesis>=6.112
+pyshacl>=0.28
+dowhy>=0.12
+pymc>=5.20
+causal-learn>=0.1.4
+simpy>=4.1
+mesa>=3.0
+tree-sitter>=0.24

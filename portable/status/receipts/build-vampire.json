@@ -1,0 +1,30 @@
+{
+  "tool_id": "vampire",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "5.1.0",
+  "kind": "binary",
+  "glibc_max": "2.34",
+  "elf_arch": "Advanced",
+  "needed_libs": "libstdc++.so.6,libm.so.6,libgcc_s.so.1,libc.so.6,ld-linux-x86-64.so.2",
+  "version_output": "Vampire 5.1.0 (Release build, commit 7b2f410 on 2026-08-13 10:17:34 +0200)\nCaDiCaL: cadical-2.1.3\nLinked to Z3 4.14.0.0 3c47fd96cf5645d0c42b2c819d9e9a84380aa721 NOTFOUND",
+  "upstream": null,
+  "build_ts": "2026-11-10T22:29:50Z",
+  "log_tail": [
+    "[17:57:56] [vampire] building vampire version=5.1.0 kind=binary",
+    "[17:57:56] [vampire] fetch: https://github.com/vprover/vampire/releases/download/v5.1.0/vampire-Linux-X64.zip",
+    "[18:00:02] [vampire] build OK: vampire 5.1.0 glibc_max=2.34",
+    "[18:33:03] [vampire] building vampire version=5.1.0 kind=binary",
+    "[18:33:03] [vampire] build OK: vampire 5.1.0 glibc_max=2.34",
+    "[19:14:25] [vampire] building vampire version=5.1.0 kind=binary",
+    "[19:14:25] [vampire] build OK: vampire 5.1.0 glibc_max=2.34",
+    "[19:17:21] [vampire] building vampire version=5.1.0 kind=binary",
+    "[19:17:21] [vampire] build OK: vampire 5.1.0 glibc_max=2.34",
+    "[22:29:50] [vampire] building vampire version=5.1.0 kind=binary",
+    "[22:29:50] [vampire] build OK: vampire 5.1.0 glibc_max=2.34"
+  ],
+  "package": {
+    "path": "packages/tools/vampire-5.1.0-linux-x86_64.tar.zst",
+    "sha256": "7b801bc960661c9aa049bcf2667722cc4a0ae4f804e3d008d8a7941e183b446e"
+  }
+}

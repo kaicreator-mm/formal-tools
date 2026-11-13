@@ -1,0 +1,22 @@
+{
+  "verdict": "PASS",
+  "phases": {
+    "pos": {
+      "exit": 0,
+      "duration_ms": 493,
+      "output_matched": true,
+      "exit_ok": true,
+      "label": "SOLVED"
+    },
+    "neg": {
+      "exit": 0,
+      "duration_ms": 317,
+      "output_matched": true,
+      "exit_ok": true,
+      "label": "REFUTED"
+    }
+  },
+  "skip": false,
+  "runner_schema": "formal-tools/portable-verify/0.2",
+  "tool_id": "sympy"
+}

@@ -1,0 +1,27 @@
+{
+  "tool_id": "ortools",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "9.15.6755",
+  "kind": "python-lib",
+  "glibc_max": null,
+  "elf_arch": null,
+  "needed_libs": null,
+  "version_output": null,
+  "upstream": null,
+  "build_ts": "2026-11-10T22:34:38Z",
+  "log_tail": [
+    "[18:14:27] [ortools] building ortools version=runtime-resolved kind=python-lib",
+    "[18:14:28] [ortools] build OK: ortools 9.15.6755 glibc_max=n/a",
+    "[18:33:23] [ortools] building ortools version=runtime-resolved kind=python-lib",
+    "[18:33:24] [ortools] build OK: ortools 9.15.6755 glibc_max=n/a",
+    "[19:14:54] [ortools] building ortools version=runtime-resolved kind=python-lib",
+    "[19:22:00] [ortools] building ortools version=runtime-resolved kind=python-lib",
+    "[19:25:43] [ortools] building ortools version=runtime-resolved kind=python-lib",
+    "[22:34:37] [ortools] building ortools version=runtime-resolved kind=python-lib"
+  ],
+  "package": {
+    "path": "packages/tools/ortools-9.15.6755-linux-x86_64.tar.zst",
+    "sha256": "9d6f6e787bb79502ed99218a7d66b4cdadd56bc36982e01677030bc32b39ff46"
+  }
+}

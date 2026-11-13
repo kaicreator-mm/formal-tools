@@ -1,0 +1,32 @@
+{
+  "tool_id": "tla-tlc",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "1.8.0",
+  "kind": "jar",
+  "glibc_max": null,
+  "elf_arch": null,
+  "needed_libs": null,
+  "version_output": "TLC2 Version 2026.11.06.222357 (rev: d8fb231)\nError: Error: unrecognized option: -version\nUsage: java tlc2.TLC [-help] [-option] inputfile",
+  "upstream": null,
+  "build_ts": "2026-11-10T22:29:48Z",
+  "log_tail": [
+    "[17:56:03] [tla-tlc] building tla-tlc version=1.8.0 kind=jar",
+    "[17:56:04] [tla-tlc] FATAL: cannot fetch maven-metadata.xml for tla2tools",
+    "[18:12:59] [tla-tlc] building tla-tlc version=1.8.0 kind=jar",
+    "[18:13:01] [tla-tlc] fetch: https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar",
+    "[18:13:07] [tla-tlc] build OK: tla-tlc 1.8.0 glibc_max=n/a",
+    "[18:33:00] [tla-tlc] building tla-tlc version=1.8.0 kind=jar",
+    "[18:33:01] [tla-tlc] build OK: tla-tlc 1.8.0 glibc_max=n/a",
+    "[19:14:02] [tla-tlc] building tla-tlc version=1.8.0 kind=jar",
+    "[19:14:23] [tla-tlc] build OK: tla-tlc 1.8.0 glibc_max=n/a",
+    "[19:17:18] [tla-tlc] building tla-tlc version=1.8.0 kind=jar",
+    "[19:17:20] [tla-tlc] build OK: tla-tlc 1.8.0 glibc_max=n/a",
+    "[22:29:47] [tla-tlc] building tla-tlc version=1.8.0 kind=jar",
+    "[22:29:48] [tla-tlc] build OK: tla-tlc 1.8.0 glibc_max=n/a"
+  ],
+  "package": {
+    "path": "packages/tools/tla-tlc-1.8.0-linux-x86_64.tar.zst",
+    "sha256": "7458f213af5c5d20d412532037bdbb5094367c31a55d663453e44832016b76e8"
+  }
+}

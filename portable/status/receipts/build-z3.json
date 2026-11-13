@@ -1,0 +1,30 @@
+{
+  "tool_id": "z3",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "5.4.0",
+  "kind": "binary",
+  "glibc_max": "2.38",
+  "elf_arch": "Advanced",
+  "needed_libs": "libstdc++.so.6,libm.so.6,libgcc_s.so.1,libc.so.6,ld-linux-x86-64.so.2",
+  "version_output": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f",
+  "upstream": null,
+  "build_ts": "2026-11-10T22:30:01Z",
+  "log_tail": [
+    "[17:58:48] [z3] building z3 version=5.4.0 kind=binary",
+    "[17:58:48] [z3] fetch: https://github.com/Z3Prover/z3/releases/download/z3-5.4.0/z3-5.4.0-x64-glibc-2.39.zip",
+    "[18:00:18] [z3] build OK: z3 5.4.0 glibc_max=2.38",
+    "[18:33:11] [z3] building z3 version=5.4.0 kind=binary",
+    "[18:33:12] [z3] build OK: z3 5.4.0 glibc_max=2.38",
+    "[19:14:32] [z3] building z3 version=5.4.0 kind=binary",
+    "[19:14:33] [z3] build OK: z3 5.4.0 glibc_max=2.38",
+    "[19:17:29] [z3] building z3 version=5.4.0 kind=binary",
+    "[19:17:31] [z3] build OK: z3 5.4.0 glibc_max=2.38",
+    "[22:29:59] [z3] building z3 version=5.4.0 kind=binary",
+    "[22:30:01] [z3] build OK: z3 5.4.0 glibc_max=2.38"
+  ],
+  "package": {
+    "path": "packages/tools/z3-5.4.0-linux-x86_64.tar.zst",
+    "sha256": "3782af107b66c2bf1cc20f9fb3bea9adcf2840f2eb75d81ed95e3536e1996338"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "tool_id": "pymc",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "6.4.0",
+  "kind": "python-lib",
+  "glibc_max": null,
+  "elf_arch": null,
+  "needed_libs": null,
+  "version_output": null,
+  "upstream": null,
+  "build_ts": "2026-11-10T22:34:39Z",
+  "log_tail": [
+    "[18:14:29] [pymc] building pymc version=runtime-resolved kind=python-lib",
+    "[18:14:30] [pymc] build OK: pymc 6.4.0 glibc_max=n/a",
+    "[18:33:24] [pymc] building pymc version=runtime-resolved kind=python-lib",
+    "[18:33:25] [pymc] build OK: pymc 6.4.0 glibc_max=n/a",
+    "[19:14:54] [pymc] building pymc version=runtime-resolved kind=python-lib",
+    "[19:22:00] [pymc] building pymc version=runtime-resolved kind=python-lib",
+    "[19:25:47] [pymc] building pymc version=runtime-resolved kind=python-lib",
+    "[22:34:38] [pymc] building pymc version=runtime-resolved kind=python-lib"
+  ],
+  "package": {
+    "path": "packages/tools/pymc-6.4.0-linux-x86_64.tar.zst",
+    "sha256": "6b597619c002e3051f4341123bc8b2bf05d547280840c04e5bbc5d056cd842ad"
+  }
+}

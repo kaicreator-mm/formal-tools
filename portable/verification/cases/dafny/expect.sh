@@ -1,0 +1,13 @@
+EXPECT_TIMEOUT=300
+EXPECT_POS_ARGS='verify tests/dafny/pos.dfy'
+EXPECT_POS_EXIT=0
+EXPECT_POS_REGEX='(verified, 0 errors|Dafny program verifier finished)'
+EXPECT_POS_LABEL=VERIFIED
+EXPECT_NEG_ARGS='verify tests/dafny/neg.dfy'
+EXPECT_NEG_EXIT=*
+EXPECT_NEG_REGEX='(verify error|assertion violation|related violations|error)'
+EXPECT_NEG_LABEL=VERIFICATION_ERROR
+EXPECT_ERR_ARGS='verify tests/dafny/err.dfy'
+EXPECT_ERR_EXIT='*'
+EXPECT_ERR_REGEX='(error|Error|parse)'
+EXPECT_ERR_LABEL=ERROR

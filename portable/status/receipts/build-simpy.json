@@ -1,0 +1,27 @@
+{
+  "tool_id": "simpy",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "4.1.2",
+  "kind": "python-lib",
+  "glibc_max": null,
+  "elf_arch": null,
+  "needed_libs": null,
+  "version_output": null,
+  "upstream": null,
+  "build_ts": "2026-11-10T22:34:39Z",
+  "log_tail": [
+    "[18:14:29] [simpy] building simpy version=runtime-resolved kind=python-lib",
+    "[18:14:30] [simpy] build OK: simpy 4.1.2 glibc_max=n/a",
+    "[18:33:24] [simpy] building simpy version=runtime-resolved kind=python-lib",
+    "[18:33:24] [simpy] build OK: simpy 4.1.2 glibc_max=n/a",
+    "[19:14:55] [simpy] building simpy version=runtime-resolved kind=python-lib",
+    "[19:22:02] [simpy] building simpy version=runtime-resolved kind=python-lib",
+    "[19:25:48] [simpy] building simpy version=runtime-resolved kind=python-lib",
+    "[22:34:39] [simpy] building simpy version=runtime-resolved kind=python-lib"
+  ],
+  "package": {
+    "path": "packages/tools/simpy-4.1.2-linux-x86_64.tar.zst",
+    "sha256": "0f5812201d7d9fd1c407315cb207a0fdfb5334110a0105b10d048f8c19448b12"
+  }
+}

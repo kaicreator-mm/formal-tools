@@ -1,0 +1,35 @@
+{
+  "tool_id": "prism",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "4.11",
+  "kind": "bundle",
+  "glibc_max": null,
+  "elf_arch": null,
+  "needed_libs": null,
+  "version_output": "Error: Could not find or load main class prism.PrismCL\nCaused by: java.lang.ClassNotFoundException: prism.PrismCL",
+  "upstream": null,
+  "build_ts": "2026-11-10T22:28:37Z",
+  "log_tail": [
+    "[17:53:35] [prism] building prism version=4.11 kind=bundle",
+    "[17:53:35] [prism] fetch: https://github.com/prismmodelchecker/prism/releases/download/v4.11/prism-4.11-linux64-x86.tar.gz",
+    "[17:53:56] [prism] prism tarball ships no JRE — wrapper will use bundled java21",
+    "[17:53:56] [prism] build OK: prism 4.11 glibc_max=n/a",
+    "[18:31:52] [prism] building prism version=4.11 kind=bundle",
+    "[18:31:52] [prism] prism tarball ships no JRE — wrapper will use bundled java21",
+    "[18:31:53] [prism] build OK: prism 4.11 glibc_max=n/a",
+    "[19:13:24] [prism] building prism version=4.11 kind=bundle",
+    "[19:13:24] [prism] prism tarball ships no JRE — wrapper will use bundled java21",
+    "[19:13:25] [prism] build OK: prism 4.11 glibc_max=n/a",
+    "[19:16:04] [prism] building prism version=4.11 kind=bundle",
+    "[19:16:05] [prism] prism tarball ships no JRE — wrapper will use bundled java21",
+    "[19:16:05] [prism] build OK: prism 4.11 glibc_max=n/a",
+    "[22:28:36] [prism] building prism version=4.11 kind=bundle",
+    "[22:28:37] [prism] prism tarball ships no JRE — wrapper will use bundled java21",
+    "[22:28:37] [prism] build OK: prism 4.11 glibc_max=n/a"
+  ],
+  "package": {
+    "path": "packages/tools/prism-4.11-linux-x86_64.tar.zst",
+    "sha256": "1ef94ae99ca282e1f6e565ce0139f5e5eaf22adaba5eb738d5404352e198f3d4"
+  }
+}

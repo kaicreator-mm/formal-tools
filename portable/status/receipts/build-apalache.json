@@ -1,0 +1,26 @@
+{
+  "tool_id": "apalache",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "0.63.0",
+  "kind": "java-bundle",
+  "glibc_max": null,
+  "elf_arch": null,
+  "needed_libs": null,
+  "version_output": "\u001b[4mUsage\u001b[24m\n\n \u001b[1mapalache-mc\u001b[22m \u001b[33m[options]\u001b[39m \u001b[1mcommand\u001b[22m \u001b[33m[command options]\u001b[39m\n\n\u001b[4mOptions\u001b[24m\n\n   \u001b[33m--config-file\u001b[39m        : strict JSON configuration to read. Overrides local .apalache.json files, default: none (overrides envvar CONFIG_FILE)\n   \u001b[33m--debug\u001b[39m              : extensive logging in detailed.log and log.smt, default: false\n   \u001b[33m--features\u001b[39m   ",
+  "upstream": null,
+  "build_ts": "2026-11-10T22:26:56Z",
+  "log_tail": [
+    "[17:48:01] [apalache] building apalache version=0.63.0 kind=java-bundle",
+    "[17:48:01] [apalache] fetch: https://github.com/apalache-mc/apalache/releases/download/v0.63.0/apalache-0.63.0.zip",
+    "[17:49:04] [apalache] build OK: apalache 0.63.0 glibc_max=n/a",
+    "[18:31:10] [apalache] building apalache version=0.63.0 kind=java-bundle",
+    "[18:31:13] [apalache] build OK: apalache 0.63.0 glibc_max=n/a",
+    "[19:12:41] [apalache] building apalache version=0.63.0 kind=java-bundle",
+    "[19:12:45] [apalache] build OK: apalache 0.63.0 glibc_max=n/a",
+    "[19:15:19] [apalache] building apalache version=0.63.0 kind=java-bundle",
+    "[19:15:22] [apalache] build OK: apalache 0.63.0 glibc_max=n/a",
+    "[22:26:52] [apalache] building apalache version=0.63.0 kind=java-bundle",
+    "[22:26:56] [apalache] build OK: apalache 0.63.0 glibc_max=n/a"
+  ]
+}

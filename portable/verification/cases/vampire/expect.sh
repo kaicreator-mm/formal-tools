@@ -1,0 +1,13 @@
+EXPECT_TIMEOUT=120
+EXPECT_POS_ARGS='tests/vampire/pos.p --time_limit 10'
+EXPECT_POS_EXIT=0
+EXPECT_POS_REGEX='Refutation found'
+EXPECT_POS_LABEL=PROVED
+EXPECT_NEG_ARGS='tests/vampire/neg.p --time_limit 10'
+EXPECT_NEG_EXIT=*
+EXPECT_NEG_REGEX='(Saturation|saturation|Terminated by)'
+EXPECT_NEG_LABEL=NOT_PROVED
+EXPECT_ERR_ARGS='tests/vampire/err.p --time_limit 10'
+EXPECT_ERR_EXIT='*'
+EXPECT_ERR_REGEX='(error|Error|Syntax|unexpected)'
+EXPECT_ERR_LABEL=ERROR

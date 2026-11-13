@@ -1,0 +1,34 @@
+{
+  "tool_id": "dafny",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "4.11.0",
+  "kind": "bundle",
+  "glibc_max": "2.16",
+  "elf_arch": "Advanced",
+  "needed_libs": "libpthread.so.0,libdl.so.2,libstdc++.so.6,libm.so.6,libgcc_s.so.1,libc.so.6",
+  "version_output": "Process terminated. Couldn't find a valid ICU package installed on the system. Please install libicu (or icu-libs) using your package manager and try again. Alternatively you can set the configuration flag System.Globalization.Invariant to true if you want to run with no globalization support. Please see https://aka.ms/dotnet-missing-libicu for more information.\n   at System.Environment.FailFast(S",
+  "upstream": null,
+  "build_ts": "2026-11-10T22:27:00Z",
+  "log_tail": [
+    "[17:50:21] [dafny] building dafny version=4.11.0 kind=bundle",
+    "[17:50:21] [dafny] fetch: https://github.com/dafny-lang/dafny/releases/download/v4.11.0/dafny-4.11.0-x64-ubuntu-22.04.zip",
+    "[17:50:49] [dafny] dafny needs a .NET runtime — shipping dotnet8 runtime",
+    "[17:50:49] [dafny] fetch: https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.21/dotnet-runtime-8.0.21-linux-x64.tar.gz",
+    "[17:51:02] [dafny] FATAL: dotnet8 runtime broken",
+    "[18:12:52] [dafny] building dafny version=4.11.0 kind=bundle",
+    "[18:12:54] [dafny] build OK: dafny 4.11.0 glibc_max=2.16",
+    "[18:31:15] [dafny] building dafny version=4.11.0 kind=bundle",
+    "[18:31:17] [dafny] build OK: dafny 4.11.0 glibc_max=2.16",
+    "[19:12:47] [dafny] building dafny version=4.11.0 kind=bundle",
+    "[19:12:49] [dafny] build OK: dafny 4.11.0 glibc_max=2.16",
+    "[19:15:24] [dafny] building dafny version=4.11.0 kind=bundle",
+    "[19:15:27] [dafny] build OK: dafny 4.11.0 glibc_max=2.16",
+    "[22:26:58] [dafny] building dafny version=4.11.0 kind=bundle",
+    "[22:27:00] [dafny] build OK: dafny 4.11.0 glibc_max=2.16"
+  ],
+  "package": {
+    "path": "packages/tools/dafny-4.11.0-linux-x86_64.tar.zst",
+    "sha256": "0558ca31b7fbd085fbff732303c063ff8f37464bc0347c10d24da5549fdc672f"
+  }
+}

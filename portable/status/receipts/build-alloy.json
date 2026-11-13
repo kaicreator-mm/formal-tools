@@ -1,0 +1,43 @@
+{
+  "tool_id": "alloy",
+  "status": "SUCCESS",
+  "failure_reason": null,
+  "version": "6.2.0",
+  "kind": "java-bundle",
+  "glibc_max": null,
+  "elf_arch": null,
+  "needed_libs": null,
+  "version_output": "usage: AlloyRunner <file.als>",
+  "upstream": null,
+  "build_ts": "2026-11-10T22:26:51Z",
+  "log_tail": [
+    "[17:47:52] [alloy] building alloy version=6.2.0 kind=java-bundle",
+    "[17:47:52] [alloy] fetch: https://github.com/AlloyTools/org.alloytools.alloy/releases/download/v6.2.0/org.alloytools.alloy.dist.jar",
+    "[17:48:01] [alloy] FATAL: AlloyRunner compile failed (check Alloy API surface)",
+    "[18:12:52] [alloy] building alloy version=6.2.0 kind=java-bundle",
+    "/src/builders/java-src/AlloyRunner.java:23: error: cannot find symbol",
+    "        opt.solver = A4Options.SatSolver.SAT4J;",
+    "                              ^",
+    "  symbol:   variable SatSolver",
+    "  location: class A4Options",
+    "/src/builders/java-src/AlloyRunner.java:24: error: incompatible types: ConstList<Command> cannot be converted to Command[]",
+    "        Command[] cmds = world.getAllCommands();",
+    "                                             ^",
+    "2 errors",
+    "[18:12:53] [alloy] FATAL: AlloyRunner compile failed (check Alloy API surface in /out/logs/alloy.build.log)",
+    "[18:22:30] [alloy] building alloy version=6.2.0 kind=java-bundle",
+    "[18:22:31] [alloy] build OK: alloy 6.2.0 glibc_max=n/a",
+    "[18:31:09] [alloy] building alloy version=6.2.0 kind=java-bundle",
+    "[18:31:10] [alloy] build OK: alloy 6.2.0 glibc_max=n/a",
+    "[19:12:40] [alloy] building alloy version=6.2.0 kind=java-bundle",
+    "[19:12:41] [alloy] build OK: alloy 6.2.0 glibc_max=n/a",
+    "[19:15:18] [alloy] building alloy version=6.2.0 kind=java-bundle",
+    "[19:15:19] [alloy] build OK: alloy 6.2.0 glibc_max=n/a",
+    "[22:26:51] [alloy] building alloy version=6.2.0 kind=java-bundle",
+    "[22:26:51] [alloy] build OK: alloy 6.2.0 glibc_max=n/a"
+  ],
+  "package": {
+    "path": "packages/tools/alloy-6.2.0-linux-x86_64.tar.zst",
+    "sha256": "1eafafe7e1198a7c8133c89b2b1608324b59e6cdff7377a399e0198db1d29810"
+  }
+}

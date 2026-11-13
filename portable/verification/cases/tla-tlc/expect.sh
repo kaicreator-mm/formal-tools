@@ -1,0 +1,11 @@
+EXPECT_TIMEOUT=300
+EXPECT_SETUP_VIA=sh
+EXPECT_SETUP_ARGS='cp $BUNDLE/tests/tla-tlc/pos.tla $FT_TMP/pos.tla; cp $BUNDLE/tests/tla-tlc/pos.cfg $FT_TMP/pos.cfg; cp $BUNDLE/tests/tla-tlc/neg.tla $FT_TMP/neg.tla; cp $BUNDLE/tests/tla-tlc/neg.cfg $FT_TMP/neg.cfg'
+EXPECT_POS_ARGS='$FT_TMP/pos.tla -config $FT_TMP/pos.cfg'
+EXPECT_POS_EXIT=0
+EXPECT_POS_REGEX='Model checking completed'
+EXPECT_POS_LABEL=PROPERTY_HOLDS
+EXPECT_NEG_ARGS='$FT_TMP/neg.tla -config $FT_TMP/neg.cfg'
+EXPECT_NEG_EXIT=*
+EXPECT_NEG_REGEX='Invariant BadInv is violated'
+EXPECT_NEG_LABEL=COUNTEREXAMPLE
