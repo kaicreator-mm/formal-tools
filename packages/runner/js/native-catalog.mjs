@@ -261,6 +261,14 @@ export function planToolProbe(tool,env={}) {
     } else if(env[runtime.binEnv]){
       launcher="alloy-bin";argv=[String(env[runtime.binEnv]),...runtime.probeArgs];
     } else missing.push(runtime.jarEnv+" or "+runtime.binEnv);
+  } else if(tool==="clingo"&&runtime.kind==="python-module"&&env.FORMAL_CLINGO_BIN){
+    // Optional trusted-host direct executable; the canonical Debian13 archive
+    // contains a native clingo 5.8.3 binary, not a Python importable module.
+    const bin=String(env.FORMAL_CLINGO_BIN);
+    if(!(/^(?:\/|[A-Za-z]:[\\\\/])/.test(bin))||bin.includes("\\0"))
+      throw new TypeError("FORMAL_CLINGO_BIN must be an absolute, NUL-free executable path");
+    launcher="clingo-bin";
+    argv=[bin,...runtime.probeArgs];
   } else if(runtime.kind==="python-module"){
     argv=[String(env[runtime.pythonEnv]||runtime.command),"-m",runtime.module,...runtime.probeArgs];
   } else {
@@ -270,6 +278,6 @@ export function planToolProbe(tool,env={}) {
     tool,launcher,status:missing.length?"NEEDS_CONFIGURATION":"PLANNED",
     ...(missing.length?{missing}:{}),argv:argv??null,requiredFiles,
     envHints:[...new Set([...(runtime.jarEnv?[runtime.jarEnv]:[]),...(runtime.binEnv?[runtime.binEnv]:[]),
-      ...(runtime.pythonEnv?[runtime.pythonEnv]:[]),"FORMAL_TOOLS_BIN_DIR"])]
+      ...(runtime.pythonEnv?[runtime.pythonEnv]:[]),...(tool==="clingo"?["FORMAL_CLINGO_BIN"]:[]),"FORMAL_TOOLS_BIN_DIR"])]
   };
 }
