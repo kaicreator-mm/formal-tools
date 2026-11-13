@@ -38,7 +38,9 @@ export async function loadPinnedTallyBusiness(){
  const bytes=readFileSync(SNAPSHOT);
  assert(bytes.length>0&&bytes.length<=131072,"unbounded business source");
  assert(gitBlob(bytes)===G6_TALLY_SOURCE.git_blob,"TALLY_BUSINESS_SOURCE_DRIFT");
- const module=await import(SNAPSHOT.href);
+ // Execute precisely the already-verified immutable Buffer; a pathname URL can
+ // be replaced between read/import or resolve to an older cached module.
+ const module=await import("data:text/javascript;base64,"+bytes.toString("base64"));
  assert(typeof module.assessTaskEvidence==="function","TALLY_BUSINESS_EXPORT_MISSING");
  return {invoke:module.assessTaskEvidence,blob:G6_TALLY_SOURCE.git_blob,
   source_sha256:createHash("sha256").update(bytes).digest("hex")};
