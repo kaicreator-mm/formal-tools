@@ -14,3 +14,11 @@ The metrics report preserves accuracy over all cases and classified cases, false
 4. Declare G5 qualified only if the protocol, raw traces and applicable Oracle/Tool claims are accepted; `SCORED_UNATTESTED` is not G5 PASS. No expansion of #24/#4; no reopening #7/#14.
 
 `tests/llm-ab-metrics.test.mjs` is a **synthetic** regression of metric math and fail-closed input/fairness validation, not a real LLM experiment.
+
+## Independent review R1 numeric integrity repairs
+
+P1-G5-01: all six per-case USD costs and latency measurements must be finite and nonnegative; now additionally bounded to USD 1,000,000 / case and 3,600,000 milliseconds / case. Sum totals and A/B deltas are tested for `Number.isFinite` and unbounded values fail closed as BLOCKED (never JSON `Infinity → null`). These caps prevent overflow without implying that actual experiments should consume such a budget.
+
+P2-G5-02: token counters are restricted to exact nonnegative integers with a per-case ceiling of 1,000,000,000. Aggregated input/output token totals must be `Number.isSafeInteger`; unsafe totals are blocked rather than silently rounded. Model seed also requires a safe integer. Focused regressions cover six `1e308` values, unsafe large token counters, invalid seed and an ordinary matched positive + semantic abstention path.
+
+No observed cost/latency/token measurements have been supplied from real LLM APIs; the new checks only validate declared record shapes and fail closed. The Source/Oracle remains synthetic, and `g5_accepted=false` regardless of arithmetic acceptance.
