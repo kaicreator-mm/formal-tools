@@ -63,7 +63,7 @@ function exactSubject(subject,candidate,current){
  * root set is **NOT a trusted policy input**: this function can only return
  * CRYPTOGRAPHICALLY_BOUND_UNQUALIFIED. Used by adversarial tests and by the
  * production wrapper *after* reading its own registered anchors.
- * @param {{candidate:any,current_provenance:any,bundle:any,roots:any,now_ms:number}} args
+ * @param {{candidate?:any,current_provenance?:any,bundle?:any,roots?:any,now_ms?:number}} [args]
  * @returns {any}
  */
 export function inspectWitnessCrypto({candidate,current_provenance,bundle,roots,now_ms}={}){
