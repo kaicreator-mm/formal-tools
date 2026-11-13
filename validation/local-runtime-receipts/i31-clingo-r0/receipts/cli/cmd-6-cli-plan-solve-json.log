@@ -1,0 +1,12 @@
+{
+  "tool": "clingo",
+  "operation": "solve-json",
+  "entry": "clingo",
+  "args": [
+    "--outf=2",
+    "--models=0",
+    "skills/clingo/examples/positive.lp"
+  ],
+  "mode": "typed",
+  "runtime": "NOT_RUN"
+}

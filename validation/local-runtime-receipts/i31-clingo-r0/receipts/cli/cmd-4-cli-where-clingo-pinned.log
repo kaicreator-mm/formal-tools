@@ -1,0 +1,13 @@
+{
+  "tool": "clingo",
+  "status": "FOUND_NOT_PROBED",
+  "launcher": "clingo-bin",
+  "executable": "/opt/formal-tools-portable-debian13-x86_64/tools/clingo/bin/clingo",
+  "argv": [
+    "/opt/formal-tools-portable-debian13-x86_64/tools/clingo/bin/clingo",
+    "--version"
+  ],
+  "diagnostics": [],
+  "probe_status": "NOT_RUN",
+  "searched": 1
+}

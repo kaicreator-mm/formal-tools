@@ -1,0 +1,11 @@
+== i31 clingo identity ==
+v22.16.0
+git_head=eb7e669e5a0a05b9123a99dd5748dd1d96b551e8
+git=UNAVAILABLE_IN_CONTAINER (authoritative checkout identity: host-identity.txt)
+umask=0022
+uid=1000(cc) gid=1000(cc) groups=1000(cc)
+FORMAL_CLINGO_BIN=/opt/formal-tools-portable-debian13-x86_64/tools/clingo/bin/clingo
+d6250068a6cb2c931f952f5554f7aa3a07491975c10832b577be322f8371ad41  /opt/formal-tools-portable-debian13-x86_64/tools/clingo/bin/clingo
+clingo version 5.8.3
+LD_LIBRARY_PATH=/opt/formal-tools-portable-debian13-x86_64/tools/clingo/lib
+pinned_file=OK_REGULAR_EXECUTABLE

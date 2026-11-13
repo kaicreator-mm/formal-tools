@@ -1,0 +1,87 @@
+{
+  "id": "clingo",
+  "title": "Clingo ASP",
+  "entries": [
+    "clingo"
+  ],
+  "operations": {
+    "solve": {
+      "entry": "clingo",
+      "required": [
+        "input"
+      ],
+      "options": {
+        "models": {
+          "type": "integer",
+          "values": null,
+          "min": 0,
+          "max": 1000000
+        },
+        "format": {
+          "type": "enum",
+          "values": [
+            "0",
+            "1",
+            "2",
+            "3"
+          ],
+          "min": null,
+          "max": null
+        },
+        "opt": {
+          "type": "enum",
+          "values": [
+            "opt",
+            "enum",
+            "optN",
+            "ignore"
+          ],
+          "min": null,
+          "max": null
+        },
+        "time": {
+          "type": "integer",
+          "values": null,
+          "min": 1,
+          "max": 120000
+        }
+      }
+    },
+    "ground": {
+      "entry": "clingo",
+      "required": [
+        "input"
+      ],
+      "options": {}
+    },
+    "solve-json": {
+      "entry": "clingo",
+      "required": [
+        "input"
+      ],
+      "options": {
+        "models": {
+          "type": "integer",
+          "values": null,
+          "min": 0,
+          "max": 1000000
+        }
+      }
+    }
+  },
+  "documentation": "https://potassco.org/clingo/",
+  "coverage": "typed operations plus trusted-local upstream argument pass-through; runtime depends on installed release",
+  "runtime": {
+    "kind": "python-module",
+    "command": "python3",
+    "module": "clingo",
+    "pythonEnv": "FORMAL_CLINGO_PYTHON",
+    "binEnv": "FORMAL_CLINGO_BIN",
+    "binProbeArgs": [
+      "--version"
+    ],
+    "probeArgs": [
+      "--help"
+    ]
+  }
+}

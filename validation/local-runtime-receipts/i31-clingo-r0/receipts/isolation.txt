@@ -1,0 +1,4 @@
+container_debian=13.7
+container_uid=1000
+bundle_write_denied=yes
+canonical_clingo_sha=d6250068a6cb2c931f952f5554f7aa3a07491975c10832b577be322f8371ad41

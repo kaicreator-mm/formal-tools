@@ -1,0 +1,23 @@
+{"event":"request","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"i31-clingo-mcp-gate-driver","version":"1.0.0"}}}
+{"event":"notification","method":"notifications/initialized"}
+{"event":"check","name":"mcp-initialize-handshake","verdict":"PASS","started":"2026-11-13T16:29:18.219Z","detail":{"serverInfo":{"name":"formal-tools-skill","version":"0.4.0"},"protocolVersion":"2025-06-18"}}
+{"event":"request","id":2,"method":"tools/list","params":{}}
+{"event":"check","name":"mcp-tools-list-twelve-registered-no-raw-surface","verdict":"PASS","started":"2026-11-13T16:29:18.362Z","detail":{"count":12,"tools":["describe_native_cli","inspect_formal_tool","inspect_native_installation","inspect_portfolio_tool","list_formal_tools","list_portfolio_tools","plan_native_cli","probe_formal_tool","run_formal_fixture","validate_formal_source","verify_formal_model","verify_portable_fixture"]}}
+{"event":"request","id":3,"method":"tools/call","params":{"name":"list_formal_tools","arguments":{}}}
+{"event":"check","name":"mcp-list-formal-tools-catalog","verdict":"PASS","started":"2026-11-13T16:29:18.372Z","detail":{"native":13,"pure":4}}
+{"event":"request","id":4,"method":"tools/call","params":{"name":"probe_formal_tool","arguments":{"tool":"clingo","timeout_s":20}}}
+{"event":"check","name":"mcp-probe-installed-clingo-pinned","verdict":"PASS","started":"2026-11-13T16:29:18.376Z","detail":{"exit_code":0,"stdout_head":"clingo version 5.8.3\nAddress model: 64-bit\n\nlibclingo versio"}}
+{"event":"request","id":5,"method":"tools/call","params":{"name":"run_formal_fixture","arguments":{"tool":"clingo","case":"positive","timeout_s":45}}}
+{"event":"check","name":"mcp-run-clingo-positive-satisfiable","verdict":"PASS","started":"2026-11-13T16:29:18.384Z","detail":{"tool_outcome":"SATISFIABLE","test_verdict":"PASS","inputs":["negative.lp","positive.lp"]}}
+{"event":"request","id":6,"method":"tools/call","params":{"name":"run_formal_fixture","arguments":{"tool":"clingo","case":"negative","timeout_s":45}}}
+{"event":"check","name":"mcp-run-clingo-negative-unsat","verdict":"PASS","started":"2026-11-13T16:29:18.395Z","detail":{"tool_outcome":"UNSATISFIABLE","test_verdict":"PASS"}}
+{"event":"request","id":7,"method":"tools/call","params":{"name":"plan_native_cli","arguments":{"tool":"clingo","operation":"solve","settings":{"input":"x.lp","models":0}}}}
+{"event":"request","id":8,"method":"tools/call","params":{"name":"plan_native_cli","arguments":{"tool":"clingo","operation":"no_such_operation","settings":{}}}}
+{"event":"request","id":9,"method":"tools/call","params":{"name":"plan_native_cli","arguments":{"tool":"clingo","operation":"solve","settings":{"input":"x.lp","opt":"shell"}}}}
+{"event":"check","name":"mcp-plan-native-cli-clingo-valid-and-invalid","verdict":"PASS","started":"2026-11-13T16:29:18.402Z","detail":{"valid_plan_args":["--models=0","x.lp"],"op_denied":true,"enum_denied":true}}
+{"event":"request","id":10,"method":"tools/call","params":{"name":"inspect_native_installation","arguments":{"tool":"clingo"}}}
+{"event":"check","name":"mcp-inspect-native-installation-clingo-pinned","verdict":"PASS","started":"2026-11-13T16:29:18.405Z","detail":{"launcher":"clingo-bin","status":"FOUND_NOT_PROBED"}}
+{"event":"request","id":11,"method":"tools/call","params":{"name":"probe_formal_tool","arguments":{"tool":"no_such_engine","timeout_s":5}}}
+{"event":"check","name":"mcp-unknown-tool-id-denied","verdict":"PASS","started":"2026-11-13T16:29:18.407Z","detail":{"denied":true}}
+{"event":"server_shutdown","exit":{"code":0,"signal":null},"graceful":true}
+{"event":"driver_done","out":"/work/receipts/mcp","serverInfo":{"name":"formal-tools-skill","version":"0.4.0"},"protocolVersion":"2025-06-18"}

@@ -1,0 +1,23 @@
+{
+  "native_tools": [
+    "lean4",
+    "z3",
+    "cvc5",
+    "tla-tlc",
+    "apalache",
+    "alloy",
+    "souffle",
+    "rdf-shacl",
+    "vampire",
+    "clingo",
+    "apache-jena",
+    "prob",
+    "dafny"
+  ],
+  "pure_engines": [
+    "dag",
+    "writers",
+    "cnf",
+    "states"
+  ]
+}

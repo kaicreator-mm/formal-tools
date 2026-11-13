@@ -1,0 +1,32 @@
+{
+  "tool": "clingo",
+  "case": "negative",
+  "run_status": "EXECUTED",
+  "tool_outcome": "UNSATISFIABLE",
+  "test_verdict": "PASS",
+  "claim_verdict": "NOT_EVALUATED",
+  "input_sha256": {
+    "negative.lp": "daefe8db8080b104b3884a515fee1c988760475ba00f26ccd461ba2fd3540520",
+    "positive.lp": "cfc913da42ce5a4f5cbc342658570eeed64cddcf68e6f504918dc544608bd5b1"
+  },
+  "executions": [
+    {
+      "argv": [
+        "/opt/formal-tools-portable-debian13-x86_64/tools/clingo/bin/clingo",
+        "/tmp/formal-js-1iP9q8/examples/negative.lp",
+        "0"
+      ],
+      "exit_code": 20,
+      "signal": null,
+      "elapsed_ms": 5,
+      "timed_out": false,
+      "stdout": "clingo version 5.8.3\nReading from .../formal-js-1iP9q8/examples/negative.lp\nSolving...\nUNSATISFIABLE\n\nModels       : 0\nCalls        : 1\nTime         : 0.000s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)\nCPU Time     : 0.000s\n",
+      "stderr": "",
+      "stdout_sha256": "87fe84a2ded0c30ec56cd324e24bf3edd502416691fe8e7376693e33df78cb96",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null,
+      "output_truncated": false
+    }
+  ],
+  "scope": "committed fixture only; not a proof of a project requirement"
+}

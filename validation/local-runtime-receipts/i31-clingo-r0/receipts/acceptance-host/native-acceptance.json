@@ -1,0 +1,141 @@
+{
+  "schema": "formal-native-local-acceptance/1.3",
+  "written_at": "2026-11-13T16:29:18.599Z",
+  "source_identity": {
+    "status": "CLEAN",
+    "head_sha": "eb7e669e5a0a05b9123a99dd5748dd1d96b551e8"
+  },
+  "host_identity": {
+    "hostname": "REDACTED",
+    "platform": "linux",
+    "release": "7.0.0-43-generic",
+    "arch": "x64",
+    "node": "v22.16.0",
+    "cpu": "Genuine Intel(R) 0000 @ 1.80GHz",
+    "tool_bin_dir": "(unset; PATH search)"
+  },
+  "tool_runtime": "ACTUAL_HOST_ATTEMPT",
+  "tool_count": 1,
+  "candidate": 1,
+  "blocked": 0,
+  "evidence": [
+    {
+      "tool": "clingo",
+      "version": {
+        "tool": "clingo",
+        "run_status": "EXECUTED",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "…/clingo/bin/clingo",
+          "--version"
+        ],
+        "exit_code": 0,
+        "signal": null,
+        "elapsed_ms": 5,
+        "timed_out": false,
+        "stdout": "clingo version 5.8.3\nAddress model: 64-bit\n\nlibclingo version 5.8.3\nConfiguration: with Python 3.13.5, without Lua\n\nlibclasp version 3.4.2 (libpotassco version 1.2.0)\nConfiguration: WITH_THREADS=1\nCopyright (C) Benjamin Kaufmann\n\nLicense: The MIT License <https://opensource.org/licenses/MIT>\n",
+        "stderr": "",
+        "stdout_sha256": "157d33c9d9e2a568a3ddedab2a69dbfdf1f66821e52c8f5b8013acc61782dcb8",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null,
+        "output_truncated": false
+      },
+      "installation": {
+        "tool": "clingo",
+        "status": "FOUND_NOT_PROBED",
+        "launcher": "clingo-bin",
+        "executable": "…/clingo/bin/clingo",
+        "argv": [
+          "…/clingo/bin/clingo",
+          "--version"
+        ],
+        "diagnostics": [],
+        "probe_status": "NOT_RUN",
+        "searched": 1
+      },
+      "binary_identity": {
+        "path": "…/clingo/bin/clingo",
+        "sha256": "d6250068a6cb2c931f952f5554f7aa3a07491975c10832b577be322f8371ad41",
+        "bytes": 385144,
+        "mtime": "2026-11-10T22:28:35.652Z",
+        "provenance": "file inherited from local host; upstream signature/supply-chain audit NOT performed"
+      },
+      "dependency_identities": [
+        {
+          "path": "…/clingo/bin/clingo",
+          "sha256": "d6250068a6cb2c931f952f5554f7aa3a07491975c10832b577be322f8371ad41",
+          "bytes": 385144,
+          "mtime": "2026-11-10T22:28:35.652Z",
+          "provenance": "file inherited from local host; upstream signature/supply-chain audit NOT performed"
+        }
+      ],
+      "positive": {
+        "tool": "clingo",
+        "case": "positive",
+        "run_status": "EXECUTED",
+        "tool_outcome": "SATISFIABLE",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.lp": "daefe8db8080b104b3884a515fee1c988760475ba00f26ccd461ba2fd3540520",
+          "positive.lp": "cfc913da42ce5a4f5cbc342658570eeed64cddcf68e6f504918dc544608bd5b1"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/clingo/bin/clingo",
+              "…/formal-js-phfHLv/examples/positive.lp",
+              "0"
+            ],
+            "exit_code": 30,
+            "signal": null,
+            "elapsed_ms": 3,
+            "timed_out": false,
+            "stdout": "clingo version 5.8.3\nReading from .../formal-js-phfHLv/examples/positive.lp\nSolving...\nAnswer: 1 (Time: 0.000s)\nchoose(b)\nAnswer: 2 (Time: 0.000s)\nchoose(a)\nSATISFIABLE\n\nModels       : 2\nCalls        : 1\nTime         : 0.000s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)\nCPU Time     : 0.000s\n",
+            "stderr": "",
+            "stdout_sha256": "6f52b41790c96b2618166b18bb18dfe94bc2e325f60049bd0ebfcc5301bfa50f",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "clingo",
+        "case": "negative",
+        "run_status": "EXECUTED",
+        "tool_outcome": "UNSATISFIABLE",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.lp": "daefe8db8080b104b3884a515fee1c988760475ba00f26ccd461ba2fd3540520",
+          "positive.lp": "cfc913da42ce5a4f5cbc342658570eeed64cddcf68e6f504918dc544608bd5b1"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/clingo/bin/clingo",
+              "…/formal-js-D8hxz6/examples/negative.lp",
+              "0"
+            ],
+            "exit_code": 20,
+            "signal": null,
+            "elapsed_ms": 3,
+            "timed_out": false,
+            "stdout": "clingo version 5.8.3\nReading from .../formal-js-D8hxz6/examples/negative.lp\nSolving...\nUNSATISFIABLE\n\nModels       : 0\nCalls        : 1\nTime         : 0.000s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)\nCPU Time     : 0.000s\n",
+            "stderr": "",
+            "stdout_sha256": "2cedf0267e19f21b578f09f03fb4df98b314a6af01f7eba9a3b63abfaed9ed03",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "extra_cases": "NOT_RUN",
+      "acceptance": "CANDIDATE_FOR_REVIEW"
+    }
+  ],
+  "warning": "CANDIDATE_FOR_REVIEW requires exact SHA/version and independent CLI semantics review; this script does not claim project-level proof."
+}

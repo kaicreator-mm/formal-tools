@@ -1,0 +1,10 @@
+{
+  "tool": "clingo",
+  "operation": "solve",
+  "entry": "clingo",
+  "args": [
+    "skills/clingo/examples/positive.lp"
+  ],
+  "mode": "typed",
+  "runtime": "NOT_RUN"
+}
