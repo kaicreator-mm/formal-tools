@@ -145,10 +145,14 @@ expect_in_file cli-invoke-true-exit-20 '"exit_code": 20' "$INVOKE_LOG"
 expect_in_file cli-invoke-unsatisfiable '"tool_status": "UNSATISFIABLE"' "$INVOKE_LOG"
 
 # ---- fail-closed error paths (expected exit 2) --------------------------------
+# Each case names the exact validation path it exercises (required --input must
+# be present so the planner reaches the option validators, not the required-
+# input check). Verified locally: "invalid enum opt" / "invalid number for
+# models" / "invalid number for time".
 run err-unknown-operation 2 $CLI exec clingo no_such_operation --input positive.lp
-run err-invalid-enum-optmode 2 $CLI plan clingo solve --opt-mode shell
-run err-range-models-negative 2 $CLI plan clingo solve --models -3
-run err-range-timelimit-zero 2 $CLI plan clingo solve --time-limit 0
+run err-invalid-enum-opt 2 $CLI plan clingo solve --opt shell --input positive.lp
+run err-range-models-negative 2 $CLI plan clingo solve --models -3 --input positive.lp
+run err-range-timelimit-zero 2 $CLI plan clingo solve --time 0 --input positive.lp
 run err-unknown-tool 2 $CLI doctor no_such_tool
 run err-pinned-missing 2 env -u FORMAL_CLINGO_BIN FORMAL_CLINGO_BIN=/nonexistent/clingo $CLI where clingo
 
