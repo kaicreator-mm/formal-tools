@@ -13,7 +13,7 @@ import {join,resolve} from "node:path";
 import {createHash} from "node:crypto";
 import {fileURLToPath} from "node:url";
 import {hardABManifest,scoreHardPairedAB} from "./score-ab.mjs";
-import {readHardCases,buildHardNativeWorklist} from "./hard-oracle.mjs";
+import {readHardCases,buildHardNativeWorklist,inspectSchedulingSemantics} from "./hard-oracle.mjs";
 import {MODEL,ENDPOINT,KEY_ENV,CONFIG,costUsd,
   renderPrompt,toolEvidence,callModel,parseVerdict}
   from "./real-paired-run.mjs";
@@ -55,8 +55,23 @@ export function bindHardNativePair(z3,cvc5){
        toolId+" incorrect source, native exit or worklist order at "+i);
    }
  }
- for(let i=0;i<20;i++)assert(z3.observations[i].status===cvc5.observations[i].status,
-   "Z3/cvc5 disagree on hard-r1 case "+i);
+ // Agreement of two solvers on the SAME wrong SMT encoding is not a
+ // source/semantic check. Independently interpret original R1/R2/R3 task
+ // facts, before handing any SAT/UNSAT status to the LLM+Tools arm. This
+ // is a deterministic algorithmic safeguard, NOT professional Product Oracle.
+ const original=readHardCases();
+ assert(original.source_sha256===list.source_sha256&&original.cases.length===20,
+   "frozen original hard-r1 semantics changed");
+ for(let i=0;i<20;i++){
+   const caseInput=original.cases[i];
+   assert(caseInput.id===list.entries[i].case_id,
+     "frozen source case order changed before native semantic verification");
+   const expected=inspectSchedulingSemantics(caseInput)==="PASS"?"SAT":"UNSAT";
+   assert(z3.observations[i].status===cvc5.observations[i].status,
+     "Z3/cvc5 disagree on hard-r1 case "+caseInput.id);
+   assert(z3.observations[i].status===expected,
+     "G5 hard-r1 source semantics disagree with both native outputs: "+caseInput.id);
+ }
  return list.entries.map((entry,i)=>({
    ...entry,tool_status:z3.observations[i].status,
    tool_receipt_sha256:digest(JSON.stringify({
