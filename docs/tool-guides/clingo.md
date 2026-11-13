@@ -45,3 +45,30 @@ node packages/runner/js/cli.mjs native clingo -- --help
 如果该工具有多个入口，请根据 `catalog` 返回的 `entries` 用 `--entry <name>` 指定；特定版本可能使用 `-h`、`help` 或特殊命令（以 `native-help` 为准）。安全的常用功能通过 `plan <tool> <operation> --input ...` 生成 argv，确认后执行 `exec`。
 
 每个工具的已命名操作、参数类型、官方引用和版本未验证状态见 [CLI 覆盖矩阵](../NATIVE_CLI_COVERAGE.md)。`native` 是可信本地 CLI 能力，不开放给 MCP 的 raw execution。真实运行与正反例结果仍须由本地验收收据确认。
+
+
+## Portable Debian 13 direct-native host override (Clingo 5.8.3)
+
+The canonical Drive `clingo-5.8.3-linux-x86_64.tar.zst` package contains
+a native `tools/clingo/bin/clingo` executable and its shared libraries,
+but not necessarily the importable `clingo` Python module.
+
+On a **trusted local host**, set `FORMAL_CLINGO_BIN` to an **absolute path**
+to the verified native executable (or its already-reviewed fixed shim). If
+using the binary directly, supply its canonical `lib/` folder through
+`LD_LIBRARY_PATH` for this isolated process environment. The binary and
+archive SHA-256, version, library/runtime identity and clean Git source SHA
+must be recorded in the acceptance receipt.
+
+With `FORMAL_CLINGO_BIN` unset, the historical
+`FORMAL_CLINGO_PYTHON` / `python3 -m clingo` path remains unchanged.
+Never infer a Python wheel from a native executable. The host may choose
+a pinned per-version executable, not an arbitrary MCP command.
+
+Complete two-model positive fixture enumeration can return **exit 30**
+(`SATISFIABLE` and two Answer entries). The UNSAT fixture normally returns
+20; parser errors may return 65. These are *actual process exit codes*
+that must not be rewritten to zero. Fixture-specific interpretation accepts
+exit 30 only with the expected SAT/two-model output. SDK still records
+`NONZERO_EXIT` as the raw process status with a separate technical
+`SATISFIABLE` tool outcome; no business-claim proof is implied.
