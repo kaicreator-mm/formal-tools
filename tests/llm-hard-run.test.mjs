@@ -67,7 +67,7 @@ test("G5 hard-r1 40 injected fake model calls only exercise scorer plumbing",asy
    const fetchImpl=async()=>{
      called++;
      return {status:200,text:async()=>JSON.stringify({
-       model:"test-only-not-a-real-endpoint",
+       model:"deepseek-flash",
        choices:[{finish_reason:"stop",message:{content:"VERDICT: UNKNOWN"}}],
        usage:{prompt_tokens:50,completion_tokens:10}
      })};
@@ -84,5 +84,24 @@ test("G5 hard-r1 40 injected fake model calls only exercise scorer plumbing",asy
    assert.equal(m.baseline.unknown,20);
    assert.equal(m.augmented.unknown,20);
    assert.equal(m.g5_accepted,false);
+ }finally{rmSync(dir,{recursive:true,force:true});}
+});
+
+test("G5 hard-r1 aborts if server serves the wrong model despite requested model match",async()=>{
+ const dir=mkdtempSync(join(tmpdir(),"g5-hard-served-model-"));
+ try{
+   let called=0;
+   const forged=async()=>{
+     called++;
+     return {status:200,text:async()=>JSON.stringify({
+       model:"unexpected-routed-model",
+       choices:[{finish_reason:"stop",message:{content:"VERDICT: PASS"}}],
+       usage:{prompt_tokens:30,completion_tokens:8}
+     })};
+   };
+   await assert.rejects(()=>runHardArms(prepareHardAB(mockNative("z3"),
+     mockNative("cvc5")),{outDir:dir,
+       env:{DEEPSEEK_API_KEY:"test-only-not-a-secret"},fetchImpl:forged}),/served model/);
+   assert.equal(called,1,"model-routed mismatch must abort first result");
  }finally{rmSync(dir,{recursive:true,force:true});}
 });
