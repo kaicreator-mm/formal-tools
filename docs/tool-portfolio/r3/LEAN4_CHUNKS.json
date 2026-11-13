@@ -1,0 +1,60 @@
+{
+  "schema": "formal-tools/lean4-split-transport/1.0",
+  "created_utc": "2026-11-13",
+  "tool_id": "FT-T17",
+  "issue": 41,
+  "portfolio_issue": 24,
+  "product_issue": 11,
+  "root_source_folder": "https://drive.google.com/drive/folders/1rIJ315fjiXtJEPk9mjXP2Kzty4V3n3nZ",
+  "original_archive_name": "lean4-4.35.0-linux-x86_64.tar.zst",
+  "original_archive_source_id": "1rPqRGojAUT5aiTnzvYDRNui6fxeMq_J0",
+  "original_archive_size_bytes": 567187865,
+  "original_archive_sha256": "671b172f8dacc4a7fd405852a2286e7657ec8c4414d301a73ece6f98f39bde62",
+  "sha256_provenance": "App/packages/SHA256SUMS recorded original full-archive hash; NOT a separate publisher signature",
+  "original_manifest_file_id": "1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1",
+  "parts": [
+    {
+      "part_index": 0,
+      "file_name": "lean4-4.35.0-linux-x86_64.tar.zst.part-00",
+      "drive_file_id": "1zlRToYmGjCSLKkiw8wCHE823wCAEGn4y",
+      "expected_size_bytes": 134217728,
+      "sha256": "UNKNOWN_UNTIL_STREAM_VERIFIED"
+    },
+    {
+      "part_index": 1,
+      "file_name": "lean4-4.35.0-linux-x86_64.tar.zst.part-01",
+      "drive_file_id": "1ZWTKJroti6P7fvPow93cHJ_N3e_85zq3",
+      "expected_size_bytes": 134217728,
+      "sha256": "UNKNOWN_UNTIL_STREAM_VERIFIED"
+    },
+    {
+      "part_index": 2,
+      "file_name": "lean4-4.35.0-linux-x86_64.tar.zst.part-02",
+      "drive_file_id": "1denol1UHvyNOfHWAHHQxfKs6JCsWnjr5",
+      "expected_size_bytes": 134217728,
+      "sha256": "UNKNOWN_UNTIL_STREAM_VERIFIED"
+    },
+    {
+      "part_index": 3,
+      "file_name": "lean4-4.35.0-linux-x86_64.tar.zst.part-03",
+      "drive_file_id": "1730NHV9vjtPsLMts5pt1XrjtUlxAYHix",
+      "expected_size_bytes": 134217728,
+      "sha256": "UNKNOWN_UNTIL_STREAM_VERIFIED"
+    },
+    {
+      "part_index": 4,
+      "file_name": "lean4-4.35.0-linux-x86_64.tar.zst.part-04",
+      "drive_file_id": "1XSqZj4uwZH915rU5m57JECGwXakuf7E_",
+      "expected_size_bytes": 30316953,
+      "sha256": "UNKNOWN_UNTIL_STREAM_VERIFIED"
+    }
+  ],
+  "transport_status": "FIVE_PARTS_FOUND_AND_STREAM_FETCH_ACCEPTED_UNVERIFIED_BYTES",
+  "reassembled_sha256_status": "NOT_RUN_EXECUTION_SERVICE_CLIENTERROR",
+  "zstd_test_status": "NOT_RUN",
+  "security_tar_preflight_status": "NOT_RUN",
+  "isolated_doctor_status": "NOT_RUN",
+  "original_tool_runner_verify_status": "NOT_RUN",
+  "source_repo_pr22_exact_head_at_inventory": "15aad39c23a6218c4adc0e07e5891e893f9b1d03",
+  "acceptance_rule": "Only after SHA256 of reconstructed exact 567187865 bytes equals source SHA256, zstd integrity, tar security preflight, safe unpack, bounded positive/negative/invalid independent native tool-runner fixture may status advance; no blanket business G3 pass."
+}
