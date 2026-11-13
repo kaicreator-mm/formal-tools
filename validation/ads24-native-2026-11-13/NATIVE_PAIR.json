@@ -3,7 +3,7 @@
   "observed_at": "2026-11-13",
   "repository": "kaicreator-mm/formal-tools",
   "issue": 11,
-  "source_fixture_git_blob": "33952ec8f460f022e750f91543c7dafbae35c9e2e",
+  "source_fixture_git_blob": "33952ec8f460f022e750f91543c7dafbae35c9e2",
   "source_generator_git_blob": "ce3a2dc2dde0ce7805c610e1caf4dfa524904e2e",
   "source_generation": "Python port of frozen source; exact 24 input hashes must match original JS generator under CI",
   "host": {
