@@ -51,6 +51,29 @@ test("Python modules require real probe after interpreter discovery",async()=>{
   assert.deepEqual(result.argv,["/opt/venv/bin/python3","-m","clingo","--help"]);
   assert.ok(result.diagnostics.some(x=>x.includes("Python module")));
 });
+test("pinned clingo binary is explicit; FORMAL_TOOLS_BIN_DIR cannot shadow it",async()=>{
+  const env={PATH:"/usr/bin",FORMAL_TOOLS_BIN_DIR:"/opt/formal",FORMAL_CLINGO_BIN:"/opt/clingo/bin/clingo"};
+  const plan=environmentSearchPlan("clingo",{env});
+  assert.equal(plan.kind,"clingo-bin");
+  // Exactly one candidate: the pinned path itself, never bin-dir or PATH.
+  assert.deepEqual(plan.candidates,["/opt/clingo/bin/clingo"]);
+  const found=await inspectInstallation("clingo",{env,exists:async p=>p==="/opt/clingo/bin/clingo"});
+  assert.equal(found.status,"FOUND_NOT_PROBED");
+  assert.equal(found.launcher,"clingo-bin");
+  assert.equal(found.executable,"/opt/clingo/bin/clingo");
+  assert.deepEqual(found.argv,["/opt/clingo/bin/clingo","--version"]);
+  assert.ok(!found.diagnostics.some(x=>x.includes("Python module")));
+});
+test("missing pinned clingo binary fails closed without PATH substitution",async()=>{
+  const env={PATH:"/usr/bin",FORMAL_CLINGO_BIN:"/missing/clingo"};
+  const result=await inspectInstallation("clingo",{env,exists:async()=>false});
+  // The pinned path is fingerprinted as a required file: absence is reported
+  // as a missing dependency, never downgraded into a PATH re-search.
+  assert.equal(result.status,"MISSING_DEPENDENCY_FILE");
+  assert.equal(result.launcher,"clingo-bin");
+  assert.deepEqual(result.missing,["/missing/clingo"]);
+  assert.equal(result.probe_status,"NOT_RUN");
+});
 test("A configured but missing JAR does not yield FOUND",async()=>{
   const env={TLA2TOOLS_JAR:"/missing.jar",PATH:"/usr/bin"};
   const result=await inspectInstallation("tla-tlc",{env,exists:async p=>p==="/usr/bin/java"});

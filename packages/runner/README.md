@@ -9,7 +9,7 @@ All active CLI and MCP code is **JavaScript ESM**. No Python invocation or depen
 
 Run `node packages/runner/js/cli.mjs validate` without `npm install`. Install MCP SDK separately using `npm install`, then run `node packages/runner/js/mcp.mjs` on a capable host. A new ChatGPT conversation cannot call an unconnected MCP server.
 
-Native environment variables: `FORMAL_TOOLS_BIN_DIR`, `FORMAL_CLINGO_PYTHON`, `FORMAL_PYSHACL_PYTHON`, `TLA2TOOLS_JAR`, `FORMAL_ALLOY_JAR`. The *orchestrator* uses no Python; the **upstream pySHACL and Clingo themselves are Python-based programs**, so native calls may invoke their Python interpreter. These are optional depending on which native solver is requested.
+Native environment variables: `FORMAL_TOOLS_BIN_DIR`, `FORMAL_CLINGO_PYTHON`, `FORMAL_PYSHACL_PYTHON`, `TLA2TOOLS_JAR`, `FORMAL_ALLOY_JAR`, `FORMAL_ALLOY_BIN`, `FORMAL_CLINGO_BIN`. Clingo supports two launchers picked only by explicit configuration: the Python module via `FORMAL_CLINGO_PYTHON` (default), or an exact-path pinned official native `clingo` executable via `FORMAL_CLINGO_BIN` (sole candidate: no PATH lookup, never shadowed by `FORMAL_TOOLS_BIN_DIR`). The *orchestrator* uses no Python; the **upstream pySHACL and Clingo themselves are Python-based programs**, so native calls may invoke their Python interpreter. These are optional depending on which native solver is requested.
 
 Execution gates:
 - Pure JS: finite algorithms can execute within a restricted JavaScript evaluator.
