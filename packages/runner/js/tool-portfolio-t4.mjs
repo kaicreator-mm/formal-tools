@@ -11,7 +11,7 @@ import { readFileSync } from "node:fs";
 import { readFile, lstat, mkdtemp, rm } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
-import { join, resolve } from "node:path";
+import { join, resolve, isAbsolute } from "node:path";
 import { tmpdir } from "node:os";
 import { toolIds } from "./native-catalog.mjs";
 
@@ -62,7 +62,7 @@ function context(){
   const expected=process.env.FORMAL_PORTABLE_RUNNER_SHA256;
   if(process.platform!=="linux"||process.arch!=="x64")
     throw new Error("PORTABLE_HOST_UNSUPPORTED: Debian/Linux x86_64 only");
-  if(typeof root!=="string"||!root||!resolve(root).startsWith("/"))
+  if(typeof root!=="string"||!root||!isAbsolute(root))
     throw new Error("PORTABLE_ROOT_NOT_CONFIGURED");
   if(typeof expected!=="string"||!shaPattern.test(expected))
     throw new Error("PORTABLE_RUNNER_DIGEST_NOT_PINNED");
@@ -176,12 +176,14 @@ export async function runPortableGate(id,{mode="verify-fixture",timeoutS=120}={}
     const argv=[x.ctx.runner,mode==="doctor"?"doctor":"verify",id];
     const p=await capture(argv,{...process.env,FORMAL_PORTABLE_ROOT:x.ctx.root,
       FT_EVIDENCE_DIR:tmp},timeoutS);
-    let cases=[],error=null;
+    let cases=[],error=null,receiptSha256=null;
     if(mode==="verify-fixture"&&!p.timed_out&&!p.output_limit&&p.exit_code===0&&!p.error){
       try{
         const file=join(tmp,"verify-"+id+".tsv");
         await regular(file);
-        cases=parseReceipt(id,await readFile(file,"utf8"));
+        const tsv=await readFile(file,"utf8");
+        cases=parseReceipt(id,tsv);
+        receiptSha256=digest(Buffer.from(tsv));
       }catch(e){error=String(e);}
     }
     const complete=mode==="verify-fixture"&&p.exit_code===0&&!p.timed_out&&
@@ -194,6 +196,7 @@ export async function runPortableGate(id,{mode="verify-fixture",timeoutS=120}={}
         output_limit:p.output_limit,elapsed_ms:p.elapsed_ms,error:p.error??error},
       runner_sha256:x.ctx.expected,metadata_sha256:x.meta_sha256,
       fixture_contract_sha256:x.fixture_contract_sha256,
+      receipt_sha256:receiptSha256,
       streams:{stdout:p.stdout,stderr:p.stderr,
         stdout_sha256:p.stdout_sha256,stderr_sha256:p.stderr_sha256},
       cases,scope:"T4_TECHNICAL_ONLY_T3_NATIVE_REVIEW_AND_T5_SEMANTICS_NOT_EVALUATED"};
