@@ -1,0 +1,141 @@
+{
+  "schema": "formal-tools/g6-real-consume-propagation/0.1",
+  "issue": 11,
+  "driver": "benchmarks/llm-methods/g6/real-consume-propagation.mjs",
+  "started_at": "2026-11-13T14:55:05.776Z",
+  "finished_at": "2026-11-13T14:55:05.826Z",
+  "node": "v24.22.3",
+  "platform": "linux/x64",
+  "store_dir": "g6-store",
+  "candidate_sha256": "ba06f7e0ebc3ba7d39e4f9adf07561cb9ed2f1304c960e6090d4a64d06746aed",
+  "fixture_sha256": "46447f8ad807fef1551da6ba7ca08fcfc310a20fc3d7a7e526f3dcd1f92de50b",
+  "nat_pair_sha256": "174c3f54fde02850251f17a2093a26597fb00f81b08628bf54de6bd7ebc8005b",
+  "oracle_content_sha256": "460c8a42332bcd7bc0f239a64d183499074ce719e703fcb57265a97c84c275e6",
+  "model_sha256": "10bbc29ecb1eba218e15f05647d8ec4811309e7edf8d4edd721a6a80b2860970",
+  "dis_reference": {
+    "repository": "kaicreator-mm/domain-harness",
+    "pr": 1497,
+    "source_head": "f21514deb0a4b5b4b2d6e3dae2cd5e8ec2f71120",
+    "example_path": "examples/dis-v020-native-sdk/bounded-engineering-demo.mjs",
+    "example_blob": "e44e2be5b66ad9e6b8961c4ec2cfdedadc0467c9",
+    "target": "linux/x64/node",
+    "contract": "dis.v0.2"
+  },
+  "real_dis_host_context": {
+    "bounded_demo_log_sha256": "c56f2f9398cb7daf62b0f081f708defc5ac365d32bbdc52ff3738092ea4fb4e5",
+    "bounded_demo_target": "linux/x64/node",
+    "source_head": "f21514deb0a4b5b4b2d6e3dae2cd5e8ec2f71120",
+    "example_blob": "e44e2be5b66ad9e6b8961c4ec2cfdedadc0467c9",
+    "kdp_receipt": "engineering-only KDP_RECEIPT authority=KDP admitted, effectExecutionProven=false"
+  },
+  "g6_accepted": false,
+  "claim_result": "UNVERIFIED",
+  "phases": [
+    {
+      "phase": "seal+persist",
+      "at": "2026-11-13T14:55:05.811Z",
+      "ok": true,
+      "actual": {
+        "status": "CANDIDATE_PERSISTED",
+        "claim_result": "UNVERIFIED",
+        "replay_allowed": false,
+        "solution_promotable": false,
+        "candidate_sha256": "ba06f7e0ebc3ba7d39e4f9adf07561cb9ed2f1304c960e6090d4a64d06746aed",
+        "record_write": "NEW"
+      }
+    },
+    {
+      "phase": "consumer-preflight-pre-revoke",
+      "at": "2026-11-13T14:55:05.811Z",
+      "ok": true,
+      "actual": {
+        "schema": "formal-tools/dis-v020-preflight/0.1",
+        "status": "REPLAY_BLOCKED_UNQUALIFIED",
+        "reason": "SOURCE_MODEL_ORACLE_HOST_TOOL_NOT_QUALIFIED",
+        "candidate_sha256": "c8857e281ff5dcf26a1336a1f24f576efacb9cb23be5c2699d3b7e397fa1e6bd",
+        "provenance_sha256": "d56a79cdc21e8f6803711ce77dd69e06a6d90605aea8da93ad287cc6c5484f13",
+        "consumer": {
+          "repository": "kaicreator-mm/domain-harness",
+          "pr": 1497,
+          "source_head": "f21514deb0a4b5b4b2d6e3dae2cd5e8ec2f71120",
+          "example_path": "examples/dis-v020-native-sdk/bounded-engineering-demo.mjs",
+          "example_blob": "e44e2be5b66ad9e6b8961c4ec2cfdedadc0467c9",
+          "target": "linux/x64/node",
+          "contract": "dis.v0.2"
+        },
+        "kind": "UNKNOWN",
+        "authority": "NONE",
+        "evidence": {
+          "attested": false,
+          "independent_oracle": false,
+          "dis_host_executed": false,
+          "source_authority": "NOT_ADMITTED"
+        },
+        "claim_result": "UNVERIFIED",
+        "replay_allowed": false,
+        "solution_promotable": false,
+        "effect_dispatched": false,
+        "host_invocations": 0,
+        "g6_accepted": false
+      }
+    },
+    {
+      "phase": "revoke",
+      "at": "2026-11-13T14:55:05.825Z",
+      "ok": true,
+      "actual": {
+        "status": "INVALIDATED",
+        "claim_result": "UNVERIFIED",
+        "replay_allowed": false,
+        "solution_promotable": false,
+        "reason": "OPERATOR_REVOKED",
+        "record_write": "NEW"
+      }
+    },
+    {
+      "phase": "consumer-reinspect-post-revoke",
+      "at": "2026-11-13T14:55:05.826Z",
+      "ok": true,
+      "actual": {
+        "store_inspect": {
+          "status": "INVALIDATED",
+          "claim_result": "UNVERIFIED",
+          "replay_allowed": false,
+          "solution_promotable": false,
+          "reason": "EXPLICIT_REVOCATION"
+        },
+        "consumer_envelope": {
+          "schema": "formal-tools/dis-v020-preflight/0.1",
+          "status": "REPLAY_BLOCKED_UNQUALIFIED",
+          "reason": "SOURCE_MODEL_ORACLE_HOST_TOOL_NOT_QUALIFIED",
+          "candidate_sha256": "c8857e281ff5dcf26a1336a1f24f576efacb9cb23be5c2699d3b7e397fa1e6bd",
+          "provenance_sha256": "d56a79cdc21e8f6803711ce77dd69e06a6d90605aea8da93ad287cc6c5484f13",
+          "consumer": {
+            "repository": "kaicreator-mm/domain-harness",
+            "pr": 1497,
+            "source_head": "f21514deb0a4b5b4b2d6e3dae2cd5e8ec2f71120",
+            "example_path": "examples/dis-v020-native-sdk/bounded-engineering-demo.mjs",
+            "example_blob": "e44e2be5b66ad9e6b8961c4ec2cfdedadc0467c9",
+            "target": "linux/x64/node",
+            "contract": "dis.v0.2"
+          },
+          "kind": "UNKNOWN",
+          "authority": "NONE",
+          "evidence": {
+            "attested": false,
+            "independent_oracle": false,
+            "dis_host_executed": false,
+            "source_authority": "NOT_ADMITTED"
+          },
+          "claim_result": "UNVERIFIED",
+          "replay_allowed": false,
+          "solution_promotable": false,
+          "effect_dispatched": false,
+          "host_invocations": 0,
+          "g6_accepted": false
+        }
+      }
+    }
+  ],
+  "run_status": "PASSED_ENGINEERING_ONLY"
+}

@@ -1,0 +1,6 @@
+Using Node v24.22.3
+G4_EXIT=0
+G6_EXIT=0
+=== receipts ===
+G4: PASSED_ENGINEERING_ONLY phases: ['persist/ok', 're-persist/ok', 'inspect/ok', 'drift/ok', 'revoke/ok', 'inspect-after-revoke/ok', 'no-resurrection/ok'] reusable: False
+G6: PASSED_ENGINEERING_ONLY phases: ['seal+persist/ok', 'consumer-preflight-pre-revoke/ok', 'revoke/ok', 'consumer-reinspect-post-revoke/ok'] accepted: False
