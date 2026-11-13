@@ -1,0 +1,558 @@
+{
+  "schema": "formal-tools/t4-interface-snapshot/0.1",
+  "portfolio_issue": 24,
+  "product_issue": 11,
+  "legacy_runtime_issue": 4,
+  "baseline_main_sha": "10eed03c09376b2d963e1bd3b41a0eefb02ef6a9",
+  "source_pr22": {
+    "number": 22,
+    "expected_head": "15aad39c23a6218c4adc0e07e5891e893f9b1d03",
+    "state": "OPEN_SEPARATE_WRITER",
+    "portable_native_fresh_qualification": "NOT_ESTABLISHED"
+  },
+  "source_registry": "registry/PROBLEM_CAPABILITIES.json",
+  "source_t0_t6": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+  "source_t3": "docs/tool-portfolio/r2/ASSET_LANES.json",
+  "source_code": "packages/runner/js/tool-portfolio-t4.mjs",
+  "counts": {
+    "all": 36,
+    "existing_native_adapters": 13,
+    "existing_typed_operations": 53,
+    "candidate_tools": 23,
+    "candidate_interface_implemented": 23,
+    "candidate_portable_fixture_route_implemented": 23,
+    "scoped_native_original_tar_receipts": 19,
+    "scoped_callable_including_alternates": 34,
+    "new_native_t4_qualified": 0,
+    "full_t5_semantic_qualified": 0
+  },
+  "truth_rule": "Gateway code+synthetic tests are not a native proof; independent T3/T4/T5 qualification requires actual SHA-pinned host/native/semantic receipts.",
+  "candidate_operations": [
+    "doctor",
+    "verify-fixture"
+  ],
+  "candidate_fixture_cases": [
+    "pos",
+    "neg",
+    "err"
+  ],
+  "mcp_boundary": "Fixed registered tool IDs, bounded timing, no shell/raw argv or arbitrary user-selected script/model path.",
+  "run_prerequisites": [
+    "Linux x86_64",
+    "FORMAL_PORTABLE_ROOT absolute and installed tool bundle",
+    "FORMAL_PORTABLE_RUNNER_SHA256 supplied from independently checked source",
+    "tool meta.json, run shim and versioned expect.sh"
+  ],
+  "tools": [
+    {
+      "id": "aflpp",
+      "issue": 25,
+      "expected_version": "5.03c",
+      "origin": "candidate",
+      "capability_ids": [
+        "test.fuzz"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "alloy",
+      "issue": 26,
+      "expected_version": "6.2.0",
+      "origin": "native-ref",
+      "capability_ids": [
+        "model.relational",
+        "model.state"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t4_interface": "EXISTING_NATIVE_CATALOG_UNCHANGED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "apache-jena",
+      "issue": 27,
+      "expected_version": "5.5.0",
+      "origin": "native-ref",
+      "capability_ids": [
+        "knowledge.rdf"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t4_interface": "EXISTING_NATIVE_CATALOG_UNCHANGED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "apalache",
+      "issue": 28,
+      "expected_version": "0.63.0",
+      "origin": "native-ref",
+      "capability_ids": [
+        "model.state",
+        "logic.smt"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R4",
+      "t4_interface": "EXISTING_NATIVE_CATALOG_UNCHANGED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "causal-learn",
+      "issue": 29,
+      "expected_version": "0.1.4.8",
+      "origin": "candidate",
+      "capability_ids": [
+        "causal.discovery"
+      ],
+      "t3_scoped_route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "cbmc",
+      "issue": 30,
+      "expected_version": "6.11.0",
+      "origin": "candidate",
+      "capability_ids": [
+        "code.verify"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "clingo",
+      "issue": 31,
+      "expected_version": "5.8.3",
+      "origin": "native-ref",
+      "capability_ids": [
+        "logic.rules",
+        "opt.combinatorial"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t4_interface": "EXISTING_NATIVE_CATALOG_UNCHANGED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "cvc5",
+      "issue": 32,
+      "expected_version": "1.4.2",
+      "origin": "native-ref",
+      "capability_ids": [
+        "logic.smt",
+        "proof.deductive"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t4_interface": "EXISTING_NATIVE_CATALOG_UNCHANGED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "dafny",
+      "issue": 33,
+      "expected_version": "4.11.0",
+      "origin": "native-ref",
+      "capability_ids": [
+        "proof.deductive",
+        "code.verify"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t4_interface": "EXISTING_NATIVE_CATALOG_UNCHANGED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "dowhy",
+      "issue": 34,
+      "expected_version": "0.14",
+      "origin": "candidate",
+      "capability_ids": [
+        "causal.inference"
+      ],
+      "t3_scoped_route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "elk",
+      "issue": 35,
+      "expected_version": "0.6.0",
+      "origin": "candidate",
+      "capability_ids": [
+        "ontology.inference"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "fast-check",
+      "issue": 36,
+      "expected_version": "4.10.2",
+      "origin": "candidate",
+      "capability_ids": [
+        "test.property"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "fast-downward",
+      "issue": 37,
+      "expected_version": "24.06",
+      "origin": "candidate",
+      "capability_ids": [
+        "planning.classical"
+      ],
+      "t3_scoped_route": "HOST_PYTHON313_RUNNER_PASS_R4",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "highs",
+      "issue": 38,
+      "expected_version": "1.15.1",
+      "origin": "candidate",
+      "capability_ids": [
+        "opt.numerical"
+      ],
+      "t3_scoped_route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "hypothesis",
+      "issue": 39,
+      "expected_version": "6.170.15",
+      "origin": "candidate",
+      "capability_ids": [
+        "test.property"
+      ],
+      "t3_scoped_route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "kani",
+      "issue": 40,
+      "expected_version": "0.68.0",
+      "origin": "candidate",
+      "capability_ids": [
+        "code.verify"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R4",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "lean4",
+      "issue": 41,
+      "expected_version": "4.35.0",
+      "origin": "native-ref",
+      "capability_ids": [
+        "proof.deductive"
+      ],
+      "t3_scoped_route": "BLOCKED_R4",
+      "t4_interface": "EXISTING_NATIVE_CATALOG_UNCHANGED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "mesa",
+      "issue": 42,
+      "expected_version": "3.5.2",
+      "origin": "candidate",
+      "capability_ids": [
+        "sim.agent"
+      ],
+      "t3_scoped_route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "minizinc",
+      "issue": 43,
+      "expected_version": "2.10.1",
+      "origin": "candidate",
+      "capability_ids": [
+        "opt.combinatorial"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "networkx",
+      "issue": 44,
+      "expected_version": "3.7",
+      "origin": "candidate",
+      "capability_ids": [
+        "graph.algorithms"
+      ],
+      "t3_scoped_route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "nuxmv",
+      "issue": 45,
+      "expected_version": "2.2.0",
+      "origin": "candidate",
+      "capability_ids": [
+        "model.state"
+      ],
+      "t3_scoped_route": "LOCAL_PATCHED_FIXTURE_RUNNER_PASS_R4",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "ortools",
+      "issue": 46,
+      "expected_version": "9.15.6755",
+      "origin": "candidate",
+      "capability_ids": [
+        "opt.combinatorial",
+        "opt.numerical"
+      ],
+      "t3_scoped_route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "prism",
+      "issue": 47,
+      "expected_version": "4.11",
+      "origin": "candidate",
+      "capability_ids": [
+        "model.probabilistic"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "prob",
+      "issue": 48,
+      "expected_version": "1.16.1",
+      "origin": "native-ref",
+      "capability_ids": [
+        "model.state"
+      ],
+      "t3_scoped_route": "LOCAL_PATCHED_FIXTURE_RUNNER_PASS_R4",
+      "t4_interface": "EXISTING_NATIVE_CATALOG_UNCHANGED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "pymc",
+      "issue": 49,
+      "expected_version": "6.4.0",
+      "origin": "candidate",
+      "capability_ids": [
+        "stats.bayesian"
+      ],
+      "t3_scoped_route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "rdf-shacl",
+      "issue": 50,
+      "expected_version": "0.40.2",
+      "origin": "native-ref",
+      "capability_ids": [
+        "knowledge.rdf"
+      ],
+      "t3_scoped_route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t4_interface": "EXISTING_NATIVE_CATALOG_UNCHANGED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "robot",
+      "issue": 51,
+      "expected_version": "1.9.11",
+      "origin": "candidate",
+      "capability_ids": [
+        "ontology.processing"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "simpy",
+      "issue": 52,
+      "expected_version": "4.1.2",
+      "origin": "candidate",
+      "capability_ids": [
+        "sim.discrete"
+      ],
+      "t3_scoped_route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "souffle",
+      "issue": 53,
+      "expected_version": "2.5",
+      "origin": "native-ref",
+      "capability_ids": [
+        "logic.rules"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t4_interface": "EXISTING_NATIVE_CATALOG_UNCHANGED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "storm",
+      "issue": 54,
+      "expected_version": "1.8.0",
+      "origin": "candidate",
+      "capability_ids": [
+        "model.probabilistic"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R4",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "sympy",
+      "issue": 55,
+      "expected_version": "1.14.0",
+      "origin": "candidate",
+      "capability_ids": [
+        "math.symbolic"
+      ],
+      "t3_scoped_route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "tla-tlc",
+      "issue": 56,
+      "expected_version": "1.8.0",
+      "origin": "native-ref",
+      "capability_ids": [
+        "model.state"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t4_interface": "EXISTING_NATIVE_CATALOG_UNCHANGED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "tree-sitter",
+      "issue": 57,
+      "expected_version": "0.27.2",
+      "origin": "candidate",
+      "capability_ids": [
+        "code.syntax"
+      ],
+      "t3_scoped_route": "ALTERNATE_CLI_SMOKE_PASS_R4",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "vampire",
+      "issue": 58,
+      "expected_version": "5.1.0",
+      "origin": "native-ref",
+      "capability_ids": [
+        "proof.deductive"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t4_interface": "EXISTING_NATIVE_CATALOG_UNCHANGED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "why3",
+      "issue": 59,
+      "expected_version": "1.8.0",
+      "origin": "candidate",
+      "capability_ids": [
+        "proof.deductive"
+      ],
+      "t3_scoped_route": "BLOCKED_R4",
+      "t4_interface": "PORTABLE_GATE_SOURCE_READY_NOT_NATIVE_ACCEPTED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    },
+    {
+      "id": "z3",
+      "issue": 60,
+      "expected_version": "5.4.0",
+      "origin": "native-ref",
+      "capability_ids": [
+        "logic.smt"
+      ],
+      "t3_scoped_route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t4_interface": "EXISTING_NATIVE_CATALOG_UNCHANGED",
+      "t4_native": "NOT_QUALIFIED_AT_THIS_PR",
+      "t5": "NOT_QUALIFIED_AT_THIS_PR",
+      "t6": "OPEN"
+    }
+  ]
+}
