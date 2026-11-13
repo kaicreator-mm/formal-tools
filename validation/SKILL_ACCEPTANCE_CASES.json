@@ -130,7 +130,7 @@
       "doctor": "riot --help",
       "positive_command": "riot --validate examples/data.ttl && arq --data examples/data.ttl --query examples/query.rq",
       "negative_command": "riot --validate examples/invalid.ttl",
-      "positive_expected": "query result contains urn:a and urn:b",
+      "positive_expected": "query result contains example.org/a and example.org/b",
       "negative_expected": "invalid Turtle is rejected with nonzero exit",
       "run_status": "NOT_RUN",
       "result_parser_status": "ADVISORY_ONLY"
