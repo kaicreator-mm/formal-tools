@@ -44,11 +44,19 @@ run() { # name expected-exit cmd...
 }
 
 # ---- identity & pinned launcher provenance -----------------------------------
+# The canonical deb13 container ships no git: checkout identity is authoritative
+# on the host side (host-identity.txt, pre/post run) and the expected HEAD is
+# injected via FT_EXPECTED_HEAD for cross-checking inside the container.
 {
   echo "== i31 clingo identity =="
   "$NODE" -v
-  git rev-parse HEAD
-  git status --porcelain --untracked-files=no | wc -l
+  if command -v git >/dev/null 2>&1; then
+    echo "git_head=$(git rev-parse HEAD)"
+    echo "git_dirty_tracked=$(git status --porcelain --untracked-files=no | wc -l)"
+  else
+    echo "git_head=${FT_EXPECTED_HEAD:?FT_EXPECTED_HEAD required when git is unavailable}"
+    echo "git=UNAVAILABLE_IN_CONTAINER (authoritative checkout identity: host-identity.txt)"
+  fi
   echo "umask=$(umask)"
   id
   echo "FORMAL_CLINGO_BIN=$CLINGO_BIN"
@@ -57,7 +65,7 @@ run() { # name expected-exit cmd...
   echo "LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-UNSET}"
   [ -f "$CLINGO_BIN" ] && [ -x "$CLINGO_BIN" ] && echo "pinned_file=OK_REGULAR_EXECUTABLE" || echo "pinned_file=BAD"
 } > "$OUT/identity.txt" 2>&1
-grep -q "HEAD [0-9a-f]\{40\}\|^[0-9a-f]\{40\}$" "$OUT/identity.txt" || { echo "FAIL: no checkout HEAD" >&2; exit 1; }
+grep -q "^git_head=[0-9a-f]\{40\}$" "$OUT/identity.txt" || { echo "FAIL: no checkout HEAD" >&2; exit 1; }
 
 # ---- official exit-code semantics on the pinned binary (direct, no runner) ---
 T="$SCRATCH/exit-probe"; rm -rf "$T"; mkdir -p "$T"
@@ -115,8 +123,14 @@ run err-invalid-case 2 $CLI run clingo --case bogus
 run err-pinned-missing 2 env -u FORMAL_CLINGO_BIN FORMAL_CLINGO_BIN=/nonexistent/clingo $CLI where clingo
 
 # ---- isolation ----------------------------------------------------------------
-git status --porcelain --untracked-files=no > "$OUT/post-run-git-status.txt" 2>&1
-if [ -s "$OUT/post-run-git-status.txt" ]; then
+# Tracked-tree cleanliness is authoritative on the host (same bind-mounted tree,
+# checked after the whole container run). In-container git check is best-effort.
+if command -v git >/dev/null 2>&1; then
+  git status --porcelain --untracked-files=no > "$OUT/post-run-git-status.txt" 2>&1
+else
+  printf 'git-unavailable-in-container; authoritative tree check: host post-run receipt\n' > "$OUT/post-run-git-status.txt"
+fi
+if [ -s "$OUT/post-run-git-status.txt" ] && ! grep -q "^git-unavailable" "$OUT/post-run-git-status.txt"; then
   printf '{"name":"git-tree-untouched","verdict":"FAIL","detail":"tree modified by runs"}\n' >> "$EV"
   FAILS=$((FAILS+1))
 else
