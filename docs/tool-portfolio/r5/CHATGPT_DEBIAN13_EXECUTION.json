@@ -1,0 +1,208 @@
+{
+  "schema": "formal-tools/i24-chatgpt-container-receipts/0.1",
+  "date_utc": "2026-11-13",
+  "scope": "ephemeral external Debian13 container only; NOT full product or T4 acceptance",
+  "source": {
+    "main_merge_sha": "12032f1d5a759dca5a1b24eedbefae2dfe01d3e0",
+    "runner_pr22_head": "3aa35b8c82545d8b234ae81f778b474173bff0d9",
+    "runner_git_blob": "94909a645eee266549a6b17e42e5f4478d72aaee",
+    "runner_sha256": "066674ca41414d1e80019218a5d20f404c0fef75785fb348fed313634720c1d3",
+    "drive_core_sha256": "fe9699e6ba503d94826551bc8e82c70c7c267191a89a6a14941e3551e2b23990",
+    "drive_core_runner_original_sha256": "d232a39e4ec99b745918f6ea7d206df488b9ffc3f37a5d11012fc9651c0a9c2e",
+    "drive_sha256sums_file_sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64"
+  },
+  "host": {
+    "os": "Debian 13 x86_64",
+    "glibc": "2.41",
+    "uid": 1000,
+    "bundle_write_access": false,
+    "network_access": false,
+    "docker_available": false,
+    "full_python_runtime_fetch": "HTTP 413 at 294346075 bytes > 268435456 limit"
+  },
+  "tool_results": [
+    {
+      "id": "cbmc",
+      "issue": 30,
+      "tool_version": "6.11.0",
+      "mode": "original native ELF",
+      "runner_rc": 0,
+      "runner_schema": "formal-tools/portable-verify/0.2",
+      "tsv_verdict": "PASS",
+      "phases": [
+        [
+          "pos",
+          0,
+          "VERIFIED"
+        ],
+        [
+          "neg",
+          10,
+          "VIOLATION"
+        ],
+        [
+          "err",
+          3,
+          "ERROR"
+        ]
+      ],
+      "receipt_sha256": "50493a43644bd4015a04b9d084e2f09ebf2af9790381bdc0f700162389d4190c",
+      "status": "COMPLETE_3_PHASE_NATIVE_EXECUTION_TECHNICAL_UNREVIEWED"
+    },
+    {
+      "id": "elk",
+      "issue": 35,
+      "tool_version": "0.6.0",
+      "mode": "original Java bundle + original Temurin21 portable",
+      "runner_rc": 0,
+      "runner_schema": "formal-tools/portable-verify/0.2",
+      "tsv_verdict": "PASS",
+      "phases": [
+        [
+          "pos",
+          0,
+          "CLASSIFIED"
+        ],
+        [
+          "neg",
+          1,
+          "PARSE_REJECTED"
+        ]
+      ],
+      "receipt_sha256": "2851c242c921354bf9d2c574280b1a9148b8f919e215054a0dafd9dc748ec151",
+      "status": "MISSING_ERR_PHASE_NOT_T4"
+    },
+    {
+      "id": "aflpp",
+      "issue": 25,
+      "tool_version": "5.03c",
+      "mode": "original native ELF",
+      "runner_rc": 0,
+      "runner_schema": "formal-tools/portable-verify/0.2",
+      "tsv_verdict": "PASS",
+      "phases": [
+        [
+          "pos",
+          0,
+          "FUZZER_EXECS"
+        ],
+        [
+          "neg",
+          1,
+          "ERROR"
+        ]
+      ],
+      "receipt_sha256": "b02345d48fa226b4f5d5651754ad78c76818f0190611b70262a6e96b3b5f3bd2",
+      "status": "MISSING_ERR_PHASE_NOT_T4"
+    },
+    {
+      "id": "fast-check",
+      "issue": 36,
+      "tool_version": "4.10.2",
+      "mode": "original Node22 portable",
+      "runner_rc": 0,
+      "runner_schema": "formal-tools/portable-verify/0.2",
+      "tsv_verdict": "PASS",
+      "phases": [
+        [
+          "pos",
+          0,
+          "PASS"
+        ],
+        [
+          "neg",
+          0,
+          "COUNTEREXAMPLE"
+        ]
+      ],
+      "receipt_sha256": "2ae4dc820d0161d6c1f7b20fd6bedd5f20b69594fe374b5c9372547ca90be861",
+      "status": "MISSING_ERR_PHASE_NOT_T4"
+    },
+    {
+      "id": "simpy",
+      "issue": 52,
+      "tool_version": "4.1.2",
+      "mode": "host Debian13 CPython3.13 with explicit PYTHONHOME/PYTHONPATH shim NOT original portable runtime",
+      "runner_rc": 0,
+      "runner_schema": "formal-tools/portable-verify/0.2",
+      "tsv_verdict": "PASS",
+      "phases": [
+        [
+          "pos",
+          0,
+          "SIMULATED"
+        ],
+        [
+          "neg",
+          0,
+          "REFUTED"
+        ]
+      ],
+      "receipt_sha256": "75bf819167ae8b870ec926e9479571d0879c27f4e35ff2e63c8ebe75e19156ce",
+      "status": "HOST_ADAPTED_MISSING_ERR_NOT_SELF_CONTAINED_T4"
+    },
+    {
+      "id": "tree-sitter",
+      "issue": 57,
+      "tool_version": "0.27.2",
+      "mode": "original tree-sitter CLI + host Python shim attempt",
+      "runner_rc": 1,
+      "runner_schema": "formal-tools/portable-verify/0.2",
+      "tsv_verdict": "FAIL",
+      "phases": [
+        [
+          "pos",
+          1,
+          "PARSED"
+        ],
+        [
+          "neg",
+          1,
+          "PARSE_ERROR_DETECTED"
+        ]
+      ],
+      "receipt_sha256": "b46ce933bb908d67574bf2dfc6c87faa7cdc55b02e1aaf9429bf99079fd39583",
+      "status": "BLOCKED_MISSING_PYTHON_BINDING",
+      "reason": "ModuleNotFoundError: No module named tree_sitter; native CLI version 0.27.2 itself works"
+    },
+    {
+      "id": "why3",
+      "issue": 59,
+      "tool_version": "1.8.0",
+      "mode": "newly uploaded Drive archive checked but deliberately not extracted",
+      "runner_rc": null,
+      "tsv_verdict": null,
+      "phases": [],
+      "new_archive_sha256": "5343afcbccd2805dbf9c1ff7689371ced7857a42d0f57615d22e9bee701ff8f3",
+      "old_manifest_sha256": "6a0e3cc7a3664529ed9573613359bb0e9019d2dd38ffd521a6b4251dcf5802d1",
+      "tar_entries": 5346,
+      "symlinks": 315,
+      "absolute_symlinks": 27,
+      "zstd": "PASS",
+      "status": "BLOCKED_SHA_MANIFEST_STALE_UNSAFE_ABSOLUTE_LINKS"
+    }
+  ],
+  "qualification": {
+    "source_interface_main_merged": true,
+    "new_full_t4_native_qualified": 0,
+    "new_t5_qualified": 0,
+    "technical_3phase_native_observed_tool_ids": [
+      "cbmc"
+    ],
+    "successful_runner_pos_neg_tool_ids": [
+      "cbmc",
+      "elk",
+      "aflpp",
+      "fast-check",
+      "simpy"
+    ],
+    "t4_js_gateway_executed_in_this_container": false
+  },
+  "replay_notes": [
+    "All 5 positive/negative cases were re-run with UID 1000 on read-only-to-uid1000 tool bundle",
+    "PR22 corrected runner reconstructed by applying exact source diff to old Drive core, final Git blob and sha256 match authoritative PR22 source byte-for-byte",
+    "Original tar SHA256SUMS checked before safe extraction; Why3 candidate fails against old checksum and has 27 absolute symlinks, was not extracted",
+    "Per-case stdout/stderr and TSV were retained locally with sha256; technical observation does not establish independent Source-First T4 qualification",
+    "No code/fixture mutation in existing PR22 or main"
+  ]
+}

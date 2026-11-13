@@ -1,0 +1,170 @@
+{
+  "schema": "formal-tools/i24-r8-current-pr22-native/1.0",
+  "output_label": "FORMAL_TOOLS_I24_TOOL_INTEGRATION_CONTINUE",
+  "source": {
+    "source_pr22": "#22",
+    "exact_head": "7fbe3b69114d7f34b9b0296757cdca43fde07412",
+    "reviewed_r7_head": "31ef3f359996ee54b346bc2c0a1c7841fe8a4ec2",
+    "source_delta": [
+      "portable/verification/cases/aflpp/expect.sh",
+      "portable/verification/cases/elk/expect.sh",
+      "portable/verification/cases/fast-check/neg.mjs",
+      "portable/verification/cases/hypothesis/neg.py",
+      "portable/verification/cases/mesa/expect.sh",
+      "portable/verification/cases/mesa/neg.py"
+    ],
+    "source_file_git_blobs": {
+      "aflpp/expect.sh": "b1f277b443ae4b52c428d2e1e27a99e9f6da2d4c",
+      "elk/expect.sh": "1663325780f0ef731011b7b26da70121dcfc48dd",
+      "fast-check/neg.mjs": "0016492f6aa84f6b68faf431e3f3a91489f61b5f",
+      "hypothesis/neg.py": "3f3ba8846a526b2a87bc1adfff87d03cfb5ea8a8",
+      "mesa/expect.sh": "1b6373733f8fe36ba9851ee7d137014caa1348d9",
+      "mesa/neg.py": "053c1f77c7ece8fe9c0d9cea2e81eb7b53598b2f"
+    },
+    "runner": {
+      "git_blob": "94909a645eee266549a6b17e42e5f4478d72aaee",
+      "sha256": "066674ca41414d1e80019218a5d20f404c0fef75785fb348fed313634720c1d3"
+    }
+  },
+  "archive": {
+    "drive_url": "https://drive.google.com/file/d/15rgRwAfH9BmZz-Xpx5u3lbg5GgR25OR_/view?usp=drivesdk",
+    "drive_file_id": "15rgRwAfH9BmZz-Xpx5u3lbg5GgR25OR_",
+    "parent_folder": "App/10-formal-tools/validation/receipts",
+    "file_name": "formal-tools-i24-r8-source-repair-receipts.zip",
+    "size_bytes": 12807,
+    "sha256": "dc5a72e21592c9e55bfcf9975edb9152d265e9658098da9fe57d02b798aef0e8",
+    "verified_after_upload": true,
+    "zip_crc": "PASS",
+    "members": 23,
+    "includes_actual_child_phase_stdout_stderr": true,
+    "includes_elktaxonomy_artifacts": true
+  },
+  "host": {
+    "os": "Debian13",
+    "arch": "x86_64",
+    "uid": 1000,
+    "tool_bundle_writable_by_uid": false,
+    "java": "21.0.13+9",
+    "node": "22.16.0",
+    "host_python": "3.13.5",
+    "docker_isolation": false,
+    "network_isolation_not_independently_certified": true,
+    "source_runner": "byte-identical corrected PR22 tool-runner",
+    "original_main_mcp_sdk_cli_e2e_executed": false
+  },
+  "tools": [
+    {
+      "id": "aflpp",
+      "issue": 25,
+      "version": "5.03c",
+      "runtime": "original native ELF",
+      "rc": [
+        0,
+        1,
+        1
+      ],
+      "labels": [
+        "FUZZER_EXECS",
+        "INVALID_INPUT_DIRECTORY",
+        "INVALID_ARGUMENT"
+      ],
+      "receipt_sha256": "b6f13ae4c422333978bcab6f54bb70b754433583d845a02f09b4f00197190bcc",
+      "status": "3PHASE_TECHNICAL_PASS_UNREVIEWED"
+    },
+    {
+      "id": "elk",
+      "issue": 35,
+      "version": "0.6.0",
+      "runtime": "original Temurin21",
+      "rc": [
+        0,
+        1,
+        1
+      ],
+      "labels": [
+        "CLASSIFIED_TAXONOMY",
+        "PARSE_REJECTED",
+        "MISSING_SOURCE"
+      ],
+      "receipt_sha256": "9d069bd82b8aa8e76fa351db25a35fe32d71f94ff10d7b6cd03427d15d3a6109",
+      "taxonomy_sha256": "1a4b1a41ee270d06cc189376f0a6bd590a1339ebf722d95b467023814bdb8274",
+      "reparse_sha256": "1a4b1a41ee270d06cc189376f0a6bd590a1339ebf722d95b467023814bdb8274",
+      "semantic_scope": "taxonomy production and reparse; neg parser-rejected only, not an ontology inconsistency oracle",
+      "status": "3PHASE_TECHNICAL_PASS_UNREVIEWED"
+    },
+    {
+      "id": "fast-check",
+      "issue": 36,
+      "version": "4.10.2",
+      "runtime": "original bundled Node22",
+      "rc": [
+        0,
+        0,
+        1
+      ],
+      "labels": [
+        "PASS",
+        "COUNTEREXAMPLE",
+        "INVALID_API_ARGUMENT"
+      ],
+      "receipt_sha256": "adc3d6f159a9051aa48244bb1cd0e146af67ed70380cba1519e57d7bcb5a48d8",
+      "status": "3PHASE_TECHNICAL_PASS_UNREVIEWED"
+    },
+    {
+      "id": "hypothesis",
+      "issue": 39,
+      "version": "6.170.15",
+      "runtime": "original metadata/payload with verified alternate offline wheelhouse and host CPython3.13",
+      "rc": [
+        0,
+        0,
+        1
+      ],
+      "labels": [
+        "PROPERTY_HELD",
+        "COUNTEREXAMPLE",
+        "INVALID_STRATEGY"
+      ],
+      "receipt_sha256": "49a2f0431e5678920981cecd18cd395f9123ee6c3f04704a4dd5ad1eaf24d6ba",
+      "status": "HOST_PYTHON_ALT_TECHNICAL_PASS_UNREVIEWED"
+    },
+    {
+      "id": "mesa",
+      "issue": 42,
+      "version": "3.5.2",
+      "runtime": "original Mesa payload, host CPython3.13+numpy+pandas",
+      "rc": [
+        0,
+        0,
+        1
+      ],
+      "labels": [
+        "STEPS",
+        "REFUTED",
+        "INVALID_MODEL"
+      ],
+      "receipt_sha256": "08be504218c098763169b742d1526ff6c58ea921e1907841815bda9e937bde90",
+      "status": "HOST_PYTHON_ALT_TECHNICAL_PASS_UNREVIEWED"
+    }
+  ],
+  "ci": {
+    "pr22_exact_head": "7fbe3b69114d7f34b9b0296757cdca43fde07412",
+    "woodpecker_push_642": "FAILURE_STEP_UNKNOWN",
+    "woodpecker_pr_643": "FAILURE_STEP_UNKNOWN",
+    "do_not_infer": "Do not attribute CI failures to clone TLS or source tests without step logs."
+  },
+  "qualification": {
+    "real_affected_scope_native_tests": 5,
+    "real_three_phase_technical_pass": 5,
+    "independently_admitted_new_T4": 0,
+    "T5_semantic": 0,
+    "PR77_evidence_writer_independent_review_pending": true,
+    "source_pr22_independent_final_delta_review_pending": true
+  },
+  "notes": [
+    "R7 originally vulnerable ELK/AFL assertions remain historically invalid; current R8 actual source repaired and reran exact changed scope.",
+    "AFL++ negative exit 1 plus narrow missing-input-directory diagnostic; ERR exit1 with invalid option; ELK positive generated nonempty taxonomy, verified Parent subsumption, reparsed taxonomy, bytes SHA identical.",
+    "One original Hypothesis trial failed because meta was not installed in staging; recovered by unpacking its SHA-verified original tool bundle. Wheelhouse is alternate runtime; no self-contained Python claim.",
+    "Temporary per-case native child output is now preserved in this R8 ZIP; unlike older R7 archive it is not only gateway-level summaries."
+  ]
+}

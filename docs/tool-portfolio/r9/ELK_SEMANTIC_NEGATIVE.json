@@ -1,0 +1,72 @@
+{
+  "schema": "formal-tools/i24-r9-elk-semantic-negative/1.0",
+  "output_label": "FORMAL_TOOLS_I24_TOOL_INTEGRATION_CONTINUE",
+  "source": {
+    "pr": 22,
+    "exact_head": "8aa994718895bcf49988981b41d391f624075602",
+    "parent_head": "7fbe3b69114d7f34b9b0296757cdca43fde07412",
+    "file": "portable/verification/cases/elk/expect.sh",
+    "file_git_blob": "82bb3272d0d21b73757f5f0d6d8bf6b5d6ce150f",
+    "positive_ofn_git_blob": "e8ec42d6580452dfd8c3a5fea4f714ac8fa82318",
+    "negative_ofn_git_blob": "279795bf2dd90087cc8ec43793208f43daaaadc5",
+    "runner_git_blob": "94909a645eee266549a6b17e42e5f4478d72aaee",
+    "runner_sha256": "066674ca41414d1e80019218a5d20f404c0fef75785fb348fed313634720c1d3"
+  },
+  "host": {
+    "os": "Debian13",
+    "arch": "x86_64",
+    "uid": 1000,
+    "source_tree_writable_by_uid": false,
+    "java": "Temurin21.0.13+9",
+    "tool": "ELK 0.6.0"
+  },
+  "test": {
+    "runner_schema": "formal-tools/portable-verify/0.2",
+    "runner_exit": 0,
+    "tsv_sha256": "2c82fe0a06fa3bfb57b99a9d37786272516d573a3f6c675c19edcdfcc35b4869",
+    "pos": {
+      "exit": 0,
+      "label": "CLASSIFIED_TAXONOMY",
+      "taxonomy_sha256": "1a4b1a41ee270d06cc189376f0a6bd590a1339ebf722d95b467023814bdb8274",
+      "reparse_sha256": "1a4b1a41ee270d06cc189376f0a6bd590a1339ebf722d95b467023814bdb8274"
+    },
+    "neg": {
+      "exit": 0,
+      "label": "INCONSISTENT_ONTOLOGY",
+      "input_kind": "SYNTAX_VALID_LOGICALLY_INCONSISTENT_OWL",
+      "observable": "EquivalentClasses(<http://www.w3.org/2002/07/owl#Nothing> <http://www.w3.org/2002/07/owl#Thing> <http://example.org/neg#A> <http://example.org/neg#B>)",
+      "taxonomy_sha256": "d5bf71cf84d7fea2e8e9107d09d51b1824a704b6bc7df89251011194f8113ef4",
+      "reparse_sha256": "d5bf71cf84d7fea2e8e9107d09d51b1824a704b6bc7df89251011194f8113ef4"
+    },
+    "err": {
+      "exit": 1,
+      "label": "MISSING_SOURCE",
+      "kind": "INVALID_INPUT"
+    }
+  },
+  "raw_receipts": {
+    "drive_file_id": "1atTwVLT9zl40qslsjTtHqaQHLK43Mxr3",
+    "drive_url": "https://drive.google.com/file/d/1atTwVLT9zl40qslsjTtHqaQHLK43Mxr3/view?usp=drivesdk",
+    "canonical_folder": "App/10-formal-tools/validation/receipts",
+    "file_name": "formal-tools-i24-r9-elk-semantic-receipts.zip",
+    "size_bytes": 8966,
+    "sha256": "3676e5bc5ac6853f7e4e84c94a0381c0b9d8b784bddd8b30e5fff6b381db8b0f",
+    "zip_crc_pass": true,
+    "member_count": 13,
+    "readback_sha256_verified": true,
+    "contains_native_stdout_stderr": true,
+    "contains_exact_source_fixture_and_input": true
+  },
+  "qualification": {
+    "actual_native_technical_3phase": "PASS_UNREVIEWED",
+    "independent_t4_accepted": false,
+    "business_t5_qualified": false,
+    "full_project_cli_mcp_sdk_host_test": false
+  },
+  "notes": [
+    "This is an actual valid inconsistent OWL ontology negative, unlike the prior R8 parser-negative fixture.",
+    "The Runner fixed sh command is committed source; the MCP caller cannot supply a shell string, only a validated tool id and bounded timeout. No shell/raw argv exposed via MCP.",
+    "R7 archive bound to 31ef... and R8 archive bound to 7fbe... retain historical qualifications and are not renamed to the new R9 HEAD.",
+    "Fresh Exact-SHA Woodpecker and independent non-Writer source+semantic evidence review are still required before T4 gate promotion."
+  ]
+}

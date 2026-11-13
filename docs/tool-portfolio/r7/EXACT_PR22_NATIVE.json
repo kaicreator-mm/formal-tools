@@ -1,0 +1,251 @@
+{
+  "schema": "formal-tools/i24-r7-exact-pr22-native/0.3",
+  "output_label": "FORMAL_TOOLS_I24_TOOL_INTEGRATION_CONTINUE",
+  "source_pr22_exact_head": "31ef3f359996ee54b346bc2c0a1c7841fe8a4ec2",
+  "source_pr22_initial_head": "3aa35b8c82545d8b234ae81f778b474173bff0d9",
+  "main_gateway_source_sha": "12032f1d5a759dca5a1b24eedbefae2dfe01d3e0",
+  "runner_git_blob": "94909a645eee266549a6b17e42e5f4478d72aaee",
+  "runner_sha256": "066674ca41414d1e80019218a5d20f404c0fef75785fb348fed313634720c1d3",
+  "gateway_git_blob": "615b55bb0f2b5fd1e611865e1dc4c766f89d5ffe",
+  "verified_exact_git_blobs": 14,
+  "expect_blobs": {
+    "aflpp": "9c63ad542185949fda1c57f476b7ffcce03ea334",
+    "elk": "8ded4e8efb20963bbdd616c6dc975a9b02cabf8b",
+    "fast-check": "fa1b35f9a2377a7b5f4c6c8681b69f15371a4320",
+    "hypothesis": "ee6bc224fc5e1eeee6b41d176b6eb9138b87124b",
+    "mesa": "af250b07f52eda7fa74ecd413e6188918cb617ad",
+    "simpy": "360a56768b47767053a0d4b8c37259431909d4fd",
+    "networkx": "1a016d95e7900f6a0249f838df1cc858024ada24",
+    "sympy": "b92ab9cdf04f5eefc1e610530fd18d19d288b053"
+  },
+  "new_error_input_blobs": {
+    "fast-check/err.mjs": "8511711a2b9011a236e88170e3da161e02e90e67",
+    "hypothesis/err.py": "e5a962b249c9b69ed6275e2a4bb17c488e7a1199",
+    "mesa/err.py": "29264c41cb27d2577bb6f7478cfd1ed50fb972bd",
+    "simpy/err.py": "ec0ae27eb039a647c09836ab2635e1016093de56",
+    "networkx/err.py": "61406f5a196d775a20f06cc7ebcd5fe80c39d325",
+    "sympy/err.py": "c40cb5a6fe5fee3ac23701c542f6e850fba6ac22"
+  },
+  "host": {
+    "os": "Debian13",
+    "architecture": "x86_64",
+    "uid": 1000,
+    "bundle_writable_by_user": false,
+    "runner_source": "PR22 exact blob",
+    "gateway_source": "merged exact module with projected 36-row registry fields",
+    "full_original_MCP_SDK_CLI_E2E": false
+  },
+  "cases": [
+    {
+      "id": "aflpp",
+      "issue": 25,
+      "exit_codes": {
+        "pos": 0,
+        "neg": 1,
+        "err": 1
+      },
+      "process_exit": 0,
+      "status": "EXECUTION_OBSERVED_ASSERTION_INCOMPLETE",
+      "receipt_sha256": "16839bb27e7527a5f516f213e3d4d61a83865b1e78776daa5dc05ec39a3ad694",
+      "runtime": "native-ELF",
+      "fully_qualified_T4": false,
+      "semantic_T5_qualified": false,
+      "assertion_review": {
+        "state": "ASSERTION_INCOMPLETE",
+        "phase_assertions": {
+          "pos": "OBSERVED_MATCH",
+          "neg": "INVALIDATED_WILDCARD_EXIT_AND_GENERIC_OUTPUT_MATCHER",
+          "err": "INVALIDATED_GENERIC_AFL_BANNER_MATCHER"
+        },
+        "reason": "EXPECT_NEG_EXIT=* permits arbitrary exit codes; EXPECT_NEG_REGEX accepts generic afl-fuzz/ERROR text. EXPECT_ERR_REGEX also accepts the generic afl-fuzz banner, so these phases are not reliable fixture assertions.",
+        "pass_claim": false
+      }
+    },
+    {
+      "id": "elk",
+      "issue": 35,
+      "exit_codes": {
+        "pos": 0,
+        "neg": 1,
+        "err": 1
+      },
+      "process_exit": 0,
+      "status": "EXECUTION_OBSERVED_ASSERTION_INCOMPLETE",
+      "receipt_sha256": "217a70ac44a5d6df482c826efefec335ec743f5ad0d9e123f5ddaa0dedac95ad",
+      "runtime": "original-Java21",
+      "fully_qualified_T4": false,
+      "semantic_T5_qualified": false,
+      "assertion_review": {
+        "state": "ASSERTION_INCOMPLETE",
+        "phase_assertions": {
+          "pos": "INVALIDATED_RUNNER_GENERATED_PHASE_DONE_MARKER_WITHOUT_TAXONOMY_ASSERTION",
+          "neg": "INVALIDATED_MALFORMED_ONTOLOGY_PARSER_REJECTION_AND_WILDCARD_EXIT",
+          "err": "OBSERVED_MATCH"
+        },
+        "reason": "EXPECT_POS_REGEX matches the runner's own PHASE_DONE marker rather than ELK output and does not assert taxonomy artifact existence/content. NEG points at err.ofn (malformed syntax), not neg.ofn (ontology inconsistency), and accepts wildcard exit; it proves parser rejection only.",
+        "pass_claim": false
+      }
+    },
+    {
+      "id": "fast-check",
+      "issue": 36,
+      "exit_codes": {
+        "pos": 0,
+        "neg": 0,
+        "err": 1
+      },
+      "process_exit": 0,
+      "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "receipt_sha256": "2e4fe53a75352f7fa03559f0da04f760dc262a77c5d26fbcf9540903c4ec8072",
+      "runtime": "original-Node22",
+      "fully_qualified_T4": false,
+      "semantic_T5_qualified": false
+    },
+    {
+      "id": "hypothesis",
+      "issue": 39,
+      "exit_codes": {
+        "pos": 0,
+        "neg": 0,
+        "err": 1
+      },
+      "process_exit": 0,
+      "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "receipt_sha256": "4a0bf0785a60a4ee276262122b5516dd6d96fdef97af4c7f4c485df006463676",
+      "runtime": "alternate-wheelhouse-host-CPython",
+      "fully_qualified_T4": false,
+      "semantic_T5_qualified": false
+    },
+    {
+      "id": "mesa",
+      "issue": 42,
+      "exit_codes": {
+        "pos": 0,
+        "neg": 0,
+        "err": 1
+      },
+      "process_exit": 0,
+      "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "receipt_sha256": "9bc6574e68dff914c31716914c0fe8676fa238eddebb9f4995a16c52e8a1cdc4",
+      "runtime": "host-CPython-site-dependencies",
+      "fully_qualified_T4": false,
+      "semantic_T5_qualified": false
+    },
+    {
+      "id": "simpy",
+      "issue": 52,
+      "exit_codes": {
+        "pos": 0,
+        "neg": 0,
+        "err": 1
+      },
+      "process_exit": 0,
+      "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "receipt_sha256": "43bc1f3e2a040bf8b1ecf3deead94653af0135fcf1b6e2e4fd8254bbfad4f062",
+      "runtime": "host-CPython",
+      "fully_qualified_T4": false,
+      "semantic_T5_qualified": false
+    },
+    {
+      "id": "networkx",
+      "issue": 44,
+      "exit_codes": {
+        "pos": 0,
+        "neg": 0,
+        "err": 1
+      },
+      "process_exit": 0,
+      "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "receipt_sha256": "13e29f7ebd8f60f86a688558c625f6fa953cf07ac5c96593424c544c554ad622",
+      "runtime": "host-CPython",
+      "fully_qualified_T4": false,
+      "semantic_T5_qualified": false
+    },
+    {
+      "id": "sympy",
+      "issue": 55,
+      "exit_codes": {
+        "pos": 0,
+        "neg": 0,
+        "err": 1
+      },
+      "process_exit": 0,
+      "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "receipt_sha256": "eb454e5923abe0e32714545eae0a091928d4e892385c8a64200f6e0263215d17",
+      "runtime": "host-CPython-mpmath",
+      "fully_qualified_T4": false,
+      "semantic_T5_qualified": false
+    }
+  ],
+  "observations": [
+    "First SymPy run FAILED due host Python's missing mpmath sys.path; fixed the isolated host PYTHONPATH to include /opt/pyvenv/lib/python3.13/site-packages; only SymPy re-run PASS; no source code changed as a workaround",
+    "PR22 newly written expect.sh/error scripts are byte-for-byte identical to checked-in branch content by git hash-object",
+    "Earlier 8 local candidate overlays and 8 negative gateway checks reused; only exact-head affected code rerun",
+    "ELK semantic negative still parser rejection, not ontology inconsistency Oracle",
+    "Python hosts fallback prevents hermetic standalone portable T4",
+    "PR22 source head Woodpecker pull_request #621 SUCCESS; push #618 FAILURE cause unverified from GitHub statuses",
+    "R7 independent Source-First review: AFL++ and ELK are downgraded to EXECUTION_OBSERVED_ASSERTION_INCOMPLETE; original process exit observations and declared receipt hashes are preserved, but no 8/8 fixture assertion PASS is claimed.",
+    "Raw archive metadata was located in ChatGPT Library (/fm-tools/formal-tools-i24-r7-exact-pr22-native.zip, 15,753 bytes); raw bytes could not be retrieved/materialized in this repair context, so the declared archive SHA256 remains unverified and P2 raw-receipt durability remains BLOCKED.",
+    "R6 README Gateway Git Blob corrected to 615b55bb0f2b5fd1e611865e1dc4c766f89d5ffe.",
+    "R8 archive recovery: exact 15,753-byte R7 ZIP recovered in current Debian container, SHA256 matches prior d14e288..., uploaded to canonical Drive validation/receipts, fetched back, ZIP CRC and 19 member SHA256s verified. Stable URL in RAW_RECEIPTS_INDEX.json. Historical 31ef source/ELK+AFL review scope remains unchanged.",
+    "Newer PR22 HEAD 7fbe3b... modifies AFL++/ELK fixture predicates and fast-check/Hypothesis/Mesa negative guards; no automatic inheritance from historical R7 receipts."
+  ],
+  "qualification": {
+    "source_14_file_changes_complete": true,
+    "actual_3phase_technical_observation_count": 8,
+    "full_new_native_T4_qualified": 0,
+    "new_semantic_T5_qualified": 0,
+    "requires_independent_exact_sha_review": true,
+    "assertion_complete_3phase_count": 6,
+    "assertion_incomplete_count": 2,
+    "assertion_incomplete_tool_ids": [
+      "aflpp",
+      "elk"
+    ],
+    "fixture_technical_pass_count": 6,
+    "raw_receipts_committed_to_git": false,
+    "raw_receipt_archive_stable_external_access": true,
+    "raw_receipt_archive_sha256_verified_in_this_repair": true
+  },
+  "review": {
+    "reviewed_pr77_head": "75045734b92beaec6746d5d1abdb7688e2ccd3c6",
+    "verdict": "REWORK",
+    "p0": 0,
+    "p1": 1,
+    "p2": 2,
+    "findings": [
+      "AFL++ NEG wildcard exit plus generic afl-fuzz/ERROR matcher can accept unrelated failures; ERR matcher also accepts generic banner.",
+      "ELK POS matcher observes the runner-generated PHASE_DONE marker rather than ELK output and does not assert taxonomy artifact; NEG invokes malformed err.ofn with wildcard exit, so it is parser rejection rather than semantic ontology negative."
+    ],
+    "portable_source_modified": false
+  },
+  "raw_receipt_archive": {
+    "file_name": "formal-tools-i24-r7-exact-pr22-native.zip",
+    "previously_declared_sha256": "d14e288853b9607aeb7bb0062a0984b68d5d2fa8a41cc3c2955c9e3c90ed7682",
+    "declared_sha256_verified_in_this_repair": true,
+    "prior_library_artifact": {
+      "path": "/fm-tools/formal-tools-i24-r7-exact-pr22-native.zip",
+      "size_bytes": 15753,
+      "modified_at": "2026-11-13T17:22:17.494181+00:00"
+    },
+    "git_versioned": false,
+    "stable_external_archive_url": "https://drive.google.com/file/d/1-Kqdc_kff6DpBOWAN65nnR3cTiPp-NVc/view?usp=drivesdk",
+    "raw_bytes_accessible_in_this_repair": true,
+    "status": "PASS_STABLE_SHA256_PINNED_DRIVE_GATEWAY_ARCHIVE",
+    "required_action": "For PR22 source newer than 31ef3f..., create separate new-head fixture/native receipts; optionally preserve true child phase logs for future trials. Do not reinterpret historical R7.",
+    "drive_file_id": "1-Kqdc_kff6DpBOWAN65nnR3cTiPp-NVc",
+    "drive_folder": "App/10-formal-tools/validation/receipts",
+    "contents_index": "docs/tool-portfolio/r7/RAW_RECEIPTS_INDEX.json",
+    "zip_crc_verified": true,
+    "zip_members": 19,
+    "content_scope": "Original saved gateway-level stdout/stderr, phase receipt summaries and replay driver; original ephemeral per-native-phase child raw logs NOT included"
+  },
+  "archive_repair": {
+    "original_r7_sha": "31ef3f359996ee54b346bc2c0a1c7841fe8a4ec2",
+    "latest_pr22_head_at_repair": "7fbe3b69114d7f34b9b0296757cdca43fde07412",
+    "stable_storage": "GOOGLE_DRIVE_VALIDATION_RECEIPTS",
+    "source_bytes_unchanged": true,
+    "per_member_sha_index": "docs/tool-portfolio/r7/RAW_RECEIPTS_INDEX.json",
+    "new_t4_qualification": 0
+  }
+}
