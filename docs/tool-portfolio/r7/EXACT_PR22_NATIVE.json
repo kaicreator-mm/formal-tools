@@ -1,5 +1,5 @@
 {
-  "schema": "formal-tools/i24-r7-exact-pr22-native/0.1",
+  "schema": "formal-tools/i24-r7-exact-pr22-native/0.2",
   "output_label": "FORMAL_TOOLS_I24_TOOL_INTEGRATION_CONTINUE",
   "source_pr22_exact_head": "31ef3f359996ee54b346bc2c0a1c7841fe8a4ec2",
   "source_pr22_initial_head": "3aa35b8c82545d8b234ae81f778b474173bff0d9",
@@ -45,11 +45,21 @@
         "err": 1
       },
       "process_exit": 0,
-      "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "status": "EXECUTION_OBSERVED_ASSERTION_INCOMPLETE",
       "receipt_sha256": "16839bb27e7527a5f516f213e3d4d61a83865b1e78776daa5dc05ec39a3ad694",
       "runtime": "native-ELF",
       "fully_qualified_T4": false,
-      "semantic_T5_qualified": false
+      "semantic_T5_qualified": false,
+      "assertion_review": {
+        "state": "ASSERTION_INCOMPLETE",
+        "phase_assertions": {
+          "pos": "OBSERVED_MATCH",
+          "neg": "INVALIDATED_WILDCARD_EXIT_AND_GENERIC_OUTPUT_MATCHER",
+          "err": "INVALIDATED_GENERIC_AFL_BANNER_MATCHER"
+        },
+        "reason": "EXPECT_NEG_EXIT=* permits arbitrary exit codes; EXPECT_NEG_REGEX accepts generic afl-fuzz/ERROR text. EXPECT_ERR_REGEX also accepts the generic afl-fuzz banner, so these phases are not reliable fixture assertions.",
+        "pass_claim": false
+      }
     },
     {
       "id": "elk",
@@ -60,11 +70,21 @@
         "err": 1
       },
       "process_exit": 0,
-      "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "status": "EXECUTION_OBSERVED_ASSERTION_INCOMPLETE",
       "receipt_sha256": "217a70ac44a5d6df482c826efefec335ec743f5ad0d9e123f5ddaa0dedac95ad",
       "runtime": "original-Java21",
       "fully_qualified_T4": false,
-      "semantic_T5_qualified": false
+      "semantic_T5_qualified": false,
+      "assertion_review": {
+        "state": "ASSERTION_INCOMPLETE",
+        "phase_assertions": {
+          "pos": "INVALIDATED_RUNNER_GENERATED_PHASE_DONE_MARKER_WITHOUT_TAXONOMY_ASSERTION",
+          "neg": "INVALIDATED_MALFORMED_ONTOLOGY_PARSER_REJECTION_AND_WILDCARD_EXIT",
+          "err": "OBSERVED_MATCH"
+        },
+        "reason": "EXPECT_POS_REGEX matches the runner's own PHASE_DONE marker rather than ELK output and does not assert taxonomy artifact existence/content. NEG points at err.ofn (malformed syntax), not neg.ofn (ontology inconsistency), and accepts wildcard exit; it proves parser rejection only.",
+        "pass_claim": false
+      }
     },
     {
       "id": "fast-check",
@@ -163,13 +183,53 @@
     "Earlier 8 local candidate overlays and 8 negative gateway checks reused; only exact-head affected code rerun",
     "ELK semantic negative still parser rejection, not ontology inconsistency Oracle",
     "Python hosts fallback prevents hermetic standalone portable T4",
-    "PR22 source head Woodpecker pull_request #621 SUCCESS; push #618 FAILURE cause unverified from GitHub statuses"
+    "PR22 source head Woodpecker pull_request #621 SUCCESS; push #618 FAILURE cause unverified from GitHub statuses",
+    "R7 independent Source-First review: AFL++ and ELK are downgraded to EXECUTION_OBSERVED_ASSERTION_INCOMPLETE; original process exit observations and declared receipt hashes are preserved, but no 8/8 fixture assertion PASS is claimed.",
+    "Raw archive metadata was located in ChatGPT Library (/fm-tools/formal-tools-i24-r7-exact-pr22-native.zip, 15,753 bytes); raw bytes could not be retrieved/materialized in this repair context, so the declared archive SHA256 remains unverified and P2 raw-receipt durability remains BLOCKED.",
+    "R6 README Gateway Git Blob corrected to 615b55bb0f2b5fd1e611865e1dc4c766f89d5ffe."
   ],
   "qualification": {
     "source_14_file_changes_complete": true,
     "actual_3phase_technical_observation_count": 8,
     "full_new_native_T4_qualified": 0,
     "new_semantic_T5_qualified": 0,
-    "requires_independent_exact_sha_review": true
+    "requires_independent_exact_sha_review": true,
+    "assertion_complete_3phase_count": 6,
+    "assertion_incomplete_count": 2,
+    "assertion_incomplete_tool_ids": [
+      "aflpp",
+      "elk"
+    ],
+    "fixture_technical_pass_count": 6,
+    "raw_receipts_committed_to_git": false,
+    "raw_receipt_archive_stable_external_access": false,
+    "raw_receipt_archive_sha256_verified_in_this_repair": false
+  },
+  "review": {
+    "reviewed_pr77_head": "75045734b92beaec6746d5d1abdb7688e2ccd3c6",
+    "verdict": "REWORK",
+    "p0": 0,
+    "p1": 1,
+    "p2": 2,
+    "findings": [
+      "AFL++ NEG wildcard exit plus generic afl-fuzz/ERROR matcher can accept unrelated failures; ERR matcher also accepts generic banner.",
+      "ELK POS matcher observes the runner-generated PHASE_DONE marker rather than ELK output and does not assert taxonomy artifact; NEG invokes malformed err.ofn with wildcard exit, so it is parser rejection rather than semantic ontology negative."
+    ],
+    "portable_source_modified": false
+  },
+  "raw_receipt_archive": {
+    "file_name": "formal-tools-i24-r7-exact-pr22-native.zip",
+    "previously_declared_sha256": "d14e288853b9607aeb7bb0062a0984b68d5d2fa8a41cc3c2955c9e3c90ed7682",
+    "declared_sha256_verified_in_this_repair": false,
+    "prior_library_artifact": {
+      "path": "/fm-tools/formal-tools-i24-r7-exact-pr22-native.zip",
+      "size_bytes": 15753,
+      "modified_at": "2026-11-13T17:22:17.494181+00:00"
+    },
+    "git_versioned": false,
+    "stable_external_archive_url": null,
+    "raw_bytes_accessible_in_this_repair": false,
+    "status": "BLOCKED_RAW_BYTES_NOT_RETRIEVABLE",
+    "required_action": "Provide the original ZIP bytes in the current task context or place them in the canonical Drive validation/receipts folder; verify the declared SHA256, then commit the extracted original per-case stdout/stderr and raw receipts. Do not synthesize missing raw output."
   }
 }

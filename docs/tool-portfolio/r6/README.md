@@ -7,7 +7,7 @@ Authority and invalidation boundaries: main `12032f1d5a759dca5a1b24eedbefae2dfe0
 ## What actually ran
 
 * Debian 13 x86_64, glibc 2.41, non-root UID 1000, tool bundle non-writable to user. Host Node 22.16.0; original supplied portable Node22 / Java21 and native ELFs; host CPython3.13 for explicitly marked alternatives. No Docker isolation.
-* The complete **main** `tool-portfolio-t4.mjs` file was copied verbatim to a temporary worktree; independently checked with `git hash-object` = **`615b55bb0f2e15a209bb13bff18094f56039bd7b3f7`**, identical to main blob. The already reconstructed PR #22 runner has Git blob `94909a645eee266549a6b17e42e5f4478d72aaee`, SHA256 `066674ca41414d1e80019218a5d20f404c0fef75785fb348fed313634720c1d3`, `runner_schema formal-tools/portable-verify/0.2`.
+* The complete **main** `tool-portfolio-t4.mjs` file was copied verbatim to a temporary worktree; independently checked with `git hash-object` = **`615b55bb0f2b5fd1e611865e1dc4c766f89d5ffe`**, identical to main blob. The already reconstructed PR #22 runner has Git blob `94909a645eee266549a6b17e42e5f4478d72aaee`, SHA256 `066674ca41414d1e80019218a5d20f404c0fef75785fb348fed313634720c1d3`, `runner_schema formal-tools/portable-verify/0.2`.
 * Since GitHub source archive cannot be cloned from this container (no GitHub DNS/network), the gateway's **36-row Registry and DAG runtime inputs were projected** from exact main Registry/DAG fields: `id`, `origin`, `capability_ids`, `expected_version` (original blob IDs `faa89997…`, `250b84ae…`); the original 13 native ids were projected. This is a faithful input-field test of the actual gateway module, **not a full checkout or the original CLI/MCP/SDK binaries**.
 * Eight actual candidate tools, under a **separately staged** overlay with additive `err` fixtures, returned gateway `FIXTURE_TECHNICAL_PASS_UNREVIEWED`, true runner exit 0, three TSV phases `pos/neg/err`, matching technical patterns and exit contracts. Per-tool metadata/fixture and receipt SHA256 in [R6 JSON](./T4_GATEWAY_NATIVE_SCOPED.json).
 
@@ -56,3 +56,8 @@ The original PR #22 Writer should add the following changes under `portable/veri
 * This container: real exact gateway **module**, with projected Registry/DAG and staged fixtures, 8/8 scoped technical execution observations; **not** full original main CLI/MCP/SDK gateway replay.
 * Newly independently qualified Native T4 = **0/23**, independent semantic T5 = **0/36**, T6 remains open. Historical 19/36 original tar and 34/36 alternate-callable stats stay separate.
 * Container execution should remain preferred; external/local handoff only for unmet runtime/download/host gates (no unnecessary duplicate validation).
+
+
+## R7 evidence correction (2026-11-14)
+
+The R7 exact-source review downgraded AFL++ and ELK from `FIXTURE_TECHNICAL_PASS_UNREVIEWED` to `EXECUTION_OBSERVED_ASSERTION_INCOMPLETE`. Their recorded process exits and legacy receipt hashes are preserved, but the current assertions do not establish a valid three-phase fixture PASS. See [R7 evidence index](../r7/README.md) and [machine-readable exact-source receipt](../r7/EXACT_PR22_NATIVE.json). No Portable source files were modified by this evidence-only PR.
