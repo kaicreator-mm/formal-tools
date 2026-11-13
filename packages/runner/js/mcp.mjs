@@ -69,7 +69,16 @@ serveStdio(()=>{
   server.registerTool("verify_portable_fixture",{
     description:"Run ONLY the candidate tool's committed portable pos/neg/err fixture through a SHA-pinned runner. No user input/raw argv/shell. Technical evidence only, not business verification.",
     inputSchema:z.object({tool:candidateId,timeout_s:z.number().int().min(1).max(120).default(120)})
-  },async({tool,timeout_s})=>handle(()=>runPortableGate(tool,{mode:"verify-fixture",timeoutS:timeout_s})));
+  },async({tool,timeout_s})=>{
+    const response=await handle(()=>runPortableGate(tool,{mode:"verify-fixture",timeoutS:timeout_s}));
+    // A returned NOT_RUN/NOT_QUALIFIED is an MCP tool error, not a successful
+    // native execution. Keep the technical receipt itself in the content.
+    try{
+      const receipt=JSON.parse(response.content[0]?.text??"{}");
+      if(receipt.status!=="FIXTURE_TECHNICAL_PASS_UNREVIEWED")return {...response,isError:true};
+    }catch{return {...response,isError:true};}
+    return response;
+  });
   server.registerTool("verify_formal_model",{
     description:"Run real finite-model checks in pure JS: DAG, writer exclusivity, CNF or finite state.",
     inputSchema:z.object({engine:z.enum(["dag","writers","cnf","states"]),model:z.record(z.string(),z.unknown())})
