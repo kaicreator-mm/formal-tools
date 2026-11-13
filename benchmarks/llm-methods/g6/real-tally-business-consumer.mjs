@@ -60,12 +60,14 @@ export async function loadPinnedTallyBusiness(){
  * No false Claim authority or professional Oracle is manufactured.
  * The owner-provisioned directory is expected to be fresh, absolute and
  * supported by POSIX directory fsync; candidate-store validates it.
- * @param {{store_dir?:string,formal_head?:string}} [args]
+ * @param {{store_dir?:string,formal_head?:string,consumer_execution_head?:string|null}} [args]
  */
-export async function runRealTallyBusinessConsumption({store_dir,formal_head}={}){
+export async function runRealTallyBusinessConsumption({store_dir,formal_head,consumer_execution_head=null}={}){
  assert(typeof store_dir==="string"&&store_dir.startsWith("/")&&
    typeof formal_head==="string"&&SHA.test(formal_head),
    "explicit POSIX store and exact formal-tools source HEAD required");
+ assert(consumer_execution_head===null||SHA.test(consumer_execution_head),
+   "consumer_execution_head must be an exact lowercase source commit SHA");
  const tally=await loadPinnedTallyBusiness();
  const source=buildRealLifecycleCandidate();
  const native=FAITHFUL_OBSERVATIONS();
@@ -120,6 +122,13 @@ export async function runRealTallyBusinessConsumption({store_dir,formal_head}={}
  return Object.freeze({
    schema:"formal-tools/g6-real-tally-business-consumer/0.1",
    source_head:formal_head,candidate_sha256,
+   consumer_execution:Object.freeze({
+     source_commit:consumer_execution_head, // caller-reported; reviewer must verify against GitHub
+     source_commit_independently_attested:false,
+     driver_git_blob:gitBlob(readFileSync(fileURLToPath(import.meta.url))),
+     test_git_blob:gitBlob(readFileSync(new URL("../../../tests/llm-g6-real-tally-business.test.mjs",import.meta.url))),
+     source_bytes_executed_pinned:true
+   }),
    host:Object.freeze({platform:process.platform,arch:process.arch,node:process.version,
      uid:typeof process.getuid==="function"?process.getuid():null,
      gid:typeof process.getgid==="function"?process.getgid():null,
@@ -137,9 +146,10 @@ export async function runRealTallyBusinessConsumption({store_dir,formal_head}={}
  });
 }
 async function main(args){
- assert(args.length===2,"usage: node real-tally-business-consumer.mjs STORE_DIR FORMAL_HEAD");
- const [store_dir,formal_head]=args;
- const r=await runRealTallyBusinessConsumption({store_dir,formal_head});
+ assert((args.length===2||args.length===3),"usage: node real-tally-business-consumer.mjs STORE_DIR FORMAL_HEAD [CONSUMER_EXECUTION_HEAD]");
+ const [store_dir,formal_head,consumer_execution_head]=args;
+ const r=await runRealTallyBusinessConsumption({store_dir,formal_head,
+   consumer_execution_head:consumer_execution_head??null});
  process.stdout.write(JSON.stringify(r,null,2)+"\n");
 }
 if(process.argv[1]&&pathToFileURL(resolve(process.argv[1])).href===import.meta.url){
