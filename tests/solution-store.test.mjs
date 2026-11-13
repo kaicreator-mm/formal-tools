@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { mkdtempSync, writeFileSync, rmSync, readdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { persistSolutionCandidate, inspectStoredReplay, revokeStoredCandidate } from "../packages/runner/js/solution-store.mjs";
@@ -66,6 +66,8 @@ test("G4 content-addressed candidate persists, reopens and refuses all semantic 
    const after=await inspectStoredReplay(request);
    assert.equal(after.status,"INVALIDATED");
    assert.equal(after.replay_allowed,false);
+   const resurrect=await persistSolutionCandidate({store_dir:dir,...f});
+   assert.equal(resurrect.status,"INVALIDATED","tombstone dominates idempotent persist");
    const different=await revokeStoredCandidate({store_dir:dir,
      candidate_sha256:first.candidate_sha256,reason:"SOURCE_REVOKED"});
    assert.equal(different.status,"BLOCKED","revocation may not be overwritten");
@@ -89,5 +91,50 @@ test("G4 stored candidate rejects modified evidence, forged gate and path traver
      "an existing forged record may not be clobbered");
    assert.equal((await revokeStoredCandidate({store_dir:dir,
      candidate_sha256:value.candidate_sha256,reason:"OPERATOR_REVOKED"})).status,"BLOCKED");
+ }finally{rmSync(dir,{recursive:true,force:true});}
+});
+
+
+test("G4 atomic hard-link publication: parallel writers and readers never see partial JSON",async()=>{
+ const dir=mkdtempSync(join(tmpdir(),"ft-g4-atomic-"));
+ try{
+   const f=fixture();
+   const stores=await Promise.all(Array.from({length:12},()=>persistSolutionCandidate({store_dir:dir,...f})));
+   assert.ok(stores.every(x=>x.status==="CANDIDATE_PERSISTED"));
+   assert.equal(stores.filter(x=>x.record_write==="NEW").length,1);
+   assert.equal(stores.filter(x=>x.record_write==="EXISTING").length,11);
+   const id=stores[0].candidate_sha256;
+   const views=await Promise.all(Array.from({length:10},()=>inspectStoredReplay({
+     store_dir:dir,candidate_sha256:id,current_provenance_json:f.provenance_json
+   })));
+   assert.ok(views.every(x=>x.status==="REPLAY_BLOCKED_UNQUALIFIED"));
+   assert.ok(readdirSync(dir).every(x=>!x.startsWith(".pending-")),"no temp artifacts after successful writers");
+   const tomb=await Promise.all(Array.from({length:8},()=>revokeStoredCandidate({
+     store_dir:dir,candidate_sha256:id,reason:"EVIDENCE_REVOKED"
+   })));
+   assert.ok(tomb.every(x=>x.status==="INVALIDATED"));
+   assert.equal(tomb.filter(x=>x.record_write==="NEW").length,1);
+   assert.equal(tomb.filter(x=>x.record_write==="EXISTING").length,7);
+   assert.equal((await persistSolutionCandidate({store_dir:dir,...f})).status,"INVALIDATED");
+   assert.equal((await inspectStoredReplay({store_dir:dir,candidate_sha256:id,
+     current_provenance_json:f.provenance_json})).status,"INVALIDATED");
+ }finally{rmSync(dir,{recursive:true,force:true});}
+});
+test("G4 orphan partial temporary record cannot be published or mistaken for committed candidate",async()=>{
+ const dir=mkdtempSync(join(tmpdir(),"ft-g4-interrupt-"));
+ try {
+   const f=fixture();
+   writeFileSync(join(dir,".pending-crashed-writer"),"{broken");
+   const stored=await persistSolutionCandidate({store_dir:dir,...f});
+   assert.equal(stored.status,"CANDIDATE_PERSISTED");
+   const view=await inspectStoredReplay({store_dir:dir,candidate_sha256:stored.candidate_sha256,
+     current_provenance_json:f.provenance_json});
+   assert.equal(view.status,"REPLAY_BLOCKED_UNQUALIFIED");
+   assert.equal(view.solution_promotable,false);
+   // Existing corrupt final path must *not* be silently overwritten or repaired.
+   writeFileSync(join(dir,"candidate-"+stored.candidate_sha256+".json"),"{incomplete");
+   assert.equal((await persistSolutionCandidate({store_dir:dir,...f})).status,"BLOCKED");
+   assert.equal((await inspectStoredReplay({store_dir:dir,candidate_sha256:stored.candidate_sha256,
+     current_provenance_json:f.provenance_json})).status,"BLOCKED");
  }finally{rmSync(dir,{recursive:true,force:true});}
 });
