@@ -39,6 +39,15 @@ test("G5 frozen A/B scorer counts wrong PASS, UNKNOWN, coverage, cost and latenc
   assert.ok(m.augmented.cost_usd>m.baseline.cost_usd);
   assert.ok(m.augmented.latency_ms>m.baseline.latency_ms);
   assert.equal(m.independent_raw_trace_review,"NOT_RUN");
+  // An independently unqualified solver may return SAT while the LLM
+  // correctly abstains from an original business-semantic verdict.
+  const abstaining=fixture();
+  abstaining.augmented.observations[0].prediction="UNKNOWN";
+  const scoped=score(abstaining);
+  assert.equal(scoped.status,"SCORED_UNATTESTED");
+  assert.equal(scoped.augmented.unknown,1);
+  assert.equal(scoped.augmented.coverage,5/6);
+  assert.equal(scoped.g5_accepted,false);
 });
 test("G5 fake fairness, missing cases, forged evidence and unbounded inputs fail closed",()=>{
   const f=fixture();
