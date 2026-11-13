@@ -1,0 +1,755 @@
+{
+  "schema": "formal-tools/app-canonical-asset-catalog/v3",
+  "snapshot_date": "2026-11-13",
+  "root_path": "App",
+  "root_url": "https://drive.google.com/drive/folders/1zZV3LcoOebjKqrbDNH2NOsqPMkM9xgJw",
+  "rules": {
+    "ingestion": "Upload all new/untrusted software into 00-INBOX. Never upload into verified/validation.",
+    "source_of_truth": "Only one canonical source file per exact package/version/platform; retain publisher archive and its filename-bound hash manifest. Record validation by SHA + receipt; no bulk file duplication.",
+    "validation": "App/10-formal-tools/validation holds receipts, not copied packages. Historical test status stays in GitHub Issue #24/#11 and R2 per-tool evidence.",
+    "historical": "Different versions, ABI/platforms, split transport parts, 36 tool tar vs independent Python wheelhouse are not byte-identical duplicates; do not delete.",
+    "highspy": "Original highspy source zip misnamed 1.15.1 but internal wheel actual 1.16.0. Preserve immutable original and one normalized verified alias as explicit exception.",
+    "deletion": "33 copies were made by Drive copy of canonical source files with matching names/sizes and R3/R4 evidence. Source retains canonical ID. Duplicate IDs are tombstones after cleanup. Fresh byte-wise hash comparison of both links unavailable in Drive connector; checksum manifests apply to canonical archive.",
+    "product": "Tool availability is NOT Source/Oracle T5/G3/G4/G5 acceptance; avoid overstating qualification."
+  },
+  "folders": {
+    "root": "1zZV3LcoOebjKqrbDNH2NOsqPMkM9xgJw",
+    "inbox": "1P3GoNQvbZPRJr-3nnzbA1HqNhHg-W68w",
+    "formal_tools": "1VG_J1Oif35tyvVvJ71klBOkp0RO6_jaK",
+    "portable": "1DsQtN4Ei3F8YGyDxUGiXCWNuIU8mS2wp",
+    "native_tools": "1rIJ315fjiXtJEPk9mjXP2Kzty4V3n3nZ",
+    "runtimes": "1SgDSA6go-q4uFXxAuHyrHNtXP_WfbnWS",
+    "python_wheelhouses": "1jT9rgermFAlgvXRpuUqRaQH0zesc0Lku",
+    "validation": "1RH31lRIMZHWp5OluomuVTu479lquiMFD",
+    "verified_tools_old": "1Ruw61tyRGHwVSK6jsz41XYCXlFzECJqb",
+    "verified_runtimes_old": "1mKYWVqLz5sfwlLSv5m45gzXD0wsrqIn6",
+    "verified_wheels_old": "1PaOrmxwWPaQ067Cg-36aF8rJAMaULrEA",
+    "verified_host_old": "1gVs3oRAf_YQjcruEdo4D-7zEO07tI4cO",
+    "receipts": "174B2Jar2OlQSs9mJkGqNUeI0vHmUZQzd",
+    "archive": "17dQ18GyCSLWKDUctWHnbNixPh8JLcJTi",
+    "legacy_formal_methods": "1MoHtWm_9hsiiYjaTfXmTf-AZ47RPfbk-",
+    "project_exports": "1NlOCp_EkGYdFnhV2qBzvOT0A7ap_4Duh"
+  },
+  "canonical": {
+    "native": [
+      {
+        "id": "149qw_UMDq-jn9wf2pkSXFelzB3q6xwr-",
+        "name": "aflpp-5.03c-linux-x86_64.tar.zst",
+        "size_bytes": 3244701,
+        "modified": "2026-11-12T07:48:04.347Z"
+      },
+      {
+        "id": "1HqJfRyy4_agn-A32x98oOwKzMRmWPXoQ",
+        "name": "alloy-6.2.0-linux-x86_64.tar.zst",
+        "size_bytes": 20293127,
+        "modified": "2026-11-12T07:48:08.555Z"
+      },
+      {
+        "id": "1YSoQtIQmRExE5x-QjB8Ifno9Xmrk28NZ",
+        "name": "apache-jena-5.5.0-linux-x86_64.tar.zst",
+        "size_bytes": 22751175,
+        "modified": "2026-11-12T07:48:13.358Z"
+      },
+      {
+        "id": "1NwEMzHqokZmhVfJGqrKBgYQ7SsCekfpJ",
+        "name": "apalache-0.63.0-linux-x86_64.tar.zst",
+        "size_bytes": 191414001,
+        "modified": "2026-11-12T07:49:20.311Z"
+      },
+      {
+        "id": "1UNAWi3EnSuOzsJOjs1W90WMno5-HpS2V",
+        "name": "causal-learn-0.1.4.8-linux-x86_64.tar.zst",
+        "size_bytes": 454971,
+        "modified": "2026-11-12T09:00:27.250Z"
+      },
+      {
+        "id": "11n3FyTfT_YXXdYgmWOsPB77e0LQpg7uX",
+        "name": "cbmc-6.11.0-linux-x86_64.tar.zst",
+        "size_bytes": 20600381,
+        "modified": "2026-11-12T09:00:36.992Z"
+      },
+      {
+        "id": "1bd6bUrcAeLWok20B7ed-D2FGlnLcCHwW",
+        "name": "clingo-5.8.3-linux-x86_64.tar.zst",
+        "size_bytes": 4916284,
+        "modified": "2026-11-12T09:00:38.959Z"
+      },
+      {
+        "id": "1HZ3ZswUQq8haSzgM-phJ_OgnXFBDqHfU",
+        "name": "cvc5-1.4.2-linux-x86_64.tar.zst",
+        "size_bytes": 8783688,
+        "modified": "2026-11-12T09:00:42.419Z"
+      },
+      {
+        "id": "1-1BlYZi6JrUfKbXp5oHSaGB0sY-lYmgr",
+        "name": "dafny-4.11.0-linux-x86_64.tar.zst",
+        "size_bytes": 46399875,
+        "modified": "2026-11-12T09:00:59.799Z"
+      },
+      {
+        "id": "17O6LyfVlR1bH3x8wfytZjJhmPF9FjAht",
+        "name": "dowhy-0.14-linux-x86_64.tar.zst",
+        "size_bytes": 659197,
+        "modified": "2026-11-12T09:01:00.002Z"
+      },
+      {
+        "id": "14e1IuMaQ8ZdViIEOWQvI90bWytA4duMy",
+        "name": "elk-0.6.0-linux-x86_64.tar.zst",
+        "size_bytes": 5384746,
+        "modified": "2026-11-12T09:01:02.334Z"
+      },
+      {
+        "id": "1LH-OfV6hbrqyLcXb9Y-cnkZYwHnXxFga",
+        "name": "fast-check-4.10.2-linux-x86_64.tar.zst",
+        "size_bytes": 124461,
+        "modified": "2026-11-11T22:39:46.889Z"
+      },
+      {
+        "id": "1CscZYC5OzaklBsspcxnYLBooqfyDbC2Y",
+        "name": "fast-downward-24.06-linux-x86_64.tar.zst",
+        "size_bytes": 98140215,
+        "modified": "2026-11-11T22:37:50.422Z"
+      },
+      {
+        "id": "19SGQTJynASZc3-wgIHG5PqMVdHCHtOV_",
+        "name": "highs-1.15.1-linux-x86_64.tar.zst",
+        "size_bytes": 2284374,
+        "modified": "2026-11-12T09:01:03.605Z"
+      },
+      {
+        "id": "1eX6OJT_zSgMGQiTBR-j8tlNQPMe8N1AM",
+        "name": "hypothesis-6.170.15-linux-x86_64.tar.zst",
+        "size_bytes": 1470711,
+        "modified": "2026-11-12T09:01:04.301Z"
+      },
+      {
+        "id": "14TgefDI8RkIk4jYVr5Tytsa_THn61mpd",
+        "name": "kani-0.68.0-linux-x86_64.tar.zst",
+        "size_bytes": 245094621,
+        "modified": "2026-11-12T07:51:02.918Z"
+      },
+      {
+        "id": "1rPqRGojAUT5aiTnzvYDRNui6fxeMq_J0",
+        "name": "lean4-4.35.0-linux-x86_64.tar.zst",
+        "size_bytes": 567187865,
+        "modified": "2026-11-11T22:42:24.789Z"
+      },
+      {
+        "id": "1zlRToYmGjCSLKkiw8wCHE823wCAEGn4y",
+        "name": "lean4-4.35.0-linux-x86_64.tar.zst.part-00",
+        "size_bytes": 134217728,
+        "modified": "2026-11-13T02:52:39.786Z"
+      },
+      {
+        "id": "1ZWTKJroti6P7fvPow93cHJ_N3e_85zq3",
+        "name": "lean4-4.35.0-linux-x86_64.tar.zst.part-01",
+        "size_bytes": 134217728,
+        "modified": "2026-11-13T02:52:53.195Z"
+      },
+      {
+        "id": "1denol1UHvyNOfHWAHHQxfKs6JCsWnjr5",
+        "name": "lean4-4.35.0-linux-x86_64.tar.zst.part-02",
+        "size_bytes": 134217728,
+        "modified": "2026-11-13T02:53:05.214Z"
+      },
+      {
+        "id": "1730NHV9vjtPsLMts5pt1XrjtUlxAYHix",
+        "name": "lean4-4.35.0-linux-x86_64.tar.zst.part-03",
+        "size_bytes": 134217728,
+        "modified": "2026-11-13T02:53:18.397Z"
+      },
+      {
+        "id": "1XSqZj4uwZH915rU5m57JECGwXakuf7E_",
+        "name": "lean4-4.35.0-linux-x86_64.tar.zst.part-04",
+        "size_bytes": 30316953,
+        "modified": "2026-11-13T02:53:21.306Z"
+      },
+      {
+        "id": "1g7U8kactST8wJD-2gaRra6YO0aqbzXIu",
+        "name": "mesa-3.5.2-linux-x86_64.tar.zst",
+        "size_bytes": 441464,
+        "modified": "2026-11-12T09:01:04.540Z"
+      },
+      {
+        "id": "1Vmn_FKlmXjXrpor46EU-7bU_Q0jJj9Pv",
+        "name": "minizinc-2.10.1-linux-x86_64.tar.zst",
+        "size_bytes": 79397709,
+        "modified": "2026-11-12T09:01:45.230Z"
+      },
+      {
+        "id": "1juU5Qkft0OnkHhdZ1hnrBS3IcuT4P7Fo",
+        "name": "networkx-3.7-linux-x86_64.tar.zst",
+        "size_bytes": 3246378,
+        "modified": "2026-11-12T09:01:47.415Z"
+      },
+      {
+        "id": "105ZEPX-fKi2gH-ebaaJg-1V4bs-Ksmxn",
+        "name": "nuxmv-2.2.0-linux-x86_64.tar.zst",
+        "size_bytes": 19728969,
+        "modified": "2026-11-12T09:02:00.366Z"
+      },
+      {
+        "id": "156MgXEaLAkcOC_vNyBGienf6IXsFyw_2",
+        "name": "ortools-9.15.6755-linux-x86_64.tar.zst",
+        "size_bytes": 21850419,
+        "modified": "2026-11-12T09:02:12.223Z"
+      },
+      {
+        "id": "1vdz-u0jbErFl1FkDlhhskfkDPpLKF9Nh",
+        "name": "prism-4.11-linux-x86_64.tar.zst",
+        "size_bytes": 38352724,
+        "modified": "2026-11-12T09:02:26.706Z"
+      },
+      {
+        "id": "1OJ81TtXhbSvyrIuDvz28Vq41hwZbOaQm",
+        "name": "prob-1.16.1-linux-x86_64.tar.zst",
+        "size_bytes": 34278304,
+        "modified": "2026-11-12T09:02:37.863Z"
+      },
+      {
+        "id": "105Aq1lrpCglTe5WLJY0Nxbw4YtnCZBkW",
+        "name": "pymc-6.4.0-linux-x86_64.tar.zst",
+        "size_bytes": 1072092,
+        "modified": "2026-11-12T09:02:38.162Z"
+      },
+      {
+        "id": "1JyKDgIZt1MdAnEZi0DowX6npELHCycvU",
+        "name": "rdf-shacl-0.40.2-linux-x86_64.tar.zst",
+        "size_bytes": 1004578,
+        "modified": "2026-11-12T09:02:38.526Z"
+      },
+      {
+        "id": "1y2vjymKixthdBdnv-QkMCf2Dl_CWdfl4",
+        "name": "robot-1.9.11-linux-x86_64.tar.zst",
+        "size_bytes": 72767623,
+        "modified": "2026-11-12T09:03:04.752Z"
+      },
+      {
+        "id": "1YkWjU-_p__2FYBWnu5cUqIsCqFpyUBd2",
+        "name": "simpy-4.1.2-linux-x86_64.tar.zst",
+        "size_bytes": 46858,
+        "modified": "2026-11-12T09:03:04.807Z"
+      },
+      {
+        "id": "1f2doUFxpGxHALhoZ2vrm5O6WLr6bjPOj",
+        "name": "souffle-2.5-linux-x86_64.tar.zst",
+        "size_bytes": 4755814,
+        "modified": "2026-11-12T09:03:06.021Z"
+      },
+      {
+        "id": "1r38Hl46oPr_Y1WP-0CQJClBCPwFNBWD6",
+        "name": "storm-1.8.0-linux-x86_64.tar.zst",
+        "size_bytes": 135514383,
+        "modified": "2026-11-12T09:03:48.053Z"
+      },
+      {
+        "id": "1MEZJ5zKT3v8NYUSEGK_Yya56U7b9_HJn",
+        "name": "sympy-1.14.0-linux-x86_64.tar.zst",
+        "size_bytes": 13114986,
+        "modified": "2026-11-12T09:03:54.237Z"
+      },
+      {
+        "id": "1zMJIekGb23rveSITIR1fJ5VdtGSSCgE1",
+        "name": "tla-tlc-1.8.0-linux-x86_64.tar.zst",
+        "size_bytes": 4218934,
+        "modified": "2026-11-12T09:03:57.305Z"
+      },
+      {
+        "id": "1Hv0TYSyXNp43KwzSPtgoUQ11MD5CDT0H",
+        "name": "tree-sitter-0.27.2-linux-x86_64.tar.zst",
+        "size_bytes": 6498226,
+        "modified": "2026-11-12T09:04:02.936Z"
+      },
+      {
+        "id": "1E9KY-cHYitaGaIn_oHd2Fs1Ub9CO1hQR",
+        "name": "vampire-5.1.0-linux-x86_64.tar.zst",
+        "size_bytes": 16217878,
+        "modified": "2026-11-11T22:43:57.275Z"
+      },
+      {
+        "id": "11al2sVeTUobdKn5ycHqK1v2SX8ZJGeA4",
+        "name": "why3-1.8.0-linux-x86_64.tar.zst",
+        "size_bytes": 41550468,
+        "modified": "2026-11-12T20:29:20.000Z"
+      },
+      {
+        "id": "1HdbFOgyUDShD04BKMeEJQRi_XjdYIdNe",
+        "name": "z3-5.4.0-linux-x86_64.tar.zst",
+        "size_bytes": 12894456,
+        "modified": "2026-11-11T22:39:46.836Z"
+      }
+    ],
+    "runtimes": [
+      {
+        "id": "1cfClfHuSXue76CADL0WTdWpU6AVMUrZf",
+        "name": "dotnet8-8.0-linux-x86_64.tar.zst",
+        "size_bytes": 24879157
+      },
+      {
+        "id": "1SLlkltuIQ3p6-ougFiuet9qEIZRB0Cc5",
+        "name": "java21-21.0.13.9-linux-x86_64.tar.zst",
+        "size_bytes": 32262489
+      },
+      {
+        "id": "1c-2M5n2aAHSktZF9qLixz8ZrG6zndbmw",
+        "name": "node22-22.16.0-linux-x86_64.tar.zst",
+        "size_bytes": 32626970
+      },
+      {
+        "id": "1kmcMROdf6t-5xGPV74wGx6CvxQwLf2hb",
+        "name": "py-cache-1.25.0-linux-x86_64.tar.zst",
+        "size_bytes": 22778389
+      },
+      {
+        "id": "1zmyt4xVpJ8eyXZlN9xWljBkyQal5rpyX",
+        "name": "python313-3.13.5-linux-x86_64.tar.zst",
+        "size_bytes": 294346075
+      }
+    ],
+    "python_wheelhouses": [
+      {
+        "id": "1A7vGCKtAWQieBTl8sLGYV-QaIFdFy_1t",
+        "name": "causal-learn-whl-0.1.4.8-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 112516162
+      },
+      {
+        "id": "1NuHbrtiMjc2N8PCFr1xnxQFHjxOF7x4C",
+        "name": "dowhy-whl-0.14-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 252672296
+      },
+      {
+        "id": "1tqnlNn9M_w8dg5AK4753P3CknqyrYwAD",
+        "name": "highspy-whl-1.15.1-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 19722262
+      },
+      {
+        "id": "1IfvWtOL2e1F7vJoiqA3g2gahi0ds8eNZ",
+        "name": "hypothesis-whl-6.170.15-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 1185687
+      },
+      {
+        "id": "1GYPzElMX-bdCwCo-vuMQ92DI-Q-ai7-n",
+        "name": "INSTALL.md",
+        "size_bytes": 3593
+      },
+      {
+        "id": "1bpZry75rOQDD-AvYEG79i2n38GG3eld1",
+        "name": "mesa-whl-3.5.2-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 63839634
+      },
+      {
+        "id": "1joNYv5agcCSR4vDzfOBXEI4GadvwVqYM",
+        "name": "networkx-whl-3.7-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 2079645
+      },
+      {
+        "id": "1AvfXet8c-l0b1glcCtuHEtGRqWDxkb6B",
+        "name": "ortools-whl-9.15.6755-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 58766317
+      },
+      {
+        "id": "1Llzj3YzFmBRrye5cXytpgUU_xAEVCFjF",
+        "name": "pymc-whl-6.4.0-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 136055980
+      },
+      {
+        "id": "1UZYdjqJZtVruDWUJqvd1WyKmuUuxD1jN",
+        "name": "pyshacl-whl-0.40.2-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 3067675
+      },
+      {
+        "id": "11L4SaU7m4MM8zwUd-GXHnHPqyLsBVoKV",
+        "name": "SHA256SUMS-ZIPS",
+        "size_bytes": 1348
+      },
+      {
+        "id": "19zptJMbjAWEoguwx5Lnulzvjnd-13er2",
+        "name": "simpy-whl-4.1.2-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 26482
+      },
+      {
+        "id": "1vZk6K2xuT16ds_pzSQnCSdxIYZRl3L3_",
+        "name": "sympy-whl-1.14.0-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 6688105
+      }
+    ],
+    "portable_top_level": [
+      {
+        "id": "1xih69-36HKcHPzGih1GTNNgtoFo9bmYH",
+        "name": "README.md",
+        "size_bytes": 8638
+      },
+      {
+        "id": "1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1",
+        "name": "SHA256SUMS",
+        "size_bytes": 4514
+      },
+      {
+        "id": "1Ke4rkdy3E7Paa06xRve6epPStkY-1CtE",
+        "name": "unpack.sh",
+        "size_bytes": 1203
+      },
+      {
+        "id": "1xEUgLSTDO6xj8ij_hvAgnHkOeq2aMrl7",
+        "name": "formal-tools-portable-core-linux-x86_64.tar.zst",
+        "size_bytes": 27989
+      }
+    ]
+  },
+  "legacy_urls": {
+    "formal_methods": "https://drive.google.com/drive/folders/1MoHtWm_9hsiiYjaTfXmTf-AZ47RPfbk-",
+    "project_exports": "https://drive.google.com/drive/folders/1NlOCp_EkGYdFnhV2qBzvOT0A7ap_4Duh"
+  },
+  "duplicate_cleanup": {
+    "count": 33,
+    "bytes_redundant": 1733082227,
+    "canonical_source_retained": true,
+    "legacy_duplicate_ids_permanently_removed": false,
+    "whitelist_verified_aliases": [
+      {
+        "copy_id": "19KfF2z9t1PwcJTIEG0A1gG6uzMeB6yD0",
+        "copy_title": "highspy-wheelhouse-1.16.0-py313-debian13-x86_64.zip",
+        "canonical_id": "1tqnlNn9M_w8dg5AK4753P3CknqyrYwAD",
+        "canonical_title": "highspy-whl-1.15.1-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 19722262,
+        "kind": "wheelhouse",
+        "disposition": "PRESERVE_VERSION_ALIAS",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      }
+    ],
+    "candidates": [
+      {
+        "copy_id": "1Vaf8LA3bUgGYK-wXAZpc3McHMygOD3_0",
+        "copy_title": "kani-0.68.0-linux-x86_64.tar.zst",
+        "canonical_id": "14TgefDI8RkIk4jYVr5Tytsa_THn61mpd",
+        "canonical_title": "kani-0.68.0-linux-x86_64.tar.zst",
+        "size_bytes": 245094621,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1hBe1Iaj4QlQfz-RZuzX7yKRivsdv6GIw",
+        "copy_title": "apalache-0.63.0-linux-x86_64.tar.zst",
+        "canonical_id": "1NwEMzHqokZmhVfJGqrKBgYQ7SsCekfpJ",
+        "canonical_title": "apalache-0.63.0-linux-x86_64.tar.zst",
+        "size_bytes": 191414001,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1jfaoT6LaDVENBmIYc0Qhv4E07_eTABk9",
+        "copy_title": "storm-1.8.0-linux-x86_64.tar.zst",
+        "canonical_id": "1r38Hl46oPr_Y1WP-0CQJClBCPwFNBWD6",
+        "canonical_title": "storm-1.8.0-linux-x86_64.tar.zst",
+        "size_bytes": 135514383,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1uWKr9jaYJyEhweMl2T2wnxz4cvUsgc7t",
+        "copy_title": "robot-1.9.11-linux-x86_64.tar.zst",
+        "canonical_id": "1y2vjymKixthdBdnv-QkMCf2Dl_CWdfl4",
+        "canonical_title": "robot-1.9.11-linux-x86_64.tar.zst",
+        "size_bytes": 72767623,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1iadRckJx36aSroaVWvFl4gPtazqe7N__",
+        "copy_title": "dafny-4.11.0-linux-x86_64.tar.zst",
+        "canonical_id": "1-1BlYZi6JrUfKbXp5oHSaGB0sY-lYmgr",
+        "canonical_title": "dafny-4.11.0-linux-x86_64.tar.zst",
+        "size_bytes": 46399875,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1NGBrVcX0GROYFHHUN6AV174adwQdRRep",
+        "copy_title": "minizinc-2.10.1-linux-x86_64.tar.zst",
+        "canonical_id": "1Vmn_FKlmXjXrpor46EU-7bU_Q0jJj9Pv",
+        "canonical_title": "minizinc-2.10.1-linux-x86_64.tar.zst",
+        "size_bytes": 79397709,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1jTZmT_tQL7MuhF162Xs6QPm09VMo3jJT",
+        "copy_title": "prism-4.11-linux-x86_64.tar.zst",
+        "canonical_id": "1vdz-u0jbErFl1FkDlhhskfkDPpLKF9Nh",
+        "canonical_title": "prism-4.11-linux-x86_64.tar.zst",
+        "size_bytes": 38352724,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1o7aUNqQC-DeLKJ98jyzYe_kDik9z6RLj",
+        "copy_title": "apache-jena-5.5.0-linux-x86_64.tar.zst",
+        "canonical_id": "1YSoQtIQmRExE5x-QjB8Ifno9Xmrk28NZ",
+        "canonical_title": "apache-jena-5.5.0-linux-x86_64.tar.zst",
+        "size_bytes": 22751175,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1i8CysWXo_ZTFzcS_xuMI2iyV_jZMdUkc",
+        "copy_title": "alloy-6.2.0-linux-x86_64.tar.zst",
+        "canonical_id": "1HqJfRyy4_agn-A32x98oOwKzMRmWPXoQ",
+        "canonical_title": "alloy-6.2.0-linux-x86_64.tar.zst",
+        "size_bytes": 20293127,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1boxLhjuMkQ5HlivXPtuxR8XKDVxDg2DC",
+        "copy_title": "elk-0.6.0-linux-x86_64.tar.zst",
+        "canonical_id": "14e1IuMaQ8ZdViIEOWQvI90bWytA4duMy",
+        "canonical_title": "elk-0.6.0-linux-x86_64.tar.zst",
+        "size_bytes": 5384746,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1VFf1h8ai3crUsqaH-obDw5RVWmkqtyFS",
+        "copy_title": "tla-tlc-1.8.0-linux-x86_64.tar.zst",
+        "canonical_id": "1zMJIekGb23rveSITIR1fJ5VdtGSSCgE1",
+        "canonical_title": "tla-tlc-1.8.0-linux-x86_64.tar.zst",
+        "size_bytes": 4218934,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "10PW70akr60AVCM9JPDuQkl1_8fMcbmfj",
+        "copy_title": "cbmc-6.11.0-linux-x86_64.tar.zst",
+        "canonical_id": "11n3FyTfT_YXXdYgmWOsPB77e0LQpg7uX",
+        "canonical_title": "cbmc-6.11.0-linux-x86_64.tar.zst",
+        "size_bytes": 20600381,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1JoX73oDvy-cYOpkEjP4QrektlSKUaT8d",
+        "copy_title": "aflpp-5.03c-linux-x86_64.tar.zst",
+        "canonical_id": "149qw_UMDq-jn9wf2pkSXFelzB3q6xwr-",
+        "canonical_title": "aflpp-5.03c-linux-x86_64.tar.zst",
+        "size_bytes": 3244701,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1lgY1-Urhe_aEhoIj8q8VxprQwMalD_5W",
+        "copy_title": "vampire-5.1.0-linux-x86_64.tar.zst",
+        "canonical_id": "1E9KY-cHYitaGaIn_oHd2Fs1Ub9CO1hQR",
+        "canonical_title": "vampire-5.1.0-linux-x86_64.tar.zst",
+        "size_bytes": 16217878,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1IZRkI_90fwX4qD5VcLMNyIlK-A4KpmM9",
+        "copy_title": "souffle-2.5-linux-x86_64.tar.zst",
+        "canonical_id": "1f2doUFxpGxHALhoZ2vrm5O6WLr6bjPOj",
+        "canonical_title": "souffle-2.5-linux-x86_64.tar.zst",
+        "size_bytes": 4755814,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1SADEon3aemG3AGnE4CbcqbrsvanLLbVu",
+        "copy_title": "clingo-5.8.3-linux-x86_64.tar.zst",
+        "canonical_id": "1bd6bUrcAeLWok20B7ed-D2FGlnLcCHwW",
+        "canonical_title": "clingo-5.8.3-linux-x86_64.tar.zst",
+        "size_bytes": 4916284,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1NEarTyU9ucWNL47EpYvQVIYbpz5N-Eq3",
+        "copy_title": "cvc5-1.4.2-linux-x86_64.tar.zst",
+        "canonical_id": "1HZ3ZswUQq8haSzgM-phJ_OgnXFBDqHfU",
+        "canonical_title": "cvc5-1.4.2-linux-x86_64.tar.zst",
+        "size_bytes": 8783688,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1zNGqO0-2oRhq6YMyg9UsRYiCEq1xiedt",
+        "copy_title": "fast-check-4.10.2-linux-x86_64.tar.zst",
+        "canonical_id": "1LH-OfV6hbrqyLcXb9Y-cnkZYwHnXxFga",
+        "canonical_title": "fast-check-4.10.2-linux-x86_64.tar.zst",
+        "size_bytes": 124461,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1UMPQy7NkLocBhjw8iCNdPz9mOfVjj4wY",
+        "copy_title": "z3-5.4.0-linux-x86_64.tar.zst",
+        "canonical_id": "1HdbFOgyUDShD04BKMeEJQRi_XjdYIdNe",
+        "canonical_title": "z3-5.4.0-linux-x86_64.tar.zst",
+        "size_bytes": 12894456,
+        "kind": "native",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1Ajwky3VS4v_j2rqhXe-q1aNAll_1ghkA",
+        "copy_title": "java21-21.0.13.9-linux-x86_64.tar.zst",
+        "canonical_id": "1SLlkltuIQ3p6-ougFiuet9qEIZRB0Cc5",
+        "canonical_title": "java21-21.0.13.9-linux-x86_64.tar.zst",
+        "size_bytes": 32262489,
+        "kind": "runtime",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1TVOMFHm312t4YFZItWB-uB_UpHyVtp0c",
+        "copy_title": "node22-22.16.0-linux-x86_64.tar.zst",
+        "canonical_id": "1c-2M5n2aAHSktZF9qLixz8ZrG6zndbmw",
+        "canonical_title": "node22-22.16.0-linux-x86_64.tar.zst",
+        "size_bytes": 32626970,
+        "kind": "runtime",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1qGOnoKSV-VxuuAR03aXuOWeQ2wI1eBeM",
+        "copy_title": "simpy-wheelhouse-4.1.2-py313-debian13-x86_64.zip",
+        "canonical_id": "19zptJMbjAWEoguwx5Lnulzvjnd-13er2",
+        "canonical_title": "simpy-whl-4.1.2-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 26482,
+        "kind": "wheelhouse",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1llfzwk-C54CM8rYF2ZbX1_gIGfy7aJoB",
+        "copy_title": "networkx-wheelhouse-3.7-py313-debian13-x86_64.zip",
+        "canonical_id": "1joNYv5agcCSR4vDzfOBXEI4GadvwVqYM",
+        "canonical_title": "networkx-whl-3.7-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 2079645,
+        "kind": "wheelhouse",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1tZHqbIH7ndK-w5Nc7YFonlk6loFjQyHz",
+        "copy_title": "hypothesis-wheelhouse-6.170.15-py313-debian13-x86_64.zip",
+        "canonical_id": "1IfvWtOL2e1F7vJoiqA3g2gahi0ds8eNZ",
+        "canonical_title": "hypothesis-whl-6.170.15-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 1185687,
+        "kind": "wheelhouse",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1jPUnWjJvXaNFUkSjbTshT5bLsD-p7WtC",
+        "copy_title": "sympy-wheelhouse-1.14.0-py313-debian13-x86_64.zip",
+        "canonical_id": "1vZk6K2xuT16ds_pzSQnCSdxIYZRl3L3_",
+        "canonical_title": "sympy-whl-1.14.0-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 6688105,
+        "kind": "wheelhouse",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1S93LgkaLpvXmbvUqBwoUA1vKgLEK1raN",
+        "copy_title": "pyshacl-wheelhouse-0.40.2-py313-debian13-x86_64.zip",
+        "canonical_id": "1UZYdjqJZtVruDWUJqvd1WyKmuUuxD1jN",
+        "canonical_title": "pyshacl-whl-0.40.2-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 3067675,
+        "kind": "wheelhouse",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1C5cZkXRJSV29eyRofXXqtgMqg_u1qLAm",
+        "copy_title": "ortools-wheelhouse-9.15.6755-py313-debian13-x86_64.zip",
+        "canonical_id": "1AvfXet8c-l0b1glcCtuHEtGRqWDxkb6B",
+        "canonical_title": "ortools-whl-9.15.6755-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 58766317,
+        "kind": "wheelhouse",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1uT8Yz2AkWeKHOLgkObuFDuHe9s3eQ81J",
+        "copy_title": "mesa-wheelhouse-3.5.2-py313-debian13-x86_64.zip",
+        "canonical_id": "1bpZry75rOQDD-AvYEG79i2n38GG3eld1",
+        "canonical_title": "mesa-whl-3.5.2-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 63839634,
+        "kind": "wheelhouse",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1Pz8JwzAgE2w8ej5ZuN5g7hYoVjMaYpoG",
+        "copy_title": "causal-learn-wheelhouse-0.1.4.8-py313-debian13-x86_64.zip",
+        "canonical_id": "1A7vGCKtAWQieBTl8sLGYV-QaIFdFy_1t",
+        "canonical_title": "causal-learn-whl-0.1.4.8-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 112516162,
+        "kind": "wheelhouse",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1hkkq81xHn8Hx1cEma7kVYXQkH-RqEIAo",
+        "copy_title": "pymc-wheelhouse-6.4.0-py313-debian13-x86_64.zip",
+        "canonical_id": "1Llzj3YzFmBRrye5cXytpgUU_xAEVCFjF",
+        "canonical_title": "pymc-whl-6.4.0-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 136055980,
+        "kind": "wheelhouse",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1EKNI73eMqzR9oF0NeS5gXPH5jY3ViOKP",
+        "copy_title": "dowhy-wheelhouse-0.14-py313-debian13-x86_64.zip",
+        "canonical_id": "1NuHbrtiMjc2N8PCFr1xnxQFHjxOF7x4C",
+        "canonical_title": "dowhy-whl-0.14-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "size_bytes": 252672296,
+        "kind": "wheelhouse",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1TsxhW5vIU9uapbD1PAnPyZa8GdJWHc1g",
+        "copy_title": "fast-downward-24.06-linux-x86_64.tar.zst",
+        "canonical_id": "1CscZYC5OzaklBsspcxnYLBooqfyDbC2Y",
+        "canonical_title": "fast-downward-24.06-linux-x86_64.tar.zst",
+        "size_bytes": 98140215,
+        "kind": "host-python",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      },
+      {
+        "copy_id": "1qdj_LDxA--d7g5Lfe5ekrt3v958GtbH7",
+        "copy_title": "formal-tools-portable-core-linux-x86_64.tar.zst",
+        "canonical_id": "1xEUgLSTDO6xj8ij_hvAgnHkOeq2aMrl7",
+        "canonical_title": "formal-tools-portable-core-linux-x86_64.tar.zst",
+        "size_bytes": 27989,
+        "kind": "core",
+        "disposition": "ELIMINATE_REDUNDANT_COPY",
+        "match_basis": "Drive copy provenance in R3/R4 receipts, equal size; original source preserved; no fresh content cryptographic comparison"
+      }
+    ]
+  },
+  "product_reference": "https://github.com/kaicreator-mm/formal-tools/issues/24",
+  "r2_snapshot": "docs/tool-portfolio/r2/ASSET_LANES.json"
+}
