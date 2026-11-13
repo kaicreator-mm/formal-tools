@@ -11,3 +11,7 @@ EXPECT_NEG_ARGS='-c -i tests/elk/err.ofn -o $FT_TMP/tax.ttl'
 EXPECT_NEG_EXIT=*
 EXPECT_NEG_REGEX='(Exception|error|Cannot load|TokenMgr)'
 EXPECT_NEG_LABEL=PARSE_REJECTED
+EXPECT_ERR_ARGS='-c -i tests/elk/does-not-exist.ofn -o $FT_TMP/invalid.ttl'
+EXPECT_ERR_EXIT=1
+EXPECT_ERR_REGEX='(FileNotFoundException|No such file)'
+EXPECT_ERR_LABEL=MISSING_SOURCE
