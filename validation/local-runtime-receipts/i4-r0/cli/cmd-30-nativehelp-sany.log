@@ -1,0 +1,33 @@
+{
+  "tool": "tla-tlc",
+  "operation": "help",
+  "mode": "LOCAL_CLI",
+  "run_status": "EXECUTED",
+  "tool_outcome": "UNPARSED",
+  "process_outcome": "EXIT_ZERO",
+  "test_verdict": "NOT_EVALUATED",
+  "claim_verdict": "NOT_EVALUATED",
+  "note": "Native command output only; solver result is not an acceptance verdict",
+  "executions": [
+    {
+      "argv": [
+        "/tmp/fti4/bin/java",
+        "-cp",
+        "/tmp/fti4/tla2tools.jar",
+        "tla2sany.SANY",
+        "-help"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "elapsed_ms": 61,
+      "timed_out": false,
+      "stdout": "\n\u001b[1mNAME\u001b[0m\n\n\tSANY - provides parsing, semantic analysis, and level-checking for a TLA+ spec - Version 2.2 created 08 July 2020\n\n\n\u001b[1mSYNOPSIS\u001b[0m\n\n\t\u001b[1mSANY\u001b[0m [\u001b[1m-dls\u001b[0m] [\u001b[1m-error-codes\u001b[0m] [\u001b[1m-messagesAsErrors\u001b[0m \u001b[3mcodes\u001b[0m] [\u001b[1m-suppressMessages\u001b[0m \u001b[3mcodes\u001b[0m] FILE...\n\n\u001b[1mDESCRIPTION\u001b[0m\n\n\t\u001b[1mSANY\u001b[0m is a parser and syntax checker for TLA+ specifications.\n\tIt catches parsing errors and some \"semantic\" errors such as\n\tpriming an expression containing primed variables.\n\n\u001b[1mOPTIONS\u001b[0m\n\n\t\u001b[1m-d\u001b[0m\n\t\tOpens the semantic graph explorer prompt. The prompt accepts the following commands:\n\t\t'cst' Prints out the concrete syntax tree.\n\t\t'dot' Emits the semantic graph to a ModuleName.dot file in the DOT graph description language.\n\t\t'mt'  Prints the module table, a list of all imported modules and their top-level definitions.\n\t\t'mt*' Prints the extended module table including built-in operator definitions.\n\t\t\n\t\tOptionally, skip the prompt and run a command directly by appending it like 'SANY -d ModuleName.tla cst'\n\t\u001b[1m-error-codes\u001b[0m\n\t\tReturn a descriptive exit code in case of error.\n\t\t\n\t\t'2' Error during parsing.\n\t\t'4' Error during semantic analysis or level-checking.\n\t\u001b[1m-l\u001b[0m\n\t\tTurns off level-checking.\n\t\u001b[1m-messagesAsErrors\u001b[0m \u001b[3mcodes\u001b[0m\n\t\tTreat specific message codes as errors; comma-separated list of message codes.\n\t\tWhen triggered, SANY exits with failure.\n\t\tMessage codes can be found in https://github.com/tlaplus/tlaplus/blob/master/tlatools/org.lamport.tlatools/src/tla2sany/semantic/ErrorCode.java#L38\n\t\u001b[1m-s\u001b[0m\n\t\tTurns off semantic analysis and level-checking.\n\t\u001b[1m-suppressMessages\u001b[0m \u001b[3mcodes\u001b[0m\n\t\tSuppress specific messages; comma-separated list of message codes.\n\t\tSuppressed messages are not printed and do not cause SANY to fail.\n\t\tErrors cannot be suppressed.\n\t\t Message codes can be found in https://github.com/tlaplus/tlaplus/blob/master/tlatools/org.lamport.tlatools/src/tla2sany/semantic/ErrorCode.java#L38\n\n",
+      "stderr": "",
+      "stdout_sha256": "40bee186fe56361bb32e252a8b3a722e56424995efa29cbc17098f8f0da089b2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null,
+      "output_truncated": false
+    }
+  ],
+  "scope": "local native CLI; not an independently validated project claim"
+}

@@ -1,1 +1,1 @@
-<urn:a> <urn:dependsOn> <urn:b> .
+<http://example.org/a> <http://example.org/dependsOn> <http://example.org/b> .

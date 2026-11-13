@@ -1,0 +1,5 @@
+== identity ==
+v22.16.0
+5d8a10e3fdb4db0d36d224706f86cbba4efb07ec
+umask=0002
+uid=1000(cc) gid=1000(cc) groups=1000(cc),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),100(users),110(lxd),999(docker)

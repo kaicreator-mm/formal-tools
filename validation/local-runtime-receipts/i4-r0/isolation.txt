@@ -1,0 +1,23 @@
+== user ==
+uid=1000(cc) gid=1000(cc) groups=1000(cc),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),100(users),110(lxd),999(docker)
+umask=0002
+== bundle write probe (as cc) ==
+touch: cannot touch '/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64/tools/z3/bin/ro-probe': Permission denied
+BUNDLE_TOOLS_DIR_READONLY
+drwxr-xr-x 2 root root 4096 Nov 11 06:30 /home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64/tools/z3/bin
+== canonical package manifest anchor ==
+5daad69d51c5adff9dd2406937b2ca18ba460153793cc7cb9848d53767a202bc  /home/cc/formal-tools-build/out/packages/SHA256SUMS
+1eafafe7e1198a7c8133c89b2b1608324b59e6cdff7377a399e0198db1d29810  tools/alloy-6.2.0-linux-x86_64.tar.zst
+12e882fb3892b83421501b503970daf43fad9a2c2011fa5cb9afeb649695c690  tools/apache-jena-5.5.0-linux-x86_64.tar.zst
+3f1edae52b39a25f2ffaf6eb017b4c929111ab0f00829b4d643a36515b22688a  tools/apalache-0.63.0-linux-x86_64.tar.zst.part-00
+74c8705d7548069b39c2871280e432cfa7f00cb477928ead39260d16033a71f0  tools/apalache-0.63.0-linux-x86_64.tar.zst.part-01
+1d9fa98030d3ab2ae349f70fad0c845fcf740e0e3e6367632c8c72457ea0dfcb  tools/clingo-5.8.3-linux-x86_64.tar.zst
+1af0cfec8eab662d181ab76b7c7eb20167560f7e58264dfb4ce448e6e0225b4a  tools/cvc5-1.4.2-linux-x86_64.tar.zst
+0558ca31b7fbd085fbff732303c063ff8f37464bc0347c10d24da5549fdc672f  tools/dafny-4.11.0-linux-x86_64.tar.zst
+68183dd94719decee26ee1178447ef0a0faa00ac808ddd89582a7ad4605333e3  tools/lean4-4.35.0-linux-x86_64.tar.zst.part-00
+d1e0ec8b175786301d65e8217d12037c5fb64028af9c12954b6aa60342c725f0  tools/lean4-4.35.0-linux-x86_64.tar.zst.part-01
+bba76f3e53c61fa8db5b45be98083fc6df69a4d42e39daa410b92951795bd234  tools/lean4-4.35.0-linux-x86_64.tar.zst.part-02
+66f141b838212ba76fa02c70d23688f5058fda7c607fd81b2f868090e5d1d7f8  tools/lean4-4.35.0-linux-x86_64.tar.zst.part-03
+f11ab32e90d368d780393c9120db1b0bee1607565dae5657c063d6651eaefafe  tools/lean4-4.35.0-linux-x86_64.tar.zst.part-04
+c0e9f577e46f57860d61f9d9701cf85182ae3924d54c79483f7527dd5e859c3f  tools/prob-1.16.1-linux-x86_64.tar.zst
+f2c0d94a44d6f48585602fa2f93b300dd303ba9b404fea64bcd450bd93781dbb  tools/rdf-shacl-0.40.2-linux-x86_64.tar.zst

@@ -1,0 +1,1698 @@
+{
+  "schema": "formal-native-local-acceptance/1.3",
+  "written_at": "2026-11-13T14:03:48.917Z",
+  "source_identity": {
+    "status": "CLEAN",
+    "head_sha": "5d8a10e3fdb4db0d36d224706f86cbba4efb07ec"
+  },
+  "host_identity": {
+    "hostname": "REDACTED",
+    "platform": "linux",
+    "release": "7.0.0-43-generic",
+    "arch": "x64",
+    "node": "v22.16.0",
+    "cpu": "Genuine Intel(R) 0000 @ 1.80GHz",
+    "tool_bin_dir": "…/tmp/fti4/bin"
+  },
+  "tool_runtime": "ACTUAL_HOST_ATTEMPT",
+  "tool_count": 13,
+  "candidate": 12,
+  "blocked": 1,
+  "evidence": [
+    {
+      "tool": "lean4",
+      "version": {
+        "tool": "lean4",
+        "run_status": "EXECUTED",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "…/fti4/bin/lean",
+          "--version"
+        ],
+        "exit_code": 0,
+        "signal": null,
+        "elapsed_ms": 36,
+        "timed_out": false,
+        "stdout": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)\n",
+        "stderr": "",
+        "stdout_sha256": "eb22144228dd41cd51a0c84af4f976cd0cef473102dcf99b60be756b11f2b95a",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null,
+        "output_truncated": false
+      },
+      "installation": {
+        "tool": "lean4",
+        "status": "FOUND_NOT_PROBED",
+        "launcher": "binary",
+        "executable": "…/fti4/bin/lean",
+        "argv": [
+          "…/fti4/bin/lean",
+          "--version"
+        ],
+        "diagnostics": [],
+        "probe_status": "NOT_RUN",
+        "searched": 1
+      },
+      "binary_identity": {
+        "path": "…/fti4/bin/lean",
+        "sha256": "bf8d54e4714cc4b03d3f6bb34c83b7202b87e49c8bfcbff6895c085bb90ceb38",
+        "bytes": 9024,
+        "mtime": "2026-10-12T16:41:25.000Z",
+        "provenance": "file inherited from local host; upstream signature/supply-chain audit NOT performed"
+      },
+      "dependency_identities": [],
+      "positive": {
+        "tool": "lean4",
+        "case": "positive",
+        "run_status": "EXECUTED",
+        "tool_outcome": "PROVED",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "Negative.lean": "b2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986",
+          "Positive.lean": "42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/lean",
+              "…/formal-js-qT6sHd/examples/Positive.lean"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 157,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "lean4",
+        "case": "negative",
+        "run_status": "EXECUTED",
+        "tool_outcome": "REJECTED",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "Negative.lean": "b2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986",
+          "Positive.lean": "42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/lean",
+              "…/formal-js-GvPzxl/examples/Negative.lean"
+            ],
+            "exit_code": 1,
+            "signal": null,
+            "elapsed_ms": 163,
+            "timed_out": false,
+            "stdout": "/tmp/fti4/tmp/formal-js-GvPzxl/examples/Negative.lean:1:47: error: unsolved goals\nn : Nat\n⊢ False\n",
+            "stderr": "",
+            "stdout_sha256": "e9a92b3bff012ec44f50a254d2e92d737a4b8961df01c36141c65694e6f09d2c",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "extra_cases": "NOT_RUN",
+      "acceptance": "CANDIDATE_FOR_REVIEW"
+    },
+    {
+      "tool": "z3",
+      "version": {
+        "tool": "z3",
+        "run_status": "EXECUTED",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "…/fti4/bin/z3",
+          "-version"
+        ],
+        "exit_code": 0,
+        "signal": null,
+        "elapsed_ms": 3,
+        "timed_out": false,
+        "stdout": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f\n",
+        "stderr": "",
+        "stdout_sha256": "9af7c6f186418585f022fd2d18eb2d278e14ad21731bf3339f3cbd1f78500e7a",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null,
+        "output_truncated": false
+      },
+      "installation": {
+        "tool": "z3",
+        "status": "FOUND_NOT_PROBED",
+        "launcher": "binary",
+        "executable": "…/fti4/bin/z3",
+        "argv": [
+          "…/fti4/bin/z3",
+          "-version"
+        ],
+        "diagnostics": [],
+        "probe_status": "NOT_RUN",
+        "searched": 1
+      },
+      "binary_identity": {
+        "path": "…/fti4/bin/z3",
+        "sha256": "e9d7e6e6d76c81b5ea3f06d165fc4cfd8afab92b74cdf94417380b5eed10845d",
+        "bytes": 42257816,
+        "mtime": "2026-11-10T22:30:01.108Z",
+        "provenance": "file inherited from local host; upstream signature/supply-chain audit NOT performed"
+      },
+      "dependency_identities": [],
+      "positive": {
+        "tool": "z3",
+        "case": "positive",
+        "run_status": "EXECUTED",
+        "tool_outcome": "UNSAT",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.smt2": "1d3336271d42ac7e4f4b12d95c70ae5c715a4cfd689e43a7119ea095fee75c4b",
+          "positive.smt2": "431edcb1fb96d9aeda5c8b4a59845d3793e1b1957bdc221d6847ca9a769c8db0"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/z3",
+              "-smt2",
+              "…/formal-js-BYUUgl/examples/positive.smt2"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 13,
+            "timed_out": false,
+            "stdout": "unsat\n",
+            "stderr": "",
+            "stdout_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "z3",
+        "case": "negative",
+        "run_status": "EXECUTED",
+        "tool_outcome": "SAT",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.smt2": "1d3336271d42ac7e4f4b12d95c70ae5c715a4cfd689e43a7119ea095fee75c4b",
+          "positive.smt2": "431edcb1fb96d9aeda5c8b4a59845d3793e1b1957bdc221d6847ca9a769c8db0"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/z3",
+              "-smt2",
+              "…/formal-js-TUMH6Y/examples/negative.smt2"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 15,
+            "timed_out": false,
+            "stdout": "sat\n",
+            "stderr": "",
+            "stdout_sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "extra_cases": {
+        "error_input": {
+          "case": "error_input",
+          "expectation": "ERROR/UNPARSED, never a sat/unsat verdict",
+          "input_sha256": "ddbc4618a0f8286db7dc02052b4ec65fbb0384545aa872c070f6d65fa2c2502b",
+          "input_text": "(assert (assert\n",
+          "tool": "z3",
+          "operation": "solve",
+          "mode": "typed",
+          "run_status": "EXECUTED",
+          "tool_outcome": "UNPARSED",
+          "process_outcome": "NONZERO_EXIT",
+          "test_verdict": "NOT_EVALUATED",
+          "claim_verdict": "NOT_EVALUATED",
+          "note": "Native command output only; solver result is not an acceptance verdict",
+          "executions": [
+            {
+              "argv": [
+                "…/fti4/bin/z3",
+                "-smt2",
+                "…/tmp/formal-accept-extra-mCvyqW/error_input.smt2"
+              ],
+              "exit_code": 1,
+              "signal": null,
+              "elapsed_ms": 10,
+              "timed_out": false,
+              "stdout": "(error \"line 2 column 0: invalid expression, unexpected input\")\n",
+              "stderr": "",
+              "stdout_sha256": "6b782fc71d1d57f200a43989609109fee86e92cff7a54ea4dc92657dd6b53a06",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "error": null,
+              "output_truncated": false
+            }
+          ],
+          "scope": "local native CLI; not an independently validated project claim"
+        },
+        "unknown_scope": {
+          "case": "unknown_scope",
+          "expectation": "tool_outcome UNKNOWN (solver scope limit), exit 0 or bounded timeout",
+          "input_sha256": "afa0104a573d4d8d7c329b168fbf3ca77d695d00a9d90920dac7098a80b47fa8",
+          "input_text": "(declare-const x Real)\n(assert (> (sin x) 0.9))\n(check-sat)\n",
+          "tool": "z3",
+          "operation": "solve",
+          "mode": "typed",
+          "run_status": "EXECUTED",
+          "tool_outcome": "UNPARSED",
+          "process_outcome": "TIMEOUT",
+          "test_verdict": "INCONCLUSIVE",
+          "claim_verdict": "NOT_EVALUATED",
+          "note": "Native command output only; solver result is not an acceptance verdict",
+          "executions": [
+            {
+              "argv": [
+                "…/fti4/bin/z3",
+                "-smt2",
+                "…/tmp/formal-accept-extra-mCvyqW/unknown_scope.smt2"
+              ],
+              "exit_code": null,
+              "signal": "SIGKILL",
+              "elapsed_ms": 20004,
+              "timed_out": true,
+              "stdout": "",
+              "stderr": "",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "error": null,
+              "output_truncated": false
+            }
+          ],
+          "scope": "local native CLI; not an independently validated project claim"
+        }
+      },
+      "acceptance": "CANDIDATE_FOR_REVIEW"
+    },
+    {
+      "tool": "cvc5",
+      "version": {
+        "tool": "cvc5",
+        "run_status": "EXECUTED",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "…/fti4/bin/cvc5",
+          "--version"
+        ],
+        "exit_code": 0,
+        "signal": null,
+        "elapsed_ms": 4,
+        "timed_out": false,
+        "stdout": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]\ncompiled as a unrestricted build with GCC version 11.4.0 on Oct  8 2026 01:24:07\n\nCopyright (c) 2009-2026 by the authors and their institutional\naffiliations listed at https://cvc5.github.io/people.html\n\ncvc5 is open-source and is covered by the BSD license (modified).\n\nTHIS SOFTWARE IS PROVIDED AS-IS, WITHOUT ANY WARRANTIES.\nUSE AT YOUR OWN RISK.\n\nThis version of cvc5 is linked against the following non-(L)GPL'ed\nthird party libraries.\n\n  CaDiCaL - Simplified Satisfiability Solver\n  See https://github.com/arminbiere/cadical for copyright information.\n\n  Editline Library\n  See https://thrysoee.dk/editline\n  for copyright information.\n\n  SymFPU - The Symbolic Floating Point Unit\n  See https://github.com/martin-cs/symfpu/tree/main for copyright information.\n\nThis version of cvc5 is linked against the following third party\nlibraries covered by the LGPLv3 license.\nSee licenses/lgpl-3.0.txt for more information.\n\n  GMP - Gnu Multi Precision Arithmetic Library\n  See http://gmplib.org for copyright information.\n\n  LibPoly polynomial library\n  See https://github.com/SRI-CSL/libpoly for copyright and\n  licensing information.\n\ncvc5 is statically linked against these libraries. To recompile\nthis version of cvc5 with different versions of these libraries\nfollow the instructions on https://github.com/cvc5/cvc5/blob/main/INSTALL.md\n\nSee the file COPYING (distributed with the source code, and with\nall binaries) for the full cvc5 copyright, licensing, and (lack of)\nwarranty information.\n\n",
+        "stderr": "",
+        "stdout_sha256": "b6c312e4bb0062a7683ca82eb08f0b25beb4e6c67f22a62a6841a8f4192fde4a",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null,
+        "output_truncated": false
+      },
+      "installation": {
+        "tool": "cvc5",
+        "status": "FOUND_NOT_PROBED",
+        "launcher": "binary",
+        "executable": "…/fti4/bin/cvc5",
+        "argv": [
+          "…/fti4/bin/cvc5",
+          "--version"
+        ],
+        "diagnostics": [],
+        "probe_status": "NOT_RUN",
+        "searched": 1
+      },
+      "binary_identity": {
+        "path": "…/fti4/bin/cvc5",
+        "sha256": "6aecddf466552b83bb5883756c7955e0c9d5ddcc6d7f45b48c2f6e06a741b102",
+        "bytes": 32241592,
+        "mtime": "2026-11-10T22:26:57.978Z",
+        "provenance": "file inherited from local host; upstream signature/supply-chain audit NOT performed"
+      },
+      "dependency_identities": [],
+      "positive": {
+        "tool": "cvc5",
+        "case": "positive",
+        "run_status": "EXECUTED",
+        "tool_outcome": "UNSAT",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.smt2": "1d3336271d42ac7e4f4b12d95c70ae5c715a4cfd689e43a7119ea095fee75c4b",
+          "positive.smt2": "431edcb1fb96d9aeda5c8b4a59845d3793e1b1957bdc221d6847ca9a769c8db0"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/cvc5",
+              "--lang",
+              "smt2",
+              "…/formal-js-z2sMt9/examples/positive.smt2"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 6,
+            "timed_out": false,
+            "stdout": "unsat\n",
+            "stderr": "",
+            "stdout_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "cvc5",
+        "case": "negative",
+        "run_status": "EXECUTED",
+        "tool_outcome": "SAT",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.smt2": "1d3336271d42ac7e4f4b12d95c70ae5c715a4cfd689e43a7119ea095fee75c4b",
+          "positive.smt2": "431edcb1fb96d9aeda5c8b4a59845d3793e1b1957bdc221d6847ca9a769c8db0"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/cvc5",
+              "--lang",
+              "smt2",
+              "…/formal-js-fAwDLL/examples/negative.smt2"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 4,
+            "timed_out": false,
+            "stdout": "sat\n",
+            "stderr": "",
+            "stdout_sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "extra_cases": {
+        "error_input": {
+          "case": "error_input",
+          "expectation": "ERROR/UNPARSED, never a sat/unsat verdict",
+          "input_sha256": "ddbc4618a0f8286db7dc02052b4ec65fbb0384545aa872c070f6d65fa2c2502b",
+          "input_text": "(assert (assert\n",
+          "tool": "cvc5",
+          "operation": "solve",
+          "mode": "typed",
+          "run_status": "EXECUTED",
+          "tool_outcome": "UNPARSED",
+          "process_outcome": "NONZERO_EXIT",
+          "test_verdict": "NOT_EVALUATED",
+          "claim_verdict": "NOT_EVALUATED",
+          "note": "Native command output only; solver result is not an acceptance verdict",
+          "executions": [
+            {
+              "argv": [
+                "…/fti4/bin/cvc5",
+                "--lang",
+                "smt2",
+                "…/tmp/formal-accept-extra-hBVHmE/error_input.smt2"
+              ],
+              "exit_code": 1,
+              "signal": null,
+              "elapsed_ms": 12,
+              "timed_out": false,
+              "stdout": "(error \"Parse Error: /tmp/fti4/tmp/formal-accept-extra-hBVHmE/error_input.smt2:2.0: Expected SMT-LIBv2 term, got `` (EOF_TOK).\")\n",
+              "stderr": "/tmp/fti4/tmp/formal-accept-extra-hBVHmE/error_input.smt2:1.2: No set-logic command was given before this point.\n/tmp/fti4/tmp/formal-accept-extra-hBVHmE/error_input.smt2:1.2: cvc5 will make all theories available.\n/tmp/fti4/tmp/formal-accept-extra-hBVHmE/error_input.smt2:1.2: Consider setting a stricter logic for (likely) better performance.\n/tmp/fti4/tmp/formal-accept-extra-hBVHmE/error_input.smt2:1.2: To suppress this warning in the future use (set-logic ALL).\n",
+              "stdout_sha256": "8796e071973c5ed0d8549ad3891fcaa56c4a7fa6e928710baf7200c991da3944",
+              "stderr_sha256": "fc5798b67b644f327559b4a7d9b566c70fea70025ac48817b4cfcaff02121e84",
+              "error": null,
+              "output_truncated": false
+            }
+          ],
+          "scope": "local native CLI; not an independently validated project claim"
+        },
+        "unknown_scope": {
+          "case": "unknown_scope",
+          "expectation": "tool_outcome UNKNOWN (solver scope limit), exit 0 or bounded timeout",
+          "input_sha256": "afa0104a573d4d8d7c329b168fbf3ca77d695d00a9d90920dac7098a80b47fa8",
+          "input_text": "(declare-const x Real)\n(assert (> (sin x) 0.9))\n(check-sat)\n",
+          "tool": "cvc5",
+          "operation": "solve",
+          "mode": "typed",
+          "run_status": "EXECUTED",
+          "tool_outcome": "UNPARSED",
+          "process_outcome": "TIMEOUT",
+          "test_verdict": "INCONCLUSIVE",
+          "claim_verdict": "NOT_EVALUATED",
+          "note": "Native command output only; solver result is not an acceptance verdict",
+          "executions": [
+            {
+              "argv": [
+                "…/fti4/bin/cvc5",
+                "--lang",
+                "smt2",
+                "…/tmp/formal-accept-extra-hBVHmE/unknown_scope.smt2"
+              ],
+              "exit_code": null,
+              "signal": "SIGKILL",
+              "elapsed_ms": 20004,
+              "timed_out": true,
+              "stdout": "",
+              "stderr": "/tmp/fti4/tmp/formal-accept-extra-hBVHmE/unknown_scope.smt2:1.2: No set-logic command was given before this point.\n/tmp/fti4/tmp/formal-accept-extra-hBVHmE/unknown_scope.smt2:1.2: cvc5 will make all theories available.\n/tmp/fti4/tmp/formal-accept-extra-hBVHmE/unknown_scope.smt2:1.2: Consider setting a stricter logic for (likely) better performance.\n/tmp/fti4/tmp/formal-accept-extra-hBVHmE/unknown_scope.smt2:1.2: To suppress this warning in the future use (set-logic ALL).\n",
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "stderr_sha256": "dacf08f25b3a1a967da0a34d3b08e5b253ad5736858d00ba8650d0cdbcdbf957",
+              "error": null,
+              "output_truncated": false
+            }
+          ],
+          "scope": "local native CLI; not an independently validated project claim"
+        }
+      },
+      "acceptance": "CANDIDATE_FOR_REVIEW"
+    },
+    {
+      "tool": "tla-tlc",
+      "version": {
+        "tool": "tla-tlc",
+        "run_status": "EXECUTED",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "…/fti4/bin/java",
+          "-cp",
+          "…/tmp/fti4/tla2tools.jar",
+          "tlc2.TLC",
+          "-help"
+        ],
+        "exit_code": 1,
+        "signal": null,
+        "elapsed_ms": 126,
+        "timed_out": false,
+        "stdout": "\n\u001b[1mNAME\u001b[0m\n\n\tTLC - provides model checking and simulation of TLA+ specifications - Version 2026.11.06.222357\n\n\n\u001b[1mSYNOPSIS\u001b[0m\n\n\t\u001b[1mTLC\u001b[0m [\u001b[1m-h\u001b[0m] [\u001b[1m-cleanup\u001b[0m] [\u001b[1m-continue\u001b[0m] [\u001b[1m-deadlock\u001b[0m] [\u001b[1m-debug\u001b[0m] [\u001b[1m-difftrace\u001b[0m] [\u001b[1m-gzip\u001b[0m] [\u001b[1m-noGenerateSpecTE\u001b[0m] [\u001b[1m-nowarning\u001b[0m] [\u001b[1m-terse\u001b[0m] [\u001b[1m-tool\u001b[0m] [\u001b[1m-view\u001b[0m] [\u001b[1m-checkpoint\u001b[0m \u001b[3mminutes\u001b[0m] [\u001b[1m-config\u001b[0m \u001b[3mfile\u001b[0m] [\u001b[1m-coverage\u001b[0m \u001b[3mminutes\u001b[0m] [\u001b[1m-dfid\u001b[0m \u001b[3mnum\u001b[0m] [\u001b[1m-dump\u001b[0m \u001b[3mformat file\u001b[0m] [\u001b[1m-dumpTrace\u001b[0m \u001b[3mformat file\u001b[0m] [\u001b[1m-fp\u001b[0m \u001b[3mN\u001b[0m] [\u001b[1m-fpbits\u001b[0m \u001b[3mnum\u001b[0m] [\u001b[1m-fpmem\u001b[0m \u001b[3mnum\u001b[0m] [\u001b[1m-inv\u001b[0m \u001b[3mexpr\u001b[0m] [\u001b[1m-invlevel\u001b[0m \u001b[3mn\u001b[0m] [\u001b[1m-loadTrace\u001b[0m \u001b[3mformat file\u001b[0m] [\u001b[1m-maxSetSize\u001b[0m \u001b[3mnum\u001b[0m] [\u001b[1m-messagesAsErrors\u001b[0m \u001b[3mcodes\u001b[0m] [\u001b[1m-metadir\u001b[0m \u001b[3mpath\u001b[0m] [\u001b[1m-postCondition\u001b[0m \u001b[3mmod!oper\u001b[0m] [\u001b[1m-recover\u001b[0m \u001b[3mid\u001b[0m] [\u001b[1m-suppressMessages\u001b[0m \u001b[3mcodes\u001b[0m] [\u001b[1m-teSpecOutDir\u001b[0m \u001b[3msome-dir-name\u001b[0m] [\u001b[1m-userFile\u001b[0m \u001b[3mfile\u001b[0m] [\u001b[1m-workers\u001b[0m \u001b[3mnum\u001b[0m] \u001b[1m-debugger\u001b[0m \u001b[3mnosuspend\u001b[0m SPEC\n\t\u001b[1mTLC\u001b[0m [\u001b[1m-h\u001b[0m] [\u001b[1m-cleanup\u001b[0m] [\u001b[1m-continue\u001b[0m] [\u001b[1m-deadlock\u001b[0m] [\u001b[1m-debug\u001b[0m] [\u001b[1m-difftrace\u001b[0m] [\u001b[1m-gzip\u001b[0m] [\u001b[1m-noGenerateSpecTE\u001b[0m] [\u001b[1m-nowarning\u001b[0m] [\u001b[1m-terse\u001b[0m] [\u001b[1m-tool\u001b[0m] [\u001b[1m-aril\u001b[0m \u001b[3mnum\u001b[0m] [\u001b[1m-checkpoint\u001b[0m \u001b[3mminutes\u001b[0m] [\u001b[1m-config\u001b[0m \u001b[3mfile\u001b[0m] [\u001b[1m-coverage\u001b[0m \u001b[3mminutes\u001b[0m] [\u001b[1m-depth\u001b[0m \u001b[3mnum\u001b[0m] [\u001b[1m-dump\u001b[0m \u001b[3mformat file\u001b[0m] [\u001b[1m-dumpTrace\u001b[0m \u001b[3mformat file\u001b[0m] [\u001b[1m-fp\u001b[0m \u001b[3mN\u001b[0m] [\u001b[1m-fpbits\u001b[0m \u001b[3mnum\u001b[0m] [\u001b[1m-fpmem\u001b[0m \u001b[3mnum\u001b[0m] [\u001b[1m-inv\u001b[0m \u001b[3mexpr\u001b[0m] [\u001b[1m-invlevel\u001b[0m \u001b[3mn\u001b[0m] [\u001b[1m-loadTrace\u001b[0m \u001b[3mformat file\u001b[0m] [\u001b[1m-maxSetSize\u001b[0m \u001b[3mnum\u001b[0m] [\u001b[1m-messagesAsErrors\u001b[0m \u001b[3mcodes\u001b[0m] [\u001b[1m-metadir\u001b[0m \u001b[3mpath\u001b[0m] [\u001b[1m-postCondition\u001b[0m \u001b[3mmod!oper\u001b[0m] [\u001b[1m-recover\u001b[0m \u001b[3mid\u001b[0m] [\u001b[1m-seed\u001b[0m \u001b[3mnum\u001b[0m] [\u001b[1m-suppressMessages\u001b[0m \u001b[3mcodes\u001b[0m] [\u001b[1m-teSpecOutDir\u001b[0m \u001b[3msome-dir-name\u001b[0m] [\u001b[1m-userFile\u001b[0m \u001b[3mfile\u001b[0m] [\u001b[1m-workers\u001b[0m \u001b[3mnum\u001b[0m] \u001b[1m-debugger\u001b[0m \u001b[3mnosuspend\u001b[0m -simulate [file=X,num=Y] SPEC\n\n\u001b[1mDESCRIPTION\u001b[0m\n\n\tThe model checker (\u001b[1mTLC\u001b[0m) provides the functionalities of model checking\n\tor simulation of TLA+ specifications. It may be invoked from the command\n\tline, or via the model checking functionality of the Toolbox.\n\t\n\tBy default, \u001b[1mTLC\u001b[0m starts in the model checking mode using breadth-first\n\tapproach for the state space exploration.\n\t\n\tA pretty-printed and in-depth description of \u001b[1mTLC\u001b[0m can be found at:\n\t\n\t\t    https://lamport.azurewebsites.net/tla/current-tools.pdf\n\n\u001b[1mOPTIONS\u001b[0m\n\n\t\u001b[1m-aril\u001b[0m \u001b[3mnum\u001b[0m\n\t\tadjust the seed for random simulation; defaults to 0\n\t\u001b[1m-checkpoint\u001b[0m \u001b[3mminutes\u001b[0m\n\t\tinterval between check point; defaults to 30\n\t\u001b[1m-cleanup\u001b[0m\n\t\tclean up the states directory\n\t\u001b[1m-config\u001b[0m \u001b[3mfile\u001b[0m\n\t\tprovide the configuration file; defaults to SPEC.cfg\n\t\u001b[1m-continue\u001b[0m\n\t\tcontinue running even when an invariant is violated; default\n\t\tbehavior is to halt on first violation\n\t\u001b[1m-coverage\u001b[0m \u001b[3mminutes\u001b[0m\n\t\tinterval between the collection of coverage information;\n\t\tif not specified, no coverage will be collected\n\t\u001b[1m-deadlock\u001b[0m\n\t\tif specified DO NOT CHECK FOR DEADLOCK. Setting the flag is\n\t\tthe same as setting CHECK_DEADLOCK to FALSE in config\n\t\tfile. When -deadlock is specified, config entry is\n\t\tignored; default behavior is to check for deadlocks\n\t\u001b[1m-debug\u001b[0m\n\t\tprint various debugging information - not for production use\n\t\t\n\t\u001b[1m-debugger\u001b[0m \u001b[3mnosuspend\u001b[0m\n\t\trun simulation or model-checking in debug mode such that TLC's\n\t\tstate-space exploration can be temporarily halted and variables\n\t\tbe inspected. The only debug front-end so far is the TLA+\n\t\tVSCode extension, which has to be downloaded and configured\n\t\tseparately, though other front-ends could be implemeted via the\n\t\tdebug-adapter-protocol.\n\t\tSpecifying the optional parameter 'nosuspend' causes\n\t\tTLC to start state-space exploration without waiting for a\n\t\tdebugger front-end to connect. Without 'nosuspend', TLC\n\t\tsuspends state-space exploration before the first ASSUME is\n\t\tevaluated (but after constants are processed). With 'nohalt',\n\t\tTLC does not halt state-space exploration when an evaluation\n\t\tor runtime error is caught. Without 'nohalt', evaluation or\n\t\truntime errors can be inspected in the debugger before TLC\n\t\tterminates. The optional parameter 'port=1274' makes the\n\t\tdebugger listen on port 1274 instead of on the standard\n\t\tport 4712, and 'port=0' lets the debugger choose a port.\n\t\tMultiple optional parameters must be comma-separated.\n\t\tSpecifying '-debugger' implies '-workers 1'.\n\t\u001b[1m-depth\u001b[0m \u001b[3mnum\u001b[0m\n\t\tspecifies the depth of random simulation; defaults to 100\n\t\u001b[1m-dfid\u001b[0m \u001b[3mnum\u001b[0m\n\t\trun the model check in depth-first iterative deepening\n\t\tstarting with an initial depth of 'num'\n\t\u001b[1m-difftrace\u001b[0m\n\t\tshow only the differences between successive states when\n\t\tprinting trace information; defaults to printing\n\t\tfull state descriptions\n\t\u001b[1m-dump\u001b[0m \u001b[3mformat file\u001b[0m\n\t\tdump all states into the specified file.\n\t\tThe format parameter can be omitted, or it can be a comma-separated\n\t\tlist beginning with 'dot' that may also contain a subset of\n\t\tthe items 'colorize', 'actionlabels', and 'constrained'. If format is\n\t\tomitted, TLC writes a list of all reachable states, described by TLA+\n\t\tformulas, on file. Otherwise, TLC writes the state graph in dot format,\n\t\tthe input format of the GraphViz program for displaying graphs. \n\t\tThe parameter 'colorize' indicates that state transitions should be \n\t\tcolored according to the action generating the transition,  \n\t\tand 'actionlabels' indicates that they should be labeled with \n\t\tthe name of the action. The parameter 'constrained' causes TLC to include\n\t\tstates in the dot file that are excluded from the model via a state or\n\t\taction constraint.\n\t",
+        "stderr": "",
+        "stdout_sha256": "10c97d9fb196bcc91b43e7a44b6e90a29b81fdcf711f24d6c1a99f2544319834",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null,
+        "output_truncated": false
+      },
+      "installation": {
+        "tool": "tla-tlc",
+        "status": "FOUND_NOT_PROBED",
+        "launcher": "java-jar",
+        "executable": "…/fti4/bin/java",
+        "argv": [
+          "…/fti4/bin/java",
+          "-cp",
+          "…/tmp/fti4/tla2tools.jar",
+          "tlc2.TLC",
+          "-help"
+        ],
+        "diagnostics": [],
+        "probe_status": "NOT_RUN",
+        "searched": 1
+      },
+      "binary_identity": {
+        "path": "…/fti4/bin/java",
+        "sha256": "7afc28801f744050aeba646b20e7314265279f76f9d0273b21a2b66411e1bf6d",
+        "bytes": 13024,
+        "mtime": "2026-10-21T17:07:51.000Z",
+        "provenance": "file inherited from local host; upstream signature/supply-chain audit NOT performed"
+      },
+      "dependency_identities": [
+        {
+          "path": "…/tmp/fti4/tla2tools.jar",
+          "sha256": "e1f11b75c4b5bc4478ba0ac5cb6ae28e40a01b0016bc33e0aa97da22dfdbcd7f",
+          "bytes": 4510215,
+          "mtime": "2026-11-10T22:29:48.642Z",
+          "provenance": "file inherited from local host; upstream signature/supply-chain audit NOT performed"
+        }
+      ],
+      "positive": {
+        "tool": "tla-tlc",
+        "case": "positive",
+        "run_status": "EXECUTED",
+        "tool_outcome": "MODEL_CHECKED",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "Toggle.cfg": "5b4b354259f60acf16e3cc80f10f37ed7847925002d497a74f6ed791df6f5372",
+          "ToggleNegative.tla": "7a743aee9048b4a212a8cc08a878a8164cab903799ba450c0634f6d2904d78a4",
+          "TogglePositive.tla": "c68f00586894ee71a594b4eca934e1313df8c9ca84a7386f724623d767ec75f0"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/java",
+              "-cp",
+              "…/tmp/fti4/tla2tools.jar",
+              "tlc2.TLC",
+              "-config",
+              "…/formal-js-Yfvdbz/examples/Toggle.cfg",
+              "…/formal-js-Yfvdbz/examples/TogglePositive.tla"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 511,
+            "timed_out": false,
+            "stdout": "TLC2 Version 2026.11.06.222357 (rev: d8fb231)\nWarning: Please run the Java VM, which executes TLC with a throughput optimized garbage collector, by passing the \"-XX:+UseParallelGC\" property.\n(Use the -nowarning option to disable this warning.)\nRunning breadth-first search Model-Checking with fp 112 and seed 7880902486346253779 with 1 worker on 16 cores with 15776MB heap and 64MB offheap memory [pid: 117117] (Linux 7.0.0-43-generic amd64, Eclipse Adoptium 21.0.13 64bit, MSBDiskFPSet, DiskStateQueue).\nParsing file /tmp/fti4/tmp/formal-js-Yfvdbz/examples/TogglePositive.tla\nParsing file /tmp/tlc-16718807675669190888/Integers.tla (jar:file:/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)\nParsing file /tmp/tlc-16718807675669190888/_TLCTrace.tla (jar:file:/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)\nParsing file /tmp/tlc-16718807675669190888/Naturals.tla (jar:file:/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)\nParsing file /tmp/tlc-16718807675669190888/TLC.tla (jar:file:/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)\nParsing file /tmp/tlc-16718807675669190888/TLCExt.tla (jar:file:/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)\nParsing file /tmp/tlc-16718807675669190888/Sequences.tla (jar:file:/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)\nParsing file /tmp/tlc-16718807675669190888/FiniteSets.tla (jar:file:/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)\nSemantic processing of module Naturals\nSemantic processing of module Integers\nSemantic processing of module Sequences\nSemantic processing of module FiniteSets\nSemantic processing of module TLC\nSemantic processing of module TLCExt\nSemantic processing of module _TLCTrace\nSemantic processing of module TogglePositive\nLinting of module TLCExt\nLinting of module _TLCTrace\nLinting of module TogglePositive\nStarting... (2026-11-13 22:03:32)\nComputing initial states...\nFinished computing initial states: 1 distinct state generated at 2026-11-13 22:03:32.\nModel checking completed. No error has been found.\n  Estimates of the probability that TLC did not check all reachable states\n  because two distinct states had the same fingerprint:\n  calculated (optimistic):  val = 1.1E-19\n3 states generated, 2 distinct states found, 0 states left on queue.\nThe depth of the complete state graph search is 2.\nThe average outdegree of the complete state graph is 1 (minimum is 0, the maximum 1 and the 95th percentile is 1).\nFinished in 00s at (2026-11-13 22:03:32)\n",
+            "stderr": "",
+            "stdout_sha256": "c663898b37ff760e40d7d6d721b07a1f87d1faf4df4a04951eb7efaf9f9cda38",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "tla-tlc",
+        "case": "negative",
+        "run_status": "EXECUTED",
+        "tool_outcome": "INVARIANT_VIOLATED",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "Toggle.cfg": "5b4b354259f60acf16e3cc80f10f37ed7847925002d497a74f6ed791df6f5372",
+          "ToggleNegative.tla": "7a743aee9048b4a212a8cc08a878a8164cab903799ba450c0634f6d2904d78a4",
+          "TogglePositive.tla": "c68f00586894ee71a594b4eca934e1313df8c9ca84a7386f724623d767ec75f0"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/java",
+              "-cp",
+              "…/tmp/fti4/tla2tools.jar",
+              "tlc2.TLC",
+              "-config",
+              "…/formal-js-HCg1W2/examples/Toggle.cfg",
+              "…/formal-js-HCg1W2/examples/ToggleNegative.tla"
+            ],
+            "exit_code": 12,
+            "signal": null,
+            "elapsed_ms": 536,
+            "timed_out": false,
+            "stdout": "TLC2 Version 2026.11.06.222357 (rev: d8fb231)\nWarning: Please run the Java VM, which executes TLC with a throughput optimized garbage collector, by passing the \"-XX:+UseParallelGC\" property.\n(Use the -nowarning option to disable this warning.)\nRunning breadth-first search Model-Checking with fp 101 and seed 4683585906060392653 with 1 worker on 16 cores with 15776MB heap and 64MB offheap memory [pid: 117154] (Linux 7.0.0-43-generic amd64, Eclipse Adoptium 21.0.13 64bit, MSBDiskFPSet, DiskStateQueue).\nParsing file /tmp/fti4/tmp/formal-js-HCg1W2/examples/ToggleNegative.tla\nParsing file /tmp/tlc-3740494334608777376/Integers.tla (jar:file:/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)\nParsing file /tmp/tlc-3740494334608777376/_TLCTrace.tla (jar:file:/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)\nParsing file /tmp/tlc-3740494334608777376/Naturals.tla (jar:file:/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)\nParsing file /tmp/tlc-3740494334608777376/TLC.tla (jar:file:/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)\nParsing file /tmp/tlc-3740494334608777376/TLCExt.tla (jar:file:/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)\nParsing file /tmp/tlc-3740494334608777376/Sequences.tla (jar:file:/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)\nParsing file /tmp/tlc-3740494334608777376/FiniteSets.tla (jar:file:/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)\nSemantic processing of module Naturals\nSemantic processing of module Integers\nSemantic processing of module Sequences\nSemantic processing of module FiniteSets\nSemantic processing of module TLC\nSemantic processing of module TLCExt\nSemantic processing of module _TLCTrace\nSemantic processing of module ToggleNegative\nLinting of module TLCExt\nLinting of module _TLCTrace\nLinting of module ToggleNegative\nStarting... (2026-11-13 22:03:32)\nComputing initial states...\nFinished computing initial states: 1 distinct state generated at 2026-11-13 22:03:33.\nError: Invariant Inv is violated.\nError: The behavior up to this point is:\nState 1: <Initial predicate>\nx = 0\n\nState 2: <Next line 5, col 9 to line 5, col 18 of module ToggleNegative>\nx = 1\n\n2 states generated, 2 distinct states found, 0 states left on queue.\nThe depth of the complete state graph search is 2.\nFinished in 00s at (2026-11-13 22:03:33)\nTrace exploration spec path: /tmp/fti4/tmp/formal-js-HCg1W2/examples/ToggleNegative_TTrace_1794578612.tla\n",
+            "stderr": "",
+            "stdout_sha256": "db9f5545317b4e83cd6e2b442d87c88542f5e94285d0e59b0e125598810aef76",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "extra_cases": "NOT_RUN",
+      "acceptance": "CANDIDATE_FOR_REVIEW"
+    },
+    {
+      "tool": "apalache",
+      "version": {
+        "tool": "apalache",
+        "run_status": "EXECUTED",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "…/fti4/bin/apalache-mc",
+          "version"
+        ],
+        "exit_code": 0,
+        "signal": null,
+        "elapsed_ms": 343,
+        "timed_out": false,
+        "stdout": "0.63.0\n",
+        "stderr": "",
+        "stdout_sha256": "9a108132abcbb17753ee4b8233d534e0958f6bfbea06cb41bde50a0aa9ac0cf9",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null,
+        "output_truncated": false
+      },
+      "installation": {
+        "tool": "apalache",
+        "status": "FOUND_NOT_PROBED",
+        "launcher": "binary",
+        "executable": "…/fti4/bin/apalache-mc",
+        "argv": [
+          "…/fti4/bin/apalache-mc",
+          "version"
+        ],
+        "diagnostics": [],
+        "probe_status": "NOT_RUN",
+        "searched": 1
+      },
+      "binary_identity": {
+        "path": "…/fti4/bin/apalache-mc",
+        "sha256": "f8d4643705369d0642d9345a479e7cc8b7929710dc966e7f9a374bf03e526fe4",
+        "bytes": 3388,
+        "mtime": "2026-11-10T07:00:20.000Z",
+        "provenance": "file inherited from local host; upstream signature/supply-chain audit NOT performed"
+      },
+      "dependency_identities": [],
+      "positive": {
+        "tool": "apalache",
+        "case": "positive",
+        "run_status": "EXECUTED",
+        "tool_outcome": "NO_ERROR",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "ToggleNegative.tla": "77b9ae830c212d35f8d5fba41df9ccd0026074748d99cb8380218a24faa5eb66",
+          "TogglePositive.tla": "85bc8b607709e89a23dcda64b29bb48f061ddd65e1d8c442cd9827e420fcfb8c"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/apalache-mc",
+              "check",
+              "--init=Init",
+              "--next=Next",
+              "--inv=Inv",
+              "--length=3",
+              "…/formal-js-H8VwJQ/examples/TogglePositive.tla"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 1578,
+            "timed_out": false,
+            "stdout": "# Usage statistics is OFF. We care about your privacy.\n# If you want to help our project, consider enabling statistics with config --enable-stats=true.\n\nOutput directory: /tmp/fti4/tmp/formal-js-H8VwJQ/_apalache-out/TogglePositive.tla/2026-11-13T22-03-33_5891372419163392505\n# APALACHE version: 0.63.0 | build: 67b8ec6                       I@22:03:33.902\nTuning:                                                           I@22:03:33.910\nPASS #0: SanyParser                                               I@22:03:34.116\nPASS #1: TypeCheckerSnowcat                                       I@22:03:34.295\n > Running Snowcat .::.                                           I@22:03:34.295\n > Your types are purrfect!                                       I@22:03:34.401\n > All expressions are typed                                      I@22:03:34.402\nPASS #2: ConfigurationPass                                        I@22:03:34.403\n  > Set the initialization predicate to Init                      I@22:03:34.405\n  > Set the transition predicate to Next                          I@22:03:34.406\n  > Set an invariant to Inv                                       I@22:03:34.406\nPASS #3: DesugarerPass                                            I@22:03:34.409\n  > Desugaring...                                                 I@22:03:34.409\nPASS #4: InlinePass                                               I@22:03:34.413\nLeaving only relevant operators: CInitPrimed, Init, InitPrimed, Inv, Next I@22:03:34.414\nPASS #5: TemporalPass                                             I@22:03:34.435\n  > Rewriting temporal operators...                               I@22:03:34.435\n  > No temporal property specified, nothing to encode             I@22:03:34.435\nPASS #6: InlinePass                                               I@22:03:34.436\nLeaving only relevant operators: CInitPrimed, Init, InitPrimed, Inv, Next I@22:03:34.436\nPASS #7: PrimingPass                                              I@22:03:34.438\n  > Introducing InitPrimed for Init'                              I@22:03:34.441\nPASS #8: VCGen                                                    I@22:03:34.621\n  > Producing verification conditions from the invariant Inv      I@22:03:34.622\n  > VCGen produced 1 verification condition(s)                    I@22:03:34.626\nPASS #9: PreprocessingPass                                        I@22:03:34.634\n  > Before preprocessing: unique renaming                         I@22:03:34.634\n > Applying standard transformations:                             I@22:03:34.640\n  > PrimePropagation                                              I@22:03:34.640\n  > Desugarer                                                     I@22:03:34.641\n  > UniqueRenamer                                                 I@22:03:34.642\n  > Normalizer                                                    I@22:03:34.644\n  > SetMembershipSimplifier                                       I@22:03:34.646\n  > Keramelizer                                                   I@22:03:34.648\n  > After preprocessing: UniqueRenamer                            I@22:03:34.649\nPASS #10: TransitionFinderPass                                    I@22:03:34.651\n  > Found 1 initializing transitions                              I@22:03:34.667\n  > Found 1 transitions                                           I@22:03:34.667\n  > No constant initializer                                       I@22:03:34.668\n  > Applying unique renaming                                      I@22:03:34.669\nPASS #11: OptimizationPass                                        I@22:03:34.670\n > Applying optimizations:                                        I@22:03:34.678\n  > ConstSimplifier                                               I@22:03:34.678\n  > ExprOptimizer                                                 I@22:03:34.680\n  > SetMembershipSimplifier                                       I@22:03:34.680\n  > ConstSimplifier                                               I@22:03:34.681\nPASS #12: AnalysisPass                                            I@22:03:34.682\n > Marking skolemizable existentials and sets to be expanded...   I@22:03:34.684\n  > Skolemization                                                 I@22:03:34.684\n  > Expansion                                                     I@22:03:34.684\n  > Remove unused let-in defs                                     I@22:03:34.685\n > Running analyzers...                                           I@22:03:34.687\n  > Introduced expression grades                                  I@22:03:34.688\nPASS #13: BoundedChecker                                          I@22:03:34.689\nState 0: Checking 1 state invariants                              I@22:03:34.957\nState 0: state invariant 0 holds.                                 I@22:03:34.975\nStep 0: picking a transition out of 1 transition(s)               I@22:03:34.978\nState 1: Checking 1 state invariants                              I@22:03:34.988\nState 1: state invariant 0 holds.                                 I@22:03:34.992\nStep 1: picking a transition out of 1 transition(s)               I@22:03:34.993\nState 2: Checking 1 state invariants                              I@22:03:34.996\nState 2: state invariant 0 holds.                                 I@22:03:34.999\nStep 2: picking a transition out of 1 transition(s)               I@22:03:35.000\nState 3: Checking 1 state invariants                              I@22:03:35.003\nState 3: state invariant 0 holds.                                 I@22:03:35.006\nStep 3: picking a transition out of 1 transition(s)               I@22:03:35.007\nThe outcome is: NoError                                           I@22:03:35.010\nChecker reports no error up to computation length 3               I@22:03:35.010\nIt took me 0 days  0 hours  0 min  1 sec                          I@22:03:35.011\nTotal time: 1.105 sec                                             I@22:03:35.011\nEXITCODE: OK\n",
+            "stderr": "",
+            "stdout_sha256": "d6283df7ecef1ff1b25eee3a2ebd7e33759ddfea0ab825e3641e4733ebfa4f14",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "apalache",
+        "case": "negative",
+        "run_status": "EXECUTED",
+        "tool_outcome": "ERROR_FOUND",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "ToggleNegative.tla": "77b9ae830c212d35f8d5fba41df9ccd0026074748d99cb8380218a24faa5eb66",
+          "TogglePositive.tla": "85bc8b607709e89a23dcda64b29bb48f061ddd65e1d8c442cd9827e420fcfb8c"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/apalache-mc",
+              "check",
+              "--init=Init",
+              "--next=Next",
+              "--inv=Inv",
+              "--length=3",
+              "…/formal-js-GgOZsd/examples/ToggleNegative.tla"
+            ],
+            "exit_code": 12,
+            "signal": null,
+            "elapsed_ms": 1660,
+            "timed_out": false,
+            "stdout": "# Usage statistics is OFF. We care about your privacy.\n# If you want to help our project, consider enabling statistics with config --enable-stats=true.\n\nOutput directory: /tmp/fti4/tmp/formal-js-GgOZsd/_apalache-out/ToggleNegative.tla/2026-11-13T22-03-35_16735216038865205855\n# APALACHE version: 0.63.0 | build: 67b8ec6                       I@22:03:35.474\nTuning:                                                           I@22:03:35.482\nPASS #0: SanyParser                                               I@22:03:35.689\nPASS #1: TypeCheckerSnowcat                                       I@22:03:35.858\n > Running Snowcat .::.                                           I@22:03:35.858\n > Your types are purrfect!                                       I@22:03:35.955\n > All expressions are typed                                      I@22:03:35.955\nPASS #2: ConfigurationPass                                        I@22:03:35.956\n  > Set the initialization predicate to Init                      I@22:03:35.959\n  > Set the transition predicate to Next                          I@22:03:35.960\n  > Set an invariant to Inv                                       I@22:03:35.960\nPASS #3: DesugarerPass                                            I@22:03:35.963\n  > Desugaring...                                                 I@22:03:35.964\nPASS #4: InlinePass                                               I@22:03:35.968\nLeaving only relevant operators: CInitPrimed, Init, InitPrimed, Inv, Next I@22:03:35.969\nPASS #5: TemporalPass                                             I@22:03:35.989\n  > Rewriting temporal operators...                               I@22:03:35.989\n  > No temporal property specified, nothing to encode             I@22:03:35.989\nPASS #6: InlinePass                                               I@22:03:35.989\nLeaving only relevant operators: CInitPrimed, Init, InitPrimed, Inv, Next I@22:03:35.990\nPASS #7: PrimingPass                                              I@22:03:35.992\n  > Introducing InitPrimed for Init'                              I@22:03:35.995\nPASS #8: VCGen                                                    I@22:03:36.180\n  > Producing verification conditions from the invariant Inv      I@22:03:36.181\n  > VCGen produced 1 verification condition(s)                    I@22:03:36.185\nPASS #9: PreprocessingPass                                        I@22:03:36.194\n  > Before preprocessing: unique renaming                         I@22:03:36.194\n > Applying standard transformations:                             I@22:03:36.200\n  > PrimePropagation                                              I@22:03:36.201\n  > Desugarer                                                     I@22:03:36.202\n  > UniqueRenamer                                                 I@22:03:36.202\n  > Normalizer                                                    I@22:03:36.204\n  > SetMembershipSimplifier                                       I@22:03:36.206\n  > Keramelizer                                                   I@22:03:36.207\n  > After preprocessing: UniqueRenamer                            I@22:03:36.209\nPASS #10: TransitionFinderPass                                    I@22:03:36.210\n  > Found 1 initializing transitions                              I@22:03:36.225\n  > Found 1 transitions                                           I@22:03:36.226\n  > No constant initializer                                       I@22:03:36.227\n  > Applying unique renaming                                      I@22:03:36.227\nPASS #11: OptimizationPass                                        I@22:03:36.229\n > Applying optimizations:                                        I@22:03:36.232\n  > ConstSimplifier                                               I@22:03:36.233\n  > ExprOptimizer                                                 I@22:03:36.234\n  > SetMembershipSimplifier                                       I@22:03:36.234\n  > ConstSimplifier                                               I@22:03:36.235\nPASS #12: AnalysisPass                                            I@22:03:36.235\n > Marking skolemizable existentials and sets to be expanded...   I@22:03:36.241\n  > Skolemization                                                 I@22:03:36.241\n  > Expansion                                                     I@22:03:36.242\n  > Remove unused let-in defs                                     I@22:03:36.242\n > Running analyzers...                                           I@22:03:36.244\n  > Introduced expression grades                                  I@22:03:36.246\nPASS #13: BoundedChecker                                          I@22:03:36.246\nState 0: Checking 1 state invariants                              I@22:03:36.521\nState 0: state invariant 0 holds.                                 I@22:03:36.526\nStep 0: picking a transition out of 1 transition(s)               I@22:03:36.530\nState 1: Checking 1 state invariants                              I@22:03:36.541\nCheck the trace in: /tmp/fti4/tmp/formal-js-GgOZsd/_apalache-out/ToggleNegative.tla/2026-11-13T22-03-35_16735216038865205855/violation1.tla, /tmp/fti4/tmp/formal-js-GgOZsd/_apalache-out/ToggleNegative.tla/2026-11-13T22-03-35_16735216038865205855/MCviolation1.out, /tmp/fti4/tmp/formal-js-GgOZsd/_apalache-out/ToggleNegative.tla/2026-11-13T22-03-35_16735216038865205855/violation1.json, /tmp/fti4/tmp/formal-js-GgOZsd/_apalache-out/ToggleNegative.tla/2026-11-13T22-03-35_16735216038865205855/violation1.itf.json I@22:03:36.658\nState 1: state invariant 0 violated.                              I@22:03:36.659\nFound 1 error(s)                                                  I@22:03:36.660\nThe outcome is: Error                                             I@22:03:36.662\nChecker has found an error                                        I@22:03:36.690\nIt took me 0 days  0 hours  0 min  1 sec                          I@22:03:36.690\nTotal time: 1.213 sec                                             I@22:03:36.69",
+            "stderr": "",
+            "stdout_sha256": "98c19b01abf53f9fa9a79d81d3e1a564ba0ac442e5e5f3329e0ec6cadc4f675b",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "extra_cases": "NOT_RUN",
+      "acceptance": "CANDIDATE_FOR_REVIEW"
+    },
+    {
+      "tool": "alloy",
+      "version": {
+        "tool": "alloy",
+        "run_status": "EXECUTED",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "…/fti4/bin/java",
+          "-jar",
+          "…/tmp/fti4/alloy.jar",
+          "help"
+        ],
+        "exit_code": 0,
+        "signal": null,
+        "elapsed_ms": 181,
+        "timed_out": false,
+        "stdout": "\nThe Alloy dispatcher\n\n\nMAIN OPTIONS\n\n   [ -d, --debug ]            -         Activate debugging mode\n   [ -D, --defaultLevel <levels> ] -    Set the default log level: off, trace,\n                                        debug, info, warn, error. If not set,\n                                        defaults to error\n   [ -l, --log <string;> ]    -         Set per logger log level. The syntax is\n                                        <logger-prefix>=<level>, where level is\n                                        off, trace, debug, info, warn, error\n\nAvailable sub-commands: \n\n  natives                     -         Show all the native solvers for all\n                                        supported platforms \n  prefs                       -         Show the preferences or modify them \n  solvers                     -         Show the list of solvers \n  version                     -         Display the current version \n\n\n  gui                         -         Opens up the Graphic User Interface of\n                                        Alloy \n\n  commands                    -         Show all commands in an Alloy program \n  exec                        -         Execute an Alloy program. This will\n                                        create a directory with the name of the\n                                        source file minus the extension. You\n                                        will find the solutions in this\n                                        directory. This directory will also\n                                        contain a receipt.json file that\n                                        contains the solutions. \n\n  ls                          -         Language Server for Alloy. \n  lsp                         -         Language Server for Alloy. \n\n\n",
+        "stderr": "",
+        "stdout_sha256": "2c183390a89bb4280fcb5427816c121bffb9e7551ba66bfc6cbc9fd7c31c0fc1",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null,
+        "output_truncated": false
+      },
+      "installation": {
+        "tool": "alloy",
+        "status": "FOUND_NOT_PROBED",
+        "launcher": "alloy-jar",
+        "executable": "…/fti4/bin/java",
+        "argv": [
+          "…/fti4/bin/java",
+          "-jar",
+          "…/tmp/fti4/alloy.jar",
+          "help"
+        ],
+        "diagnostics": [],
+        "probe_status": "NOT_RUN",
+        "searched": 1
+      },
+      "binary_identity": {
+        "path": "…/fti4/bin/java",
+        "sha256": "7afc28801f744050aeba646b20e7314265279f76f9d0273b21a2b66411e1bf6d",
+        "bytes": 13024,
+        "mtime": "2026-10-21T17:07:51.000Z",
+        "provenance": "file inherited from local host; upstream signature/supply-chain audit NOT performed"
+      },
+      "dependency_identities": [
+        {
+          "path": "…/tmp/fti4/alloy.jar",
+          "sha256": "6b8c1cb5bc93bedfc7c61435c4e1ab6e688a242dc702a394628d9a9801edb78d",
+          "bytes": 21062377,
+          "mtime": "2026-11-10T22:26:51.250Z",
+          "provenance": "file inherited from local host; upstream signature/supply-chain audit NOT performed"
+        }
+      ],
+      "positive": {
+        "tool": "alloy",
+        "case": "positive",
+        "run_status": "EXECUTED",
+        "tool_outcome": "UNSAT",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.als": "57dbc677a55f4f65bccd85db9924183bbaa421d1d5b5f9cc5da0ec8f00199d53",
+          "positive.als": "f8a2d957cef447f314b9c7d4d8438445a63633f4b8645b15149098ed7e8815ab"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/java",
+              "-jar",
+              "…/tmp/fti4/alloy.jar",
+              "exec",
+              "-c",
+              "0",
+              "…/formal-js-3pl6IW/examples/positive.als"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 518,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "00. check NoSelfLoop               0       UNSAT\n",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "17e93ee971697fbda28110ac80574a6eb582c4c7363ced565839f40898774763",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "alloy",
+        "case": "negative",
+        "run_status": "EXECUTED",
+        "tool_outcome": "SAT",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.als": "57dbc677a55f4f65bccd85db9924183bbaa421d1d5b5f9cc5da0ec8f00199d53",
+          "positive.als": "f8a2d957cef447f314b9c7d4d8438445a63633f4b8645b15149098ed7e8815ab"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/java",
+              "-jar",
+              "…/tmp/fti4/alloy.jar",
+              "exec",
+              "-c",
+              "0",
+              "…/formal-js-1ga1v0/examples/negative.als"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 523,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "00. check NoSelfLoop               0\b\b\b\b\b    1/1     SAT\n",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "507212ae02fcc59c6d3302af58190ee12f3d956ec6b0d5293e9556692fb11d3e",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "extra_cases": "NOT_RUN",
+      "acceptance": "CANDIDATE_FOR_REVIEW"
+    },
+    {
+      "tool": "souffle",
+      "version": {
+        "tool": "souffle",
+        "run_status": "EXECUTED",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "…/fti4/bin/souffle",
+          "--version"
+        ],
+        "exit_code": 0,
+        "signal": null,
+        "elapsed_ms": 4,
+        "timed_out": false,
+        "stdout": "----------------------------------------------------------------------------\nVersion: 2.5 (2.5)\nWord size: 64 bits\nOptions enabled: ffi openmp ncurses sqlite zlib\n----------------------------------------------------------------------------\nCopyright (c) 2016-25 The Souffle Developers.\nCopyright (c) 2013-16 Oracle and/or its affiliates.\nAll rights reserved.\n============================================================================\n\n",
+        "stderr": "",
+        "stdout_sha256": "189a327e08c521cd3d22fee1ab6c908eca5953a78b210ee541c15465cb2522b2",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null,
+        "output_truncated": false
+      },
+      "installation": {
+        "tool": "souffle",
+        "status": "FOUND_NOT_PROBED",
+        "launcher": "binary",
+        "executable": "…/fti4/bin/souffle",
+        "argv": [
+          "…/fti4/bin/souffle",
+          "--version"
+        ],
+        "diagnostics": [],
+        "probe_status": "NOT_RUN",
+        "searched": 1
+      },
+      "binary_identity": {
+        "path": "…/fti4/bin/souffle",
+        "sha256": "28b6284150aae6c77fd5294aabe146058624f5b70a981ade7d8b843581995da0",
+        "bytes": 18581097,
+        "mtime": "2026-11-10T22:29:31.543Z",
+        "provenance": "file inherited from local host; upstream signature/supply-chain audit NOT performed"
+      },
+      "dependency_identities": [],
+      "positive": {
+        "tool": "souffle",
+        "case": "positive",
+        "run_status": "EXECUTED",
+        "tool_outcome": "ACYCLIC",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.dl": "a82394c49c04206f03a8bf7dbf979cd57b0b4cc8f2dceb242d7fdc52ef9013dc",
+          "positive.dl": "e54fab54287b715d4b64087d0582ff884b6fcd06e32dd44b0dba2bf29c4280c3"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/souffle",
+              "…/formal-js-uWvo6z/examples/positive.dl",
+              "-D",
+              "…/fti4/tmp/formal-js-uWvo6z"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 12,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "souffle",
+        "case": "negative",
+        "run_status": "EXECUTED",
+        "tool_outcome": "CYCLIC",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.dl": "a82394c49c04206f03a8bf7dbf979cd57b0b4cc8f2dceb242d7fdc52ef9013dc",
+          "positive.dl": "e54fab54287b715d4b64087d0582ff884b6fcd06e32dd44b0dba2bf29c4280c3"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/souffle",
+              "…/formal-js-rzWVZi/examples/negative.dl",
+              "-D",
+              "…/fti4/tmp/formal-js-rzWVZi"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 13,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "extra_cases": "NOT_RUN",
+      "acceptance": "CANDIDATE_FOR_REVIEW"
+    },
+    {
+      "tool": "rdf-shacl",
+      "version": {
+        "tool": "rdf-shacl",
+        "run_status": "EXECUTED",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "…/tmp/fti4/python3",
+          "-m",
+          "pyshacl",
+          "--help"
+        ],
+        "exit_code": 0,
+        "signal": null,
+        "elapsed_ms": 233,
+        "timed_out": false,
+        "stdout": "usage: python3 -m pyshacl [-h] [-s [SHACL]] [-e [ONT]]\n                          [-i {none,rdfs,owlrl,both}] [-m] [-q] [-im] [-a]\n                          [-j] [-it] [--abort] [--allow-info] [-w]\n                          [--max-depth [MAX_DEPTH]] [-d] [--validate-each]\n                          [--focus [FOCUS]] [--shape [SHAPE]]\n                          [-f {human,table,turtle,xml,json-ld,nt,n3}]\n                          [-df {auto,turtle,xml,json-ld,nt,n3}]\n                          [-sf {auto,turtle,xml,json-ld,nt,n3}]\n                          [-ef {auto,turtle,xml,json-ld,nt,n3}] [-V]\n                          [-o [OUTPUT]] [--rules] [--server]\n                          [DataGraph ...]\n\nPySHACL 0.40.2 Validator command line tool.\n\npositional arguments:\n  DataGraph             The file(s) or endpoint containing the Target Data\n                        Graph.\n\noptions:\n  -h, --help            show this help message and exit\n  -s, --shapes, --shacl [SHACL]\n                        A file containing the SHACL Shapes Graph.\n  -e, --ont-graph [ONT]\n                        A file path or URL to a document containing extra\n                        ontological information. RDFS and OWL definitions from\n                        this are used to inoculate the DataGraph.\n  -i, --inference {none,rdfs,owlrl,both}\n                        Choose a type of inferencing to run against the Data\n                        Graph before validating.\n  -m, --metashacl       Validate the SHACL Shapes graph against the shacl-\n                        shacl Shapes Graph before validating the Data Graph.\n  -q, --sparql-mode     Treat the DataGraph as a SPARQL endpoint, validate the\n                        graph at the SPARQL endpoint.\n  -im, --imports        Allow import of sub-graphs defined in statements with\n                        owl:imports.\n  -a, --advanced        Enable features from the SHACL Advanced Features\n                        specification.\n  -j, --js              Enable features from the SHACL-JS Specification.\n  -it, --iterate-rules  Run Shape's SHACL Rules iteratively until the\n                        data_graph reaches a steady state.\n  --abort               Abort on first invalid data.\n  --allow-info, --allow-infos\n                        Shapes marked with severity of Info will not cause\n                        result to be invalid.\n  -w, --allow-warning, --allow-warnings\n                        Shapes marked with severity of Warning or Info will\n                        not cause result to be invalid.\n  --max-depth [MAX_DEPTH]\n                        The maximum number of SHACL shapes \"deep\" that the\n                        validator can go before reaching an \"endpoint\"\n                        constraint.\n  -d, --debug           Output additional verbose runtime messages.\n  --validate-each       Validate each data graph independently when multiple\n                        inputs are provided.\n  --focus [FOCUS]       Optional IRIs of focus nodes from the DataGraph, the\n                        shapes will validate only these node. Comma-separated\n                        list.\n  --shape [SHAPE]       Optional IRIs of a NodeShape or PropertyShape from the\n                        SHACL ShapesGraph, only these shapes will be used to\n                        validate the DataGraph. Comma-separated list.\n  -f, --format {human,table,turtle,xml,json-ld,nt,n3}\n                        Choose an output format. Default is \"human\".\n  -df, --data-file-format {auto,turtle,xml,json-ld,nt,n3}\n                        Explicitly state the RDF File format of the input\n                        DataGraph file. Default=\"auto\".\n  -sf, --shacl-file-format {auto,turtle,xml,json-ld,nt,n3}\n                        Explicitly state the RDF File format of the input\n                        SHACL file. Default=\"auto\".\n  -ef, --ont-file-format {auto,turtle,xml,json-ld,nt,n3}\n                        Explicitly state the RDF File format of the extra\n                        ontology file. Default=\"auto\".\n  -V, --version         Show PySHACL version and exit.\n  -o, --output [OUTPUT]\n                        Send output to a file (defaults to stdout).\n  --rules               Ignore validation options, run PySHACL in Rules\n                        Expansion mode. Same as `pyshacl_rules`.\n  --server              Ignore all the rest of the options, start the HTTP\n                        Server. Same as `pyshacl_server`.\n",
+        "stderr": "",
+        "stdout_sha256": "89c25a6011a81b94f7421ebe50283648c7870b5157b36308c3980081ac1415af",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null,
+        "output_truncated": false
+      },
+      "installation": {
+        "tool": "rdf-shacl",
+        "status": "FOUND_NOT_PROBED",
+        "launcher": "python-module",
+        "executable": "…/tmp/fti4/python3",
+        "argv": [
+          "…/tmp/fti4/python3",
+          "-m",
+          "pyshacl",
+          "--help"
+        ],
+        "diagnostics": [
+          "Python module presence is not checked by PATH inspection; run a real version probe"
+        ],
+        "probe_status": "NOT_RUN",
+        "searched": 1
+      },
+      "binary_identity": {
+        "path": "…/tmp/fti4/python3",
+        "sha256": "bc1eac3518b3af714c804257aa7844e4156f91560981c60ef8f4a96a064d2434",
+        "bytes": 32842520,
+        "mtime": "2026-11-10T17:40:12.845Z",
+        "provenance": "file inherited from local host; upstream signature/supply-chain audit NOT performed"
+      },
+      "dependency_identities": [],
+      "positive": {
+        "tool": "rdf-shacl",
+        "case": "positive",
+        "run_status": "EXECUTED",
+        "tool_outcome": "TRUE",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.ttl": "9e72999141cb7a505f25c48b680d10fd2b7a96b824fe7fa5a298e441ad652a74",
+          "positive.ttl": "75879af8e9ddd20118279cedbc11560d5a11fae608876bd36cd2422505971b93",
+          "shapes.ttl": "5fcbc3ae014734e176d54501a507e9acd78f4e250656712a39ed0d8b67f9ac65"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/tmp/fti4/python3",
+              "-m",
+              "pyshacl",
+              "-s",
+              "…/formal-js-0a83Vc/examples/shapes.ttl",
+              "-df",
+              "turtle",
+              "-sf",
+              "turtle",
+              "-f",
+              "human",
+              "…/formal-js-0a83Vc/examples/positive.ttl"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 238,
+            "timed_out": false,
+            "stdout": "Validation Report\nConforms: True\n",
+            "stderr": "",
+            "stdout_sha256": "77debc800e6c973b66475968bdf71e2e667df8f4108e7f5299fe1651e6606dc9",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "rdf-shacl",
+        "case": "negative",
+        "run_status": "EXECUTED",
+        "tool_outcome": "FALSE",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.ttl": "9e72999141cb7a505f25c48b680d10fd2b7a96b824fe7fa5a298e441ad652a74",
+          "positive.ttl": "75879af8e9ddd20118279cedbc11560d5a11fae608876bd36cd2422505971b93",
+          "shapes.ttl": "5fcbc3ae014734e176d54501a507e9acd78f4e250656712a39ed0d8b67f9ac65"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/tmp/fti4/python3",
+              "-m",
+              "pyshacl",
+              "-s",
+              "…/formal-js-Yc2BSl/examples/shapes.ttl",
+              "-df",
+              "turtle",
+              "-sf",
+              "turtle",
+              "-f",
+              "human",
+              "…/formal-js-Yc2BSl/examples/negative.ttl"
+            ],
+            "exit_code": 1,
+            "signal": null,
+            "elapsed_ms": 242,
+            "timed_out": false,
+            "stdout": "Validation Report\nConforms: False\nResults (1):\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:path ex:version ]\n\tFocus Node: ex:x\n\tResult Path: ex:version\n\tMessage: Less than 1 values on ex:x->ex:version\n",
+            "stderr": "",
+            "stdout_sha256": "cad01d47efb0a470ce5493e0496223c74daa3fb227d04250ce9a29d8c4b779d2",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "extra_cases": "NOT_RUN",
+      "acceptance": "CANDIDATE_FOR_REVIEW"
+    },
+    {
+      "tool": "vampire",
+      "version": {
+        "tool": "vampire",
+        "run_status": "EXECUTED",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "…/fti4/bin/vampire",
+          "--help"
+        ],
+        "exit_code": 0,
+        "signal": null,
+        "elapsed_ms": 4,
+        "timed_out": false,
+        "stdout": "Usage: vampire [OPTIONS] PROBLEM\n\nSupported options:\n\n\t--mode portfolio (execute a schedule of many different proof attempts)\n\t--schedule <schedule> (in portfolio mode, use the builtin <schedule>)\n\t--input_syntax {tptp,smtlib2} (read TPTP or SMT-LIB 2.x input)\n\t--proof tptp (use the TSTP proof format)\n\t--output_mode {smtcomp,ucore} (output only sat/unsat with an optional core)\n\t--time_limit <seconds> (limit Vampire's runtime)\n\nUse '--show_options on' to see all available options.\n",
+        "stderr": "",
+        "stdout_sha256": "7a32200963bac8f1afb167e0cc3cfc5e8439d3fb463add20735e0bc2d5ab5bcb",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null,
+        "output_truncated": false
+      },
+      "installation": {
+        "tool": "vampire",
+        "status": "FOUND_NOT_PROBED",
+        "launcher": "binary",
+        "executable": "…/fti4/bin/vampire",
+        "argv": [
+          "…/fti4/bin/vampire",
+          "--help"
+        ],
+        "diagnostics": [],
+        "probe_status": "NOT_RUN",
+        "searched": 1
+      },
+      "binary_identity": {
+        "path": "…/fti4/bin/vampire",
+        "sha256": "1bc3c598494d790f9b385d1118c7ab9c03f8f146721a6567700679c407314444",
+        "bytes": 55131792,
+        "mtime": "2026-11-10T22:29:50.595Z",
+        "provenance": "file inherited from local host; upstream signature/supply-chain audit NOT performed"
+      },
+      "dependency_identities": [],
+      "positive": {
+        "tool": "vampire",
+        "case": "positive",
+        "run_status": "EXECUTED",
+        "tool_outcome": "THEOREM",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.p": "541ca68d3e61c06ab88f275057c032bf36c955efacbaa933f222ea79ca863f31",
+          "positive.p": "d5b502c429de71f4bbabcd3c8f4c86233759ed7cb925b719f9c7c818755d68ae"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/vampire",
+              "--mode",
+              "casc",
+              "…/formal-js-0qfGu5/examples/positive.p"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 9,
+            "timed_out": false,
+            "stdout": "% Running in auto input_syntax mode. Trying TPTP\n% Detected 'Essentially Bernays–Schönfinkel–Ramsey OR Essentially ground' problem, will run a specialized EPR schedule (with support for satisfiability detection).\n% WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time\n% ott+21_1_sil=128000:fs=off:lcm=predicate:random_seed=2824409036:i=102:av=off:fsr=off_1 on positive for (1ds/102Mi)\n%  found proof, printing to \"/tmp/fti4/tmp/vampire-proof-117439-117441\"...\n% ...printing done.\n% Refutation found. Thanks to Tanya!\n% SZS status Theorem for positive\n% SZS output start Proof for positive\nfof(f1,axiom,(\n  ! [X0] : (p(X0) => q(X0))),\n  file('/tmp/fti4/tmp/formal-js-0qfGu5/examples/positive.p','a1')).\nfof(f2,axiom,(\n  p(a)),\n  file('/tmp/fti4/tmp/formal-js-0qfGu5/examples/positive.p','a2')).\nfof(f3,conjecture,(\n  q(a)),\n  file('/tmp/fti4/tmp/formal-js-0qfGu5/examples/positive.p','goal')).\nfof(f4,negated_conjecture,(\n  ~ q(a)),\n  inference(negated_conjecture,[status(cth)],[f3])).\nfof(f5,plain,(\n  ~q(a)),\n  inference(flattening,[],[f4])).\nfof(f6,plain,(\n  ! [X0] : (q(X0) | ~p(X0))),\n  inference(ennf_transformation,[],[f1])).\nfof(f7,plain,(\n  ( ! [X0] : (q(X0) | ~p(X0)) )),\n  inference(cnf_transformation,[],[f6])).\nfof(f8,plain,(\n  p(a)),\n  inference(cnf_transformation,[],[f2])).\nfof(f9,plain,(\n  ~q(a)),\n  inference(cnf_transformation,[],[f5])).\nfof(f10,plain,(\n  ~p(a)),\n  inference(resolution,[],[f7,f9])).\nfof(f11,plain,(\n  $false),\n  inference(resolution,[],[f10,f8])).\n% SZS output end Proof for positive\n% ------------------------------\n% Version: Vampire 5.1.0 (Release build, commit 7b2f410 on 2026-08-13 10:17:34 +0200)\n% Linked with Z3 4.14.0.0 3c47fd96cf5645d0c42b2c819d9e9a84380aa721 NOTFOUND\n% CaDiCaL version: 2.1.3\n% Termination reason: Refutation\n% Time elapsed: 0.0000 s\n% Peak memory usage: 12 MB\n% Success in time 0.003 s\n",
+            "stderr": "",
+            "stdout_sha256": "105f661eb6c891ec2ef23290f182db1908e2da66acddbabee2e4d3760f0f4ab9",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "vampire",
+        "case": "negative",
+        "run_status": "EXECUTED",
+        "tool_outcome": "COUNTER_SATISFIABLE",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.p": "541ca68d3e61c06ab88f275057c032bf36c955efacbaa933f222ea79ca863f31",
+          "positive.p": "d5b502c429de71f4bbabcd3c8f4c86233759ed7cb925b719f9c7c818755d68ae"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/vampire",
+              "--mode",
+              "casc",
+              "…/formal-js-YFdbNJ/examples/negative.p"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 7,
+            "timed_out": false,
+            "stdout": "% Running in auto input_syntax mode. Trying TPTP\n% Detected 'Essentially Bernays–Schönfinkel–Ramsey OR Essentially ground' problem, will run a specialized EPR schedule (with support for satisfiability detection).\n% WARNING: time unlimited strategy and instruction limiting not in place - attempting to translate instructions to time\n% ott+21_1_sil=128000:fs=off:lcm=predicate:random_seed=206737811:i=102:av=off:fsr=off_1 on negative for (1ds/102Mi)\n%  found proof, printing to \"/tmp/fti4/tmp/vampire-proof-117443-117445\"...\n% ...printing done.\n% SZS status CounterSatisfiable for negative\n% SZS output start Saturation.\ncnf(u10,negated_conjecture,\n    ~p(b)).\n\ncnf(u7,axiom,\n    q(X0) | ~p(X0)).\n\ncnf(u8,axiom,\n    p(a)).\n\ncnf(u9,negated_conjecture,\n    ~q(b)).\n\n% SZS output end Saturation.\n% SZS output start Definitions and Model Updates.\n% SZS output end Definitions and Model Updates.\n% ------------------------------\n% Version: Vampire 5.1.0 (Release build, commit 7b2f410 on 2026-08-13 10:17:34 +0200)\n% Linked with Z3 4.14.0.0 3c47fd96cf5645d0c42b2c819d9e9a84380aa721 NOTFOUND\n% CaDiCaL version: 2.1.3\n% Termination reason: Satisfiable\n% Time elapsed: 0.0000 s\n% Peak memory usage: 12 MB\n% Success in time 0.003 s\n",
+            "stderr": "",
+            "stdout_sha256": "85289a4a2efe636fd64c50e9bd80613f801d3bf3d847c71ecfdd49bc3b2c11bd",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "extra_cases": "NOT_RUN",
+      "acceptance": "CANDIDATE_FOR_REVIEW"
+    },
+    {
+      "tool": "clingo",
+      "version": {
+        "tool": "clingo",
+        "run_status": "EXECUTED",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "…/tmp/fti4/python3",
+          "-m",
+          "clingo",
+          "--help"
+        ],
+        "exit_code": 1,
+        "signal": null,
+        "elapsed_ms": 15,
+        "timed_out": false,
+        "stdout": "",
+        "stderr": "/tmp/fti4/python3: No module named clingo\n",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "bb1c55542ff8ca7dcf64e4330cdc4d0976f54efe7bd4ef65b821ccc9d9ecde90",
+        "error": null,
+        "output_truncated": false
+      },
+      "installation": {
+        "tool": "clingo",
+        "status": "FOUND_NOT_PROBED",
+        "launcher": "python-module",
+        "executable": "…/tmp/fti4/python3",
+        "argv": [
+          "…/tmp/fti4/python3",
+          "-m",
+          "clingo",
+          "--help"
+        ],
+        "diagnostics": [
+          "Python module presence is not checked by PATH inspection; run a real version probe"
+        ],
+        "probe_status": "NOT_RUN",
+        "searched": 1
+      },
+      "binary_identity": {
+        "path": "…/tmp/fti4/python3",
+        "sha256": "bc1eac3518b3af714c804257aa7844e4156f91560981c60ef8f4a96a064d2434",
+        "bytes": 32842520,
+        "mtime": "2026-11-10T17:40:12.845Z",
+        "provenance": "file inherited from local host; upstream signature/supply-chain audit NOT performed"
+      },
+      "dependency_identities": [],
+      "positive": {
+        "tool": "clingo",
+        "case": "positive",
+        "run_status": "EXECUTED",
+        "tool_outcome": "UNPARSED",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.lp": "daefe8db8080b104b3884a515fee1c988760475ba00f26ccd461ba2fd3540520",
+          "positive.lp": "cfc913da42ce5a4f5cbc342658570eeed64cddcf68e6f504918dc544608bd5b1"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/tmp/fti4/python3",
+              "-m",
+              "clingo",
+              "…/formal-js-QAW8eH/examples/positive.lp",
+              "0"
+            ],
+            "exit_code": 1,
+            "signal": null,
+            "elapsed_ms": 15,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "/tmp/fti4/python3: No module named clingo\n",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "bb1c55542ff8ca7dcf64e4330cdc4d0976f54efe7bd4ef65b821ccc9d9ecde90",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "clingo",
+        "case": "negative",
+        "run_status": "EXECUTED",
+        "tool_outcome": "UNPARSED",
+        "test_verdict": "INCONCLUSIVE",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "negative.lp": "daefe8db8080b104b3884a515fee1c988760475ba00f26ccd461ba2fd3540520",
+          "positive.lp": "cfc913da42ce5a4f5cbc342658570eeed64cddcf68e6f504918dc544608bd5b1"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/tmp/fti4/python3",
+              "-m",
+              "clingo",
+              "…/formal-js-Jculx6/examples/negative.lp",
+              "0"
+            ],
+            "exit_code": 1,
+            "signal": null,
+            "elapsed_ms": 15,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "/tmp/fti4/python3: No module named clingo\n",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "bb1c55542ff8ca7dcf64e4330cdc4d0976f54efe7bd4ef65b821ccc9d9ecde90",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "extra_cases": "NOT_RUN",
+      "acceptance": "BLOCK_OR_REPAIR"
+    },
+    {
+      "tool": "apache-jena",
+      "version": {
+        "tool": "apache-jena",
+        "run_status": "EXECUTED",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "…/fti4/bin/riot",
+          "--help"
+        ],
+        "exit_code": 0,
+        "signal": null,
+        "elapsed_ms": 607,
+        "timed_out": false,
+        "stdout": "",
+        "stderr": "riot [--help] [--time] [--base=IRI] [--syntax=FORMAT] [--out=FORMAT] [--count] file ...\n  Parser control\n      --sink                 Parse but throw away output\n      --syntax=NAME          Set syntax (otherwise syntax guessed from file extension)\n      --base=URI             Set the base URI (does not apply to N-triples and N-Quads)\n      --nobase               Pass through relative URIs (best effort)\n      --check                Additional checking of RDF terms\n      --strict               Run with in strict mode\n      --validate             Same as --sink --check --strict\n      --count                Count triples/quads parsed, not output them\n      --merge                Convert quads to triples\n      --rdfs=file            Apply some RDFS inference using the vocabulary in the file\n      --nocheck              Turn off checking of RDF terms\n  Output control\n      --output=FMT           Output in the given format, streaming if possible.\n      --formatted=FMT        Output, using pretty printing (consumes memory)\n      --stream=FMT           Output, using a streaming format\n      --compress             Compress the output with gzip\n  Time\n      --time                 Time the operation\n  Symbol definition\n      --set                  Set a configuration symbol to a value\n  General\n      -v   --verbose         Verbose\n      -q   --quiet           Run with minimal output\n      --debug                Output information for debugging\n      --help\n      --version              Version information\n",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "15fccafd87f01380e592e21cd570c80d4ec8229a458d6c01b13b30fca9134a1a",
+        "error": null,
+        "output_truncated": false
+      },
+      "installation": {
+        "tool": "apache-jena",
+        "status": "FOUND_NOT_PROBED",
+        "launcher": "binary",
+        "executable": "…/fti4/bin/riot",
+        "argv": [
+          "…/fti4/bin/riot",
+          "--help"
+        ],
+        "diagnostics": [],
+        "probe_status": "NOT_RUN",
+        "searched": 1
+      },
+      "binary_identity": {
+        "path": "…/fti4/bin/riot",
+        "sha256": "853c14708260512f4234f72afa65fea6d866d9240138e3c0b6e01eb84e3c3b82",
+        "bytes": 2234,
+        "mtime": "2025-07-14T19:44:49.000Z",
+        "provenance": "file inherited from local host; upstream signature/supply-chain audit NOT performed"
+      },
+      "dependency_identities": [],
+      "positive": {
+        "tool": "apache-jena",
+        "case": "positive",
+        "run_status": "EXECUTED",
+        "tool_outcome": "QUERY_MATCH",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "data.ttl": "94f4c9cde8df3d9b656bcee1c4347b75329803bc92652627bd4ab6b361d4f791",
+          "invalid.ttl": "d6f6dbd7351c23a80a1f35a8d5530dc348ec926983888fd17c71316f3621d9cd",
+          "query.rq": "5d2865566e48ca7eccd18726198513fd5df994a233691ef457be198d87ba584d"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/riot",
+              "--validate",
+              "…/formal-js-EkQSj3/examples/data.ttl"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 677,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          },
+          {
+            "argv": [
+              "…/fti4/bin/arq",
+              "--data",
+              "…/formal-js-EkQSj3/examples/data.ttl",
+              "--query",
+              "…/formal-js-EkQSj3/examples/query.rq"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 769,
+            "timed_out": false,
+            "stdout": "---------------------------------------------------\n| source                 | target                 |\n===================================================\n| <http://example.org/a> | <http://example.org/b> |\n---------------------------------------------------\n",
+            "stderr": "",
+            "stdout_sha256": "b819dd6885e091ee27bd7aa251de7cae1c35661b97d0cdc3c46ba00439290e51",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "apache-jena",
+        "case": "negative",
+        "run_status": "EXECUTED",
+        "tool_outcome": "INVALID_TURTLE",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "data.ttl": "94f4c9cde8df3d9b656bcee1c4347b75329803bc92652627bd4ab6b361d4f791",
+          "invalid.ttl": "d6f6dbd7351c23a80a1f35a8d5530dc348ec926983888fd17c71316f3621d9cd",
+          "query.rq": "5d2865566e48ca7eccd18726198513fd5df994a233691ef457be198d87ba584d"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/riot",
+              "--validate",
+              "…/formal-js-xcxObB/examples/invalid.ttl"
+            ],
+            "exit_code": 1,
+            "signal": null,
+            "elapsed_ms": 675,
+            "timed_out": false,
+            "stdout": "",
+            "stderr": "22:03:41 ERROR riot            :: [line: 1, col: 55] Unrecognized (expected an RDF Term): [DOT]\n",
+            "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr_sha256": "2685a6056aaf288cd2bb9e5c4758659a904d0742605284e8626617738a94af3d",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "extra_cases": "NOT_RUN",
+      "acceptance": "CANDIDATE_FOR_REVIEW"
+    },
+    {
+      "tool": "prob",
+      "version": {
+        "tool": "prob",
+        "run_status": "EXECUTED",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "…/fti4/bin/probcli",
+          "-version"
+        ],
+        "exit_code": 0,
+        "signal": null,
+        "elapsed_ms": 1010,
+        "timed_out": false,
+        "stdout": "ProB Command Line Interface\n  VERSION 1.16.1-final (716929f528b333dd3901a0521fc0d3460a488af7)\n  Thu Aug 27 12:46:31 2026 +0200\n  Prolog (sicstus): SICStus 4.9.0 (x86_64-linux-glibc2.28): Fri Dec 15 10:08:12 UTC 2023\n  COMPILE TIME FLAGS: [prob_release]\n",
+        "stderr": "",
+        "stdout_sha256": "aed1d2af909b802ab9aea6714180c67a9e42ccdf7d61ea7b7c166783b4a10a4d",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null,
+        "output_truncated": false
+      },
+      "installation": {
+        "tool": "prob",
+        "status": "FOUND_NOT_PROBED",
+        "launcher": "binary",
+        "executable": "…/fti4/bin/probcli",
+        "argv": [
+          "…/fti4/bin/probcli",
+          "-version"
+        ],
+        "diagnostics": [],
+        "probe_status": "NOT_RUN",
+        "searched": 1
+      },
+      "binary_identity": {
+        "path": "…/fti4/bin/probcli",
+        "sha256": "029d38ba5b8ffbc8685bb7ba8e58ee43c6261ba689690ecebfb1aa33de932565",
+        "bytes": 10746736,
+        "mtime": "2026-08-27T10:50:04.000Z",
+        "provenance": "file inherited from local host; upstream signature/supply-chain audit NOT performed"
+      },
+      "dependency_identities": [],
+      "positive": {
+        "tool": "prob",
+        "case": "positive",
+        "run_status": "EXECUTED",
+        "tool_outcome": "NO_COUNTEREXAMPLE",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "Negative.mch": "b26bc10e906ff03cf41b2b2544b8d3b6b3bf6564d8414e986fdbc3f5cbda156e",
+          "Positive.mch": "46069da117e2e8faa66d621445150a5c215b00673e8fcc0d47dfcc9dc1c480de"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/probcli",
+              "…/formal-js-X5T5zm/examples/Positive.mch",
+              "-model_check"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 1573,
+            "timed_out": false,
+            "stdout": "\nALL OPERATIONS COVERED\n% Model checking finished, all open states visited\nModel checking time: 35 ms (36 ms walltime)\nStates analysed: 3\nTransitions fired: 6\n\u001b[32mNo counter example found. ALL states visited.\u001b[0m\n\n\n",
+            "stderr": "",
+            "stdout_sha256": "aa9eaf11244f0761997e98349ccc31e334144bbf1ba1c690c0942fa5b799f5e3",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "prob",
+        "case": "negative",
+        "run_status": "EXECUTED",
+        "tool_outcome": "INVARIANT_VIOLATION",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "Negative.mch": "b26bc10e906ff03cf41b2b2544b8d3b6b3bf6564d8414e986fdbc3f5cbda156e",
+          "Positive.mch": "46069da117e2e8faa66d621445150a5c215b00673e8fcc0d47dfcc9dc1c480de"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/probcli",
+              "…/formal-js-0xmSQs/examples/Negative.mch",
+              "-model_check"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 1594,
+            "timed_out": false,
+            "stdout": "\nALL OPERATIONS COVERED\n\nModel checking time: 34 ms (36 ms walltime)\nStates analysed: 3\nTransitions fired: 5\n\u001b[31m*** COUNTER EXAMPLE FOUND ***\u001b[0m\n\ninvariant_violation\n*** TRACE (length=4):\n 1: INITIALISATION(n=0)\n 2 - 4: inc   (3 repetitions)\n*** Invariant 1 (Line:3 Col:20) is false (in state with id 3):\n n <= 2 & n : NAT\n\n\n",
+            "stderr": "Found \"invariant_violation\" error in state id 3\n! *** error occurred ***\n! invariant_violation\n! Total Errors: 1, Warnings:0\n",
+            "stdout_sha256": "088b0f2bcb0a9782cf93f6ee46990ab773ae6852d1d6f9e6f2f4560318850906",
+            "stderr_sha256": "fa3b1c2dfb3f242bc4da9524543b330389dc6940347dcb6c3979ad98dc075f19",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "extra_cases": "NOT_RUN",
+      "acceptance": "CANDIDATE_FOR_REVIEW"
+    },
+    {
+      "tool": "dafny",
+      "version": {
+        "tool": "dafny",
+        "run_status": "EXECUTED",
+        "version_verdict": "UNVERIFIED",
+        "argv": [
+          "…/fti4/bin/dafny",
+          "--version"
+        ],
+        "exit_code": 0,
+        "signal": null,
+        "elapsed_ms": 452,
+        "timed_out": false,
+        "stdout": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2\n",
+        "stderr": "",
+        "stdout_sha256": "2e4243de9dcb2a6464f6e6e20031511043025167bf72bf67a6bdf0de213717ef",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null,
+        "output_truncated": false
+      },
+      "installation": {
+        "tool": "dafny",
+        "status": "FOUND_NOT_PROBED",
+        "launcher": "binary",
+        "executable": "…/fti4/bin/dafny",
+        "argv": [
+          "…/fti4/bin/dafny",
+          "--version"
+        ],
+        "diagnostics": [],
+        "probe_status": "NOT_RUN",
+        "searched": 1
+      },
+      "binary_identity": {
+        "path": "…/fti4/bin/dafny",
+        "sha256": "e540b4826363afb87c326446239a682d45086905425fa6299c103eca9693846d",
+        "bytes": 72568,
+        "mtime": "2025-08-25T17:52:54.000Z",
+        "provenance": "file inherited from local host; upstream signature/supply-chain audit NOT performed"
+      },
+      "dependency_identities": [],
+      "positive": {
+        "tool": "dafny",
+        "case": "positive",
+        "run_status": "EXECUTED",
+        "tool_outcome": "VERIFIED",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "Negative.dfy": "80035202665f9a15a5cf4feb3869476397373504bcdbe66894eb071f22cd6f62",
+          "Positive.dfy": "d7961f4f871b42386a81e8b0e4b2805f697d30813b39ae01f02fb8a0e987d4fa"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/dafny",
+              "verify",
+              "…/formal-js-PvB7uH/examples/Positive.dfy"
+            ],
+            "exit_code": 0,
+            "signal": null,
+            "elapsed_ms": 1426,
+            "timed_out": false,
+            "stdout": "\nDafny program verifier finished with 1 verified, 0 errors\n",
+            "stderr": "",
+            "stdout_sha256": "8ce85ec7ed890383d7cae79018d16a2f81d68d7398f2e3a2e914ba64cf174ff5",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "negative": {
+        "tool": "dafny",
+        "case": "negative",
+        "run_status": "EXECUTED",
+        "tool_outcome": "REFUTED",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "input_sha256": {
+          "Negative.dfy": "80035202665f9a15a5cf4feb3869476397373504bcdbe66894eb071f22cd6f62",
+          "Positive.dfy": "d7961f4f871b42386a81e8b0e4b2805f697d30813b39ae01f02fb8a0e987d4fa"
+        },
+        "executions": [
+          {
+            "argv": [
+              "…/fti4/bin/dafny",
+              "verify",
+              "…/formal-js-9Wih1U/examples/Negative.dfy"
+            ],
+            "exit_code": 4,
+            "signal": null,
+            "elapsed_ms": 1215,
+            "timed_out": false,
+            "stdout": "examples/Negative.dfy(3,0): Error: a postcondition could not be proved on this return path\n  |\n3 | {\n  | ^\n\nexamples/Negative.dfy(2,12): Related location: this is the postcondition that could not be proved\n  |\n2 |   ensures y == x + 2\n  |             ^^\n\n\nDafny program verifier finished with 0 verified, 1 error\n",
+            "stderr": "",
+            "stdout_sha256": "4296613ccd1ed15ff712e38de9d2048666c3d94e443a325d2b8421f75618250c",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "error": null,
+            "output_truncated": false
+          }
+        ],
+        "scope": "committed fixture only; not a proof of a project requirement"
+      },
+      "extra_cases": "NOT_RUN",
+      "acceptance": "CANDIDATE_FOR_REVIEW"
+    }
+  ],
+  "warning": "CANDIDATE_FOR_REVIEW requires exact SHA/version and independent CLI semantics review; this script does not claim project-level proof."
+}

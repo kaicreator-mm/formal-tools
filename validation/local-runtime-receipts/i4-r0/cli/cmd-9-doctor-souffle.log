@@ -1,0 +1,19 @@
+{
+  "tool": "souffle",
+  "run_status": "EXECUTED",
+  "version_verdict": "UNVERIFIED",
+  "argv": [
+    "/tmp/fti4/bin/souffle",
+    "--version"
+  ],
+  "exit_code": 0,
+  "signal": null,
+  "elapsed_ms": 6,
+  "timed_out": false,
+  "stdout": "----------------------------------------------------------------------------\nVersion: 2.5 (2.5)\nWord size: 64 bits\nOptions enabled: ffi openmp ncurses sqlite zlib\n----------------------------------------------------------------------------\nCopyright (c) 2016-25 The Souffle Developers.\nCopyright (c) 2013-16 Oracle and/or its affiliates.\nAll rights reserved.\n============================================================================\n\n",
+  "stderr": "",
+  "stdout_sha256": "189a327e08c521cd3d22fee1ab6c908eca5953a78b210ee541c15465cb2522b2",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "error": null,
+  "output_truncated": false
+}

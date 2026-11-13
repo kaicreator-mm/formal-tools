@@ -194,8 +194,10 @@ export function interpret(tool,which,steps,extra={}) {
   }
   if (tool==="apache-jena") {
     // Jena 6.x logs fatal syntax errors as "ERROR riot :: ..."; older builds may
-    // throw RiotException/ParseException text instead.
-    const good=positive?(steps.every(x=>x.exit_code===0)&&text.includes("urn:a")&&text.includes("urn:b")):(exit!==0&&/(riotexception|parseexception|syntax error|ERROR\s+riot)/i.test(text));
+    // throw RiotException/ParseException text instead. Fixtures use valid
+    // http IRIs: Jena 5.x IRI validation rejects bare <urn:a>-style URNs
+    // (SCHEME_PATTERN_MATCH_FAILED) at parse time, before any query runs.
+    const good=positive?(steps.every(x=>x.exit_code===0)&&text.includes("example.org/a")&&text.includes("example.org/b")):(exit!==0&&/(riotexception|parseexception|syntax error|ERROR\s+riot)/i.test(text));
     return {tool_outcome:good?(positive?"QUERY_MATCH":"INVALID_TURTLE"):"UNPARSED",test_verdict:good?"PASS":"INCONCLUSIVE"};
   }
   if (tool==="tla-tlc") {

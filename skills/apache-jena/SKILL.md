@@ -36,7 +36,7 @@ riot --validate examples/data.ttl && arq --data examples/data.ttl --query exampl
 riot --validate examples/invalid.ttl
 ```
 
-**Expected outcome and judgment:** Positive query must return the (urn:a, urn:b) edge; negative malformed Turtle must fail validation. Jena 6 requires Java 21+. CLI `riot` / `arq` syntax is documented by Apache. No OWL inference is configured.
+**Expected outcome and judgment:** Positive query must return the (example.org/a, example.org/b) edge; negative malformed Turtle must fail validation. Jena requires Java 21+; its IRI validation (5.x included) rejects bare `<urn:a>`-style URNs at parse time, so fixtures use valid `http://example.org/...` IRIs. CLI `riot` / `arq` syntax is documented by Apache. No OWL inference is configured.
 
 These are **statically prepared** test cases, NOT verified executions. Use `validation/SKILL_ACCEPTANCE_CASES.json` for the complete suite. Every run requires an exact input SHA-256, command, version, timeout, stdout/stderr and result status. Distinguish expected negative behavior from a tool error.
 

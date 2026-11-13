@@ -1,1 +1,1 @@
-SELECT ?source ?target WHERE { ?source <urn:dependsOn> ?target . }
+SELECT ?source ?target WHERE { ?source <http://example.org/dependsOn> ?target . }

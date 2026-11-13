@@ -1,12 +1,14 @@
 import { knownTools, doctor, runFixture, executeNativePlan } from "../packages/runner/js/native.mjs";
-import { planNative } from "../packages/runner/js/native-catalog.mjs";
+import { planNative, planToolProbe } from "../packages/runner/js/native-catalog.mjs";
 import { inspectInstallation } from "../packages/runner/js/tool-manager.mjs";
-import { mkdir, writeFile, readFile, stat, mkdtemp, rm } from "node:fs/promises";
+import { mkdir, writeFile, stat, mkdtemp, rm } from "node:fs/promises";
+import { createReadStream } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { tmpdir } from "node:os";
 import os from "node:os";
 import { join, resolve } from "node:path";
-import { pathToFileURL } from "node:url";
+import { pathToFileURL, fileURLToPath } from "node:url";
 
 /**
  * One-shot local native acceptance. Does NOT install/download tools or modify CI.
@@ -27,9 +29,15 @@ import { pathToFileURL } from "node:url";
  * - local absolute paths in metadata (argv, tool dirs, executables, missing/
  *   diagnostics lists, error messages) are collapsed to their last 3 segments.
  * - stdout/stderr stay verbatim: they are hash-anchored evidence and must not be
- *   rewritten (their SHA-256 is computed over raw bytes).
+ *   rewritten (their SHA-256 is computed over raw bytes). Real engines echo
+ *   install/temp paths into these streams, so the fail-closed scan scopes
+ *   itself to metadata only and skips the verbatim stream texts; the gate
+ *   harness neutralizes what it controls (tmpdir root, configured tool paths)
+ *   and any residual tool-echoed system path in a stream is bounded evidence,
+ *   not a metadata leak.
  * - fail-closed: the receipt is only written when no absolute local path
- *   survives anywhere in the JSON; a leak aborts the run instead of publishing.
+ *   survives anywhere in the metadata; a metadata leak aborts the run instead
+ *   of publishing.
  */
 const WIN_PATH=/(^|[^A-Za-z0-9.+-])([A-Za-z]:[\\/][^\s"'`]*)/g;
 // Also cover Linux/WSL/macOS absolute paths; "https://" URLs do not match.
@@ -52,6 +60,9 @@ export function redactString(s){
 const REDACTED_KEYS=new Set(["hostname"]);
 const STRING_PATH_KEYS=new Set(["tool_bin_dir","executable","path","error","cwd"]);
 const LIST_PATH_KEYS=new Set(["argv","missing","diagnostics"]);
+// Verbatim, hash-anchored stream texts are the only fields exempt from the
+// privacy scan; everything else must be free of absolute local paths.
+const STREAM_TEXT_KEYS=new Set(["stdout","stderr"]);
 function scrubNode(node,key){
   if(node===null||typeof node!=="object")return node;
   if(Array.isArray(node))return node.map(x=>scrubNode(x,key));
@@ -70,8 +81,8 @@ export function redactReceipt(summary){
   (function scan(node,p=""){
     if(node===null||typeof node!=="object")return;
     for(const [k,v] of Object.entries(node)){
-      if(typeof v==="string"&&(v.match(WIN_PATH)||v.match(POSIX_PATH)))violations.push(p?`${p}.${k}`:k);
-      else scan(v,p?`${p}.${k}`:k);
+      if(typeof v==="string"&&!STREAM_TEXT_KEYS.has(k)&&(v.match(WIN_PATH)||v.match(POSIX_PATH)))violations.push(p?`${p}.${k}`:k);
+      else if(typeof v!=="string")scan(v,p?`${p}.${k}`:k);
     }
   })(safe);
   if(violations.length)throw new Error("receipt privacy invariant violated, absolute local path survived redaction: "+violations.join(", "));
@@ -87,11 +98,28 @@ const EXTRA_INPUTS={
 };
 const SMT2_SOLVERS=new Set(["z3","cvc5"]);
 const sha=input=>createHash("sha256").update(input).digest("hex");
-async function binaryIdentity(path){
+/** @param {string} path */
+export async function binaryIdentity(path){
   const info=await stat(path);
-  return {path,sha256:sha(await readFile(path)),bytes:info.size,
+  if(!info.isFile())throw new TypeError("fingerprint source must be a regular file");
+  const digest=createHash("sha256");
+  for await(const chunk of createReadStream(path))digest.update(chunk);
+  return {path,sha256:digest.digest("hex"),bytes:info.size,
     mtime:info.mtime.toISOString(),
-    provenance:"binary inherited from local host; supply-chain audit NOT performed by this script"};
+    provenance:"file inherited from local host; upstream signature/supply-chain audit NOT performed"};
+}
+
+/** Read the exact source checkout instead of trusting an operator-supplied SHA. */
+export function checkoutIdentity(){
+  const cwd=fileURLToPath(new URL("../",import.meta.url));
+  try{
+    /** @param {string[]} args */
+    const git=args=>execFileSync("git",args,{cwd,encoding:"utf8",timeout:5000,stdio:["ignore","pipe","ignore"]}).trim();
+    const head_sha=git(["rev-parse","--verify","HEAD"]);
+    if(!/^[0-9a-f]{40}$/.test(head_sha))return {status:"UNVERIFIED",head_sha:null};
+    const dirty=git(["status","--porcelain","--untracked-files=no"]).length>0;
+    return {status:dirty?"DIRTY":"CLEAN",head_sha};
+  }catch{return {status:"UNVERIFIED",head_sha:null};}
 }
 async function extraCases(tool){
   const dir=await mkdtemp(join(tmpdir(),"formal-accept-extra-"));
@@ -113,18 +141,24 @@ export async function buildAcceptanceReceipt(tools,env=process.env){
   for(const tool of tools){
     const version=await doctor(tool,20);
     const installation=await inspectInstallation(tool,{env,platform:process.platform});
-    const binary_identity=installation.status==="FOUND_NOT_PROBED"&&installation.launcher==="binary"
+    const binary_identity=installation.executable
       ?await binaryIdentity(installation.executable).catch(e=>({error:String(e)}))
       :null;
+    // Java/JAR and explicit Alloy dependencies must be independently pinned.
+    // For python-module tools this fingerprints only the interpreter; the wheel
+    // or module distribution still needs a separate provenance receipt.
+    const dependency_identities=await Promise.all(planToolProbe(tool,env).requiredFiles.map(async path=>
+      await binaryIdentity(path).catch(e=>({path,error:String(e)}))));
     const positive=await runFixture(tool,"positive",45);
     const negative=await runFixture(tool,"negative",45);
     const extra_cases=version.run_status==="EXECUTED"&&SMT2_SOLVERS.has(tool)
       ?await extraCases(tool):"NOT_RUN";
-    records.push({tool,version,installation,binary_identity,positive,negative,extra_cases,
+    records.push({tool,version,installation,binary_identity,dependency_identities,positive,negative,extra_cases,
       acceptance:(positive.test_verdict==="PASS"&&negative.test_verdict==="PASS")?"CANDIDATE_FOR_REVIEW":"BLOCK_OR_REPAIR"});
   }
   return {
-    schema:"formal-native-local-acceptance/1.2",written_at:new Date().toISOString(),
+    schema:"formal-native-local-acceptance/1.3",written_at:new Date().toISOString(),
+    source_identity:checkoutIdentity(),
     host_identity:{hostname:os.hostname(),platform:process.platform,release:os.release(),
       arch:process.arch,node:process.version,cpu:os.cpus()[0]?.model??"unknown",
       tool_bin_dir:env.FORMAL_TOOLS_BIN_DIR??"(unset; PATH search)"},

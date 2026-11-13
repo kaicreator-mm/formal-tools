@@ -1,0 +1,191 @@
+{
+  "status": "STATIC_ENVIRONMENT_INSPECTION_ONLY",
+  "tools": 13,
+  "counts": {
+    "FOUND_NOT_PROBED": 13
+  },
+  "checks": [
+    {
+      "tool": "lean4",
+      "status": "FOUND_NOT_PROBED",
+      "launcher": "binary",
+      "executable": "/tmp/fti4/bin/lean",
+      "argv": [
+        "/tmp/fti4/bin/lean",
+        "--version"
+      ],
+      "diagnostics": [],
+      "probe_status": "NOT_RUN",
+      "searched": 1
+    },
+    {
+      "tool": "z3",
+      "status": "FOUND_NOT_PROBED",
+      "launcher": "binary",
+      "executable": "/tmp/fti4/bin/z3",
+      "argv": [
+        "/tmp/fti4/bin/z3",
+        "-version"
+      ],
+      "diagnostics": [],
+      "probe_status": "NOT_RUN",
+      "searched": 1
+    },
+    {
+      "tool": "cvc5",
+      "status": "FOUND_NOT_PROBED",
+      "launcher": "binary",
+      "executable": "/tmp/fti4/bin/cvc5",
+      "argv": [
+        "/tmp/fti4/bin/cvc5",
+        "--version"
+      ],
+      "diagnostics": [],
+      "probe_status": "NOT_RUN",
+      "searched": 1
+    },
+    {
+      "tool": "tla-tlc",
+      "status": "FOUND_NOT_PROBED",
+      "launcher": "java-jar",
+      "executable": "/tmp/fti4/bin/java",
+      "argv": [
+        "/tmp/fti4/bin/java",
+        "-cp",
+        "/tmp/fti4/tla2tools.jar",
+        "tlc2.TLC",
+        "-help"
+      ],
+      "diagnostics": [],
+      "probe_status": "NOT_RUN",
+      "searched": 1
+    },
+    {
+      "tool": "apalache",
+      "status": "FOUND_NOT_PROBED",
+      "launcher": "binary",
+      "executable": "/tmp/fti4/bin/apalache-mc",
+      "argv": [
+        "/tmp/fti4/bin/apalache-mc",
+        "version"
+      ],
+      "diagnostics": [],
+      "probe_status": "NOT_RUN",
+      "searched": 1
+    },
+    {
+      "tool": "alloy",
+      "status": "FOUND_NOT_PROBED",
+      "launcher": "alloy-jar",
+      "executable": "/tmp/fti4/bin/java",
+      "argv": [
+        "/tmp/fti4/bin/java",
+        "-jar",
+        "/tmp/fti4/alloy.jar",
+        "help"
+      ],
+      "diagnostics": [],
+      "probe_status": "NOT_RUN",
+      "searched": 1
+    },
+    {
+      "tool": "souffle",
+      "status": "FOUND_NOT_PROBED",
+      "launcher": "binary",
+      "executable": "/tmp/fti4/bin/souffle",
+      "argv": [
+        "/tmp/fti4/bin/souffle",
+        "--version"
+      ],
+      "diagnostics": [],
+      "probe_status": "NOT_RUN",
+      "searched": 1
+    },
+    {
+      "tool": "rdf-shacl",
+      "status": "FOUND_NOT_PROBED",
+      "launcher": "python-module",
+      "executable": "/tmp/fti4/python3",
+      "argv": [
+        "/tmp/fti4/python3",
+        "-m",
+        "pyshacl",
+        "--help"
+      ],
+      "diagnostics": [
+        "Python module presence is not checked by PATH inspection; run a real version probe"
+      ],
+      "probe_status": "NOT_RUN",
+      "searched": 1
+    },
+    {
+      "tool": "vampire",
+      "status": "FOUND_NOT_PROBED",
+      "launcher": "binary",
+      "executable": "/tmp/fti4/bin/vampire",
+      "argv": [
+        "/tmp/fti4/bin/vampire",
+        "--help"
+      ],
+      "diagnostics": [],
+      "probe_status": "NOT_RUN",
+      "searched": 1
+    },
+    {
+      "tool": "clingo",
+      "status": "FOUND_NOT_PROBED",
+      "launcher": "python-module",
+      "executable": "/tmp/fti4/python3",
+      "argv": [
+        "/tmp/fti4/python3",
+        "-m",
+        "clingo",
+        "--help"
+      ],
+      "diagnostics": [
+        "Python module presence is not checked by PATH inspection; run a real version probe"
+      ],
+      "probe_status": "NOT_RUN",
+      "searched": 1
+    },
+    {
+      "tool": "apache-jena",
+      "status": "FOUND_NOT_PROBED",
+      "launcher": "binary",
+      "executable": "/tmp/fti4/bin/riot",
+      "argv": [
+        "/tmp/fti4/bin/riot",
+        "--help"
+      ],
+      "diagnostics": [],
+      "probe_status": "NOT_RUN",
+      "searched": 1
+    },
+    {
+      "tool": "prob",
+      "status": "FOUND_NOT_PROBED",
+      "launcher": "binary",
+      "executable": "/tmp/fti4/bin/probcli",
+      "argv": [
+        "/tmp/fti4/bin/probcli",
+        "-version"
+      ],
+      "diagnostics": [],
+      "probe_status": "NOT_RUN",
+      "searched": 1
+    },
+    {
+      "tool": "dafny",
+      "status": "FOUND_NOT_PROBED",
+      "launcher": "binary",
+      "executable": "/tmp/fti4/bin/dafny",
+      "argv": [
+        "/tmp/fti4/bin/dafny",
+        "--version"
+      ],
+      "diagnostics": [],
+      "probe_status": "NOT_RUN",
+      "searched": 1
+    }
+  ]
+}

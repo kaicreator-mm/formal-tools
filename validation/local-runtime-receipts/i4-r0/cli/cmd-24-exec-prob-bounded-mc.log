@@ -1,0 +1,32 @@
+{
+  "tool": "prob",
+  "operation": "check",
+  "mode": "typed",
+  "run_status": "EXECUTED",
+  "tool_outcome": "UNPARSED",
+  "process_outcome": "EXIT_ZERO",
+  "test_verdict": "NOT_EVALUATED",
+  "claim_verdict": "NOT_EVALUATED",
+  "note": "Native command output only; solver result is not an acceptance verdict",
+  "executions": [
+    {
+      "argv": [
+        "/tmp/fti4/bin/probcli",
+        "Positive.mch",
+        "-mc",
+        "5"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "elapsed_ms": 1574,
+      "timed_out": false,
+      "stdout": "\nALL OPERATIONS COVERED\n% Model checking finished, all open states visited\nModel checking time: 35 ms (36 ms walltime)\nStates analysed: 3\nTransitions fired: 6\n\u001b[32mNo counter example found. ALL states visited.\u001b[0m\n\n\n",
+      "stderr": "",
+      "stdout_sha256": "aa9eaf11244f0761997e98349ccc31e334144bbf1ba1c690c0942fa5b799f5e3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null,
+      "output_truncated": false
+    }
+  ],
+  "scope": "local native CLI; not an independently validated project claim"
+}

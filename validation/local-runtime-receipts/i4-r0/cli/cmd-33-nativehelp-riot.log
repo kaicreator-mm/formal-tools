@@ -1,0 +1,30 @@
+{
+  "tool": "apache-jena",
+  "operation": "help",
+  "mode": "LOCAL_CLI",
+  "run_status": "EXECUTED",
+  "tool_outcome": "UNPARSED",
+  "process_outcome": "EXIT_ZERO",
+  "test_verdict": "NOT_EVALUATED",
+  "claim_verdict": "NOT_EVALUATED",
+  "note": "Native command output only; solver result is not an acceptance verdict",
+  "executions": [
+    {
+      "argv": [
+        "/tmp/fti4/bin/riot",
+        "--help"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "elapsed_ms": 642,
+      "timed_out": false,
+      "stdout": "",
+      "stderr": "riot [--help] [--time] [--base=IRI] [--syntax=FORMAT] [--out=FORMAT] [--count] file ...\n  Parser control\n      --sink                 Parse but throw away output\n      --syntax=NAME          Set syntax (otherwise syntax guessed from file extension)\n      --base=URI             Set the base URI (does not apply to N-triples and N-Quads)\n      --nobase               Pass through relative URIs (best effort)\n      --check                Additional checking of RDF terms\n      --strict               Run with in strict mode\n      --validate             Same as --sink --check --strict\n      --count                Count triples/quads parsed, not output them\n      --merge                Convert quads to triples\n      --rdfs=file            Apply some RDFS inference using the vocabulary in the file\n      --nocheck              Turn off checking of RDF terms\n  Output control\n      --output=FMT           Output in the given format, streaming if possible.\n      --formatted=FMT        Output, using pretty printing (consumes memory)\n      --stream=FMT           Output, using a streaming format\n      --compress             Compress the output with gzip\n  Time\n      --time                 Time the operation\n  Symbol definition\n      --set                  Set a configuration symbol to a value\n  General\n      -v   --verbose         Verbose\n      -q   --quiet           Run with minimal output\n      --debug                Output information for debugging\n      --help\n      --version              Version information\n",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "15fccafd87f01380e592e21cd570c80d4ec8229a458d6c01b13b30fca9134a1a",
+      "error": null,
+      "output_truncated": false
+    }
+  ],
+  "scope": "local native CLI; not an independently validated project claim"
+}

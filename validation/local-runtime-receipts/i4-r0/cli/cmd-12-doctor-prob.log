@@ -1,0 +1,19 @@
+{
+  "tool": "prob",
+  "run_status": "EXECUTED",
+  "version_verdict": "UNVERIFIED",
+  "argv": [
+    "/tmp/fti4/bin/probcli",
+    "-version"
+  ],
+  "exit_code": 0,
+  "signal": null,
+  "elapsed_ms": 847,
+  "timed_out": false,
+  "stdout": "ProB Command Line Interface\n  VERSION 1.16.1-final (716929f528b333dd3901a0521fc0d3460a488af7)\n  Thu Aug 27 12:46:31 2026 +0200\n  Prolog (sicstus): SICStus 4.9.0 (x86_64-linux-glibc2.28): Fri Dec 15 10:08:12 UTC 2023\n  COMPILE TIME FLAGS: [prob_release]\n",
+  "stderr": "",
+  "stdout_sha256": "aed1d2af909b802ab9aea6714180c67a9e42ccdf7d61ea7b7c166783b4a10a4d",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "error": null,
+  "output_truncated": false
+}

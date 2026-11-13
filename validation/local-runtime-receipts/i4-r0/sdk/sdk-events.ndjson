@@ -1,0 +1,36 @@
+{"event":"check","name":"staged-souffle-success-artifacts-hashed","verdict":"PASS","started":"2026-11-13T13:48:06.394Z","detail":{"status":"EXIT_ZERO","artifacts":2,"paths":["cycle.csv","reach.csv"]}}
+{"event":"check","name":"staged-z3-unsat-success","verdict":"PASS","started":"2026-11-13T13:48:06.428Z","detail":{"status":"EXIT_ZERO","tool_status":"UNSAT","stdout_sha256":"5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18"}}
+{"event":"check","name":"staged-z3-error-input-nonzero","verdict":"PASS","started":"2026-11-13T13:48:06.445Z","detail":{"status":"NONZERO_EXIT","exit_code":1,"stderr_sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}}
+{"event":"check","name":"staged-tlc-timeout-partial","verdict":"FAIL","started":"2026-11-13T13:48:06.458Z","error":"expected TIMEOUT, got EXIT_ZERO"}
+{"event":"check","name":"deny-option-parent-traversal","verdict":"PASS","started":"2026-11-13T13:48:06.999Z","detail":{"denied":"staged option config may not access paths outside the private workspace"}}
+{"event":"check","name":"deny-option-absolute-path","verdict":"PASS","started":"2026-11-13T13:48:06.999Z","detail":{"denied":"staged option config may not access paths outside the private workspace"}}
+{"event":"check","name":"deny-input-manifest-traversal","verdict":"PASS","started":"2026-11-13T13:48:07.000Z","detail":{"denied":"invalid source-relative input path: ../outside.smt2"}}
+{"event":"check","name":"deny-unstaged-shapes-option","verdict":"PASS","started":"2026-11-13T13:48:07.000Z","detail":{"denied":"file option shapes must reference an explicitly staged input"}}
+{"event":"check","name":"missing-engine-fail-closed-not-started","verdict":"FAIL","started":"2026-11-13T13:48:07.001Z","error":"expected NOT_STARTED, got NONZERO_EXIT"}
+{"event":"check","name":"raw-passthrough-denied-by-default","verdict":"PASS","started":"2026-11-13T13:48:07.369Z","detail":{"denied":"raw native pass-through is disabled for this caller"}}
+{"event":"driver_done","out":"/tmp/fti4/evidence/sdk","checks":10}
+{"event":"driver_identity","checkout":{"status":"CLEAN","head_sha":"81b14452f5dd361428678c8f02837ceff55fe20d"},"node":"v22.16.0"}
+{"event":"check","name":"staged-souffle-success-artifacts-hashed","verdict":"PASS","started":"2026-11-13T13:55:50.653Z","detail":{"status":"EXIT_ZERO","artifacts":2,"paths":["cycle.csv","reach.csv"]}}
+{"event":"check","name":"staged-z3-unsat-success","verdict":"PASS","started":"2026-11-13T13:55:50.680Z","detail":{"status":"EXIT_ZERO","tool_status":"UNSAT","stdout_sha256":"5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18"}}
+{"event":"check","name":"staged-z3-error-input-nonzero","verdict":"PASS","started":"2026-11-13T13:55:50.697Z","detail":{"status":"NONZERO_EXIT","exit_code":1,"stderr_sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}}
+{"event":"check","name":"staged-dafny-timeout-partial","verdict":"PASS","started":"2026-11-13T13:55:50.709Z","detail":{"status":"TIMEOUT","artifacts_status":"PARTIAL"}}
+{"event":"check","name":"deny-option-parent-traversal","verdict":"PASS","started":"2026-11-13T13:55:51.721Z","detail":{"denied":"staged option config may not access paths outside the private workspace"}}
+{"event":"check","name":"deny-option-absolute-path","verdict":"PASS","started":"2026-11-13T13:55:51.721Z","detail":{"denied":"staged option config may not access paths outside the private workspace"}}
+{"event":"check","name":"deny-input-manifest-traversal","verdict":"PASS","started":"2026-11-13T13:55:51.721Z","detail":{"denied":"invalid source-relative input path: ../outside.smt2"}}
+{"event":"check","name":"deny-unstaged-shapes-option","verdict":"PASS","started":"2026-11-13T13:55:51.722Z","detail":{"denied":"file option shapes must reference an explicitly staged input"}}
+{"event":"check","name":"missing-engine-fail-closed-not-started","verdict":"PASS","started":"2026-11-13T13:55:51.722Z","detail":{"status":"NOT_STARTED","error":"spawn dafny ENOENT"}}
+{"event":"check","name":"raw-passthrough-denied-by-default","verdict":"PASS","started":"2026-11-13T13:55:51.724Z","detail":{"denied":"raw native pass-through is disabled for this caller"}}
+{"event":"driver_done","out":"/tmp/fti4/evidence/sdk","checks":10}
+{"event":"driver_identity","checkout":{"status":"CLEAN","head_sha":"c8dc339e82addc49073f9e81f3d2df5fb764fb01"},"node":"v22.16.0"}
+{"event":"check","name":"staged-souffle-success-artifacts-hashed","verdict":"PASS","started":"2026-11-13T14:07:52.821Z","detail":{"status":"EXIT_ZERO","artifacts":2,"paths":["cycle.csv","reach.csv"]}}
+{"event":"check","name":"staged-z3-unsat-success","verdict":"PASS","started":"2026-11-13T14:07:52.850Z","detail":{"status":"EXIT_ZERO","tool_status":"UNSAT","stdout_sha256":"5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18"}}
+{"event":"check","name":"staged-z3-error-input-nonzero","verdict":"PASS","started":"2026-11-13T14:07:52.868Z","detail":{"status":"NONZERO_EXIT","exit_code":1,"stderr_sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}}
+{"event":"check","name":"staged-dafny-timeout-partial","verdict":"PASS","started":"2026-11-13T14:07:52.884Z","detail":{"status":"TIMEOUT","artifacts_status":"PARTIAL"}}
+{"event":"check","name":"deny-option-parent-traversal","verdict":"PASS","started":"2026-11-13T14:07:53.895Z","detail":{"denied":"staged option config may not access paths outside the private workspace"}}
+{"event":"check","name":"deny-option-absolute-path","verdict":"PASS","started":"2026-11-13T14:07:53.896Z","detail":{"denied":"staged option config may not access paths outside the private workspace"}}
+{"event":"check","name":"deny-input-manifest-traversal","verdict":"PASS","started":"2026-11-13T14:07:53.896Z","detail":{"denied":"invalid source-relative input path: ../outside.smt2"}}
+{"event":"check","name":"deny-unstaged-shapes-option","verdict":"PASS","started":"2026-11-13T14:07:53.896Z","detail":{"denied":"file option shapes must reference an explicitly staged input"}}
+{"event":"check","name":"missing-engine-fail-closed-not-started","verdict":"PASS","started":"2026-11-13T14:07:53.897Z","detail":{"status":"NOT_STARTED","error":"spawn dafny ENOENT"}}
+{"event":"check","name":"raw-passthrough-denied-by-default","verdict":"PASS","started":"2026-11-13T14:07:53.899Z","detail":{"denied":"raw native pass-through is disabled for this caller"}}
+{"event":"driver_done","out":"/tmp/fti4/evidence/sdk","checks":10}
+{"event":"driver_identity","checkout":{"status":"CLEAN","head_sha":"5d8a10e3fdb4db0d36d224706f86cbba4efb07ec"},"node":"v22.16.0"}
