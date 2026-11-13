@@ -1,5 +1,5 @@
 {
-  "schema": "formal-tools/i24-r7-exact-pr22-native/0.2",
+  "schema": "formal-tools/i24-r7-exact-pr22-native/0.3",
   "output_label": "FORMAL_TOOLS_I24_TOOL_INTEGRATION_CONTINUE",
   "source_pr22_exact_head": "31ef3f359996ee54b346bc2c0a1c7841fe8a4ec2",
   "source_pr22_initial_head": "3aa35b8c82545d8b234ae81f778b474173bff0d9",
@@ -186,7 +186,9 @@
     "PR22 source head Woodpecker pull_request #621 SUCCESS; push #618 FAILURE cause unverified from GitHub statuses",
     "R7 independent Source-First review: AFL++ and ELK are downgraded to EXECUTION_OBSERVED_ASSERTION_INCOMPLETE; original process exit observations and declared receipt hashes are preserved, but no 8/8 fixture assertion PASS is claimed.",
     "Raw archive metadata was located in ChatGPT Library (/fm-tools/formal-tools-i24-r7-exact-pr22-native.zip, 15,753 bytes); raw bytes could not be retrieved/materialized in this repair context, so the declared archive SHA256 remains unverified and P2 raw-receipt durability remains BLOCKED.",
-    "R6 README Gateway Git Blob corrected to 615b55bb0f2b5fd1e611865e1dc4c766f89d5ffe."
+    "R6 README Gateway Git Blob corrected to 615b55bb0f2b5fd1e611865e1dc4c766f89d5ffe.",
+    "R8 archive recovery: exact 15,753-byte R7 ZIP recovered in current Debian container, SHA256 matches prior d14e288..., uploaded to canonical Drive validation/receipts, fetched back, ZIP CRC and 19 member SHA256s verified. Stable URL in RAW_RECEIPTS_INDEX.json. Historical 31ef source/ELK+AFL review scope remains unchanged.",
+    "Newer PR22 HEAD 7fbe3b... modifies AFL++/ELK fixture predicates and fast-check/Hypothesis/Mesa negative guards; no automatic inheritance from historical R7 receipts."
   ],
   "qualification": {
     "source_14_file_changes_complete": true,
@@ -202,8 +204,8 @@
     ],
     "fixture_technical_pass_count": 6,
     "raw_receipts_committed_to_git": false,
-    "raw_receipt_archive_stable_external_access": false,
-    "raw_receipt_archive_sha256_verified_in_this_repair": false
+    "raw_receipt_archive_stable_external_access": true,
+    "raw_receipt_archive_sha256_verified_in_this_repair": true
   },
   "review": {
     "reviewed_pr77_head": "75045734b92beaec6746d5d1abdb7688e2ccd3c6",
@@ -220,16 +222,30 @@
   "raw_receipt_archive": {
     "file_name": "formal-tools-i24-r7-exact-pr22-native.zip",
     "previously_declared_sha256": "d14e288853b9607aeb7bb0062a0984b68d5d2fa8a41cc3c2955c9e3c90ed7682",
-    "declared_sha256_verified_in_this_repair": false,
+    "declared_sha256_verified_in_this_repair": true,
     "prior_library_artifact": {
       "path": "/fm-tools/formal-tools-i24-r7-exact-pr22-native.zip",
       "size_bytes": 15753,
       "modified_at": "2026-11-13T17:22:17.494181+00:00"
     },
     "git_versioned": false,
-    "stable_external_archive_url": null,
-    "raw_bytes_accessible_in_this_repair": false,
-    "status": "BLOCKED_RAW_BYTES_NOT_RETRIEVABLE",
-    "required_action": "Provide the original ZIP bytes in the current task context or place them in the canonical Drive validation/receipts folder; verify the declared SHA256, then commit the extracted original per-case stdout/stderr and raw receipts. Do not synthesize missing raw output."
+    "stable_external_archive_url": "https://drive.google.com/file/d/1-Kqdc_kff6DpBOWAN65nnR3cTiPp-NVc/view?usp=drivesdk",
+    "raw_bytes_accessible_in_this_repair": true,
+    "status": "PASS_STABLE_SHA256_PINNED_DRIVE_GATEWAY_ARCHIVE",
+    "required_action": "For PR22 source newer than 31ef3f..., create separate new-head fixture/native receipts; optionally preserve true child phase logs for future trials. Do not reinterpret historical R7.",
+    "drive_file_id": "1-Kqdc_kff6DpBOWAN65nnR3cTiPp-NVc",
+    "drive_folder": "App/10-formal-tools/validation/receipts",
+    "contents_index": "docs/tool-portfolio/r7/RAW_RECEIPTS_INDEX.json",
+    "zip_crc_verified": true,
+    "zip_members": 19,
+    "content_scope": "Original saved gateway-level stdout/stderr, phase receipt summaries and replay driver; original ephemeral per-native-phase child raw logs NOT included"
+  },
+  "archive_repair": {
+    "original_r7_sha": "31ef3f359996ee54b346bc2c0a1c7841fe8a4ec2",
+    "latest_pr22_head_at_repair": "7fbe3b69114d7f34b9b0296757cdca43fde07412",
+    "stable_storage": "GOOGLE_DRIVE_VALIDATION_RECEIPTS",
+    "source_bytes_unchanged": true,
+    "per_member_sha_index": "docs/tool-portfolio/r7/RAW_RECEIPTS_INDEX.json",
+    "new_t4_qualification": 0
   }
 }
