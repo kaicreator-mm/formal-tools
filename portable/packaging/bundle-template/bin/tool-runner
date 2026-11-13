@@ -211,7 +211,7 @@ case "$cmd" in
     else verify_one "$2"; fi ;;
   run)
     id="${2:?usage: tool-runner run <id> [args...]}"; shift 2
-    tool_meta "$id"
+    tool_meta "$id" || exit 2
     exec "$FT_ROOT/tools/$id/run" "$@" ;;
   py)
     shift; py_env; exec "$FT_ROOT/runtimes/python313/bin/python3.13" -s "$@" ;;
@@ -220,7 +220,8 @@ case "$cmd" in
   java)
     shift; export JAVA_HOME="$FT_ROOT/runtimes/java21"; export PATH="$JAVA_HOME/bin:$PATH"; exec java "$@" ;;
   version)
-    tool_meta "${2:?}"; echo "tool: ${TOOL_ID}"; echo "version: ${TOOL_VERSION}"; echo "probe: ${TOOL_VERSION_OUTPUT:-n/a}" ;;
+    tool_meta "${2:?}" || exit 2
+    echo "tool: ${TOOL_ID}"; echo "version: ${TOOL_VERSION}"; echo "probe: ${TOOL_VERSION_OUTPUT:-n/a}" ;;
   *)
     sed -n '2,14p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
 esac
