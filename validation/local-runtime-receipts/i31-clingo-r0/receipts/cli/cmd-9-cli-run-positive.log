@@ -13,16 +13,16 @@
     {
       "argv": [
         "/opt/formal-tools-portable-debian13-x86_64/tools/clingo/bin/clingo",
-        "/tmp/formal-js-wd2qqB/examples/positive.lp",
+        "/tmp/formal-js-eVTBxG/examples/positive.lp",
         "0"
       ],
       "exit_code": 30,
       "signal": null,
       "elapsed_ms": 6,
       "timed_out": false,
-      "stdout": "clingo version 5.8.3\nReading from .../formal-js-wd2qqB/examples/positive.lp\nSolving...\nAnswer: 1 (Time: 0.000s)\nchoose(b)\nAnswer: 2 (Time: 0.000s)\nchoose(a)\nSATISFIABLE\n\nModels       : 2\nCalls        : 1\nTime         : 0.000s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)\nCPU Time     : 0.000s\n",
+      "stdout": "clingo version 5.8.3\nReading from .../formal-js-eVTBxG/examples/positive.lp\nSolving...\nAnswer: 1 (Time: 0.000s)\nchoose(b)\nAnswer: 2 (Time: 0.000s)\nchoose(a)\nSATISFIABLE\n\nModels       : 2\nCalls        : 1\nTime         : 0.000s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)\nCPU Time     : 0.000s\n",
       "stderr": "",
-      "stdout_sha256": "529a02aca64a1f358b1b5ce4a035c5b8377b4475f4edd7c905098f5a41c6447a",
+      "stdout_sha256": "dd94868feea1a0aac2a88086b1b1a3fe84d85b581bcd093ab4d2bf01509905f8",
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "error": null,
       "output_truncated": false

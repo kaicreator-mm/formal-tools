@@ -19,9 +19,9 @@
       "signal": null,
       "elapsed_ms": 6,
       "timed_out": false,
-      "stdout": "clingo version 5.8.3\nReading from positive.lp\nSolving...\nAnswer: 1 (Time: 0.001s)\nchoose(b)\nAnswer: 2 (Time: 0.001s)\nchoose(a)\nSATISFIABLE\n\nModels       : 2\nCalls        : 1\nTime         : 0.001s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)\nCPU Time     : 0.001s\n",
+      "stdout": "clingo version 5.8.3\nReading from positive.lp\nSolving...\nAnswer: 1 (Time: 0.000s)\nchoose(b)\nAnswer: 2 (Time: 0.000s)\nchoose(a)\nSATISFIABLE\n\nModels       : 2\nCalls        : 1\nTime         : 0.000s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)\nCPU Time     : 0.000s\n",
       "stderr": "",
-      "stdout_sha256": "61066cd38deb9f0e92ff0e0731527a39335e3ec2fe333966c86cf7688afde0fc",
+      "stdout_sha256": "055a26939a3b0e36995b980aa3ce258d10edfd7da918cbe1cb972c7a2b43c92b",
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "error": null,
       "output_truncated": false

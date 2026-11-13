@@ -8,7 +8,7 @@
   ],
   "exit_code": 0,
   "signal": null,
-  "elapsed_ms": 8,
+  "elapsed_ms": 6,
   "timed_out": false,
   "stdout": "clingo version 5.8.3\nAddress model: 64-bit\n\nlibclingo version 5.8.3\nConfiguration: with Python 3.13.5, without Lua\n\nlibclasp version 3.4.2 (libpotassco version 1.2.0)\nConfiguration: WITH_THREADS=1\nCopyright (C) Benjamin Kaufmann\n\nLicense: The MIT License <https://opensource.org/licenses/MIT>\n",
   "stderr": "",

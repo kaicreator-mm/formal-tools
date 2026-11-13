@@ -1,6 +1,6 @@
 == i31 clingo identity ==
 v22.16.0
-git_head=eb7e669e5a0a05b9123a99dd5748dd1d96b551e8
+git_head=c939fbc7f7b4e570658ca0711633b736494077f8
 git=UNAVAILABLE_IN_CONTAINER (authoritative checkout identity: host-identity.txt)
 umask=0022
 uid=1000(cc) gid=1000(cc) groups=1000(cc)

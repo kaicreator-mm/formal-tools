@@ -21,7 +21,8 @@ implicit binary≡module equivalence is claimed or relied upon.
 
 | Item | Value |
 | --- | --- |
-| Receipt source checkout | `eb7e669e5a0a05b9123a99dd5748dd1d96b551e8` (PR branch `task/ft-i31-clingo-zcode`, PR #76) |
+| Receipt source checkout | `eb7e669e5a0a05b9123a99dd5748dd1d96b551e8` (PR branch `task/ft-i31-clingo-zcode`, PR #76) — **last product-code commit**; every later commit on the branch (7e6e87f receipts/docs, c939fbc driver-label fix) touches only `validation/` |
+| Gate-B re-run note | after the independent review's P2 receipt-labeling fix, gate B was re-run at `c939fbc7f7b4e570658ca0711633b736494077f8` in the same canonical container (fails 0 / 28 commands, corrected enum/range cases now hit `invalid enum opt` / `invalid number for models` / `invalid number for time`); gates A/A′/C/D receipts remain from the coherent eb7e669 run — product code is byte-identical across all three SHAs |
 | Canonical binary | `clingo 5.8.3` official native executable, sha256 `d6250068a6cb2c931f952f5554f7aa3a07491975c10832b577be322f8371ad41`, 385144 bytes |
 | Canonical bundle anchor | `out/packages/SHA256SUMS` sha256 `5daad69d51c5adff9dd2406937b2ca18ba460153793cc7cb9848d53767a202bc` (#24 catalog, unchanged) |
 | Canonical runtime env | Docker image `formal-tools:deb13-r0` — Debian **13.7 (trixie)** + full 36-tool bundle at `/opt/formal-tools-portable-debian13-x86_64`, `--network none` (offline), `--user 1000:1000` (non-root), bundle node `v22.16.0`, bundle write-denied |

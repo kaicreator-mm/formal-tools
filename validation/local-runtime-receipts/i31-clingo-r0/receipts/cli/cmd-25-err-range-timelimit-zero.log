@@ -1,1 +1,1 @@
-{"status":"ERROR","message":"TypeError: unknown option time-limit for clingo/solve"}
+{"status":"ERROR","message":"TypeError: invalid number for time"}
