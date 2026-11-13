@@ -57,7 +57,7 @@ async function exclusiveWrite(file,text) {
  * Strictly seal the original Problem/Method/provenance through G2 before storing.
  * The directory must be provisioned by the trusted local owner (no global cache).
  */
-/** @returns {Promise<any>} */
+/** @param {{store_dir?:string,problem_json?:string,method_json?:string,provenance_json?:string}} [args] @returns {Promise<any>} */
 export async function persistSolutionCandidate({store_dir,problem_json,method_json,provenance_json}={}) {
   try {
     const candidate=sealSolutionCandidate({problem_json,method_json,provenance_json});
@@ -76,7 +76,7 @@ export async function persistSolutionCandidate({store_dir,problem_json,method_js
 }
 
 /** Read the exact stored bytes, reject a mutation, version drift or revocation. */
-/** @returns {Promise<any>} */
+/** @param {{store_dir?:string,candidate_sha256?:string,current_provenance_json?:string}} [args] @returns {Promise<any>} */
 export async function inspectStoredReplay({store_dir,candidate_sha256,current_provenance_json}={}) {
   try {
     if(!SHA.test(candidate_sha256))return denied("invalid candidate identifier");
@@ -92,7 +92,7 @@ export async function inspectStoredReplay({store_dir,candidate_sha256,current_pr
 }
 
 /** Tombstone is append-only at this API boundary; never auto-resurrect. */
-/** @returns {Promise<any>} */
+/** @param {{store_dir?:string,candidate_sha256?:string,reason?:string}} [args] @returns {Promise<any>} */
 export async function revokeStoredCandidate({store_dir,candidate_sha256,reason}={}) {
   try {
     if(!SHA.test(candidate_sha256)||!REASONS.has(reason))
