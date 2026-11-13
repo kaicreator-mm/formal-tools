@@ -25,7 +25,7 @@ const portfolioId=z.string().refine(value=>listPortfolioTools().some(t=>t.id===v
   {message:"Unknown portfolio tool"});
 const toolId=z.string().refine(value=>toolIds.includes(value),{message:"Unknown registered formal tool"});
 serveStdio(()=>{
-  const server=new McpServer({name:"formal-tools-skill",version:"0.3.0"});
+  const server=new McpServer({name:"formal-tools-skill",version:"0.4.0"});
   server.registerTool("list_formal_tools",{
     description:"List original 13 native adapters, 23 candidate portfolio tools, and 4 pure JS model checkers.",
     inputSchema:z.object({})
