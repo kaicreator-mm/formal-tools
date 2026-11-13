@@ -56,7 +56,7 @@ export function inspectDisV020Consumption({candidate_json,current_provenance_jso
   const provenanceSha=provenanceOK?hash(current_provenance_json):null;
   if(!sourceOK||!provenanceOK)
     return unqualified("INVALID_HANDOFF","BLOCKED",candidateSha,provenanceSha);
-  if(!SHA.test(target_head)||target_head!==DIS_V020_REFERENCE.source_head)
+  if(typeof target_head!=="string"||!SHA.test(target_head)||target_head!==DIS_V020_REFERENCE.source_head)
     return unqualified("DIS_TARGET_VERSION_DRIFT","STALE",candidateSha,provenanceSha);
   const assessment=inspectCandidateReplay(candidate_json,current_provenance_json);
   if(assessment.status==="STALE")
