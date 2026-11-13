@@ -55,7 +55,7 @@ if(process.platform==="linux"&&process.arch==="x64"){
       await mkdir(join(root,"tools",candidate),{recursive:true});
       await mkdir(join(root,"tests",candidate),{recursive:true});
       await writeFile(join(root,"tools",candidate,"meta.json"),
-        JSON.stringify({id:candidate,version:describePortfolioTool(candidate).expected_version}));
+        JSON.stringify({tool_id:candidate,kind:"bundle",version:describePortfolioTool(candidate).expected_version}));
       await writeFile(join(root,"tools",candidate,"run"),"#!/bin/sh\nexit 0\n");
       await chmod(join(root,"tools",candidate,"run"),0o755);
       await writeFile(join(root,"tests",candidate,"expect.sh"),"# fake fixed fixture contract\n");
