@@ -71,6 +71,13 @@ function executable(name) {
   return directory ? join(directory,name) : name;
 }
 function toolPython(tool) { return process.env[tool === "clingo" ? "FORMAL_CLINGO_PYTHON" : "FORMAL_PYSHACL_PYTHON"] || "python3"; }
+function clingoCommand(args){
+  // Explicitly pinned native executable; default remains python3 -m clingo.
+  // This is trusted host configuration, not a caller-supplied MCP executable.
+  const probe=planToolProbe("clingo",process.env);
+  return probe.launcher==="clingo-bin"?[probe.argv[0],...args]:
+    [toolPython("clingo"),"-m","clingo",...args];
+}
 function jar(variable) {
   const p=process.env[variable];
   if (!p) throw new TypeError(variable+" must point to an installed jar");
@@ -86,7 +93,7 @@ function commands(tool,which,output,inputDir) {
   if (tool==="lean4") return [[executable("lean"),model(positive?"Positive.lean":"Negative.lean")]];
   if (tool==="dafny") return [[executable("dafny"),"verify",model(positive?"Positive.dfy":"Negative.dfy")]];
   if (tool==="vampire") return [[executable("vampire"),"--mode","casc",model(stem+".p")]];
-  if (tool==="clingo") return [[toolPython(tool),"-m","clingo",model(stem+".lp"),"0"]];
+  if (tool==="clingo") return [clingoCommand([model(stem+".lp"),"0"])];
   if (tool==="rdf-shacl") return [[toolPython(tool),"-m","pyshacl","-s",model("shapes.ttl"),"-df","turtle","-sf","turtle","-f","human",model(stem+".ttl")]];
   if (tool==="souffle") return [[executable("souffle"),model(stem+".dl"),"-D",output]];
   if (tool==="tla-tlc") return [[executable("java"),"-cp",jar("TLA2TOOLS_JAR"),"tlc2.TLC","-config",model("Toggle.cfg"),model(positive?"TogglePositive.tla":"ToggleNegative.tla")]];
@@ -164,7 +171,7 @@ export function interpret(tool,which,steps,extra={}) {
   if (tool==="clingo") {
     const outcome=/^UNSATISFIABLE\s*$/m.test(text)?"UNSATISFIABLE":/^SATISFIABLE\s*$/m.test(text)?"SATISFIABLE":"UNPARSED";
     const models=[...text.matchAll(/^Answer:\s*\d+/gm)].length;
-    return {tool_outcome:outcome,test_verdict:positive?(outcome==="SATISFIABLE"&&models===2&&[0,10].includes(exit)?"PASS":"INCONCLUSIVE"):(outcome==="UNSATISFIABLE"&&[0,20].includes(exit)?"PASS":"INCONCLUSIVE")};
+    return {tool_outcome:outcome,test_verdict:positive?(outcome==="SATISFIABLE"&&models===2&&[0,10,30].includes(exit)?"PASS":"INCONCLUSIVE"):(outcome==="UNSATISFIABLE"&&[0,20].includes(exit)?"PASS":"INCONCLUSIVE")};
   }
   if (tool==="rdf-shacl") {
     const conforms=text.match(/Conforms:\s*(True|False)/i)?.[1]?.toLowerCase()??"unparsed";
@@ -292,10 +299,8 @@ function nativeCommand(plan) {
    if(!jar)throw new TypeError("TLA2TOOLS_JAR missing");
    return [executable("java"),"-cp",resolve(jar),TOOL_CLASSES[entry],...args];
  }
- if(entry==="clingo"||entry==="pyshacl")return [
-   process.env[entry==="clingo"?"FORMAL_CLINGO_PYTHON":"FORMAL_PYSHACL_PYTHON"]||"python3",
-   "-m",entry,...args
- ];
+ if(entry==="clingo")return clingoCommand(args);
+ if(entry==="pyshacl")return [toolPython("rdf-shacl"),"-m",entry,...args];
  if(entry==="alloy"){
    if(process.env.FORMAL_ALLOY_JAR)
      return [executable("java"),"-jar",resolve(process.env.FORMAL_ALLOY_JAR),...args];
