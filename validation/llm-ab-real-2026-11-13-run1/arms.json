@@ -1,0 +1,170 @@
+{
+  "schema": "formal-tools/llm-ab-real-run/0.1",
+  "protocol_id": "g5-real-paired-deepseek-flash-2026-11-13",
+  "requested_model": "deepseek-flash",
+  "generated_at": "2026-11-13T14:35:43.817Z",
+  "baseline": {
+    "schema": "formal-tools/llm-ab-observations/0.1",
+    "arm": "LLM_ONLY",
+    "source_sha256": "46447f8ad807fef1551da6ba7ca08fcfc310a20fc3d7a7e526f3dcd1f92de50b",
+    "protocol_id": "g5-real-paired-deepseek-flash-2026-11-13",
+    "config": {
+      "model_id": "deepseek-flash",
+      "model_version": "deepseek-flash-deepseek-v4.1-flash-1017",
+      "prompt_template_sha256": "5a3d05d703031cd439f7e438fa5f4410653dc675595c9987fb1de768a89860fb",
+      "seed": 0,
+      "temperature": 0,
+      "max_output_tokens": 1024
+    },
+    "observations": [
+      {
+        "case_id": "positive-sequential-same-writer",
+        "case_sha256": "21bc53241116303054fcfcbc99581f30a793d0cbfc0aac6b9e146c74c609ead5",
+        "prediction": "UNKNOWN",
+        "raw_trace_sha256": "ec2c0a45555ef555832ea2a4192cc3f0473092c3af55c4c24af0821bbbdd51a4",
+        "cost_usd": 0.0013143,
+        "latency_ms": 7286,
+        "input_tokens": 285,
+        "output_tokens": 1024
+      },
+      {
+        "case_id": "positive-parallel-distinct-writers",
+        "case_sha256": "d45be878dbb7398cc147d94b45d03f94406f1208393682bf23dae770a2aaa9c1",
+        "prediction": "PASS",
+        "raw_trace_sha256": "62889ed413bdf404af44f19a1d6498a6edf300df2f06723f77920cd7b3533ca8",
+        "cost_usd": 0.0004347,
+        "latency_ms": 1941,
+        "input_tokens": 281,
+        "output_tokens": 292
+      },
+      {
+        "case_id": "negative-overlap-same-writer",
+        "case_sha256": "ff6ad73cda378faa2ed2fcd4de2954f6dc984e058f5bfed11d6f408c142caf59",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "a966c6f6c5898fce11f73a0fb8d236e99ff2a7f725a3f96840c3eeef243b352e",
+        "cost_usd": 0.0003789,
+        "latency_ms": 2107,
+        "input_tokens": 279,
+        "output_tokens": 246
+      },
+      {
+        "case_id": "negative-cycle",
+        "case_sha256": "2a4af094dd9f7b5c0eb43b413bfdc45f2e494b88b1c2b018a069489537ab71d7",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "232c1e246cc3333520b2ce23042ea7720a920f01828ae21b7f7069ba605f36a3",
+        "cost_usd": 0.0004368,
+        "latency_ms": 2421,
+        "input_tokens": 292,
+        "output_tokens": 291
+      },
+      {
+        "case_id": "negative-predecessor-order",
+        "case_sha256": "5b4ce95eda97e6185310dd83987c763e8cf75da53c012b55c4cd283af6e91175",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "549805e34ccfb6d259982998d88f7b25bb1977cf0f5697e43730713c2d28110e",
+        "cost_usd": 0.0004029,
+        "latency_ms": 2081,
+        "input_tokens": 287,
+        "output_tokens": 264
+      },
+      {
+        "case_id": "negative-zero-duration",
+        "case_sha256": "d00a5c9654fb1e16b9eb8271a31e24fe163f924bec58ba038971ef76e000293b",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "dcec2ac6b2569aef033d954df0cd78b13060fca9c735579e0e3b6535555bb9eb",
+        "cost_usd": 0.0002628,
+        "latency_ms": 1422,
+        "input_tokens": 264,
+        "output_tokens": 153
+      }
+    ]
+  },
+  "augmented": {
+    "schema": "formal-tools/llm-ab-observations/0.1",
+    "arm": "LLM_TOOLS",
+    "source_sha256": "46447f8ad807fef1551da6ba7ca08fcfc310a20fc3d7a7e526f3dcd1f92de50b",
+    "protocol_id": "g5-real-paired-deepseek-flash-2026-11-13",
+    "config": {
+      "model_id": "deepseek-flash",
+      "model_version": "deepseek-flash-deepseek-v4.1-flash-1017",
+      "prompt_template_sha256": "5a3d05d703031cd439f7e438fa5f4410653dc675595c9987fb1de768a89860fb",
+      "seed": 0,
+      "temperature": 0,
+      "max_output_tokens": 1024
+    },
+    "observations": [
+      {
+        "case_id": "positive-sequential-same-writer",
+        "case_sha256": "21bc53241116303054fcfcbc99581f30a793d0cbfc0aac6b9e146c74c609ead5",
+        "prediction": "PASS",
+        "raw_trace_sha256": "38f15c6c590286c58953cded0e4761911c7e058f26f421e310487fee9bb78147",
+        "cost_usd": 0.0010299,
+        "latency_ms": 5223,
+        "input_tokens": 545,
+        "output_tokens": 722,
+        "tool_status": "SAT",
+        "tool_receipt_sha256": "855dc685d988a55096c5426b51f08bb29389f765dc0fd0a09ec53aff221b632a"
+      },
+      {
+        "case_id": "positive-parallel-distinct-writers",
+        "case_sha256": "d45be878dbb7398cc147d94b45d03f94406f1208393682bf23dae770a2aaa9c1",
+        "prediction": "PASS",
+        "raw_trace_sha256": "403f4b1dd1e64071822ecd18e86e82a01ec1ab30215cffc70d73465b65db95a3",
+        "cost_usd": 0.000423,
+        "latency_ms": 1746,
+        "input_tokens": 506,
+        "output_tokens": 226,
+        "tool_status": "SAT",
+        "tool_receipt_sha256": "b49c66260da562eef6dc563c0893fb9421e9b2998d02cc145241776b128a82e8"
+      },
+      {
+        "case_id": "negative-overlap-same-writer",
+        "case_sha256": "ff6ad73cda378faa2ed2fcd4de2954f6dc984e058f5bfed11d6f408c142caf59",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "55cfaf542d0e6865b4693d40b1c9a69730d64d1917a8b822fc6c6bba1cb3fffb",
+        "cost_usd": 0.0004866,
+        "latency_ms": 2622,
+        "input_tokens": 518,
+        "output_tokens": 276,
+        "tool_status": "UNSAT",
+        "tool_receipt_sha256": "6c0da292c322373ba05893b26d91fc0b2f86cc505dd883073d4290ea924c315a"
+      },
+      {
+        "case_id": "negative-cycle",
+        "case_sha256": "2a4af094dd9f7b5c0eb43b413bfdc45f2e494b88b1c2b018a069489537ab71d7",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "bbf77153dcd51adc7e5b5806895ceab5bdf138a087f8c306aebc58ceb734dd57",
+        "cost_usd": 0.0005352,
+        "latency_ms": 2432,
+        "input_tokens": 552,
+        "output_tokens": 308,
+        "tool_status": "UNSAT",
+        "tool_receipt_sha256": "91c42dcfaa9525a9cc650a21a33d6cee92af19395015818b061fb501bb28fa2d"
+      },
+      {
+        "case_id": "negative-predecessor-order",
+        "case_sha256": "5b4ce95eda97e6185310dd83987c763e8cf75da53c012b55c4cd283af6e91175",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "89f6a480e5d8c8fede9808cd13718428af2f54c46a85c6446ca12c43eb382ace",
+        "cost_usd": 0.0004587,
+        "latency_ms": 2275,
+        "input_tokens": 537,
+        "output_tokens": 248,
+        "tool_status": "UNSAT",
+        "tool_receipt_sha256": "ca7485bd2f702fd75f23539ddabd53812263314b81640459691e73b5bf3b9d67"
+      },
+      {
+        "case_id": "negative-zero-duration",
+        "case_sha256": "d00a5c9654fb1e16b9eb8271a31e24fe163f924bec58ba038971ef76e000293b",
+        "prediction": "FAIL",
+        "raw_trace_sha256": "a76ed4cf4661e69d611949a02ccb48c34200a1323d50fa136b5e7dda78b696a8",
+        "cost_usd": 0.0004644,
+        "latency_ms": 2163,
+        "input_tokens": 444,
+        "output_tokens": 276,
+        "tool_status": "UNSAT",
+        "tool_receipt_sha256": "73415cf3397f7c88fa4dd9470cbd93c02d6b3195b40f1bde55d23dc3576b2f0c"
+      }
+    ]
+  }
+}

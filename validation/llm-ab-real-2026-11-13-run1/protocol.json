@@ -1,0 +1,81 @@
+{
+  "schema": "formal-tools/llm-ab-real-protocol/0.1",
+  "protocol_id": "g5-real-paired-deepseek-flash-2026-11-13",
+  "frozen_at": "2026-11-13T14:35:10.082Z",
+  "requested_model": "deepseek-flash",
+  "endpoint": "https://api.deepseek.com/chat/completions",
+  "prompt_template": "You are judging whether a task-assignment scenario satisfies three frozen scheduling requirements.\n\nRequirements (authoritative; evaluate ALL of them against the scenario facts):\nR1: Dependencies form a directed acyclic graph and every predecessor finishes before its successor starts.\nR2: Two tasks writing the same resource may not execute at overlapping times; different-resource writers may overlap.\nR3: Every task must have a finite start and end time with start strictly less than end.\n\nScenario facts:\nTasks (start/end are integers; end is exclusive): {TASKS}\nPrecedence edges ([\"A\",\"B\"] means A must finish before B starts): {EDGES}\n\n{EVIDENCE}\n\nReason step by step, then end your reply with exactly one final line, no backticks:\nVERDICT: PASS\nor\nVERDICT: FAIL\nor\nVERDICT: UNKNOWN\nPASS = the scenario satisfies ALL of R1, R2, R3. FAIL = at least one requirement is violated. UNKNOWN = you cannot determine.",
+  "config": {
+    "model_id": "deepseek-flash",
+    "model_version": "deepseek-flash-deepseek-v4.1-flash-1017",
+    "prompt_template_sha256": "5a3d05d703031cd439f7e438fa5f4410653dc675595c9987fb1de768a89860fb",
+    "seed": 0,
+    "temperature": 0,
+    "max_output_tokens": 1024
+  },
+  "pricing": {
+    "source": "DeepSeek official pricing page (api-docs.deepseek.com/quick_start/pricing, read 2026-11-13)",
+    "tier": "peak",
+    "input_cache_miss_usd_per_million_tokens": 0.3,
+    "output_usd_per_million_tokens": 1.2,
+    "formula": "cost_usd = (prompt_tokens*0.3 + completion_tokens*1.2)/1e6 rounded to 8 decimals"
+  },
+  "sampling": {
+    "temperature": 0,
+    "max_tokens": 1024,
+    "seed_sent": false,
+    "seed_note": "seed 0 is a declared scorer control only; the endpoint does not honor it"
+  },
+  "calls": {
+    "retries": 0,
+    "per_case_per_arm": 1,
+    "total": 12,
+    "abort_on": "non-2xx HTTP status, transport error or missing usage counters"
+  },
+  "key": {
+    "env": "DEEPSEEK_API_KEY",
+    "handling": "read from process.env only; never logged or written; sent only as the Authorization header"
+  },
+  "native_receipt": {
+    "path": "validation/ads24-native-2026-11-13/NATIVE_PAIR.json",
+    "source_sha256": "46447f8ad807fef1551da6ba7ca08fcfc310a20fc3d7a7e526f3dcd1f92de50b",
+    "bindings": [
+      {
+        "case_id": "positive-sequential-same-writer",
+        "input_sha256": "583b0a01c2e9b4ffcba3d0929ec156249fb34caec7deabc27f4d4e615087814b",
+        "tool_status": "SAT",
+        "tool_receipt_sha256": "855dc685d988a55096c5426b51f08bb29389f765dc0fd0a09ec53aff221b632a"
+      },
+      {
+        "case_id": "positive-parallel-distinct-writers",
+        "input_sha256": "87ad2e7625b439f4f68f20735120d3c1955596acd36e563d1a422373ae50c1c7",
+        "tool_status": "SAT",
+        "tool_receipt_sha256": "b49c66260da562eef6dc563c0893fb9421e9b2998d02cc145241776b128a82e8"
+      },
+      {
+        "case_id": "negative-overlap-same-writer",
+        "input_sha256": "3cda987ae8648719715437021ad7cb565e8f17662fac41d12771a77c1ead0659",
+        "tool_status": "UNSAT",
+        "tool_receipt_sha256": "6c0da292c322373ba05893b26d91fc0b2f86cc505dd883073d4290ea924c315a"
+      },
+      {
+        "case_id": "negative-cycle",
+        "input_sha256": "322c6bdbccb994e2b61229b8d451e1642e2083b586ed8db83cf2670c109487e8",
+        "tool_status": "UNSAT",
+        "tool_receipt_sha256": "91c42dcfaa9525a9cc650a21a33d6cee92af19395015818b061fb501bb28fa2d"
+      },
+      {
+        "case_id": "negative-predecessor-order",
+        "input_sha256": "f5c312b7eb50c2a1c2c967cda1636f6841b1a6b47fff62fb99f96a4b3a7a1dcd",
+        "tool_status": "UNSAT",
+        "tool_receipt_sha256": "ca7485bd2f702fd75f23539ddabd53812263314b81640459691e73b5bf3b9d67"
+      },
+      {
+        "case_id": "negative-zero-duration",
+        "input_sha256": "5613cdb13d2c7f9ad52fee766a1f0cca5e4ee9ef1fee5139ec51ba6680c9ad12",
+        "tool_status": "UNSAT",
+        "tool_receipt_sha256": "73415cf3397f7c88fa4dd9470cbd93c02d6b3195b40f1bde55d23dc3576b2f0c"
+      }
+    ]
+  }
+}

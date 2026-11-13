@@ -17,10 +17,12 @@ const frozenPath=new URL("../r0/spec-fidelity-cases.json",import.meta.url);
 
 export function frozenABManifest(){
   const source=readFileSync(frozenPath);
+  // Checkout-agnostic frozen-source identity: EOL-only normalization, real content edits still change the hash; no-op on LF checkouts so previously recorded LF-form values (e.g. 46447f8a...) remain valid.
+  const gitBytes=Buffer.from(source.toString("utf8").replace(/\r\n/g,"\n"),"utf8");
   const data=JSON.parse(source.toString("utf8"));
   if(data.schema!=="formal-tools/semantic-spec-cases/0.1"||
       !Array.isArray(data.cases)||data.cases.length!==6)throw Error("frozen source changed");
-  return {schema:"formal-tools/llm-ab-frozen/0.1",source_sha256:hash(source),
+  return {schema:"formal-tools/llm-ab-frozen/0.1",source_sha256:hash(gitBytes),
     cases:data.cases.map(c=>({id:c.id,expected:c.expected,
       case_sha256:hash(JSON.stringify(c))}))};
 }
