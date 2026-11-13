@@ -118,9 +118,11 @@ export async function executeAds24(args) {
     host_process_attested:false};
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
-  if(process.argv.length!==6)
+  if(process.argv.length!==6||!["z3","cvc5"].includes(process.argv[2]))
     throw new Error("Usage: node ads-native-replay.mjs z3|cvc5 BINARY_DIR EXPECTED_BINARY_SHA256 OUTPUT_DIR");
-  const result=await executeAds24({tool:process.argv[2],binary_dir:process.argv[3],
+  const tool=process.argv[2];
+  if(tool!=="z3"&&tool!=="cvc5")throw new TypeError("unsupported native tool");
+  const result=await executeAds24({tool,binary_dir:process.argv[3],
     expected_binary_sha256:process.argv[4],output_dir:process.argv[5]});
   process.stdout.write(JSON.stringify(result,null,2)+"\n");
 }
