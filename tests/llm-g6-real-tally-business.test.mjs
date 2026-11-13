@@ -1,11 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {spawnSync} from "node:child_process";
-import {fileURLToPath} from "node:url";
-import {mkdtempSync,rmSync} from "node:fs";
+import {fileURLToPath,pathToFileURL} from "node:url";
+import {mkdtempSync,rmSync,readFileSync,writeFileSync} from "node:fs";
 import {tmpdir} from "node:os";
 import {join} from "node:path";
-import {G6_TALLY_SOURCE,loadPinnedTallyBusiness,runRealTallyBusinessConsumption}
+import {G6_TALLY_SOURCE,loadPinnedTallyBusiness,loadPinnedTallyBusinessFromBytes,runRealTallyBusinessConsumption}
   from "../benchmarks/llm-methods/g6/real-tally-business-consumer.mjs";
 
 const HEAD="ed6d0fbb6815b6d9445a5deacf8dab56de003c84";
@@ -22,6 +22,38 @@ test("G6 imports the REAL original Git-blob-pinned Tally Business Function",asyn
  const missing=actual.invoke({});
  assert.deepEqual({state:missing.state,admitted:missing.admitted,taskPass:missing.taskPass},
    {state:"UNQUALIFIED_INPUT",admitted:false,taskPass:false});
+});
+test("G6 P1: byte-backed pinned loader defeats poisoned file-URL module cache and pathname replacement",async()=>{
+ const dir=mkdtempSync(join(tmpdir(),"ft-g6-verified-bytes-"));
+ try{
+   const modulePath=join(dir,"original-tally.mjs");
+   const hostile='export function assessTaskEvidence(){return {state:"UNPINNED_CACHED_MODULE",admitted:true,taskPass:true}};\n';
+   const pinned=readFileSync(new URL(
+     "../benchmarks/llm-methods/g6/snapshots/tally-business.mjs",import.meta.url));
+   const identity=pathToFileURL(modulePath).href;
+   writeFileSync(modulePath,hostile);
+   const preloaded=await import(identity);
+   assert.equal(preloaded.assessTaskEvidence({}).admitted,true);
+   // The on-disk path now passes the same byte check as the production pin.
+   // The old read/check/import(path URL) primitive would still use hostile
+   // cached code, proving the reviewer's exact P1 counterexample.
+   writeFileSync(modulePath,pinned);
+   const knownBytes=readFileSync(modulePath);
+   const stale=await import(identity);
+   assert.strictEqual(stale,preloaded);
+   assert.equal(stale.assessTaskEvidence({}).state,"UNPINNED_CACHED_MODULE");
+   const safe=await loadPinnedTallyBusinessFromBytes(knownBytes);
+   assert.equal(safe.blob,G6_TALLY_SOURCE.git_blob);
+   assert.equal(safe.invoke({}).state,"UNQUALIFIED_INPUT");
+   assert.equal(safe.invoke({}).admitted,false);
+   // A later pathname swap cannot alter the previously validated bytes.
+   writeFileSync(modulePath,hostile);
+   const afterSwap=await loadPinnedTallyBusinessFromBytes(knownBytes);
+   assert.equal(afterSwap.invoke({}).admitted,false);
+   assert.equal(afterSwap.invoke({}).taskPass,false);
+   await assert.rejects(()=>loadPinnedTallyBusinessFromBytes(
+     Buffer.from(hostile)),/TALLY_BUSINESS_SOURCE_DRIFT/);
+ }finally{rmSync(dir,{recursive:true,force:true});}
 });
 test("G6 Tally Business invocation cannot promote a fabricated claim or dependency",async()=>{
  const real=await loadPinnedTallyBusiness();
