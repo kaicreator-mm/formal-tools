@@ -42,8 +42,15 @@ py_env() {
 tool_meta() { # id -> sources meta.sh into env
   local m="$FT_ROOT/tools/$1/meta.sh"
   [ -f "$m" ] || { echo "unknown tool: $1 (no meta)" >&2; return 1; }
+  # Prevent inherited/stale environment keys from masking broken bundle metadata.
+  # Historical TOOL_TOOL_ID was a packaging bug, never a valid identity alias.
+  unset TOOL_ID TOOL_VERSION TOOL_KIND TOOL_MAIN_BIN TOOL_GLIBC_MAX TOOL_ELF_ARCH TOOL_VERSION_OUTPUT UNAVAILABLE
   # shellcheck disable=SC1090
-  . "$m"
+  . "$m" || return 1
+  if [ "${TOOL_ID:-}" != "$1" ] || [ -z "${TOOL_VERSION:-}" ] || [ -z "${TOOL_KIND:-}" ]; then
+    echo "invalid tool metadata: $1 (TOOL_ID/version/kind missing or mismatched)" >&2
+    return 1
+  fi
 }
 
 list_ids() { for f in "$FT_ROOT"/tools/*/meta.sh; do [ -f "$f" ] && basename "$(dirname "$f")"; done | sort; }
