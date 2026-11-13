@@ -14,7 +14,11 @@ import { fileURLToPath } from "node:url";
 import { frozenABManifest, scoreFrozenPairedAB } from "./score-ab.mjs";
 import { readFrozenAdsCases, generateAdsMatrix } from "../g3/ads-native-matrix.mjs";
 
-export const PROTOCOL_ID="g5-real-paired-deepseek-flash-2026-11-13";
+// Protocol v2 = v1 (g5-real-paired-deepseek-flash-2026-11-13) + output budget
+// raised 1024 -> 4096, after the documented v1 truncation artifact
+// (finish_reason "length", no_content -> UNKNOWN; see
+// validation/llm-ab-real-2026-11-13-run1/README.md). All other controls frozen.
+export const PROTOCOL_ID="g5-real-paired-deepseek-flash-2026-11-13-v2";
 export const MODEL="deepseek-flash";
 export const ENDPOINT="https://api.deepseek.com/chat/completions";
 export const KEY_ENV="DEEPSEEK_API_KEY";
@@ -59,7 +63,7 @@ export const costUsd=(prompt_tokens,completion_tokens)=>
 export const CONFIG=Object.freeze({model_id:MODEL,
   model_version:"deepseek-flash-deepseek-v4.1-flash-1017",
   prompt_template_sha256:sha256(PROMPT_TEMPLATE),seed:0,temperature:0,
-  max_output_tokens:1024});
+  max_output_tokens:4096});
 
 export const renderPrompt=(scenario,evidence)=>
   PROMPT_TEMPLATE.replace("{TASKS}",JSON.stringify(scenario.tasks))
@@ -199,13 +203,14 @@ export async function runArms(plan,{outDir,env,fetchImpl=globalThis.fetch}={}){
 /** Frozen constants captured provably before the first API call. */
 function protocolDocument(plan){
   return {schema:"formal-tools/llm-ab-real-protocol/0.1",protocol_id:PROTOCOL_ID,
+    revision:"v2 = v1 (g5-real-paired-deepseek-flash-2026-11-13) + max_output_tokens 1024 -> 4096 after the documented v1 truncation artifact (LLM_ONLY__positive-sequential-same-writer finish_reason length, no_content -> UNKNOWN; see validation/llm-ab-real-2026-11-13-run1/README.md)",
     frozen_at:new Date().toISOString(),requested_model:MODEL,endpoint:ENDPOINT,
     prompt_template:PROMPT_TEMPLATE,config:CONFIG,
     pricing:{source:"DeepSeek official pricing page (api-docs.deepseek.com/quick_start/pricing, read 2026-11-13)",
       tier:"peak",input_cache_miss_usd_per_million_tokens:PRICE_INPUT_PER_MILLION,
       output_usd_per_million_tokens:PRICE_OUTPUT_PER_MILLION,
       formula:"cost_usd = (prompt_tokens*0.3 + completion_tokens*1.2)/1e6 rounded to 8 decimals"},
-    sampling:{temperature:0,max_tokens:1024,seed_sent:false,
+    sampling:{temperature:0,max_tokens:4096,seed_sent:false,
       seed_note:"seed 0 is a declared scorer control only; the endpoint does not honor it"},
     calls:{retries:0,per_case_per_arm:1,total:12,
       abort_on:"non-2xx HTTP status, transport error or missing usage counters"},

@@ -57,7 +57,7 @@ test("G5 real run: stubbed API produces arms the frozen scorer accepts unchanged
     const body=JSON.parse(init.body);
     assert.equal(body.model,MODEL);
     assert.equal(body.temperature,0);
-    assert.equal(body.max_tokens,1024);
+    assert.equal(body.max_tokens,4096);
     assert.ok(!("seed" in body),"seed is a declared control, never sent");
     seen.push(body);
     const i=seen.length-1,expected=plan.cases[i%6].expected;
