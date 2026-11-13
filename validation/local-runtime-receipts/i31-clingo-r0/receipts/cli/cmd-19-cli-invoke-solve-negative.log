@@ -1,0 +1,38 @@
+{
+  "schema": "formal-tools/tool-execution/1",
+  "tool_id": "clingo",
+  "operation": "solve",
+  "invocation": {
+    "entry": "clingo",
+    "args": [
+      "negative.lp"
+    ],
+    "mode": "typed"
+  },
+  "process": {
+    "run_status": "EXECUTED",
+    "status": "NONZERO_EXIT",
+    "exit_code": 20,
+    "signal": null,
+    "elapsed_ms": 6,
+    "timed_out": false,
+    "output_truncated": false,
+    "error": null
+  },
+  "tool_status": "UNSATISFIABLE",
+  "streams": {
+    "stdout": {
+      "text": "clingo version 5.8.3\nReading from negative.lp\nSolving...\nUNSATISFIABLE\n\nModels       : 0\nCalls        : 1\nTime         : 0.000s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)\nCPU Time     : 0.000s\n",
+      "sha256": "98baa12595f45ba70e46afdae715f4043f5e7768b8bc7cc4cbd145cce5bf1050"
+    },
+    "stderr": {
+      "text": "",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "artifacts": {
+    "status": "NOT_COLLECTED",
+    "items": []
+  },
+  "scope": "UPSTREAM_TOOL_TECHNICAL_RESULT_ONLY"
+}

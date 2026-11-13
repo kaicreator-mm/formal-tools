@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  toolIds,describeNativeTool,planNative,planNativeHelp,planRawNative
+  toolIds,describeNativeTool,planNative,planNativeHelp,planRawNative,planToolProbe
 } from "../packages/runner/js/native-catalog.mjs";
 
 function validOptions(operation){
@@ -80,4 +80,22 @@ test("named operations retain CLI-only scope (MCP does not execute native raw)",
   assert.equal(raw.mode,"LOCAL_CLI_ONLY");
   assert.equal(planNativeHelp("z3").mode,"LOCAL_CLI");
   assert.equal(planNative("z3","solve",{input:"a.smt2"}).mode,"typed");
+});
+test("clingo probe plans the Python module unless an explicit pinned binary is configured",()=>{
+  // Default (and explicitly configured interpreter) stays the python-module
+  // contract; this path must be untouched by the pinned-binary launcher.
+  const module_=planToolProbe("clingo",{FORMAL_CLINGO_PYTHON:"/opt/venv/bin/python3"});
+  assert.equal(module_.launcher,"python-module");
+  assert.deepEqual(module_.argv,["/opt/venv/bin/python3","-m","clingo","--help"]);
+  assert.deepEqual(module_.requiredFiles,[]);
+  // FORMAL_CLINGO_BIN pins exactly one official native executable: its own
+  // probe args, no PATH involvement, and the path lands in requiredFiles so
+  // acceptance receipts fingerprint its SHA-256 bytes.
+  const pinned=planToolProbe("clingo",{FORMAL_CLINGO_BIN:"/opt/clingo/bin/clingo"});
+  assert.equal(pinned.launcher,"clingo-bin");
+  assert.equal(pinned.status,"PLANNED");
+  assert.deepEqual(pinned.argv,["/opt/clingo/bin/clingo","--version"]);
+  assert.deepEqual(pinned.requiredFiles,["/opt/clingo/bin/clingo"]);
+  assert.ok(pinned.envHints.includes("FORMAL_CLINGO_BIN"));
+  assert.ok(pinned.envHints.includes("FORMAL_TOOLS_BIN_DIR"));
 });

@@ -30,6 +30,7 @@ node packages/runner/js/cli.mjs doctor-all --probe --timeout 12
 | `FORMAL_ALLOY_JAR` | Alloy Analyzer 官方 Java JAR | 与 Grafana Alloy 名称冲突，必须显式指明 |
 | `FORMAL_ALLOY_BIN` | Alloy Analyzer 官方原生可执行文件 | 可代替 JAR 指向明确的二进制 |
 | `FORMAL_CLINGO_PYTHON` / `FORMAL_PYSHACL_PYTHON` | 指定这些官方 Python 模块所用的解释器 | Tool Manager 是 JS，第三方原生工具仍保留各自依赖 |
+| `FORMAL_CLINGO_BIN` | Clingo 官方原生可执行文件的显式 pin 路径 | 设置后成为唯一 launcher 候选（kind `clingo-bin`）：不做 PATH 查找、不被 `FORMAL_TOOLS_BIN_DIR` 遮蔽，路径进 requiredFiles 供验收收据做 SHA-256 指纹；未设置时保持既有 Python module 契约不变 |
 
 ### Windows 原生支持
 

@@ -1,0 +1,1 @@
+git-unavailable-in-container; authoritative tree check: host post-run receipt

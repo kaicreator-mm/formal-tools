@@ -86,7 +86,15 @@ function commands(tool,which,output,inputDir) {
   if (tool==="lean4") return [[executable("lean"),model(positive?"Positive.lean":"Negative.lean")]];
   if (tool==="dafny") return [[executable("dafny"),"verify",model(positive?"Positive.dfy":"Negative.dfy")]];
   if (tool==="vampire") return [[executable("vampire"),"--mode","casc",model(stem+".p")]];
-  if (tool==="clingo") return [[toolPython(tool),"-m","clingo",model(stem+".lp"),"0"]];
+  if (tool==="clingo") {
+    // Same allowlisted committed-fixture argv shape for both launchers: the
+    // explicit pinned native binary (FORMAL_CLINGO_BIN, e.g. the canonical #24
+    // deb13 bundle executable) or the explicitly configured Python module. The
+    // pinned path is resolved once here and never taken from PATH or
+    // FORMAL_TOOLS_BIN_DIR.
+    const pinned=process.env.FORMAL_CLINGO_BIN;
+    return pinned?[[resolve(pinned),model(stem+".lp"),"0"]]:[[toolPython(tool),"-m","clingo",model(stem+".lp"),"0"]];
+  }
   if (tool==="rdf-shacl") return [[toolPython(tool),"-m","pyshacl","-s",model("shapes.ttl"),"-df","turtle","-sf","turtle","-f","human",model(stem+".ttl")]];
   if (tool==="souffle") return [[executable("souffle"),model(stem+".dl"),"-D",output]];
   if (tool==="tla-tlc") return [[executable("java"),"-cp",jar("TLA2TOOLS_JAR"),"tlc2.TLC","-config",model("Toggle.cfg"),model(positive?"TogglePositive.tla":"ToggleNegative.tla")]];
@@ -164,7 +172,14 @@ export function interpret(tool,which,steps,extra={}) {
   if (tool==="clingo") {
     const outcome=/^UNSATISFIABLE\s*$/m.test(text)?"UNSATISFIABLE":/^SATISFIABLE\s*$/m.test(text)?"SATISFIABLE":"UNPARSED";
     const models=[...text.matchAll(/^Answer:\s*\d+/gm)].length;
-    return {tool_outcome:outcome,test_verdict:positive?(outcome==="SATISFIABLE"&&models===2&&[0,10].includes(exit)?"PASS":"INCONCLUSIVE"):(outcome==="UNSATISFIABLE"&&[0,20].includes(exit)?"PASS":"INCONCLUSIVE")};
+    // Satisfiable all-model enumeration (the committed fixture command suffix
+    // "0") deterministically exits 30 on the pinned official clingo 5.8.3 native
+    // binary (measured on the #24 canonical deb13 bundle; the portable R3
+    // harness allowed exactly 30/10/0 for the same fixture class). Single-model
+    // runs and the Python module exit 10. 30 is only accepted together with the
+    // SATISFIABLE verdict text and exactly two enumerated answer sets, so a
+    // genuine UNKNOWN can never masquerade as PASS.
+    return {tool_outcome:outcome,test_verdict:positive?(outcome==="SATISFIABLE"&&models===2&&[0,10,30].includes(exit)?"PASS":"INCONCLUSIVE"):(outcome==="UNSATISFIABLE"&&[0,20].includes(exit)?"PASS":"INCONCLUSIVE")};
   }
   if (tool==="rdf-shacl") {
     const conforms=text.match(/Conforms:\s*(True|False)/i)?.[1]?.toLowerCase()??"unparsed";
@@ -292,10 +307,14 @@ function nativeCommand(plan) {
    if(!jar)throw new TypeError("TLA2TOOLS_JAR missing");
    return [executable("java"),"-cp",resolve(jar),TOOL_CLASSES[entry],...args];
  }
- if(entry==="clingo"||entry==="pyshacl")return [
+ if(entry==="clingo"||entry==="pyshacl"){
+   const pinned=entry==="clingo"?process.env.FORMAL_CLINGO_BIN:undefined;
+   if(pinned)return [resolve(pinned),...args];
+   return [
    process.env[entry==="clingo"?"FORMAL_CLINGO_PYTHON":"FORMAL_PYSHACL_PYTHON"]||"python3",
    "-m",entry,...args
- ];
+   ];
+ }
  if(entry==="alloy"){
    if(process.env.FORMAL_ALLOY_JAR)
      return [executable("java"),"-jar",resolve(process.env.FORMAL_ALLOY_JAR),...args];

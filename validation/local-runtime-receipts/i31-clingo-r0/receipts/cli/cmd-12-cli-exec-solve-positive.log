@@ -1,0 +1,30 @@
+{
+  "tool": "clingo",
+  "operation": "solve",
+  "mode": "typed",
+  "run_status": "EXECUTED",
+  "tool_outcome": "SATISFIABLE",
+  "process_outcome": "NONZERO_EXIT",
+  "test_verdict": "NOT_EVALUATED",
+  "claim_verdict": "NOT_EVALUATED",
+  "note": "Native command output only; solver result is not an acceptance verdict",
+  "executions": [
+    {
+      "argv": [
+        "/opt/formal-tools-portable-debian13-x86_64/tools/clingo/bin/clingo",
+        "positive.lp"
+      ],
+      "exit_code": 10,
+      "signal": null,
+      "elapsed_ms": 6,
+      "timed_out": false,
+      "stdout": "clingo version 5.8.3\nReading from positive.lp\nSolving...\nAnswer: 1 (Time: 0.000s)\nchoose(b)\nSATISFIABLE\n\nModels       : 1+\nCalls        : 1\nTime         : 0.000s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)\nCPU Time     : 0.000s\n",
+      "stderr": "",
+      "stdout_sha256": "f3603349e15a070e13380f23aec790b19c236d0c2c6c36555f6edf13b1536360",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null,
+      "output_truncated": false
+    }
+  ],
+  "scope": "local native CLI; not an independently validated project claim"
+}

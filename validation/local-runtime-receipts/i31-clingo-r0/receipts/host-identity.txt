@@ -1,0 +1,11 @@
+== host pre-run identity (2026-11-14T00:29:16+08:00) ==
+eb7e669e5a0a05b9123a99dd5748dd1d96b551e8
+tracked_dirty=0
+expected_head=eb7e669e5a0a05b9123a99dd5748dd1d96b551e8
+v22.16.0
+uid=1000(cc) gid=1000(cc) groups=1000(cc),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),100(users),110(lxd),999(docker)
+canonical_clingo=d6250068a6cb2c931f952f5554f7aa3a07491975c10832b577be322f8371ad41
+sha256sums_anchor=5daad69d51c5adff9dd2406937b2ca18ba460153793cc7cb9848d53767a202bc
+== host post-run identity (2026-11-14T00:29:18+08:00) ==
+tracked_dirty_after=0
+eb7e669e5a0a05b9123a99dd5748dd1d96b551e8

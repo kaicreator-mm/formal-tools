@@ -51,3 +51,25 @@ test("CLI invoke returns a technical NOT_STARTED receipt for missing upstream bi
   assert.equal(p.json.tool_status,"INCONCLUSIVE");
   assert.ok(!Object.hasOwn(p.json,"claim_verdict"));
 });
+test("CLI invoke clingo with pinned binary spawns exactly the pinned path",()=>{
+  // FORMAL_CLINGO_BIN is the sole launcher coordinate: a missing pinned file
+  // must surface as NOT_STARTED pointing at that path, with no PATH or
+  // FORMAL_TOOLS_BIN_DIR fallback.
+  const pinned=join(repo,"__formal_tools_missing_clingo_binary__");
+  const p=command(["invoke","clingo","solve","--input","no-model.lp"],
+    {FORMAL_CLINGO_BIN:pinned,FORMAL_TOOLS_BIN_DIR:join(repo,"__formal_tools_nonexistent_bin_directory__")});
+  assert.equal(p.exitCode,2,p.stderr);
+  assert.equal(p.json.schema,"formal-tools/tool-execution/1");
+  assert.equal(p.json.process.status,"NOT_STARTED");
+  assert.equal(p.json.tool_status,"INCONCLUSIVE");
+  assert.ok(String(p.json.process.error).includes("__formal_tools_missing_clingo_binary__"),
+    "spawn target must be the pinned path, got "+String(p.json.process.error));
+});
+test("CLI where clingo plans the pinned binary with no bin-dir shadowing",()=>{
+  const pinned=join(repo,"__formal_tools_pinned_clingo__");
+  const p=command(["where","clingo"],
+    {FORMAL_CLINGO_BIN:pinned,FORMAL_TOOLS_BIN_DIR:join(repo,"__formal_tools_nonexistent_bin_directory__")});
+  assert.equal(p.exitCode,2,p.stderr); // the pinned fixture path does not exist
+  assert.equal(p.json.status,"MISSING_DEPENDENCY_FILE");
+  assert.equal(p.json.launcher,"clingo-bin");
+});

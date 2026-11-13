@@ -34,7 +34,10 @@ export function environmentSearchPlan(tool,{env={},platform="linux"}={}) {
   };
   const pathLib=pathFor(platform);
   const exe=probe.argv[0];
-  const explicit=probe.launcher==="alloy-bin"||pathLib.isAbsolute(exe)||/[\\/]/.test(exe);
+  // Pinned binary launchers (clingo-bin) carry exactly one operator-configured
+  // path: it is never re-resolved through PATH, and FORMAL_TOOLS_BIN_DIR must
+  // not shadow it.
+  const explicit=probe.launcher==="alloy-bin"||probe.launcher==="clingo-bin"||pathLib.isAbsolute(exe)||/[\\/]/.test(exe);
   const pref=env.FORMAL_TOOLS_BIN_DIR;
   // The existing runner applies FORMAL_TOOLS_BIN_DIR to native binaries and Java,
   // but not to the explicitly configured Python interpreter.

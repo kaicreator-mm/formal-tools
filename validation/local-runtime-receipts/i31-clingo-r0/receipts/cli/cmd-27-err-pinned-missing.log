@@ -1,0 +1,12 @@
+{
+  "tool": "clingo",
+  "status": "MISSING_DEPENDENCY_FILE",
+  "launcher": "clingo-bin",
+  "missing": [
+    "/nonexistent/clingo"
+  ],
+  "diagnostics": [
+    "Configured dependency file is missing or unreadable: /nonexistent/clingo"
+  ],
+  "probe_status": "NOT_RUN"
+}

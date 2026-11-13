@@ -116,7 +116,12 @@ const REGISTRY = {
  clingo:{
   title:"Clingo ASP",source:"https://potassco.org/clingo/",
   entries:["clingo"],help:{entry:"clingo",args:["--help=3"]},
-  runtime:{"kind":"python-module","command":"python3","module":"clingo","pythonEnv":"FORMAL_CLINGO_PYTHON","probeArgs":["--help"]},
+  // Two legitimate launchers, picked only by explicit operator configuration:
+  // default stays the explicitly configured Python module (FORMAL_CLINGO_PYTHON);
+  // setting FORMAL_CLINGO_BIN pins the official native clingo executable by exact
+  // path (e.g. the #24 canonical Debian 13 bundle binary). The pinned path is the
+  // sole search candidate: no PATH lookup and no FORMAL_TOOLS_BIN_DIR shadowing.
+  runtime:{"kind":"python-module","command":"python3","module":"clingo","pythonEnv":"FORMAL_CLINGO_PYTHON","binEnv":"FORMAL_CLINGO_BIN","binProbeArgs":["--version"],"probeArgs":["--help"]},
   operations:{
    solve:operation("clingo",[],["input"],{models:integer("--models=",0,1000000),format:choice("--outf=",["0","1","2","3"]),opt:choice("--opt-mode=",["opt","enum","optN","ignore"]),time:integer("--time-limit=",1,120000)}),
    ground:operation("clingo",["--mode=gringo"],["input"]),
@@ -262,7 +267,15 @@ export function planToolProbe(tool,env={}) {
       launcher="alloy-bin";argv=[String(env[runtime.binEnv]),...runtime.probeArgs];
     } else missing.push(runtime.jarEnv+" or "+runtime.binEnv);
   } else if(runtime.kind==="python-module"){
-    argv=[String(env[runtime.pythonEnv]||runtime.command),"-m",runtime.module,...runtime.probeArgs];
+    if(runtime.binEnv&&env[runtime.binEnv]){
+      // Explicitly pinned native binary: one operator-configured path, recorded in
+      // requiredFiles for SHA fingerprinting. Never resolved via PATH or bin dir.
+      launcher=runtime.module+"-bin";
+      requiredFiles=[String(env[runtime.binEnv])];
+      argv=[String(env[runtime.binEnv]),...(runtime.binProbeArgs??runtime.probeArgs)];
+    } else {
+      argv=[String(env[runtime.pythonEnv]||runtime.command),"-m",runtime.module,...runtime.probeArgs];
+    }
   } else {
     argv=[runtime.command,...runtime.probeArgs];
   }
