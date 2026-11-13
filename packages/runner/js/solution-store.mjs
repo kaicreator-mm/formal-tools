@@ -4,8 +4,9 @@
  * It persists candidate metadata, NOT a reusable executable Solution.
  * No caller, LLM or test can authorize semantic promotion via this module.
  */
-import { open, lstat, realpath, readFile } from "node:fs/promises";
+import { open, link, unlink, lstat, realpath, readFile } from "node:fs/promises";
 import { isAbsolute, join } from "node:path";
+import { randomUUID } from "node:crypto";
 import { sealSolutionCandidate, inspectCandidateReplay } from "./solution-candidate.mjs";
 
 const SHA=/^[a-f0-9]{64}$/;
@@ -39,20 +40,43 @@ async function revocationExists(file) {
   try {await boundedRegularFile(file);return true;}
   catch(err) {if(err?.code==="ENOENT")return false;throw err;}
 }
-async function exclusiveWrite(file,text) {
+// Publish only complete, fsync'ed bytes. A hard link is an atomic NO-REPLACE
+// operation in the same directory; rename() could overwrite a live tombstone.
+// A crash before publication leaves at most a .pending orphan, not a partial
+// candidate or revocation visible at its final content-addressed path.
+async function syncDirectory(root) {
+  let dir;
+  try {
+    dir=await open(root,"r");
+    await dir.sync();
+  } finally {await dir?.close();}
+}
+async function exclusiveWrite(root,file,text) {
+  const temp=join(root,".pending-"+randomUUID());
   let handle;
   try {
-    handle=await open(file,"wx",0o600);
+    handle=await open(temp,"wx",0o600);
     await handle.writeFile(text,"utf8");
     await handle.sync();
-    return "NEW";
-  } catch(err) {
-    if(err?.code!=="EEXIST")throw err;
-    if(await boundedRegularFile(file)!==text)throw new Error("existing record content differs");
-    return "EXISTING";
-  } finally {await handle?.close();}
+    await handle.close();
+    handle=undefined;
+    try {
+      await link(temp,file);
+      // Keep inode/link durable over process crash on POSIX local filesystems.
+      // If directory syncing is unsupported, do NOT claim durable SUCCESS.
+      await syncDirectory(root);
+      return "NEW";
+    } catch(err) {
+      if(err?.code!=="EEXIST")throw err;
+      if(await boundedRegularFile(file)!==text)
+        throw new Error("existing record content differs");
+      return "EXISTING";
+    }
+  } finally {
+    await handle?.close();
+    await unlink(temp).catch(err=>{if(err?.code!=="ENOENT")throw err;});
+  }
 }
-
 /**
  * Strictly seal the original Problem/Method/provenance through G2 before storing.
  * The directory must be provisioned by the trusted local owner (no global cache).
@@ -69,7 +93,14 @@ export async function persistSolutionCandidate({store_dir,problem_json,method_js
     const preflight=inspectCandidateReplay(JSON.stringify(candidate),provenance_json);
     if(preflight.status!=="REPLAY_BLOCKED_UNQUALIFIED")
       return denied("candidate preflight did not fail closed");
-    const stored=await exclusiveWrite(candidatePath(root,candidate.candidate_sha256),serialized);
+    // A permanent tombstone must dominate even an identical existing candidate.
+    // This double check provides a clear linearization point; a subsequent
+    // concurrent revoke is authoritative and readers must re-inspect.
+    if(await revocationExists(revokePath(root,candidate.candidate_sha256)))
+      return notReusable("INVALIDATED",{reason:"EXPLICIT_REVOCATION"});
+    const stored=await exclusiveWrite(root,candidatePath(root,candidate.candidate_sha256),serialized);
+    if(await revocationExists(revokePath(root,candidate.candidate_sha256)))
+      return notReusable("INVALIDATED",{reason:"EXPLICIT_REVOCATION"});
     return notReusable("CANDIDATE_PERSISTED",{
       candidate_sha256:candidate.candidate_sha256,record_write:stored});
   } catch {return denied("candidate store write or validation failed");}
@@ -106,7 +137,7 @@ export async function revokeStoredCandidate({store_dir,candidate_sha256,reason}=
       return denied("cannot revoke an invalid candidate");
     const marker=JSON.stringify({schema:"formal-tools/solution-revocation/0.1",
       candidate_sha256,reason})+"\n";
-    const written=await exclusiveWrite(revokePath(root,candidate_sha256),marker);
+    const written=await exclusiveWrite(root,revokePath(root,candidate_sha256),marker);
     return notReusable("INVALIDATED",{reason,record_write:written});
   } catch {return denied("candidate revocation failed");}
 }
