@@ -6,7 +6,7 @@ import { generateAdsMatrix, scoreAdsMatrix } from "../benchmarks/llm-methods/g3/
 
 const hash=x=>createHash("sha256").update(x).digest("hex");
 const gitBlob=x=>createHash("sha1").update(Buffer.concat([
-  Buffer.from("blob "+x.length+"\\0"),x])).digest("hex");
+  Buffer.from("blob "+x.length+"\0"),x])).digest("hex");
 const receipt=JSON.parse(readFileSync(new URL("../validation/ads24-native-2026-11-13/NATIVE_PAIR.json",import.meta.url),"utf8"));
 
 test("G3 original git bytes and all 24 native replay input hashes match frozen source generator",()=>{
