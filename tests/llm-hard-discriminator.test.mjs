@@ -17,7 +17,7 @@ function syntheticPaired(){
    schema:"formal-tools/llm-ab-observations/0.1",arm,
    source_sha256:manifest.source_sha256,
    protocol_id:"hard-r1-synthetic-test-not-real-model-or-native",
-   config,
+   config:{...config},
    observations:manifest.cases.map(c=>({
      case_id:c.id,case_sha256:c.case_sha256,
      prediction:arm==="LLM_ONLY"?"UNKNOWN":c.expected,
