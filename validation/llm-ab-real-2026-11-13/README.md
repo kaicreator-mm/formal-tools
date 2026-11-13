@@ -85,3 +85,12 @@ This is a real paired observation, not a qualification.
 - `arms.json`: `47287c5035bb39e17fea3d6291caaa55f3742194477a5fbb9ad1565806314f2c`
 - Per-case `raw_trace_sha256` values in `arms.json` equal the sha256 of the
   committed `traces/<ARM>__<case_id>.json` files (verified at commit time).
+
+## Verifying on autocrlf checkouts
+
+`source_sha256` (in `arms.json`, and as recomputed by the frozen scorer) and
+each row's `raw_trace_sha256` are sha256 over the git-object (LF) byte form of
+the fixture/trace files. Verifiers on `core.autocrlf=true` checkouts (CRLF
+working-tree bytes) must hash LF-normalized bytes —
+`sha256(bytes_of(text.replace(/\r\n/g,"\n")))` — not raw working-tree bytes.
+This is EOL-only normalization: any real content edit still changes the hash.

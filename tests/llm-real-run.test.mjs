@@ -142,3 +142,34 @@ test("G5 real run: faithful native receipts bind by input hash and forgery abort
   inconclusive.observations.find(o=>o.id==="faithful__negative-cycle").status="UNKNOWN";
   assert.throws(()=>bindFaithfulObservations(matrix,inconclusive),/inconclusive/);
 });
+
+test("G5 real run: committed real v2 evidence verifies on any checkout",()=>{
+  const evidence=new URL("../validation/llm-ab-real-2026-11-13/",import.meta.url);
+  // Identity is the git-object (LF) byte form: EOL-only normalization keeps
+  // verification checkout-agnostic while real content edits still mismatch.
+  const lfSha256=p=>sha256(Buffer.from(readFileSync(p).toString("utf8").replace(/\r\n/g,"\n"),"utf8"));
+  const arms=JSON.parse(readFileSync(new URL("arms.json",evidence),"utf8"));
+  assert.equal(arms.protocol_id,"g5-real-paired-deepseek-flash-2026-11-13-v2");
+  const fixtureSha=lfSha256(new URL("../benchmarks/llm-methods/r0/spec-fidelity-cases.json",import.meta.url));
+  assert.equal(arms.baseline.source_sha256,fixtureSha);
+  assert.equal(arms.augmented.source_sha256,fixtureSha);
+  let traced=0;
+  for(const [arm,obj] of [["LLM_ONLY",arms.baseline],["LLM_TOOLS",arms.augmented]])
+    for(const row of obj.observations){
+      assert.equal(lfSha256(new URL("traces/"+arm+"__"+row.case_id+".json",evidence)),
+        row.raw_trace_sha256);
+      traced++;
+    }
+  assert.equal(traced,12);
+  const scored=scoreFrozenPairedAB(JSON.stringify(arms.baseline),JSON.stringify(arms.augmented));
+  assert.equal(scored.status,"SCORED_UNATTESTED");
+  assert.equal(scored.source_sha256,fixtureSha);
+  assert.equal(scored.baseline.correct,6);
+  assert.equal(scored.baseline.cases,6);
+  assert.equal(scored.augmented.correct,6);
+  assert.equal(scored.augmented.cases,6);
+  assert.equal(scored.baseline.false_pass,0);
+  assert.equal(scored.augmented.false_pass,0);
+  assert.equal(scored.deltas.accuracy_all_cases,0);
+  assert.ok(Math.abs(scored.deltas.cost_usd-0.000962)<1e-6);
+});
