@@ -89,9 +89,18 @@ parser error line (exit 1, never a sat/unsat verdict); `unknown_scope` hit the b
   `cli-events.ndjson`, do not edit); engines may echo the documented canonical bundle
   path (`jar:file:/home/cc/formal-tools-build/...` via JVM `-cp` realpath through the
   staging symlink) — this layout is already public in #24 and is not operator-private.
-  The hash-anchored acceptance receipt itself (`acceptance/native-acceptance.json`)
-  contains zero absolute host paths (metadata redacted, streams neutral).
+  The hash-anchored acceptance receipt (`acceptance/native-acceptance.json`) has
+  **metadata fully redacted** (hostname REDACTED, zero absolute paths outside stream
+  texts); its verbatim `stdout`/`stderr` stream texts retain 17 neutral staging paths
+  (`/tmp/fti4/...`) and no operator-home paths.
 - `clingo` python-module runtime is a genuine asset gap in the canonical bundle
   (`tools/clingo` ships only the 5.8.3 binary). Recorded INCONCLUSIVE per the #4
   working policy; provisioning a canonical clingo wheel is a #24 asset task, not a
   runtime-gate blocker for the other 12 families.
+- Run identity inside the event logs: both event files are append-logs across the
+  deterministic-fix iterations. `sdk/sdk-events.ndjson` holds 3 runs — `81b1445`
+  (8/10, two harness-case FAILs kept as the documented fix history), `c8dc339`
+  (10/10) and the accepted final run `5d8a10e3fdb4db0d36d224706f86cbba4efb07ec`
+  (10/10), identified by its `driver_identity.checkout` pin. `mcp/mcp-events.ndjson`
+  holds 2 clean runs (`c8dc339`, then the accepted final at `5d8a10e` — last
+  `driver_done` in append order, no FAIL lines at any point).
