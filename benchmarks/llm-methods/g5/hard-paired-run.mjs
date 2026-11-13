@@ -121,6 +121,10 @@ export async function runHardArms(plan,{outDir,env,fetchImpl=globalThis.fetch}={
        "real LLM HTTP/transport failure for "+arm+"__"+c.case_id);
      // Unlike the archived v1 experiment, truncation cannot be silently
      // counted as an LLM-only inability. Abort BOTH-arm comparability.
+     // Every real response must be served by the declared model, not merely
+     // requested with that model ID. Mixed served models invalidate fairness.
+     assert(response?.model===MODEL,
+       "served model differs from the frozen paired model control");
      assert(choice?.finish_reason==="stop"&&parse.parse==="ok",
        "incomplete/ambiguous LLM response; do not score this partial run");
      const usage=response?.usage;
