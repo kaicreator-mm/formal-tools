@@ -7,3 +7,7 @@ EXPECT_NEG_ARGS='-i $TOOL_DIR/does-not-exist -o $FT_TMP/afl-out $TOOL_DIR/test-t
 EXPECT_NEG_EXIT=*
 EXPECT_NEG_REGEX='(Input directory|not accessible|ERROR|afl-fuzz)'
 EXPECT_NEG_LABEL=ERROR
+EXPECT_ERR_ARGS='--definitely-not-an-afl-flag'
+EXPECT_ERR_EXIT=1
+EXPECT_ERR_REGEX='(invalid option|afl-fuzz|ERROR)'
+EXPECT_ERR_LABEL=INVALID_ARGUMENT
