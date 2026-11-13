@@ -49,6 +49,7 @@ export async function loadPinnedTallyBusiness(){
  * No false Claim authority or professional Oracle is manufactured.
  * The owner-provisioned directory is expected to be fresh, absolute and
  * supported by POSIX directory fsync; candidate-store validates it.
+ * @param {{store_dir?:string,formal_head?:string}} [args]
  */
 export async function runRealTallyBusinessConsumption({store_dir,formal_head}={}){
  assert(typeof store_dir==="string"&&store_dir.startsWith("/")&&
