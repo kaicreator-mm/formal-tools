@@ -1,0 +1,88 @@
+{
+  "schema": "formal-tools/app-drive-dedup-execution/v1",
+  "date": "2026-11-13",
+  "parent_issue": 24,
+  "drive_root": "https://drive.google.com/drive/folders/1zZV3LcoOebjKqrbDNH2NOsqPMkM9xgJw",
+  "expected_plan_file": "docs/tool-portfolio/r3/APP_CANONICAL_CATALOG.json",
+  "result": "SUCCESS_DRIVE_READBACK",
+  "deleted_file_count": 33,
+  "deleted_bytes_estimated_from_drive_metadata": 1733082227,
+  "source_retained": true,
+  "old_verified_link_ids_are_tombstones": true,
+  "exceptions": {
+    "highspy_1_16_0_correct_named_alias_file_id": "19KfF2z9t1PwcJTIEG0A1gG6uzMeB6yD0",
+    "original_highspy_source_misnamed_id": "1tqnlNn9M_w8dg5AK4753P3CknqyrYwAD",
+    "different_versions_and_alternate_abies_not_deduplicated": true,
+    "lean4_original_and_five_parts_retained": true,
+    "why3_new_source_retained": true
+  },
+  "breakdown": [
+    {
+      "kind": "native",
+      "deleted": 19,
+      "verified_folder_readback_count": 0
+    },
+    {
+      "kind": "runtime",
+      "deleted": 2,
+      "verified_folder_readback_count": 0
+    },
+    {
+      "kind": "wheelhouse",
+      "deleted": 10,
+      "verified_folder_readback_count": 1
+    },
+    {
+      "kind": "host-python",
+      "deleted": 1,
+      "verified_folder_readback_count": 0
+    },
+    {
+      "kind": "core",
+      "deleted": 1,
+      "verified_core_readback_count": 0
+    }
+  ],
+  "after_move_readback": {
+    "app_child_folders": [
+      "00-INBOX",
+      "10-formal-tools",
+      "90-archive"
+    ],
+    "formal_tools_child_folders": [
+      "portable",
+      "python-wheelhouses",
+      "validation"
+    ],
+    "validation_items": [
+      "receipts",
+      "whl-scoped-cp313",
+      "VALIDATION_REPORT — formal-tools portable Debian13 — 2026-11-12"
+    ],
+    "archive_items": [
+      "Formal-Methods-legacy",
+      "project-exports",
+      "retired-verified-mirrors-empty"
+    ],
+    "empty_retired_mirrors": [
+      "old-host-python313-empty",
+      "old-verified-runtimes-empty",
+      "old-verified-tools-empty"
+    ],
+    "portable_native_files_count": 41,
+    "portable_runtime_files_count": 5,
+    "python_wheelhouse_files_count": 13
+  },
+  "tests_done": [
+    "Drive pre-deletion original-and-copy name and size equality checks",
+    "Former copy folders read back counts",
+    "Canonical source folders read back unchanged counts",
+    "New root/folder tree read back"
+  ],
+  "tests_not_done": [
+    "Direct bilateral fresh binary SHA256 comparison for every redundant copy (Drive connector metadata did not expose content hashes)"
+  ],
+  "product_qualification_changed": false,
+  "source_pr22_modified": false,
+  "excluded_issue7_modified": false
+}
