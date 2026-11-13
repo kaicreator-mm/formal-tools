@@ -1,0 +1,662 @@
+{
+  "schema": "formal-tools/tool-asset-lanes/2.0",
+  "snapshot_utc": "2026-11-13",
+  "source_r1_dag": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+  "authorizations": {
+    "repository": "kaicreator-mm/formal-tools",
+    "tool_portfolio_issue": 24,
+    "product_issue": 11,
+    "pr22_source_owner": "PR #22 (source code must be updated by its original single Writer)",
+    "excluded_issue": 7
+  },
+  "categorization": "Experimental limited native tool invocation availability; not publisher attestation, release, complete corpus coverage, original source PR #22 qualification or a real business/oracle PASS",
+  "counts": {
+    "ORIGINAL_TAR_RUNNER_PASS_R3": 16,
+    "ORIGINAL_TAR_RUNNER_PASS_R4": 3,
+    "HOST_PYTHON313_RUNNER_PASS_R4": 1,
+    "LOCAL_PATCHED_FIXTURE_RUNNER_PASS_R4": 2,
+    "ALTERNATE_CLI_SMOKE_PASS_R4": 1,
+    "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4": 11,
+    "BLOCKED_R4": 2,
+    "total": 36,
+    "original_tar_runner_scoped_total": 19,
+    "scoped_invokable_with_alternates_including_patched": 34,
+    "fully_qualified_semantic_consumers": 0
+  },
+  "drive": {
+    "original_tar_source": "https://drive.google.com/drive/folders/1rIJ315fjiXtJEPk9mjXP2Kzty4V3n3nZ",
+    "original_wheelhouse_source": "https://drive.google.com/drive/folders/1jT9rgermFAlgvXRpuUqRaQH0zesc0Lku",
+    "verified_tar": "https://drive.google.com/drive/folders/1Ruw61tyRGHwVSK6jsz41XYCXlFzECJqb",
+    "verified_wheelhouse": "https://drive.google.com/drive/folders/1PaOrmxwWPaQ067Cg-36aF8rJAMaULrEA",
+    "host_python_scoped": "https://drive.google.com/drive/folders/1gVs3oRAf_YQjcruEdo4D-7zEO07tI4cO"
+  },
+  "wheelhouse": {
+    "naming": "<distribution>-wheelhouse-<actual-pypi-version>-py313-debian13-x86_64.zip; outer ZIP naming is not a PEP425 wheel tag",
+    "no_zip_bytes_changed": true,
+    "original_zip_and_sha256_manifests_preserved": true,
+    "version_mismatch": "highspy source ZIP calls itself 1.15.1 but contains actual 1.16.0 wheel; verified copy renamed to 1.16.0, catalog highs 1.15.1 not silently modified",
+    "initial_evidence": "https://github.com/kaicreator-mm/formal-tools/issues/24#issuecomment-6840631270"
+  },
+  "native_host": {
+    "os": "Debian 13 x86_64",
+    "python": "3.13.5",
+    "node": "22.16.0",
+    "runtime_real_memory_limit": "bounded",
+    "native_user": "unprivileged uid 65534",
+    "source_sha256_manifest": "App/packages/SHA256SUMS",
+    "archive_member_security": "absolute/path-traversal/escaping-symlink rejection, sum-size bound, SHA hash verified"
+  },
+  "tools": [
+    {
+      "id": "FT-T01",
+      "slug": "aflpp",
+      "issue": 25,
+      "catalog_version": "5.03c",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "observation": "Prior R3 source-sha-bounded native fixture receipt reused; no re-run in R4",
+      "evidence": {},
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "PASS_SCOPED_R3_FIXTURES"
+    },
+    {
+      "id": "FT-T02",
+      "slug": "alloy",
+      "issue": 26,
+      "catalog_version": "6.2.0",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "observation": "Prior R3 source-sha-bounded native fixture receipt reused; no re-run in R4",
+      "evidence": {},
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "PASS_SCOPED_R3_FIXTURES"
+    },
+    {
+      "id": "FT-T03",
+      "slug": "apache-jena",
+      "issue": 27,
+      "catalog_version": "5.5.0",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "observation": "Prior R3 source-sha-bounded native fixture receipt reused; no re-run in R4",
+      "evidence": {},
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "PASS_SCOPED_R3_FIXTURES"
+    },
+    {
+      "id": "FT-T04",
+      "slug": "apalache",
+      "issue": 28,
+      "catalog_version": "0.63.0",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R4",
+      "observation": "Original hashed tar + original core runner passed observed native fixture phases as non-root",
+      "evidence": {
+        "sha256": "1c4cb32d52e94c264f5d84b8373623408c9db0e558a474f87a8b703f32f9774d",
+        "tsv_sha256": "b475e2bbc63d5a9b12c31862bbbc8d1668a39b061c82c09ca5b22fa92da21972",
+        "cases_exit": {
+          "positive": 0,
+          "negative": 12,
+          "invalid": 255
+        },
+        "drive_verified_tool_file_id": "1hBe1Iaj4QlQfz-RZuzX7yKRivsdv6GIw"
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T05",
+      "slug": "causal-learn",
+      "issue": 29,
+      "catalog_version": "0.1.4.8",
+      "route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "observation": "Actual CPython3.13 Debian13 offline isolated pip, positive/negative/error smoke on source sha; not original tar runner, no G3 oracle",
+      "evidence": {
+        "wheel_distribution": "causal-learn",
+        "catalog_tar_version": "0.1.4.8",
+        "wheel_actual_version": "0.1.4.8",
+        "sha256": "beb4c87ea8a60da31a6df2fd664cce5e224ab2e6fb011812df16e6e939f0a432",
+        "verified_drive_file_id": "1Pz8JwzAgE2w8ej5ZuN5g7hYoVjMaYpoG",
+        "verified_name": "causal-learn-wheelhouse-0.1.4.8-py313-debian13-x86_64.zip",
+        "source_name": "causal-learn-whl-0.1.4.8-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "sha256_manifest": "SHA256SUMS-ZIPS (immutable source names)",
+        "version_alias_only": false
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T06",
+      "slug": "cbmc",
+      "issue": 30,
+      "catalog_version": "6.11.0",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "observation": "Prior R3 source-sha-bounded native fixture receipt reused; no re-run in R4",
+      "evidence": {},
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "PASS_SCOPED_R3_FIXTURES"
+    },
+    {
+      "id": "FT-T07",
+      "slug": "clingo",
+      "issue": 31,
+      "catalog_version": "5.8.3",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "observation": "Prior R3 source-sha-bounded native fixture receipt reused; no re-run in R4",
+      "evidence": {},
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "PASS_SCOPED_R3_FIXTURES"
+    },
+    {
+      "id": "FT-T08",
+      "slug": "cvc5",
+      "issue": 32,
+      "catalog_version": "1.4.2",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "observation": "Prior R3 source-sha-bounded native fixture receipt reused; no re-run in R4",
+      "evidence": {},
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "PASS_SCOPED_R3_FIXTURES"
+    },
+    {
+      "id": "FT-T09",
+      "slug": "dafny",
+      "issue": 33,
+      "catalog_version": "4.11.0",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "observation": "Prior R3 source-sha-bounded native fixture receipt reused; no re-run in R4",
+      "evidence": {},
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "PASS_SCOPED_R3_FIXTURES"
+    },
+    {
+      "id": "FT-T10",
+      "slug": "dowhy",
+      "issue": 34,
+      "catalog_version": "0.14",
+      "route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "observation": "Actual CPython3.13 Debian13 offline isolated pip, positive/negative/error smoke on source sha; not original tar runner, no G3 oracle",
+      "evidence": {
+        "wheel_distribution": "dowhy",
+        "catalog_tar_version": "0.14",
+        "wheel_actual_version": "0.14",
+        "sha256": "dc0c57b5ec475b601113d9f0c7d9f6e77b99c6aaf851176826e4e1b63b07bcc9",
+        "verified_drive_file_id": "1EKNI73eMqzR9oF0NeS5gXPH5jY3ViOKP",
+        "verified_name": "dowhy-wheelhouse-0.14-py313-debian13-x86_64.zip",
+        "source_name": "dowhy-whl-0.14-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "sha256_manifest": "SHA256SUMS-ZIPS (immutable source names)",
+        "version_alias_only": false
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T11",
+      "slug": "elk",
+      "issue": 35,
+      "catalog_version": "0.6.0",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "observation": "Prior R3 source-sha-bounded native fixture receipt reused; no re-run in R4",
+      "evidence": {},
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "PASS_SCOPED_R3_FIXTURES"
+    },
+    {
+      "id": "FT-T12",
+      "slug": "fast-check",
+      "issue": 36,
+      "catalog_version": "4.10.2",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "observation": "Prior R3 source-sha-bounded native fixture receipt reused; no re-run in R4",
+      "evidence": {},
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "PASS_SCOPED_R3_FIXTURES"
+    },
+    {
+      "id": "FT-T13",
+      "slug": "fast-downward",
+      "issue": 37,
+      "catalog_version": "24.06",
+      "route": "HOST_PYTHON313_RUNNER_PASS_R4",
+      "observation": "Hashed tar + core runner positive plan (exit 0), unsolvable (exit 11), provided host Python3.13 symlink instead of oversized portable Python runtime",
+      "evidence": {
+        "sha256": "909f427d559965709adf9725899a3512f3c81ca88d0cae17619412cd810de503",
+        "tsv_sha256": "deb80ae36b688238f761843e84eba5c6cc9dfd4d13d3cc8f1cf558a7c509d86c",
+        "cases_exit": {
+          "positive": 0,
+          "negative": 11
+        },
+        "drive_host_shim_file_id": "1TsxhW5vIU9uapbD1PAnPyZa8GdJWHc1g"
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T14",
+      "slug": "highs",
+      "issue": 38,
+      "catalog_version": "1.15.1",
+      "route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "observation": "Actual CPython3.13 Debian13 offline isolated pip, positive/negative/error smoke on source sha; not original tar runner, no G3 oracle",
+      "evidence": {
+        "wheel_distribution": "highspy",
+        "catalog_tar_version": "1.15.1",
+        "wheel_actual_version": "1.16.0",
+        "sha256": "a67913c95322957bfcaf6c0e9ff9f1dba8f99a2bd0be27d0ce80119feb45f620",
+        "verified_drive_file_id": "19KfF2z9t1PwcJTIEG0A1gG6uzMeB6yD0",
+        "verified_name": "highspy-wheelhouse-1.16.0-py313-debian13-x86_64.zip",
+        "source_name": "highspy-whl-1.15.1-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "sha256_manifest": "SHA256SUMS-ZIPS (immutable source names)",
+        "version_alias_only": true
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T15",
+      "slug": "hypothesis",
+      "issue": 39,
+      "catalog_version": "6.170.15",
+      "route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "observation": "Actual CPython3.13 Debian13 offline isolated pip, positive/negative/error smoke on source sha; not original tar runner, no G3 oracle",
+      "evidence": {
+        "wheel_distribution": "hypothesis",
+        "catalog_tar_version": "6.170.15",
+        "wheel_actual_version": "6.170.15",
+        "sha256": "aa0cb18cca7c1509fb288ea38edba51d8e92d7c6e528f96e42a1dab6f7a9e282",
+        "verified_drive_file_id": "1tZHqbIH7ndK-w5Nc7YFonlk6loFjQyHz",
+        "verified_name": "hypothesis-wheelhouse-6.170.15-py313-debian13-x86_64.zip",
+        "source_name": "hypothesis-whl-6.170.15-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "sha256_manifest": "SHA256SUMS-ZIPS (immutable source names)",
+        "version_alias_only": false
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T16",
+      "slug": "kani",
+      "issue": 40,
+      "catalog_version": "0.68.0",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R4",
+      "observation": "Original hashed tar + original core runner passed observed native fixture phases as non-root",
+      "evidence": {
+        "sha256": "f2703e1c9d17ab45dc3234bdceb48b71fb435533423d5292750512fce669b89d",
+        "tsv_sha256": "e717edc3e18571f3af3f6084dca347b7735624ff6051b0d068f105b3916d5422",
+        "cases_exit": {
+          "positive": 0,
+          "negative": 1
+        },
+        "drive_verified_tool_file_id": "1Vaf8LA3bUgGYK-wXAZpc3McHMygOD3_0"
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T17",
+      "slug": "lean4",
+      "issue": 41,
+      "catalog_version": "4.35.0",
+      "route": "BLOCKED_R4",
+      "observation": "567187865-byte archive exceeds connector 268435456-byte transfer limit (HTTP413), no native binary invocation",
+      "evidence": {
+        "archive_bytes": 567187865,
+        "transport_limit_bytes": 268435456,
+        "download_result": "HTTP_413"
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T18",
+      "slug": "mesa",
+      "issue": 42,
+      "catalog_version": "3.5.2",
+      "route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "observation": "Actual CPython3.13 Debian13 offline isolated pip, positive/negative/error smoke on source sha; not original tar runner, no G3 oracle",
+      "evidence": {
+        "wheel_distribution": "mesa",
+        "catalog_tar_version": "3.5.2",
+        "wheel_actual_version": "3.5.2",
+        "sha256": "314255c3d7baaa42ad9e7ecb2217bde7b8ec1e4d98de14c8810329f25fc53da7",
+        "verified_drive_file_id": "1uT8Yz2AkWeKHOLgkObuFDuHe9s3eQ81J",
+        "verified_name": "mesa-wheelhouse-3.5.2-py313-debian13-x86_64.zip",
+        "source_name": "mesa-whl-3.5.2-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "sha256_manifest": "SHA256SUMS-ZIPS (immutable source names)",
+        "version_alias_only": false
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T19",
+      "slug": "minizinc",
+      "issue": 43,
+      "catalog_version": "2.10.1",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "observation": "Prior R3 source-sha-bounded native fixture receipt reused; no re-run in R4",
+      "evidence": {},
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "PASS_SCOPED_R3_FIXTURES"
+    },
+    {
+      "id": "FT-T20",
+      "slug": "networkx",
+      "issue": 44,
+      "catalog_version": "3.7",
+      "route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "observation": "Actual CPython3.13 Debian13 offline isolated pip, positive/negative/error smoke on source sha; not original tar runner, no G3 oracle",
+      "evidence": {
+        "wheel_distribution": "networkx",
+        "catalog_tar_version": "3.7",
+        "wheel_actual_version": "3.7",
+        "sha256": "2cd5c31ea96663fa997069cba86e97c8a4b883dcaf60cf24148375740742debf",
+        "verified_drive_file_id": "1llfzwk-C54CM8rYF2ZbX1_gIGfy7aJoB",
+        "verified_name": "networkx-wheelhouse-3.7-py313-debian13-x86_64.zip",
+        "source_name": "networkx-whl-3.7-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "sha256_manifest": "SHA256SUMS-ZIPS (immutable source names)",
+        "version_alias_only": false
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T21",
+      "slug": "nuxmv",
+      "issue": 45,
+      "catalog_version": "2.2.0",
+      "route": "LOCAL_PATCHED_FIXTURE_RUNNER_PASS_R4",
+      "observation": "Original core lacks tests/nuxmv/expect.sh; added local candidate three fixtures. Actual nuXmv outcome true/false/syntax; doctor LD path issue remains",
+      "evidence": {
+        "archive_sha256": "75ef7e5c33a68849e84dc8e7ac784b8aee62d6e8c7ffe20ebda8c4b0797df41b",
+        "tsv_sha256": "7f3cd390a4089280019b4739b3047818b5dab1a4f668e4c2d3d1f207f8265f79",
+        "cases_exit": {
+          "positive": 0,
+          "negative": 0,
+          "invalid": 1
+        },
+        "source_core_unchanged": true
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T22",
+      "slug": "ortools",
+      "issue": 46,
+      "catalog_version": "9.15.6755",
+      "route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "observation": "Actual CPython3.13 Debian13 offline isolated pip, positive/negative/error smoke on source sha; not original tar runner, no G3 oracle",
+      "evidence": {
+        "wheel_distribution": "ortools",
+        "catalog_tar_version": "9.15.6755",
+        "wheel_actual_version": "9.15.6755",
+        "sha256": "76bf08ea5274ffb596c70c323e46098cba397804e8512a6ea3ae8405ae6ab031",
+        "verified_drive_file_id": "1C5cZkXRJSV29eyRofXXqtgMqg_u1qLAm",
+        "verified_name": "ortools-wheelhouse-9.15.6755-py313-debian13-x86_64.zip",
+        "source_name": "ortools-whl-9.15.6755-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "sha256_manifest": "SHA256SUMS-ZIPS (immutable source names)",
+        "version_alias_only": false
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T23",
+      "slug": "prism",
+      "issue": 47,
+      "catalog_version": "4.11",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "observation": "Prior R3 source-sha-bounded native fixture receipt reused; no re-run in R4",
+      "evidence": {},
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "PASS_SCOPED_R3_FIXTURES"
+    },
+    {
+      "id": "FT-T24",
+      "slug": "prob",
+      "issue": 48,
+      "catalog_version": "1.16.1",
+      "route": "LOCAL_PATCHED_FIXTURE_RUNNER_PASS_R4",
+      "observation": "Original fixture is read-only, positive model deadlocks, default exit0 masks errors. Local candidate uses writable fixture, looped nondeadlock positive and -strict; setup/pos/neg/err pass",
+      "evidence": {
+        "archive_sha256": "5f62f29a338ec0f06796cc78de6e26aa2447061c33811a1d972202907b644537",
+        "tsv_sha256": "94de334c69096ae3014805b3024d32212d15ba06831110382b0d655ead503e59",
+        "cases_exit": {
+          "setup": 0,
+          "positive": 0,
+          "negative": 1,
+          "invalid": 1
+        },
+        "source_core_unchanged": true
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T25",
+      "slug": "pymc",
+      "issue": 49,
+      "catalog_version": "6.4.0",
+      "route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "observation": "Actual CPython3.13 Debian13 offline isolated pip, positive/negative/error smoke on source sha; not original tar runner, no G3 oracle",
+      "evidence": {
+        "wheel_distribution": "pymc",
+        "catalog_tar_version": "6.4.0",
+        "wheel_actual_version": "6.4.0",
+        "sha256": "8be0c662edff078d03e103b856dd409d94166ddadff0a3c79ecb305edd88ce50",
+        "verified_drive_file_id": "1hkkq81xHn8Hx1cEma7kVYXQkH-RqEIAo",
+        "verified_name": "pymc-wheelhouse-6.4.0-py313-debian13-x86_64.zip",
+        "source_name": "pymc-whl-6.4.0-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "sha256_manifest": "SHA256SUMS-ZIPS (immutable source names)",
+        "version_alias_only": false
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T26",
+      "slug": "rdf-shacl",
+      "issue": 50,
+      "catalog_version": "0.40.2",
+      "route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "observation": "Actual CPython3.13 Debian13 offline isolated pip, positive/negative/error smoke on source sha; not original tar runner, no G3 oracle",
+      "evidence": {
+        "wheel_distribution": "pyshacl",
+        "catalog_tar_version": "0.40.2",
+        "wheel_actual_version": "0.40.2",
+        "sha256": "0f1e023066cbb34a965cc692c624cd258f9617b8e251ab89f06a1e0d01830de9",
+        "verified_drive_file_id": "1S93LgkaLpvXmbvUqBwoUA1vKgLEK1raN",
+        "verified_name": "pyshacl-wheelhouse-0.40.2-py313-debian13-x86_64.zip",
+        "source_name": "pyshacl-whl-0.40.2-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "sha256_manifest": "SHA256SUMS-ZIPS (immutable source names)",
+        "version_alias_only": false
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T27",
+      "slug": "robot",
+      "issue": 51,
+      "catalog_version": "1.9.11",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "observation": "Prior R3 source-sha-bounded native fixture receipt reused; no re-run in R4",
+      "evidence": {},
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "PASS_SCOPED_R3_FIXTURES"
+    },
+    {
+      "id": "FT-T28",
+      "slug": "simpy",
+      "issue": 52,
+      "catalog_version": "4.1.2",
+      "route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "observation": "Actual CPython3.13 Debian13 offline isolated pip, positive/negative/error smoke on source sha; not original tar runner, no G3 oracle",
+      "evidence": {
+        "wheel_distribution": "simpy",
+        "catalog_tar_version": "4.1.2",
+        "wheel_actual_version": "4.1.2",
+        "sha256": "83427684ac6035c1025bbf57dbbc898be33a3296b67527fe547f2bcc106c7d89",
+        "verified_drive_file_id": "1qGOnoKSV-VxuuAR03aXuOWeQ2wI1eBeM",
+        "verified_name": "simpy-wheelhouse-4.1.2-py313-debian13-x86_64.zip",
+        "source_name": "simpy-whl-4.1.2-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "sha256_manifest": "SHA256SUMS-ZIPS (immutable source names)",
+        "version_alias_only": false
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T29",
+      "slug": "souffle",
+      "issue": 53,
+      "catalog_version": "2.5",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "observation": "Prior R3 source-sha-bounded native fixture receipt reused; no re-run in R4",
+      "evidence": {},
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "PASS_SCOPED_R3_FIXTURES"
+    },
+    {
+      "id": "FT-T30",
+      "slug": "storm",
+      "issue": 54,
+      "catalog_version": "1.8.0",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R4",
+      "observation": "Original hashed tar + original core runner passed observed native fixture phases as non-root",
+      "evidence": {
+        "sha256": "3958dd3c800a2e1fbcf471a10d3917945ed39f66c60c40ad94ec295a5ca9f71a",
+        "tsv_sha256": "292c8d59f27eb433987546e70630a202a6fbfe6fa95de9e32d842649b313e6c4",
+        "cases_exit": {
+          "positive": 0,
+          "negative": 0
+        },
+        "drive_verified_tool_file_id": "1jfaoT6LaDVENBmIYc0Qhv4E07_eTABk9"
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T31",
+      "slug": "sympy",
+      "issue": 55,
+      "catalog_version": "1.14.0",
+      "route": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "observation": "Actual CPython3.13 Debian13 offline isolated pip, positive/negative/error smoke on source sha; not original tar runner, no G3 oracle",
+      "evidence": {
+        "wheel_distribution": "sympy",
+        "catalog_tar_version": "1.14.0",
+        "wheel_actual_version": "1.14.0",
+        "sha256": "5e798d1875cb9e9decef1991879050962161a1896161dcafcdf20498fb6cd006",
+        "verified_drive_file_id": "1jPUnWjJvXaNFUkSjbTshT5bLsD-p7WtC",
+        "verified_name": "sympy-wheelhouse-1.14.0-py313-debian13-x86_64.zip",
+        "source_name": "sympy-whl-1.14.0-cp313-cp313-manylinux_2_39_x86_64.zip",
+        "sha256_manifest": "SHA256SUMS-ZIPS (immutable source names)",
+        "version_alias_only": false
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T32",
+      "slug": "tla-tlc",
+      "issue": 56,
+      "catalog_version": "1.8.0",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "observation": "Prior R3 source-sha-bounded native fixture receipt reused; no re-run in R4",
+      "evidence": {},
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "PASS_SCOPED_R3_FIXTURES"
+    },
+    {
+      "id": "FT-T33",
+      "slug": "tree-sitter",
+      "issue": 57,
+      "catalog_version": "0.27.2",
+      "route": "ALTERNATE_CLI_SMOKE_PASS_R4",
+      "observation": "Original CLI generated tiny grammar and parsed good source exit0 and erroneous source exit1; Python binding fixture still blocked",
+      "evidence": {
+        "archive_sha256": "03d9454d2b7914e37d9cba3d50d8a0250ee3408e65e79c4c43749e836ba3ca5d",
+        "cases_exit": {
+          "grammar_generate": 0,
+          "valid_parse": 0,
+          "invalid_parse": 1
+        },
+        "python_original_runner": "NOT_RUN_MISSING_BINDINGS"
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T34",
+      "slug": "vampire",
+      "issue": 58,
+      "catalog_version": "5.1.0",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "observation": "Prior R3 source-sha-bounded native fixture receipt reused; no re-run in R4",
+      "evidence": {},
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "PASS_SCOPED_R3_FIXTURES"
+    },
+    {
+      "id": "FT-T35",
+      "slug": "why3",
+      "issue": 59,
+      "catalog_version": "1.8.0",
+      "route": "BLOCKED_R4",
+      "observation": "27 external absolute symlinks rejected; diagnostics excluded unsafe members but program compiled absolute OCaml commands path cannot be resolved; setup exit1. No verified promotion",
+      "evidence": {
+        "archive_sha256": "6a0e3cc7a3664529ed9573613359bb0e9019d2dd38ffd521a6b4251dcf5802d1",
+        "preflight_external_symlinks": 27,
+        "diagnostic_setup_exit": 1
+      },
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "NOT_QUALIFIED"
+    },
+    {
+      "id": "FT-T36",
+      "slug": "z3",
+      "issue": 60,
+      "catalog_version": "5.4.0",
+      "route": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "observation": "Prior R3 source-sha-bounded native fixture receipt reused; no re-run in R4",
+      "evidence": {},
+      "product_gates": "NOT_QUALIFIED",
+      "original_portable_t3": "PASS_SCOPED_R3_FIXTURES"
+    }
+  ],
+  "remaining_blockers": [
+    {
+      "issue": 41,
+      "slug": "lean4",
+      "next": "provide <=128MiB hashed chunks and complete reconstruction SHA; run source fixture"
+    },
+    {
+      "issue": 59,
+      "slug": "why3",
+      "next": "repackage hermetic without 27 external links, remove compiled /usr/lib OCaml absolute dependency; bounded native prove true/false/error"
+    },
+    {
+      "issue": 45,
+      "slug": "nuxmv",
+      "next": "original PR#22 Writer add missing expect.sh, 3 test models and fix doctor wrapper LD_LIBRARY_PATH false-negative"
+    },
+    {
+      "issue": 48,
+      "slug": "prob",
+      "next": "original PR#22 Writer use writable fixture and no-deadlock positive, -strict typed exit; new source SHA and regression"
+    },
+    {
+      "issue": 57,
+      "slug": "tree-sitter",
+      "next": "original Python binding grammar fixture and valid negative contract; CLI alternate scoped only"
+    },
+    {
+      "issue": 37,
+      "slug": "fast-downward",
+      "next": "make host Python3.13 dependency explicit or provide independently verified portable runtime, re-run exact core"
+    },
+    {
+      "issue": 38,
+      "slug": "highs",
+      "next": "explicitly accept 1.16.0 alternate version or provide genuine 1.15.1 wheel; no renaming original manifest"
+    }
+  ]
+}
