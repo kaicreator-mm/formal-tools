@@ -128,13 +128,21 @@ mkdir -p "$SCRATCH/exec"; cp skills/clingo/examples/*.lp "$SCRATCH/exec/"
 # 20 UNSAT); "counterexample is a meaningful observation" per cli.mjs mapping.
 run cli-exec-solve-positive 2 $CLI exec clingo solve --timeout 45 --cwd "$SCRATCH/exec" --input positive.lp
 EXEC_LOG="$OUT/cmd-$((IDX-1))-cli-exec-solve-positive.log"
-expect_in_file cli-exec-true-exit-30 '"exit_code":30' "$EXEC_LOG"
-expect_in_file cli-exec-run-executed '"run_status":"EXECUTED"' "$EXEC_LOG"
-expect_in_file cli-exec-satisfiable '"tool_outcome":"SATISFIABLE"' "$EXEC_LOG"
+# The typed plan defaults to single-model semantics (official exit 10, carried
+# verbatim in the pretty-printed receipt).
+expect_in_file cli-exec-true-exit-10 '"exit_code": 10' "$EXEC_LOG"
+expect_in_file cli-exec-run-executed '"run_status": "EXECUTED"' "$EXEC_LOG"
+expect_in_file cli-exec-satisfiable '"tool_outcome": "SATISFIABLE"' "$EXEC_LOG"
+# All-models enumeration through the typed option path: --models 0 must reach
+# the pinned binary and yield the official all-models exit 30 with 2 answers.
+run cli-exec-solve-all-models 2 $CLI exec clingo solve --models 0 --timeout 45 --cwd "$SCRATCH/exec" --input positive.lp
+EXEC_ALL_LOG="$OUT/cmd-$((IDX-1))-cli-exec-solve-all-models.log"
+expect_in_file cli-exec-allmodels-true-exit-30 '"exit_code": 30' "$EXEC_ALL_LOG"
+expect_in_file cli-exec-allmodels-flag-reached '"--models=0"' "$EXEC_ALL_LOG"
 run cli-invoke-solve-negative 2 $CLI invoke clingo solve --timeout 45 --cwd "$SCRATCH/exec" --input negative.lp
 INVOKE_LOG="$OUT/cmd-$((IDX-1))-cli-invoke-solve-negative.log"
-expect_in_file cli-invoke-true-exit-20 '"exit_code":20' "$INVOKE_LOG"
-expect_in_file cli-invoke-unsatisfiable '"tool_status":"UNSATISFIABLE"' "$INVOKE_LOG"
+expect_in_file cli-invoke-true-exit-20 '"exit_code": 20' "$INVOKE_LOG"
+expect_in_file cli-invoke-unsatisfiable '"tool_status": "UNSATISFIABLE"' "$INVOKE_LOG"
 
 # ---- fail-closed error paths (expected exit 2) --------------------------------
 run err-unknown-operation 2 $CLI exec clingo no_such_operation --input positive.lp
