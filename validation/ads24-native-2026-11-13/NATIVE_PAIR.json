@@ -1,0 +1,279 @@
+{
+  "schema": "formal-tools/ads24-native-pair/0.1",
+  "observed_at": "2026-11-13",
+  "repository": "kaicreator-mm/formal-tools",
+  "issue": 11,
+  "source_fixture_git_blob": "33952ec8f460f022e750f91543c7dafbae35c9e2",
+  "source_generator_git_blob": "ce3a2dc2dde0ce7805c610e1caf4dfa524904e2e",
+  "source_generation": "Python port of frozen source; exact 24 input hashes must match original JS generator under CI",
+  "host": {
+    "os": "Debian GNU/Linux 13 (trixie)",
+    "arch": "x86_64",
+    "execution": "ChatGPT container",
+    "user": "unprivileged uid/gid 65534 for solver child process",
+    "bounds": "6s wall, 3s CPU, 1GiB address space, 64 FD, 1MiB file size per process, network unavailable",
+    "independent_process_attestation": false
+  },
+  "solvers": [
+    {
+      "id": "z3",
+      "version": "5.4.0",
+      "archive_sha256": "039d3f8c75e92ceb196bb1291d8602340541f1b1be2f0a1acf32d3c025f8ed16",
+      "executable_sha256": "e9d7e6e6d76c81b5ea3f06d165fc4cfd8afab92b74cdf94417380b5eed10845d",
+      "version_stdout_sha256": "9af7c6f186418585f022fd2d18eb2d278e14ad21731bf3339f3cbd1f78500e7a",
+      "input_method": "-smt2 file",
+      "all_24_exit_zero": true,
+      "all_24_stderr_empty": true,
+      "full_host_receipt_sha256": "98a6bd7e9aaf86d47934aaa47da22e9b19a7780b0c0d12600f40399bf990ee6d"
+    },
+    {
+      "id": "cvc5",
+      "version": "1.4.2",
+      "archive_sha256": "b7a5f6d1740086347d8055dab7fd1216960e19ab7a769fa2b15c1ec76ed0c193",
+      "executable_sha256": "6aecddf466552b83bb5883756c7955e0c9d5ddcc6d7f45b48c2f6e06a741b102",
+      "input_method": "--lang smt2 file",
+      "all_24_exit_zero": true,
+      "all_24_stderr_empty": true,
+      "full_host_receipt_sha256": "8758f885e53011ea8913ae6faa94e9539db0721a993aacea95bb9cb1df075d7f"
+    }
+  ],
+  "stdout_sha256": {
+    "SAT": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+    "UNSAT": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+    "stderr_empty": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "observations": [
+    {
+      "id": "faithful__positive-sequential-same-writer",
+      "input_sha256": "583b0a01c2e9b4ffcba3d0929ec156249fb34caec7deabc27f4d4e615087814b",
+      "status": "SAT",
+      "z3_status": "SAT",
+      "cvc5_status": "SAT",
+      "exit_code": 0
+    },
+    {
+      "id": "faithful__positive-parallel-distinct-writers",
+      "input_sha256": "87ad2e7625b439f4f68f20735120d3c1955596acd36e563d1a422373ae50c1c7",
+      "status": "SAT",
+      "z3_status": "SAT",
+      "cvc5_status": "SAT",
+      "exit_code": 0
+    },
+    {
+      "id": "faithful__negative-overlap-same-writer",
+      "input_sha256": "3cda987ae8648719715437021ad7cb565e8f17662fac41d12771a77c1ead0659",
+      "status": "UNSAT",
+      "z3_status": "UNSAT",
+      "cvc5_status": "UNSAT",
+      "exit_code": 0
+    },
+    {
+      "id": "faithful__negative-cycle",
+      "input_sha256": "322c6bdbccb994e2b61229b8d451e1642e2083b586ed8db83cf2670c109487e8",
+      "status": "UNSAT",
+      "z3_status": "UNSAT",
+      "cvc5_status": "UNSAT",
+      "exit_code": 0
+    },
+    {
+      "id": "faithful__negative-predecessor-order",
+      "input_sha256": "f5c312b7eb50c2a1c2c967cda1636f6841b1a6b47fff62fb99f96a4b3a7a1dcd",
+      "status": "UNSAT",
+      "z3_status": "UNSAT",
+      "cvc5_status": "UNSAT",
+      "exit_code": 0
+    },
+    {
+      "id": "faithful__negative-zero-duration",
+      "input_sha256": "5613cdb13d2c7f9ad52fee766a1f0cca5e4ee9ef1fee5139ec51ba6680c9ad12",
+      "status": "UNSAT",
+      "z3_status": "UNSAT",
+      "cvc5_status": "UNSAT",
+      "exit_code": 0
+    },
+    {
+      "id": "weak-omits-writer__positive-sequential-same-writer",
+      "input_sha256": "6d0062b73d7344e111697bad7ef33629dcfe19b3fbc95e1ce5d3f92c25e13d9a",
+      "status": "SAT",
+      "z3_status": "SAT",
+      "cvc5_status": "SAT",
+      "exit_code": 0
+    },
+    {
+      "id": "weak-omits-writer__positive-parallel-distinct-writers",
+      "input_sha256": "87ad2e7625b439f4f68f20735120d3c1955596acd36e563d1a422373ae50c1c7",
+      "status": "SAT",
+      "z3_status": "SAT",
+      "cvc5_status": "SAT",
+      "exit_code": 0
+    },
+    {
+      "id": "weak-omits-writer__negative-overlap-same-writer",
+      "input_sha256": "2edd1ab9c229220c56b93aef38e94f6bb6797de8fbb41f7429c804d41534f38e",
+      "status": "SAT",
+      "z3_status": "SAT",
+      "cvc5_status": "SAT",
+      "exit_code": 0
+    },
+    {
+      "id": "weak-omits-writer__negative-cycle",
+      "input_sha256": "322c6bdbccb994e2b61229b8d451e1642e2083b586ed8db83cf2670c109487e8",
+      "status": "UNSAT",
+      "z3_status": "UNSAT",
+      "cvc5_status": "UNSAT",
+      "exit_code": 0
+    },
+    {
+      "id": "weak-omits-writer__negative-predecessor-order",
+      "input_sha256": "f5c312b7eb50c2a1c2c967cda1636f6841b1a6b47fff62fb99f96a4b3a7a1dcd",
+      "status": "UNSAT",
+      "z3_status": "UNSAT",
+      "cvc5_status": "UNSAT",
+      "exit_code": 0
+    },
+    {
+      "id": "weak-omits-writer__negative-zero-duration",
+      "input_sha256": "5613cdb13d2c7f9ad52fee766a1f0cca5e4ee9ef1fee5139ec51ba6680c9ad12",
+      "status": "UNSAT",
+      "z3_status": "UNSAT",
+      "cvc5_status": "UNSAT",
+      "exit_code": 0
+    },
+    {
+      "id": "overstrong-global-exclusion__positive-sequential-same-writer",
+      "input_sha256": "583b0a01c2e9b4ffcba3d0929ec156249fb34caec7deabc27f4d4e615087814b",
+      "status": "SAT",
+      "z3_status": "SAT",
+      "cvc5_status": "SAT",
+      "exit_code": 0
+    },
+    {
+      "id": "overstrong-global-exclusion__positive-parallel-distinct-writers",
+      "input_sha256": "08d0b3868b5b142afe2477593e72ce8f6355d3e1e766e3bdcaf2de725b58437d",
+      "status": "UNSAT",
+      "z3_status": "UNSAT",
+      "cvc5_status": "UNSAT",
+      "exit_code": 0
+    },
+    {
+      "id": "overstrong-global-exclusion__negative-overlap-same-writer",
+      "input_sha256": "3cda987ae8648719715437021ad7cb565e8f17662fac41d12771a77c1ead0659",
+      "status": "UNSAT",
+      "z3_status": "UNSAT",
+      "cvc5_status": "UNSAT",
+      "exit_code": 0
+    },
+    {
+      "id": "overstrong-global-exclusion__negative-cycle",
+      "input_sha256": "c4c8052b3f3047063e8f58d2fc739642374ca0a455e38196259b9a5fd6ba9339",
+      "status": "UNSAT",
+      "z3_status": "UNSAT",
+      "cvc5_status": "UNSAT",
+      "exit_code": 0
+    },
+    {
+      "id": "overstrong-global-exclusion__negative-predecessor-order",
+      "input_sha256": "a24df9bdc6847c2decd758662a15f6b6371779e8ebecb5ba6f19d2699407d3ba",
+      "status": "UNSAT",
+      "z3_status": "UNSAT",
+      "cvc5_status": "UNSAT",
+      "exit_code": 0
+    },
+    {
+      "id": "overstrong-global-exclusion__negative-zero-duration",
+      "input_sha256": "5613cdb13d2c7f9ad52fee766a1f0cca5e4ee9ef1fee5139ec51ba6680c9ad12",
+      "status": "UNSAT",
+      "z3_status": "UNSAT",
+      "cvc5_status": "UNSAT",
+      "exit_code": 0
+    },
+    {
+      "id": "vacuous-always-false__positive-sequential-same-writer",
+      "input_sha256": "a05bad8c89b97199ceac9fbebf7a2edccb93eab520c73ac22053bd41b7a626eb",
+      "status": "UNSAT",
+      "z3_status": "UNSAT",
+      "cvc5_status": "UNSAT",
+      "exit_code": 0
+    },
+    {
+      "id": "vacuous-always-false__positive-parallel-distinct-writers",
+      "input_sha256": "99c8b8b884e97b9316fb0b846a0e8741cec980308b0e4394c926caca7ae29e4d",
+      "status": "UNSAT",
+      "z3_status": "UNSAT",
+      "cvc5_status": "UNSAT",
+      "exit_code": 0
+    },
+    {
+      "id": "vacuous-always-false__negative-overlap-same-writer",
+      "input_sha256": "602f7f8f1f66ca71c369e52f3f676b4f3941addab4767e7c67915e101cc49514",
+      "status": "UNSAT",
+      "z3_status": "UNSAT",
+      "cvc5_status": "UNSAT",
+      "exit_code": 0
+    },
+    {
+      "id": "vacuous-always-false__negative-cycle",
+      "input_sha256": "560fe3f100ef9abf979aeb0bbc7d7a6410756619616eddda43f1c1d6ae85708a",
+      "status": "UNSAT",
+      "z3_status": "UNSAT",
+      "cvc5_status": "UNSAT",
+      "exit_code": 0
+    },
+    {
+      "id": "vacuous-always-false__negative-predecessor-order",
+      "input_sha256": "1850e84b8a1df7bde7d5b1974ccf222052a125e71f385734dbc256eb28cc0add",
+      "status": "UNSAT",
+      "z3_status": "UNSAT",
+      "cvc5_status": "UNSAT",
+      "exit_code": 0
+    },
+    {
+      "id": "vacuous-always-false__negative-zero-duration",
+      "input_sha256": "eff168e58d9b9ec34a8215d5300a190d17b3aa838bbfad64638a1905e0d03782",
+      "status": "UNSAT",
+      "z3_status": "UNSAT",
+      "cvc5_status": "UNSAT",
+      "exit_code": 0
+    }
+  ],
+  "summary": {
+    "z3": {
+      "SAT": 6,
+      "UNSAT": 18
+    },
+    "cvc5": {
+      "SAT": 6,
+      "UNSAT": 18
+    },
+    "cross_solver_agree": 24,
+    "diagnostics": {
+      "faithful": "MATCHES_FROZEN_SAMPLES_UNATTESTED",
+      "weak-omits-writer": "REJECT_WEAK",
+      "overstrong-global-exclusion": "REJECT_OVERSTRONG",
+      "vacuous-always-false": "REJECT_VACUOUS"
+    }
+  },
+  "scope": {
+    "actual_native_processes_executed": true,
+    "synthetic_oracle_independently_certified": false,
+    "binary_supplier_or_process_independently_attested": false,
+    "original_business_claim": "UNVERIFIED",
+    "solution_promotable": false,
+    "full_G3_qualification": false
+  },
+  "original_js_runner_replay": {
+    "source_path": "benchmarks/llm-methods/g3/ads-native-replay.mjs",
+    "source_git_blob": "9794ec4b62d3f5e9c22fa1f45ee3999565aa9a68",
+    "host": "Current ChatGPT Debian13 x86_64 container",
+    "execution": "Node v22.16.0 native typed planNative/executeNativePlan as uid/gid 65534 for all 48 child runs",
+    "z3_full_receipt_sha256": "51ab504961bcf15fa973bb445dbac40c31122d716efb79d040e09caf211e48df",
+    "cvc5_full_receipt_sha256": "1300ab973a4662dac34c655d1c1b30194aa1786614576721647559f99d703702",
+    "z3_cases": 24,
+    "cvc5_cases": 24,
+    "paired_status_agreement": 24,
+    "claim_verdict": "UNVERIFIED",
+    "host_process_attested": false,
+    "independent_semantic_oracle": "NOT_RUN",
+    "note": "Original source generator and original typed native runner were directly executed in addition to independent Python-port recheck. Full output receipts are anchored by digest but require authorized artifact storage for separate reviewer readback; this file is the stable compact observed metadata."
+  }
+}
