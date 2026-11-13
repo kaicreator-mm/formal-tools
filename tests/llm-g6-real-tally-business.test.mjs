@@ -82,6 +82,11 @@ test("G6 real persisted G4 candidate -> Tally Function over 4 adverse states",
      assert.equal(result.did_invoke_actual_domain_business_function,true);
      assert.equal(result.did_invoke_dis_aot_sdk_host,false);
      assert.equal(result.function_calls,4);
+     assert.equal(result.consumer_execution.source_commit,null);
+     assert.match(result.consumer_execution.driver_git_blob,/^[a-f0-9]{40}$/);
+     assert.match(result.consumer_execution.test_git_blob,/^[a-f0-9]{40}$/);
+     assert.equal(result.consumer_execution.source_bytes_executed_pinned,true);
+     assert.equal(result.consumer_execution.source_commit_independently_attested,false);
      assert.equal(result.native_original_faithful_cases,6);
      assert.equal(result.host_invocations,0);
      assert.equal(result.effect_dispatched,false);
@@ -107,6 +112,8 @@ test("G6 fail-closed real call refuses missing or malformed source head",async()
      formal_head:"not-a-sha"}),/exact formal-tools source HEAD/);
    await assert.rejects(()=>runRealTallyBusinessConsumption({store_dir:dir,
      formal_head:"ABCDEF123456789012345678901234567890ABCD"}),/exact formal-tools source HEAD/);
+   await assert.rejects(()=>runRealTallyBusinessConsumption({store_dir:dir,
+     formal_head:HEAD,consumer_execution_head:"forged"}),/consumer_execution_head/);
  }finally{rmSync(dir,{recursive:true,force:true});}
 });
 
@@ -117,13 +124,15 @@ test("G6 real two-argument CLI executes the exact pinned Tally Function and refu
     const script=fileURLToPath(new URL(
       "../benchmarks/llm-methods/g6/real-tally-business-consumer.mjs",import.meta.url));
     try{
-      const good=spawnSync(process.execPath,[script,dir,HEAD],
+      const good=spawnSync(process.execPath,[script,dir,HEAD,HEAD],
         {encoding:"utf8",timeout:10000,maxBuffer:131072});
       assert.equal(good.status,0,good.stderr);
       const result=JSON.parse(good.stdout);
       assert.equal(result.status,"PASSED_ENGINEERING_ONLY");
       assert.equal(result.function_calls,4);
       assert.equal(result.g6_accepted,false);
+      assert.equal(result.consumer_execution.source_commit,HEAD);
+      assert.equal(result.consumer_execution.source_commit_independently_attested,false);
       const bad=spawnSync(process.execPath,[script,dir],
         {encoding:"utf8",timeout:3000,maxBuffer:8192});
       assert.equal(bad.status,1);
