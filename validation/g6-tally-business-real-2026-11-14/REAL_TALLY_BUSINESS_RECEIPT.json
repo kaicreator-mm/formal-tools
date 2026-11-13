@@ -1,0 +1,117 @@
+{
+  "schema": "formal-tools/g6-real-tally-business-consumer/0.1",
+  "source_head": "ed6d0fbb6815b6d9445a5deacf8dab56de003c84",
+  "candidate_sha256": "ba06f7e0ebc3ba7d39e4f9adf07561cb9ed2f1304c960e6090d4a64d06746aed",
+  "host": {
+    "platform": "linux",
+    "arch": "x64",
+    "node": "v22.16.0",
+    "uid": 65534,
+    "gid": 65534,
+    "independently_attested": false
+  },
+  "source": {
+    "repository": "kaicreator-mm/tally",
+    "commit": "e988321439f65b55936a691c02250b6d62a29409",
+    "path": "packages/tally-engineering-business/src/index.mjs",
+    "git_blob": "54015fb63ffb13b4f4e562f660d2172098b5f7f4",
+    "original_dis_consumer": "kaicreator-mm/domain-harness",
+    "original_dis_consumer_manifest_blob": "39e14468723c4211d1e55d6a7c3aa1a16204c5a8",
+    "business_function": "assessTaskEvidence"
+  },
+  "tally_source_sha256": "dbcd308f74637a8e45f58fefb8a138604ad7371bccd64b257fa69aa51d71531e",
+  "native_original_faithful_cases": 6,
+  "original_claim": "UNVERIFIED",
+  "function_calls": 4,
+  "host_invocations": 0,
+  "effect_dispatched": false,
+  "did_invoke_actual_domain_business_function": true,
+  "did_invoke_dis_aot_sdk_host": false,
+  "independent_professional_oracle": false,
+  "solution_promotable": false,
+  "replay_allowed": false,
+  "g6_accepted": false,
+  "consumer_preflight": {
+    "schema": "formal-tools/dis-v020-preflight/0.1",
+    "status": "REPLAY_BLOCKED_UNQUALIFIED",
+    "reason": "SOURCE_MODEL_ORACLE_HOST_TOOL_NOT_QUALIFIED",
+    "candidate_sha256": "c8857e281ff5dcf26a1336a1f24f576efacb9cb23be5c2699d3b7e397fa1e6bd",
+    "provenance_sha256": "d56a79cdc21e8f6803711ce77dd69e06a6d90605aea8da93ad287cc6c5484f13",
+    "consumer": {
+      "repository": "kaicreator-mm/domain-harness",
+      "pr": 1497,
+      "source_head": "f21514deb0a4b5b4b2d6e3dae2cd5e8ec2f71120",
+      "example_path": "examples/dis-v020-native-sdk/bounded-engineering-demo.mjs",
+      "example_blob": "e44e2be5b66ad9e6b8961c4ec2cfdedadc0467c9",
+      "target": "linux/x64/node",
+      "contract": "dis.v0.2"
+    },
+    "kind": "UNKNOWN",
+    "authority": "NONE",
+    "evidence": {
+      "attested": false,
+      "independent_oracle": false,
+      "dis_host_executed": false,
+      "source_authority": "NOT_ADMITTED"
+    },
+    "claim_result": "UNVERIFIED",
+    "replay_allowed": false,
+    "solution_promotable": false,
+    "effect_dispatched": false,
+    "host_invocations": 0,
+    "g6_accepted": false
+  },
+  "phases": [
+    {
+      "phase": "unqualified-candidate",
+      "store_status": "REPLAY_BLOCKED_UNQUALIFIED",
+      "dependenciesComplete": false,
+      "tally_result": {
+        "state": "UNQUALIFIED_INPUT",
+        "reason": "DEPENDENCIES_UNVERIFIED",
+        "admitted": false,
+        "taskPass": false
+      },
+      "actual_business_function_called": true
+    },
+    {
+      "phase": "tool-version-stale",
+      "store_status": "STALE",
+      "dependenciesComplete": false,
+      "tally_result": {
+        "state": "UNQUALIFIED_INPUT",
+        "reason": "DEPENDENCIES_UNVERIFIED",
+        "admitted": false,
+        "taskPass": false
+      },
+      "actual_business_function_called": true
+    },
+    {
+      "phase": "forged-dependencies-complete",
+      "store_status": "REPLAY_BLOCKED_UNQUALIFIED",
+      "dependenciesComplete": true,
+      "tally_result": {
+        "state": "OBSERVED_INPUT_ONLY",
+        "reason": "REQUIRES_NATIVE_CLAIM_AND_KERNEL_ADMISSION",
+        "issueRef": "https://github.com/kaicreator-mm/formal-tools/issues/11",
+        "sourceSha": "ed6d0fbb6815b6d9445a5deacf8dab56de003c84",
+        "admitted": false,
+        "taskPass": false
+      },
+      "actual_business_function_called": true
+    },
+    {
+      "phase": "post-revocation",
+      "store_status": "INVALIDATED",
+      "dependenciesComplete": false,
+      "tally_result": {
+        "state": "UNQUALIFIED_INPUT",
+        "reason": "DEPENDENCIES_UNVERIFIED",
+        "admitted": false,
+        "taskPass": false
+      },
+      "actual_business_function_called": true
+    }
+  ],
+  "status": "PASSED_ENGINEERING_ONLY"
+}
