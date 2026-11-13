@@ -244,6 +244,9 @@ export function toolRuntimeProfile(tool) {
     operationCount:Object.keys(record.operations).length
   };
 }
+/** @param {string} tool
+ *  @param {Record<string,string|undefined>} [env]
+ */
 export function planToolProbe(tool,env={}) {
   const record=toolRuntimeProfile(tool),runtime=record.runtime,missing=[];
   if(!env||typeof env!=="object"||Array.isArray(env))throw new TypeError("environment must be an object");
