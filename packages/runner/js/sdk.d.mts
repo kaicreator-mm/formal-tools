@@ -135,6 +135,7 @@ export interface PortfolioGateReceipt {
   runner_sha256?: string;
   metadata_sha256?: string;
   fixture_contract_sha256?: string;
+  receipt_sha256?: string | null;
   streams?: { stdout: string; stderr: string; stdout_sha256: string; stderr_sha256: string };
   cases?: { phase: string; exit_code: number; duration_ms: number;
     semantic_pattern_matched: boolean; exit_contract_matched: boolean; label: string }[];
