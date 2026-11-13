@@ -260,5 +260,20 @@
     "original_business_claim": "UNVERIFIED",
     "solution_promotable": false,
     "full_G3_qualification": false
+  },
+  "original_js_runner_replay": {
+    "source_path": "benchmarks/llm-methods/g3/ads-native-replay.mjs",
+    "source_git_blob": "9794ec4b62d3f5e9c22fa1f45ee3999565aa9a68",
+    "host": "Current ChatGPT Debian13 x86_64 container",
+    "execution": "Node v22.16.0 native typed planNative/executeNativePlan as uid/gid 65534 for all 48 child runs",
+    "z3_full_receipt_sha256": "51ab504961bcf15fa973bb445dbac40c31122d716efb79d040e09caf211e48df",
+    "cvc5_full_receipt_sha256": "1300ab973a4662dac34c655d1c1b30194aa1786614576721647559f99d703702",
+    "z3_cases": 24,
+    "cvc5_cases": 24,
+    "paired_status_agreement": 24,
+    "claim_verdict": "UNVERIFIED",
+    "host_process_attested": false,
+    "independent_semantic_oracle": "NOT_RUN",
+    "note": "Original source generator and original typed native runner were directly executed in addition to independent Python-port recheck. Full output receipts are anchored by digest but require authorized artifact storage for separate reviewer readback; this file is the stable compact observed metadata."
   }
 }
