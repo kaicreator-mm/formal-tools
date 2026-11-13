@@ -1,0 +1,35 @@
+{
+  "schema": "formal-tools/g5-hard-r1-llm-run-config/0.1",
+  "label": "FORMAL_TOOLS_I11_G5_HARD_R1_REAL_LLM",
+  "repo": "kaicreator-mm/formal-tools",
+  "issue": 11,
+  "pr": 74,
+  "exact_head": "50a2e77a73e75d00fe79272e9196f84f5ced7850",
+  "driver": "benchmarks/llm-methods/g5/hard-paired-run.mjs",
+  "protocol_id": "g5-hard-r1-20-cases-deepseek-flash-v1",
+  "declared_before_first_call": "2026-11-13T17:15:02.072Z",
+  "cost_cap": {
+    "hard_cap_usd": 0.5,
+    "basis": "40 calls x worst-case (2k prompt+4096 completion) ~= $0.22 at frozen pricing (input $0.3/M, output $1.2/M); cap = 2x worst case, ~15x expected (~$0.03)",
+    "enforcement": "external watchdog polls traces/ cumulative cost_usd from per-call usage; exceeding cap kills the driver process immediately; run recorded ABORTED_COST_CAP",
+    "anomaly_stop": "driver assert-failure (HTTP non-2xx, transport error, served-model mismatch, truncation, missing usage) aborts the whole run immediately with exit 1; no partial scoring"
+  },
+  "retry_policy": {
+    "retries": 0,
+    "blind_retry": "forbidden",
+    "restart": "at most one restart, ONLY if 0 calls succeeded AND cause is environmental (DNS/connect refused); otherwise abort is final",
+    "proxy_fallback": "single fallback with NODE_USE_ENV_PROXY=1 + local proxy 127.0.0.1:10808 only under the same 0-calls condition"
+  },
+  "key_handling": "DEEPSEEK_API_KEY from process env only; never logged, never written to any file; driver serializes request body without headers",
+  "native_reuse": "20x2 native receipts reused from committed validation/g5-hard-r1-native-2026-11-13/REAL_JS_NATIVE_UID65534.json (git blob d74a27c1c13f497a46fdec151c5f234efc88af2f); native NOT re-run",
+  "executor": {
+    "host": "Windows win32 x64, Git Bash",
+    "node": "v26.13.0",
+    "role": "independent non-Writer Source-First reviewer + real-run executor (R7 session)"
+  },
+  "review": {
+    "p0": 0,
+    "p1": 0,
+    "labels_recheck": "independent checker agreed 20/20 authored labels"
+  }
+}

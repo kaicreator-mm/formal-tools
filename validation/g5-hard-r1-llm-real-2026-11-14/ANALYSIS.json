@@ -1,0 +1,343 @@
+{
+  "schema": "formal-tools/g5-hard-r1-llm-independent-recompute/0.1",
+  "generated_at": "2026-11-13T17:19:24.245Z",
+  "evidence_dir": "g5-hard-r1-llm-real-2026-11-14",
+  "traces_reviewed": 40,
+  "findings": [
+    "none"
+  ],
+  "independent_verdict": "RECOMPUTED_FROM_RAW_TRACES",
+  "summary": {
+    "baseline": {
+      "cases": 20,
+      "correct": 20,
+      "classified": 20,
+      "accuracy_all_cases": 1,
+      "accuracy_classified": 1,
+      "false_pass": 0,
+      "false_pass_rate_on_negatives": 0,
+      "false_reject": 0,
+      "unknown": 0,
+      "coverage": 1,
+      "cost_usd": 0.015519899999999998,
+      "latency_ms": 73203,
+      "input_tokens": 6237,
+      "output_tokens": 11374,
+      "per_case": [
+        {
+          "case_id": "n-disjoint-writers-wrong-edge",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "99442257cfb88547e5fadd81a264950cf2954767356c7c86a2eb94881f26c1b7"
+        },
+        {
+          "case_id": "n-eight-task-hidden-race",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "d774e0012cc8751b2cb854ff2da15f2852a083eb0c3c32ea4bd68fee1e3c215a"
+        },
+        {
+          "case_id": "n-hidden-writer-fork-collision",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "fd7dbeb2416cb2e427d1c47ccef2bb12ed427b318f5542de89cf373fcaf01aaf"
+        },
+        {
+          "case_id": "n-hidden-zero-length",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "10f4ffea7821056a0cfd0a01a7cb8085db4fa0b16fc45a234fd8b13dc5b2c15f"
+        },
+        {
+          "case_id": "n-long-interval-tail-overlap",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "2ab0e9cc4656e5319b046e0f88c2e8bdfb0d2a70bf8b2389f8528d229b859e1f"
+        },
+        {
+          "case_id": "n-one-tick-writer-intersection",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "aa2eb10fd4bb2afc695ec85cd1fdffda4d902c43cba0ebc7d30ac35734d406f4"
+        },
+        {
+          "case_id": "n-precedence-off-by-one",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "95a914d86ca7a58d6f91f30c0331a5fac29e0bc9499c5e6224195bff2d74d865"
+        },
+        {
+          "case_id": "n-reversed-window",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "32226386482bd540028b408f407453620a06b81eb9a65c5dddf3ece3a7e53c4f"
+        },
+        {
+          "case_id": "n-self-loop",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "1630a0d58f6f1500708bcca58ea663cd728d3575e4e630b1a046bb5b2c665a88"
+        },
+        {
+          "case_id": "n-three-cycle",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "951470cc7385c0530181ebcea3037290934ab1ea431e9573571a2383bca187cc"
+        },
+        {
+          "case_id": "p-adjacent-multiwriter",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "ae6fb9d61485466aebb1838a4854379812e0af22069ca12607cda6d87c3c8c76"
+        },
+        {
+          "case_id": "p-case-sensitive-resource",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "c9a1d693824b2f843317652140ad56fe8f3653fcdd3951baef015318d32a45a3"
+        },
+        {
+          "case_id": "p-eight-interleaved-writers",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "9a140e18103f0f14f2b1ec05ce839b6dbfa5ef9c4b941a8df562a22d6e3e3808"
+        },
+        {
+          "case_id": "p-fork-join-boundary",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "4d9e3770b29af0be36c609b3c3c0a3ee302dc0ef8bae8bfa8c1a313922f7d3e2"
+        },
+        {
+          "case_id": "p-negative-time-adjacent",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "bd38eb9c217c74b8a6fc42e748d8c4ee32ec71c3cf245d2f2c6e78f0872dd6a8"
+        },
+        {
+          "case_id": "p-no-edge-same-writer-sequence",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "853c945c306e087e2a1e1b4ac8d67fa1f383c1eac1aae0ee347b5e38ca4eb2ff"
+        },
+        {
+          "case_id": "p-overlap-unrelated-only",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "d92a275902b92b2d5235f9bf02150200aa6ca2bb8ce012c439ee1db5eb1b6d57"
+        },
+        {
+          "case_id": "p-parallel-three-distinct",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "c2f3c1d5857f31edd29d79de246906dc9d1277bfd51e0c811ceb80773806ee03"
+        },
+        {
+          "case_id": "p-same-writer-separated-by-other",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "f8f4a16a6e0e513c4f85240b3ea219bcdb6a244a9eb2f9e84e47353c1ac59b36"
+        },
+        {
+          "case_id": "p-upper-time-bound",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "d3d86e878de2b0d22b5efaf0503113c92c063584a37b56c7b440958faf249970"
+        }
+      ]
+    },
+    "augmented": {
+      "cases": 20,
+      "correct": 20,
+      "classified": 20,
+      "accuracy_all_cases": 1,
+      "accuracy_classified": 1,
+      "false_pass": 0,
+      "false_pass_rate_on_negatives": 0,
+      "false_reject": 0,
+      "unknown": 0,
+      "coverage": 1,
+      "cost_usd": 0.015243,
+      "latency_ms": 60425,
+      "input_tokens": 13238,
+      "output_tokens": 9393,
+      "per_case": [
+        {
+          "case_id": "n-disjoint-writers-wrong-edge",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "8f23d6dee9af7417df7f6a9f36e72826079f608626717d3c7170a4c0b76c3ed2"
+        },
+        {
+          "case_id": "n-eight-task-hidden-race",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "dbb5c78bfae37bdd0be08f4778dd1a01c7225a4303e95e85d9db061102b39a72"
+        },
+        {
+          "case_id": "n-hidden-writer-fork-collision",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "5e7c628457b7fbad1617b9e0f181f396db8f829ee9eedcfc8674c7fa9fade197"
+        },
+        {
+          "case_id": "n-hidden-zero-length",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "e5ba416e821de63d8e7df05d70286d7b09a9a242150d699b8e7a2c14a9f378bc"
+        },
+        {
+          "case_id": "n-long-interval-tail-overlap",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "b2cbbebf7087b5a5aeac1109c1300081c2c47e4f3f1ff4be27382c0aca423191"
+        },
+        {
+          "case_id": "n-one-tick-writer-intersection",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "576fbc0fdb298ecf54afc9567539ed64c385d2e7130b97635abaef06714f4b0b"
+        },
+        {
+          "case_id": "n-precedence-off-by-one",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "2571c88d32c2a4fe3f006f8188e061952cdf6621809948fdd1870460a875eec7"
+        },
+        {
+          "case_id": "n-reversed-window",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "6644ea8c886cc7d70258faf5947455b38bf54739a01641e16e59c3f4ca20213e"
+        },
+        {
+          "case_id": "n-self-loop",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "f6bc74178a5679b7ec77be067d60bbb06206ef3e8243e4c3cd0a2e1b186f9472"
+        },
+        {
+          "case_id": "n-three-cycle",
+          "expected": "FAIL",
+          "prediction": "FAIL",
+          "match": true,
+          "trace_sha256": "191c93b72e71435819d5dd003058aa9a05311124495715439b2e2f4824332e14"
+        },
+        {
+          "case_id": "p-adjacent-multiwriter",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "10e4deb542ea048628fe6bbd4e5681fad4c1a96282998c74540ab25eb38a4552"
+        },
+        {
+          "case_id": "p-case-sensitive-resource",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "bc3f4b4e982c5555312d89c67376a306fe403fc59a086e29144a27ea8cb6bbd5"
+        },
+        {
+          "case_id": "p-eight-interleaved-writers",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "982f2a68975d13500d03ca64e587b9ada748e407c6f0992f0bc4f4a52103a23c"
+        },
+        {
+          "case_id": "p-fork-join-boundary",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "c57e4030e9f01c37a03d5605edcb81e9b0fea688362ba9766d0b2bf1ae0480ff"
+        },
+        {
+          "case_id": "p-negative-time-adjacent",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "6d7b0e6ccdc6ba4c41aac02d3bf8d94cbafb799562df11cb2bcdf966a2d03e22"
+        },
+        {
+          "case_id": "p-no-edge-same-writer-sequence",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "89f82e98ffeaf3f3b9d3e42401fe46e66a06a9dff014f7d015ae48f06e4d16ee"
+        },
+        {
+          "case_id": "p-overlap-unrelated-only",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "a93c1c885f67bd4bb60e21b6a4f66a512868bdb450a9fd86955454c941bd826f"
+        },
+        {
+          "case_id": "p-parallel-three-distinct",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "ee037c105a474a2a0d19b2a1e00f14afa72ed01ae7588178046957e1953a8057"
+        },
+        {
+          "case_id": "p-same-writer-separated-by-other",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "98d0c07feb804c8680ed556599c1b2f415ce52cdc611e608f88ff2ac20db4dbc"
+        },
+        {
+          "case_id": "p-upper-time-bound",
+          "expected": "PASS",
+          "prediction": "PASS",
+          "match": true,
+          "trace_sha256": "1211da6a15128724f0a4beff6cc8e1f878e34d6f2081a8f5f51fbacbf6380acc"
+        }
+      ]
+    },
+    "deltas": {
+      "accuracy_all_cases": 0,
+      "false_pass": 0,
+      "unknown": 0,
+      "coverage": 0,
+      "cost_usd": -0.00027689999999999833,
+      "latency_ms": -12778
+    }
+  },
+  "status_check": {
+    "scorer_status": "SCORED_UNATTESTED",
+    "scorer_g5_accepted": false,
+    "cost_cap_usd": 0.5,
+    "total_cost_usd": 0.030762899999999996,
+    "cap_headroom_usd": 0.4692371
+  }
+}

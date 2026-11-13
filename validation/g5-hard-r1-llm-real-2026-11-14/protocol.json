@@ -1,0 +1,31 @@
+{
+  "schema": "formal-tools/g5-hard-real-protocol/0.1",
+  "protocol_id": "g5-hard-r1-20-cases-deepseek-flash-v1",
+  "frozen_before_model_calls": "2026-11-13T17:15:18.208Z",
+  "suite": "HARD_R1",
+  "source_sha256": "b4dce007e9ef1f85e52364a15558c21560e05fe38a1641509ff575fd801fa6ba",
+  "requested_model": "deepseek-flash",
+  "endpoint": "https://api.deepseek.com/chat/completions",
+  "config": {
+    "model_id": "deepseek-flash",
+    "model_version": "deepseek-flash-deepseek-v4.1-flash-1017",
+    "prompt_template_sha256": "5a3d05d703031cd439f7e438fa5f4410653dc675595c9987fb1de768a89860fb",
+    "seed": 0,
+    "temperature": 0,
+    "max_output_tokens": 4096
+  },
+  "prompt_template_reference": "real-paired-run.mjs/PROMPT_TEMPLATE",
+  "tool_native_pair": "20 real z3 + 20 real cvc5 pinned prior receipts",
+  "calls": {
+    "count": 40,
+    "retries": 0,
+    "per_arm": 20
+  },
+  "pricing_source": "real-paired-run.mjs pinned DeepSeek peak prices, estimate only",
+  "key": {
+    "env": "DEEPSEEK_API_KEY",
+    "logged": false
+  },
+  "independent_semantic_oracle": false,
+  "actual_qualification": "NOT_RUN"
+}
