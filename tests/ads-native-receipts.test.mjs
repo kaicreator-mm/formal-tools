@@ -7,13 +7,17 @@ import { generateAdsMatrix, scoreAdsMatrix } from "../benchmarks/llm-methods/g3/
 const hash=x=>createHash("sha256").update(x).digest("hex");
 const gitBlob=x=>createHash("sha1").update(Buffer.concat([
   Buffer.from("blob "+x.length+"\0"),x])).digest("hex");
+// Checkout-agnostic: hash the git-object (LF) byte form, not the working-tree form,
+// so autocrlf checkouts on Windows produce the same blob identity as CI Linux.
+// Normalization touches only EOL bytes, so any real content edit still fails the comparison.
+const gitBytes=x=>Buffer.from(x.toString("utf8").replace(/\r\n/g,"\n"),"utf8");
 const receipt=JSON.parse(readFileSync(new URL("../validation/ads24-native-2026-11-13/NATIVE_PAIR.json",import.meta.url),"utf8"));
 
 test("G3 original git bytes and all 24 native replay input hashes match frozen source generator",()=>{
  const fixture=readFileSync(new URL("../benchmarks/llm-methods/r0/spec-fidelity-cases.json",import.meta.url));
  const generator=readFileSync(new URL("../benchmarks/llm-methods/g3/ads-native-matrix.mjs",import.meta.url));
- assert.equal(gitBlob(fixture),receipt.source_fixture_git_blob);
- assert.equal(gitBlob(generator),receipt.source_generator_git_blob);
+ assert.equal(gitBlob(gitBytes(fixture)),receipt.source_fixture_git_blob);
+ assert.equal(gitBlob(gitBytes(generator)),receipt.source_generator_git_blob);
  const matrix=generateAdsMatrix();
  assert.equal(receipt.observations.length,24);
  assert.equal(matrix.entries.length,24);
