@@ -265,7 +265,8 @@ export function planToolProbe(tool,env={}) {
     // Optional trusted-host direct executable; the canonical Debian13 archive
     // contains a native clingo 5.8.3 binary, not a Python importable module.
     const bin=String(env.FORMAL_CLINGO_BIN);
-    if(!(/^(?:\/|[A-Za-z]:[\\\\/])/.test(bin))||bin.includes("\\0"))
+    const absolute=bin.startsWith("/")||(/^[A-Za-z]:/.test(bin)&&["/","\\"].includes(bin[2]));
+    if(!absolute||bin.includes("\0"))
       throw new TypeError("FORMAL_CLINGO_BIN must be an absolute, NUL-free executable path");
     launcher="clingo-bin";
     argv=[bin,...runtime.probeArgs];
