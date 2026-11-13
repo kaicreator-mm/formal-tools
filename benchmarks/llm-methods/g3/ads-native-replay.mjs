@@ -79,8 +79,10 @@ export async function executeAds24(args) {
         timed_out:step?.timed_out===true,output_truncated:step?.output_truncated===true,
         elapsed_ms:Number.isSafeInteger(step?.elapsed_ms)?step.elapsed_ms:null,
         stdout_sha256:step?.stdout_sha256??null,stderr_sha256:step?.stderr_sha256??null,
-        stdout_text:typeof step?.stdout==="string"?step.stdout:null,
-        stderr_text:typeof step?.stderr==="string"?step.stderr:null});
+        // Do not persist arbitrary tool text, which may contain host paths,
+        // secrets or other user data. Stable hashes are retained for a separately
+        // permissioned original-output evidence store.
+        stdout_status:["SAT","UNSAT","UNKNOWN"].includes(status)?status:null});
     }
   } finally {
     if(old===undefined)delete process.env.FORMAL_TOOLS_BIN_DIR;
