@@ -64,10 +64,12 @@ function validArm(arm,which,manifest) {
     }else{
       if(!STATUS.has(row.tool_status)||!SHA.test(row.tool_receipt_sha256))
         throw Error("tool arm requires scoped, source-linked evidence metadata");
-      const expected=row.tool_status==="SAT"?"PASS":
-        row.tool_status==="UNSAT"?"FAIL":"UNKNOWN";
-      if(row.prediction!==expected)
-        throw Error("LLM+Tools prediction contradicts observed solver status");
+      // SAT/UNSAT is only a model-relative solver outcome, never a semantic
+      // claim verdict. An LLM may abstain (UNKNOWN) despite a decisive solver
+      // response when Source/Model/Oracle fidelity is unqualified. Conversely,
+      // an inconclusive/failed tool call cannot support a claimed PASS/FAIL.
+      if(!["SAT","UNSAT"].includes(row.tool_status)&&row.prediction!=="UNKNOWN")
+        throw Error("inconclusive native tool status must not claim a verdict");
     }
   }
   return arm;
