@@ -12,7 +12,7 @@ import { mkdir, appendFile, readFile } from "node:fs/promises";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
+const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "../../../..");
 const OUT = resolve(process.argv[2] ?? "validation/local-runtime-receipts/i4-r0/mcp-receipts");
 await mkdir(OUT, { recursive: true });
 const log = [];
@@ -104,10 +104,12 @@ await check("mcp-tools-list-nine-registered", async () => {
   assert(JSON.stringify(toolNames) === JSON.stringify(expected),
     "tool list mismatch: " + JSON.stringify(toolNames));
   for (const t of res.result.tools) {
-    const raw = JSON.stringify(t);
-    assert(!/"raw"|shell|passthrough/i.test(t.name + (t.description ?? "")),
-      "suspicious raw/shell tool exposed: " + t.name);
+    // No raw command-runner surface: the tool set is the fixed registered list
+    // (asserted above) and no tool schema exposes raw argv/shell parameters.
     assert(t.inputSchema, "tool without input schema: " + t.name);
+    const propNames = Object.keys(t.inputSchema?.properties ?? {});
+    assert(!propNames.some(p => /^(argv|command|cmd|shell|args)$/.test(p)),
+      "raw passthrough parameter exposed by tool: " + t.name + " prop " + propNames.join(","));
   }
   return { count: toolNames.length, tools: toolNames };
 });

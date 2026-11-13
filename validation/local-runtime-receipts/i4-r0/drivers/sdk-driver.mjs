@@ -14,11 +14,11 @@ import { mkdtemp, mkdir, writeFile, rm, appendFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { invokeTool, invokeStagedTool } from "../../../packages/runner/js/sdk.mjs";
-import { executeNativePlan } from "../../../packages/runner/js/native.mjs";
-import { planRawNative } from "../../../packages/runner/js/native-catalog.mjs";
+import { invokeTool, invokeStagedTool } from "../../../../packages/runner/js/sdk.mjs";
+import { executeNativePlan } from "../../../../packages/runner/js/native.mjs";
+import { planRawNative } from "../../../../packages/runner/js/native-catalog.mjs";
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../../..");
 const OUT = resolve(process.argv[2] ?? "validation/local-runtime-receipts/i4-r0/sdk-receipts");
 await mkdir(OUT, { recursive: true });
 const events = [];
@@ -43,7 +43,7 @@ const assert = (cond, message) => { if (!cond) throw new Error(message); };
 
 async function childEnvSanity() {
   // Prove which interpreter the driver used and that the current checkout is the expected one.
-  const { checkoutIdentity } = await import("../../../scripts/native-acceptance.mjs");
+  const { checkoutIdentity } = await import("../../../../scripts/native-acceptance.mjs");
   return { checkout: checkoutIdentity(), node: process.version };
 }
 
