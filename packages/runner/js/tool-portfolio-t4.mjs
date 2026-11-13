@@ -31,6 +31,15 @@ if(allIds.length!==36||new Set(allIds).size!==36||
 
 const digest=b=>createHash("sha256").update(b).digest("hex");
 const maxBytes=1024*1024;
+const maxMetadataBytes=65536;
+const maxFixtureBytes=65536;
+const maxRunnerBytes=1024*1024;
+function verifyOptionalPin(variable,actual) {
+  const expected=process.env[variable];
+  if(expected===undefined)return;
+  if(!shaPattern.test(expected))throw new Error(variable+"_INVALID_PIN");
+  if(expected!==actual)throw new Error(variable+"_MISMATCH");
+}
 const shaPattern=/^[a-f0-9]{64}$/;
 function profile(id){
   const t=toolById.get(id);
@@ -77,24 +86,34 @@ async function regular(path,executable=false){
 async function installed(id){
   candidate(id);
   const ctx=context();
-  await regular(ctx.runner,true);
+  const runnerStat=await regular(ctx.runner,true);
+  if(runnerStat.size>maxRunnerBytes)throw new Error("PORTABLE_RUNNER_SIZE_LIMIT");
   const b=await readFile(ctx.runner);
   const actual=digest(b);
   if(actual!==ctx.expected)throw new Error("PORTABLE_RUNNER_SHA256_MISMATCH");
   const metaPath=join(ctx.root,"tools",id,"meta.json");
   const shim=join(ctx.root,"tools",id,"run");
   const contract=join(ctx.root,"tests",id,"expect.sh");
-  await regular(metaPath);
+  const metaStat=await regular(metaPath);
   await regular(shim,true);
-  await regular(contract);
-  const meta=JSON.parse(await readFile(metaPath,"utf8"));
+  const contractStat=await regular(contract);
+  if(metaStat.size>maxMetadataBytes||contractStat.size>maxFixtureBytes)
+    throw new Error("PORTABLE_META_OR_CONTRACT_SIZE_LIMIT");
+  const metaBytes=await readFile(metaPath);
+  const fixtureBytes=await readFile(contract);
+  const metaHash=digest(metaBytes),fixtureHash=digest(fixtureBytes);
+  verifyOptionalPin("FORMAL_PORTABLE_META_SHA256",metaHash);
+  verifyOptionalPin("FORMAL_PORTABLE_FIXTURE_SHA256",fixtureHash);
+  const meta=JSON.parse(metaBytes.toString("utf8"));
   if(meta.tool_id!==id)throw new Error("PORTABLE_META_TOOL_ID_MISMATCH");
   if(typeof meta.version!=="string"||meta.version!==String(versionById.get(id)))
     throw new Error("PORTABLE_VERSION_DRIFT_EXPECTED_"+versionById.get(id));
   if(typeof meta.kind!=="string"||!meta.kind||meta.unavailable===true)
     throw new Error("PORTABLE_META_KIND_OR_AVAILABILITY_INVALID");
-  return {ctx,meta,meta_sha256:digest(await readFile(metaPath)),
-    fixture_contract_sha256:digest(await readFile(contract))};
+  // Host operator must own a stable bundle root. lstat/readFile/spawn is
+  // not a filesystem sandbox against an attacker mutating bundle paths.
+  return {ctx,meta,meta_sha256:metaHash,
+    fixture_contract_sha256:fixtureHash};
 }
 /** Read-only host discovery; a file hit never counts as an execution result. */
 export async function inspectPortfolioTool(id){
