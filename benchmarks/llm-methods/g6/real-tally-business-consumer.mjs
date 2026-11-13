@@ -108,6 +108,10 @@ export async function runRealTallyBusinessConsumption({store_dir,formal_head}={}
  return Object.freeze({
    schema:"formal-tools/g6-real-tally-business-consumer/0.1",
    source_head:formal_head,candidate_sha256,
+   host:Object.freeze({platform:process.platform,arch:process.arch,node:process.version,
+     uid:typeof process.getuid==="function"?process.getuid():null,
+     gid:typeof process.getgid==="function"?process.getgid():null,
+     independently_attested:false}),
    source:G6_TALLY_SOURCE,tally_source_sha256:tally.source_sha256,
    native_original_faithful_cases:6,
    original_claim:"UNVERIFIED",
