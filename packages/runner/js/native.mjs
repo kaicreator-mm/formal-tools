@@ -71,12 +71,16 @@ function executable(name) {
   return directory ? join(directory,name) : name;
 }
 function toolPython(tool) { return process.env[tool === "clingo" ? "FORMAL_CLINGO_PYTHON" : "FORMAL_PYSHACL_PYTHON"] || "python3"; }
+/** @param {string[]} args */
 function clingoCommand(args){
   // Explicitly pinned native executable; default remains python3 -m clingo.
   // This is trusted host configuration, not a caller-supplied MCP executable.
   const probe=planToolProbe("clingo",process.env);
-  return probe.launcher==="clingo-bin"?[probe.argv[0],...args]:
-    [toolPython("clingo"),"-m","clingo",...args];
+  if(probe.launcher==="clingo-bin"){
+    if(!probe.argv)throw new TypeError("Clingo native executable probe has no argv");
+    return [probe.argv[0],...args];
+  }
+  return [toolPython("clingo"),"-m","clingo",...args];
 }
 function jar(variable) {
   const p=process.env[variable];
