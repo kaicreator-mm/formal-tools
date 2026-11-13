@@ -1,0 +1,189 @@
+{
+  "schema": "formal-tools/i24-t4-actual-gateway-evidence/0.1",
+  "output_label": "FORMAL_TOOLS_I24_TOOL_INTEGRATION_CONTINUE",
+  "source_main": "12032f1d5a759dca5a1b24eedbefae2dfe01d3e0",
+  "reviewed_source_gateway": {
+    "path": "packages/runner/js/tool-portfolio-t4.mjs",
+    "git_blob": "615b55bb0f2b5fd1e611865e1dc4c766f89d5ffe",
+    "exact_bytes_reconstructed": true
+  },
+  "source_portable_runner": {
+    "pr": 22,
+    "head": "3aa35b8c82545d8b234ae81f778b474173bff0d9",
+    "git_blob": "94909a645eee266549a6b17e42e5f4478d72aaee",
+    "sha256": "066674ca41414d1e80019218a5d20f404c0fef75785fb348fed313634720c1d3"
+  },
+  "registry_scope": "36-row exact id/version/origin/capability projection from GitHub blobs faa89997... and 250b84ae..., not full unmodified Registry/DAG file. Existing native-catalog replaced by 13-id projection solely for this in-container module test.",
+  "host": {
+    "os": "Debian13 x86_64 glibc2.41",
+    "uid": 1000,
+    "tool_bundle_write_permission": false,
+    "docker_isolation": false,
+    "network_execution": false,
+    "python": "3.13.5",
+    "node": "22.16.0",
+    "java": "21"
+  },
+  "qualifier": "TRUE_TOOL_EXECUTION_AND_EXACT_GATEWAY_MODULE_BUT_STAGED_FIXTURES_AND_PROJECTED_CATALOG; NOT FULL ORIGINAL_CLI_MCP_SDK; NO T4/T5 ADMISSION",
+  "new_technical_cases": [
+    {
+      "id": "aflpp",
+      "issue": 25,
+      "version": "5.03c",
+      "mode": "original native ELF + local err fixture",
+      "gateway_status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "gateway_process_rc": 0,
+      "runner_schema": "formal-tools/portable-verify/0.2",
+      "phase_exit_codes": {
+        "pos": 0,
+        "neg": 1,
+        "err": 1
+      },
+      "receipt_sha256": "1c3af3cdd79513eaefa0bf405e657e8eaa99b364588c913eac0d8db863a9c9e4",
+      "fixture_sha256": "f52a22f8df20291cf12f37b61df6880005a3979282322b6f9b282f7e1a79dbc7",
+      "t4_qualified": false,
+      "t5_qualified": false
+    },
+    {
+      "id": "elk",
+      "issue": 35,
+      "version": "0.6.0",
+      "mode": "original Java21 + local err fixture",
+      "gateway_status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "gateway_process_rc": 0,
+      "runner_schema": "formal-tools/portable-verify/0.2",
+      "phase_exit_codes": {
+        "pos": 0,
+        "neg": 1,
+        "err": 1
+      },
+      "receipt_sha256": "f983a410768f1314dbea91e5821bc73acaffd42a1c4f3c0a11ba83333afb575a",
+      "fixture_sha256": "376002583c2c871e4f06bc90c7631bdbb1272a311e0b711556317ca34c481682",
+      "t4_qualified": false,
+      "t5_qualified": false
+    },
+    {
+      "id": "fast-check",
+      "issue": 36,
+      "version": "4.10.2",
+      "mode": "original Node22 + local err fixture",
+      "gateway_status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "gateway_process_rc": 0,
+      "runner_schema": "formal-tools/portable-verify/0.2",
+      "phase_exit_codes": {
+        "pos": 0,
+        "neg": 0,
+        "err": 1
+      },
+      "receipt_sha256": "d75befadf6dc85028226f9acf1b5b922647bd8f2815c04edc0c693fe23193aac",
+      "fixture_sha256": "e2561b5867b1f0be5770db156159e99194065dd6df4be763a29036c4ca78a596",
+      "t4_qualified": false,
+      "t5_qualified": false
+    },
+    {
+      "id": "hypothesis",
+      "issue": 39,
+      "version": "6.170.15",
+      "mode": "alternate wheelhouse SHA aa0cb18cca7c... + host CPython3.13 + local err fixture",
+      "gateway_status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "gateway_process_rc": 0,
+      "runner_schema": "formal-tools/portable-verify/0.2",
+      "phase_exit_codes": {
+        "pos": 0,
+        "neg": 0,
+        "err": 1
+      },
+      "receipt_sha256": "9441e3b93c6fa54a0555159c410f785d5a854cc0ae213aa72f17bedd810262d9",
+      "fixture_sha256": "3590d2d98cd80bd3a7afcc65ab71db5684a77710454cabcab349483da51f10aa",
+      "t4_qualified": false,
+      "t5_qualified": false
+    },
+    {
+      "id": "mesa",
+      "issue": 42,
+      "version": "3.5.2",
+      "mode": "original Mesa payload + host virtualenv numpy/pandas site deps + local err fixture",
+      "gateway_status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "gateway_process_rc": 0,
+      "runner_schema": "formal-tools/portable-verify/0.2",
+      "phase_exit_codes": {
+        "pos": 0,
+        "neg": 0,
+        "err": 1
+      },
+      "receipt_sha256": "47fa71729bed0f7986f78a7aa062d78daa2f6dca907681aa70bccf57b6308ac6",
+      "fixture_sha256": "720efa6f64a8b440b9e152486d3ce5fc52d1542e26ab90b440720b31da74b395",
+      "t4_qualified": false,
+      "t5_qualified": false
+    },
+    {
+      "id": "simpy",
+      "issue": 52,
+      "version": "4.1.2",
+      "mode": "original SimPy payload + host CPython3.13 shim + local err fixture",
+      "gateway_status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "gateway_process_rc": 0,
+      "runner_schema": "formal-tools/portable-verify/0.2",
+      "phase_exit_codes": {
+        "pos": 0,
+        "neg": 0,
+        "err": 1
+      },
+      "receipt_sha256": "dbd338588f8e9dbd2df7ab93cbea849f4766989af9a5fb6e54ef50861b680155",
+      "fixture_sha256": "3278a78e14397a60540bf80946062af935f44d1ba7278dd7ac132e07c986b5d2",
+      "t4_qualified": false,
+      "t5_qualified": false
+    }
+  ],
+  "fail_closed": [
+    {
+      "case_name": "native-ref rejected",
+      "status": "TypeError"
+    },
+    {
+      "case_name": "unknown tool rejected",
+      "status": "RangeError"
+    },
+    {
+      "case_name": "root unset",
+      "status": "NOT_RUN_FAIL_CLOSED"
+    },
+    {
+      "case_name": "runner digest mismatch",
+      "status": "NOT_RUN_FAIL_CLOSED"
+    },
+    {
+      "case_name": "fixture digest mismatch",
+      "status": "NOT_RUN_FAIL_CLOSED"
+    },
+    {
+      "case_name": "metadata digest mismatch",
+      "status": "NOT_RUN_FAIL_CLOSED"
+    },
+    {
+      "case_name": "original 2-phase fast-check fixture",
+      "status": "FIXTURE_NOT_QUALIFIED despite runner exit 0"
+    },
+    {
+      "case_name": "aflpp gateway timeout 1s",
+      "status": "FIXTURE_NOT_QUALIFIED timed_out=true"
+    }
+  ],
+  "counts": {
+    "catalog_tools": 36,
+    "existing_native_ref": 13,
+    "candidate_routes": 23,
+    "in_container_candidate_technical_pass_local_patch": 6,
+    "earlier_unmodified_CBMC_3phase_technical": 1,
+    "independently_qualified_T4_new": 0,
+    "independently_qualified_T5": 0
+  },
+  "limits": [
+    "Local fixture overlays NOT committed to PR22/source tool bundle",
+    "Hypothesis original tar missing _hypothesis_globals while alternate CPython wheelhouse works",
+    "Mesa requires host numpy/pandas dependencies; SimPy host Python fallback",
+    "ELK neg is parser rejection, not independent ontology inconsistency Oracle",
+    "Original runner 0.2 matches SHA but full repo CLI/MCP/SDK E2E not executed in this local container",
+    "PR #77 docs-only evidence cannot approve source PR #22 or Product #11"
+  ]
+}
