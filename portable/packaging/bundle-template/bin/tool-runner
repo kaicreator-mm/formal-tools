@@ -167,7 +167,14 @@ doctor_one() {
     if [ -f "$FT_ROOT/$TOOL_MAIN_BIN" ]; then
       echo "  binary: $TOOL_MAIN_BIN OK (glibc_max=${TOOL_GLIBC_MAX:-n/a})"
       local miss
-      miss=$(ldd "$FT_ROOT/$TOOL_MAIN_BIN" 2>&1 | grep -c "not found" || true)
+      # Match the tool's run shim: native solvers ship private shared libraries.
+      # ldd without the tool lib path falsely flags ICU/libstdc++ as missing.
+      local tool_lib="$FT_ROOT/tools/$id/lib"
+      if [ -d "$tool_lib" ]; then
+        miss=$(LD_LIBRARY_PATH="$tool_lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" ldd "$FT_ROOT/$TOOL_MAIN_BIN" 2>&1 | grep -c "not found" || true)
+      else
+        miss=$(ldd "$FT_ROOT/$TOOL_MAIN_BIN" 2>&1 | grep -c "not found" || true)
+      fi
       if [ "${miss:-0}" != 0 ]; then echo "  ldd missing libs: $miss FAIL"; fails=1; else echo "  ldd: no missing libs OK"; fi
       [ "$(uname -m)" = x86_64 ] || { echo "  arch: host not x86_64 FAIL"; fails=1; }
     else
