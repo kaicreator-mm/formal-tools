@@ -6,9 +6,18 @@
   "baseline_main_sha": "10eed03c09376b2d963e1bd3b41a0eefb02ef6a9",
   "source_pr22": {
     "number": 22,
-    "expected_head": "15aad39c23a6218c4adc0e07e5891e893f9b1d03",
-    "state": "OPEN_SEPARATE_WRITER",
-    "portable_native_fresh_qualification": "NOT_ESTABLISHED"
+    "expected_head": "3aa35b8c82545d8b234ae81f778b474173bff0d9",
+    "state": "OPEN_SEPARATE_WRITER_EXACT_SHA_CI_SUCCESS",
+    "portable_native_fresh_qualification": "SCOPED_HOST_RECEIPTS_ONLY_NOT_FULL_BUNDLE_QUALIFIED",
+    "initial_checkpoint_head": "15aad39c23a6218c4adc0e07e5891e893f9b1d03",
+    "source_repairs": [
+      "make_meta.py standalone metadata generator restored",
+      "11 python-lib build specs repaired"
+    ],
+    "source_host_verified_incremental_tools": [
+      "z3",
+      "simpy"
+    ]
   },
   "source_registry": "registry/PROBLEM_CAPABILITIES.json",
   "source_t0_t6": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
@@ -24,7 +33,8 @@
     "scoped_native_original_tar_receipts": 19,
     "scoped_callable_including_alternates": 34,
     "new_native_t4_qualified": 0,
-    "full_t5_semantic_qualified": 0
+    "full_t5_semantic_qualified": 0,
+    "new_candidate_portable_real_host_technical_observed": 1
   },
   "truth_rule": "Gateway code+synthetic tests are not a native proof; independent T3/T4/T5 qualification requires actual SHA-pinned host/native/semantic receipts.",
   "candidate_operations": [
@@ -554,5 +564,20 @@
       "t5": "NOT_QUALIFIED_AT_THIS_PR",
       "t6": "OPEN"
     }
-  ]
+  ],
+  "integration_pr69": {
+    "number": 69,
+    "previous_review_head": "e76a5617807fce68d4eeae87f2af7f314dab1a35",
+    "review_verdict": "P0=0;P1=0;P2=3 (Writer remediation on subsequent SHA)",
+    "woodpecker_previous_head": [
+      "push #408 SUCCESS",
+      "PR #409 SUCCESS"
+    ],
+    "host_example": {
+      "tool": "minizinc",
+      "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "case_count": 3,
+      "scope": "real Debian13 host fixed-fixture technical observation only"
+    }
+  }
 }
