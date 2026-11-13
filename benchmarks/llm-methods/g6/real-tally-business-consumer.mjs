@@ -121,7 +121,7 @@ export async function runRealTallyBusinessConsumption({store_dir,formal_head}={}
  });
 }
 async function main(args){
- assert(args.length===3,"usage: node real-tally-business-consumer.mjs STORE_DIR FORMAL_HEAD");
+ assert(args.length===2,"usage: node real-tally-business-consumer.mjs STORE_DIR FORMAL_HEAD");
  const [store_dir,formal_head]=args;
  const r=await runRealTallyBusinessConsumption({store_dir,formal_head});
  process.stdout.write(JSON.stringify(r,null,2)+"\n");
