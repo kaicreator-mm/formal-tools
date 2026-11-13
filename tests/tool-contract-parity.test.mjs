@@ -46,6 +46,7 @@ test("D08: MCP exposes 12 allowlisted tools but never unrestricted native shell"
     "list_portfolio_tools","inspect_portfolio_tool","verify_portable_fixture"
   ].sort());
   assert.doesNotMatch(source,/planRawNative|executeNativePlan|invokeStagedTool|child_process/);
+  assert.match(source,/receipt\.status!==\"FIXTURE_TECHNICAL_PASS_UNREVIEWED\"/);
   assert.match(source,/toolIds\.includes\(value\)/);
 });
 test("D08: process success is distinct from proof or consumer claim acceptance",()=>{
