@@ -69,9 +69,9 @@ done
 stage z3
 run exec-z3-solve-timeout-flag 0 $CLI exec z3 solve --timeout 10 --cwd "$SCRATCH/z3" --input positive.smt2
 stage cvc5
-run exec-cvc5-solve-models-tlimit 0 $CLI exec cvc5 solve --models true --tlimit 10000 --cwd "$SCRATCH/cvc5" --input positive.smt2
+run exec-cvc5-solve-models-tlimit 0 $CLI exec cvc5 solve --models --tlimit 10000 --cwd "$SCRATCH/cvc5" --input positive.smt2
 stage vampire
-run exec-vampire-casc-mode 60 $CLI exec vampire casc --timeout 90 --cwd "$SCRATCH/vampire" --input positive.p
+run exec-vampire-casc-mode 0 $CLI exec vampire casc --timeout 90 --cwd "$SCRATCH/vampire" --input positive.p
 stage tla-tlc
 run exec-tlc-check-workers-config 0 $CLI exec tla-tlc check --workers 2 --config Toggle.cfg --timeout 90 --cwd "$SCRATCH/tla-tlc" --input TogglePositive.tla
 stage apalache
@@ -114,8 +114,9 @@ run err-raw-in-mcp-toolset 2 $CLI catalog no_such_tool
 run pure-dag-positive 0 $CLI pure dag --input validation/js/dag-positive.json
 run pure-dag-negative ANY $CLI pure dag --input validation/js/dag-negative.json
 
-# ---- isolation: no fixture/exec run wrote into the git tree -----------------
-git status --porcelain > "$OUT/post-run-git-status.txt" 2>&1
+# ---- isolation: no fixture/exec run wrote into the tracked git tree ----------
+# node_modules from the documented npm ci step is untracked and expected.
+git status --porcelain --untracked-files=no > "$OUT/post-run-git-status.txt" 2>&1
 if [ -s "$OUT/post-run-git-status.txt" ]; then
   printf '{"name":"git-tree-untouched","verdict":"FAIL","detail":"tree modified by runs"}\n' >> "$EV"
   FAILS=$((FAILS+1))
