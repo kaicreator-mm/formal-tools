@@ -1,0 +1,119 @@
+{
+  "schema": "formal-tools/i24-r7-raw-evidence-index/1.0",
+  "source_pr22_head": "31ef3f359996ee54b346bc2c0a1c7841fe8a4ec2",
+  "source_pr22_current_head_at_upload": "7fbe3b69114d7f34b9b0296757cdca43fde07412",
+  "archive": {
+    "drive_file_id": "1-Kqdc_kff6DpBOWAN65nnR3cTiPp-NVc",
+    "drive_url": "https://drive.google.com/file/d/1-Kqdc_kff6DpBOWAN65nnR3cTiPp-NVc/view?usp=drivesdk",
+    "drive_parent_id": "174B2Jar2OlQSs9mJkGqNUeI0vHmUZQzd",
+    "file_name": "formal-tools-i24-r7-exact-pr22-native.zip",
+    "byte_size": 15753,
+    "sha256": "d14e288853b9607aeb7bb0062a0984b68d5d2fa8a41cc3c2955c9e3c90ed7682",
+    "verified_download_readback": true,
+    "zip_crc_test": "PASS",
+    "contents": [
+      {
+        "path": "r7-evidence/SUMMARY.json",
+        "byte_size": 6934,
+        "sha256": "90c351399f0535f54d0f2bf3afb278feaa06cc25abe93af73e4c78d0bd1bc608"
+      },
+      {
+        "path": "r7-evidence/aflpp.stderr",
+        "byte_size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "r7-evidence/aflpp.stdout",
+        "byte_size": 2407,
+        "sha256": "099b0b7b451cb759424672549a2044b137fbf987e8cd42ee72967acf3aef62a1"
+      },
+      {
+        "path": "r7-evidence/elk.stderr",
+        "byte_size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "r7-evidence/elk.stdout",
+        "byte_size": 2417,
+        "sha256": "df06fa77dbc329f05b3cbf0efc46063e553a466a3387b705095ea89115563463"
+      },
+      {
+        "path": "r7-evidence/fast-check.stderr",
+        "byte_size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "r7-evidence/fast-check.stdout",
+        "byte_size": 2460,
+        "sha256": "2f566f3eb0f74089e85ccc88a69b28791a4324d1c6468db2f058e7037520a7a1"
+      },
+      {
+        "path": "r7-evidence/hypothesis.stderr",
+        "byte_size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "r7-evidence/hypothesis.stdout",
+        "byte_size": 2482,
+        "sha256": "30ea1a62ca42ea2e9ce894b8d527f9719e79b188fa4f761589fdd9ca7b759cab"
+      },
+      {
+        "path": "r7-evidence/mesa.stderr",
+        "byte_size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "r7-evidence/mesa.stdout",
+        "byte_size": 2389,
+        "sha256": "a1f4b1b0c20b02ffd1e97f7415295a2e46f8fef87d4b6130911c466d572d382b"
+      },
+      {
+        "path": "r7-evidence/networkx.stderr",
+        "byte_size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "r7-evidence/networkx.stdout",
+        "byte_size": 2437,
+        "sha256": "557173e117bade548c4909c11e7898aecf05894c57665e4217def94749616d11"
+      },
+      {
+        "path": "r7-evidence/simpy.stderr",
+        "byte_size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "r7-evidence/simpy.stdout",
+        "byte_size": 2401,
+        "sha256": "86e1d8ae4da9eee85912dfda8ef1d240d3e515f9a763189769a28eb09df552d6"
+      },
+      {
+        "path": "r7-evidence/sympy-resolved.stdout",
+        "byte_size": 2419,
+        "sha256": "4c12e3f3c0c9c196f74abeeac8d136299253bf36a31d0b725878f8f3001f7c17"
+      },
+      {
+        "path": "r7-evidence/sympy.stderr",
+        "byte_size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "r7-evidence/sympy.stdout",
+        "byte_size": 1949,
+        "sha256": "cde716681d303f2b6b68b8d37abd87bdb51cc96478622453472f72e43289eb0b"
+      },
+      {
+        "path": "r7-exact-head-native.py",
+        "byte_size": 3460,
+        "sha256": "cad0f3cac504158ae4c72b0a7740a5c8d1417debca99ad0055ebd9c9f5f94e70"
+      }
+    ]
+  },
+  "evidence_scope": "Gateway-level original stdout/stderr summaries, runner execution receipt SHA, and replay driver. Temporary underlying per-case native stdout/stderr files were not preserved in this ZIP; do not claim those raw per-case tool logs exist.",
+  "qualification": {
+    "original_r7_aflpp_elk_assertions_incomplete": true,
+    "independent_new_candidate_T4_qualified": 0,
+    "T5_qualified": 0
+  },
+  "provenance": "Readback of exact uploaded file from canonical Drive validation/receipts; computed byte hash independently in ChatGPT Debian13 container; archive content immutable on this version, change requires re-pin."
+}
