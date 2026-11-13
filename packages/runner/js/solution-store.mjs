@@ -44,6 +44,27 @@ async function revocationExists(file) {
 // operation in the same directory; rename() could overwrite a live tombstone.
 // A crash before publication leaves at most a .pending orphan, not a partial
 // candidate or revocation visible at its final content-addressed path.
+// Directory fsync is platform-dependent (win32/NTFS: EPERM). Exactly these
+// codes mean "unsupported": fail closed with zero writes. Any other probe
+// error is a real failure and rethrows.
+const DIR_FSYNC_UNSUPPORTED=new Set(["EPERM","EINVAL","EOPNOTSUPP","ENOSYS","ENOTTY"]);
+const STORE_UNSUPPORTED="store directory does not support directory fsync;"+
+  " the owner must provision a local POSIX-style store directory;"+
+  " nothing was written, provision a supported store and retry";
+const PUBLISHED_NOT_DURABLE="record may exist at its final path but is not"+
+  " directory-durable; re-inspect via inspectStoredReplay or retry"+
+  " persist/revoke before relying on this state";
+async function probeDirectorySync(root) {
+  let dir;
+  try {
+    dir=await open(root,"r");
+    await dir.sync();
+    return true;
+  } catch(err) {
+    if(DIR_FSYNC_UNSUPPORTED.has(err?.code))return false;
+    throw err;
+  } finally {await dir?.close();}
+}
 async function syncDirectory(root) {
   let dir;
   try {
@@ -52,6 +73,11 @@ async function syncDirectory(root) {
   } finally {await dir?.close();}
 }
 async function exclusiveWrite(root,file,text) {
+  // Durability invariant: NEW/EXISTING is returned only when THIS operation
+  // performed at least one successful directory fsync. The probe IS that fsync
+  // for an idempotent EEXIST answer (it flushes prior directory entries);
+  // NEW fsyncs again after link(). An unsupported probe aborts before any write.
+  if(!await probeDirectorySync(root))return "UNSUPPORTED";
   const temp=join(root,".pending-"+randomUUID());
   let handle;
   try {
@@ -62,16 +88,18 @@ async function exclusiveWrite(root,file,text) {
     handle=undefined;
     try {
       await link(temp,file);
-      // Keep inode/link durable over process crash on POSIX local filesystems.
-      // If directory syncing is unsupported, do NOT claim durable SUCCESS.
-      await syncDirectory(root);
-      return "NEW";
     } catch(err) {
       if(err?.code!=="EEXIST")throw err;
       if(await boundedRegularFile(file)!==text)
         throw new Error("existing record content differs");
       return "EXISTING";
     }
+    // Keep inode/link durable over process crash on POSIX local filesystems.
+    // The probe passed, so this should succeed; if it still fails, the record
+    // IS published at its final path but NOT directory-durable — never pretend.
+    try {await syncDirectory(root);}
+    catch {return "PUBLISHED_NOT_DURABLE";}
+    return "NEW";
   } finally {
     await handle?.close();
     await unlink(temp).catch(err=>{if(err?.code!=="ENOENT")throw err;});
@@ -99,6 +127,8 @@ export async function persistSolutionCandidate({store_dir,problem_json,method_js
     if(await revocationExists(revokePath(root,candidate.candidate_sha256)))
       return notReusable("INVALIDATED",{reason:"EXPLICIT_REVOCATION"});
     const stored=await exclusiveWrite(root,candidatePath(root,candidate.candidate_sha256),serialized);
+    if(stored==="UNSUPPORTED")return denied(STORE_UNSUPPORTED);
+    if(stored==="PUBLISHED_NOT_DURABLE")return denied(PUBLISHED_NOT_DURABLE);
     if(await revocationExists(revokePath(root,candidate.candidate_sha256)))
       return notReusable("INVALIDATED",{reason:"EXPLICIT_REVOCATION"});
     return notReusable("CANDIDATE_PERSISTED",{
@@ -138,6 +168,8 @@ export async function revokeStoredCandidate({store_dir,candidate_sha256,reason}=
     const marker=JSON.stringify({schema:"formal-tools/solution-revocation/0.1",
       candidate_sha256,reason})+"\n";
     const written=await exclusiveWrite(root,revokePath(root,candidate_sha256),marker);
+    if(written==="UNSUPPORTED")return denied(STORE_UNSUPPORTED);
+    if(written==="PUBLISHED_NOT_DURABLE")return denied(PUBLISHED_NOT_DURABLE);
     return notReusable("INVALIDATED",{reason,record_write:written});
   } catch {return denied("candidate revocation failed");}
 }

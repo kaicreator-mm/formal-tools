@@ -1,9 +1,31 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { mkdtempSync, writeFileSync, rmSync, readdirSync } from "node:fs";
+import { open } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { persistSolutionCandidate, inspectStoredReplay, revokeStoredCandidate } from "../packages/runner/js/solution-store.mjs";
+import { sealSolutionCandidate } from "../packages/runner/js/solution-candidate.mjs";
+
+// Detect directory-fsync support by attempting the same probe the store performs
+// (open the directory read-only + one fsync); never branch on process.platform.
+const DIR_FSYNC_UNSUPPORTED=new Set(["EPERM","EINVAL","EOPNOTSUPP","ENOSYS","ENOTTY"]);
+async function directoryFsyncSupported(dir){
+  let handle;
+  try{
+    handle=await open(dir,"r");
+    await handle.sync();
+    return true;
+  }catch(err){
+    if(DIR_FSYNC_UNSUPPORTED.has(err?.code))return false;
+    throw err;
+  }finally{await handle?.close();}
+}
+const probeDir=mkdtempSync(join(tmpdir(),"ft-g4-probe-"));
+const dirFsyncOk=await directoryFsyncSupported(probeDir);
+rmSync(probeDir,{recursive:true,force:true});
+const onSupported=dirFsyncOk?test:test.skip;
+const onUnsupported=dirFsyncOk?test.skip:test;
 
 const encode=JSON.stringify;
 const sha=(letter)=>letter.repeat(64);
@@ -39,7 +61,7 @@ function fixture(){
   return {problem_json:encode(problem),method_json:encode(method),
     provenance_json:encode(provenance),provenance};
 }
-test("G4 content-addressed candidate persists, reopens and refuses all semantic promotion",async()=>{
+onSupported("G4 content-addressed candidate persists, reopens and refuses all semantic promotion",async()=>{
  const dir=mkdtempSync(join(tmpdir(),"ft-g4-store-"));
  try{
    const f=fixture(), first=await persistSolutionCandidate({store_dir:dir,...f});
@@ -73,7 +95,7 @@ test("G4 content-addressed candidate persists, reopens and refuses all semantic 
    assert.equal(different.status,"BLOCKED","revocation may not be overwritten");
  }finally{rmSync(dir,{recursive:true,force:true});}
 });
-test("G4 stored candidate rejects modified evidence, forged gate and path traversal",async()=>{
+onSupported("G4 stored candidate rejects modified evidence, forged gate and path traversal",async()=>{
  const dir=mkdtempSync(join(tmpdir(),"ft-g4-tamper-"));
  try{
    const f=fixture(),value=await persistSolutionCandidate({store_dir:dir,...f});
@@ -95,7 +117,7 @@ test("G4 stored candidate rejects modified evidence, forged gate and path traver
 });
 
 
-test("G4 atomic hard-link publication: parallel writers and readers never see partial JSON",async()=>{
+onSupported("G4 atomic hard-link publication: parallel writers and readers never see partial JSON",async()=>{
  const dir=mkdtempSync(join(tmpdir(),"ft-g4-atomic-"));
  try{
    const f=fixture();
@@ -120,7 +142,7 @@ test("G4 atomic hard-link publication: parallel writers and readers never see pa
      current_provenance_json:f.provenance_json})).status,"INVALIDATED");
  }finally{rmSync(dir,{recursive:true,force:true});}
 });
-test("G4 orphan partial temporary record cannot be published or mistaken for committed candidate",async()=>{
+onSupported("G4 orphan partial temporary record cannot be published or mistaken for committed candidate",async()=>{
  const dir=mkdtempSync(join(tmpdir(),"ft-g4-interrupt-"));
  try {
    const f=fixture();
@@ -136,5 +158,46 @@ test("G4 orphan partial temporary record cannot be published or mistaken for com
    assert.equal((await persistSolutionCandidate({store_dir:dir,...f})).status,"BLOCKED");
    assert.equal((await inspectStoredReplay({store_dir:dir,candidate_sha256:stored.candidate_sha256,
      current_provenance_json:f.provenance_json})).status,"BLOCKED");
+ }finally{rmSync(dir,{recursive:true,force:true});}
+});
+onUnsupported("G4 unsupported directory fsync: persist/revoke fail closed before any write",async()=>{
+ const dir=mkdtempSync(join(tmpdir(),"ft-g4-unsupported-"));
+ try{
+   const f=fixture();
+   const sealed=sealSolutionCandidate({problem_json:f.problem_json,method_json:f.method_json,
+     provenance_json:f.provenance_json});
+   assert.equal(sealed.status,"CANDIDATE");
+   const id=sealed.candidate_sha256;
+   assert.match(id,/^[a-f0-9]{64}$/);
+   const stored=await persistSolutionCandidate({store_dir:dir,...f});
+   assert.equal(stored.status,"BLOCKED",JSON.stringify(stored));
+   assert.equal(stored.record_write,undefined);
+   assert.equal(stored.claim_result,"UNVERIFIED");
+   assert.equal(stored.replay_allowed,false);
+   assert.equal(stored.solution_promotable,false);
+   assert.match(stored.issues[0],/does not support directory fsync/,
+     "names the directory-fsync unavailability");
+   assert.match(stored.issues[0],/POSIX-style store directory/,
+     "names the owner provisioning requirement");
+   assert.match(stored.issues[0],/nothing was written/,
+     "names the recovery guidance");
+   assert.doesNotMatch(stored.issues[0],/write or validation failed/,
+     "never the generic catch-all message");
+   assert.ok(!readdirSync(dir).some(x=>x.startsWith("candidate-")),
+     "no candidate-<sha>.json may exist after the unsupported BLOCKED");
+   assert.ok(readdirSync(dir).every(x=>!x.startsWith(".pending-")),"no temp residue");
+   const view=await inspectStoredReplay({store_dir:dir,candidate_sha256:id,
+     current_provenance_json:f.provenance_json});
+   assert.equal(view.status,"BLOCKED","record absent: replay inspect sees nothing");
+   const again=await persistSolutionCandidate({store_dir:dir,...f});
+   assert.equal(again.status,"BLOCKED","an unsupported retry may never claim EXISTING");
+   assert.equal(again.record_write,undefined);
+   assert.match(again.issues[0],/does not support directory fsync/);
+   const revoked=await revokeStoredCandidate({store_dir:dir,candidate_sha256:id,
+     reason:"ORACLE_REVOKED"});
+   assert.equal(revoked.status,"BLOCKED");
+   assert.ok(!readdirSync(dir).some(x=>x.endsWith(".revoked.json")),
+     "no tombstone may exist after the unsupported BLOCKED");
+   assert.ok(readdirSync(dir).every(x=>!x.startsWith(".pending-")),"no temp residue");
  }finally{rmSync(dir,{recursive:true,force:true});}
 });
