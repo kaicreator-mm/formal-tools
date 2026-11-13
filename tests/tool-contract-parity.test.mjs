@@ -34,15 +34,16 @@ test("D08: no native shell entry can masquerade as a registered SDK tool",async(
     tool:"z3",operation:"solve",sourceRoot:".",inputs:["../other"],settings:{input:"../other"}
   }),/invalid source-relative/);
 });
-test("D08: MCP exposes 9 allowlisted tools but never unrestricted native shell",async()=>{
+test("D08: MCP exposes 12 allowlisted tools but never unrestricted native shell",async()=>{
   const source=await readFile(new URL("../packages/runner/js/mcp.mjs",import.meta.url),"utf8");
   const names=[...source.matchAll(/registerTool\("([a-z_]+)"/g)].map(match=>match[1]);
-  assert.equal(names.length,9);
+  assert.equal(names.length,12);
   assert.equal(new Set(names).size,names.length);
   assert.deepEqual(names.sort(),[
     "list_formal_tools","validate_formal_source","inspect_formal_tool",
     "probe_formal_tool","run_formal_fixture","describe_native_cli",
-    "inspect_native_installation","plan_native_cli","verify_formal_model"
+    "inspect_native_installation","plan_native_cli","verify_formal_model",
+    "list_portfolio_tools","inspect_portfolio_tool","verify_portable_fixture"
   ].sort());
   assert.doesNotMatch(source,/planRawNative|executeNativePlan|invokeStagedTool|child_process/);
   assert.match(source,/toolIds\.includes\(value\)/);
