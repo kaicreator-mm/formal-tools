@@ -33,17 +33,26 @@ function assert(condition,message){if(!condition)throw Error(message);}
 const denied=x=>x&&x.admitted===false&&x.taskPass===false&&
   (x.state==="UNQUALIFIED_INPUT"||x.state==="OBSERVED_INPUT_ONLY");
 
-/** Verify exact original Tally bytes before importing ANY source code. */
-export async function loadPinnedTallyBusiness(){
- const bytes=readFileSync(SNAPSHOT);
- assert(bytes.length>0&&bytes.length<=131072,"unbounded business source");
+/**
+ * Execute only bytes that match the original immutable Tally Git Blob.
+ * The content-derived ESM URL cannot reopen an attacker-replaced path or
+ * resolve a cached, different module under the same filesystem URL.
+ * Exported for deterministic adversarial tests; it accepts NO caller pin.
+ * @param {Buffer} bytes
+ */
+export async function loadPinnedTallyBusinessFromBytes(bytes){
+ assert(Buffer.isBuffer(bytes)&&bytes.length>0&&bytes.length<=131072,
+   "unbounded business source");
  assert(gitBlob(bytes)===G6_TALLY_SOURCE.git_blob,"TALLY_BUSINESS_SOURCE_DRIFT");
- // Execute precisely the already-verified immutable Buffer; a pathname URL can
- // be replaced between read/import or resolve to an older cached module.
  const module=await import("data:text/javascript;base64,"+bytes.toString("base64"));
  assert(typeof module.assessTaskEvidence==="function","TALLY_BUSINESS_EXPORT_MISSING");
  return {invoke:module.assessTaskEvidence,blob:G6_TALLY_SOURCE.git_blob,
-  source_sha256:createHash("sha256").update(bytes).digest("hex")};
+   source_sha256:createHash("sha256").update(bytes).digest("hex")};
+}
+
+/** Read only the pinned Tally source; the import consumes the verified bytes. */
+export async function loadPinnedTallyBusiness(){
+ return loadPinnedTallyBusinessFromBytes(readFileSync(SNAPSHOT));
 }
 
 /**
