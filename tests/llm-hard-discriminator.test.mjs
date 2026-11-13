@@ -119,6 +119,10 @@ test("G5 hard-r1 source drift/false model controls/unknown tool/precision fail c
 });
 test("G5 sampling control comparison is canonical across JSON object key ordering",()=>{
  const x=syntheticPaired();
- x.augmented.config=Object.fromEntries(Object.entries(x.augmented.config).reverse());
+ const c=x.augmented.config;
+ x.augmented.config={max_output_tokens:c.max_output_tokens,
+   temperature:c.temperature,seed:c.seed,
+   prompt_template_sha256:c.prompt_template_sha256,
+   model_version:c.model_version,model_id:c.model_id};
  assert.equal(score(x).status,"SCORED_UNATTESTED");
 });
