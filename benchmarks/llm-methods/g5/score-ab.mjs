@@ -32,12 +32,15 @@ function parse(text){
   if(!isPlain(obj))throw Error("observation must be a JSON object");
   return obj;
 }
-function validNumber(x){return typeof x==="number"&&Number.isFinite(x)&&x>=0;}
+const MAX_CASE_COST_USD=1_000_000;
+const MAX_CASE_LATENCY_MS=3_600_000;
+const MAX_CASE_TOKENS=1_000_000_000;
+function validNumber(x,max){return typeof x==="number"&&Number.isFinite(x)&&x>=0&&x<=max;}
 function goodConfig(c){
   return isPlain(c)&&typeof c.model_id==="string"&&c.model_id.length>0&&c.model_id.length<=100&&
     typeof c.model_version==="string"&&c.model_version.length>0&&c.model_version.length<=100&&
-    SHA.test(c.prompt_template_sha256)&&Number.isInteger(c.seed)&&
-    validNumber(c.temperature)&&c.temperature<=2&&
+    SHA.test(c.prompt_template_sha256)&&Number.isSafeInteger(c.seed)&&
+    validNumber(c.temperature,2)&&
     Number.isSafeInteger(c.max_output_tokens)&&c.max_output_tokens>0&&c.max_output_tokens<=100000;
 }
 function validArm(arm,which,manifest) {
@@ -54,9 +57,9 @@ function validArm(arm,which,manifest) {
     seen.add(row.case_id);
     if(!cases.has(row.case_id)||cases.get(row.case_id).case_sha256!==row.case_sha256||
        !PRED.has(row.prediction)||!SHA.test(row.raw_trace_sha256)||
-       !validNumber(row.cost_usd)||!validNumber(row.latency_ms)||
-       !Number.isSafeInteger(row.input_tokens)||row.input_tokens<0||
-       !Number.isSafeInteger(row.output_tokens)||row.output_tokens<0)
+       !validNumber(row.cost_usd,MAX_CASE_COST_USD)||!validNumber(row.latency_ms,MAX_CASE_LATENCY_MS)||
+       !Number.isSafeInteger(row.input_tokens)||row.input_tokens<0||row.input_tokens>MAX_CASE_TOKENS||
+       !Number.isSafeInteger(row.output_tokens)||row.output_tokens<0||row.output_tokens>MAX_CASE_TOKENS)
       throw Error("missing, unfrozen or unmetered case observation");
     if(which==="LLM_ONLY"){
       if(Object.hasOwn(row,"tool_status")||Object.hasOwn(row,"tool_receipt_sha256"))
@@ -91,6 +94,9 @@ function measure(arm,manifest){
     cost_usd+=row.cost_usd; latency_ms+=row.latency_ms;
     input_tokens+=row.input_tokens;output_tokens+=row.output_tokens;
   }
+  if(![cost_usd,latency_ms].every(Number.isFinite)||
+     ![input_tokens,output_tokens].every(Number.isSafeInteger))
+    throw Error("aggregate numeric metric overflow");
   const negative_cases=manifest.cases.filter(x=>x.expected==="FAIL").length;
   return {cases:rows.length,correct,classified,accuracy_all_cases:correct/rows.length,
     accuracy_classified:classified?correct/classified:null,
@@ -112,13 +118,16 @@ export function scoreFrozenPairedAB(baseline_json,augmented_json){
        baseline.protocol_id!==augmented.protocol_id)
       return denied("different LLM model/prompt/sampling/protocol controls");
     const b=measure(baseline,manifest),a=measure(augmented,manifest);
+    const deltas={accuracy_all_cases:a.accuracy_all_cases-b.accuracy_all_cases,
+      false_pass:a.false_pass-b.false_pass,unknown:a.unknown-b.unknown,
+      coverage:a.coverage-b.coverage,cost_usd:a.cost_usd-b.cost_usd,
+      latency_ms:a.latency_ms-b.latency_ms};
+    if(!Object.values(deltas).every(Number.isFinite))
+      return denied("non-finite paired metric delta");
     return {schema:"formal-tools/llm-ab-metrics/0.1",
       status:"SCORED_UNATTESTED",source_sha256:manifest.source_sha256,
       protocol_id:baseline.protocol_id,baseline:b,augmented:a,
-      deltas:{accuracy_all_cases:a.accuracy_all_cases-b.accuracy_all_cases,
-        false_pass:a.false_pass-b.false_pass,unknown:a.unknown-b.unknown,
-        coverage:a.coverage-b.coverage,cost_usd:a.cost_usd-b.cost_usd,
-        latency_ms:a.latency_ms-b.latency_ms},
+      deltas,
       independent_raw_trace_review:"NOT_RUN",business_oracle:"SOURCE_AUTHORED_SYNTHETIC",
       g5_accepted:false};
   }catch {return denied("invalid, unfair, incomplete or unbounded A/B observations");}
