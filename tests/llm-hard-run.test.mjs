@@ -42,6 +42,24 @@ test("G5 hard-r1 native pair binding needs the EXACT frozen 20-case identity",()
  cvc5.observations[2].status=z3.observations[2].status==="SAT"?"UNSAT":"SAT";
  assert.throws(()=>bindHardNativePair(z3,cvc5),/disagree/);
 });
+test("G5 hard-r1 rejects both Z3 and cvc5 agreeing on the same WRONG source classification",()=>{
+ const original=readHardCases();
+ const positive=original.cases.findIndex(x=>x.expected==="PASS");
+ const negative=original.cases.findIndex(x=>x.expected==="FAIL");
+ assert.ok(positive>=0&&negative>=0);
+ for(const [index,wrong] of [[positive,"UNSAT"],[negative,"SAT"]]){
+   const z3=mockNative("z3"),cvc5=mockNative("cvc5");
+   assert.equal(inspectSchedulingSemantics(original.cases[index]),wrong==="SAT"?"FAIL":"PASS");
+   // All source hashes, exit codes, result schema, tool identities and
+   // cross-engine agreement still pass the OLD binder. Only a separate
+   // finite source-semantic expectation can reject this common-mode error.
+   z3.observations[index].status=wrong;
+   cvc5.observations[index].status=wrong;
+   assert.equal(z3.observations[index].status,cvc5.observations[index].status);
+   assert.throws(()=>bindHardNativePair(z3,cvc5),/source semantics disagree/);
+   assert.throws(()=>prepareHardAB(z3,cvc5),/source semantics disagree/);
+ }
+});
 test("G5 hard-r1 refuses forged native version/source and missing cases",()=>{
  const a=mockNative("z3"),b=mockNative("cvc5");
  a.tool_binary_sha256="a".repeat(64);
