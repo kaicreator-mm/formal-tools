@@ -45,8 +45,17 @@ except Exception as exc:
 if len(raw) > MAX_INPUT_BYTES:
     fail("REQUEST_SIZE_LIMIT")
 input_sha256 = hashlib.sha256(raw).hexdigest()
+def unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError("duplicate JSON key")
+        result[key] = value
+    return result
+
 try:
-    model = json.loads(raw.decode("utf-8"), parse_constant=lambda value: (_ for _ in ()).throw(ValueError(value)))
+    model = json.loads(raw.decode("utf-8"), object_pairs_hook=unique_object,
+                       parse_constant=lambda value: (_ for _ in ()).throw(ValueError(value)))
 except Exception:
     fail("REQUEST_JSON_INVALID")
 if not exact_keys(model, ("sense", "objective", "variables", "constraints")):
@@ -92,7 +101,11 @@ except Exception as exc:
 actual_version = highspy.Highs().version()
 if actual_version != "1.15.1":
     fail("HIGHS_VERSION_MISMATCH_EXPECTED_1.15.1_ACTUAL_" + str(actual_version), 3)
-h = highspy.Highs()
+try:
+    h = highspy.Highs()
+except Exception as exc:
+    fail("HIGHS_INITIALIZATION_FAILED:" + type(exc).__name__, 3)
+
 def must_ok(label, status):
     if status != highspy.HighsStatus.kOk:
         fail("HIGHS_API_ERROR_" + label + ":" + str(status), 3)
