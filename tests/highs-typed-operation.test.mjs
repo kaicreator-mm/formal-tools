@@ -73,6 +73,13 @@ test("Highs candidate exposes one bounded typed Python Library operation, never 
   assert.throws(()=>planPortfolioOperation("highs","solve-lp",hiddenExtra),/HIGHS_MODEL_SCHEMA_INVALID/);
   const accessor={...model};Object.defineProperty(accessor,"sense",{enumerable:true,get(){throw new Error("getter must not execute");}});
   assert.throws(()=>planPortfolioOperation("highs","solve-lp",accessor),/HIGHS_MODEL_SCHEMA_INVALID/);
+  const hostileProxy=new Proxy(model,{ownKeys(){throw new Error("proxy trap must not run");}});
+  assert.throws(()=>planPortfolioOperation("highs","solve-lp",hostileProxy),/HIGHS_MODEL_SCHEMA_INVALID/);
+  const proxyArray=new Proxy(model.objective,{getPrototypeOf(){throw new Error("array proxy trap must not run");}});
+  assert.throws(()=>planPortfolioOperation("highs","solve-lp",{...model,objective:proxyArray}),/HIGHS_OBJECTIVE_INVALID/);
+  const proxyOptions=new Proxy({timeoutS:10},{get(){throw new Error("option proxy trap must not run");}});
+  assert.throws(()=>sdk.runPortfolioOperation("highs","solve-lp",model,proxyOptions),/plain data object/);
+  assert.throws(()=>sdk.runPortfolioOperation("highs","solve-lp",model,{get timeoutS(){throw new Error("option getter must not run");}}),/data property/);
 });
 
 test("SDK and CLI use the same pinned typed operation; CLI opens model with O_NOFOLLOW",{skip:process.platform!=="linux"||process.arch!=="x64"},async()=>{
