@@ -5,8 +5,8 @@
   "repository": "kaicreator-mm/formal-tools",
   "pr": 96,
   "branch": "feat/i24-highspy-typed-lp-operation-r20",
-  "base_main_sha": "74ff708addfb188bb6b3ab8afed4fb6359508872",
-  "reviewed_head_before_this_document": "0c5ee5ebe795d470a4a5334da46934cc215652d7",
+  "base_main_sha": "9a997e980c4f3202620f189eb9c935b941b57f1e",
+  "reviewed_head_before_this_document": "f586dec55d4be443806583cd8a2df2f9230f05bc",
   "issue_scope": {
     "portfolio": 24,
     "tool": 38,
@@ -25,16 +25,16 @@
   "implementation": {
     "python_operation": {
       "path": "portable/verification/cases/highs/solve-lp.py",
-      "git_blob": "65d459dfd55144fc92ef5a5305d5c9a84e35d1eb",
-      "sha256": "869a341e76139131eea9fb22c6a152d5e4fdca9dc604160cc6d0b41109030b20"
+      "git_blob": "f8730bc4f9d934e46f767e184cda356fb9790c6d",
+      "sha256": "6b43add5fbb8dc3b2aa65b951f85d9ee41f7827921d8d624588fe3aaae339136"
     },
     "shared_runner": {
       "path": "packages/runner/js/tool-portfolio-t4.mjs",
-      "git_blob": "e707547c0bee4203833b2e851aeaaa3afdfa2047"
+      "git_blob": "922a7c208beaa0e48346403a29ec2d927189319f"
     },
     "cli": {
       "path": "packages/runner/js/cli.mjs",
-      "git_blob": "7505c77e2245d1762a244a04a13f30682b1ded9f"
+      "git_blob": "05a0693f1ab34a881c7fd8de81b3d609e6568047"
     },
     "mcp": {
       "path": "packages/runner/js/mcp.mjs",
@@ -57,8 +57,8 @@
     },
     "tests": {
       "path": "tests/highs-typed-operation.test.mjs",
-      "git_blob": "48e71c5ed5626b9acd3ee1dc01094d3456689143",
-      "scope": "synthetic pinned Runner; validation; SDK/CLI/MCP stdio wiring; not a real Highs native process"
+      "git_blob": "794115c6eda958d75458f8e4bc2201844d8f6d9e",
+      "scope": "synthetic pinned Runner; CLI FIFO/duplicate JSON; SDK/CLI/MCP stdio wiring; runner timeout/output/version failures; not a real Highs process"
     },
     "parity_test": {
       "path": "tests/tool-contract-parity.test.mjs",
@@ -69,6 +69,18 @@
       "path": "scripts/mcp-acceptance.mjs",
       "git_blob": "04548e0d3f66e372daaeff586610299801850bb9",
       "mcp_method_count": 13
+    },
+    "candidate_route": {
+      "cli_command": "portfolio invoke highs solve-lp --model <JSON-file> [--timeout N]",
+      "mcp_method": "run_portfolio_operation",
+      "sdk_exports": [
+        "planPortfolioOperation",
+        "runPortfolioOperation"
+      ],
+      "shared_registry_runner": true,
+      "one_mcp_server": true,
+      "candidate_operation_implemented": 1,
+      "full_candidate_t4_accepted": 0
     }
   },
   "contract": {
@@ -105,15 +117,16 @@
     ]
   },
   "validation": {
-    "source_static_review": "NOT_RUN_IN_MODEL_ENVIRONMENT",
-    "unit_and_ci": "WOODPECKER_PUSH_935_AND_PR_936_FAILED; FAILING_STEP_LOGS_NOT_ACCESSIBLE_FROM_THIS_SESSION; test execution outcome not independently established",
-    "synthetic_runner_test": "TESTS_IMPLEMENTED; EXECUTION_OUTCOME_UNKNOWN_DUE_CI_FAILURE",
+    "source_static_review": "P2_REPAIRS_IMPLEMENTED; FRESH_INDEPENDENT_SOURCE_FIRST_REVIEW_PENDING",
+    "unit_and_ci": "NOT_PASS; previous exact repair head f586dec55d4be443806583cd8a2df2f9230f05bc Woodpecker push #964 and PR #965 both FAILURE; first failing step/log inaccessible from this session; root cause UNKNOWN",
+    "synthetic_runner_test": "EXPANDED_POS_NEG_ERR_AND_FAILURE_PATH_TESTS_COMMITTED; NOT_EXECUTED_BY_SUCCESSFUL_CI",
     "actual_original_highspy_1151_pos_neg_err": "R19_SCOPED_NATIVE_PASS_USING_HOST_PYTHON_3.13.5_SUBSTITUTE",
-    "actual_typed_operation_against_canonical_portable_python_runtime": "NOT_RUN",
-    "full_cli_mcp_sdk_real_highs_e2e": "NOT_RUN",
-    "independent_source_first_review": "PENDING",
-    "woodpecker_push_and_pr_exact_sha": "FAILED_ON_SOURCE_HEAD_0c5ee5ebe795d470a4a5334da46934cc215652d7; need inspect pipeline logs and rerun",
-    "local_model_environment": "container and Python execution tools returned ClientError; no native typed-operation run claimed"
+    "actual_typed_operation_host_substitute": "PASS_SCOPED: exact solve-lp.py SHA256 6b43add5fbb8dc3b2aa65b951f85d9ee41f7827921d8d624588fe3aaae339136 executed against original Highs archive SHA256 ea0a12198f986f9fd03c7a29525d7f93c64e39c51525492bf3fc37e0bc7815a2 with host CPython 3.13.5 and NumPy 2.3.5; POS kOptimal objective=3; NEG kInfeasible; duplicate JSON, reversed bounds and NaN rejected; synthetic highspy stub proves value_valid=false and API Warning fail closed; NOT canonical portable-runtime evidence",
+    "actual_typed_operation_against_canonical_portable_python_runtime": "NOT_RUN: Drive runtime archive is 294346075 bytes, exceeding the connector 268435456-byte raw-download limit; exact Python version available locally is host substitute, not relocated bundle",
+    "full_cli_mcp_sdk_real_highs_e2e": "NOT_RUN; source tests use a synthetic pinned Runner and are not native execution",
+    "independent_source_first_review": "REWORK on prior exact HEAD 07d5393ea05a19798946b9c234fef0dd0539ed1d (P0=0/P1=0/P2=6); repairs committed; fresh review of current merge head pending",
+    "woodpecker_push_and_pr_exact_sha": "REPAIR HEAD f586dec55d4be443806583cd8a2df2f9230f05bc: push #964 FAILURE and PR #965 FAILURE; first failing step/root cause UNKNOWN; do not blind retry",
+    "local_model_environment": "Python 3.13.5 and Node 22.16.0 available; container.exec ClientError; actual typed Python script tested locally with exact source SHA and original Highs archive, but no Node 24.21.0 or complete portable Python bundle in this session"
   },
   "counts_before_acceptance": {
     "registered_tools": 36,
@@ -128,10 +141,11 @@
     "callable_including_alternate_scopes": 34,
     "new_candidate_full_t4_accepted": 0,
     "t5_semantic_accepted": 0,
-    "t6_final_accepted": 0
+    "t6_final_accepted": 0,
+    "candidate_typed_operations_implemented": 1
   },
   "qualification": {
-    "implementation_status": "CANDIDATE_IMPLEMENTED_CI_FAILURE_UNDIAGNOSED_INDEPENDENT_REVIEW_PENDING",
+    "implementation_status": "P2_REPAIRS_COMMITTED; CI_FAILURE_ROOT_CAUSE_UNKNOWN; INDEPENDENT_REVIEW_PENDING",
     "candidate_tool_t4_accepted": false,
     "t5_semantics_accepted": false,
     "t6_accepted": false,
@@ -139,12 +153,68 @@
     "r19_native_receipts_do_not_prove_typed_operation_or_hermetic_runtime": true
   },
   "next": [
-    "Inspect Woodpecker pipeline 935/936 failing step and repair the actual failure before another acceptance claim.",
-    "Wait for Woodpecker push and PR exact-head statuses.",
-    "Resolve all test/typecheck failures without touching PR #86 shared ELF doctor Writer scope.",
-    "Independent other-conversation Source-First review of current PR exact HEAD.",
-    "Run original verified portable bundle with canonical bundled Python 3.13.5 and original Highs 1.15.1 through this exact typed script; capture process, streams, model hash, Runner/meta/fixture/script hashes.",
-    "Run real CLI, MCP stdio and SDK against that same exact bundle and LP model; include infeasible and malformed-input cases.",
-    "Only after independent review and exact-SHA evidence, update #38/#24 and candidate T4 count; do not promote T5."
-  ]
+    "Obtain Woodpecker #964/#965 first-failing-step logs and classify the actual source/infrastructure failure; do not blind-retry.",
+    "After repairing the actual CI cause, obtain push and PR SUCCESS on the same exact head.",
+    "Fresh independent non-Writer Source-First review of the current merged branch HEAD and every changed Blob.",
+    "Run exact typed Highs operation through canonical portable Python 3.13.5 bundle; the 294346075-byte runtime archive must be supplied in split chunks or run from a local machine because this connector has a 268435456-byte download limit.",
+    "Run real shared Runner, CLI, MCP stdio and SDK against that same portable bundle; keep host-substitute receipts scoped.",
+    "Only after all required gates, update #38/#24 candidate T4 count; do not promote T5 or Release."
+  ],
+  "local_host_execution": {
+    "source_sha256": "6b43add5fbb8dc3b2aa65b951f85d9ee41f7827921d8d624588fe3aaae339136",
+    "archive_sha256": "ea0a12198f986f9fd03c7a29525d7f93c64e39c51525492bf3fc37e0bc7815a2",
+    "python_version": "3.13.5",
+    "numpy_version": "2.3.5",
+    "highspy_version": "1.15.1",
+    "mode": "HOST_PYTHON_SUBSTITUTE_NOT_PORTABLE_RUNTIME",
+    "results": [
+      {
+        "case": "positive",
+        "exit": 0,
+        "model_status": "kOptimal",
+        "objective": 3,
+        "variables": [
+          1,
+          0
+        ],
+        "input_sha256": "df0e96b7a98b71ed22ce9c5934092e30d06608419cea78703c88a4f3109be7bd",
+        "stdout_sha256": "8de0597e367636c7fc7903371e4de806c87ce87b761561d5c82c168f50183953"
+      },
+      {
+        "case": "infeasible",
+        "exit": 0,
+        "model_status": "kInfeasible",
+        "objective": null,
+        "variables": [],
+        "input_sha256": "601ffec398c8144edb3c0498a4f188a1fca896928d3a8cf146a1e801fabb7a70",
+        "stdout_sha256": "52ef879b7fa0433a0e4ca20c9e3e087aeffe4134eb472aed9890e014327ebed5"
+      },
+      {
+        "case": "duplicate-json-key",
+        "exit": 2,
+        "stderr_suffix": "REQUEST_JSON_INVALID"
+      },
+      {
+        "case": "reversed-bounds",
+        "exit": 2,
+        "stderr_suffix": "VARIABLE_BOUNDS_REVERSED"
+      },
+      {
+        "case": "NaN",
+        "exit": 2,
+        "stderr_suffix": "REQUEST_JSON_INVALID"
+      },
+      {
+        "case": "invalid-solution-value_valid-false-stub",
+        "exit": 3,
+        "stderr_suffix": "OPTIMAL_SOLUTION_VALUE_INVALID"
+      },
+      {
+        "case": "Highs-API-warning-stub",
+        "exit": 3,
+        "stderr_suffix": "HIGHS_API_ERROR_THREADS"
+      }
+    ],
+    "note": "The host Python environment emits an unrelated spreadsheet warmup stderr warning when launched normally; the controlled -S run used for clean POS/NEG receipts has empty stderr. The original archive hash and source hash were independently checked."
+  }
 }
