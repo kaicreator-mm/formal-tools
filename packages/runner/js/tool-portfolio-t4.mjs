@@ -35,7 +35,7 @@ const maxBytes=1024*1024;
 const maxMetadataBytes=65536;
 const maxFixtureBytes=65536;
 const maxRunnerBytes=1024*1024;
-const highsSolveScriptSha256="869a341e76139131eea9fb22c6a152d5e4fdca9dc604160cc6d0b41109030b20";
+const highsSolveScriptSha256="6b43add5fbb8dc3b2aa65b951f85d9ee41f7827921d8d624588fe3aaae339136";
 function verifyOptionalPin(variable,actual) {
   const expected=process.env[variable];
   if(expected===undefined)return;
@@ -164,7 +164,7 @@ function denseModelArray(value,min,max){
 function finiteModelNumber(value){return typeof value==="number"&&Number.isFinite(value);}
 function numpyVersionSupported(value){
   if(typeof value!=="string")return false;
-  const match=/^(\\d+)\\.(\\d+)(?:\\.\\d+)?(?:[A-Za-z0-9.+-].*)?$/.exec(value);
+  const match=/^(\d+)\.(\d+)(?:\.\d+)?(?:[A-Za-z0-9.+-].*)?$/.exec(value);
   if(!match)return false;
   const major=Number(match[1]),minor=Number(match[2]);
   return Number.isSafeInteger(major)&&Number.isSafeInteger(minor)&&
