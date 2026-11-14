@@ -10,6 +10,7 @@ import { describePortfolioTool, planPortfolioOperation, runPortfolioOperation } 
 import * as sdk from "../packages/runner/js/sdk.mjs";
 
 const repoRoot=resolve(dirname(fileURLToPath(import.meta.url)),"..");
+/** @type {import("../packages/runner/js/sdk.mjs").HighsLinearProgram} */
 const model={
   sense:"max",objective:[3,2],
   variables:[{lower:0,upper:null},{lower:0,upper:null}],
