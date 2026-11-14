@@ -34,7 +34,7 @@ const maxBytes=1024*1024;
 const maxMetadataBytes=65536;
 const maxFixtureBytes=65536;
 const maxRunnerBytes=1024*1024;
-const highsSolveScriptSha256="506a0d9fc0665ab2fcc8cfe1df7c14cf08a449e7fc3b38d4402d4c665d8e728b";
+const highsSolveScriptSha256="869a341e76139131eea9fb22c6a152d5e4fdca9dc604160cc6d0b41109030b20";
 function verifyOptionalPin(variable,actual) {
   const expected=process.env[variable];
   if(expected===undefined)return;
