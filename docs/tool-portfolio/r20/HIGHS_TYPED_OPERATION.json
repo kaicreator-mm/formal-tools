@@ -1,0 +1,149 @@
+{
+  "schema": "formal-tools/i24-highs-typed-operation/1.0",
+  "output_label": "FORMAL_TOOLS_I24_TOOL_INTEGRATION_CONTINUE",
+  "date": "2026-11-15",
+  "repository": "kaicreator-mm/formal-tools",
+  "pr": 96,
+  "branch": "feat/i24-highspy-typed-lp-operation-r20",
+  "base_main_sha": "88c79464bd717ad9f0ae2cdf0ee18f8c99ca2a05",
+  "reviewed_head": "cc440536fc78221f0c600986219028fba1b01d45",
+  "issue_scope": {
+    "portfolio": 24,
+    "tool": 38,
+    "product": 11,
+    "runtime": 4
+  },
+  "capability": {
+    "tool": "highs",
+    "expected_version": "1.15.1",
+    "capability_ids": [
+      "opt.numerical"
+    ],
+    "operation": "solve-lp",
+    "schema": "formal-tools/highs-solve-lp/1.0"
+  },
+  "implementation": {
+    "python_operation": {
+      "path": "portable/verification/cases/highs/solve-lp.py",
+      "git_blob": "65d459dfd55144fc92ef5a5305d5c9a84e35d1eb",
+      "sha256": "869a341e76139131eea9fb22c6a152d5e4fdca9dc604160cc6d0b41109030b20"
+    },
+    "shared_runner": {
+      "path": "packages/runner/js/tool-portfolio-t4.mjs",
+      "git_blob": "fd63bfd209cf455c4fe6399d6e46303bacebaf25"
+    },
+    "cli": {
+      "path": "packages/runner/js/cli.mjs",
+      "git_blob": "7867d61331fb2b50cc1d42ae88975aad1ffeb468",
+      "route": "portfolio invoke highs solve-lp --model FILE --timeout N"
+    },
+    "mcp": {
+      "path": "packages/runner/js/mcp.mjs",
+      "git_blob": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+      "method": "run_portfolio_operation",
+      "single_shared_server": true,
+      "strict_input_schema": true
+    },
+    "sdk": {
+      "path": "packages/runner/js/sdk.mjs",
+      "git_blob": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+      "exports": [
+        "planPortfolioOperation",
+        "runPortfolioOperation"
+      ]
+    },
+    "types": {
+      "path": "packages/runner/js/sdk.d.mts",
+      "git_blob": "e39a82b82756845f75d22293f95bdb19ea5642ea"
+    },
+    "tests": {
+      "path": "tests/highs-typed-operation.test.mjs",
+      "git_blob": "cd296ad3e3251bbc687abb3544c322538279d958",
+      "scope": "synthetic pinned runner; validation; SDK/CLI/MCP stdio wiring; no real Highs process"
+    },
+    "parity_test": {
+      "path": "tests/tool-contract-parity.test.mjs",
+      "git_blob": "fbfa769a62b2121c51f260462783f59b45638d76",
+      "mcp_method_count": 13
+    },
+    "mcp_acceptance": {
+      "path": "scripts/mcp-acceptance.mjs",
+      "git_blob": "04548e0d3f66e372daaeff586610299801850bb9",
+      "mcp_method_count": 13
+    }
+  },
+  "contract": {
+    "max_input_bytes": 65536,
+    "max_variables": 64,
+    "max_constraints": 128,
+    "max_timeout_seconds": 30,
+    "bounds": "finite numeric coefficients; nullable lower/upper bounds; lower <= upper",
+    "reject": [
+      "unknown object keys including non-enumerable and symbol keys",
+      "accessor properties",
+      "sparse arrays",
+      "duplicate JSON keys",
+      "NaN/Infinity",
+      "unknown tool/operation",
+      "version drift",
+      "untrusted runner/script digest",
+      "timeouts",
+      "output overflow",
+      "invalid solver result schema"
+    ],
+    "no_raw_argv": true,
+    "no_shell": true,
+    "no_user_script": true,
+    "no_arbitrary_input_path_mcp": true,
+    "per_api_call_status_check": true,
+    "solver_version_exact": "1.15.1",
+    "allowed_statuses": [
+      "kOptimal",
+      "kInfeasible",
+      "kUnbounded",
+      "kUnboundedOrInfeasible",
+      "kTimeLimit"
+    ]
+  },
+  "validation": {
+    "source_static_review": "NOT_RUN_IN_MODEL_ENVIRONMENT",
+    "unit_and_ci": "PENDING_AT_RECORD_CREATION",
+    "synthetic_runner_test": "IMPLEMENTED_NOT_YET_EXECUTED",
+    "actual_original_highspy_1151_pos_neg_err": "R19_SCOPED_NATIVE_PASS_USING_HOST_PYTHON_3.13.5_SUBSTITUTE",
+    "actual_typed_operation_against_canonical_portable_python_runtime": "NOT_RUN",
+    "full_cli_mcp_sdk_real_highs_e2e": "NOT_RUN",
+    "independent_source_first_review": "PENDING",
+    "woodpecker_push_and_pr_exact_sha": "PENDING"
+  },
+  "counts_before_acceptance": {
+    "registered_tools": 36,
+    "existing_native_adapters": 13,
+    "existing_typed_native_operations": 53,
+    "candidate_tools": 23,
+    "candidate_discovery_routes": 23,
+    "candidate_fixture_routes": 23,
+    "prior_shared_mcp_portfolio_methods": 3,
+    "prior_sdk_portfolio_exports": 5,
+    "original_tar_t3_scoped_receipts": 19,
+    "callable_including_alternate_scopes": 34,
+    "new_candidate_full_t4_accepted": 0,
+    "t5_semantic_accepted": 0,
+    "t6_final_accepted": 0
+  },
+  "qualification": {
+    "implementation_status": "CANDIDATE_IMPLEMENTED_PENDING_EXACT_SHA_CI_AND_INDEPENDENT_REVIEW",
+    "candidate_tool_t4_accepted": false,
+    "t5_semantics_accepted": false,
+    "t6_accepted": false,
+    "synthetic_runner_never_counts_as_native_execution": true,
+    "r19_native_receipts_do_not_prove_typed_operation_or_hermetic_runtime": true
+  },
+  "next": [
+    "Wait for Woodpecker push and PR exact-head statuses.",
+    "Resolve all test/typecheck failures without touching PR #86 shared ELF doctor Writer scope.",
+    "Independent other-conversation Source-First review of current PR exact HEAD.",
+    "Run original verified portable bundle with canonical bundled Python 3.13.5 and original Highs 1.15.1 through this exact typed script; capture process, streams, model hash, runner/meta/fixture/script hashes.",
+    "Run real CLI, MCP stdio and SDK against that same exact bundle and LP model; include infeasible and malformed-input cases.",
+    "Only after independent review and exact-SHA evidence, update #38/#24 and candidate T4 count; do not promote T5."
+  ]
+}
