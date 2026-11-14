@@ -138,7 +138,17 @@ export async function main(args=process.argv.slice(2)) {
           const fileStat=await modelHandle.stat();
           if(!fileStat.isFile()||fileStat.size>65536)
             throw new TypeError("model file must be a regular non-symlink file <=64KiB");
-          model=JSON.parse(await modelHandle.readFile("utf8"));
+          const chunks=[];
+          let total=0;
+          while(total<=65536){
+            const chunk=Buffer.alloc(Math.min(8192,65537-total));
+            const {bytesRead}=await modelHandle.read(chunk,0,chunk.length,null);
+            if(bytesRead===0)break;
+            total+=bytesRead;
+            if(total>65536)throw new RangeError("model file grew beyond 64KiB while reading");
+            chunks.push(chunk.subarray(0,bytesRead));
+          }
+          model=JSON.parse(Buffer.concat(chunks).toString("utf8"));
         }finally{await modelHandle.close();}
         result=await runPortfolioOperation(tool,operation,model,{timeoutS:optNumber(params.timeout,30)});
       }
