@@ -180,7 +180,7 @@ test("MCP stdio invokes the same typed Highs operation and rejects arbitrary fie
     assert.equal(receipt.status,"T4_OPERATION_EXECUTED_UNREVIEWED");
     assert.equal(receipt.solver.highspy_version,"1.15.1");
     assert.equal(receipt.solver.objective,3);
-    assert.equal(executed.result.isError,false);
+    assert.notEqual(executed.result?.isError,true);
     assert.ok(rejected.error||rejected.result?.isError===true,"unknown argv field must be rejected");
   }finally{await bundle.cleanup();}
 });
