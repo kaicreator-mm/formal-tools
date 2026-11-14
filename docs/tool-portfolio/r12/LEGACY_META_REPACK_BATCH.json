@@ -133,7 +133,7 @@
     "header_evidence_closeout": {
       "status": "P2_01_CLOSED_SCOPED",
       "evidence_file": "docs/tool-portfolio/r13/CANDIDATE_TAR_HEADERS.json",
-      "evidence_blob": "3883f039ea1cef9b68995d9c404ae32d5686a43e",
+      "evidence_blob": "8f8cd8e84a3ab59aa69ad34a408cb61e8fe3a0bb",
       "candidate_archives": 6,
       "candidate_tar_entries": 247,
       "uniform_header_fields_for_every_entry": {
@@ -188,7 +188,8 @@
         "original_App_packages_modified": false
       },
       "method": "Authenticated readback of only the already-pinned candidate archives; SHA256, zstd integrity and tar headers verified read-only. R12 ZIP CRC/manifest retained. Per-entry path/type/mode tables plus common mtime/uid/gid values are in the evidence file.",
-      "qualification_boundary": "Header evidence closes the documentation P2 only. These six candidates remain noncanonical; old doctor/version receipts are bound to the R12 Runner. Rebuild under R13 Runner before any further candidate admission use. No T4/T5/Product/Release promotion."
+      "qualification_boundary": "Header evidence closes the documentation P2 only. These six candidates remain noncanonical; old doctor/version receipts are bound to the R12 Runner. Rebuild under R13 Runner before any further candidate admission use. No T4/T5/Product/Release promotion.",
+      "entry_count_validation": "All six per-entry path/mode arrays were machine-checked against the tar header entry counts: 30/30, 39/39, 45/45, 27/27, 16/16, 90/90 (247/247 total)."
     },
     "required_before_further_use": [
       "COMPLETED: extract per-entry mode/mtime/uid/gid for the four R12 candidates plus R10 HiGHS and R11 nuXmv candidates; see docs/tool-portfolio/r13/CANDIDATE_TAR_HEADERS.json.",
