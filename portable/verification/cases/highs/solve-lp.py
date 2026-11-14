@@ -5,6 +5,8 @@ import json
 import math
 import os
 import pathlib
+import platform
+import re
 import stat
 import sys
 
@@ -16,6 +18,10 @@ MAX_CONSTRAINTS = 128
 def fail(message, code=2):
     print("HIGHS_TYPED_OPERATION_ERROR: " + message, file=sys.stderr, flush=True)
     raise SystemExit(code)
+
+actual_python_version = platform.python_version()
+if actual_python_version != "3.13.5":
+    fail("PYTHON_VERSION_MISMATCH_EXPECTED_3.13.5_ACTUAL_" + actual_python_version, 3)
 
 def finite_number(value):
     return type(value) in (int, float) and math.isfinite(value)
@@ -101,6 +107,13 @@ except Exception as exc:
 actual_version = highspy.Highs().version()
 if actual_version != "1.15.1":
     fail("HIGHS_VERSION_MISMATCH_EXPECTED_1.15.1_ACTUAL_" + str(actual_version), 3)
+numpy_version = str(np.__version__)
+numpy_match = re.fullmatch(r"([0-9]+)\.([0-9]+)(?:\.[0-9]+)?(?:[A-Za-z0-9.+-].*)?", numpy_version)
+if not numpy_match:
+    fail("NUMPY_VERSION_INVALID_" + numpy_version, 3)
+numpy_major, numpy_minor = (int(numpy_match.group(1)), int(numpy_match.group(2)))
+if numpy_major < 2 or (numpy_major == 2 and numpy_minor < 1):
+    fail("NUMPY_VERSION_BELOW_PORTABLE_FLOOR_2.1_" + numpy_version, 3)
 try:
     h = highspy.Highs()
 except Exception as exc:
@@ -130,11 +143,13 @@ must_ok("RUN", h.run())
 model_status = h.getModelStatus()
 status_name = model_status.name
 result = {"schema": SCHEMA, "tool": "highs", "highspy_version": actual_version,
-          "numpy_version": np.__version__, "python_version": sys.version.split()[0],
+          "numpy_version": numpy_version, "python_version": actual_python_version,
           "input_sha256": input_sha256, "model_status": status_name,
           "objective": None, "variables": [], "solver_api_status": "kOk"}
 if model_status == highspy.HighsModelStatus.kOptimal:
     solution = h.getSolution()
+    if not bool(getattr(solution, "value_valid", False)):
+        fail("OPTIMAL_SOLUTION_VALUE_INVALID", 3)
     values = list(solution.col_value)
     objective_value = h.getObjectiveValue()
     if len(values) != len(objective) or any(not math.isfinite(float(x)) for x in values) or not math.isfinite(float(objective_value)):
