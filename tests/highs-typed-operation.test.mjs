@@ -31,7 +31,7 @@ async function fixtureBundle(){
   await copyFile(join(repoRoot,"portable/verification/cases/highs/expect.sh"),join(root,"tests","highs","expect.sh"));
   await copyFile(join(repoRoot,"portable/verification/cases/highs/solve-lp.py"),join(root,"tests","highs","solve-lp.py"));
   const runner=join(root,"bin","tool-runner");
-  const source=`#!/usr/bin/env node
+  const source=String.raw\`#!/usr/bin/env node
 const fs=require("node:fs");
 const path=require("node:path");
 const crypto=require("node:crypto");
@@ -39,15 +39,26 @@ const root=path.resolve(__dirname,"..");
 const [command,id,script,input]=process.argv.slice(2);
 if(command!=="run"||id!=="highs"||script!==path.join(root,"tests","highs","solve-lp.py")||process.argv.length!==6)process.exit(2);
 if(!process.env.FORMAL_TOOLS_HIGHS_TIME_LIMIT_S)process.exit(3);
+const mode=process.env.FORMAL_TEST_HIGHS_MODE??"optimal";
+if(mode==="timeout"){setInterval(()=>{},1000);}
+if(mode==="overflow"){process.stdout.write("x".repeat(1048577));}
+if(mode==="missing-dependency"){process.stderr.write("DEPENDENCY_IMPORT_FAILED:ModuleNotFoundError");process.exit(3);}
+if(mode==="api-error"){process.stderr.write("HIGHS_API_ERROR_RUN:kWarning");process.exit(3);}
+if(mode==="malformed"){process.stdout.write("{malformed");process.exit(0);}
 const raw=fs.readFileSync(input);
-const model=JSON.parse(raw.toString("utf8"));
 const input_sha256=crypto.createHash("sha256").update(raw).digest("hex");
-process.stdout.write(JSON.stringify({
+const result={
   schema:"formal-tools/highs-solve-lp/1.0",tool:"highs",highspy_version:"1.15.1",
-  numpy_version:"2.2.4",python_version:"3.13.5",input_sha256,
-  model_status:"kOptimal",objective:3,variables:[1,0],solver_api_status:"kOk"
-})+"\n");
-`;
+  numpy_version:mode==="numpy-drift"?"1.26.4":"2.2.4",
+  python_version:mode==="python-drift"?"3.13.6":"3.13.5",input_sha256,
+  model_status:mode==="infeasible"?"kInfeasible":mode==="unbounded"?"kUnbounded":"kOptimal",
+  objective:3,variables:[1,0],solver_api_status:mode==="api-warning"?"kWarning":"kOk"
+};
+if(result.model_status!=="kOptimal"){result.objective=null;result.variables=[];}
+if(mode==="bad-optimal")result.variables=[1];
+process.stdout.write(JSON.stringify(result)+"\\n");
+\`;
+
   await writeFile(runner,source);
   await chmod(runner,0o755);
   const runnerBytes=await readFile(runner);
