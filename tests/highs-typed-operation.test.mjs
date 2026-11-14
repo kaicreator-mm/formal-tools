@@ -95,6 +95,9 @@ test("SDK and CLI use the same pinned typed operation; CLI opens model with O_NO
     assert.equal(receipt.process.exit_code,0);
     assert.match(receipt.operation_script_sha256,/^[a-f0-9]{64}$/);
     assert.equal(receipt.input_sha256,receipt.solver.input_sha256);
+    const sdkReceipt=await sdk.runPortfolioOperation("highs","solve-lp",model,{timeoutS:10});
+    assert.equal(sdkReceipt.status,"T4_OPERATION_EXECUTED_UNREVIEWED");
+    assert.equal(sdkReceipt.solver.objective,3);
     const cli=spawnSync(process.execPath,[
       join(repoRoot,"packages/runner/js/cli.mjs"),
       "portfolio","invoke","highs","solve-lp","--model",modelPath,"--timeout","10"
@@ -151,8 +154,13 @@ async function mcpRequests(env,requests){
     return results;
   }finally{
     child.stdin.end();
-    child.kill("SIGTERM");
-    await new Promise(resolve=>child.once("exit",resolve));
+    if(child.exitCode===null&&child.signalCode===null){
+      child.kill("SIGTERM");
+      await new Promise(resolve=>{
+        if(child.exitCode!==null||child.signalCode!==null)return resolve();
+        child.once("exit",resolve);
+      });
+    }
   }
 }
 
