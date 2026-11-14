@@ -23,7 +23,7 @@ async function fixtureBundle(){
   await mkdir(join(root,"tools","highs"),{recursive:true});
   await mkdir(join(root,"tests","highs"),{recursive:true});
   await writeFile(join(root,"tools","highs","meta.json"),JSON.stringify({
-    tool_id:"highs",version:"1.15.1",kind:"python-library",unavailable:false
+    tool_id:"highs",version:"1.15.1",kind:"python-lib",unavailable:false
   })+"\n");
   await writeFile(join(root,"tools","highs","run"),"#!/bin/sh\nexit 0\n");
   await chmod(join(root,"tools","highs","run"),0o755);
@@ -102,6 +102,13 @@ test("SDK and CLI use the same pinned typed operation; CLI opens model with O_NO
     assert.equal(receipt.process.exit_code,0);
     assert.match(receipt.operation_script_sha256,/^[a-f0-9]{64}$/);
     assert.equal(receipt.input_sha256,receipt.solver.input_sha256);
+    const metaPath=join(bundle.root,"tools","highs","meta.json");
+    const originalMeta=await readFile(metaPath,"utf8");
+    await writeFile(metaPath,JSON.stringify({tool_id:"highs",version:"1.15.1",kind:"binary",unavailable:false}));
+    const wrongKind=await runPortfolioOperation("highs","solve-lp",model,{timeoutS:10});
+    assert.equal(wrongKind.status,"NOT_RUN_FAIL_CLOSED");
+    assert.match(wrongKind.reason,/HIGHS_ADAPTER_KIND_MISMATCH/);
+    await writeFile(metaPath,originalMeta);
     const sdkReceipt=await sdk.runPortfolioOperation("highs","solve-lp",model,{timeoutS:10});
     assert.equal(sdkReceipt.status,"T4_OPERATION_EXECUTED_UNREVIEWED");
     assert.equal(sdkReceipt.solver.objective,3);
