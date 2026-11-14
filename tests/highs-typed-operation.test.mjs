@@ -45,7 +45,7 @@ process.stdout.write(JSON.stringify({
   schema:"formal-tools/highs-solve-lp/1.0",tool:"highs",highspy_version:"1.15.1",
   numpy_version:"2.2.4",python_version:"3.13.5",input_sha256,
   model_status:"kOptimal",objective:3,variables:[1,0],solver_api_status:"kOk"
-})+"\\n");
+})+"\n");
 `;
   await writeFile(runner,source);
   await chmod(runner,0o755);
@@ -125,7 +125,7 @@ async function mcpRequests(env,requests){
   child.stdout.on("data",chunk=>{
     buffer+=chunk;
     let index;
-    while((index=buffer.indexOf("\\n"))>=0){
+    while((index=buffer.indexOf("\n"))>=0){
       const line=buffer.slice(0,index).trim();buffer=buffer.slice(index+1);
       if(!line)continue;
       let message;try{message=JSON.parse(line);}catch{continue;}
@@ -139,7 +139,7 @@ async function mcpRequests(env,requests){
     return new Promise((resolve,reject)=>{
       const timer=setTimeout(()=>{pending.delete(id);reject(new Error("MCP timeout "+method+" stderr="+stderr));},10000);
       pending.set(id,message=>{clearTimeout(timer);resolve(message);});
-      child.stdin.write(JSON.stringify({jsonrpc:"2.0",id,method,params})+"\\n");
+      child.stdin.write(JSON.stringify({jsonrpc:"2.0",id,method,params})+"\n");
     });
   };
   try{
@@ -148,7 +148,7 @@ async function mcpRequests(env,requests){
       clientInfo:{name:"highs-typed-operation-test",version:"1.0.0"}
     });
     assert.equal(initialized.error,undefined,JSON.stringify(initialized));
-    child.stdin.write(JSON.stringify({jsonrpc:"2.0",method:"notifications/initialized",params:{}})+"\\n");
+    child.stdin.write(JSON.stringify({jsonrpc:"2.0",method:"notifications/initialized",params:{}})+"\n");
     const results=[];
     for(const [method,params] of requests)results.push(await request(method,params));
     return results;
