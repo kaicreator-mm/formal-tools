@@ -113,6 +113,47 @@ test('R21 adversarial false qualification and hidden DAG rewiring fail closed',(
     assert.throws(()=>checkDag(corrupted));
   }
 });
+test('R23 equal-length duplicate IDs fail at raw uniqueness before indexing',()=>{
+  const cases=[
+    {
+      label:'task FULL_ACCEPTED',
+      duplicate:'task',
+      mutate:d=>{
+        const forged={...structuredClone(index(d.tasks)['T-G6-01']),
+          status:'FULL_ACCEPTED'};
+        d.tasks[0]=forged;
+      }
+    },
+    {
+      label:'gate FULL_ACCEPTED',
+      duplicate:'gate',
+      mutate:d=>{
+        const forged={...structuredClone(index(d.gates).G6),
+          status:'FULL_ACCEPTED'};
+        d.gates[0]=forged;
+      }
+    },
+    {
+      label:'task dependency rewrite',
+      duplicate:'task',
+      mutate:d=>{
+        const forged={...structuredClone(index(d.tasks)['T-G6-01']),
+          depends_on:[]};
+        d.tasks[0]=forged;
+      }
+    }
+  ];
+  for(const item of cases){
+    const corrupted=structuredClone(dag);
+    const gateCount=corrupted.gates.length,taskCount=corrupted.tasks.length;
+    item.mutate(corrupted);
+    assert.equal(corrupted.gates.length,gateCount,item.label+' changed gate count');
+    assert.equal(corrupted.tasks.length,taskCount,item.label+' changed task count');
+    assert.throws(()=>checkDag(corrupted),
+      item.duplicate==='gate'?/duplicate raw gate ID/:/duplicate raw task ID/,
+      item.label+' must fail at the uniqueness guard, not array cardinality');
+  }
+});
 test('R21 receipt and Product-root Git Blobs match actual frozen files',()=>{
   for(const item of [rec.g3_native_receipt,rec.g4_store_receipt,
     rec.g4_product_trust_registry,rec.g5_real_ab,rec.g6_dis_r20])
