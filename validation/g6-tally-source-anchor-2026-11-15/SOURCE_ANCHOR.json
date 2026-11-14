@@ -27,7 +27,9 @@
     "commit": "90afefa81ef9ad0d42087ffc8a0dbaa32757811f",
     "path": "examples/dis-v020-cross-project/snapshots/tally/business.mjs",
     "git_blob": "54015fb63ffb13b4f4e562f660d2172098b5f7f4",
-    "exact_git_blob_match": true
+    "exact_git_blob_match": true,
+    "ref": "90afefa81ef9ad0d42087ffc8a0dbaa32757811f",
+    "ref_type": "immutable_commit"
   },
   "original_tests": {
     "repository": "kaicreator-mm/tally",
@@ -39,7 +41,9 @@
       "unproven DAG dependency refuses",
       "invalid/missing GitHub source identity refuses"
     ],
-    "authority": "same-project regression tests; not an independent professional semantic Oracle"
+    "authority": "same-project regression tests; not an independent professional semantic Oracle",
+    "ref": "refs/heads/main",
+    "ref_type": "branch"
   },
   "formal_tools_snapshot": {
     "path": "validation/g6-tally-source-anchor-2026-11-15/TALLY_BUSINESS_SOURCE.mjs",
@@ -78,15 +82,30 @@
   ],
   "independent_reference_oracle": {
     "file": "tests/g6-tally-source-anchor.test.mjs",
-    "status": "TO_BE_ADDED_IN_THIS_PR",
-    "kind": "independently-authored-executable-source-contract-oracle",
+    "status": "PRESENT_IN_THIS_PR",
+    "kind": "executable-source-contract-regression-test",
     "professional_semantic_oracle": false,
     "independent_business_truth": false
   },
   "tool_provenance": {
     "runtime": "Node.js >=24 (formal-tools exact-SHA CI)",
-    "execution": "PENDING_EXACT_SHA_CI",
-    "formal_solver": "NOT_USED_FOR_THIS_SOURCE-CODE_CONTRACT"
+    "execution": "LAST_RECORDED_EXACT_HEAD_CI_SUCCESS",
+    "formal_solver": "NOT_USED_FOR_THIS_SOURCE-CODE_CONTRACT",
+    "last_successful_exact_head": "710f3b091327c4bc681b95eae77fd1ffe016d5da",
+    "last_successful_ci": {
+      "provider": "Woodpecker",
+      "runtime": "Node.js 24.21.0",
+      "push": {
+        "pipeline": 939,
+        "status": "SUCCESS",
+        "target_url": "https://ci.kaicreator.com/repos/39/pipeline/939/1"
+      },
+      "pull_request": {
+        "pipeline": 940,
+        "status": "SUCCESS",
+        "target_url": "https://ci.kaicreator.com/repos/39/pipeline/940/1"
+      }
+    }
   },
   "qualification": {
     "source_identity": "PINNED",
