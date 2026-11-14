@@ -2,9 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {readFileSync} from 'node:fs';
-import {assessTaskEvidence} from '../validation/g6-tally-source-anchor-2026-11-15/TALLY_BUSINESS_SOURCE.mjs';
-
+// Load the byte-pinned snapshot through a computed URL string, like the
+// benchmarks/llm-methods/g6 chain does: a statically resolvable import would
+// pull the unmodified upstream file into the tsc checkJs program and fail the
+// typecheck gate on upstream-only JS patterns.
 const sourcePath=new URL('../validation/g6-tally-source-anchor-2026-11-15/TALLY_BUSINESS_SOURCE.mjs',import.meta.url);
+const {assessTaskEvidence}=await import(sourcePath.href);
 const manifestPath=new URL('../validation/g6-tally-source-anchor-2026-11-15/SOURCE_ANCHOR.json',import.meta.url);
 const sourceBytes=readFileSync(sourcePath);
 const manifest=JSON.parse(readFileSync(manifestPath,'utf8'));
