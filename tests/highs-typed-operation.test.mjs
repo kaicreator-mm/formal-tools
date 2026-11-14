@@ -31,7 +31,7 @@ async function fixtureBundle(){
   await copyFile(join(repoRoot,"portable/verification/cases/highs/expect.sh"),join(root,"tests","highs","expect.sh"));
   await copyFile(join(repoRoot,"portable/verification/cases/highs/solve-lp.py"),join(root,"tests","highs","solve-lp.py"));
   const runner=join(root,"bin","tool-runner");
-  const source=String.raw\`#!/usr/bin/env node
+  const source=String.raw`#!/usr/bin/env node
 const fs=require("node:fs");
 const path=require("node:path");
 const crypto=require("node:crypto");
@@ -56,8 +56,8 @@ const result={
 };
 if(result.model_status!=="kOptimal"){result.objective=null;result.variables=[];}
 if(mode==="bad-optimal")result.variables=[1];
-process.stdout.write(JSON.stringify(result)+"\\n");
-\`;
+process.stdout.write(JSON.stringify(result)+"\n");
+`;
 
   await writeFile(runner,source);
   await chmod(runner,0o755);
