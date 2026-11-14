@@ -51,7 +51,7 @@ const result={
   schema:"formal-tools/highs-solve-lp/1.0",tool:"highs",highspy_version:"1.15.1",
   numpy_version:mode==="numpy-drift"?"1.26.4":"2.2.4",
   python_version:mode==="python-drift"?"3.13.6":"3.13.5",input_sha256,
-  model_status:mode==="infeasible"?"kInfeasible":mode==="unbounded"?"kUnbounded":"kOptimal",
+  model_status:mode==="infeasible"?"kInfeasible":mode==="unbounded"?"kUnbounded":mode==="time-limit"?"kTimeLimit":"kOptimal",
   objective:3,variables:[1,0],solver_api_status:mode==="api-warning"?"kWarning":"kOk"
 };
 if(result.model_status!=="kOptimal"){result.objective=null;result.variables=[];}
