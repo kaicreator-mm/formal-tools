@@ -26,7 +26,28 @@
     "corrected_meta_key": "TOOL_ID=nuxmv",
     "packaging_method": "--sort=name --mtime=@0 --owner=0 --group=0 --numeric-owner | zstd -5 -T2",
     "is_official_package": false,
-    "canonical_App_packages_updated": false
+    "canonical_App_packages_updated": false,
+    "archive_header_differences": {
+      "audit": "independent comparison of original and candidate tar member headers, fresh Debian13 extraction metadata inspection",
+      "entries_total": 39,
+      "regular_payload_bytes_differ_only": [
+        "tools/nuxmv/meta.sh"
+      ],
+      "mode_changes": 39,
+      "original_modes": [
+        "0755",
+        "0644"
+      ],
+      "candidate_modes": [
+        "0555",
+        "0444"
+      ],
+      "mtime_changes": 39,
+      "uid_changes": 0,
+      "gid_changes": 0,
+      "archive_entry_path_set_equal": true,
+      "note": "Prior 'changed_files_only' describes decompressed ordinary file content differences ONLY; the candidate also normalizes mode and mtime on all entries. It is intentionally validation-only and not byte/metadata equivalent to the original tar."
+    }
   },
   "clean_nonroot_host": {
     "os": "Debian13 x86_64",
@@ -61,6 +82,7 @@
     "full_shared_cli_mcp_sdk_host_not_tested": true,
     "formal_T4_qualified": false,
     "T5_qualified": false,
-    "do_not_promote_to_canonical": true
+    "do_not_promote_to_canonical": true,
+    "p2_candidate_archive_metadata_disclosed": true
   }
 }
