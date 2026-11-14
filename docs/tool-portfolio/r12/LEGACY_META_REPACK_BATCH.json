@@ -101,5 +101,33 @@
     "ELK doctor uses staged original Java21 runtime; node-lib fast-check doctor only validates metadata and does not independently prove node module version/ABI/host installation",
     "Do not infer that all 36 artifacts have the bad legacy metadata alias; only five other verified assets previously scoped and these four directly checked",
     "Original source T4 candidate admission still requires official repack, full candidate Gateway/CLI/MCP/SDK host, new exact SHA CI and distinct Source-First review"
-  ]
+  ],
+  "r13_addendum": {
+    "schema": "formal-tools/i24-r13-repair-addendum/1.0",
+    "output_label": "FORMAL_TOOLS_I24_R13_P1_P2_REPAIR_CLOSEOUT",
+    "date": "2026-11-14",
+    "source_pr": 79,
+    "scope": "Adds the tar-header metadata disclosure required by the independent R12 incremental review (P2-01) and records runner supersession. Does not rewrite any R12 historical receipt, hash, or claim recorded above.",
+    "verified_exact_difference_only_scope": {
+      "meaning": "Applies to REGULAR PAYLOAD BYTES and ARCHIVE PATH SETS only: all regular files compare byte-identical to the staged original except tools/<id>/meta.sh (TOOL_TOOL_ID -> TOOL_ID rename).",
+      "excludes": "Tar header metadata (per-entry mode, mtime, uid, gid) and archive ordering. Candidate repacks regenerate tar headers, so original vs candidate archives differ at the header level even where payload bytes match; the payload-only claim above does not assert header equality.",
+      "established_header_discipline_reference": "docs/tool-portfolio/r10/CANDIDATE_PACKAGE.json records the R10 candidate packaging method: tar --sort=name --mtime=@0 --owner=0 --group=0 --numeric-owner (deterministic epoch mtime, uid/gid 0). This R12 batch JSON did not record an equivalent packaging method or per-entry header table; that omission is the P2-01 gap disclosed here.",
+      "r13_attempt": "R13 attempted to re-derive per-entry mode/mtime/uid/gid tables from the pinned candidate artifacts (R12 ZIP cc7d09aadcd2b55e707470afd361a686158b52163f2642ab2cc2b44e4e3cfb5b, R10 HiGHS candidate baab9138a6e86ee22afec7749ebf83d8a2055177d5c700e4c07d4c1ea3a2e5a5, R11 nuXmv candidate Drive id 1yjneRDGdgF5MAob2SKiCr3l3ZqqPe_wJ); every Drive fetch was rejected (gdown rate-limit 'many accesses' / non-public-link refusal, with and without cached cookies, from two networks, 2026-11-14). Original archives were NOT re-downloaded (R13 brief constraint: originals stay immutable). Per-entry header tables therefore remain UNDISCLOSED in-repo.",
+      "required_before_further_use": [
+        "Extract per-entry mode/mtime/uid/gid for the four candidate archives from the pinned R12 ZIP (or record the exact packaging method that determines them, following the R10 pattern) into this file.",
+        "Apply the same disclosure to the nuXmv candidate recorded under PR #81 before its review.",
+        "Rebuild the candidates with the fixed R13 runner (see runner_supersession) before any doctor/version/verify observation is reused for admission."
+      ]
+    },
+    "runner_supersession": {
+      "r12_pinned_runner_blob": "0f9e1f7d5f07c3dafaaba59cc08a0beaff944a99",
+      "r13_fixed_runner_blob": "660ca31d2f33791875a5fa84415f2d80f867b137",
+      "fixes": [
+        "P1: unsafe tool IDs (traversal, absolute, separator, dot-segment) are rejected by a strict [A-Za-z0-9._-] no-leading-dot allowlist before any filesystem path is constructed, sourced, executed, or used in a receipt filename; sourced/executed bundle files (meta.sh, expect.sh, run shim, private lib dir) are symlink-contained inside tools/<id>/ (or tests/<id>/).",
+        "P2-02: doctor ldd probe is fail-closed — a nonzero ldd exit or an empty dependency listing is reported as probe FAILED, never as 'no missing libs OK'."
+      ],
+      "node_regression": "tests/tool-portable-metadata.test.mjs 11/11 (6 pre-existing + 5 new adversarial: traversal/absolute/dot-segment IDs, meta.sh/run-shim/expect.sh symlink escapes, ldd probe failure modes) and tests/portable-tool-runner.test.mjs 5/5 (4 pre-existing + 1 new: non-executable run shim is SKIP for verify and exit 126 for run). Verified on Linux (WSL2 Debian) against the exact source; Windows-local runs of the metadata suite have a pre-existing cygwin path-semantics failure in the sixth test that also fails on the R12 runner blob and is out of CI scope.",
+      "impact_on_r12_candidates": "The four R12 candidates (and the R10/R11 candidates) were produced and validated under the R12 runner blob. R12 doctor/version exit observations remain valid only for that blob. The fixed runner's stricter ID validation does not alter healthy-tool doctor/version behavior (all pre-existing Node cases pass unchanged), but candidates must be rebuilt with the fixed runner before any further admission use."
+    }
+  }
 }
