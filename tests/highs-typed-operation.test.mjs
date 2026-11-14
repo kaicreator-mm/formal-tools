@@ -222,8 +222,8 @@ test("typed Highs operation rejects invalid statuses, runtime drift, process fai
     }finally{await writeFile(scriptPath,originalScript);}
 
     const pythonSource=await readFile(join(repoRoot,"portable/verification/cases/highs/solve-lp.py"),"utf8");
-    assert.match(pythonSource,/actual_python_version != "3\\.13\\.5"/);
-    assert.match(pythonSource,/status != highspy\\.HighsStatus\\.kOk/);
+    assert.ok(pythonSource.includes('actual_python_version != "3.13.5"'));
+    assert.ok(pythonSource.includes("status != highspy.HighsStatus.kOk"));
     const valueValidity=pythonSource.indexOf('if not bool(getattr(solution, "value_valid", False))');
     const valueConsumption=pythonSource.indexOf("values = list(solution.col_value)");
     assert.ok(valueValidity>=0&&valueValidity<valueConsumption,"value_valid must be checked before col_value");
