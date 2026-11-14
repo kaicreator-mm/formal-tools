@@ -162,6 +162,14 @@ function denseModelArray(value,min,max){
   return true;
 }
 function finiteModelNumber(value){return typeof value==="number"&&Number.isFinite(value);}
+function numpyVersionSupported(value){
+  if(typeof value!=="string")return false;
+  const match=/^(\\d+)\\.(\\d+)(?:\\.\\d+)?(?:[A-Za-z0-9.+-].*)?$/.exec(value);
+  if(!match)return false;
+  const major=Number(match[1]),minor=Number(match[2]);
+  return Number.isSafeInteger(major)&&Number.isSafeInteger(minor)&&
+    (major>2||(major===2&&minor>=1));
+}
 function validModelBound(value){return value===null||finiteModelNumber(value);}
 function validateHighsModel(model){
   if(!exactRecordKeys(model,["sense","objective","variables","constraints"]))
@@ -266,7 +274,7 @@ export async function runPortfolioOperation(id,operation,model,options={}){
         if(solver.schema!=="formal-tools/highs-solve-lp/1.0"||solver.tool!=="highs"||
            solver.highspy_version!=="1.15.1"||solver.input_sha256!==plan.input_sha256||
            solver.solver_api_status!=="kOk"||!allowed.has(solver.model_status)||
-           typeof solver.numpy_version!=="string"||typeof solver.python_version!=="string")
+           solver.python_version!=="3.13.5"||!numpyVersionSupported(solver.numpy_version))
           throw new Error("HIGHS_RESULT_SCHEMA_OR_VERSION_INVALID");
         if(solver.model_status==="kOptimal"){
           if(!finiteModelNumber(solver.objective)||!Array.isArray(solver.variables)||
