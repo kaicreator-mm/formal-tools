@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { chmod, copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { chmod, copyFile, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
@@ -113,6 +113,22 @@ test("SDK and CLI use the same pinned typed operation; CLI opens model with O_NO
     const cliReceipt=JSON.parse(cli.stdout);
     assert.equal(cliReceipt.status,"T4_OPERATION_EXECUTED_UNREVIEWED");
     assert.equal(cliReceipt.solver.model_status,"kOptimal");
+    const symlinkPath=join(bundle.root,"model-link.json");
+    await symlink(modelPath,symlinkPath);
+    const symlinkCli=spawnSync(process.execPath,[
+      join(repoRoot,"packages/runner/js/cli.mjs"),
+      "portfolio","invoke","highs","solve-lp","--model",symlinkPath
+    ],{cwd:repoRoot,encoding:"utf8",timeout:15000,env:{...process.env}});
+    assert.equal(symlinkCli.status,2);
+    assert.match(symlinkCli.stderr,/ELOOP|too many symbolic links/i);
+    const oversizedPath=join(bundle.root,"oversized.json");
+    await writeFile(oversizedPath," ".repeat(65537));
+    const oversizedCli=spawnSync(process.execPath,[
+      join(repoRoot,"packages/runner/js/cli.mjs"),
+      "portfolio","invoke","highs","solve-lp","--model",oversizedPath
+    ],{cwd:repoRoot,encoding:"utf8",timeout:15000,env:{...process.env}});
+    assert.equal(oversizedCli.status,2);
+    assert.match(oversizedCli.stderr,/64KiB/);
   }finally{
     if(oldRoot===undefined)delete process.env.FORMAL_PORTABLE_ROOT;else process.env.FORMAL_PORTABLE_ROOT=oldRoot;
     if(oldPin===undefined)delete process.env.FORMAL_PORTABLE_RUNNER_SHA256;else process.env.FORMAL_PORTABLE_RUNNER_SHA256=oldPin;
