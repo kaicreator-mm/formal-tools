@@ -11,6 +11,7 @@ import { readFileSync } from "node:fs";
 import { readFile, writeFile, lstat, mkdtemp, rm } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
+import { types as utilTypes } from "node:util";
 import { join, resolve, isAbsolute } from "node:path";
 import { tmpdir } from "node:os";
 import { toolIds } from "./native-catalog.mjs";
@@ -137,7 +138,7 @@ export function planPortfolioFixture(id){
     args:["verify",id],mode:"typed",scope:"COMMITTED_POS_NEG_ERR_ONLY"};
 }
 function exactRecordKeys(value,expected){
-  if(value===null||typeof value!=="object"||Array.isArray(value)||
+  if(value===null||typeof value!=="object"||utilTypes.isProxy(value)||Array.isArray(value)||
      !(Object.getPrototypeOf(value)===Object.prototype||Object.getPrototypeOf(value)===null))
     return false;
   const keys=Reflect.ownKeys(value);
@@ -150,7 +151,7 @@ function exactRecordKeys(value,expected){
   });
 }
 function denseModelArray(value,min,max){
-  if(!Array.isArray(value)||Object.getPrototypeOf(value)!==Array.prototype||
+  if(utilTypes.isProxy(value)||!Array.isArray(value)||Object.getPrototypeOf(value)!==Array.prototype||
      value.length<min||value.length>max)return false;
   const keys=Reflect.ownKeys(value);
   if(keys.length!==value.length+1||!keys.includes("length"))return false;
@@ -217,11 +218,26 @@ export function planPortfolioOperation(id,operation,model){
     budget:{max_variables:64,max_constraints:128,max_input_bytes:maxFixtureBytes,max_timeout_s:30},
     raw_argv_allowed:false};
 }
-/** The first candidate typed operation: fixed Highs Python Library LP model, no argv or user paths. */
-export async function runPortfolioOperation(id,operation,model,{timeoutS=30}={}){
-  const plan=planPortfolioOperation(id,operation,model);
-  if(!Number.isInteger(timeoutS)||timeoutS<1||timeoutS>30)
+function portfolioTimeout(options){
+  if(options===undefined)return 30;
+  if(options===null||typeof options!=="object"||Array.isArray(options)||utilTypes.isProxy(options)||
+     !(Object.getPrototypeOf(options)===Object.prototype||Object.getPrototypeOf(options)===null))
+    throw new TypeError("portfolio operation options must be a plain data object");
+  const keys=Reflect.ownKeys(options);
+  if(keys.some(key=>key!=="timeoutS")||keys.length>1)
+    throw new TypeError("unknown portfolio operation option");
+  const descriptor=Object.getOwnPropertyDescriptor(options,"timeoutS");
+  if(descriptor!==undefined&&(!Object.hasOwn(descriptor,"value")||descriptor.enumerable!==true))
+    throw new TypeError("portfolio timeout option must be a data property");
+  const value=descriptor===undefined?30:descriptor.value;
+  if(!Number.isInteger(value)||value<1||value>30)
     throw new TypeError("timeoutS must be integer 1..30");
+  return value;
+}
+/** The first candidate typed operation: fixed Highs Python Library LP model, no argv or user paths. */
+export async function runPortfolioOperation(id,operation,model,options={}){
+  const timeoutS=portfolioTimeout(options);
+  const plan=planPortfolioOperation(id,operation,model);
   let tmp=null;
   try{
     const x=await installed(id);
