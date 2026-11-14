@@ -241,6 +241,7 @@ export async function runPortfolioOperation(id,operation,model,options={}){
   let tmp=null;
   try{
     const x=await installed(id);
+    if(x.meta.kind!=="python-lib")throw new Error("HIGHS_ADAPTER_KIND_MISMATCH");
     tmp=await mkdtemp(join(tmpdir(),"formal-highs-operation-"));
     const script=join(x.ctx.root,"tests","highs","solve-lp.py");
     const scriptStat=await regular(script);
