@@ -29,6 +29,65 @@ test('G6 Tally source snapshot is byte-identical to upstream and DIS consumer pi
   assert.equal(manifest.formal_tools_snapshot.git_blob,expectedSourceBlob);
   assert.equal(manifest.consumer_snapshot.exact_git_blob_match,true);
 });
+test('G6 source anchor locks complete Source, Consumer and Original Test provenance metadata',()=>{
+  assert.deepEqual(manifest.source,{
+    repository:'kaicreator-mm/tally',
+    ref:'refs/heads/main',
+    commit:'e988321439f65b55936a691c02250b6d62a29409',
+    path:'packages/tally-engineering-business/src/index.mjs',
+    git_blob:expectedSourceBlob,
+    exported_symbol:'assessTaskEvidence',
+    source_line_start:26,
+    source_line_end:47
+  });
+  assert.deepEqual(manifest.consumer_snapshot,{
+    repository:'kaicreator-mm/domain-harness',
+    ref:'90afefa81ef9ad0d42087ffc8a0dbaa32757811f',
+    ref_type:'immutable_commit',
+    commit:'90afefa81ef9ad0d42087ffc8a0dbaa32757811f',
+    path:'examples/dis-v020-cross-project/snapshots/tally/business.mjs',
+    git_blob:expectedSourceBlob,
+    exact_git_blob_match:true
+  });
+  assert.deepEqual(manifest.original_tests,{
+    repository:'kaicreator-mm/tally',
+    ref:'refs/heads/main',
+    ref_type:'branch',
+    commit:'e988321439f65b55936a691c02250b6d62a29409',
+    path:'packages/tally-engineering-business/test/business-policy.test.mjs',
+    git_blob:'88c5b6512ff5e8005c02a170d2336a2f6c4090b1',
+    relevant_cases:[
+      'canonical observed input still cannot grant K admission or Task PASS',
+      'unproven DAG dependency refuses',
+      'invalid/missing GitHub source identity refuses'
+    ],
+    authority:'same-project regression tests; not an independent professional semantic Oracle'
+  });
+  assert.equal(manifest.independent_reference_oracle.file,
+    'tests/g6-tally-source-anchor.test.mjs');
+  assert.equal(manifest.independent_reference_oracle.status,'PRESENT_IN_THIS_PR');
+  assert.equal(manifest.independent_reference_oracle.kind,
+    'executable-source-contract-regression-test');
+  assert.equal(manifest.independent_reference_oracle.professional_semantic_oracle,false);
+  assert.equal(manifest.independent_reference_oracle.independent_business_truth,false);
+  assert.equal(manifest.tool_provenance.execution,'LAST_RECORDED_EXACT_HEAD_CI_SUCCESS');
+  assert.equal(manifest.tool_provenance.last_successful_exact_head,
+    '710f3b091327c4bc681b95eae77fd1ffe016d5da');
+  assert.deepEqual(manifest.tool_provenance.last_successful_ci,{
+    provider:'Woodpecker',
+    runtime:'Node.js 24.21.0',
+    push:{
+      pipeline:939,
+      status:'SUCCESS',
+      target_url:'https://ci.kaicreator.com/repos/39/pipeline/939/1'
+    },
+    pull_request:{
+      pipeline:940,
+      status:'SUCCESS',
+      target_url:'https://ci.kaicreator.com/repos/39/pipeline/940/1'
+    }
+  });
+});
 test('G6 valid source identity is advisory only and never admits or passes a Task',()=>{
   const result=assessTaskEvidence(valid);
   assert.deepEqual(view(result),{
