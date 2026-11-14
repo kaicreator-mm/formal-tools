@@ -53,7 +53,7 @@ process.stdout.write(JSON.stringify({
   return {root,runnerSha:sha(runnerBytes),cleanup:()=>rm(root,{recursive:true,force:true})};
 }
 
-test("Highs candidate exposes one bounded typed Python Library operation, never raw argv",()=>{
+test("Highs candidate exposes one bounded typed Python Library operation, never raw argv",async()=>{
   const description=describePortfolioTool("highs");
   assert.ok(description.operations.includes("solve-lp"));
   assert.equal(description.raw_argv_allowed,false);
@@ -78,8 +78,8 @@ test("Highs candidate exposes one bounded typed Python Library operation, never 
   const proxyArray=new Proxy(model.objective,{getPrototypeOf(){throw new Error("array proxy trap must not run");}});
   assert.throws(()=>planPortfolioOperation("highs","solve-lp",{...model,objective:proxyArray}),/HIGHS_OBJECTIVE_INVALID/);
   const proxyOptions=new Proxy({timeoutS:10},{get(){throw new Error("option proxy trap must not run");}});
-  assert.throws(()=>sdk.runPortfolioOperation("highs","solve-lp",model,proxyOptions),/plain data object/);
-  assert.throws(()=>sdk.runPortfolioOperation("highs","solve-lp",model,{get timeoutS(){throw new Error("option getter must not run");}}),/data property/);
+  await assert.rejects(sdk.runPortfolioOperation("highs","solve-lp",model,proxyOptions),/plain data object/);
+  await assert.rejects(sdk.runPortfolioOperation("highs","solve-lp",model,{get timeoutS(){throw new Error("option getter must not run");}}),/data property/);
 });
 
 test("SDK and CLI use the same pinned typed operation; CLI opens model with O_NOFOLLOW",{skip:process.platform!=="linux"||process.arch!=="x64"},async()=>{
