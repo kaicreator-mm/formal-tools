@@ -137,9 +137,28 @@ export function planPortfolioFixture(id){
     args:["verify",id],mode:"typed",scope:"COMMITTED_POS_NEG_ERR_ONLY"};
 }
 function exactRecordKeys(value,expected){
-  return value!==null&&typeof value==="object"&&!Array.isArray(value)&&
-    (Object.getPrototypeOf(value)===Object.prototype||Object.getPrototypeOf(value)===null)&&
-    Object.keys(value).sort().join("\\0")===expected.slice().sort().join("\\0");
+  if(value===null||typeof value!=="object"||Array.isArray(value)||
+     !(Object.getPrototypeOf(value)===Object.prototype||Object.getPrototypeOf(value)===null))
+    return false;
+  const keys=Reflect.ownKeys(value);
+  if(keys.length!==expected.length||keys.some(k=>typeof k!=="string"))return false;
+  const actual=keys.slice().sort().join("\\0");
+  if(actual!==expected.slice().sort().join("\\0"))return false;
+  return expected.every(key=>{
+    const descriptor=Object.getOwnPropertyDescriptor(value,key);
+    return descriptor!==undefined&&Object.hasOwn(descriptor,"value")&&descriptor.enumerable===true;
+  });
+}
+function denseModelArray(value,min,max){
+  if(!Array.isArray(value)||Object.getPrototypeOf(value)!==Array.prototype||
+     value.length<min||value.length>max)return false;
+  const keys=Reflect.ownKeys(value);
+  if(keys.length!==value.length+1||!keys.includes("length"))return false;
+  for(let i=0;i<value.length;i++){
+    const descriptor=Object.getOwnPropertyDescriptor(value,String(i));
+    if(descriptor===undefined||!Object.hasOwn(descriptor,"value")||descriptor.enumerable!==true)return false;
+  }
+  return true;
 }
 function finiteModelNumber(value){return typeof value==="number"&&Number.isFinite(value);}
 function validModelBound(value){return value===null||finiteModelNumber(value);}
@@ -147,29 +166,43 @@ function validateHighsModel(model){
   if(!exactRecordKeys(model,["sense","objective","variables","constraints"]))
     throw new TypeError("HIGHS_MODEL_SCHEMA_INVALID");
   if(!["min","max"].includes(model.sense))throw new TypeError("HIGHS_MODEL_SENSE_INVALID");
-  if(!Array.isArray(model.objective)||model.objective.length<1||model.objective.length>64||
-     !model.objective.every(finiteModelNumber))
+  if(!denseModelArray(model.objective,1,64))
     throw new TypeError("HIGHS_OBJECTIVE_INVALID");
-  if(!Array.isArray(model.variables)||model.variables.length!==model.objective.length)
+  const objective=[];
+  for(let i=0;i<model.objective.length;i++){
+    const value=model.objective[i];
+    if(!finiteModelNumber(value))throw new TypeError("HIGHS_OBJECTIVE_INVALID_"+i);
+    objective.push(value);
+  }
+  if(!denseModelArray(model.variables,objective.length,objective.length))
     throw new TypeError("HIGHS_VARIABLE_COUNT_MISMATCH");
-  const variables=model.variables.map((v,i)=>{
+  const variables=[];
+  for(let i=0;i<model.variables.length;i++){
+    const v=model.variables[i];
     if(!exactRecordKeys(v,["lower","upper"])||!validModelBound(v.lower)||!validModelBound(v.upper)||
        (v.lower!==null&&v.upper!==null&&v.lower>v.upper))
       throw new TypeError("HIGHS_VARIABLE_BOUNDS_INVALID_"+i);
-    return {lower:v.lower,upper:v.upper};
-  });
-  if(!Array.isArray(model.constraints)||model.constraints.length>128)
+    variables.push({lower:v.lower,upper:v.upper});
+  }
+  if(!denseModelArray(model.constraints,0,128))
     throw new TypeError("HIGHS_CONSTRAINT_COUNT_INVALID");
-  const constraints=model.constraints.map((c,i)=>{
+  const constraints=[];
+  for(let i=0;i<model.constraints.length;i++){
+    const c=model.constraints[i];
     if(!exactRecordKeys(c,["lower","upper","coefficients"])||
        !validModelBound(c.lower)||!validModelBound(c.upper)||
        (c.lower!==null&&c.upper!==null&&c.lower>c.upper)||
-       !Array.isArray(c.coefficients)||c.coefficients.length!==model.objective.length||
-       !c.coefficients.every(finiteModelNumber))
+       !denseModelArray(c.coefficients,objective.length,objective.length))
       throw new TypeError("HIGHS_CONSTRAINT_INVALID_"+i);
-    return {lower:c.lower,upper:c.upper,coefficients:[...c.coefficients]};
-  });
-  const normalized={sense:model.sense,objective:[...model.objective],variables,constraints};
+    const coefficients=[];
+    for(let j=0;j<c.coefficients.length;j++){
+      const value=c.coefficients[j];
+      if(!finiteModelNumber(value))throw new TypeError("HIGHS_CONSTRAINT_INVALID_"+i);
+      coefficients.push(value);
+    }
+    constraints.push({lower:c.lower,upper:c.upper,coefficients});
+  }
+  const normalized={sense:model.sense,objective,variables,constraints};
   const bytes=Buffer.from(JSON.stringify(normalized));
   if(bytes.length>maxFixtureBytes)throw new RangeError("HIGHS_MODEL_SIZE_LIMIT");
   return {model:normalized,bytes,input_sha256:digest(bytes)};
