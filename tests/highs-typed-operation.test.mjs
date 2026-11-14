@@ -132,6 +132,24 @@ test("SDK and CLI use the same pinned typed operation; CLI opens model with O_NO
     const cliReceipt=JSON.parse(cli.stdout);
     assert.equal(cliReceipt.status,"T4_OPERATION_EXECUTED_UNREVIEWED");
     assert.equal(cliReceipt.solver.model_status,"kOptimal");
+    const duplicatePath=join(bundle.root,"duplicate-model.json");
+    await writeFile(duplicatePath,JSON.stringify(model).replace('"sense":"max"','"sense":"max","sense":"min"'));
+    const duplicateCli=spawnSync(process.execPath,[
+      join(repoRoot,"packages/runner/js/cli.mjs"),
+      "portfolio","invoke","highs","solve-lp","--model",duplicatePath
+    ],{cwd:repoRoot,encoding:"utf8",timeout:15000,env:{...process.env}});
+    assert.equal(duplicateCli.status,2);
+    assert.match(duplicateCli.stderr,/DUPLICATE_JSON_KEY:sense/);
+    const fifoPath=join(bundle.root,"model.fifo");
+    const fifoCreate=spawnSync("mkfifo",[fifoPath],{encoding:"utf8"});
+    assert.equal(fifoCreate.status,0,fifoCreate.stderr);
+    const fifoCli=spawnSync(process.execPath,[
+      join(repoRoot,"packages/runner/js/cli.mjs"),
+      "portfolio","invoke","highs","solve-lp","--model",fifoPath
+    ],{cwd:repoRoot,encoding:"utf8",timeout:2000,env:{...process.env}});
+    assert.equal(fifoCli.error,undefined,"FIFO input must not block before fstat");
+    assert.equal(fifoCli.status,2,fifoCli.stderr);
+    assert.match(fifoCli.stderr,/regular non-symlink/);
     const symlinkPath=join(bundle.root,"model-link.json");
     await symlink(modelPath,symlinkPath);
     const symlinkCli=spawnSync(process.execPath,[
@@ -151,6 +169,68 @@ test("SDK and CLI use the same pinned typed operation; CLI opens model with O_NO
   }finally{
     if(oldRoot===undefined)delete process.env.FORMAL_PORTABLE_ROOT;else process.env.FORMAL_PORTABLE_ROOT=oldRoot;
     if(oldPin===undefined)delete process.env.FORMAL_PORTABLE_RUNNER_SHA256;else process.env.FORMAL_PORTABLE_RUNNER_SHA256=oldPin;
+    await bundle.cleanup();
+  }
+});
+
+test("typed Highs operation rejects invalid statuses, runtime drift, process failures and pin mismatches",async()=>{
+  const bundle=await fixtureBundle();
+  const oldRoot=process.env.FORMAL_PORTABLE_ROOT;
+  const oldPin=process.env.FORMAL_PORTABLE_RUNNER_SHA256;
+  const oldMode=process.env.FORMAL_TEST_HIGHS_MODE;
+  process.env.FORMAL_PORTABLE_ROOT=bundle.root;
+  process.env.FORMAL_PORTABLE_RUNNER_SHA256=bundle.runnerSha;
+  const invoke=async(mode,timeoutS=3)=>{
+    if(mode===undefined)delete process.env.FORMAL_TEST_HIGHS_MODE;
+    else process.env.FORMAL_TEST_HIGHS_MODE=mode;
+    return await runPortfolioOperation("highs","solve-lp",model,{timeoutS});
+  };
+  try{
+    for(const status of ["infeasible","unbounded"]){
+      const receipt=await invoke(status);
+      assert.equal(receipt.status,"T4_OPERATION_EXECUTED_UNREVIEWED",status);
+      assert.equal(receipt.solver.model_status,status==="infeasible"?"kInfeasible":"kUnbounded");
+      assert.equal(receipt.solver.objective,null);
+      assert.deepEqual(receipt.solver.variables,[]);
+    }
+    const timeLimit=await invoke("time-limit");
+    assert.equal(timeLimit.status,"T4_OPERATION_EXECUTED_UNREVIEWED");
+    for(const mode of ["malformed","python-drift","numpy-drift","api-warning","bad-optimal","missing-dependency","api-error"]){
+      const receipt=await invoke(mode);
+      assert.equal(receipt.status,"PORTFOLIO_OPERATION_FAILED",mode);
+    }
+    const timed=await invoke("timeout",1);
+    assert.equal(timed.status,"PORTFOLIO_OPERATION_FAILED");
+    assert.equal(timed.process.timed_out,true);
+    const overflow=await invoke("overflow",5);
+    assert.equal(overflow.status,"PORTFOLIO_OPERATION_FAILED");
+    assert.equal(overflow.process.output_limit,true);
+
+    process.env.FORMAL_PORTABLE_RUNNER_SHA256="0".repeat(64);
+    const runnerMismatch=await invoke("optimal");
+    assert.equal(runnerMismatch.status,"NOT_RUN_FAIL_CLOSED");
+    assert.match(runnerMismatch.reason,/PORTABLE_RUNNER_SHA256_MISMATCH/);
+    process.env.FORMAL_PORTABLE_RUNNER_SHA256=bundle.runnerSha;
+
+    const scriptPath=join(bundle.root,"tests","highs","solve-lp.py");
+    const originalScript=await readFile(scriptPath);
+    await writeFile(scriptPath,Buffer.concat([originalScript,Buffer.from("\\n# changed script\\n")]));
+    try{
+      const scriptMismatch=await invoke("optimal");
+      assert.equal(scriptMismatch.status,"NOT_RUN_FAIL_CLOSED");
+      assert.match(scriptMismatch.reason,/HIGHS_OPERATION_SCRIPT_SHA256_MISMATCH/);
+    }finally{await writeFile(scriptPath,originalScript);}
+
+    const pythonSource=await readFile(join(repoRoot,"portable/verification/cases/highs/solve-lp.py"),"utf8");
+    assert.match(pythonSource,/actual_python_version != "3\\.13\\.5"/);
+    assert.match(pythonSource,/status != highspy\\.HighsStatus\\.kOk/);
+    const valueValidity=pythonSource.indexOf('if not bool(getattr(solution, "value_valid", False))');
+    const valueConsumption=pythonSource.indexOf("values = list(solution.col_value)");
+    assert.ok(valueValidity>=0&&valueValidity<valueConsumption,"value_valid must be checked before col_value");
+  }finally{
+    if(oldRoot===undefined)delete process.env.FORMAL_PORTABLE_ROOT;else process.env.FORMAL_PORTABLE_ROOT=oldRoot;
+    if(oldPin===undefined)delete process.env.FORMAL_PORTABLE_RUNNER_SHA256;else process.env.FORMAL_PORTABLE_RUNNER_SHA256=oldPin;
+    if(oldMode===undefined)delete process.env.FORMAL_TEST_HIGHS_MODE;else process.env.FORMAL_TEST_HIGHS_MODE=oldMode;
     await bundle.cleanup();
   }
 });
