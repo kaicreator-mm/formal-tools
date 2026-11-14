@@ -6,10 +6,11 @@
  * Oracle/Host/Tool qualification exists. This is a typed refusal envelope
  * for a future real consumer, not a second DIS Runtime or real E2E proof.
  *
- * External reference (READ-ONLY, pinned at implementation time):
- * kaicreator-mm/domain-harness PR #1497 HEAD f21514de...
- * examples/dis-v020-native-sdk/bounded-engineering-demo.mjs
- * Git blob e44e2be5b66ad9e6b8961c4ec2cfdedadc0467c9.
+ * External reference (READ-ONLY, re-pinned at real-consumer implementation
+ * time per Issue #11 R15 target selection):
+ * kaicreator-mm/domain-harness PR #1497 HEAD 90afefa8...
+ * examples/dis-v020-native-sdk/b05-target-consumer.test.mjs
+ * Git blob 242930c5b10f629a13115a45069f2814f6042316.
  * Its bounded observations have kind/authority and no business attestation.
  */
 import {createHash} from "node:crypto";
@@ -19,9 +20,9 @@ const SHA=/^[a-f0-9]{40}$/;
 export const DIS_V020_REFERENCE=Object.freeze({
   repository:"kaicreator-mm/domain-harness",
   pr:1497,
-  source_head:"f21514deb0a4b5b4b2d6e3dae2cd5e8ec2f71120",
-  example_path:"examples/dis-v020-native-sdk/bounded-engineering-demo.mjs",
-  example_blob:"e44e2be5b66ad9e6b8961c4ec2cfdedadc0467c9",
+  source_head:"90afefa81ef9ad0d42087ffc8a0dbaa32757811f",
+  example_path:"examples/dis-v020-native-sdk/b05-target-consumer.test.mjs",
+  example_blob:"242930c5b10f629a13115a45069f2814f6042316",
   target:"linux/x64/node",
   contract:"dis.v0.2",
 });
