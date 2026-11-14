@@ -40,6 +40,80 @@ function optString(v,fallback) {
   if(typeof v!=="string")throw new TypeError("option must be a string: "+String(v));
   return v;
 }
+function parseJsonRejectDuplicateKeys(source){
+  if(typeof source!=="string")throw new TypeError("JSON source must be text");
+  let offset=0;
+  const fail=message=>{throw new SyntaxError(message??"INVALID_JSON");};
+  const whitespace=()=>{while(offset<source.length&&" \t\r\n".includes(source[offset]))offset++;};
+  const string=()=>{
+    const start=offset;
+    if(source[offset]!=='"')fail("INVALID_JSON_STRING");
+    offset++;
+    while(offset<source.length){
+      const code=source.charCodeAt(offset);
+      const char=source[offset++];
+      if(char==='"')return JSON.parse(source.slice(start,offset));
+      if(char==="\\"){
+        if(offset>=source.length)fail("INVALID_JSON_ESCAPE");
+        const escaped=source[offset++];
+        if(escaped==="u"){
+          if(!/^[0-9a-fA-F]{4}$/.test(source.slice(offset,offset+4)))fail("INVALID_JSON_UNICODE_ESCAPE");
+          offset+=4;
+        }else if(!'"\\/bfnrt'.includes(escaped))fail("INVALID_JSON_ESCAPE");
+      }else if(code<0x20)fail("INVALID_JSON_CONTROL_CHARACTER");
+    }
+    fail("UNTERMINATED_JSON_STRING");
+  };
+  const value=depth=>{
+    if(depth>64)fail("JSON_NESTING_LIMIT");
+    whitespace();
+    const char=source[offset];
+    if(char==="{"){
+      offset++;
+      whitespace();
+      if(source[offset]==="}"){offset++;return;}
+      const keys=new Set();
+      while(true){
+        whitespace();
+        const key=string();
+        if(keys.has(key))fail("DUPLICATE_JSON_KEY:"+key);
+        keys.add(key);
+        whitespace();
+        if(source[offset++]!==":")fail("INVALID_JSON_OBJECT_COLON");
+        value(depth+1);
+        whitespace();
+        if(source[offset]===","){offset++;continue;}
+        if(source[offset]==="}"){offset++;break;}
+        fail("INVALID_JSON_OBJECT_DELIMITER");
+      }
+      return;
+    }
+    if(char==="["){
+      offset++;
+      whitespace();
+      if(source[offset]==="]"){offset++;return;}
+      while(true){
+        value(depth+1);
+        whitespace();
+        if(source[offset]===","){offset++;continue;}
+        if(source[offset]==="]"){offset++;break;}
+        fail("INVALID_JSON_ARRAY_DELIMITER");
+      }
+      return;
+    }
+    if(char==='"'){string();return;}
+    for(const literal of ["true","false","null"]){
+      if(source.startsWith(literal,offset)){offset+=literal.length;return;}
+    }
+    const number=/^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?/.exec(source.slice(offset));
+    if(number){offset+=number[0].length;return;}
+    fail("INVALID_JSON_VALUE");
+  };
+  value(0);
+  whitespace();
+  if(offset!==source.length)fail("INVALID_JSON_TRAILING_DATA");
+  return JSON.parse(source);
+}
 const print=x=>process.stdout.write(JSON.stringify(x,null,2)+"\n");
 export async function main(args=process.argv.slice(2)) {
   const [action,arg,...rest]=args;
@@ -132,7 +206,8 @@ export async function main(args=process.argv.slice(2)) {
         if(!modelFile)throw new TypeError("portfolio invoke requires --model <JSON-file>");
         const modelPath=resolve(modelFile);
         if(fsConstants.O_NOFOLLOW===undefined)throw new Error("NOFOLLOW_UNAVAILABLE");
-        const modelHandle=await open(modelPath,fsConstants.O_RDONLY|fsConstants.O_NOFOLLOW);
+        if(fsConstants.O_NONBLOCK===undefined)throw new Error("NONBLOCK_UNAVAILABLE");
+        const modelHandle=await open(modelPath,fsConstants.O_RDONLY|fsConstants.O_NOFOLLOW|fsConstants.O_NONBLOCK);
         let model;
         try{
           const fileStat=await modelHandle.stat();
@@ -148,7 +223,7 @@ export async function main(args=process.argv.slice(2)) {
             if(total>65536)throw new RangeError("model file grew beyond 64KiB while reading");
             chunks.push(chunk.subarray(0,bytesRead));
           }
-          model=JSON.parse(Buffer.concat(chunks).toString("utf8"));
+          model=parseJsonRejectDuplicateKeys(Buffer.concat(chunks).toString("utf8"));
         }finally{await modelHandle.close();}
         result=await runPortfolioOperation(tool,operation,model,{timeoutS:optNumber(params.timeout,30)});
       }
