@@ -5,7 +5,7 @@ import { chmod, copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:f
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { describePortfolioTool, planPortfolioOperation, runPortfolioOperation } from "../packages/runner/js/tool-portfolio-t4.mjs";
 import * as sdk from "../packages/runner/js/sdk.mjs";
 
@@ -67,6 +67,12 @@ test("Highs candidate exposes one bounded typed Python Library operation, never 
   assert.throws(()=>planPortfolioOperation("nuXmv","solve-lp",model),/unadmitted/);
   assert.throws(()=>planPortfolioOperation("highs","solve-lp",{...model,argv:["sh"]}),/HIGHS_MODEL_SCHEMA_INVALID/);
   assert.throws(()=>planPortfolioOperation("highs","solve-lp",{...model,constraints:[{lower:null,upper:1,coefficients:[1]}]}),/HIGHS_CONSTRAINT_INVALID/);
+  const sparseObjective=new Array(2);sparseObjective[1]=2;
+  assert.throws(()=>planPortfolioOperation("highs","solve-lp",{...model,objective:sparseObjective}),/HIGHS_OBJECTIVE_INVALID/);
+  const hiddenExtra={...model};Object.defineProperty(hiddenExtra,"argv",{value:["sh"],enumerable:false});
+  assert.throws(()=>planPortfolioOperation("highs","solve-lp",hiddenExtra),/HIGHS_MODEL_SCHEMA_INVALID/);
+  const accessor={...model};Object.defineProperty(accessor,"sense",{enumerable:true,get(){throw new Error("getter must not execute");}});
+  assert.throws(()=>planPortfolioOperation("highs","solve-lp",accessor),/HIGHS_MODEL_SCHEMA_INVALID/);
 });
 
 test("SDK and CLI use the same pinned typed operation; CLI opens model with O_NOFOLLOW",{skip:process.platform!=="linux"||process.arch!=="x64"},async()=>{
@@ -104,11 +110,69 @@ test("SDK and CLI use the same pinned typed operation; CLI opens model with O_NO
   }
 });
 
-test("MCP exposes the same typed operation with a closed schema and no argv field",async()=>{
-  const mcp=await readFile(join(repoRoot,"packages/runner/js/mcp.mjs"),"utf8");
-  assert.match(mcp,/registerTool\("run_portfolio_operation"/);
-  assert.match(mcp,/tool:z\.literal\("highs"\)/);
-  assert.match(mcp,/operation:z\.literal\("solve-lp"\)/);
-  assert.match(mcp,/model:highsModelSchema/);
-  assert.doesNotMatch(mcp,/raw_argv_allowed:z|argv:z\.array/);
+async function mcpRequests(env,requests){
+  const child=spawn(process.execPath,[join(repoRoot,"packages/runner/js/mcp.mjs")],{
+    cwd:repoRoot,env,stdio:["pipe","pipe","pipe"]
+  });
+  const pending=new Map();
+  let nextId=1,buffer="",stderr="";
+  child.stdout.setEncoding("utf8");
+  child.stderr.setEncoding("utf8");
+  child.stderr.on("data",chunk=>{stderr+=chunk;});
+  child.stdout.on("data",chunk=>{
+    buffer+=chunk;
+    let index;
+    while((index=buffer.indexOf("\\n"))>=0){
+      const line=buffer.slice(0,index).trim();buffer=buffer.slice(index+1);
+      if(!line)continue;
+      let message;try{message=JSON.parse(line);}catch{continue;}
+      if(message.id!==undefined&&pending.has(message.id)){
+        const resolve=pending.get(message.id);pending.delete(message.id);resolve(message);
+      }
+    }
+  });
+  const request=(method,params)=>{
+    const id=nextId++;
+    return new Promise((resolve,reject)=>{
+      const timer=setTimeout(()=>{pending.delete(id);reject(new Error("MCP timeout "+method+" stderr="+stderr));},10000);
+      pending.set(id,message=>{clearTimeout(timer);resolve(message);});
+      child.stdin.write(JSON.stringify({jsonrpc:"2.0",id,method,params})+"\\n");
+    });
+  };
+  try{
+    const initialized=await request("initialize",{
+      protocolVersion:"2025-06-18",capabilities:{},
+      clientInfo:{name:"highs-typed-operation-test",version:"1.0.0"}
+    });
+    assert.equal(initialized.error,undefined,JSON.stringify(initialized));
+    child.stdin.write(JSON.stringify({jsonrpc:"2.0",method:"notifications/initialized",params:{}})+"\\n");
+    const results=[];
+    for(const [method,params] of requests)results.push(await request(method,params));
+    return results;
+  }finally{
+    child.stdin.end();
+    child.kill("SIGTERM");
+    await new Promise(resolve=>child.once("exit",resolve));
+  }
+}
+
+test("MCP stdio invokes the same typed Highs operation and rejects arbitrary fields",{skip:process.platform!=="linux"||process.arch!=="x64"},async()=>{
+  const bundle=await fixtureBundle();
+  const env={...process.env,FORMAL_PORTABLE_ROOT:bundle.root,FORMAL_PORTABLE_RUNNER_SHA256:bundle.runnerSha};
+  try{
+    const [listed,executed,rejected]=await mcpRequests(env,[
+      ["tools/list",{}],
+      ["tools/call",{name:"run_portfolio_operation",arguments:{tool:"highs",operation:"solve-lp",model,timeout_s:10}}],
+      ["tools/call",{name:"run_portfolio_operation",arguments:{tool:"highs",operation:"solve-lp",model,timeout_s:10,argv:["sh"]}}]
+    ]);
+    const names=(listed.result?.tools??[]).map(tool=>tool.name);
+    assert.ok(names.includes("run_portfolio_operation"));
+    assert.ok(names.includes("list_portfolio_tools"));
+    const receipt=JSON.parse(executed.result.content[0].text);
+    assert.equal(receipt.status,"T4_OPERATION_EXECUTED_UNREVIEWED");
+    assert.equal(receipt.solver.highspy_version,"1.15.1");
+    assert.equal(receipt.solver.objective,3);
+    assert.equal(executed.result.isError,false);
+    assert.ok(rejected.error||rejected.result?.isError===true,"unknown argv field must be rejected");
+  }finally{await bundle.cleanup();}
 });
