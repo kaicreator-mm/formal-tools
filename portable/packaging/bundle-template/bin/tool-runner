@@ -55,10 +55,31 @@ ft_safe_id() {
 
 # Resolve a bundle file to its physical path and require it to stay inside the
 # given physical directory prefix (symlink containment for sourced/executed
-# bundle content).
+# bundle content). Primary resolver is readlink -f (GNU and busybox both
+# support it; busybox realpath does NOT support -e/--). Fallback resolves the
+# containing directory with pure shell and walks a final symlink manually,
+# failing closed on unresolved chains.
 ft_path_under() { # file prefix -> rc
   local r
-  r=$(realpath -e -- "$1" 2>/dev/null) || return 1
+  r=$(readlink -f "$1" 2>/dev/null) || true
+  if [ -z "$r" ]; then
+    local d b t hop=0
+    d=$(cd -- "$(dirname -- "$1")" 2>/dev/null && pwd -P) || return 1
+    b=$(basename -- "$1")
+    r="$d/$b"
+    while [ -L "$r" ] && [ "$hop" -lt 10 ]; do
+      t=$(readlink "$r") || return 1
+      case "$t" in
+        /*) r="$t" ;;
+        *) r="$d/$t" ;;
+      esac
+      d=$(cd -- "$(dirname -- "$r")" 2>/dev/null && pwd -P) || return 1
+      r="$d/$(basename -- "$r")"
+      hop=$((hop + 1))
+    done
+    [ -L "$r" ] && return 1 # unresolved symlink chain: fail closed
+  fi
+  [ -n "$r" ] || return 1
   case "$r" in
     "$2"*) return 0 ;;
   esac
