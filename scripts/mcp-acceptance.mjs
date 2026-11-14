@@ -17,7 +17,8 @@ const server=resolve(here,"../packages/runner/js/mcp.mjs");
 const EXPECTED_TOOLS=[
   "list_formal_tools","validate_formal_source","inspect_formal_tool",
   "probe_formal_tool","run_formal_fixture","describe_native_cli",
-  "inspect_native_installation","plan_native_cli","verify_formal_model",\n  "list_portfolio_tools","inspect_portfolio_tool","verify_portable_fixture","run_portfolio_operation"
+  "inspect_native_installation","plan_native_cli","verify_formal_model",
+  "list_portfolio_tools","inspect_portfolio_tool","verify_portable_fixture","run_portfolio_operation"
 ].sort();
 
 const childEnv={...process.env};
