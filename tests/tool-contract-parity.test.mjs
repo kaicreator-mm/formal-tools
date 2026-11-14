@@ -48,6 +48,9 @@ test("D08: MCP exposes 13 allowlisted tools but never unrestricted native shell"
   assert.doesNotMatch(source,/planRawNative|executeNativePlan|invokeStagedTool|child_process/);
   assert.match(source,/receipt\.status!==\"FIXTURE_TECHNICAL_PASS_UNREVIEWED\"/);
   assert.match(source,/toolIds\.includes\(value\)/);
+  assert.match(source,/tool:z\.literal\("highs"\)/);
+  assert.match(source,/operation:z\.literal\("solve-lp"\)/);
+  assert.match(source,/inputSchema:z\.object\([\s\S]*?\)\.strict\(\)/);
 });
 test("D08: process success is distinct from proof or consumer claim acceptance",()=>{
   const plan=planNative("z3","solve",{input:"input.smt2"});
