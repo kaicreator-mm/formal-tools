@@ -95,7 +95,7 @@ serveStdio(()=>{
     inputSchema:z.object({
       tool:z.literal("highs"),operation:z.literal("solve-lp"),model:highsModelSchema,
       timeout_s:z.number().int().min(1).max(30).default(30)
-    })
+    }).strict()
   },async({tool,operation,model,timeout_s})=>{
     const response=await handle(()=>runPortfolioOperation(tool,operation,model,{timeoutS:timeout_s}));
     try{
