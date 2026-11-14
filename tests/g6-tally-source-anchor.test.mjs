@@ -72,19 +72,19 @@ test('G6 source anchor locks complete Source, Consumer and Original Test provena
   assert.equal(manifest.independent_reference_oracle.independent_business_truth,false);
   assert.equal(manifest.tool_provenance.execution,'LAST_RECORDED_EXACT_HEAD_CI_SUCCESS');
   assert.equal(manifest.tool_provenance.last_successful_exact_head,
-    '710f3b091327c4bc681b95eae77fd1ffe016d5da');
+    'dd59ea51ee1b82147f6a33fc2e6ed3d9cfa3dc78');
   assert.deepEqual(manifest.tool_provenance.last_successful_ci,{
     provider:'Woodpecker',
     runtime:'Node.js 24.21.0',
     push:{
-      pipeline:939,
+      pipeline:944,
       status:'SUCCESS',
-      target_url:'https://ci.kaicreator.com/repos/39/pipeline/939/1'
+      target_url:'https://ci.kaicreator.com/repos/39/pipeline/944/1'
     },
     pull_request:{
-      pipeline:940,
+      pipeline:945,
       status:'SUCCESS',
-      target_url:'https://ci.kaicreator.com/repos/39/pipeline/940/1'
+      target_url:'https://ci.kaicreator.com/repos/39/pipeline/945/1'
     }
   });
 });
