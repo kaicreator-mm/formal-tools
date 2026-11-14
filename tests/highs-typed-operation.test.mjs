@@ -111,7 +111,7 @@ test("SDK and CLI use the same pinned typed operation; CLI opens model with O_NO
     await writeFile(metaPath,originalMeta);
     const sdkReceipt=await sdk.runPortfolioOperation("highs","solve-lp",model,{timeoutS:10});
     assert.equal(sdkReceipt.status,"T4_OPERATION_EXECUTED_UNREVIEWED");
-    assert.equal(sdkReceipt.solver.objective,3);
+    assert.equal(sdkReceipt.solver?.objective,3);
     const cli=spawnSync(process.execPath,[
       join(repoRoot,"packages/runner/js/cli.mjs"),
       "portfolio","invoke","highs","solve-lp","--model",modelPath,"--timeout","10"
