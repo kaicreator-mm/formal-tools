@@ -4,7 +4,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 /**
- * Real MCP stdio acceptance for the 9 registered tools. Speaks newline-delimited
+ * Real MCP stdio acceptance for the 13 registered tools. Speaks newline-delimited
  * JSON-RPC to a spawned packages/runner/js/mcp.mjs child — no SDK client shortcut,
  * so the handshake exercises the same transport an external MCP host would use.
  * Read-only plus registered-tool calls only; never opens a raw shell channel.
@@ -17,10 +17,13 @@ const server=resolve(here,"../packages/runner/js/mcp.mjs");
 const EXPECTED_TOOLS=[
   "list_formal_tools","validate_formal_source","inspect_formal_tool",
   "probe_formal_tool","run_formal_fixture","describe_native_cli",
-  "inspect_native_installation","plan_native_cli","verify_formal_model"
+  "inspect_native_installation","plan_native_cli","verify_formal_model",\n  "list_portfolio_tools","inspect_portfolio_tool","verify_portable_fixture","run_portfolio_operation"
 ].sort();
 
-const child=spawn(process.execPath,[server],{stdio:["pipe","pipe","pipe"]});
+const childEnv={...process.env};
+for(const key of ["FORMAL_PORTABLE_ROOT","FORMAL_PORTABLE_RUNNER_SHA256",
+  "FORMAL_PORTABLE_META_SHA256","FORMAL_PORTABLE_FIXTURE_SHA256"])delete childEnv[key];
+const child=spawn(process.execPath,[server],{stdio:["pipe","pipe","pipe"],env:childEnv});
 const pending=new Map();
 let nextId=1;
 const stderrTail=[];
@@ -89,7 +92,7 @@ try{
 
   const list=await request("tools/list",{});
   const names=(list.result?.tools??[]).map(t=>t.name).sort();
-  check("tools/list exposes exactly the 9 registered tools",
+  check("tools/list exposes exactly the 13 registered tools",
     JSON.stringify(names)===JSON.stringify(EXPECTED_TOOLS),names.join(","));
   const toolMeta={};
   for(const t of list.result?.tools??[])toolMeta[t.name]=t.inputSchema;
@@ -152,6 +155,31 @@ try{
   check("verify_formal_model really verifies the DAG model in pure JS",
     pure?.test_verdict==="PASS"&&pure?.execution==="PURE_JS",
     JSON.stringify(pure).slice(0,160));
+
+  const portfolioSchema=JSON.stringify(toolMeta.run_portfolio_operation);
+  check("run_portfolio_operation schema is a closed typed Highs LP interface",
+    /"tool"/.test(portfolioSchema)&&/"operation"/.test(portfolioSchema)&&/"model"/.test(portfolioSchema)&&
+    !/"argv"|"shell"|"script_path"/.test(portfolioSchema),portfolioSchema.slice(0,300));
+
+  const typedModel={
+    sense:"max",objective:[3,2],
+    variables:[{lower:0,upper:null},{lower:0,upper:null}],
+    constraints:[{lower:null,upper:1,coefficients:[1,1]}]
+  };
+  const typedRes=await call("run_portfolio_operation",{
+    tool:"highs",operation:"solve-lp",model:typedModel,timeout_s:5
+  });
+  const typed=firstText(typedRes.result);
+  check("run_portfolio_operation fails closed when no pinned portable root is configured",
+    typedRes.result?.isError===true&&typed?.status==="NOT_RUN_FAIL_CLOSED",
+    JSON.stringify({status:typed?.status,isError:typedRes.result?.isError}).slice(0,160));
+
+  const rawRes=await call("run_portfolio_operation",{
+    tool:"highs",operation:"solve-lp",model:typedModel,timeout_s:5,argv:["sh"]
+  });
+  check("run_portfolio_operation rejects raw argv extension",
+    rawRes.result?.isError===true||Boolean(rawRes.error),
+    JSON.stringify(rawRes.error??rawRes.result?.content?.[0]?.text).slice(0,160));
 
   const badRes=await call("inspect_native_installation",{tool:"definitely-not-a-tool"});
   check("unknown tool id is rejected by schema (no generic executable)",
