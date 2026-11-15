@@ -1,0 +1,7 @@
+Error: Undefined relation path in file badtypes.dl at line 4
+path(1,notanumber).
+^-------------------
+Error: Undefined relation path in file badtypes.dl at line 5
+.output path
+--------^----
+2 errors generated, evaluation aborted

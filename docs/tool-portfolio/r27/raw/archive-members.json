@@ -1,0 +1,98 @@
+{
+  "archive_sha256": "e3b04c0491998c51c69172d2f2fec6c1896c74a1aaab3750e56e831935648e71",
+  "member_count": 17,
+  "regular_files": 14,
+  "directories": 3,
+  "symlinks": 0,
+  "hardlinks": 0,
+  "special_entries": 0,
+  "unsafe_paths": 0,
+  "duplicate_paths": 0,
+  "members": [
+    {
+      "path": "tools/souffle/",
+      "type": "directory",
+      "size": 0
+    },
+    {
+      "path": "tools/souffle/run",
+      "type": "regular_file",
+      "size": 479
+    },
+    {
+      "path": "tools/souffle/bin/",
+      "type": "directory",
+      "size": 0
+    },
+    {
+      "path": "tools/souffle/bin/souffle",
+      "type": "regular_file",
+      "size": 18581097
+    },
+    {
+      "path": "tools/souffle/bin/mcpp",
+      "type": "regular_file",
+      "size": 14496
+    },
+    {
+      "path": "tools/souffle/lib/",
+      "type": "directory",
+      "size": 0
+    },
+    {
+      "path": "tools/souffle/lib/libgomp.so.1",
+      "type": "regular_file",
+      "size": 348056
+    },
+    {
+      "path": "tools/souffle/lib/libgcc_s.so.1",
+      "type": "regular_file",
+      "size": 182856
+    },
+    {
+      "path": "tools/souffle/lib/libstdc++.so.6",
+      "type": "regular_file",
+      "size": 2497768
+    },
+    {
+      "path": "tools/souffle/lib/libffi.so.8",
+      "type": "regular_file",
+      "size": 47576
+    },
+    {
+      "path": "tools/souffle/lib/libmcpp.so.0",
+      "type": "regular_file",
+      "size": 150744
+    },
+    {
+      "path": "tools/souffle/lib/libz.so.1",
+      "type": "regular_file",
+      "size": 125376
+    },
+    {
+      "path": "tools/souffle/lib/libsqlite3.so.0",
+      "type": "regular_file",
+      "size": 1571096
+    },
+    {
+      "path": "tools/souffle/lib/libncurses.so.6",
+      "type": "regular_file",
+      "size": 169984
+    },
+    {
+      "path": "tools/souffle/lib/libtinfo.so.6",
+      "type": "regular_file",
+      "size": 220464
+    },
+    {
+      "path": "tools/souffle/meta.sh",
+      "type": "regular_file",
+      "size": 152
+    },
+    {
+      "path": "tools/souffle/meta.json",
+      "type": "regular_file",
+      "size": 1108
+    }
+  ]
+}
