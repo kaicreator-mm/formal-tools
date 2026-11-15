@@ -60,13 +60,19 @@
     "manifest_entry_matches": true,
     "zstd_integrity": {
       "result": "PASS",
-      "command": "zstd -t pymc-6.4.0-linux-x86_64.tar.zst.bin",
+      "command": "zstd -t source archive",
       "exit_code": 0,
       "decompression_exit_code": 0,
       "evidence_status": "INDEPENDENTLY_REPLAYED",
-      "replay_log_path": "docs/tool-portfolio/r50/evidence/PYMC_T2_REPLAY_LOG.txt",
-      "replay_log_blob": "23216bc38ffc53f98ca1eb86504114663f88685c",
-      "replay_log_sha256": "e6880cca97275e6a197997ce5ceb5d7a881f0b488caaf7d67f889d652f71e6bb"
+      "receipt_archive_drive_file_id": "1u-yzMMeWUOedqgzYY0eY5yGgkpu6DhRm",
+      "receipt_archive_sha256": "80a902e148ecc7dff43f1b447f688b1e2c1657dd625e585c645b2ef5431f7f68",
+      "raw_receipt_entries": [
+        "zstd-test.stdout",
+        "zstd-test.stderr",
+        "zstd-test.exit",
+        "zstd-decompress.stderr",
+        "zstd-decompress.exit"
+      ]
     },
     "tar_members": {
       "total": 315,
@@ -78,7 +84,7 @@
       "absolute_or_parent_traversal_paths": 0,
       "duplicate_normalized_paths": 0,
       "regular_payload_bytes": 4762659,
-      "evidence_status": "INDEPENDENT_MEMBER_MANIFEST",
+      "evidence_status": "INDEPENDENTLY_REPLAYED",
       "manifest_path": "docs/tool-portfolio/r50/evidence/PYMC_T2_MEMBER_MANIFEST.json.zlib.b64",
       "manifest_encoding": "base64(zlib(UTF-8 JSON)); decode base64 then zlib decompress",
       "manifest_uncompressed_size_bytes": 29557,
@@ -87,7 +93,20 @@
       "manifest_compressed_sha256": "5d56f17047d9ce4a5b89b6503cd5ec9c261e7d474ab3ec757539119b3969c320",
       "manifest_base64_size_bytes": 4436,
       "manifest_base64_sha256": "582982f86e7f9113f897c62a49b5b0920cb894c2d2fdec7bc094eb83931fc9c7",
-      "manifest_git_blob": "46ac724f5ffa92c5896d221f0ed09818e03bf3ed"
+      "manifest_git_blob": "46ac724f5ffa92c5896d221f0ed09818e03bf3ed",
+      "manifest_source": {
+        "receipt_archive_drive_file_id": "1u-yzMMeWUOedqgzYY0eY5yGgkpu6DhRm",
+        "archive_entry": "tar-members.json",
+        "sha256": "a9ee1149c87c84c713cbfd8b6f9267afc15b73849e5c04ba72eb21cf80566927",
+        "member_count": 315
+      },
+      "independent_preflight": {
+        "command": "Python tarfile preflight over the zstd-decompressed archive",
+        "exit_code": 0,
+        "archive_tar_sha256": "9488515ac9bb8eb3762d61205b3248f3c88a81d01c77d1e4bd0ad21ca9490547",
+        "unsafe_or_duplicate_count": 0,
+        "path_type_size_uid_gid_match_count": 315
+      }
     },
     "extraction": {
       "result": "PASS_SCOPED_INDEPENDENT_REPLAY",
@@ -114,7 +133,27 @@
       "replay_log_blob": "23216bc38ffc53f98ca1eb86504114663f88685c",
       "replay_log_sha256": "e6880cca97275e6a197997ce5ceb5d7a881f0b488caaf7d67f889d652f71e6bb",
       "execution_user": "uid=65534(nobody) gid=65534(nogroup) groups=65534(nogroup)",
-      "command": "zstd -dc ARCHIVE | setpriv --reuid=65534 --regid=65534 --clear-groups tar --no-same-owner --no-same-permissions --no-overwrite-dir --delay-directory-restore -x -f - -C DEST"
+      "command": "zstd -dc ARCHIVE | setpriv --reuid=65534 --regid=65534 --clear-groups tar --no-same-owner --no-same-permissions --no-overwrite-dir --delay-directory-restore -x -f - -C DEST",
+      "evidence_status": "INDEPENDENTLY_REPLAYED",
+      "receipt_source": {
+        "receipt_archive_drive_file_id": "1u-yzMMeWUOedqgzYY0eY5yGgkpu6DhRm",
+        "archive_entry": "extracted-files.json",
+        "sha256": "5291575dc8a01c73ec1728fde340670868d58905e29683f113906e5958443db3"
+      },
+      "independent_replay": {
+        "command": "runuser -u nobody -- tar --no-same-owner --no-same-permissions -xf archive.tar -C extracted",
+        "exit_code": 0,
+        "uid": 65534,
+        "gid": 65534,
+        "extracted_entries": 316,
+        "regular_files": 271,
+        "directories": 45,
+        "symlinks": 0,
+        "special_files": 0,
+        "owner_mismatches": 0,
+        "regular_file_sha256_matches_receipt": 271,
+        "path_type_owner_matches_receipt": 316
+      }
     },
     "embedded_file_sha256": {
       "meta.sh": "086441cd0ed2c75d03818cc4d5205450985852e4961559bc035bc097d08d1855",
@@ -147,17 +186,112 @@
     },
     "safety_evidence": {
       "status": "INDEPENDENTLY_REPLAYED_SCOPED",
-      "writer_report_reference": "kaicreator-mm/formal-tools#125 comment 6894311642",
-      "independent_replay_reference": "kaicreator-mm/formal-tools#125 comment 6895383716",
-      "independent_reproduction": "PASS_IN_CURRENT_EXECUTION_ENVIRONMENT",
-      "preserved_receipts": {
-        "member_manifest": "docs/tool-portfolio/r50/evidence/PYMC_T2_MEMBER_MANIFEST.json.zlib.b64",
-        "extraction_receipt": "docs/tool-portfolio/r50/evidence/PYMC_T2_EXTRACTION_RECEIPT.json",
-        "replay_log": "docs/tool-portfolio/r50/evidence/PYMC_T2_REPLAY_LOG.txt",
-        "archive_sha256sum_manifest": "Drive file 1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1"
+      "writer_receipt_reference": "kaicreator-mm/formal-tools#125 comment 6895383716",
+      "receipt_archive": {
+        "drive_file_id": "1u-yzMMeWUOedqgzYY0eY5yGgkpu6DhRm",
+        "name": "PYMC_R55_T2_REPLAY_RECEIPTS.zip",
+        "url": "https://drive.google.com/file/d/1u-yzMMeWUOedqgzYY0eY5yGgkpu6DhRm/view?usp=drivesdk",
+        "size_bytes": 30421,
+        "sha256": "80a902e148ecc7dff43f1b447f688b1e2c1657dd625e585c645b2ef5431f7f68",
+        "zip_integrity": "PASS",
+        "internal_sha256sums_entries": 18,
+        "internal_sha256sums_verified": 18,
+        "internal_sha256sums_failures": 0,
+        "receipt_json_sha256": "becc8c16deeaa1f03ee4fbd9a43fb112de0b7332b08fb6494819cab137a9aa86",
+        "tar_members_sha256": "a9ee1149c87c84c713cbfd8b6f9267afc15b73849e5c04ba72eb21cf80566927",
+        "extracted_files_sha256": "5291575dc8a01c73ec1728fde340670868d58905e29683f113906e5958443db3"
       },
-      "interpretation": "The original archive and SHA256SUMS were fetched again as raw bytes and independently re-hashed. zstd -t passed; every TAR member was preflighted for path/type safety and every regular payload hashed; extraction was run as UID/GID 65534; all 315 archive members matched the extracted filesystem. The archive omits an explicit tools/ directory entry, so tar creates one implicit parent; the final comparator permits only that implied directory. Raw member manifest, extraction receipt and replay log are committed in this PR.",
-      "qualification_boundary": "T2 PASS_SCOPED covers archive integrity, member path/type preflight and non-root extraction only. It does not prove original package runtime execution (T3), current Runner integration (T4), business semantics (T5) or maintenance (T6)."
+      "preserved_receipt_entries": [
+        "environment.txt",
+        "source-sha256.txt",
+        "manifest-entry.txt",
+        "zstd-test.stdout",
+        "zstd-test.stderr",
+        "zstd-test.exit",
+        "zstd-decompress.stderr",
+        "zstd-decompress.exit",
+        "archive-tar.sha256",
+        "tar-listing.txt",
+        "tar-listing.stderr",
+        "tar-listing.exit",
+        "tar-members.json",
+        "extract.stdout",
+        "extract.stderr",
+        "extract.exit",
+        "extracted-files.json",
+        "receipt.json",
+        "SHA256SUMS"
+      ],
+      "independent_replay": {
+        "environment": {
+          "os": "Debian GNU/Linux 13.3 (trixie)",
+          "arch": "x86_64",
+          "kernel": "6.18.57",
+          "python": "3.13.5",
+          "zstd": "1.5.7",
+          "gnu_tar": "1.35",
+          "runuser": "util-linux 2.41.5",
+          "preflight_executor_uid_gid": "0:0",
+          "extraction_uid_gid": "65534:65534"
+        },
+        "source_archive": {
+          "drive_file_id": "105Aq1lrpCglTe5WLJY0Nxbw4YtnCZBkW",
+          "size_bytes": 1072092,
+          "sha256": "f70fd5fc32ba835262642eedf761cdea4b1b1398c4877014f0e7cbcc734fbff4",
+          "expected_sha256_matches": true
+        },
+        "sha256sums": {
+          "drive_file_id": "1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1",
+          "size_bytes": 4514,
+          "sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64",
+          "archive_entry_matches": true
+        },
+        "decompressed_tar": {
+          "size_bytes": 4997120,
+          "sha256": "9488515ac9bb8eb3762d61205b3248f3c88a81d01c77d1e4bd0ad21ca9490547"
+        },
+        "command_exit_codes": {
+          "zstd_test": 0,
+          "zstd_decompress": 0,
+          "tar_listing": 0,
+          "tar_preflight": 0,
+          "nonroot_extraction": 0
+        },
+        "tar_preflight": {
+          "total": 315,
+          "regular_files": 271,
+          "directories": 44,
+          "symlinks": 0,
+          "hardlinks": 0,
+          "special_files": 0,
+          "absolute_or_parent_traversal_paths": 0,
+          "duplicate_normalized_paths": 0,
+          "member_manifest_matches": 315
+        },
+        "nonroot_extraction": {
+          "uid": 65534,
+          "gid": 65534,
+          "total_entries": 316,
+          "regular_files": 271,
+          "directories": 45,
+          "symlinks": 0,
+          "special_files": 0,
+          "owner_mismatches": 0,
+          "regular_file_content_sha256_matches": 271,
+          "path_type_owner_matches": 316
+        },
+        "cross_checks": {
+          "receipt_zip_integrity": "PASS",
+          "receipt_internal_sha256sums": "18/18 PASS",
+          "archive_sha256_vs_manifest": "MATCH",
+          "decompressed_tar_sha256_vs_receipt": "MATCH",
+          "tar_listing_sha256_vs_receipt": "MATCH",
+          "tar_member_paths_types_sizes_uid_gid": "315/315 MATCH",
+          "extracted_file_content_sha256": "271/271 MATCH",
+          "extracted_tree_paths_types_owners": "316/316 MATCH"
+        }
+      },
+      "qualification_boundary": "T2 PASS_SCOPED covers archive integrity, member path/type preflight and non-root extraction only. It does not prove reproducible build, original package runtime execution (T3), current Runner integration (T4), business semantics (T5) or maintenance (T6), Product or Release."
     }
   },
   "current_main_compatibility": {
@@ -200,8 +334,8 @@
     "P2": 0,
     "p1": "Original package meta.sh exports TOOL_TOOL_ID rather than TOOL_ID, so current main Runner rejects it. Rebuild with current main builder and canonical metadata before T4.",
     "p2_resolution": {
-      "P2-01": "RESOLVED_IN_RECORD: added the explicit AePPL MIT, aesara-devs MIT, and historical Academic Free License notices, while retaining Apache-2.0 as the project license expression and leaving unspecified AFL version unresolved.",
-      "P2-02": "RESOLVED_BY_INDEPENDENT_REPLAY: raw zstd integrity result, complete 315-member path/type/size manifest, non-root extraction receipt and replay log are now committed with hashes; T2 remains scoped to archive safety/extraction only."
+      "P2-01": "RESOLVED_IN_RECORD: explicit AePPL MIT, aesara-devs MIT, and historical Academic Free License notices are recorded without inventing an AFL version or component mapping.",
+      "P2-02": "RESOLVED_WITH_IMMUTABLE_DRIVE_RECEIPT_AND_INDEPENDENT_REPLAY: the 30,421-byte Drive ZIP is SHA256-pinned; ZIP integrity and all 18 internal SHA256SUMS entries pass. The original archive and manifest were re-fetched and independently hashed; zstd, decompression, tar listing/preflight and UID/GID 65534 extraction were rerun with exit 0. Member and extracted-file manifests cross-match."
     }
   },
   "next_actions": [
