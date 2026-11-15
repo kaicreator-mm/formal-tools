@@ -74,7 +74,7 @@ function addReasons(map, gates, reason) {
   }
 }
 
-function comparePin({ name, expected, observed, gates, hashPattern, stale, unknown, changes }) {
+function comparePin({ name, expected, observed, gates, hashPattern = null, stale, unknown, changes }) {
   if (expected === null || expected === undefined) {
     addReasons(unknown, gates, name + ": baseline pin is not established");
     return;
@@ -201,14 +201,16 @@ function parseCliArgs(args) {
 function normalizeExternalPins(value) {
   if (!value || typeof value !== "object" || Array.isArray(value))
     throw new TypeError("external asset evidence must be a JSON object");
-  const out = {};
-  for (const key of ["portable_package_sha256", "upstream_source_archive_sha256", "binary_sha256", "oracle_sha256"]) {
-    const candidate = value[key];
-    out[key] = typeof candidate === "string" && SHA256.test(candidate)
+  const normalize = candidate =>
+    typeof candidate === "string" && SHA256.test(candidate)
       ? candidate.toLowerCase()
       : null;
-  }
-  return out;
+  return {
+    portable_package_sha256: normalize(value.portable_package_sha256),
+    upstream_source_archive_sha256: normalize(value.upstream_source_archive_sha256),
+    binary_sha256: normalize(value.binary_sha256),
+    oracle_sha256: normalize(value.oracle_sha256)
+  };
 }
 
 async function readRegularFile(path) {

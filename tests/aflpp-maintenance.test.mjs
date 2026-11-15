@@ -219,6 +219,36 @@ test("current state reader rejects symlinked pinned source files", async () => {
   }
 });
 
+test("external asset pins keep all four fields and map invalid or missing values to UNKNOWN", async () => {
+  const base = baseline();
+  const root = await mkdtemp(join(tmpdir(), "aflpp-maintenance-external-pins-"));
+  try {
+    const withoutExternal = await readCurrentAflppState(root, base);
+    assert.deepEqual(withoutExternal.asset_pins, {
+      portable_package_sha256: null,
+      upstream_source_archive_sha256: null,
+      binary_sha256: null,
+      oracle_sha256: null
+    });
+
+    const externalPath = join(root, "external.json");
+    await writeFile(externalPath, JSON.stringify({
+      portable_package_sha256: sha256("A"),
+      upstream_source_archive_sha256: "not-a-sha256",
+      binary_sha256: 17
+    }));
+    const current = await readCurrentAflppState(root, base, externalPath);
+    assert.deepEqual(current.asset_pins, {
+      portable_package_sha256: sha256("a"),
+      upstream_source_archive_sha256: null,
+      binary_sha256: null,
+      oracle_sha256: null
+    });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("Git blob hashing uses the canonical blob header and byte length", () => {
   const bytes = Buffer.from("hello\n", "utf8");
   assert.equal(gitBlobSha1(bytes), "ce013625030ba8dba906f756967f9e9ca394464a");
@@ -246,7 +276,9 @@ test("current state reader hashes exact repository bytes and extracts the pinned
     assert.equal(current.version, "5.03c");
     assert.equal(current.source_blobs["portable/builders/tools/aflpp.sh"], base.source_files["portable/builders/tools/aflpp.sh"].git_blob_sha1);
     assert.equal(current.asset_pins.portable_package_sha256, base.asset_pins.portable_package_sha256);
+    assert.equal(current.asset_pins.upstream_source_archive_sha256, base.asset_pins.upstream_source_archive_sha256);
     assert.equal(current.asset_pins.binary_sha256, base.asset_pins.binary_sha256);
+    assert.equal(current.asset_pins.oracle_sha256, base.asset_pins.oracle_sha256);
   } finally {
     await rm(root, { recursive: true, force: true });
   }
