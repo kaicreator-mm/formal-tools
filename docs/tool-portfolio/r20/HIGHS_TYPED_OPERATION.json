@@ -57,8 +57,8 @@
     },
     "tests": {
       "path": "tests/highs-typed-operation.test.mjs",
-      "git_blob": "16f4a80e8ef8d12dbcf5f4e245e47165d059f1be",
-      "scope": "synthetic pinned Runner; CLI FIFO/duplicate JSON; SDK/CLI/MCP stdio wiring; runner timeout/output/version failures; not a real Highs process"
+      "git_blob": "0712e3600d63580223f6bbeabe75aa553b353349",
+      "scope": "synthetic pinned Runner transport/wiring and deterministic failure modes; CLI raw-file duplicate-key/FIFO/symlink/size checks; MCP decoded-object schema; committed executable fake-highspy regression invokes the exact Python solve-lp.py under Python 3.13.5 with value_valid=false and a col_value property that raises if consumed; not a real Highs process"
     },
     "parity_test": {
       "path": "tests/tool-contract-parity.test.mjs",
@@ -93,7 +93,7 @@
       "unknown object keys including non-enumerable and symbol keys",
       "accessor properties",
       "sparse arrays",
-      "duplicate JSON keys",
+      "duplicate JSON keys at raw CLI-file and Python request boundaries; raw duplicate-key detection is not claimed at the MCP JSON-RPC decoded-object boundary",
       "NaN/Infinity",
       "unknown tool/operation",
       "version drift",
@@ -114,18 +114,23 @@
       "kUnbounded",
       "kUnboundedOrInfeasible",
       "kTimeLimit"
-    ]
+    ],
+    "duplicate_key_scope": {
+      "cli_raw_model_file": "REJECTED before JSON.parse by duplicate-aware raw-text parser",
+      "python_operation_request": "REJECTED before model normalization by json.loads object_pairs_hook",
+      "mcp_json_rpc": "NOT_CLAIMED; MCP SDK parses JSON-RPC into a JavaScript object before the tool schema receives it"
+    }
   },
   "validation": {
-    "source_static_review": "P2_REPAIRS_IMPLEMENTED; FRESH_INDEPENDENT_SOURCE_FIRST_REVIEW_PENDING",
-    "unit_and_ci": "LOCAL_LINUX_NODE_24.21.0_PASS at 48d5988364209ca5d81ee621f6421a7c8052b752: npm ci, complete Node tests, TypeScript typecheck and all five CI CLI commands exit 0. Woodpecker #966/#967 first-failure root cause diagnosed as tests/highs-typed-operation.test.mjs:94 TS2322; final exact-head Woodpecker push/PR remain PENDING",
-    "synthetic_runner_test": "PASS_SCOPED_NODE_24.21.0: 358 tests, 357 pass, 0 fail, 1 intentionally skipped; synthetic Runner coverage is transport/wiring only and is not native execution",
+    "source_static_review": "P2_REPAIRS_IMPLEMENTED; executable fake-highspy invalid-solution regression committed; fresh independent Source-First review of current exact HEAD required",
+    "unit_and_ci": "Prior exact HEAD 45e4344fb1663e83bd11aa200f1d1b4353e19748: Woodpecker push #974 and PR #975 SUCCESS; Node 24.21.0 tests/typecheck/CLI gates passed. Current revision status is authoritative in the GitHub commit status contexts; this JSON does not self-assert a result for the commit that updates it.",
+    "synthetic_runner_test": "Prior exact HEAD: 358 tests, 357 pass, 0 fail, 1 intentionally skipped; current revision adds an executable fake-highspy invalid-solution regression, with its actual execution result bound to current Woodpecker/local receipts. Synthetic Runner coverage remains transport/wiring only, not native execution.",
     "actual_original_highspy_1151_pos_neg_err": "R19_SCOPED_NATIVE_PASS_USING_HOST_PYTHON_3.13.5_SUBSTITUTE",
     "actual_typed_operation_host_substitute": "PASS_SCOPED: exact solve-lp.py SHA256 6b43add5fbb8dc3b2aa65b951f85d9ee41f7827921d8d624588fe3aaae339136 executed against original Highs archive SHA256 ea0a12198f986f9fd03c7a29525d7f93c64e39c51525492bf3fc37e0bc7815a2 with host CPython 3.13.5 and NumPy 2.3.5; POS kOptimal objective=3; NEG kInfeasible; duplicate JSON, reversed bounds and NaN rejected; synthetic highspy stub proves value_valid=false and API Warning fail closed; NOT canonical portable-runtime evidence",
     "actual_typed_operation_against_canonical_portable_python_runtime": "PASS_SCOPED at 48d5988364209ca5d81ee621f6421a7c8052b752: canonical Drive Runtime SHA256 1dbbc431b578da5139c8f1993d5c138582dee577804fca9e85936b490606f1d5, actual Python 3.13.5 / NumPy 2.5.4 / highspy 1.15.1; original core bin/tool-runner run typed POS kOptimal objective=3 variables=[1,0], NEG kInfeasible, reversed bounds/duplicate key/NaN rejected; 5/5 cases pass",
     "full_cli_mcp_sdk_real_highs_e2e": "PASS_SCOPED at 48d5988364209ca5d81ee621f6421a7c8052b752: 18/18 environment+SDK+CLI+MCP stdio assertions in Debian 13 with canonical Node 22.16.0 and the same canonical Python Runtime; UID 65534, network NONE, bundle READ_ONLY; real positive, infeasible and fail-closed boundaries; independent T4 acceptance and T5 remain ungranted",
-    "independent_source_first_review": "REWORK on prior exact HEAD 07d5393ea05a19798946b9c234fef0dd0539ed1d (P0=0/P1=0/P2=6); repairs and real portable execution complete; fresh non-Writer review of the final exact HEAD is still required",
-    "woodpecker_push_and_pr_exact_sha": "PRIOR HEAD 7614ef075587f8049a07446687772322ee9a10c4: push #966 step 25189 and PR #967 step 25191 both FAILURE exit 2 at npm run typecheck after clone/npm ci/Node tests passed; error TS2322 Type 'void' is not assignable to type 'number' at tests/highs-typed-operation.test.mjs(94,80). Source-test type defect repaired by 48d5988364209ca5d81ee621f6421a7c8052b752; no blind retry; final HEAD CI PENDING",
+    "independent_source_first_review": "REWORK on exact HEAD 45e4344fb1663e83bd11aa200f1d1b4353e19748 (P0=0/P1=0/P2=3); P2 repairs are committed in the current branch revision; fresh non-Writer Source-First review of the new exact HEAD is required.",
+    "woodpecker_push_and_pr_exact_sha": "Prior exact HEAD 45e4344fb1663e83bd11aa200f1d1b4353e19748: push #974 SUCCESS and PR #975 SUCCESS. The new revision's exact-SHA status is the GitHub commit status context; do not reuse prior pipeline IDs as evidence for a later SHA.",
     "local_model_environment": "Authoritative local Linux gates used an isolated woodpecker-agent-local:v3.20.1 container with Node 24.21.0. Real portable E2E used Debian 13 with canonical Node 22.16.0 and canonical Python 3.13.5, never Host Python substitute evidence"
   },
   "ci_diagnosis": {
@@ -232,7 +237,7 @@
     "candidate_typed_operations_implemented": 1
   },
   "qualification": {
-    "implementation_status": "CI_ROOT_CAUSE_REPAIRED; LOCAL_NODE24_AND_REAL_PORTABLE_E2E_PASS_SCOPED; FINAL_EXACT_HEAD_CI_AND_INDEPENDENT_REVIEW_PENDING",
+    "implementation_status": "CI_ROOT_CAUSE_REPAIRED; LOCAL_NODE24_AND_REAL_PORTABLE_E2E_PASS_SCOPED; prior exact-head CI #974/#975 SUCCESS; new committed invalid-solution regression and evidence-scope repairs require current exact-head CI and fresh independent review",
     "candidate_tool_t4_accepted": false,
     "t5_semantics_accepted": false,
     "t6_accepted": false,
@@ -241,10 +246,10 @@
     "real_portable_receipts_do_not_replace_independent_review_or_exact_sha_ci": true
   },
   "next": [
-    "Push the source-test repair and this versioned evidence, then obtain Woodpecker push and PR SUCCESS on one final exact HEAD.",
-    "Fresh independent non-Writer Source-First review of the final HEAD and every changed Blob, including the CI diagnosis and real portable receipts.",
+    "Check current revision's Woodpecker push and PR status contexts on its exact HEAD; #974/#975 are SUCCESS only for prior HEAD 45e4344.",
+    "Fresh independent non-Writer Source-First review of the new exact HEAD and every changed Blob, including fake-highspy invalid-solution regression, duplicate-key scope, CI diagnosis and real portable receipts.",
     "Keep the original core Runner typed-operation receipt scoped; do not relabel it as an R13 runner_schema 0.2 verify receipt or increase original-tar T3 counts.",
-    "Only after independent acceptance may the candidate T4 disposition be reconsidered; T5 semantic qualification and Release remain separate and ungranted."
+    "Only after independent acceptance may candidate T4 disposition be reconsidered; T5 semantic qualification and Release remain separate and ungranted."
   ],
   "local_host_execution": {
     "source_sha256": "6b43add5fbb8dc3b2aa65b951f85d9ee41f7827921d8d624588fe3aaae339136",
