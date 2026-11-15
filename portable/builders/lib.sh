@@ -189,3 +189,41 @@ ft::set_version() {
   [ -n "${FT_TOOL_VERSION:-}" ] || return 1
   printf '%s' "$FT_TOOL_VERSION" > "$FT_TOOL_DIR/.version"
 }
+
+# ft::elf_arch <readelf Machine field> -> stable architecture identifier.
+# GNU readelf prints "Advanced Micro Devices X86-64" for EM_X86_64; taking
+# only the second whitespace token incorrectly records "Advanced".
+ft::elf_arch() {
+  local machine="${1:-}"
+  case "$machine" in
+    *"X86-64"*) printf '%s\\n' "x86_64" ;;
+    "AArch64") printf '%s\\n' "aarch64" ;;
+    "Intel 80386") printf '%s\\n' "i386" ;;
+    "PowerPC64 LE") printf '%s\\n' "ppc64le" ;;
+    "PowerPC64") printf '%s\\n' "ppc64" ;;
+    *"RISC-V"*) printf '%s\\n' "riscv" ;;
+    "ARM") printf '%s\\n' "arm" ;;
+    "") printf '%s\\n' "" ;;
+    *) printf '%s\\n' "$machine" ;;
+  esac
+}
+
+# ft::probe_version <tool_dir> <relative_probe> [args...]
+# Run the best-effort version probe with the same private tool library directory
+# that the portable Runner's doctor/run paths use. Preserve any inherited paths.
+ft::probe_version() {
+  local tool_dir="$1"; shift
+  [ -d "$tool_dir" ] && [ "$#" -gt 0 ] || return 2
+  local private_lib="$tool_dir/lib"
+  local probe_ld="${LD_LIBRARY_PATH:-}"
+  if [ -d "$private_lib" ]; then
+    case ":$probe_ld:" in
+      *":$private_lib:"*) ;;
+      *) probe_ld="$private_lib${probe_ld:+:$probe_ld}" ;;
+    esac
+  fi
+  (
+    cd "$tool_dir" || exit 2
+    LD_LIBRARY_PATH="$probe_ld" timeout 60 "./$1" "${@:2}" 2>&1 | head -c 400 || true
+  )
+}
