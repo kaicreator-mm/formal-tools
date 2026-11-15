@@ -1,0 +1,1328 @@
+{
+  "schema": "formal-tools/i24-t0-t6-36-tool-checkpoint/1.0",
+  "output_label": "FORMAL_TOOLS_I24_TOOL_INTEGRATION_CONTINUE",
+  "date": "2026-11-15",
+  "authority": {
+    "portfolio_issue": 24,
+    "product_issue": 11,
+    "legacy_runtime_issue": 4,
+    "issue_numbers": "25-60",
+    "do_not_reopen": [
+      7,
+      14
+    ]
+  },
+  "base_main_sha": "0f07c2719115b9dfdd7c0cff005b33ffb775173a",
+  "historical": {
+    "source_pr22": {
+      "pr": 22,
+      "merged": true,
+      "exact_head": "8aa994718895bcf49988981b41d391f624075602",
+      "merged_commit": "eff58e166de2b9ae71470f0ea35da92ce493c19d",
+      "user_expected_head": "15aad39c23a6218c4adc0e07e5891e893f9b1d03",
+      "disposition": "HISTORICAL_EXPECTED_HEAD_NOT_CURRENT"
+    },
+    "t4_gateway_pr69": {
+      "pr": 69,
+      "merged": true,
+      "merge_commit": "12032f1d5a759dca5a1b24eedbefae2dfe01d3e0"
+    },
+    "t0_t2_snapshot": {
+      "source": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+      "snapshot_date": "2026-11-12",
+      "t0": {
+        "archive_sha_matches_publisher_manifest_only": 20,
+        "not_qualified": 16,
+        "qualification_limit": "SHA match is not publisher attestation, rights clearance or independent source acceptance"
+      },
+      "t1": {
+        "independently_reproducible_build_qualified": 0,
+        "not_qualified_independent_build": 36
+      },
+      "t2": {
+        "pass_scoped_r3": 16,
+        "not_qualified": 20
+      },
+      "r21_delta": "No new independent T1 build or T2 install qualification is claimed in this R21 increment."
+    }
+  },
+  "this_increment": {
+    "why3_host_safety": {
+      "pr": 92,
+      "exact_head": "62e4a70d4078fd8a237a433a328cbdbc26a5344a",
+      "merge_commit": "d6a031f808e8c5297ada36e69a7f707b0ee7bea2",
+      "post_merge_woodpecker_push": 855,
+      "scope": "BUILDER_SCRIPT_P0_HOST_WRITE_REMOVED_ONLY_NO_CANONICAL_SAFE_PACKAGE",
+      "tool_issue": 59
+    },
+    "tree_sitter_native_cli": {
+      "pr": 87,
+      "exact_head": "90aa3e34484b60c2a158f3a9eeb9d959e0afe812",
+      "merge_commit": "d18dd29f4141f4a50f5e21d87e7dc0474cd5bb0a",
+      "post_merge_woodpecker_push": 856,
+      "scope": "PINNED_FIXED_NATIVE_CLI_FIXTURE_SOURCE_ONLY_NOT_COMPLETE_T4",
+      "tool_issue": 57
+    },
+    "doctor_static_elf": {
+      "pr": 86,
+      "tool_issue": 45,
+      "current_exact_head": "3eb6d5d5b31b0dc09d3c85f7f112e88a12d4e2ab",
+      "pr_base_main": "74b511e27ed2b2690be6c7e292400c723c6b9b88",
+      "current_main": "0f07c2719115b9dfdd7c0cff005b33ffb775173a",
+      "runner_blob": "40427c1e541f294d71d803b0225984175708391e",
+      "test_blob": "b964a18907a4fa4c8097aae466cfc8f464f1b0d7",
+      "evidence_blob": "715feb732f95283cbaa79e51e75cfca56116e41f",
+      "compare": "28_AHEAD_1_BEHIND_CURRENT_MAIN",
+      "ci_push": 1233,
+      "ci_pr": 1234,
+      "ci": "SUCCESS_SUCCESS",
+      "review": "REWORK_P0_0_P1_0_P2_2",
+      "findings": {
+        "P2_01": "R17 evidence ci.exact_head/push/pull_request and qualification.review still say PENDING; update to exact R21 head/Runner/Test/Evidence Blobs, #1233/#1234 SUCCESS and REWORK/P2 disposition.",
+        "P2_02": "Add a valid ELF32 header negative fixture (EI_CLASS=1, e_ehsize=52, e_phentsize=32) proving ELF32 cannot take the static shortcut; preserve explicit ELF64-LE EM_X86_64-only scope."
+      },
+      "writer": "CHATGPT_AUTO_WRITER_PR86_ELF_CLASSIFIER_R20_20261115",
+      "status": "REWORK_P2_EVIDENCE_AND_ELF32_REGRESSION",
+      "merge": false,
+      "qualification": "Shared Runner source fixes are reviewed scoped only; local R20/R21 execution NOT_RUN due ClientError; no T4/T5/Product/Release promotion.",
+      "local_execution": "NOT_RUN_EXECUTION_BACKEND_CLIENTERROR",
+      "historical_reviews": [
+        {
+          "head": "b9e4e419e1a144c7cb1e3b8e6ccee74d50d66871",
+          "review": "REWORK_P1",
+          "finding": "PT_INTERP absence false-static for ET_REL and ET_DYN with missing DT_NEEDED"
+        },
+        {
+          "head": "797ef57d34319c45244faf140b90916ff91f4a31",
+          "review": "REWORK_P2",
+          "finding": "Missing e_machine/PF_X/executable entry-range checks"
+        },
+        {
+          "head": "57a7f8de70c4cb37ed704c71ac910c16eb101a0a",
+          "review": "REWORK_P1_P2",
+          "finding": "Missing ft_has_elf_magic definition and zero-entry static false-positive"
+        },
+        {
+          "head": "3eb6d5d5b31b0dc09d3c85f7f112e88a12d4e2ab",
+          "review": "REWORK_P0_0_P1_0_P2_2",
+          "findings": {
+            "P2_01": "Versioned evidence still says exact-head CI/review pending despite #1233/#1234 SUCCESS and completed review.",
+            "P2_02": "ELF32 explicit rejection has no dedicated valid ELF32 negative regression."
+          }
+        }
+      ]
+    },
+    "fast_downward_pr94": {
+      "pr": 94,
+      "tool_issue": 37,
+      "reviewed_head": "302ab518642d1053835c60d6db5342d8ceda6830",
+      "merge_commit": "4a733d0c7e33da5ed77ff7e3a8e628b3c8bb369b",
+      "ci_push": 1011,
+      "ci_pr": 1012,
+      "review": "PASS_SCOPED_P0_0_P1_0_P2_0",
+      "scope": "FIXTURE_NEG_ERR_EXACT_EXIT_AND_MALFORMED_PDDL_CONTRACT_MERGED",
+      "remaining": "ORIGINAL_ARCHIVE_DECLARED_24.06_ACTUAL_26.6_PLUS_SOURCE_COMMIT_UNKNOWN_P1",
+      "t3": "NO_PROMOTION"
+    },
+    "highs_typed_operation_pr96": {
+      "pr": 96,
+      "tool_issue": 38,
+      "reviewed_head": "8ab68e166fda3c9b4fc8e55df1a292b992ed580c",
+      "integrated_head": "6553afb98b62f86698d4cb1d6b20a89baf0c11df",
+      "merge_commit": "2e8f066c93f66d12d9a8037b9af76af06e32d1e2",
+      "ci_push": 1072,
+      "ci_pr": 1073,
+      "review": "ACCEPTED_SCOPED_P0_0_P1_0_P2_1_NONBLOCKING",
+      "implementation": "ONE_TYPED_SOLVE_LP_OPERATION_IN_SHARED_RUNNER_CLI_MCP_SDK",
+      "canonical_portable_execution": "EXISTING_SCOPED_CANONICAL_PYTHON313_NUMPY254_HIGHSPY1151_POS_NEG_ERR_RECEIPT",
+      "remaining": "PYTHON313_FAKE_HIGHSPY_INVALID_SOLUTION_REGRESSION_CONDITIONALLY_SKIPS_OUTSIDE_PINNED_PYTHON313; FULL_T4_NOT_ACCEPTED",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false
+    },
+    "prob_fixture_pr99": {
+      "pr": 99,
+      "tool_issue": 48,
+      "reviewed_head": "29d20f7caab1e07a4dd2fc488a67d28c43707830",
+      "current_head": "6ddcf0800e7ee81bcccdb96203a668e77bd7abdc",
+      "ci_push": 1091,
+      "ci_pr": 1092,
+      "review": "ACCEPTED_SCOPED_P0_0_P1_0_P2_1_NONBLOCKING_METADATA",
+      "scope": "FIXTURE_COPY_CONTRACT_AND_EXACT_EXIT_EVIDENCE_ONLY",
+      "remaining": "HISTORICAL_DRIVE_CORE_RUNNER_AND_LEGACY_TOOL_TOOL_ID_PACKAGE_META; NETWORK_ISOLATION_NOT_PROVEN; CURRENT_MAIN_T3_T4_T5_NOT_QUALIFIED",
+      "merge": true,
+      "merge_commit": "56ca5ebb180433a7c391f640b607be8c2977cffd",
+      "ci": "SUCCESS_SUCCESS"
+    },
+    "ledger_review_repairs": {
+      "pr": 100,
+      "repaired_findings": [
+        "P2-01 preserve per-tool historical R1 T0/T2 source snapshot states",
+        "P2-02 update PR99 review state from PENDING to ACCEPTED_SCOPED and refresh current PR/head/CI"
+      ],
+      "source_ledger_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+      "regression_test": "tests/i24-t0-t2-checkpoint.test.mjs",
+      "regression_scope": "all 36 Issue #25-#60 rows map to R1 by issue ID, preserve exact T0/T2 values and verify 20/16 and 16/20 aggregate counts",
+      "current_main_after_integrations": "0f07c2719115b9dfdd7c0cff005b33ffb775173a",
+      "review_r23_p2": [
+        "PR86 current status updated from stale b9e4 review to exact current HEAD 3a789d11; records undefined ft_has_elf_magic P1, zero-entry P2, and exact CI #1131/#1132 failure.",
+        "PR100 primary PR body header/current R23 CI metadata corrected to current main and exact head."
+      ],
+      "pr105_networkx": {
+        "merge_commit": "b1cecc5937c9f3a6b6a5cd70f480d32ce61019d9",
+        "review": "ACCEPTED_SCOPED",
+        "ci": "SUCCESS_SUCCESS",
+        "scope": "T0_SOURCE_VERSION_LICENSE_ARCHIVE_PROVENANCE_ONLY",
+        "current_main_ancestor": true
+      },
+      "pr107_tree_sitter": {
+        "github_state": "MERGED_AND_PRESENT_IN_CURRENT_MAIN",
+        "merge_commit": "74b511e27ed2b2690be6c7e292400c723c6b9b88",
+        "current_main_builder_blob": "5adc9de0d11ed2c60c45d2683ad27d7e80791854",
+        "current_main_test_blob": "e3493b52d4dcccbcf8fb4e963a01ad5b3cfac0ad",
+        "review": "ACCEPTED_SCOPED_P0_0_P1_0_P2_1_NONBLOCKING_SCOPE",
+        "qualification": "BUILDER_SOURCE_ONLY; NO_T1/T3/T4/T5/T6_PROMOTION"
+      },
+      "fast_downward_pr116": {
+        "merge_commit": "0f07c2719115b9dfdd7c0cff005b33ffb775173a",
+        "review": "ACCEPTED_SCOPED",
+        "scope": "TEST_ONLY_EXIT_ASSIGNMENT_UNIQUENESS"
+      }
+    },
+    "lean4_pr101": {
+      "pr": 101,
+      "tool_issue": 41,
+      "reviewed_head": "e6618722f93058ae78797b1630b75ad33e496e60",
+      "integrated_head": "f7f77bdc7134e605214ea19172c2e77833c16f03",
+      "merge_commit": "cbd7f173b05c4f329bf9e37c2f9a06006526ba08",
+      "ci_push": 1104,
+      "ci_pr": 1105,
+      "ci": "SUCCESS_SUCCESS",
+      "review": "ACCEPTED_SCOPED_P0_0_P1_0_P2_1_NONBLOCKING",
+      "scope": "LEAN4_FIXTURE_EXIT_CONTRACT_AND_CURRENT_MAIN_RUNNER_EVIDENCE_WITH_STAGED_METADATA_OVERLAY",
+      "qualification": "T3_WRITER_REPORTED_PASS_SCOPED_RAW_RECEIPT_LOG_BYTES_NOT_LINKED; NETWORK_ISOLATION_NOT_PROVEN; T1_NOT_QUALIFIED; T4_T5_T6_NOT_ACCEPTED",
+      "merge": true
+    },
+    "networkx_t0_pr105": {
+      "pr": 105,
+      "tool_issue": 44,
+      "reviewed_head": "055ecdf3b296986cddc3769810a063598cda5856",
+      "merge_commit": "b1cecc5937c9f3a6b6a5cd70f480d32ce61019d9",
+      "ci_push": 1133,
+      "ci_pr": 1134,
+      "ci": "SUCCESS_SUCCESS",
+      "review": "ACCEPTED_SCOPED_P0_0_P1_0_P2_0",
+      "scope": "UPSTREAM_SIGNED_TAG_VERSION_LICENSE_AND_DRIVE_ARCHIVE_TO_LOCAL_PRODUCER_MANIFEST_HASH_ONLY",
+      "qualification": "FULL_T0_NOT_ACCEPTED; T1/T2/T3/T4/T5/T6_NOT_ACCEPTED",
+      "current_main_ancestor": true
+    },
+    "tree_sitter_pr107": {
+      "pr": 107,
+      "tool_issue": 57,
+      "reviewed_head": "013c44ea1ad18b31bea9857a2e3f3867179b61de",
+      "github_state": "MERGED",
+      "merge_commit": "74b511e27ed2b2690be6c7e292400c723c6b9b88",
+      "ci_push": 1155,
+      "ci_pr": 1156,
+      "ci": "SUCCESS_SUCCESS",
+      "review": "ACCEPTED_SCOPED_P0_0_P1_0_P2_1_NONBLOCKING_SCOPE",
+      "merge_commit_in_current_main": true,
+      "current_main_tree_sitter_builder_blob": "5adc9de0d11ed2c60c45d2683ad27d7e80791854",
+      "reviewed_tree_sitter_builder_blob": "5adc9de0d11ed2c60c45d2683ad27d7e80791854",
+      "current_main_tree_sitter_test": "PRESENT",
+      "status": "MERGED_MAIN_BUILDER_SOURCE_ONLY",
+      "qualification": "MERGED_BUILDER_AND_TEST_SOURCE_ONLY; NO_T1/T3/T4/T5/T6_PROMOTION",
+      "current_main_tree_sitter_test_blob": "e3493b52d4dcccbcf8fb4e963a01ad5b3cfac0ad",
+      "p2_followup": "Issue #57 dependency/next-action wording must distinguish native CLI-only fixture from Python binding availability."
+    },
+    "fast_downward_pr116": {
+      "pr": 116,
+      "tool_issue": 37,
+      "exact_head": "0128ff15d8dcb45e1fb567061a5bd6f93b051c4e",
+      "merge_commit": "0f07c2719115b9dfdd7c0cff005b33ffb775173a",
+      "ci_push": 1201,
+      "ci_pr": 1202,
+      "ci": "SUCCESS_SUCCESS",
+      "review": "ACCEPTED_SCOPED_P0_0_P1_0_P2_0",
+      "scope": "TEST_ONLY_DUPLICATE_WILDCARD_AND_MISSING_EXIT_ASSIGNMENT_HARDENING",
+      "qualification": "NO_SOURCE_VERSION_IDENTITY_OR_T0_T1_T2_T3_T4_T5_T6_PROMOTION"
+    }
+  },
+  "counts": {
+    "tool_issues": 36,
+    "source_registered": 36,
+    "original_tar_t3_scoped_receipts_reference": 19,
+    "callable_scoped_including_alternates_reference": 34,
+    "original_13_runtime_scoped": 13,
+    "original_typed_operations": 53,
+    "added_candidate_discovery_routes": 23,
+    "candidate_portable_gate_source_routes": 23,
+    "added_mcp_portfolio_methods": 3,
+    "added_sdk_portfolio_exports": 5,
+    "independently_reviewed_scoped_three_phase_technical_tools_from_r9": 5,
+    "formal_new_candidate_t4_accepted": 0,
+    "independently_qualified_t5_business": 0,
+    "complete_36_tool_t6_acceptance": 0,
+    "main_shared_mcp_portfolio_methods": 3,
+    "main_shared_sdk_portfolio_exports": 5,
+    "r21_prob_original_archive_scoped_native_pos_neg_err_observations": 1,
+    "t0_archive_sha_match_publisher_manifest_only_reference": 20,
+    "t0_not_qualified_reference": 16,
+    "t1_independent_build_qualified_reference": 0,
+    "t1_not_qualified_independent_build_reference": 36,
+    "t2_pass_scoped_r3_reference": 16,
+    "t2_not_qualified_reference": 20,
+    "t3_original_tar_scoped_receipts_reference": 19,
+    "t3_callable_scoped_including_alternates_reference": 34,
+    "t4_original_13_scoped_runtime_interfaces": 13,
+    "t4_candidate_fixed_cli_routes": 23,
+    "t4_full_candidate_acceptance": 0,
+    "t5_business_semantic_qualified": 0,
+    "t6_final_accepted": 0,
+    "merged_main_candidate_typed_operations_implemented": 1,
+    "merged_main_candidate_typed_operations_real_portable_e2e_scoped": 1,
+    "merged_main_candidate_typed_operations_independently_reviewed_scoped": 1,
+    "merged_main_candidate_typed_operations_full_t4_accepted": 0
+  },
+  "truth_rules": [
+    "T0 registration is not source publication, rights, or publisher attestation",
+    "T3 original tar and T3 host alternative are distinct scopes and must not be added as formal successes",
+    "A source-integrated CLI/MCP/SDK gateway or synthetic fixture pass never promotes T4",
+    "R9 five tool technical three-phase reviewed cases are not full native CLI/MCP/SDK E2E",
+    "Why3 original archive still contains host-unsafe run script, never run privileged",
+    "A changed SHA never inherits previous reviewer approval or CI",
+    "T5 requires separate source/model/oracle/host and downstream real consumption",
+    "Other 34 tool Issues had no new exact-source delta in this reconciliation",
+    "A candidate typed operation in an open PR is not counted as merged CLI/MCP/SDK integration or T4 acceptance.",
+    "Portable execution against a Drive core archive is not current-main Runner evidence unless its runner Git Blob matches the exact current main source.",
+    "Known tool-specific exit codes must be pinned; EXPECT_*_EXIT=* accepts timeouts and launch failures and is not a safe semantic gate.",
+    "Host-substitute and historical portable-core executions remain scoped technical observations; they do not increment original-tar T3 or full T4 counts without the required exact current artifacts and independent review."
+  ],
+  "sources": [
+    "docs/tool-portfolio/r4/T4_INTEGRATION.json",
+    "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+    "registry/PROBLEM_CAPABILITIES.json",
+    "https://github.com/kaicreator-mm/formal-tools/issues/24",
+    "https://github.com/kaicreator-mm/formal-tools/pull/22",
+    "https://github.com/kaicreator-mm/formal-tools/pull/69",
+    "https://github.com/kaicreator-mm/formal-tools/pull/87",
+    "https://github.com/kaicreator-mm/formal-tools/pull/92",
+    "https://github.com/kaicreator-mm/formal-tools/pull/86",
+    "docs/tool-portfolio/r20/HIGHS_TYPED_OPERATION.json (PR #96 exact HEAD 45e4344; open)",
+    "docs/tool-portfolio/r21/PROB_R21_NATIVE_FIXTURE.json (PR #99 exact HEAD 951ad63; open)",
+    "https://github.com/kaicreator-mm/formal-tools/pull/94",
+    "https://github.com/kaicreator-mm/formal-tools/pull/96",
+    "https://github.com/kaicreator-mm/formal-tools/pull/99",
+    "https://github.com/kaicreator-mm/formal-tools/issues/37",
+    "https://github.com/kaicreator-mm/formal-tools/issues/38",
+    "https://github.com/kaicreator-mm/formal-tools/issues/48",
+    "PR #94 merged commit 4a733d0c7e33da5ed77ff7e3a8e628b3c8bb369b",
+    "PR #96 merged commit 2e8f066c93f66d12d9a8037b9af76af06e32d1e2",
+    "PR #99 merged commit 56ca5ebb180433a7c391f640b607be8c2977cffd",
+    "PR #101 merged commit cbd7f173b05c4f329bf9e37c2f9a06006526ba08",
+    "PR #105 NetworkX T0 scoped source audit merge commit b1cecc5937c9f3a6b6a5cd70f480d32ce61019d9; ancestor of current main 74b511e27ed2b2690be6c7e292400c723c6b9b88",
+    "PR #107 Tree-sitter builder source merge commit 74b511e27ed2b2690be6c7e292400c723c6b9b88; present in current main 74b511e27ed2b2690be6c7e292400c723c6b9b88",
+    "PR #116 Fast Downward duplicate/wildcard exit-contract test merge commit 0f07c2719115b9dfdd7c0cff005b33ffb775173a; scoped test-only follow-up, no version qualification"
+  ],
+  "tools": [
+    {
+      "id": "aflpp",
+      "issue": 25,
+      "expected_version": "5.03c",
+      "origin": "candidate",
+      "capabilities": [
+        "test.fuzz"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "TECHNICAL_PASS_INDEPENDENT_REVIEWED_R9",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "alloy",
+      "issue": 26,
+      "expected_version": "6.2.0",
+      "origin": "native-ref",
+      "capabilities": [
+        "model.relational",
+        "model.state"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "apache-jena",
+      "issue": 27,
+      "expected_version": "5.5.0",
+      "origin": "native-ref",
+      "capabilities": [
+        "knowledge.rdf"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "apalache",
+      "issue": 28,
+      "expected_version": "0.63.0",
+      "origin": "native-ref",
+      "capabilities": [
+        "model.state",
+        "logic.smt"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "causal-learn",
+      "issue": 29,
+      "expected_version": "0.1.4.8",
+      "origin": "candidate",
+      "capabilities": [
+        "causal.discovery"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "cbmc",
+      "issue": 30,
+      "expected_version": "6.11.0",
+      "origin": "candidate",
+      "capabilities": [
+        "code.verify"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "clingo",
+      "issue": 31,
+      "expected_version": "5.8.3",
+      "origin": "native-ref",
+      "capabilities": [
+        "logic.rules",
+        "opt.combinatorial"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "cvc5",
+      "issue": 32,
+      "expected_version": "1.4.2",
+      "origin": "native-ref",
+      "capabilities": [
+        "logic.smt",
+        "proof.deductive"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "dafny",
+      "issue": 33,
+      "expected_version": "4.11.0",
+      "origin": "native-ref",
+      "capabilities": [
+        "proof.deductive",
+        "code.verify"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "dowhy",
+      "issue": 34,
+      "expected_version": "0.14",
+      "origin": "candidate",
+      "capabilities": [
+        "causal.inference"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "elk",
+      "issue": 35,
+      "expected_version": "0.6.0",
+      "origin": "candidate",
+      "capabilities": [
+        "ontology.inference"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "TECHNICAL_PASS_INDEPENDENT_REVIEWED_R9",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "fast-check",
+      "issue": 36,
+      "expected_version": "4.10.2",
+      "origin": "candidate",
+      "capabilities": [
+        "test.property"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "TECHNICAL_PASS_INDEPENDENT_REVIEWED_R9",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "fast-downward",
+      "issue": 37,
+      "expected_version": "24.06",
+      "origin": "candidate",
+      "capabilities": [
+        "planning.classical"
+      ],
+      "reference_t3_route_r4": "HOST_PYTHON313_RUNNER_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #94 fixture exit contract remains merged; PR #116 test-only follow-up now rejects duplicate, wildcard, missing and malformed POS/NEG/ERR exit assignments and checks actual Bash-sourced 0/11/31. Separate PR #102 official source pin still has Push CI failure/root cause unknown; original archive reports 26.6+ while declared version is 24.06, so source identity and T0/T1/T3/T4/T5/T6 remain unqualified.",
+      "t3_r19_delta": "ORIGINAL_ARCHIVE_POS_NEG_ERR_SCOPED_OBSERVATION; NEG=11 ERR=31 FIXTURE_CONTRACT_MERGED; VERSION_IDENTITY_REWORK_P1",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      },
+      "r23_exit_contract_regression": {
+        "pr": 116,
+        "merge_commit": "0f07c2719115b9dfdd7c0cff005b33ffb775173a",
+        "review": "ACCEPTED_SCOPED",
+        "ci": "SUCCESS_SUCCESS",
+        "scope": "TEST_ONLY_EXACT_UNIQUE_POS_NEG_ERR_EXIT_ASSIGNMENTS",
+        "qualification": "ARCHIVE_VERSION_IDENTITY_STILL_UNRESOLVED; NO_T0_T1_T2_T3_T4_T5_T6_PROMOTION"
+      }
+    },
+    {
+      "id": "highs",
+      "issue": 38,
+      "expected_version": "1.15.1",
+      "origin": "candidate",
+      "capabilities": [
+        "opt.numerical"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "TYPED_SOLVE_LP_OPERATION_MERGED_MAIN_CANDIDATE; FULL_T4_ACCEPTANCE_PENDING_EXACT_MAIN_PORTABLE_REPLAY_AND_REVIEW",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "Typed Highs LP operation merged to main; independent review ACCEPTED_SCOPED with nonblocking P2 because fake-highspy invalid-solution regression skips outside Python 3.13.5. Full T4/T5/T6 remain unaccepted.",
+      "t3_r20_delta": "CANONICAL_PYTHON313_NUMPY254_HIGHSPY1151_TYPED_POS_NEG_ERR_EXECUTED",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "hypothesis",
+      "issue": 39,
+      "expected_version": "6.170.15",
+      "origin": "candidate",
+      "capabilities": [
+        "test.property"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "TECHNICAL_PASS_INDEPENDENT_REVIEWED_R9",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "kani",
+      "issue": 40,
+      "expected_version": "0.68.0",
+      "origin": "candidate",
+      "capabilities": [
+        "code.verify"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "lean4",
+      "issue": 41,
+      "expected_version": "4.35.0",
+      "origin": "native-ref",
+      "capabilities": [
+        "proof.deductive"
+      ],
+      "reference_t3_route_r4": "BLOCKED_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR101 fixture/evidence delta merged; current-main Runner T3 is writer-reported PASS_SCOPED with staged metadata overlay, but raw receipt/log bytes are not linked and network isolation is NOT_PROVEN; T1/T4/T5/T6 not accepted.",
+      "t3_r19_delta": "ORIGINAL_LEAN4_ARCHIVE_POS_NEG_ERR_NATIVE_SCOPED_PASS",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      },
+      "t3_r22_delta": "CURRENT_MAIN_RUNNER_LEAN4_POS_NEG_ERR_WRITER_REPORTED_PASS_SCOPED_METADATA_OVERLAY"
+    },
+    {
+      "id": "mesa",
+      "issue": 42,
+      "expected_version": "3.5.2",
+      "origin": "candidate",
+      "capabilities": [
+        "sim.agent"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "TECHNICAL_PASS_INDEPENDENT_REVIEWED_R9",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "minizinc",
+      "issue": 43,
+      "expected_version": "2.10.1",
+      "origin": "candidate",
+      "capabilities": [
+        "opt.combinatorial"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "networkx",
+      "issue": 44,
+      "expected_version": "3.7",
+      "origin": "candidate",
+      "capabilities": [
+        "graph.algorithms"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      },
+      "r22_t0_source_audit": {
+        "pr": 105,
+        "exact_head": "055ecdf3b296986cddc3769810a063598cda5856",
+        "merge_commit": "74b511e27ed2b2690be6c7e292400c723c6b9b88",
+        "review": "ACCEPTED_SCOPED",
+        "scope": "SOURCE_VERSION_LICENSE_AND_ARCHIVE_PRODUCER_MANIFEST_MATCH_ONLY",
+        "full_t0": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "id": "nuxmv",
+      "issue": 45,
+      "expected_version": "2.2.0",
+      "origin": "candidate",
+      "capabilities": [
+        "model.state"
+      ],
+      "reference_t3_route_r4": "LOCAL_PATCHED_FIXTURE_RUNNER_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR86 shared Runner Writer scope remains OPEN; ELF no-PT_INTERP false-static P1 must be closed before current-main portable bundle requalification",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "ortools",
+      "issue": 46,
+      "expected_version": "9.15.6755",
+      "origin": "candidate",
+      "capabilities": [
+        "opt.combinatorial",
+        "opt.numerical"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "prism",
+      "issue": 47,
+      "expected_version": "4.11",
+      "origin": "candidate",
+      "capabilities": [
+        "model.probabilistic"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "prob",
+      "issue": 48,
+      "expected_version": "1.16.1",
+      "origin": "native-ref",
+      "capabilities": [
+        "model.state"
+      ],
+      "reference_t3_route_r4": "LOCAL_PATCHED_FIXTURE_RUNNER_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR99 fixture-copy contract merged; historical Drive core Runner and legacy TOOL_TOOL_ID package metadata remain stale; network isolation not proven; no current-main T3/T4/T5 qualification.",
+      "t3_r21_delta": "ORIGINAL_PROB1161_POS_NEG_ERR_SCOPED_PASS_HISTORICAL_RUNNER; FIXTURE_COPY_CONTRACT_MERGED; NO_CURRENT_MAIN_RUNNER_REQUALIFICATION",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "pymc",
+      "issue": 49,
+      "expected_version": "6.4.0",
+      "origin": "candidate",
+      "capabilities": [
+        "stats.bayesian"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "rdf-shacl",
+      "issue": 50,
+      "expected_version": "0.40.2",
+      "origin": "native-ref",
+      "capabilities": [
+        "knowledge.rdf"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "robot",
+      "issue": 51,
+      "expected_version": "1.9.11",
+      "origin": "candidate",
+      "capabilities": [
+        "ontology.processing"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "simpy",
+      "issue": 52,
+      "expected_version": "4.1.2",
+      "origin": "candidate",
+      "capabilities": [
+        "sim.discrete"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "souffle",
+      "issue": 53,
+      "expected_version": "2.5",
+      "origin": "native-ref",
+      "capabilities": [
+        "logic.rules"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "storm",
+      "issue": 54,
+      "expected_version": "1.8.0",
+      "origin": "candidate",
+      "capabilities": [
+        "model.probabilistic"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "sympy",
+      "issue": 55,
+      "expected_version": "1.14.0",
+      "origin": "candidate",
+      "capabilities": [
+        "math.symbolic"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "tla-tlc",
+      "issue": 56,
+      "expected_version": "1.8.0",
+      "origin": "native-ref",
+      "capabilities": [
+        "model.state"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "tree-sitter",
+      "issue": 57,
+      "expected_version": "0.27.2",
+      "origin": "candidate",
+      "capabilities": [
+        "code.syntax"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_CLI_SMOKE_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NATIVE_CLI_POS_NEG_ERR_SCOPED_SOURCE_REVIEWED_NOT_ORIGINAL_PACKAGE_REBUILT",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #107 builder/test source is present in current main (merge commit 74b511e27ed2b2690be6c7e292400c723c6b9b88; builder Blob 5adc9de0d11ed2c60c45d2683ad27d7e80791854; test Blob e3493b52d4dcccbcf8fb4e963a01ad5b3cfac0ad). Remaining: canonical package rebuild from current main, current-main Runner + CLI/MCP/SDK E2E and independent T3/T4 acceptance. Reviewer P2: update Issue #57 dependency/next-action wording to distinguish CLI-only fixture from Python binding availability. No T1/T3/T4/T5/T6 promotion.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "vampire",
+      "issue": 58,
+      "expected_version": "5.1.0",
+      "origin": "native-ref",
+      "capabilities": [
+        "proof.deductive"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "why3",
+      "issue": 59,
+      "expected_version": "1.8.0",
+      "origin": "candidate",
+      "capabilities": [
+        "proof.deductive"
+      ],
+      "reference_t3_route_r4": "BLOCKED_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "UNSAFE_ORIGINAL_STILL_BLOCKED_PRIVATE_CHROOT_RESEARCH_ONLY",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR92 safe builder source merged; original Drive archive remains stale hash/unsafe absolute links; canonical safe package and relocatable proof runtime still required",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "z3",
+      "issue": 60,
+      "expected_version": "5.4.0",
+      "origin": "native-ref",
+      "capabilities": [
+        "logic.smt"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    }
+  ]
+}
