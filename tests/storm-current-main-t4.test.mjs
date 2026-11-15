@@ -11,10 +11,23 @@ const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 function uniqueNumericExitAssignments(source) {
   const values = {};
+  const lines = source.split(/\r?\n/);
   for (const phase of ["POS", "NEG", "ERR"]) {
-    const matches = [...source.matchAll(new RegExp("^EXPECT_" + phase + "_EXIT=([0-9]+)[ \t]*$", "gm"))];
-    assert.equal(matches.length, 1, phase + " must have exactly one numeric exit assignment");
-    values[phase] = Number(matches[0][1]);
+    const name = "EXPECT_" + phase + "_EXIT";
+    // Shell permits leading blanks and the export NAME=value form. Count
+    // every assignment first (including nonnumeric ones), then validate value.
+    const assignmentPattern = new RegExp("^[\\t ]*(?:export[\\t ]+)?" + name + "=(.*)$");
+    const matches = [];
+    for (const [index, line] of lines.entries()) {
+      const match = line.match(assignmentPattern);
+      if (match) matches.push({ raw: match[1], line: index + 1 });
+    }
+    assert.equal(matches.length, 1, name + " must have exactly one assignment");
+    const raw = matches[0].raw.replace(/[ \t]+#.*$/, "").trim();
+    assert.match(raw, /^[0-9]+$/, name + " must be an unquoted numeric exit assignment");
+    const value = Number(raw);
+    assert.ok(Number.isSafeInteger(value), name + " must be a safe integer");
+    values[phase] = value;
   }
   return values;
 }
@@ -27,15 +40,53 @@ test("Storm current-main fixture pins exactly one numeric POS/NEG/ERR exit assig
   assert.match(fixture, /EXPECT_NEG_LABEL=PROPERTY_FAILS/);
 });
 
-test("Storm exit contract rejects duplicate, wildcard, missing, and quoted assignments", () => {
-  const negativeControls = [
-    { label: "duplicate", source: fixture + "\nEXPECT_POS_EXIT=77\n" },
-    { label: "wildcard", source: fixture.replace(/^EXPECT_NEG_EXIT=0$/m, "EXPECT_NEG_EXIT=*\n") },
-    { label: "missing", source: fixture.replace(/^EXPECT_ERR_EXIT=1$/m, "") },
-    { label: "quoted", source: fixture.replace(/^EXPECT_POS_EXIT=0$/m, "EXPECT_POS_EXIT='0'") }
+test("Storm exit parser recognizes ordinary, leading-space, tab, and export assignments", () => {
+  const forms = [
+    { label: "ordinary", format: (name, value) => name + "=" + value },
+    { label: "leading space", format: (name, value) => " " + name + "=" + value },
+    { label: "leading tab", format: (name, value) => "\t" + name + "=" + value },
+    { label: "export", format: (name, value) => "export " + name + "=" + value },
+    { label: "indented export with tab separator", format: (name, value) => " \texport\t" + name + "=" + value }
   ];
-  for (const control of negativeControls) {
-    assert.throws(() => uniqueNumericExitAssignments(control.source), control.label);
+  for (const form of forms) {
+    const source = ["POS", "NEG", "ERR"]
+      .map(phase => form.format("EXPECT_" + phase + "_EXIT", phase === "ERR" ? "1" : "0"))
+      .join("\n");
+    assert.deepEqual(uniqueNumericExitAssignments(source), { POS: 0, NEG: 0, ERR: 1 }, form.label);
+  }
+});
+
+test("Storm exit parser rejects duplicate assignments in every shell-valid syntax for every phase", () => {
+  const forms = [
+    { label: "ordinary", format: name => name + "=77" },
+    { label: "leading space", format: name => " " + name + "=77" },
+    { label: "leading tab", format: name => "\t" + name + "=77" },
+    { label: "export", format: name => "export " + name + "=77" },
+    { label: "indented export with tab separator", format: name => " \texport\t" + name + "=77" }
+  ];
+  for (const phase of ["POS", "NEG", "ERR"]) {
+    const name = "EXPECT_" + phase + "_EXIT";
+    for (const form of forms) {
+      const duplicate = fixture + "\n" + form.format(name) + "\n";
+      assert.throws(() => uniqueNumericExitAssignments(duplicate), /exactly one assignment/, phase + " " + form.label);
+    }
+  }
+});
+
+test("Storm exit parser rejects missing, wildcard, quoted, and malformed values for every phase", () => {
+  for (const phase of ["POS", "NEG", "ERR"]) {
+    const name = "EXPECT_" + phase + "_EXIT";
+    const original = new RegExp("^" + name + "=[^\\r\\n]*$", "m");
+    const missing = fixture.replace(original, "");
+    assert.throws(() => uniqueNumericExitAssignments(missing), /exactly one assignment/, phase + " missing");
+    for (const value of ["*", "'0'", "\"0\"", "0; echo invalid"]) {
+      const malformed = fixture.replace(original, name + "=" + value);
+      assert.throws(() => uniqueNumericExitAssignments(malformed), /numeric exit assignment/, phase + " " + value);
+    }
+    for (const value of ["*", "'77'"]) {
+      const duplicate = fixture + "\n\t" + name + "=" + value + "\n";
+      assert.throws(() => uniqueNumericExitAssignments(duplicate), /exactly one assignment/, phase + " malformed duplicate " + value);
+    }
   }
 });
 
