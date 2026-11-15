@@ -4,7 +4,9 @@ import { readFileSync } from "node:fs";
 
 const builder = readFileSync("portable/builders/tools/apache-jena.sh", "utf8");
 const uniqueValue = (source, name) => {
-  const lines = source.split(/\r?\n/).filter((line) => line.startsWith(name + "="));
+  const lines = source.split(/\r?\n/)
+    .map((line) => line.trim().replace(/^export\s+/, ""))
+    .filter((line) => line.startsWith(name + "="));
   assert.equal(lines.length, 1, name + " must be assigned exactly once");
   return lines[0].slice(name.length + 1).replace(/^['"]|['"]$/g, "");
 };
@@ -44,7 +46,17 @@ test("Jena run shim uses the bundled Java 21 runtime", () => {
   assert.ok(javaHomeAt < javaPathAt && javaPathAt < execAt);
 });
 
-test("Jena source pin rejects duplicate overrides of the upstream digest", () => {
-  const duplicate = builder + '\nFT_UPSTREAM_SHA512="' + "0".repeat(128) + '"\n';
-  assert.throws(() => uniqueValue(duplicate, "FT_UPSTREAM_SHA512"), /assigned exactly once/);
+test("Jena source pin rejects shell-valid whitespace and export duplicate overrides", () => {
+  const digest = "0".repeat(128);
+  const duplicates = [
+    "FT_UPSTREAM_SHA512=\"" + digest + "\"",
+    " FT_UPSTREAM_SHA512=\"" + digest + "\"",
+    "\tFT_UPSTREAM_SHA512=\"" + digest + "\"",
+    " export FT_UPSTREAM_SHA512=\"" + digest + "\"",
+    "\t export FT_UPSTREAM_SHA512=\"" + digest + "\"",
+  ];
+  for (const duplicate of duplicates) {
+    assert.throws(() => uniqueValue(builder + "\n" + duplicate + "\n", "FT_UPSTREAM_SHA512"), /assigned exactly once/);
+  }
+  assert.equal(uniqueValue(" export FT_TOOL_VERSION=5.5.0\n", "FT_TOOL_VERSION"), "5.5.0");
 });
