@@ -1,0 +1,111 @@
+{
+  "schema": "formal-tools/i24-why3-r27-scoped-replay/1.0",
+  "output_label": "FORMAL_TOOLS_I24_PR112_WHY3_R27_EVIDENCE",
+  "repository": "kaicreator-mm/formal-tools",
+  "portfolio_issue": 24,
+  "tool_issue": 59,
+  "related_historical_pr": 112,
+  "run_date": "2026-11-15",
+  "exact_main_sha": "90b7f3206d401aa5a2634d775c6f16487f0f1b0f",
+  "current_main_builder_blob": "a955cd5169e42495b46a3b52b245307f98774bb2",
+  "evidence_archive": {
+    "filename": "WHY3_R27_VERIFICATION.zip",
+    "drive_file_id": "1pFz7sfCywT52mObHZ5mxv2TLDJEcEO1x",
+    "drive_url": "https://drive.google.com/file/d/1pFz7sfCywT52mObHZ5mxv2TLDJEcEO1x/view?usp=drivesdk",
+    "bytes": 25852,
+    "sha256": "df2ef4b3378aa9559a50c051d677538dcc65496692b104c60ad3b807bbfb7268",
+    "verification": "Downloaded through the Drive connector as base64; decoded byte count and SHA-256 match the local archive. Contains 51 payload files across original R27 and independent rerun plus SHA256SUMS."
+  },
+  "source_identity": {
+    "why3_validation_candidate": {
+      "bytes": 54709487,
+      "sha256": "62a16b57fd90ed6fdded53c34ddeeddbd375e05d0eb6ab905b4ee82715ce6ed2",
+      "status": "validation-only candidate; not official publisher package"
+    },
+    "why3_binary": {
+      "sha256": "21c095a558ee5ca95319e8777e68810f6946fe9b8411e831c4a4207f02f1133a",
+      "version": "Why3 platform, version 1.8.0"
+    },
+    "z3_official_release_zip": {
+      "bytes": 70339318,
+      "sha256": "708d4c296e01aab4554dd567e46f803efd229140fb646fb51aabb8e2388a2929",
+      "publisher_asset_digest_match": true
+    },
+    "z3_binary_only_tar": {
+      "bytes": 12894456,
+      "sha256": "039d3f8c75e92ceb196bb1291d8602340541f1b1be2f0a1acf32d3c025f8ed16"
+    },
+    "z3_executable": {
+      "sha256": "e9d7e6e6d76c81b5ea3f06d165fc4cfd8afab92b74cdf94417380b5eed10845d",
+      "same_executable_bytes_in_both_archives": true,
+      "version": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f"
+    },
+    "z3_shared_library": {
+      "sha256": "901b1def2a4fc2b64e2c347c8e8ad58e054c5c75a9c964a527b7f92002ae2a7d"
+    }
+  },
+  "independent_rerun": {
+    "relation": "Second independent replay of the R27 input bytes; NOT the missing historical R23 /tmp inputs or R23 raw logs.",
+    "environment": {
+      "os": "Debian GNU/Linux 13 (trixie) x86_64",
+      "kernel": "Linux 6.18.57 x86_64",
+      "host_setup_uid_gid": "0:0",
+      "solver_uid_gid": "65534:65534",
+      "isolation": "Filesystem chroot; no host mounts; host runtime libraries copied into private rootfs.",
+      "user_namespace": "NOT_ESTABLISHED",
+      "network_namespace": "NOT_AVAILABLE; unshare -n returned Operation not permitted; network isolation NOT_PROVEN",
+      "host_usr_ocaml_path": "ABSENT before and after",
+      "package_write_guard": "Non-root process created a private /tmp file owned by 65534:65534; write into /tools/why3/usr/bin was denied (exit 2)."
+    },
+    "configuration": {
+      "why3": "1.8.0",
+      "z3": "5.4.0",
+      "prover": "Z3,5.4.0",
+      "driver": "z3_487",
+      "mode": "Explicit manual configuration; automatic Why3 detection does not recognize Z3 5.4.0.",
+      "manual_config_sha256": "d6acd4827750c238200d41e362ba74c1519f63e1f51a2da472caa067153c42e4"
+    },
+    "cases": [
+      {
+        "case": "POS",
+        "input": "pos.mlw",
+        "input_sha256": "a969ac6eb93b1256b9cf7e014b0b1b936d81ad47d3920487552bc000330ca414",
+        "exit_code": 0,
+        "result": "Valid",
+        "stdout_sha256": "d5f8759f81c5eda87e68b646376c78f30542a1f519b88b91eaa59bb966eeb98e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "NEG",
+        "input": "neg.mlw",
+        "input_sha256": "1dc233cbcf24d8361b3b9c7646d8d2713971cbb1058b67a7603901f48a19a4cb",
+        "exit_code": 2,
+        "result": "Unknown (sat); not Invalid and not an independently validated counterexample",
+        "stdout_sha256": "4cd0ea0281628a6af95bdd653cfd8c0c286d4c6bff6889f1117d2d7c48df115c",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "ERR",
+        "input": "err.mlw",
+        "input_sha256": "46faecc5887615296460676a8ec1dd9e69b2b6ac5079c5e8332a0c741768fd57",
+        "exit_code": 1,
+        "result": "Why3 parser syntax error",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "64fb53109cd1ff84da53b3686ae03ae517e58410a3da447c60da5bba5444a773"
+      }
+    ]
+  },
+  "scope_and_limits": {
+    "original_unsafe_why3_archive": "Still quarantined; not executed.",
+    "r23_historical_gap": "This R27 package does not reconstruct or claim the missing historical R23 input bytes/raw logs; it is a separately versioned fresh replay.",
+    "t0": "Candidate archive byte identity only; not canonical publisher source/rights attestation.",
+    "t1": "No reproducible source build.",
+    "t2": "Non-root chroot replay observed but not formal package T2 acceptance.",
+    "t3": "NOT_QUALIFIED; manual driver compatibility and copied-library chroot limits remain.",
+    "t4": "NOT_ACCEPTED; no current-main Runner/Registry/CLI/MCP/SDK execution.",
+    "t5": "NOT_QUALIFIED; no independent domain semantic Oracle.",
+    "t6": "OPEN.",
+    "product_release": "NOT_GRANTED."
+  },
+  "reviewer_action": "Fresh independent Source-First review required on the new PR exact HEAD. Integrator may merge only after review and current-head Woodpecker checks."
+}
