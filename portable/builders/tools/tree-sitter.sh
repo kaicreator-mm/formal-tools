@@ -5,8 +5,8 @@ FT_TOOL_KIND=binary
 FT_MAIN_BIN="tools/tree-sitter/bin/tree-sitter"
 FT_UPSTREAM_URL="https://github.com/tree-sitter/tree-sitter/releases/download/v0.27.2/tree-sitter-linux-x64.gz"
 # Hash of the official 0.27.2 Linux x86_64 executable extracted from the
-# canonical Drive package. Verify the decompressed executable, not just the
-# transport archive (the upstream release does not publish a sibling checksum).
+# canonical Drive package. The release API publishes an asset digest for the
+# compressed archive; verify that and the decompressed executable independently.
 FT_TREE_SITTER_ARCHIVE_SHA256=7ed56d152c52437397b9fcaa43cf341f49933cecc1ca291843f0d347c6e2cb3a
 FT_TREE_SITTER_CLI_SHA256=a658dfc7704d6595a3d2f50eba2590f5919ecd54beedf978ba9888ec914fec1f
 FT_PROBE=(bin/tree-sitter --version)
