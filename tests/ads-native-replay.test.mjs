@@ -61,6 +61,20 @@ test("G3 24 actual subprocess observations are NOT semantic Oracle or supply-cha
  }finally{rmSync(root,{recursive:true,force:true});}
 });
 
+// Shared POSIX fake-tool script template for the per-execution and worker
+// isolation tests below, defined once at module scope. R32 CI #1002/#1003
+// failed because the worker variant re-typed this template with double
+// escapes ("\\n" and \\"), which was simultaneously a file-level JavaScript
+// SyntaxError and, had it parsed, a single-line sh comment emitting nothing.
+// The fake-tool-scripts regression test at the end of this file pins the
+// exact byte shape so a re-escaped variant cannot reach CI again.
+const fakeToolScript=(label,status)=>
+ "#!/bin/sh\n"+
+ "if [ \"$1\" = \"-version\" ]; then echo \""+label+"\"; sleep 0.03; exit 0; fi\n"+
+ "sleep 0.003\n"+
+ "echo "+status+"\n"+
+ "exit 0\n";
+
 // The per-execution environment isolation lives in the typed Native Runner
 // (doctor/executeNativePlan accept {env} and resolve executables from that
 // environment). The frozen ADS24 replay source is provenance-pinned by the
@@ -74,11 +88,7 @@ test("G3 runner binds concurrent native executions to their own environments",{
   const makeTool=(name,status)=>{
    const dir=join(root,name);mkdirSync(dir);
    const exe=join(dir,"z3");
-   const script="#!/bin/sh\n"+
-     "if [ \"$1\" = \"-version\" ]; then echo \"isolated-"+name+"\"; sleep 0.03; exit 0; fi\n"+
-     "sleep 0.003\n"+
-     "echo "+status+"\n"+
-     "exit 0\n";
+   const script=fakeToolScript("isolated-"+name,status);
    writeFileSync(exe,script);chmodSync(exe,0o755);
    return {dir,sha256:sha(readFileSync(exe))};
   };
@@ -131,11 +141,7 @@ test("G3 concurrent frozen ADS24 orchestrations isolate each worker's native env
   const makeTool=(name,status)=>{
    const dir=join(root,name);mkdirSync(dir);
    const exe=join(dir,"z3");
-   const script="#!/bin/sh\\n"+
-     "if [ \\"$1\\" = \\"-version\\" ]; then echo \\"worker-"+name+"\\"; sleep 0.03; exit 0; fi\\n"+
-     "sleep 0.003\\n"+
-     "echo "+status+"\\n"+
-     "exit 0\\n";
+   const script=fakeToolScript("worker-"+name,status);
    writeFileSync(exe,script);chmodSync(exe,0o755);
    return {dir,sha256:sha(readFileSync(exe))};
   };
@@ -160,4 +166,26 @@ test("G3 concurrent frozen ADS24 orchestrations isolate each worker's native env
  }finally{
   rmSync(root,{recursive:true,force:true});
  }
+});
+
+// R32 regression: CI #1002/#1003 failed the whole file at module load because
+// the worker test's tool script template was re-typed with double escapes
+// ("\\" + "\\n"), producing a JavaScript SyntaxError before any test could
+// register. The generated scripts must stay one-command-per-line POSIX shell;
+// any literal backslash-n or escaped-quote sequence means the template was
+// double-escaped again (invalid JS, or a single sh comment line whose empty
+// probe output can never satisfy the isolation assertions above).
+test("G3 fake native tool scripts remain valid one-command-per-line POSIX templates",()=>{
+ const scripts=[fakeToolScript("isolated-arm-a","sat"),
+                fakeToolScript("worker-arm-b","unsat")];
+ for(const script of scripts){
+  const lines=script.split("\n");
+  assert.equal(lines[0],"#!/bin/sh","shebang must terminate on a real newline");
+  assert.equal(lines[lines.length-1],"","script must end with a newline");
+  assert.ok(lines.length>=6,"every statement must sit on its own line");
+  assert.ok(!script.includes("\\n")&&!script.includes('\\"'),
+    "template must not contain literal backslash-n or escaped-quote sequences");
+ }
+ assert.match(scripts[0],/^#!\/bin\/sh\nif \[ "\$1" = "-version" \]; then echo "isolated-arm-a";/);
+ assert.match(scripts[1],/^#!\/bin\/sh\nif \[ "\$1" = "-version" \]; then echo "worker-arm-b";/);
 });
