@@ -23,7 +23,7 @@ test("Fast Downward portable fixture pins exactly one POS, NEG and malformed-PDD
   assert.match(uniqueExit(contract, "EXPECT_NEG_EXIT"), /^11$/);
   assert.match(uniqueExit(contract, "EXPECT_ERR_EXIT"), /^31$/);
   assert.match(contract, /EXPECT_POS_REGEX='Solution found'/);
-  assert.match(contract, /EXPECT_NEG_REGEX='([Uu]nsolvable|no solution|Completely explored)'/);
+  assert.match(contract, /^EXPECT_NEG_REGEX='.*unsolvable.*no solution.*Completely explored'$/im);
   assert.match(contract, /EXPECT_ERR_REGEX='Could not parse problem file'/);
   assert.match(contract, /EXPECT_ERR_LABEL=INVALID_PDDL_REJECTED/);
   const opens=(malformed.match(/\(/g)||[]).length;
