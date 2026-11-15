@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /** Node ESM CLI. Native external tools require Node host process permissions. */
-import { readFile } from "node:fs/promises";
+import { readFile, open } from "node:fs/promises";
+import { constants as fsConstants } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { resolve } from "node:path";
 import { verifyPure } from "../../core/src/finite.mjs";
@@ -8,7 +9,7 @@ import { knownTools, inspectTool, validateSource, doctor, runFixture, executeNat
 import { describeNativeTool, planNative, planRawNative, planNativeHelp, toolIds } from "./native-catalog.mjs";
 import { toolInfo, inspectInstallation, inspectAllInstallations } from "./tool-manager.mjs";
 import { invokeTool } from "./sdk.mjs";
-import { listPortfolioTools, describePortfolioTool, inspectPortfolioTool, runPortableGate } from "./tool-portfolio-t4.mjs";
+import { listPortfolioTools, describePortfolioTool, inspectPortfolioTool, runPortableGate, runPortfolioOperation } from "./tool-portfolio-t4.mjs";
 
 function localParams(args) {
   /** @type {{[key:string]:string|number|boolean}} */
@@ -38,6 +39,80 @@ function optString(v,fallback) {
   if(v===undefined)return fallback;
   if(typeof v!=="string")throw new TypeError("option must be a string: "+String(v));
   return v;
+}
+function parseJsonRejectDuplicateKeys(source){
+  if(typeof source!=="string")throw new TypeError("JSON source must be text");
+  let offset=0;
+  const fail=message=>{throw new SyntaxError(message??"INVALID_JSON");};
+  const whitespace=()=>{while(offset<source.length&&" \t\r\n".includes(source[offset]))offset++;};
+  const string=()=>{
+    const start=offset;
+    if(source[offset]!=='"')fail("INVALID_JSON_STRING");
+    offset++;
+    while(offset<source.length){
+      const code=source.charCodeAt(offset);
+      const char=source[offset++];
+      if(char==='"')return JSON.parse(source.slice(start,offset));
+      if(char==="\\"){
+        if(offset>=source.length)fail("INVALID_JSON_ESCAPE");
+        const escaped=source[offset++];
+        if(escaped==="u"){
+          if(!/^[0-9a-fA-F]{4}$/.test(source.slice(offset,offset+4)))fail("INVALID_JSON_UNICODE_ESCAPE");
+          offset+=4;
+        }else if(!'"\\/bfnrt'.includes(escaped))fail("INVALID_JSON_ESCAPE");
+      }else if(code<0x20)fail("INVALID_JSON_CONTROL_CHARACTER");
+    }
+    fail("UNTERMINATED_JSON_STRING");
+  };
+  const value=depth=>{
+    if(depth>64)fail("JSON_NESTING_LIMIT");
+    whitespace();
+    const char=source[offset];
+    if(char==="{"){
+      offset++;
+      whitespace();
+      if(source[offset]==="}"){offset++;return;}
+      const keys=new Set();
+      while(true){
+        whitespace();
+        const key=string();
+        if(keys.has(key))fail("DUPLICATE_JSON_KEY:"+key);
+        keys.add(key);
+        whitespace();
+        if(source[offset++]!==":")fail("INVALID_JSON_OBJECT_COLON");
+        value(depth+1);
+        whitespace();
+        if(source[offset]===","){offset++;continue;}
+        if(source[offset]==="}"){offset++;break;}
+        fail("INVALID_JSON_OBJECT_DELIMITER");
+      }
+      return;
+    }
+    if(char==="["){
+      offset++;
+      whitespace();
+      if(source[offset]==="]"){offset++;return;}
+      while(true){
+        value(depth+1);
+        whitespace();
+        if(source[offset]===","){offset++;continue;}
+        if(source[offset]==="]"){offset++;break;}
+        fail("INVALID_JSON_ARRAY_DELIMITER");
+      }
+      return;
+    }
+    if(char==='"'){string();return;}
+    for(const literal of ["true","false","null"]){
+      if(source.startsWith(literal,offset)){offset+=literal.length;return;}
+    }
+    const number=/^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?/.exec(source.slice(offset));
+    if(number){offset+=number[0].length;return;}
+    fail("INVALID_JSON_VALUE");
+  };
+  value(0);
+  whitespace();
+  if(offset!==source.length)fail("INVALID_JSON_TRAILING_DATA");
+  return JSON.parse(source);
 }
 const print=x=>process.stdout.write(JSON.stringify(x,null,2)+"\n");
 export async function main(args=process.argv.slice(2)) {
@@ -122,7 +197,37 @@ export async function main(args=process.argv.slice(2)) {
       else if(arg==="inspect"&&rest.length===1)result=await inspectPortfolioTool(rest[0]);
       else if(["doctor","verify"].includes(arg)&&rest.length===1)
         result=await runPortableGate(rest[0],{mode:arg==="doctor"?"doctor":"verify-fixture"});
-      else throw new TypeError("portfolio usage: list | describe TOOL | inspect TOOL | doctor CANDIDATE | verify CANDIDATE");
+      else if(arg==="invoke"&&rest.length>=3){
+        const [tool,operation,...options]=rest;
+        const params=localParams(options);
+        if(Object.keys(params).some(k=>!["model","timeout"].includes(k)))
+          throw new TypeError("portfolio invoke accepts only --model and --timeout");
+        const modelFile=optString(params.model,"");
+        if(!modelFile)throw new TypeError("portfolio invoke requires --model <JSON-file>");
+        const modelPath=resolve(modelFile);
+        if(fsConstants.O_NOFOLLOW===undefined)throw new Error("NOFOLLOW_UNAVAILABLE");
+        if(fsConstants.O_NONBLOCK===undefined)throw new Error("NONBLOCK_UNAVAILABLE");
+        const modelHandle=await open(modelPath,fsConstants.O_RDONLY|fsConstants.O_NOFOLLOW|fsConstants.O_NONBLOCK);
+        let model;
+        try{
+          const fileStat=await modelHandle.stat();
+          if(!fileStat.isFile()||fileStat.size>65536)
+            throw new TypeError("model file must be a regular non-symlink file <=64KiB");
+          const chunks=[];
+          let total=0;
+          while(total<=65536){
+            const chunk=Buffer.alloc(Math.min(8192,65537-total));
+            const {bytesRead}=await modelHandle.read(chunk,0,chunk.length,null);
+            if(bytesRead===0)break;
+            total+=bytesRead;
+            if(total>65536)throw new RangeError("model file grew beyond 64KiB while reading");
+            chunks.push(chunk.subarray(0,bytesRead));
+          }
+          model=parseJsonRejectDuplicateKeys(Buffer.concat(chunks).toString("utf8"));
+        }finally{await modelHandle.close();}
+        result=await runPortfolioOperation(tool,operation,model,{timeoutS:optNumber(params.timeout,30)});
+      }
+      else throw new TypeError("portfolio usage: list | describe TOOL | inspect TOOL | doctor CANDIDATE | verify CANDIDATE | invoke highs solve-lp --model model.json [--timeout N]");
     } else if (action==="pure") {
       const path=flag(rest,"--input");
       if (!path) throw new TypeError("pure requires --input <JSON-file>");
@@ -149,6 +254,7 @@ export async function main(args=process.argv.slice(2)) {
       if(arg==="inspect")return result.status==="FOUND_PINNED_NOT_EXECUTED"||result.status==="EXISTING_NATIVE_ADAPTER_NOT_PROBED"?0:2;
       if(arg==="doctor")return result.status==="DOCTOR_EXECUTED_NOT_T3"?0:2;
       if(arg==="verify")return result.status==="FIXTURE_TECHNICAL_PASS_UNREVIEWED"?0:2;
+      if(arg==="invoke")return result.status==="T4_OPERATION_EXECUTED_UNREVIEWED"?0:2;
       return 0;
     }
     if(action==="pure")return result.tool_outcome==="UNKNOWN"?2:0;

@@ -1,0 +1,120 @@
+{
+  "schema": "formal-tools/i11/g6-source-anchor/0.1",
+  "issue": 11,
+  "status": "CANDIDATE_PENDING_INDEPENDENT_SOURCE_FIRST_REVIEW",
+  "claim": {
+    "id": "TALLY-TASK-EVIDENCE-ADVISORY-001",
+    "text": "For a well-formed GitHub Issue reference, matching positive issue number, 40-character lowercase source SHA, nonempty claim reference, and dependenciesComplete=true, assessTaskEvidence returns OBSERVED_INPUT_ONLY and never grants admitted=true or taskPass=true.",
+    "scope": "Exact behavior of one source-pinned Tally business function; does not establish that the referenced Issue claim is true, that dependencies are complete in GitHub, or that a K/Host permit exists.",
+    "assumptions": [
+      "input is a JavaScript value passed to the pinned function",
+      "source identity fields satisfy the pinned function's syntactic checks",
+      "dependenciesComplete is a caller-supplied boolean, not independently proven native dependency readback"
+    ]
+  },
+  "source": {
+    "repository": "kaicreator-mm/tally",
+    "ref": "refs/heads/main",
+    "commit": "e988321439f65b55936a691c02250b6d62a29409",
+    "path": "packages/tally-engineering-business/src/index.mjs",
+    "git_blob": "54015fb63ffb13b4f4e562f660d2172098b5f7f4",
+    "exported_symbol": "assessTaskEvidence",
+    "source_line_start": 26,
+    "source_line_end": 47
+  },
+  "consumer_snapshot": {
+    "repository": "kaicreator-mm/domain-harness",
+    "commit": "90afefa81ef9ad0d42087ffc8a0dbaa32757811f",
+    "path": "examples/dis-v020-cross-project/snapshots/tally/business.mjs",
+    "git_blob": "54015fb63ffb13b4f4e562f660d2172098b5f7f4",
+    "exact_git_blob_match": true,
+    "ref": "90afefa81ef9ad0d42087ffc8a0dbaa32757811f",
+    "ref_type": "immutable_commit"
+  },
+  "original_tests": {
+    "repository": "kaicreator-mm/tally",
+    "commit": "e988321439f65b55936a691c02250b6d62a29409",
+    "path": "packages/tally-engineering-business/test/business-policy.test.mjs",
+    "git_blob": "88c5b6512ff5e8005c02a170d2336a2f6c4090b1",
+    "relevant_cases": [
+      "canonical observed input still cannot grant K admission or Task PASS",
+      "unproven DAG dependency refuses",
+      "invalid/missing GitHub source identity refuses"
+    ],
+    "authority": "same-project regression tests; not an independent professional semantic Oracle",
+    "ref": "refs/heads/main",
+    "ref_type": "branch"
+  },
+  "formal_tools_snapshot": {
+    "path": "validation/g6-tally-source-anchor-2026-11-15/TALLY_BUSINESS_SOURCE.mjs",
+    "git_blob": "54015fb63ffb13b4f4e562f660d2172098b5f7f4",
+    "byte_identity": "exact Git Blob match with both Tally main source and DIS consumer snapshot"
+  },
+  "bounded_reference_model": [
+    {
+      "input_class": "missing_or_non_object",
+      "state": "UNQUALIFIED_INPUT",
+      "reason": "MISSING_INPUT",
+      "admitted": false,
+      "taskPass": false
+    },
+    {
+      "input_class": "invalid_issue_or_source_identity",
+      "state": "UNQUALIFIED_INPUT",
+      "reason": "MISSING_SOURCE_IDENTITY",
+      "admitted": false,
+      "taskPass": false
+    },
+    {
+      "input_class": "dependenciesComplete_not_true",
+      "state": "UNQUALIFIED_INPUT",
+      "reason": "DEPENDENCIES_UNVERIFIED",
+      "admitted": false,
+      "taskPass": false
+    },
+    {
+      "input_class": "valid_identity_and_dependenciesComplete_true",
+      "state": "OBSERVED_INPUT_ONLY",
+      "reason": "REQUIRES_NATIVE_CLAIM_AND_KERNEL_ADMISSION",
+      "admitted": false,
+      "taskPass": false
+    }
+  ],
+  "independent_reference_oracle": {
+    "file": "tests/g6-tally-source-anchor.test.mjs",
+    "status": "PRESENT_IN_THIS_PR",
+    "kind": "executable-source-contract-regression-test",
+    "professional_semantic_oracle": false,
+    "independent_business_truth": false
+  },
+  "tool_provenance": {
+    "runtime": "Node.js >=24 (formal-tools exact-SHA CI)",
+    "execution": "LAST_RECORDED_EXACT_HEAD_CI_SUCCESS",
+    "formal_solver": "NOT_USED_FOR_THIS_SOURCE-CODE_CONTRACT",
+    "last_successful_exact_head": "dd59ea51ee1b82147f6a33fc2e6ed3d9cfa3dc78",
+    "last_successful_ci": {
+      "provider": "Woodpecker",
+      "runtime": "Node.js 24.21.0",
+      "push": {
+        "pipeline": 944,
+        "status": "SUCCESS",
+        "target_url": "https://ci.kaicreator.com/repos/39/pipeline/944/1"
+      },
+      "pull_request": {
+        "pipeline": 945,
+        "status": "SUCCESS",
+        "target_url": "https://ci.kaicreator.com/repos/39/pipeline/945/1"
+      }
+    }
+  },
+  "qualification": {
+    "source_identity": "PINNED",
+    "source_claim": "PENDING_INDEPENDENT_REVIEW",
+    "product_owner_cryptographic_witness": "NOT_PRESENT",
+    "independent_professional_oracle": "NOT_PRESENT",
+    "trusted_host_attestation": "NOT_PRESENT",
+    "qualified_solution": false,
+    "qualified_replay": false,
+    "dis_effects": 0
+  }
+}
