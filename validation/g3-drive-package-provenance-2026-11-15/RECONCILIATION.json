@@ -14,10 +14,13 @@
     "gid": 1000
   },
   "drive": {
-    "original_packages_root_folder_id": "1DsQtN4Ei3F8YGyDxUGiXCWNuIU8mS2wp",
     "tools_folder_id": "1rIJ315fjiXtJEPk9mjXP2Kzty4V3n3nZ",
     "sha256sums_file_id": "1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1",
-    "sha256sums_sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64"
+    "sha256sums_sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64",
+    "portable_root_folder_id": "1DsQtN4Ei3F8YGyDxUGiXCWNuIU8mS2wp",
+    "portable_root_folder_name": "portable",
+    "portable_root_parent_folder_name": "10-formal-tools",
+    "portable_root_grandparent_folder_name": "App"
   },
   "artifacts": [
     {
@@ -139,6 +142,6 @@
     "professional_semantic_oracle": false,
     "source_fixture_authority": "SOURCE_AUTHORED_NOT_INDEPENDENTLY_AUDITED",
     "formal_tool_qualification": "NOT_PROMOTED",
-    "statement": "This reconciliation proves byte identity between the original App/packages Drive archives, their SHA256SUMS entries, and the historical NATIVE_PAIR archive/executable digests. It does not prove upstream publisher authenticity, trusted Host/process identity, professional semantic Oracle approval, or authorize new Replay/Effect."
+    "statement": "This reconciliation proves byte identity between the original App/10-formal-tools/portable/tools Drive archives, their SHA256SUMS entries, and the historical NATIVE_PAIR archive/executable digests. It does not prove upstream publisher authenticity, trusted Host/process identity, professional semantic Oracle approval, or authorize new Replay/Effect."
   }
 }
