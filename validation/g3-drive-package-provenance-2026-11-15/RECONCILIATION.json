@@ -1,0 +1,147 @@
+{
+  "schema": "formal-tools/g3-drive-package-byte-reconciliation/0.1",
+  "issue": 11,
+  "observed_date": "2026-11-15",
+  "qualification": "BYTE_IDENTITY_RECONCILED_ONLY",
+  "environment": {
+    "os": "Debian GNU/Linux 13.3 (trixie)",
+    "kernel": "Linux 6.18.57 x86_64",
+    "glibc": "2.41",
+    "architecture": "x86_64",
+    "python": "3.13.5",
+    "node": "v22.16.0",
+    "uid": 1000,
+    "gid": 1000
+  },
+  "drive": {
+    "tools_folder_id": "1rIJ315fjiXtJEPk9mjXP2Kzty4V3n3nZ",
+    "sha256sums_file_id": "1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1",
+    "sha256sums_sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64",
+    "portable_root_folder_id": "1DsQtN4Ei3F8YGyDxUGiXCWNuIU8mS2wp",
+    "portable_root_folder_name": "portable",
+    "portable_root_parent_folder_name": "10-formal-tools",
+    "portable_root_grandparent_folder_name": "App"
+  },
+  "artifacts": [
+    {
+      "tool": "z3",
+      "version": "5.4.0",
+      "drive_file_id": "1HdbFOgyUDShD04BKMeEJQRi_XjdYIdNe",
+      "filename": "z3-5.4.0-linux-x86_64.tar.zst",
+      "bytes": 12894456,
+      "archive_sha256": "039d3f8c75e92ceb196bb1291d8602340541f1b1be2f0a1acf32d3c025f8ed16",
+      "receipt_archive_sha256": "039d3f8c75e92ceb196bb1291d8602340541f1b1be2f0a1acf32d3c025f8ed16",
+      "sha256sums_path": "tools/z3-5.4.0-linux-x86_64.tar.zst",
+      "manifest_match": true,
+      "receipt_archive_match": true,
+      "zstd_test_exit": 0,
+      "tar_list_exit": 0,
+      "tar_entries": 6,
+      "unsafe_paths": 0,
+      "symlinks": 0,
+      "executable_path": "tools/z3/bin/z3",
+      "executable_bytes": 42257816,
+      "executable_sha256": "e9d7e6e6d76c81b5ea3f06d165fc4cfd8afab92b74cdf94417380b5eed10845d",
+      "receipt_executable_sha256": "e9d7e6e6d76c81b5ea3f06d165fc4cfd8afab92b74cdf94417380b5eed10845d",
+      "executable_match": true,
+      "version_probe_exit": 0,
+      "version_stdout": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f",
+      "version_stdout_sha256": "9af7c6f186418585f022fd2d18eb2d278e14ad21731bf3339f3cbd1f78500e7a",
+      "receipt_version_stdout_sha256": "9af7c6f186418585f022fd2d18eb2d278e14ad21731bf3339f3cbd1f78500e7a",
+      "version_stdout_match": true
+    },
+    {
+      "tool": "cvc5",
+      "version": "1.4.2",
+      "drive_file_id": "1HZ3ZswUQq8haSzgM-phJ_OgnXFBDqHfU",
+      "filename": "cvc5-1.4.2-linux-x86_64.tar.zst",
+      "bytes": 8783688,
+      "archive_sha256": "b7a5f6d1740086347d8055dab7fd1216960e19ab7a769fa2b15c1ec76ed0c193",
+      "receipt_archive_sha256": "b7a5f6d1740086347d8055dab7fd1216960e19ab7a769fa2b15c1ec76ed0c193",
+      "sha256sums_path": "tools/cvc5-1.4.2-linux-x86_64.tar.zst",
+      "manifest_match": true,
+      "receipt_archive_match": true,
+      "zstd_test_exit": 0,
+      "tar_list_exit": 0,
+      "tar_entries": 6,
+      "unsafe_paths": 0,
+      "symlinks": 0,
+      "executable_path": "tools/cvc5/bin/cvc5",
+      "executable_bytes": 32241592,
+      "executable_sha256": "6aecddf466552b83bb5883756c7955e0c9d5ddcc6d7f45b48c2f6e06a741b102",
+      "receipt_executable_sha256": "6aecddf466552b83bb5883756c7955e0c9d5ddcc6d7f45b48c2f6e06a741b102",
+      "executable_match": true,
+      "version_probe_exit": 0,
+      "version_stdout_first_lines": [
+        "cvc5 1.4.2 [git 282d5e0 on branch HEAD]",
+        "compiled as a unrestricted build with GCC version 11.4.0 on Oct  8 2026 01:24:07"
+      ],
+      "receipt_version_stdout_sha256": null,
+      "version_stdout_match": "VERSION_STRING_MATCH; RECEIPT_HAS_NO_VERSION_STDOUT_SHA256"
+    }
+  ],
+  "alternate_zip_observations": [
+    {
+      "tool": "z3",
+      "filename": "z3-5.4.0-x64-glibc-2.39.zip",
+      "drive_file_id": "1tbykPtOkRh371eNVzdRhwUNGiIx3jNKH",
+      "archive_sha256": "708d4c296e01aab4554dd567e46f803efd229140fb646fb51aabb8e2388a2929",
+      "receipt_archive_match": false,
+      "executable_sha256": "e9d7e6e6d76c81b5ea3f06d165fc4cfd8afab92b74cdf94417380b5eed10845d",
+      "receipt_executable_match": true,
+      "disposition": "NOT_USED_FOR_RECONCILIATION; same executable bytes, different archive bytes"
+    },
+    {
+      "tool": "cvc5",
+      "filename": "cvc5-Linux-x86_64-libcxx-static.zip",
+      "drive_file_id": "1zH1oEk_8DecScyzWX3Fe1X8DcPG3l4Qt",
+      "archive_sha256": "0af677313c8277dc558d3049b192389db4d975d31c968fbd6f31cf0849ee411d",
+      "receipt_archive_match": false,
+      "executable_sha256": "cd890c206c0bb4a604345c2e84de5ed576959a20f6bd96bda94608dd6521f3e3",
+      "receipt_executable_match": false,
+      "disposition": "NOT_USED_FOR_RECONCILIATION; same version label, different binary build"
+    }
+  ],
+  "source_pins": {
+    "fixture_path": "benchmarks/llm-methods/r0/spec-fidelity-cases.json",
+    "fixture_git_blob": "33952ec8f460f022e750f91543c7dafbae35c9e2",
+    "receipt_source_fixture_git_blob": "33952ec8f460f022e750f91543c7dafbae35c9e2",
+    "fixture_blob_match": true,
+    "generator_path": "benchmarks/llm-methods/g3/ads-native-matrix.mjs",
+    "generator_git_blob": "ce3a2dc2dde0ce7805c610e1caf4dfa524904e2e",
+    "receipt_source_generator_git_blob": "ce3a2dc2dde0ce7805c610e1caf4dfa524904e2e",
+    "generator_blob_match": true,
+    "frozen_replay_path": "benchmarks/llm-methods/g3/ads-native-replay.mjs",
+    "frozen_replay_git_blob": "9794ec4b62d3f5e9c22fa1f45ee3999565aa9a68",
+    "native_pair_path": "validation/ads24-native-2026-11-13/NATIVE_PAIR.json",
+    "native_pair_git_blob": "cee8f188cce20b042df505f824cccae64d2c9b1c",
+    "independent_verifier_path": "benchmarks/llm-methods/g3/independent-finite-verifier.mjs",
+    "independent_verifier_git_blob": "2213cf7f3025a32923625e9276d5dc42c7c1db42"
+  },
+  "execution_scope": {
+    "performed": [
+      "Drive raw-byte download",
+      "SHA256 of archive and manifest",
+      "manifest line reconciliation",
+      "zstd -t",
+      "tar member listing and path/symlink review",
+      "extract only after safe member review",
+      "binary SHA256",
+      "--version probe"
+    ],
+    "solver_cases_executed": 0,
+    "native_24x2_rerun": false,
+    "stderr_empty_for_version_probes": true,
+    "original_native_receipts_modified": false
+  },
+  "limitations": {
+    "vendor_signature_verified": false,
+    "upstream_release_attestation_verified": false,
+    "trusted_host_attestation": false,
+    "independent_process_attestation": false,
+    "professional_semantic_oracle": false,
+    "source_fixture_authority": "SOURCE_AUTHORED_NOT_INDEPENDENTLY_AUDITED",
+    "formal_tool_qualification": "NOT_PROMOTED",
+    "statement": "This reconciliation proves byte identity between the original App/10-formal-tools/portable/tools Drive archives, their SHA256SUMS entries, and the historical NATIVE_PAIR archive/executable digests. It does not prove upstream publisher authenticity, trusted Host/process identity, professional semantic Oracle approval, or authorize new Replay/Effect."
+  }
+}
