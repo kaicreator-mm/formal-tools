@@ -1,0 +1,131 @@
+{
+  "schema": "formal-tools/llm-methods-ci-root-cause/0.1",
+  "output_label": "FORMAL_TOOLS_I11_R32_CI_ROOT_CAUSE_EVIDENCE",
+  "role": "ORIGINAL_LOCAL_EXECUTOR",
+  "execution_platform": ["WINDOWS_NODE24_LOCAL", "WSL_LINUX_NODE24"],
+  "node_local": "24.21.0",
+  "npm_local": "11.19.0",
+  "ci": "WOODPECKER",
+  "ci_host": "ci.kaicreator.com",
+  "woodpecker_repo_id": 39,
+  "investigated_at": "2026-11-15",
+  "log_sha256_convention": "SHA256 of the full decoded step log text as returned by the Woodpecker logs API (base64 lines decoded, joined in row order without separators, Woodpecker line-status marker characters retained) - same convention as R31",
+  "pipelines": [
+    {
+      "pipeline": 999,
+      "pr": null,
+      "event": "push",
+      "ref": "refs/heads/main",
+      "exact_sha": "6e98fef47b15592c327523916048280c363acf06",
+      "first_failed_step": "clone",
+      "exit_code": 128,
+      "root_error": "fatal: unable to access 'https://github.com/kaicreator-mm/formal-tools.git/': TLS connect error: error:0A000126:SSL routines::unexpected eof while reading (x4: first attempt + 3 git-wrapper retries, all failed)",
+      "downstream": "formal-js-source-and-finite-model never started (logs API returns null, no log rows)",
+      "classification": "INFRASTRUCTURE",
+      "rationale": "clone network transient with the known TLS unexpected_eof signature; zero build steps executed. Same-SHA restart #1174 SUCCESS (363 tests / 362 pass / 0 fail) proves the code at 6e98fef is sound.",
+      "logs": {
+        "clone": {"step_id": 25316, "sha256": "fcf3e585a704e24cc69b835265f48bcc1963ea8a93e5f04e887fd82b40870331", "chars": 1269},
+        "formal-js-source-and-finite-model": {"step_id": 25317, "sha256": null, "chars": 0, "note": "never started, logs API returned null"}
+      },
+      "resolution": "API restart of the same SHA: POST /api/repos/39/pipelines/999 -> pipeline #1174 SUCCESS (clone fetched 6e98fef clean; tests 363/pass 362/fail 0/skip 1)"
+    },
+    {
+      "pipeline": 1002,
+      "pr": 98,
+      "event": "push",
+      "ref": "refs/heads/fix/i11-g3-isolated-native-env-r29",
+      "exact_sha": "802ec0e6124aca8cdaf4056a7d3202a71cf6dc73",
+      "first_failed_step": "formal-js-source-and-finite-model",
+      "first_failed_command": "node --test tests/*.test.mjs (exit 1); npm run typecheck and later commands in the step never ran",
+      "exit_code": 1,
+      "root_error": "SyntaxError: Invalid or unexpected token at tests/ads-native-replay.test.mjs:135 (module parse failure: the worker fake-tool script template re-typed the escaping as double-escaped backslash-n and backslash-quote sequences, which terminated the double-quoted JS string literal early and left $1 as a bare token). The whole file failed to load, so zero tests from the file registered; node --test reported a file-level failure 'test failed' at tests/ads-native-replay.test.mjs:1:1 with no test detail - explaining the detail-less CI failure shape.",
+      "test_stats_ci": "361 tests / 359 pass / 1 fail / 1 skipped (the 1 fail is the file-level entry; the file's own 6 tests never ran)",
+      "classification": "SOURCE",
+      "rationale": "clone succeeded after 2 git-wrapper TLS retries (fetched 802ec0e6); the failure is a real source defect introduced by this PR's head commit 802ec0e itself (the new worker-isolation test inside tests/ads-native-replay.test.mjs), not environment or infra.",
+      "logs": {
+        "clone": {"step_id": 25328, "sha256": "3357df8f8cd766e8405171b96c9ac20df0b9396314a64e29ca82d995899d8a02", "chars": 1265},
+        "formal-js-source-and-finite-model": {"step_id": 25329, "sha256": "42a680c85ecf09010510995cc0cebf417de11aeb7a5cdcb399df9dddff4eecc2", "chars": 32435}
+      },
+      "resolution": "fixed by f8f2eae on the PR branch (fakeToolScript single template + regression test)"
+    },
+    {
+      "pipeline": 1003,
+      "pr": 98,
+      "event": "pull_request",
+      "ref": "refs/pull/98/merge",
+      "exact_sha": "802ec0e6124aca8cdaf4056a7d3202a71cf6dc73",
+      "first_failed_step": "formal-js-source-and-finite-model",
+      "first_failed_command": "node --test tests/*.test.mjs (exit 1); identical to #1002",
+      "exit_code": 1,
+      "root_error": "identical to #1002: SyntaxError at tests/ads-native-replay.test.mjs:135, file-level 'test failed' at 1:1",
+      "test_stats_ci": "361 tests / 359 pass / 1 fail / 1 skipped",
+      "classification": "SOURCE",
+      "rationale": "PR pipeline checked out the same exact SHA 802ec0e6 as the push pipeline (clone log verified); failure identical in kind. NOTE: the pipeline message field of #1003 shows 'fix(g3): isolate native tool environment per execution' which is the message of ancestor commit f3b0ac9 - stale PR event metadata; the clone log is the authoritative SHA source (Exact-SHA discipline).",
+      "logs": {
+        "clone": {"step_id": 25330, "sha256": "b84e93d8d87267abbe1a039f04c1240122f6fcc11bd801b12ea9afa2af3cbb1c", "chars": 1205},
+        "formal-js-source-and-finite-model": {"step_id": 25331, "sha256": "ae9a982db1e6f3cb95ba1b4d16a18f63caa6aefdba79412284e585d85d45981d", "chars": 32442}
+      },
+      "resolution": "same as #1002"
+    }
+  ],
+  "environment_observed": {
+    "ci_step_node": "v24.21.0",
+    "ci_step_npm": "11.19.0",
+    "backend": "local (agent container exec; clone workspace under /var/lib/woodpecker/tmp/woodpecker-local-*)",
+    "npm_ci": "added 8 packages in 644ms (#1002) / 668ms (#1003) - shared pull-through cache healthy",
+    "node_version_skew": "none - all investigated pipelines report node v24.21.0 / npm 11.19.0",
+    "pr_vs_push_sha_skew": "none - #1002/#1003 both 802ec0e6 (verified from clone logs; list-view sha field empty)",
+    "pipeline_message_field_anomaly": "#1003's message belongs to ancestor commit f3b0ac9 ('isolate native tool environment per execution'), not the fetched head 802ec0e6 ('isolate frozen ADS24 orchestration in worker environments'); clone log is authoritative",
+    "webhook_delivery_anomaly": "the push of f8f2eae did not produce a pipeline: GitHub delivered its webhook twice (push delivery 3854156675629973504 at 08:32:39Z and PR #98 synchronize delivery 3854156678811353088 at 08:32:40Z) and the server answered HTTP 400 to every delivery between 08:24-08:41Z (server-side forge access degradation; the same window killed the #999 clone and manual pipeline triggers returned 400/500). GitHub webhook redelivery API is not available for this token (404 on a delivery id that GET resolves). Resolution: the two delivery payloads were replayed byte-faithfully to the Woodpecker hook endpoint after recovery, creating pipelines #1197 (push) and #1198 (pull_request) for f8f2eae. Zero commits fabricated."
+  },
+  "recurrence_analysis": "This is the SECOND occurrence of the same defect class in this file: R31 pipeline #973 failed with the identical SyntaxError signature at tests/ads-native-replay.test.mjs:71 (escaped-backslash + closing-quote sequence inside a double-quoted string), the writer fixed it in d65eb49b, and the new worker-isolation test added by 802ec0e re-typed the same template with double escapes at line 135. The fix therefore extracts one shared module-scope fakeToolScript(label,status) template and adds a platform-independent regression test that pins its POSIX byte shape, so a re-escaped variant fails on every platform before CI.",
+  "fix": {
+    "commit": "f8f2eaec714ad12fa60343b5fb2591eea78b86f8",
+    "branch": "fix/i11-g3-isolated-native-env-r29",
+    "changes": [
+      "tests/ads-native-replay.test.mjs: extracted the fake-tool script into one module-scope fakeToolScript(label,status) helper (real newline and bare-quote escaping), used by both the per-execution concurrent-isolation test and the worker-isolation test",
+      "tests/ads-native-replay.test.mjs: new platform-independent regression test 'G3 fake native tool scripts remain valid one-command-per-line POSIX templates' - asserts shebang on its own line, trailing newline, one command per line, and absence of literal backslash-n / escaped-quote sequences, reproducing the CI failure signature if the template is double-escaped again"
+    ],
+    "not_done": [
+      "benchmarks/llm-methods/g3/ads-native-replay.mjs untouched (frozen source byte-identical; provenance blob test passes)",
+      "receipt validation/ads24-native-2026-11-13/NATIVE_PAIR.json untouched",
+      "no Z3/cvc5 24x2 native re-verification executed (out of scope per task constraints)"
+    ]
+  },
+  "local_verification": {
+    "windows_node24_pre_fix": {
+      "node": "v24.21.0 (fnm)",
+      "targeted_tests": "node --test tests/ads-native-replay.test.mjs tests/i11-dag-receipt-reconciliation.test.mjs -> exit 1, SyntaxError: Invalid or unexpected token at tests/ads-native-replay.test.mjs:135, file-level fail 9 tests/8 pass/1 fail/0 skip",
+      "typecheck": "npm run typecheck -> exit 2, tsc reports 9 syntax errors all at tests/ads-native-replay.test.mjs:135 (same root cause)"
+    },
+    "wsl_linux_node24_pre_fix": {
+      "node": "v24.21.0",
+      "targeted_tests": "cold clone of mirror at exact 802ec0e6, node --test tests/ads-native-replay.test.mjs -> exit 1, same SyntaxError, 1 test entry / 0 pass / 1 fail - exact CI failure shape reproduced"
+    },
+    "windows_node24_post_fix": {
+      "node": "v24.21.0 (fnm)",
+      "targeted_tests": "exit 0 - 15 tests / 12 pass / 0 fail / 3 skipped (the 3 linux-only isolation tests skip by design)",
+      "typecheck": "exit 0"
+    },
+    "wsl_linux_node24_post_fix": {
+      "node": "v24.21.0 (CI-equivalent)",
+      "npm_ci": "exit 0, added 8 packages",
+      "targeted_tests": "node --test tests/ads-native-replay.test.mjs tests/i11-dag-receipt-reconciliation.test.mjs -> exit 0, 15 tests / 15 pass / 0 fail / 0 skipped - BOTH worker concurrency tests execute on Linux: 'G3 runner binds concurrent native executions to their own environments' (48.1ms) and 'G3 concurrent frozen ADS24 orchestrations isolate each worker's native environment' (284.5ms)",
+      "full_suite": "node --test tests/*.test.mjs -> exit 0, 367 tests / 366 pass / 0 fail / 1 skipped (pre-existing platform skip), duration 1862ms",
+      "typecheck": "exit 0",
+      "cli_smoke": "validate / pure dag / catalog z3 / info z3 / plan z3 solve -> exit 0 x5 (the remaining commands of the CI step)"
+    }
+  },
+  "post_fix_ci": [
+    {"pipeline": 1174, "event": "push (API restart of #999)", "sha": "6e98fef47b15592c327523916048280c363acf06", "status": "success", "tests": "363 tests / 362 pass / 0 fail / 1 skip", "logs": {"clone_sha256": "cdf2b1618ed25298a5c8a649e4b5aa5107f9e1150e27ab96e0bd94d6f3dfe796", "main_sha256": "451ba57ed5ac81d5649046f95e8df7b3bf99beec1e46ea481dc3ba3204b045cd"}},
+    {"pipeline": 1197, "event": "push (first attempt, hook replay)", "sha": "f8f2eaec714ad12fa60343b5fb2591eea78b86f8", "status": "failure", "first_failed_step": "clone", "exit_code": 128, "root_error": "TLS unexpected eof transient (same class as #999); zero build steps ran; network window ongoing", "logs": {"clone_sha256": "be065cc46a6d71fda354f4be605674f44dde7eb09db74927f1f9b7569c9de482"}},
+    {"pipeline": 1203, "event": "push (API restart of #1197, same SHA)", "sha": "f8f2eaec714ad12fa60343b5fb2591eea78b86f8", "status": "success", "tests": "367 tests / 366 pass / 0 fail / 1 skip - regression test and both worker concurrency tests pass on CI Linux; matches the WSL local full-suite exactly", "logs": {"clone_sha256": "c0087dd3f8763dfdb72a96ee639c3cf1b2cceab0ceab7d7c46fd1ec3cb190c60", "main_sha256": "2870d8c059ee7b4de565e9c60ebe87bb01cdab68ff5bcb2a0cc195196b509be6"}},
+    {"pipeline": 1198, "event": "pull_request (hook replay of the 400'd synchronize delivery)", "sha": "f8f2eaec714ad12fa60343b5fb2591eea78b86f8", "status": "success", "tests": "367 tests / 366 pass / 0 fail / 1 skip", "logs": {"clone_sha256": "c2ec977b943b951a9380dffdd1fb7bbc8dfbaf80081250a4e5537ff985061725", "main_sha256": "7f7d37e5db587fe1c2928c37366d222c4beb7bbb9869a95d83891a38c9c1ab51"}}
+  ],
+  "open_blocks": [],
+  "observations": [
+    "defect class recurrence across rounds (R31 line 71 -> R32 line 135) motivated the single-template + byte-shape regression test design",
+    "node --test file-level SyntaxError failure carries no test detail in the spec reporter ('test failed' at 1:1) - when CI shows a detail-less file failure, check module parseability first (npm run typecheck on the same tree also fails with tsc syntax errors, giving the precise line)",
+    "the PR pipeline message field can carry a stale commit message from an ancestor; clone logs remain the only authoritative SHA source"
+  ]
+}
