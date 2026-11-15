@@ -16,7 +16,8 @@ ft_tool_build() {
   [ -n "$src" ] || ft::die "apache-jena dir not found"
   cp -a "$src/." "$FT_TOOL_DIR/"
   [ -x "$FT_TOOL_DIR/bin/riot" ] || ft::die "bin/riot missing"
-  ft::make_shim 'export PATH="$TOOL_DIR/bin:$PATH"
+  ft::make_shim 'export JAVA_HOME="$FT_ROOT/runtimes/java21"
+export PATH="$JAVA_HOME/bin:$TOOL_DIR/bin:$PATH"
 export JENA_HOME="$TOOL_DIR"
 exec "$TOOL_DIR/bin/riot" "$@"'
 }

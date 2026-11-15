@@ -68,11 +68,11 @@
     }
   },
   "proposed_fixes": {
-    "builder_blob": "777abe37c6b180ba448d93331cdada86142c4b4f",
+    "builder_blob": "02afc9c66a74f4d11fa46f92c6e0165dd598d954",
     "expect_blob": "a73bd895a41ace7dba5d5b1768da091b5abeda30",
-    "source_test_blob": "43a11e2671ff5b4f7a0ee5c3572f3bd5537ea030",
-    "fixture_test_blob": "0648aed7bf090b79ac9c633f865a5a7bf0caab39",
-    "local_tests": "4/4 PASS",
+    "source_test_blob": "3bddfb70cadb45b0d9cc5977b398102d12b0cbe0",
+    "fixture_test_blob": "506c93d34061a77bd9b64c23e0cd2b166742a06c",
+    "local_tests": "7/7 PASS (pending exact-head CI)",
     "shell_syntax": "bash -n PASS"
   },
   "current_main": {
@@ -85,7 +85,7 @@
     "T0": "PASS_SCOPED_CURRENT_DRIVE_ARCHIVE_HASH_MATCHES_PRODUCER_MANIFEST; official SHA512 sidecar pinned in proposed builder; full T0 pending license inventory and publisher-byte rebuild",
     "T1": "NOT_QUALIFIED; no upstream asset bytes/build",
     "T2": "PASS_SCOPED_ZSTD_TAR_PREFLIGHT_AND_NONROOT_EXTRACTION_ONLY",
-    "T3": "SCOPED_NATIVE_POS_NEG_ERR_REPRODUCED_WITH_HOST_JAVA21; pending independent review",
+    "T3": "PASS_SCOPED_DIRECT_NATIVE_POS_NEG_ERR; independently replayed as UID/GID 65534 with host OpenJDK 21.0.12.1; no current Runner/CLI/MCP/SDK qualification.",
     "T4": "NOT_ACCEPTED; legacy TOOL_TOOL_ID; no current Runner/CLI/MCP/SDK run",
     "T5": "NOT_QUALIFIED",
     "T6": "OPEN",
@@ -94,9 +94,9 @@
   },
   "findings": {
     "P0": 0,
-    "P1": 1,
+    "P1": 0,
     "P2": 0,
-    "P1_detail": "Upstream SHA512 pin and exact NEG/ERR exits proposed; pending exact-head CI, independent review and official asset fetch/rebuild. P2 stale receipt discrepancy resolved by current Drive byte+manifest rehash."
+    "P1_detail": "R57 review P1 bundled-Java shim regression and P2 duplicate-assignment test gaps are repaired in this revision; official upstream .tar.gz bytes not fetched remains a T1 qualification limitation, not a code finding."
   },
   "limitations": [
     "Official .tar.gz bytes not fetched; sidecar SHA512 is not a PGP signature verification.",
