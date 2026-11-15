@@ -1,0 +1,85 @@
+{
+  "schema": "formal-tools/vampire-source-pin-fixture-contract/1.0",
+  "output_label": "FORMAL_TOOLS_I24_UNIFIED_PARALLEL_DELIVERY",
+  "portfolio_issue": 24,
+  "tool_issue": 58,
+  "tool_id": "vampire",
+  "version": "5.1.0",
+  "baseline_main": "cbd7f173b05c4f329bf9e37c2f9a06006526ba08",
+  "upstream_release": {
+    "repository": "vprover/vampire",
+    "tag": "v5.1.0",
+    "asset": "vampire-Linux-X64.zip",
+    "url": "https://github.com/vprover/vampire/releases/download/v5.1.0/vampire-Linux-X64.zip",
+    "github_release_api_sha256": "495828dc76cb17a27080d62dedce755e46de96f47f06f5f0ad4be9cdaf6f968f",
+    "size_bytes": 21664799,
+    "digest_authority": "GitHub Releases API asset digest; not described as a publisher signature",
+    "asset_kind": "prebuilt official binary; not a reproducible source build"
+  },
+  "prior_build_receipt": {
+    "path": "portable/status/receipts/build-vampire.json",
+    "blob": "a02e3a61bba8293ede81e28e0b09908ada1dd810",
+    "previous_packaged_bundle_sha256": "7b801bc960661c9aa049bcf2667722cc4a0ae4f804e3d008d8a7941e183b446e",
+    "status": "historical builder output; not rebuilt under new hard pin"
+  },
+  "prior_verify_receipt": {
+    "path": "portable/status/receipts/verify-vampire.json",
+    "blob": "eca8939e7051176dad2231170777e832633d2bd6",
+    "observed_exit_codes": {
+      "pos": 0,
+      "neg": 0,
+      "err": 4
+    },
+    "limitation": "receipt stores outcomes and exit codes but not raw phase stdout/stderr"
+  },
+  "fixture_contract": {
+    "previous_expect_blob": "94a70336c56522dfebd3c085ad95af3fc9503574",
+    "new_expected_exit_codes": {
+      "pos": 0,
+      "neg": 0,
+      "err": 4
+    },
+    "new_markers": {
+      "pos": "Refutation found",
+      "neg": "Termination reason: Saturation",
+      "err": "parse error in"
+    },
+    "upstream_source_pins": {
+      "parse_error_prefix": {
+        "path": "Parse/TPTP.cpp",
+        "ref": "v5.1.0",
+        "blob": "e9e44b390660803c1901249e60053ebaf36e9435",
+        "meaning": "ParseErrorException::cry emits 'parse error in'"
+      },
+      "saturation_reason": {
+        "path": "Shell/Statistics.cpp",
+        "ref": "v5.1.0",
+        "blob": "f559d0278815c11ff3f8c09c9c1479ef9b4e7810",
+        "meaning": "SATURATION phase maps to 'Saturation'; runtime line format is 'Termination reason: ...'"
+      }
+    },
+    "replay": "NOT_RUN_IN_THIS_ENVIRONMENT; exact markers are source-backed and must be confirmed by the next healthy native replay"
+  },
+  "changes": {
+    "builder_blob": "00086f1a10cba384b60950b1a90ea89141542d60",
+    "expect_blob": "0107769a651740636eed2a2f1bc8808259c2dd8f",
+    "tests_path": "tests/vampire-source-fixture-contract.test.mjs",
+    "test_scope": "static assertions for pinned asset SHA/size, explicit cache-hit digest verification, whitespace-safe size guard, exact NEG/ERR exits, narrow source-backed markers and malformed input",
+    "test_blob": "2de76c4349cddc2cf295313fa4164313a69ea941"
+  },
+  "qualification": {
+    "t0": "PASS_SCOPED_GITHUB_RELEASE_ASSET_DIGEST_AND_VERSION_PIN; publisher signature not established",
+    "t1": "NOT_QUALIFIED_UNTIL_FRESH_BUILDER_EXECUTION_AND_REPACK",
+    "t2": "PRESERVE_EXISTING_R3_SCOPED_PASS; no new install run",
+    "t3": "PRESERVE_EXISTING_R3_SCOPED_PASS; exit contract now pinned to observed 0/0/4, but raw outputs unavailable and new markers require fresh replay",
+    "t4": "NOT_ACCEPTED",
+    "t5": "NOT_QUALIFIED_REAL_SEMANTICS",
+    "t6": "OPEN"
+  },
+  "exclusions": [
+    "No shared Runner/Registry/CLI/MCP/SDK edits",
+    "No #24 total ledger edits",
+    "No Product/Release promotion",
+    "No claim that prebuilt binary asset is a reproducible source build"
+  ]
+}
