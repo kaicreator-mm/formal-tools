@@ -1,0 +1,130 @@
+{
+  "schema": "formal-tools/clingo-maintenance-baseline/1.0",
+  "toolId": "clingo",
+  "snapshotMain": "3ea64a631c2bf0e44b5e286ca96d45b10e742db5",
+  "updatedAt": "2026-11-16",
+  "identity": {
+    "version": "5.8.3",
+    "upstreamRepository": "potassco/clingo",
+    "upstreamCommit": "2ef91640ed3355c3211e9995edecdb20b16b0e38",
+    "sourceSdistSha256": "28778784f8f4e8d842a027ceabc8afd3493d0ce49494c8a7dfe960a7556be0e9",
+    "sourceSdistBytesVerified": false,
+    "license": "MIT",
+    "licenseEvidenceBlob": null,
+    "canonicalArchiveSha256": "496254a850cb3dd988aaf3662845f0fe97cf2b2d33535ef6eed44274f140ea3d",
+    "binarySha256": "d6250068a6cb2c931f952f5554f7aa3a07491975c10832b577be322f8371ad41",
+    "positiveFixtureBlob": "9865b36ba12884b69151d7e802308b852d8710e4",
+    "negativeFixtureBlob": "6ac4b470a691fd6d5f3b85df69ce9b1bff3d513c",
+    "nativeCatalogBlob": "02f628947be3e5c270d802be150ab220e14fc2b8",
+    "nativeAdapterBlob": "2e0e669e4fa66cb27654644705e76794c0727004",
+    "toolManagerBlob": "a8e547718b8242c9d27f9e906b1c1ebaa2d80de6",
+    "cliDriverBlob": "1b01e1182557eb921c5a40fbbe85462a75790712",
+    "sdkDriverBlob": "15238281a64de0d0171a855512998e233d98d5d8",
+    "mcpDriverBlob": "cde211ae240dc8557f3b8bb2e3c6c61b5a5a4fe5",
+    "nativeAcceptanceBlob": "dea983b77d1253cfcc7215a2a748fc9f68b108ec",
+    "runtimeReadmeBlob": "b7379e0e1cd7babe473b6698fcb82a900e738b8d",
+    "buildRecipeBlob": null,
+    "toolchainFingerprint": null,
+    "rebuiltBinarySha256": null,
+    "installRecipeBlob": null,
+    "runtimeImageDigest": null,
+    "runnerImageDigest": null,
+    "oracleId": null,
+    "oracleVersion": null,
+    "oracleCaseBlob": null
+  },
+  "gateStatus": {
+    "T0": "PASS_SCOPED",
+    "T1": "NOT_QUALIFIED",
+    "T2": "PASS_SCOPED",
+    "T3": "PASS_SCOPED",
+    "T4": "PASS_SCOPED",
+    "T5": "OPEN",
+    "T6": "IN_PROGRESS"
+  },
+  "scope": {
+    "t0": "The canonical original Drive archive and native binary identities are pinned. The PyPI source sdist digest and provenance commit are public metadata only; source bytes have not yet been downloaded and verified in this execution environment. Publisher/rights review remains scoped.",
+    "t1": "NOT_QUALIFIED: no independent reproducible source build has been produced.",
+    "t2": "PASS_SCOPED: canonical Debian 13 bundle non-root installation/doctor evidence is in PR #76 receipts; no immutable runtime image digest is currently recorded.",
+    "t3": "PASS_SCOPED: canonical native POS/NEG/invalid fixtures and exact upstream exit semantics are in PR #76 receipts; do not infer project-level proof.",
+    "t4": "PASS_SCOPED: PR #76 merged to main; native binary launcher is explicit and Python-module default remains fail-closed when the module is absent. T4 Runner/CLI/SDK/MCP routes consume the pinned POS/NEG fixture inputs, so fixture drift invalidates T4 alongside T3 and downstream T5 case evidence.",
+    "t5": "OPEN: no source-backed business case or independent semantic Oracle is admitted.",
+    "t6": "This PR adds the first executable identity-drift assessor and regression tests. It is a maintenance mechanism, not a completed real upgrade cycle."
+  },
+  "evidence": {
+    "canonicalArchiveDriveId": "1bd6bUrcAeLWok20B7ed-D2FGlnLcCHwW",
+    "canonicalBinaryBytes": 385144,
+    "sourceSdistPyPiProvenance": "PyPI Trusted Publishing record reports potassco/clingo commit 2ef91640ed3355c3211e9995edecdb20b16b0e38; source bytes not independently retrieved.",
+    "sourceReferences": {
+      "installBlob": "c23b382983fba6bc926eae5c5138f8d076f4ceda",
+      "changesBlob": "8cf53db036a3eb17fc345642f91f9e2223200ff3",
+      "cmakeBlob": "5f57982b2238408db426f510656e59b830fc78de"
+    },
+    "t4MergeCommit": "f354dac5a5f0e4bedafee9984b71e5bc866e6bee",
+    "t4ReviewedHead": "0ea5b2376e3c67a4343d4313ad2c2d5d7db291a2",
+    "t4Woodpecker": {
+      "pr": 585,
+      "push": 586,
+      "postMergeMainPush": 593
+    }
+  },
+  "gateDependencies": {
+    "T0": [
+      "version",
+      "upstreamRepository",
+      "upstreamCommit",
+      "sourceSdistSha256",
+      "sourceSdistBytesVerified",
+      "license",
+      "licenseEvidenceBlob",
+      "canonicalArchiveSha256"
+    ],
+    "T1": [
+      "version",
+      "upstreamCommit",
+      "sourceSdistSha256",
+      "sourceSdistBytesVerified",
+      "buildRecipeBlob",
+      "toolchainFingerprint",
+      "rebuiltBinarySha256"
+    ],
+    "T2": [
+      "version",
+      "canonicalArchiveSha256",
+      "binarySha256",
+      "installRecipeBlob",
+      "runtimeImageDigest"
+    ],
+    "T3": [
+      "version",
+      "binarySha256",
+      "positiveFixtureBlob",
+      "negativeFixtureBlob",
+      "nativeAcceptanceBlob"
+    ],
+    "T4": [
+      "version",
+      "binarySha256",
+      "positiveFixtureBlob",
+      "negativeFixtureBlob",
+      "nativeCatalogBlob",
+      "nativeAdapterBlob",
+      "toolManagerBlob",
+      "cliDriverBlob",
+      "sdkDriverBlob",
+      "mcpDriverBlob",
+      "runnerImageDigest"
+    ],
+    "T5": [
+      "version",
+      "binarySha256",
+      "positiveFixtureBlob",
+      "negativeFixtureBlob",
+      "oracleId",
+      "oracleVersion",
+      "oracleCaseBlob"
+    ],
+    "T6": "ALL_TRACKED_IDENTITY_FIELDS"
+  },
+  "qualificationBoundary": "No T1/T5/T6 completion, no #24 full-portfolio T4 promotion, and no #11 Product/Release qualification."
+}
