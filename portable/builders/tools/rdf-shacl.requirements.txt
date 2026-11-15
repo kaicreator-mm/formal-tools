@@ -1,0 +1,10 @@
+# Exact pySHACL 0.40.2 dependency closure for the R52 native rebuild.
+# The builder fails closed if the shared runtime contains any other versions.
+pyshacl==0.40.2
+owlrl==7.6.2
+rdflib==7.6.0
+pyparsing==3.3.3
+html5rdf==1.2.1
+packaging==26.3
+prettytable==3.18.0
+wcwidth==0.9.4

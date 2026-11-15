@@ -7,3 +7,7 @@ EXPECT_NEG_ARGS='--shacl tests/rdf-shacl/shape.ttl tests/rdf-shacl/neg.ttl'
 EXPECT_NEG_EXIT=*
 EXPECT_NEG_REGEX='Conforms: False'
 EXPECT_NEG_LABEL=VIOLATION
+EXPECT_ERR_ARGS='--shacl tests/rdf-shacl/shape.ttl tests/rdf-shacl/err.ttl'
+EXPECT_ERR_EXIT=*
+EXPECT_ERR_REGEX='SyntaxError|ParseError|Expected|EOF'
+EXPECT_ERR_LABEL=INVALID_RDF

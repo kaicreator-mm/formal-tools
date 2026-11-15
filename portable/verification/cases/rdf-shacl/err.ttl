@@ -1,0 +1,3 @@
+@prefix ex: <http://example.invalid/> .
+
+ex:alice ex:age "unterminated .
