@@ -18,8 +18,14 @@ function uniqueNumericExitAssignments(source) {
   for (const [index, line] of lines.entries()) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith("#")) continue;
-    assert.match(line, /^[\\t ]*(?:export[\\t ]+)?EXPECT_[A-Z0-9_]+=/,
-      "unsupported shell command in sourced expect.sh at line " + (index + 1));
+    const assignment = line.match(/^[\t ]*(?:export[\t ]+)?(EXPECT_[A-Z0-9_]+)=(.*)$/);
+    assert.ok(assignment, "unsupported shell command in sourced expect.sh at line " + (index + 1));
+    const raw = assignment[2];
+    const singleQuoted = raw.length >= 2 && raw.startsWith("'") && raw.endsWith("'") && !raw.slice(1, -1).includes("'");
+    const doubleQuoted = raw.length >= 2 && raw.startsWith('"') && raw.endsWith('"') && !/["$\x60\\]/.test(raw.slice(1, -1));
+    const unquotedLiteral = /^[A-Za-z0-9_./:*?+-]+$/.test(raw);
+    assert.ok(singleQuoted || doubleQuoted || unquotedLiteral,
+      "unsafe shell assignment value in sourced expect.sh at line " + (index + 1));
   }
   for (const phase of ["POS", "NEG", "ERR"]) {
     const name = "EXPECT_" + phase + "_EXIT";
@@ -88,7 +94,7 @@ test("Storm exit parser rejects missing, wildcard, quoted, and malformed values 
     const original = new RegExp("^" + name + "=[^\\r\\n]*$", "m");
     const missing = fixture.replace(original, "");
     assert.throws(() => uniqueNumericExitAssignments(missing), /exactly one assignment/, phase + " missing");
-    for (const value of ["*", "'0'", "\"0\"", "0; echo invalid"]) {
+    for (const value of ["*", "'0'", "\"0\""]) {
       const malformed = fixture.replace(original, name + "=" + value);
       assert.throws(() => uniqueNumericExitAssignments(malformed), /numeric exit assignment/, phase + " " + value);
     }
@@ -111,11 +117,19 @@ test("Storm sourced expect.sh rejects shell override commands for every exit pha
     const name = "EXPECT_" + phase + "_EXIT";
     for (const override of overrides) {
       assert.throws(
-        () => uniqueNumericExitAssignments(fixture + "\\n" + override(name) + "\\n"),
+        () => uniqueNumericExitAssignments(fixture + "\n" + override(name) + "\n"),
         /unsupported shell command/,
         phase + " " + override(name)
       );
     }
+  }
+});
+
+test("Storm exit parser rejects shell expansion and command chaining in EXPECT assignments", () => {
+  const backtick = String.fromCharCode(96);
+  for (const value of ["$(id)", backtick + "id" + backtick, "\${HOME}", "0; echo invalid", "0 && true"]) {
+    const source = fixture + "\nEXPECT_EXTRA=" + value + "\n";
+    assert.throws(() => uniqueNumericExitAssignments(source), /unsafe shell assignment value/, value);
   }
 });
 
