@@ -208,14 +208,42 @@ ft::elf_arch() {
   esac
 }
 
+# ft::absolutize_path_list <colon-separated path list> <base directory>
+# Convert relative and empty LD_LIBRARY_PATH components against the caller's cwd.
+# Empty components mean the caller's cwd; leaving them relative would silently
+# change loader semantics after ft::probe_version changes into the tool directory.
+ft::absolutize_path_list() {
+  local rest="${1-}" base="${2:-$PWD}" part result="" more
+  while :; do
+    case "$rest" in
+      *:*) part="${rest%%:*}"; rest="${rest#*:}"; more=1 ;;
+      *) part="$rest"; more=0 ;;
+    esac
+    case "$part" in
+      "") part="$base" ;;
+      /*) ;;
+      *) part="$base/$part" ;;
+    esac
+    if [ -z "$result" ]; then result="$part"; else result="$result:$part"; fi
+    [ "$more" = 1 ] || break
+  done
+  printf '%s' "$result"
+}
+
 # ft::probe_version <tool_dir> <relative_probe> [args...]
 # Run the best-effort version probe with the same private tool library directory
-# that the portable Runner's doctor/run paths use. Preserve any inherited paths.
+# that the portable Runner's doctor/run paths use. Preserve caller-relative paths
+# by making every inherited path component absolute before changing directories.
 ft::probe_version() {
   local tool_dir="$1"; shift
   [ -d "$tool_dir" ] && [ "$#" -gt 0 ] || return 2
+  local caller_pwd="$PWD"
   local private_lib="$tool_dir/lib"
-  local probe_ld="${LD_LIBRARY_PATH:-}"
+  case "$private_lib" in /*) ;; *) private_lib="$caller_pwd/$private_lib" ;; esac
+  local probe_ld=""
+  if [ "${LD_LIBRARY_PATH+x}" = x ]; then
+    probe_ld=$(ft::absolutize_path_list "$LD_LIBRARY_PATH" "$caller_pwd")
+  fi
   if [ -d "$private_lib" ]; then
     case ":$probe_ld:" in
       *":$private_lib:"*) ;;
