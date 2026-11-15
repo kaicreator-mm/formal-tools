@@ -1,0 +1,192 @@
+{
+  "schema": "formal-tools/i24-why3-private-userns-chroot-proof/1.0",
+  "output_label": "FORMAL_TOOLS_I24_UNIFIED_PARALLEL_DELIVERY",
+  "portfolio_issue": 24,
+  "tool_issue": 59,
+  "tool": "why3",
+  "worker_id": "CHATGPT_AUTO_WHY3_R23_PRIVATE_USERNS_CHROOT_20261115",
+  "task_type": "WHY3_PRIVATE_USERNS_CHROOT_POS_NEG_ERR_REPLAY",
+  "status": "SCOPED_RESEARCH_EVIDENCE_REVIEW_REQUIRED",
+  "base_main_sha": "cbd7f173b05c4f329bf9e37c2f9a06006526ba08",
+  "write_scope": "This evidence file only. No builder, original archive, shared Runner, Registry, CLI, MCP, SDK or #24 total ledger changes.",
+  "source": {
+    "current_main_builder_blob": "a955cd5169e42495b46a3b52b245307f98774bb2",
+    "builder_boundary": "Current main builder removes the historical host /usr mutations and its unconfined shim refuses proof/config commands with WHY3_RELOCATION_NOT_QUALIFIED.",
+    "original_drive_archive": {
+      "bytes": 41550468,
+      "sha256": "5343afcbccd2805dbf9c1ff7689371ced7857a42d0f57615d22e9bee701ff8f3",
+      "prior_manifest_sha256": "6a0e3cc7a3664529ed9573613359bb0e9019d2dd38ffd521a6b4251dcf5802d1",
+      "boundary": "Original archive remains quarantined: the prior independent complete-byte check found a stale manifest digest and 27 absolute host-path symlinks. Its original run shim was not executed in this experiment."
+    },
+    "validation_only_candidate": {
+      "name": "why3-1.8.0-sanitized-safe-only-CANDIDATE.tar.zst",
+      "bytes": 54709487,
+      "sha256": "62a16b57fd90ed6fdded53c34ddeeddbd375e05d0eb6ab905b4ee82715ce6ed2",
+      "role": "Validation-only candidate, not an official/publisher release and not a replacement for the original package.",
+      "zstd_test": "PASS",
+      "tar_preflight": {
+        "entries": 5319,
+        "regular_files": 3681,
+        "directories": 1350,
+        "relative_symlinks": 288,
+        "absolute_symlinks": 0,
+        "path_traversal": 0,
+        "escaping_symlinks": 0,
+        "special_files": 0,
+        "result": "PASS"
+      },
+      "safe_shim_sha256": "cb1bbd86dd12df0f28610f76c0628705581350e1a03ad5a9d5e3dd7e3ff4dc19"
+    },
+    "why3_binary": {
+      "version": "1.8.0",
+      "sha256": "21c095a558ee5ca95319e8777e68810f6946fe9b8411e831c4a4207f02f1133a",
+      "git_blob": "79b3f1242254bc580c7d2447cd2745e5c953a462"
+    },
+    "z3_asset": {
+      "name": "z3-5.4.0-x64-glibc-2.39.zip",
+      "sha256": "708d4c296e01aab4554dd567e46f803efd229140fb646fb51aabb8e2388a2929",
+      "binary_sha256": "e9d7e6e6d76c81b5ea3f06d165fc4cfd8afab92b74cdf94417380b5eed10845d",
+      "libz3_sha256": "901b1def2a4fc2b64e2c347c8e8ad58e054c5c75a9c964a527b7f92002ae2a7d",
+      "version_output": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f"
+    },
+    "driver": {
+      "name": "z3_487",
+      "path": "usr/share/why3/drivers/z3_487.drv",
+      "sha256": "597e853cdee99896af59f14a30b7e02dcb0089a0c7f4b34ad193777eb39d79a1",
+      "git_blob": "136c761995782c5f347d8d833dd6b9a53bc50352",
+      "detection_data_git_blob": "930d648a7195f443dfc733148ee508d1d626f56b"
+    }
+  },
+  "execution": {
+    "host": "Debian 13 x86_64 container",
+    "execution_identity": {
+      "host_uid_gid": "65534:65534",
+      "user_namespace": "unshare -Ur succeeded",
+      "uid_map": "0 65534 1",
+      "chroot": "succeeded; process UID 0 is mapped to host UID 65534, not host root",
+      "network_namespace": "NOT_AVAILABLE; unshare -n returned Operation not permitted"
+    },
+    "isolation": {
+      "filesystem": "Private chroot rooted in a conversation-local directory; no host mounts.",
+      "package": "Candidate Why3 and Z3 trees read-only.",
+      "metadata": "Manual Why3 config read-only.",
+      "writable_paths": "Only private chroot /tmp and private configuration files.",
+      "host_usr_ocaml_path_before_after": "ABSENT / ABSENT",
+      "original_unsafe_shim_executed": false,
+      "host_filesystem_mutation": "NONE_OBSERVED"
+    },
+    "relocation": {
+      "why3_print_libdir": "/usr/lib/x86_64-linux-gnu/ocaml/5.3.0/why3",
+      "why3_print_datadir": "/usr/share/why3",
+      "private_chroot_paths": "Both absolute paths resolve inside the chroot to the validation-only candidate payload; the commands directory and Why3 stdlib directory exist there.",
+      "approach": "Private /usr/lib/.../ocaml/5.3.0 and /usr/share/why3 paths were linked inside the chroot to the candidate package paths. No corresponding host /usr path was created."
+    },
+    "copied_host_runtime_libraries": [
+      {
+        "name": "libc.so.6",
+        "sha256": "fa430b8f298f817a266046af84a77533185ad6fc4406c7d3787b5a0a0c207826"
+      },
+      {
+        "name": "libgcc_s.so.1",
+        "sha256": "30c61ab012a4241bed033725a09b61f5fdd3bb7df95ee852d0b096520524c7af"
+      },
+      {
+        "name": "libgmp.so.10",
+        "sha256": "d15e1585c6c267296459570c8ac217ca9123044bcd4e896d2f686b32333445d2"
+      },
+      {
+        "name": "libm.so.6",
+        "sha256": "6d567d53e895273ca14a1f9dc164fc6c8d39aed2f60aa46a733c2784228915f3"
+      },
+      {
+        "name": "libstdc++.so.6",
+        "sha256": "972bb2a18b71140dab0240f8a1f68ab3fb1d56bcd4c4f824a91b70888faf5a00"
+      },
+      {
+        "name": "libz.so.1",
+        "sha256": "85590dd58edf5445e18bc7193e5ebc01ac5841f1ae187e97705a662e90c6421e"
+      },
+      {
+        "name": "ld-linux-x86-64.so.2",
+        "sha256": "438c546d8e8cc48496bf3a95f753051afd9db66a629a74e31a9ded71586b56e0"
+      }
+    ],
+    "automatic_prover_detection": {
+      "command": "why3 config detect",
+      "exit_code": 0,
+      "output": "Prover Z3 version 5.4.0 is not recognized; three partial prover entries were added with unrecognized version.",
+      "known_z3_versions": "The packaged detection data recognizes Z3 4.8.7 through 4.13.x, not 5.4.0.",
+      "interpretation": "Automatic detection is not accepted as proof of Z3 5.4.0 compatibility."
+    },
+    "manual_prover_configuration": {
+      "config_sha256": "83f22666322805ce642e954b553565ed5cfe55aa4d181d045e0a16b16087e3d4",
+      "config": "[prover]\ncommand = \"'/tools/z3/bin/z3' -smt2 -T:%t sat.random_seed=42 nlsat.randomize=false smt.random_seed=42 -st %f\"\ncommand_steps = \"'/tools/z3/bin/z3' -smt2 sat.random_seed=42 nlsat.randomize=false smt.random_seed=42 -st rlimit=%S %f\"\ndriver = \"z3_487\"\neditor = \"\"\nin_place = false\ninteractive = false\nname = \"Z3\"\nshortcut = \"z3-5.4\"\nversion = \"5.4.0\"\n",
+      "list_provers_output": "Z3 5.4.0",
+      "boundary": "This is an explicit manual configuration using the real Z3 5.4.0 executable and the packaged z3_487 driver. The temporary version-detection experiment was discarded; the final proof configuration does not claim Z3 4.8.7."
+    },
+    "proof_cases": [
+      {
+        "phase": "POS",
+        "input": "pos.mlw",
+        "input_sha256": "38926e688854eabdc359e82a34f2627035585594ca67a606f48bece379b45ec2",
+        "command": "why3 prove --prover Z3,5.4.0 --timelimit 10 --memlimit 1024 /tmp/pos.mlw",
+        "exit_code": 0,
+        "result": "Valid (0.00s, 14 steps)",
+        "stdout_sha256": "f6ea38fd39257509035377ba60d3a2a5602e30fe9be1caae088b1e38f3e9c131",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "elapsed_seconds": 0.27,
+        "max_rss_kib": 43016
+      },
+      {
+        "phase": "NEG",
+        "input": "neg.mlw",
+        "input_sha256": "76f103fabf25f06a812eed5b783a8ad742c4b5612991dd45aa9067ed1f4044ee",
+        "command": "why3 prove --prover Z3,5.4.0 --timelimit 10 --memlimit 1024 /tmp/neg.mlw",
+        "exit_code": 2,
+        "result": "Unknown (sat) (0.00s, 15 steps)",
+        "interpretation": "The negated goal is satisfiable. Preserve Why3's actual `Unknown (sat)` status; do not relabel it as Why3 `Invalid` or as a formally validated counterexample.",
+        "stdout_sha256": "725703d7a413b3214565ea4c16604a7ee65cbc3339846215dbb2e1a387963b25",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "elapsed_seconds": 0.23,
+        "max_rss_kib": 42904
+      },
+      {
+        "phase": "ERR",
+        "input": "err.mlw",
+        "input_sha256": "0a81d9c5738e8072fb1c07019359a9f4acd9c9c5661f3ab7eb996988daf645f1",
+        "command": "why3 prove --prover Z3,5.4.0 --timelimit 10 --memlimit 1024 /tmp/err.mlw",
+        "exit_code": 1,
+        "result": "Why3 parser syntax error",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "3075efac4ad59ee27499fb00b4b55def87022b893ccf40d4d67219e8374aee40",
+        "elapsed_seconds": 0.15,
+        "max_rss_kib": 42624
+      }
+    ],
+    "resources": {
+      "cgroup_memory_max_bytes": 4294967296,
+      "cgroup_cpu_max": "400000 100000",
+      "cpu_affinity": "single CPU (CPU 0)",
+      "why3_time_limit_seconds": 10,
+      "why3_memory_limit_mb": 1024
+    }
+  },
+  "qualification": {
+    "result": "SCOPED_PRIVATE_USERNS_CHROOT_PROOF_ONLY",
+    "t0": "Original archive byte identity and publisher/rights attestation remain separate; validation candidate is not official.",
+    "t1": "No reproducible Why3 build performed.",
+    "t2": "Candidate safe extraction and private user-namespace chroot were exercised, but this is not formal package T2 acceptance.",
+    "t3": "Not promoted. A scoped native Why3/Z3 POS, NEG-sat and ERR replay exists only in this private non-hermetic chroot with manually configured Z3 5.4.0.",
+    "t4": "NOT_ACCEPTED; no current-main Registry/Runner/CLI/MCP/SDK integration.",
+    "t5": "NOT_QUALIFIED; no independent domain-semantic Oracle.",
+    "t6": "OPEN.",
+    "product_release": "NOT_QUALIFIED"
+  },
+  "next": [
+    "Obtain independent Source-First review of this exact evidence file and the manual Z3 5.4.0/z3_487 compatibility boundary.",
+    "Determine whether Why3 1.8.0 officially supports Z3 5.4.0 or requires a newer driver; the successful arithmetic probes do not establish broad compatibility.",
+    "Keep the original unsafe archive quarantined and stale checksum manifest fail-closed.",
+    "Design a reproducible, portable relocation strategy; this user namespace/chroot worked in this conversation's container but unshare -n was unavailable and other hosts may disable unprivileged user namespaces.",
+    "Do not promote T2/T3/T4/T5/T6, Product or Release from this research receipt."
+  ]
+}
