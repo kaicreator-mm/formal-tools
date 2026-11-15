@@ -93,7 +93,6 @@ export const GATE_DEPENDENCIES = Object.freeze({
     "buildToolBlob",
     "metaGeneratorBlob",
     "packagerBlob",
-    "buildRecipeBlob",
     "toolchainFingerprint",
     "rebuiltPackageTreeSha256"
   ]),
