@@ -12,6 +12,15 @@ const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 function uniqueNumericExitAssignments(source) {
   const values = {};
   const lines = source.split(/\r?\n/);
+  // expect.sh is sourced by tool-runner. Restrict every executable line to
+  // a simple EXPECT_* assignment so readonly/declare/typeset/local or shell
+  // commands cannot override values after this static contract check.
+  for (const [index, line] of lines.entries()) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    assert.match(line, /^[\\t ]*(?:export[\\t ]+)?EXPECT_[A-Z0-9_]+=/,
+      "unsupported shell command in sourced expect.sh at line " + (index + 1));
+  }
   for (const phase of ["POS", "NEG", "ERR"]) {
     const name = "EXPECT_" + phase + "_EXIT";
     // Shell permits leading blanks and the export NAME=value form. Count
@@ -86,6 +95,26 @@ test("Storm exit parser rejects missing, wildcard, quoted, and malformed values 
     for (const value of ["*", "'77'"]) {
       const duplicate = fixture + "\n\t" + name + "=" + value + "\n";
       assert.throws(() => uniqueNumericExitAssignments(duplicate), /exactly one assignment/, phase + " malformed duplicate " + value);
+    }
+  }
+});
+
+test("Storm sourced expect.sh rejects shell override commands for every exit phase", () => {
+  const overrides = [
+    name => "readonly " + name + "=77",
+    name => "declare " + name + "=77",
+    name => "typeset " + name + "=77",
+    name => "local " + name + "=77",
+    name => "declare -g " + name + "=77"
+  ];
+  for (const phase of ["POS", "NEG", "ERR"]) {
+    const name = "EXPECT_" + phase + "_EXIT";
+    for (const override of overrides) {
+      assert.throws(
+        () => uniqueNumericExitAssignments(fixture + "\\n" + override(name) + "\\n"),
+        /unsupported shell command/,
+        phase + " " + override(name)
+      );
     }
   }
 });

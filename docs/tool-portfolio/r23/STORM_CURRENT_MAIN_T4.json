@@ -264,7 +264,7 @@
   },
   "pr_base": "d996d168812f51d131b3f3f9c525cc1bd161d087",
   "pr_compare_to_base": {
-    "ahead": 7,
+    "ahead": 9,
     "behind": 0,
     "changed_files": 3
   },
@@ -305,9 +305,9 @@
     "note": "These runs validate the unchanged source/test/evidence content before the current-main metadata-only refresh; new exact-head CI for the metadata refresh is tracked in the PR body."
   },
   "pr_compare_to_current_main": {
-    "measured_at_head": "97a39ec49e32c7f6412a1c25315c3efc6897ca86",
+    "measured_at_head": "71593435328a7fa406c15c8e376229ba6d8084dd",
     "base": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
-    "ahead": 8,
+    "ahead": 9,
     "behind": 32,
     "changed_files": 3,
     "paths": [
@@ -317,7 +317,7 @@
     ],
     "synced": false,
     "merge": "NOT_PERFORMED",
-    "note": "Historical snapshot immediately before the final R54 metadata commit; final live counts are recorded in PR #115 and Issue #54."
+    "note": "Exact final pre-R56 repair HEAD; current main is 32 commits ahead and the delta is disjoint from the three Storm-owned PR paths. Integrator controls any sync/merge."
   },
   "source_to_current_main_compare": {
     "base": "6a069dfee98633b42e625b295f3cc42c74afb414",
@@ -359,12 +359,20 @@
           "NEG",
           "ERR"
         ]
-      }
+      },
+      "new_negative_forms": [
+        "readonly",
+        "declare",
+        "typeset",
+        "local",
+        "declare -g"
+      ],
+      "strict_sourced_grammar": "Only blank/comments and optional-export EXPECT_* assignments; reject all other executable lines."
     },
     "runtime_source_pins": {
       "count": 17,
       "matched": 17,
-      "status": "ALL_MATCH_CURRENT_MAIN_A82",
+      "status": "ALL_17_MATCH_CURRENT_MAIN_0F2141DC",
       "ref": "0f2141dc4dcecacd5a6db72b22c28af447b50b23"
     },
     "native_mjs_impact": "The current-main native.mjs change is pinned but does not participate in the Storm runPortableGate -> tool-runner execution path; no re-execution of the prior POS/NEG/ERR route was necessary.",
@@ -392,7 +400,7 @@
         "sha": "a82b16a985aaa0154234cf491ca6aecdb2b254a9",
         "status": "SUCCESS"
       },
-      "classification": "INTEGRATOR_OWNED; NOT_RECLASSIFIED_BY_THIS_REPAIR",
+      "classification": "INTEGRATOR_CLASSIFIED_INFRASTRUCTURE_FAILURE; ORIGINAL_FAILURE_AND_SAME_SHA_RETRY_PRESERVED",
       "current_main_push_1512": {
         "pipeline": 1512,
         "sha": "a82b16a985aaa0154234cf491ca6aecdb2b254a9",
@@ -402,6 +410,12 @@
         "pipeline": 1526,
         "sha": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
         "status": "SUCCESS"
+      },
+      "integrator_disposition": {
+        "source": "Issue #24 Integrator checkpoint R67/R72; authenticated raw-log triage comment #6897435249",
+        "classification": "INFRASTRUCTURE_FAILURE_CLONE_TLS_UNEXPECTED_EOF_EXIT_128",
+        "same_sha_retry": "#1468 SUCCESS",
+        "note": "Historical #1450 FAILURE remains preserved as the original event; the newer Integrator classification is recorded separately and does not overwrite it."
       }
     },
     "exact_head_ci": "AUTHORITATIVE_FINAL_HEAD_AND_PIPELINE_IDS_RECORDED_EXTERNALLY_IN_PR_BODY_AND_ISSUE_54_CLOSEOUT; NOT_SELF_EMBEDDED",
@@ -411,6 +425,23 @@
       "push": "#1520 SUCCESS",
       "pr": "#1521 SUCCESS",
       "note": "These exact-head checks passed for the first R54 repair commit; a metadata-only follow-up records the successful run without self-referential CI fields."
+    },
+    "r56_repair": {
+      "previous_head": "71593435328a7fa406c15c8e376229ba6d8084dd",
+      "status": "STRICT_SOURCED_SHELL_GRAMMAR_REPAIR",
+      "test_blob_pending": true,
+      "changes": [
+        "Only blank/comment lines or simple EXPECT_* assignments (optionally export) are accepted in the sourced expect.sh fixture.",
+        "Reject readonly, declare, typeset, local, declare -g and arbitrary executable shell commands before exit assignment counting.",
+        "Add per-phase negative controls for all override forms."
+      ],
+      "review_finding": "R55 P1-01: Bash source semantics allowed readonly/declare/local overrides after direct EXPECT_*_EXIT assignments while the JS parser ignored those lines.",
+      "stale_metadata_repairs": {
+        "pr_compare_to_base": "9 ahead / 0 behind / 3 files at exact pre-repair HEAD",
+        "pr_compare_to_current_main": "9 ahead / 32 behind at current main 0f2141dc4dcecacd5a6db72b22c28af447b50b23",
+        "current_main_source_pins": "17/17 exact blobs"
+      },
+      "qualification": "No T4/T5/T6/Product/Release promotion; current-main solver route remains historical evidence only."
     }
   }
 }
