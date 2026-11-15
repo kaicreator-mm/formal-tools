@@ -4,10 +4,19 @@ FT_TOOL_VERSION=6.11.0
 FT_TOOL_KIND=binary
 FT_MAIN_BIN="tools/cbmc/bin/cbmc"
 FT_UPSTREAM_URL="https://github.com/diffblue/cbmc/releases/download/cbmc-6.11.0/ubuntu-24.04-cbmc-6.11.0-Linux.deb"
+# GitHub Release asset 523196902; digest and size independently read from the official release API.
+FT_UPSTREAM_ASSET_ID=523196902
+FT_UPSTREAM_SHA256="b3721aa541038384d7801ea3aeabbcddc3e8845ac8f1cbff637cf8dec7481ac8"
+FT_UPSTREAM_SIZE=73477756
 FT_PROBE=(bin/cbmc --version)
 
 ft_tool_build() {
   local deb; deb=$(ft::fetch "$FT_UPSTREAM_URL")
+  local actual_sha256 actual_size
+  actual_sha256=$(sha256sum "$deb" | awk '{print $1}') || ft::die "CBMC 6.11.0 upstream archive SHA256 could not be computed"
+  actual_size=$(stat -c '%s' "$deb") || ft::die "CBMC 6.11.0 upstream archive size could not be read"
+  [ "$actual_sha256" = "$FT_UPSTREAM_SHA256" ] || ft::die "CBMC 6.11.0 upstream archive SHA256 mismatch: expected $FT_UPSTREAM_SHA256 got $actual_sha256"
+  [ "$actual_size" = "$FT_UPSTREAM_SIZE" ] || ft::die "CBMC 6.11.0 upstream archive size mismatch: expected $FT_UPSTREAM_SIZE got $actual_size"
   ft::deb_extract "$deb" /tmp/cbmcx
   local binp; binp=$(find /tmp/cbmcx -type f -name cbmc | head -1)
   [ -n "$binp" ] || ft::die "cbmc binary not found in deb"
