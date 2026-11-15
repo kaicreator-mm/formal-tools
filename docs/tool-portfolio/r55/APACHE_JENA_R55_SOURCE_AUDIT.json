@@ -1,10 +1,9 @@
 {
-  "schema": "formal-tools/i24-apache-jena-r55-source-native-replay/1.0",
+  "schema": "formal-tools/i24-apache-jena-r55-source-native-replay/1.1",
   "output_label": "FORMAL_TOOLS_I24_APACHE_JENA_R55_SOURCE_NATIVE_REPLAY",
   "repository": "kaicreator-mm/formal-tools",
   "main_issue": 24,
   "tool_issue": 27,
-  "exact_main": "d996d168812f51d131b3f3f9c525cc1bd161d087",
   "source_archive": {
     "drive_file_id": "1YSoQtIQmRExE5x-QjB8Ifno9Xmrk28NZ",
     "size_bytes": 22751175,
@@ -34,7 +33,65 @@
     "sha256": "6b6a49937874efc19651883d681f965ef6bedcc3c0fdbc761c24b0b9c8fd1ec2",
     "zip_entries": 45,
     "sha256sum_entries": 43,
-    "drive_readback_verified": true
+    "drive_readback_verified": true,
+    "legacy_native_sha256_manifest": {
+      "path": "native/SHA256SUMS",
+      "portability": "NON_PORTABLE_ABSOLUTE_WORKSPACE_PATHS",
+      "disposition": "Preserved byte-for-byte as historical receipt evidence; do not use as a relocatable sha256sum -c manifest."
+    },
+    "portable_native_sha256_manifest": {
+      "schema": "formal-tools/portable-sha256-manifest/1.0",
+      "entries": [
+        {
+          "path": "native/err.stdout",
+          "size_bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "native/neg.stdout",
+          "size_bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "native/pos.stdout",
+          "size_bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "native/err.stderr",
+          "size_bytes": 738,
+          "sha256": "753bd342a4d5b84299945e85691bd1e60cae7ed26ef04d0521ed3ad294d49500"
+        },
+        {
+          "path": "native/neg.stderr",
+          "size_bytes": 76,
+          "sha256": "864c1be44b64d8413d7d294252684106aff07f8750a5f44f631675e97b0884f6"
+        },
+        {
+          "path": "native/pos.stderr",
+          "size_bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "native/err.exit",
+          "size_bytes": 2,
+          "sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+        },
+        {
+          "path": "native/neg.exit",
+          "size_bytes": 2,
+          "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+        },
+        {
+          "path": "native/pos.exit",
+          "size_bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        }
+      ],
+      "canonical_entries_sha256": "a51e2bf89560b7edfb5d2fa745715a5a8e138692343da710b9807acf09c78a3c",
+      "path_semantics": "Paths are relative to the root of the evidence ZIP and can be verified after extraction at any location.",
+      "source": "Recomputed from the 9 native payload files in the exact immutable evidence ZIP; each digest matches the outer root SHA256SUMS."
+    }
   },
   "archive_safety": {
     "zstd_test": 0,
@@ -47,47 +104,73 @@
     "hardlinks": 0,
     "special_files": 0,
     "unsafe_paths": 0,
-    "nonroot_extract": 0,
     "extracted_entries": 305,
-    "all_entries_owned_by_65534": true
+    "writer_reported_nonroot_extract_exit": 0,
+    "writer_reported_all_entries_owned_by_65534": true,
+    "independent_reviewer_replay": {
+      "uid_gid": "65534:65534",
+      "extracted_entries": 305,
+      "all_entries_owned_by_65534": true,
+      "result": "PASS_SCOPED",
+      "reference": "PR #131 review comment 5911529316"
+    }
   },
   "native": {
-    "riot_version": "5.5.0",
+    "route": "Direct original Apache Jena 5.5.0 RIOT CLI; POS/ERR from immutable R55 receipt and NEG from supplemental R58 replay; not current-main Runner/CLI/MCP/SDK",
     "uid_gid": "65534:65534",
-    "pos": {
-      "exit": 0,
-      "stderr": ""
-    },
-    "neg": {
-      "exit": 1,
-      "stderr": "Undefined prefix: rdfs"
-    },
-    "err": {
-      "exit": 2,
-      "stderr": "Not found: does-not-exist.ttl"
+    "version": "5.5.0",
+    "cases": {
+      "pos": {
+        "exit": 0,
+        "stderr": "",
+        "provenance": "immutable R55 evidence ZIP; independently reproduced by R58 reviewer"
+      },
+      "neg": {
+        "exit": 1,
+        "diagnostic": "Triples not terminated properly in []-list",
+        "stderr_sha256": "723f247a502b22c5d290e7c175554b0c3f3bbfc186f7209af88d2d75ec7fd3ed",
+        "fixture_blob": "0f90187e40638af0f504b77ee5aad6ead04740e8",
+        "provenance": "R58 post-review direct native replay as UID/GID 65534:65534"
+      },
+      "err": {
+        "exit": 2,
+        "stderr": "Not found: does-not-exist.ttl",
+        "provenance": "immutable R55 evidence ZIP; independently reproduced by R58 reviewer"
+      }
     }
   },
   "proposed_fixes": {
     "builder_blob": "02afc9c66a74f4d11fa46f92c6e0165dd598d954",
-    "expect_blob": "a73bd895a41ace7dba5d5b1768da091b5abeda30",
-    "source_test_blob": "3bddfb70cadb45b0d9cc5977b398102d12b0cbe0",
-    "fixture_test_blob": "506c93d34061a77bd9b64c23e0cd2b166742a06c",
-    "local_tests": "7/7 PASS",
+    "expect_blob": "efc961e667e8272bf2bcf5d61ddd5add35900502",
+    "source_test_blob": "46a3b459fcd9dae0bc8aea4e8e13b8d396a68347",
+    "fixture_test_blob": "5ad621457c24791b193119d0cd69c139e1beb86d",
+    "local_tests": "8/8 PASS (Node v22.16.0)",
     "shell_syntax": "bash -n PASS",
-    "shim_replay": "PASS_SCOPED writer-side reconstructed generated-shim replay; bundled Java21 selected with host java shadowed"
+    "shim_replay": "PASS_SCOPED writer-side reconstructed generated-shim replay; bundled Java21 selected with host java shadowed",
+    "neg_fixture_blob": "0f90187e40638af0f504b77ee5aad6ead04740e8",
+    "review_findings": {
+      "P2-01": "FIXED: uniqueness parser trims leading whitespace and normalizes optional export before counting assignments; tests reject duplicate, leading-space, tab-indented and export overrides.",
+      "P2-02": "FIXED: environment.txt is explicitly labelled collector UID/GID 0:0 only; writer-reported operation identity is separated from independently reviewer-replayed UID/GID 65534:65534.",
+      "P2-03": "FIXED: original absolute-path nested manifest is preserved and labelled non-portable; a 9-entry relative-path SHA256 manifest is embedded and its canonical hash is pinned.",
+      "P2-04": "FIXED: ambiguous exact_main removed; historical evidence baseline, PR base and latest main snapshot/#1450 status are separate fields.",
+      "P2-05": "FIXED: NEG fixture now declares rdfs prefix and reaches the intended malformed []-list syntax error; direct native replay as UID/GID 65534 returned exit 1 with exact diagnostic."
+    },
+    "status": "REVIEW_REWORK_ITEMS_FIXED_PENDING_FRESH_INDEPENDENT_REVIEW_AND_EXACT_HEAD_CI"
   },
   "current_main": {
     "runner_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
     "meta_generator_blob": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
     "current_package_meta": "TOOL_TOOL_ID=apache-jena",
-    "runner_requires": "TOOL_ID"
+    "runner_requires": "TOOL_ID",
+    "snapshot_commit": "250d20ec782785f13d4d027f7ab79e005feacc76",
+    "builder_blob": "c19e50c54f0b7922fd8b152a13d11118efa0e6d3"
   },
   "qualification": {
-    "T0": "PASS_SCOPED_CURRENT_DRIVE_ARCHIVE_HASH_MATCHES_PRODUCER_MANIFEST; official SHA512 sidecar pinned in proposed builder; full T0 pending license inventory and publisher-byte rebuild",
+    "T0": "PASS_SCOPED_CURRENT_DRIVE_ARCHIVE_HASH_MATCHES_PRODUCER_MANIFEST; official SHA512 sidecar pinned; full T0 pending complete license inventory and publisher-byte rebuild/signature",
     "T1": "NOT_QUALIFIED; no upstream asset bytes/build",
-    "T2": "PASS_SCOPED_ZSTD_TAR_PREFLIGHT_AND_NONROOT_EXTRACTION_ONLY",
-    "T3": "PASS_SCOPED_DIRECT_NATIVE_POS_NEG_ERR; independently replayed as UID/GID 65534 with host OpenJDK 21.0.12.1; no current Runner/CLI/MCP/SDK qualification.",
-    "T4": "NOT_ACCEPTED; legacy TOOL_TOOL_ID; no current Runner/CLI/MCP/SDK run",
+    "T2": "PASS_SCOPED_ZSTD_TAR_PREFLIGHT_AND_NONROOT_EXTRACTION; independent reviewer verified UID/GID 65534:65534 extraction",
+    "T3": "PASS_SCOPED_DIRECT_NATIVE_POS_NEG_ERR; original evidence retained, corrected malformed-syntax NEG independently replayed as UID/GID 65534:65534; not current Runner/CLI/MCP/SDK",
+    "T4": "NOT_ACCEPTED; current package meta.sh uses TOOL_TOOL_ID and current Runner requires TOOL_ID; no current Runner/CLI/MCP/SDK run",
     "T5": "NOT_QUALIFIED",
     "T6": "OPEN",
     "Product": "NOT_QUALIFIED",
@@ -97,13 +180,18 @@
     "P0": 0,
     "P1": 0,
     "P2": 0,
-    "P1_detail": "R57 review P1 bundled-Java shim regression and P2 duplicate-assignment test gaps are repaired in this revision; official upstream .tar.gz bytes not fetched remains a T1 qualification limitation, not a code finding."
+    "status": "ALL_FIVE_R58_P2_ITEMS_REPAIRED_PENDING_FRESH_REVIEW",
+    "previous_review": "REWORK P0=0 P1=0 P2=5",
+    "repaired_head": "PENDING_FINAL_COMMIT_HEAD",
+    "detail": "See proposed_fixes.review_findings; no T1/T4/T5/T6/Product/Release promotion."
   },
   "limitations": [
-    "Official .tar.gz bytes not fetched; sidecar SHA512 is not a PGP signature verification.",
+    "Official .tar.gz bytes not fetched; the Apache SHA512 sidecar is not a PGP signature verification.",
     "No T1 source build or current Runner/CLI/MCP/SDK route.",
-    "Full third-party license inventory and T5/T6/Product/Release remain open.",
-    "Bundled Java21 shim replay validates the generated run shim directly only; no current tool-runner run or full CLI/MCP/SDK T4 route."
+    "The evidence ZIP environment.txt is a root collector-context snapshot, not an execution identity; non-root operation identity is independently replayed and separately recorded.",
+    "The nested native/SHA256SUMS retains absolute workspace paths; the supplemental portable relative-path manifest is the relocatable verification source.",
+    "Current main push #1450 remains FAILURE_UNCLASSIFIED; branch sync and merge are blocked pending authenticated first-failure triage and a green main.",
+    "Full third-party license inventory and T5/T6/Product/Release remain open."
   ],
   "bundled_java_shim_replay": {
     "status": "PASS_SCOPED_WRITER_SIDE_REPLAY",
@@ -157,5 +245,78 @@
       }
     },
     "interpretation": "The shim-selected bundled Java 21 runtime is usable when host java is shadowed by a failing stub; version and native POS/NEG/ERR outcomes are correct. This validates the Java environment setup in the generated shim only. Current tool-runner run, metadata, CLI/MCP/SDK integration remain untested and T4 is not granted."
+  },
+  "historical_evidence_baseline": {
+    "commit": "d996d168812f51d131b3f3f9c525cc1bd161d087",
+    "role": "ORIGINAL_R55_EVIDENCE_SOURCE_SNAPSHOT",
+    "note": "Historical source snapshot used by original R55 evidence; not the PR base and not the latest main."
+  },
+  "pr_base_at_review": "8fa74a38e0af0a4fe8db83bd4598c4ea767550c2",
+  "current_main_snapshot": {
+    "commit": "250d20ec782785f13d4d027f7ab79e005feacc76",
+    "push_pipeline": 1450,
+    "push_status": "FAILURE_UNCLASSIFIED",
+    "sync_merge_status": "BLOCKED_UNTIL_AUTHENTICATED_FIRST_FAILURE_TRIAGE_AND_GREEN_MAIN",
+    "note": "Do not infer infrastructure/source cause and do not sync or merge while #1450 is unclassified."
+  },
+  "environment": {
+    "collector_snapshot": {
+      "file": "environment.txt",
+      "uid_gid": "0:0",
+      "role": "COLLECTOR_CONTEXT_ONLY",
+      "execution_identity": false,
+      "note": "The ZIP environment.txt records the process that collected the evidence bundle; it does not prove the UID/GID used for extraction or native execution."
+    },
+    "original_writer_reported_operations": {
+      "extraction_uid_gid": "65534:65534",
+      "execution_uid_gid": "65534:65534",
+      "provenance": "Writer receipt claim; not derivable from environment.txt alone."
+    },
+    "independent_reviewer_replay": {
+      "uid_gid": "65534:65534",
+      "extraction_uid_gid": "65534:65534",
+      "native_execution_uid_gid": "65534:65534",
+      "result": "PASS_SCOPED",
+      "reference": "PR #131 review comment 5911529316"
+    }
+  },
+  "historical_native_execution": {
+    "riot_version": "5.5.0",
+    "uid_gid": "65534:65534",
+    "pos": {
+      "exit": 0,
+      "stderr": ""
+    },
+    "neg": {
+      "exit": 1,
+      "stderr": "Undefined prefix: rdfs"
+    },
+    "err": {
+      "exit": 2,
+      "stderr": "Not found: does-not-exist.ttl"
+    },
+    "disposition": "Original immutable ZIP receipt retained unchanged. Its NEG parse error was caused by the missing rdfs prefix and is superseded as the intended malformed-syntax control by post_review_negative_replay."
+  },
+  "fixtures": {
+    "neg_blob": "0f90187e40638af0f504b77ee5aad6ead04740e8",
+    "neg_expected_diagnostic": "Triples not terminated properly in []-list",
+    "neg_expected_diagnostic_status": "REPRODUCED_AFTER_DECLARING_RDFS_PREFIX",
+    "neg_historical_diagnostic": "Undefined prefix: rdfs",
+    "neg_historical_disposition": "Original ZIP replay is retained unchanged; corrected fixture replay supersedes its generic parse failure as the intended malformed-syntax control."
+  },
+  "post_review_negative_replay": {
+    "status": "PASS_SCOPED",
+    "route": "Direct original Apache Jena 5.5.0 RIOT CLI; not current Runner/CLI/MCP/SDK",
+    "source_archive_sha256": "6cf2dff4e97a946534428c679af7da4c80e832a0e496f3f6306114118a432855",
+    "fixture_blob": "0f90187e40638af0f504b77ee5aad6ead04740e8",
+    "uid_gid": "65534:65534",
+    "uid_probe_stdout": "65534\n65534\n",
+    "uid_probe_stdout_sha256": "00c30f68d8a92fb7b770ac1f22074f731bf70ba0b6b9cb4679e3225c362f727f",
+    "java": "OpenJDK 21.0.12.1 host runtime",
+    "command": "riot --validate tests/apache-jena/neg.ttl",
+    "exit": 1,
+    "stderr_excerpt": "[line: 4, col: 18] Triples not terminated properly in []-list",
+    "stderr_sha256": "723f247a502b22c5d290e7c175554b0c3f3bbfc186f7209af88d2d75ec7fd3ed",
+    "stderr_sha256_note": "Raw stderr includes a wall-clock timestamp; hash is for the exact captured stderr bytes in this replay."
   }
 }
