@@ -57,8 +57,8 @@
     },
     "tests": {
       "path": "tests/highs-typed-operation.test.mjs",
-      "git_blob": "0712e3600d63580223f6bbeabe75aa553b353349",
-      "scope": "synthetic pinned Runner transport/wiring and deterministic failure modes; CLI raw-file duplicate-key/FIFO/symlink/size checks; MCP decoded-object schema; committed executable fake-highspy regression invokes the exact Python solve-lp.py under Python 3.13.5 with value_valid=false and a col_value property that raises if consumed; not a real Highs process"
+      "git_blob": "1c9958269abf5290d4073a354025aa2e2cec01d3",
+      "scope": "synthetic pinned Runner transport/wiring and deterministic failure modes; CLI raw-file duplicate-key/FIFO/symlink/size checks; MCP decoded-object schema; executable fake-highspy regression invokes the exact Python solve-lp.py under canonical Python 3.13.5 with value_valid=false and a col_value property that raises if consumed; not a real Highs process"
     },
     "parity_test": {
       "path": "tests/tool-contract-parity.test.mjs",
@@ -124,7 +124,7 @@
   "validation": {
     "source_static_review": "P2_REPAIRS_IMPLEMENTED; executable fake-highspy invalid-solution regression committed; fresh independent Source-First review of current exact HEAD required",
     "unit_and_ci": "Prior exact HEAD 45e4344fb1663e83bd11aa200f1d1b4353e19748: Woodpecker push #974 and PR #975 SUCCESS; Node 24.21.0 tests/typecheck/CLI gates passed. Current revision status is authoritative in the GitHub commit status contexts; this JSON does not self-assert a result for the commit that updates it.",
-    "synthetic_runner_test": "Prior exact HEAD: 358 tests, 357 pass, 0 fail, 1 intentionally skipped; current revision adds an executable fake-highspy invalid-solution regression, with its actual execution result bound to current Woodpecker/local receipts. Synthetic Runner coverage remains transport/wiring only, not native execution.",
+    "synthetic_runner_test": "Prior exact HEAD: 358 tests, 357 pass, 0 fail, 1 intentionally skipped. Current revision adds a Python 3.13.5 fake-highspy invalid-solution regression; exact execution result is reported by the current revision's CI/local receipt. Synthetic Runner coverage remains transport/wiring only, not native execution.",
     "actual_original_highspy_1151_pos_neg_err": "R19_SCOPED_NATIVE_PASS_USING_HOST_PYTHON_3.13.5_SUBSTITUTE",
     "actual_typed_operation_host_substitute": "PASS_SCOPED: exact solve-lp.py SHA256 6b43add5fbb8dc3b2aa65b951f85d9ee41f7827921d8d624588fe3aaae339136 executed against original Highs archive SHA256 ea0a12198f986f9fd03c7a29525d7f93c64e39c51525492bf3fc37e0bc7815a2 with host CPython 3.13.5 and NumPy 2.3.5; POS kOptimal objective=3; NEG kInfeasible; duplicate JSON, reversed bounds and NaN rejected; synthetic highspy stub proves value_valid=false and API Warning fail closed; NOT canonical portable-runtime evidence",
     "actual_typed_operation_against_canonical_portable_python_runtime": "PASS_SCOPED at 48d5988364209ca5d81ee621f6421a7c8052b752: canonical Drive Runtime SHA256 1dbbc431b578da5139c8f1993d5c138582dee577804fca9e85936b490606f1d5, actual Python 3.13.5 / NumPy 2.5.4 / highspy 1.15.1; original core bin/tool-runner run typed POS kOptimal objective=3 variables=[1,0], NEG kInfeasible, reversed bounds/duplicate key/NaN rejected; 5/5 cases pass",
