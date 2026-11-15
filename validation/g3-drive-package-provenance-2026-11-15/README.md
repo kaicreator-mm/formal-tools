@@ -4,14 +4,14 @@
 
 **Byte identity reconciled for the exact original Z3 5.4.0 and cvc5 1.4.2 packages used by the existing G3 Native receipt.**
 
-The exact original `App/packages/tools` archives were downloaded from Google Drive as raw bytes, hashed locally, checked against the same Drive `SHA256SUMS` manifest, tested with `zstd -t`, listed before extraction, and only then selectively extracted. The executable SHA256 values and version probes match the original `validation/ads24-native-2026-11-13/NATIVE_PAIR.json` pins.
+The exact original `App/10-formal-tools/portable/tools` archives were downloaded from Google Drive as raw bytes, hashed locally, checked against the same Drive `SHA256SUMS` manifest, tested with `zstd -t`, listed before extraction, and only then selectively extracted. The executable SHA256 values and version probes match the original `validation/ads24-native-2026-11-13/NATIVE_PAIR.json` pins.
 
 This is a byte-provenance reconciliation, **not a new solver run** and not a promotion to trusted tool, Host, Oracle, Solution or Replay qualification.
 
 ## Exact artifact chain
 
 Drive location:
-- Original package root: `App/packages` folder ID `1DsQtN4Ei3F8YGyDxUGiXCWNuIU8mS2wp`
+- Portable root: `App/10-formal-tools/portable` folder ID `1DsQtN4Ei3F8YGyDxUGiXCWNuIU8mS2wp` (Drive metadata: folder name `portable`, parent `10-formal-tools`, grandparent `App`)
 - `tools/` folder ID `1rIJ315fjiXtJEPk9mjXP2Kzty4V3n3nZ`
 - `SHA256SUMS` file ID `1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1`
 - Manifest SHA256: `671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64`
@@ -48,7 +48,7 @@ Drive also contains similarly named ZIP packages:
 - Z3 `z3-5.4.0-x64-glibc-2.39.zip`: archive SHA differs from NATIVE_PAIR, although its contained Z3 executable SHA happens to match.
 - cvc5 `cvc5-Linux-x86_64-libcxx-static.zip`: archive SHA and executable SHA both differ from NATIVE_PAIR, despite the same 1.4.2 version label.
 
-Those ZIPs were **not** used for reconciliation. The exact original `.tar.zst` files under `App/packages/tools` are the receipt-matching artifacts. Do not substitute packages by version label alone.
+Those ZIPs were **not** used for reconciliation. The exact original `.tar.zst` files under `App/10-formal-tools/portable/tools` are the receipt-matching artifacts. Do not substitute packages by version label alone.
 
 ## Environment and limits
 
