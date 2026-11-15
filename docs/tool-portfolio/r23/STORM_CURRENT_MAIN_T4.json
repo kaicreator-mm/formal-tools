@@ -82,7 +82,10 @@
     },
     "same_sha_followup_push_sha": "250d20ec782785f13d4d027f7ab79e005feacc76",
     "push_1450_sha": "250d20ec782785f13d4d027f7ab79e005feacc76",
-    "status_classification_owner": "MAIN_ISSUE_24_INTEGRATOR; THIS_TOOL_REPAIR_PRESERVES_HISTORICAL_1450_FAILURE_AND_1468_SAME_SHA_SUCCESS_RECORDS_WITHOUT_RECLASSIFICATION"
+    "status_classification_owner": "MAIN_ISSUE_24_INTEGRATOR; THIS_TOOL_REPAIR_PRESERVES_HISTORICAL_1450_FAILURE_AND_1468_SAME_SHA_SUCCESS_RECORDS_WITHOUT_RECLASSIFICATION",
+    "latest_observed_push_pipeline": 1512,
+    "latest_observed_push_status": "SUCCESS",
+    "latest_observed_push_sha": "a82b16a985aaa0154234cf491ca6aecdb2b254a9"
   },
   "package": {
     "drive_file_id": "1r38Hl46oPr_Y1WP-0CQJClBCPwFNBWD6",
@@ -379,7 +382,13 @@
       },
       "classification": "INTEGRATOR_OWNED; NOT_RECLASSIFIED_BY_THIS_REPAIR"
     },
-    "exact_head_ci": "PENDING",
-    "fresh_independent_review": "PENDING"
+    "exact_head_ci": "AUTHORITATIVE_FINAL_HEAD_AND_PIPELINE_IDS_RECORDED_EXTERNALLY_IN_PR_BODY_AND_ISSUE_54_CLOSEOUT; NOT_SELF_EMBEDDED",
+    "fresh_independent_review": "PENDING_AFTER_FINAL_EXACT_HEAD_DUAL_CI",
+    "intermediate_exact_head_ci": {
+      "head": "da6b4a85c8542206f189032574111f7e4bc8957b",
+      "push": "#1520 SUCCESS",
+      "pr": "#1521 SUCCESS",
+      "note": "These exact-head checks passed for the first R54 repair commit; a metadata-only follow-up records the successful run without self-referential CI fields."
+    }
   }
 }
