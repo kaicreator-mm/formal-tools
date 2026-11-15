@@ -1,12 +1,12 @@
 {
   "schema": "formal-tools/i24-highs-typed-operation/1.0",
-  "output_label": "FORMAL_TOOLS_I24_TOOL_INTEGRATION_CONTINUE",
+  "output_label": "FORMAL_TOOLS_I24_R20_CI_DIAGNOSE_AND_CLOSE",
   "date": "2026-11-15",
   "repository": "kaicreator-mm/formal-tools",
   "pr": 96,
   "branch": "feat/i24-highspy-typed-lp-operation-r20",
   "base_main_sha": "9a997e980c4f3202620f189eb9c935b941b57f1e",
-  "reviewed_head_before_this_document": "f586dec55d4be443806583cd8a2df2f9230f05bc",
+  "reviewed_head_before_this_document": "48d5988364209ca5d81ee621f6421a7c8052b752",
   "issue_scope": {
     "portfolio": 24,
     "tool": 38,
@@ -57,7 +57,7 @@
     },
     "tests": {
       "path": "tests/highs-typed-operation.test.mjs",
-      "git_blob": "794115c6eda958d75458f8e4bc2201844d8f6d9e",
+      "git_blob": "16f4a80e8ef8d12dbcf5f4e245e47165d059f1be",
       "scope": "synthetic pinned Runner; CLI FIFO/duplicate JSON; SDK/CLI/MCP stdio wiring; runner timeout/output/version failures; not a real Highs process"
     },
     "parity_test": {
@@ -118,15 +118,102 @@
   },
   "validation": {
     "source_static_review": "P2_REPAIRS_IMPLEMENTED; FRESH_INDEPENDENT_SOURCE_FIRST_REVIEW_PENDING",
-    "unit_and_ci": "NOT_PASS; previous exact repair head f586dec55d4be443806583cd8a2df2f9230f05bc Woodpecker push #964 and PR #965 both FAILURE; first failing step/log inaccessible from this session; root cause UNKNOWN",
-    "synthetic_runner_test": "EXPANDED_POS_NEG_ERR_AND_FAILURE_PATH_TESTS_COMMITTED; NOT_EXECUTED_BY_SUCCESSFUL_CI",
+    "unit_and_ci": "LOCAL_LINUX_NODE_24.21.0_PASS at 48d5988364209ca5d81ee621f6421a7c8052b752: npm ci, complete Node tests, TypeScript typecheck and all five CI CLI commands exit 0. Woodpecker #966/#967 first-failure root cause diagnosed as tests/highs-typed-operation.test.mjs:94 TS2322; final exact-head Woodpecker push/PR remain PENDING",
+    "synthetic_runner_test": "PASS_SCOPED_NODE_24.21.0: 358 tests, 357 pass, 0 fail, 1 intentionally skipped; synthetic Runner coverage is transport/wiring only and is not native execution",
     "actual_original_highspy_1151_pos_neg_err": "R19_SCOPED_NATIVE_PASS_USING_HOST_PYTHON_3.13.5_SUBSTITUTE",
     "actual_typed_operation_host_substitute": "PASS_SCOPED: exact solve-lp.py SHA256 6b43add5fbb8dc3b2aa65b951f85d9ee41f7827921d8d624588fe3aaae339136 executed against original Highs archive SHA256 ea0a12198f986f9fd03c7a29525d7f93c64e39c51525492bf3fc37e0bc7815a2 with host CPython 3.13.5 and NumPy 2.3.5; POS kOptimal objective=3; NEG kInfeasible; duplicate JSON, reversed bounds and NaN rejected; synthetic highspy stub proves value_valid=false and API Warning fail closed; NOT canonical portable-runtime evidence",
-    "actual_typed_operation_against_canonical_portable_python_runtime": "NOT_RUN: Drive runtime archive is 294346075 bytes, exceeding the connector 268435456-byte raw-download limit; exact Python version available locally is host substitute, not relocated bundle",
-    "full_cli_mcp_sdk_real_highs_e2e": "NOT_RUN; source tests use a synthetic pinned Runner and are not native execution",
-    "independent_source_first_review": "REWORK on prior exact HEAD 07d5393ea05a19798946b9c234fef0dd0539ed1d (P0=0/P1=0/P2=6); repairs committed; fresh review of current merge head pending",
-    "woodpecker_push_and_pr_exact_sha": "REPAIR HEAD f586dec55d4be443806583cd8a2df2f9230f05bc: push #964 FAILURE and PR #965 FAILURE; first failing step/root cause UNKNOWN; do not blind retry",
-    "local_model_environment": "Python 3.13.5 and Node 22.16.0 available; container.exec ClientError; actual typed Python script tested locally with exact source SHA and original Highs archive, but no Node 24.21.0 or complete portable Python bundle in this session"
+    "actual_typed_operation_against_canonical_portable_python_runtime": "PASS_SCOPED at 48d5988364209ca5d81ee621f6421a7c8052b752: canonical Drive Runtime SHA256 1dbbc431b578da5139c8f1993d5c138582dee577804fca9e85936b490606f1d5, actual Python 3.13.5 / NumPy 2.5.4 / highspy 1.15.1; original core bin/tool-runner run typed POS kOptimal objective=3 variables=[1,0], NEG kInfeasible, reversed bounds/duplicate key/NaN rejected; 5/5 cases pass",
+    "full_cli_mcp_sdk_real_highs_e2e": "PASS_SCOPED at 48d5988364209ca5d81ee621f6421a7c8052b752: 18/18 environment+SDK+CLI+MCP stdio assertions in Debian 13 with canonical Node 22.16.0 and the same canonical Python Runtime; UID 65534, network NONE, bundle READ_ONLY; real positive, infeasible and fail-closed boundaries; independent T4 acceptance and T5 remain ungranted",
+    "independent_source_first_review": "REWORK on prior exact HEAD 07d5393ea05a19798946b9c234fef0dd0539ed1d (P0=0/P1=0/P2=6); repairs and real portable execution complete; fresh non-Writer review of the final exact HEAD is still required",
+    "woodpecker_push_and_pr_exact_sha": "PRIOR HEAD 7614ef075587f8049a07446687772322ee9a10c4: push #966 step 25189 and PR #967 step 25191 both FAILURE exit 2 at npm run typecheck after clone/npm ci/Node tests passed; error TS2322 Type 'void' is not assignable to type 'number' at tests/highs-typed-operation.test.mjs(94,80). Source-test type defect repaired by 48d5988364209ca5d81ee621f6421a7c8052b752; no blind retry; final HEAD CI PENDING",
+    "local_model_environment": "Authoritative local Linux gates used an isolated woodpecker-agent-local:v3.20.1 container with Node 24.21.0. Real portable E2E used Debian 13 with canonical Node 22.16.0 and canonical Python 3.13.5, never Host Python substitute evidence"
+  },
+  "ci_diagnosis": {
+    "prior_exact_head": "7614ef075587f8049a07446687772322ee9a10c4",
+    "push_pipeline": 966,
+    "pr_pipeline": 967,
+    "push_failed_step_id": 25189,
+    "pr_failed_step_id": 25191,
+    "failed_step": "formal-js-source-and-finite-model",
+    "failed_command": "npm run typecheck",
+    "exit_code": 2,
+    "root_cause_class": "SOURCE_TEST_TYPESCRIPT_DEFECT",
+    "root_cause": "The throwing timeoutS getter was inferred as void instead of number at tests/highs-typed-operation.test.mjs:94",
+    "not_infrastructure_failure": true,
+    "clone_npm_ci_and_node_tests_before_typecheck": "PASS on both pipelines; Node tests were 357 pass / 0 fail / 1 skip",
+    "repair_head": "48d5988364209ca5d81ee621f6421a7c8052b752",
+    "repair": "Use assert.fail in the throwing getter; its never return type satisfies the numeric accessor contract without changing runtime behavior",
+    "blind_retry": false
+  },
+  "real_portable_execution": {
+    "source_head": "48d5988364209ca5d81ee621f6421a7c8052b752",
+    "source_scope": "Exact clean Git bundle checkout; typed Python source SHA256 6b43add5fbb8dc3b2aa65b951f85d9ee41f7827921d8d624588fe3aaae339136",
+    "drive_manifest_sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64",
+    "assets": [
+      {
+        "name": "python313-3.13.5-linux-x86_64.tar.zst",
+        "drive_id": "1zmyt4xVpJ8eyXZlN9xWljBkyQal5rpyX",
+        "size_bytes": 294346075,
+        "sha256": "1dbbc431b578da5139c8f1993d5c138582dee577804fca9e85936b490606f1d5",
+        "zstd_test": "PASS",
+        "safe_archive_preflight": "PASS"
+      },
+      {
+        "name": "highs-1.15.1-linux-x86_64.tar.zst",
+        "drive_id": "19SGQTJynASZc3-wgIHG5PqMVdHCHtOV_",
+        "size_bytes": 2284374,
+        "sha256": "ea0a12198f986f9fd03c7a29525d7f93c64e39c51525492bf3fc37e0bc7815a2",
+        "zstd_test": "PASS",
+        "safe_archive_preflight": "PASS"
+      },
+      {
+        "name": "formal-tools-portable-core-linux-x86_64.tar.zst",
+        "drive_id": "1xEUgLSTDO6xj8ij_hvAgnHkOeq2aMrl7",
+        "size_bytes": 27989,
+        "sha256": "fe9699e6ba503d94826551bc8e82c70c7c267191a89a6a14941e3551e2b23990",
+        "zstd_test": "PASS",
+        "safe_archive_preflight": "PASS"
+      }
+    ],
+    "canonical_node22": {
+      "version": "22.16.0",
+      "sha256": "29891eeb165b0e38ff04089d98efc9408a6bd607a3251896f036932534ebf394",
+      "provenance": "Existing CC-LAN200 canonical package cache, reverified against the fresh Drive SHA256SUMS before extraction",
+      "purpose": "Debian/glibc interface host; Node 24.21.0 source and CLI gates are recorded separately"
+    },
+    "runtime_observed": {
+      "python": "3.13.5",
+      "numpy": "2.5.4",
+      "highspy": "1.15.1",
+      "host_python_substitute": false
+    },
+    "original_core_runner": {
+      "sha256": "d232a39e4ec99b745918f6ea7d206df488b9ffc3f37a5d11012fc9651c0a9c2e",
+      "scope": "Original core bin/tool-runner run for this typed operation; not an R13 runner_schema 0.2 verify receipt and not a new original-tar T3 count"
+    },
+    "direct_runner": {
+      "status": "PASS_SCOPED",
+      "cases": 5,
+      "positive": "exit 0, kOptimal, objective 3, variables [1,0]",
+      "negative": "exit 0, kInfeasible, objective null, variables []",
+      "errors": "reversed bounds exit 2; duplicate JSON key exit 2; NaN exit 2",
+      "log_sha256": "6007bb5b32c35ed4ad6d2c01fbb98ea2dc64180d79031956fee617c19c27ce72"
+    },
+    "interfaces": {
+      "status": "PASS_SCOPED",
+      "assertions": 18,
+      "sdk": "positive, infeasible, reversed bounds/zero timeout rejection, Runner pin mismatch fail closed",
+      "cli": "positive, infeasible, duplicate key, NaN, reversed bounds, FIFO, symlink and oversized-file rejection",
+      "mcp_stdio": "13 tools listed; positive, infeasible, reversed bounds, extra argv and zero timeout rejection",
+      "isolation": "Debian 13; UID/GID 65534; network NONE; read-only bundle; capabilities dropped; no-new-privileges",
+      "summary_sha256": "57b685f23862621d77d7f69aa8f8504add2313c5eb5a53103e4a58baf62c250a",
+      "events_sha256": "56423d5974d496a1a5add40f823fcba6bbd3e6ce529a7fd00fe1454d4aa47eba",
+      "driver_sha256": "0802bd628f93f66d4d03b68c0883f3cebc0dd89be4328bd78d75fadac27954ff"
+    },
+    "evidence_index_sha256": "8f3f03b5aeb00f1b896a9735bf9dfc01c61f3ea2172e4f1c918dec21356092f2",
+    "asset_validation_log_sha256": "4e89488bc746b5b28df718a4442c64afe31a30e50807274d49928459e20cca80",
+    "node24_test_log_sha256": "fe68a5682f06b0d475e6332912bee92b633864ede7a2e03b15daf89d945053fa",
+    "qualification_boundary": "Real technical execution only; independent Source-First acceptance, full candidate T4, T5 semantics and Release remain ungranted"
   },
   "counts_before_acceptance": {
     "registered_tools": 36,
@@ -145,20 +232,19 @@
     "candidate_typed_operations_implemented": 1
   },
   "qualification": {
-    "implementation_status": "P2_REPAIRS_COMMITTED; CI_FAILURE_ROOT_CAUSE_UNKNOWN; INDEPENDENT_REVIEW_PENDING",
+    "implementation_status": "CI_ROOT_CAUSE_REPAIRED; LOCAL_NODE24_AND_REAL_PORTABLE_E2E_PASS_SCOPED; FINAL_EXACT_HEAD_CI_AND_INDEPENDENT_REVIEW_PENDING",
     "candidate_tool_t4_accepted": false,
     "t5_semantics_accepted": false,
     "t6_accepted": false,
     "synthetic_runner_never_counts_as_native_execution": true,
-    "r19_native_receipts_do_not_prove_typed_operation_or_hermetic_runtime": true
+    "r19_native_receipts_do_not_prove_typed_operation_or_hermetic_runtime": true,
+    "real_portable_receipts_do_not_replace_independent_review_or_exact_sha_ci": true
   },
   "next": [
-    "Obtain Woodpecker #964/#965 first-failing-step logs and classify the actual source/infrastructure failure; do not blind-retry.",
-    "After repairing the actual CI cause, obtain push and PR SUCCESS on the same exact head.",
-    "Fresh independent non-Writer Source-First review of the current merged branch HEAD and every changed Blob.",
-    "Run exact typed Highs operation through canonical portable Python 3.13.5 bundle; the 294346075-byte runtime archive must be supplied in split chunks or run from a local machine because this connector has a 268435456-byte download limit.",
-    "Run real shared Runner, CLI, MCP stdio and SDK against that same portable bundle; keep host-substitute receipts scoped.",
-    "Only after all required gates, update #38/#24 candidate T4 count; do not promote T5 or Release."
+    "Push the source-test repair and this versioned evidence, then obtain Woodpecker push and PR SUCCESS on one final exact HEAD.",
+    "Fresh independent non-Writer Source-First review of the final HEAD and every changed Blob, including the CI diagnosis and real portable receipts.",
+    "Keep the original core Runner typed-operation receipt scoped; do not relabel it as an R13 runner_schema 0.2 verify receipt or increase original-tar T3 counts.",
+    "Only after independent acceptance may the candidate T4 disposition be reconsidered; T5 semantic qualification and Release remain separate and ungranted."
   ],
   "local_host_execution": {
     "source_sha256": "6b43add5fbb8dc3b2aa65b951f85d9ee41f7827921d8d624588fe3aaae339136",
