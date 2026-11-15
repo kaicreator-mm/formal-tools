@@ -238,11 +238,12 @@
     "R48 one-tool Portable package SHA256 498553c7ae3273d6087c5ebdd5d13133e35277702686659810824576d02d82ac; size 4,219,861; archive has six entries with parity PASS. It embeds the exact official JAR and Java21 package SHA256 7e9b1bfdc120d17a4af2eb2baaf4b3772b2c7a2114248ed1a5967af89c5387ca.",
     "Older Drive archive SHA256 3fbc410808b4daf915d9c5ddf1500b67f65d0b97a7777b56f8d9c6cbc7573fd5 contains an older JAR SHA256 e1f11b75c4b5bc4478ba0ac5cb6ae28e40a01b0016bc33e0aa97da22dfdbcd7f and is quarantined; it is not used as T1 evidence.",
     "R48 native execution is limited to Debian13 offline non-root Runner POS/NEG exits 0/12; no ERR phase. T2 is historical R3 only. T4 remains NOT_ACCEPTED, T5 has no independent semantic Oracle, and T6 assessor is not itself lifecycle qualification.",
-    "Current main 8c0811a7baa5f79953a85a190595995f2463f7d0 has Push #1635 SUCCESS. The nine commits after 069444c are Robot-only and disjoint from all 21 TLA-TLC source/evidence pins."
+    "Current main 8c0811a7baa5f79953a85a190595995f2463f7d0 has Push #1635 SUCCESS. The nine commits after 069444c are Robot-only and disjoint from all 21 TLA-TLC source/evidence pins.",
+    "The same current-main commit 8c0811a7baa5f79953a85a190595995f2463f7d0 also passed later main Push #1644; earlier same-SHA Push #1635 remains SUCCESS."
   ],
   "current_main_snapshot": {
     "commit": "8c0811a7baa5f79953a85a190595995f2463f7d0",
-    "woodpecker_push_pipeline": 1635,
+    "woodpecker_push_pipeline": 1644,
     "woodpecker_push_status": "SUCCESS",
     "source_blob_pin_verification": "21_OF_21_MATCH_CURRENT_MAIN"
   }
