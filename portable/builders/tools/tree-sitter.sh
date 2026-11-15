@@ -20,6 +20,11 @@ ft_tool_build() {
   else
     local gz
     gz=$(ft::fetch "$FT_UPSTREAM_URL" "$FT_TREE_SITTER_ARCHIVE_SHA256")
+    local archive_sha
+    archive_sha=$(sha256sum "$gz" | cut -d' ' -f1)
+    [ "$archive_sha" = "$FT_TREE_SITTER_ARCHIVE_SHA256" ] \
+      || ft::die "Tree-sitter release archive SHA-256 mismatch: got=$archive_sha"
+    ft::note "archive_sha256" "$archive_sha"
     gunzip -c "$gz" > "$FT_TOOL_DIR/bin/tree-sitter"
     chmod 0755 "$FT_TOOL_DIR/bin/tree-sitter"
     ft::note "binary_source" "official upstream v0.27.2 Linux x86_64 release asset"
