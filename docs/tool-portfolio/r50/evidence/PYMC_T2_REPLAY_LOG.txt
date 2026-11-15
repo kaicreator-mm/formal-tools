@@ -1,0 +1,19 @@
+OUTPUT_LABEL=FORMAL_TOOLS_I24_PYMC_R52_T2_REPLAY
+REPO=kaicreator-mm/formal-tools TOOL_ISSUE=#49 PR=#125
+SOURCE_ARCHIVE_DRIVE_ID=105Aq1lrpCglTe5WLJY0Nxbw4YtnCZBkW
+MANIFEST_DRIVE_ID=1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1
+ARCHIVE_SIZE=1072092
+ARCHIVE_SHA256=f70fd5fc32ba835262642eedf761cdea4b1b1398c4877014f0e7cbcc734fbff4
+MANIFEST_SIZE=4514
+MANIFEST_SHA256=671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64
+MANIFEST_ENTRY=tools/pymc-6.4.0-linux-x86_64.tar.zst
+MANIFEST_ENTRY_SHA256_MATCH=TRUE
+HOST=Linux x86_64 glibc 2.41; Python 3.13.5; Zstandard CLI 1.5.7; GNU tar 1.35
+zstd -t EXIT=0
+TAR_PREFLIGHT=315 members; 271 regular; 44 directories; 0 symlinks; 0 hardlinks; 0 special; 0 unsafe paths; 0 duplicate normalized paths; regular payload bytes=4762659
+NONROOT_ID=uid=65534(nobody) gid=65534(nogroup) groups=65534(nogroup)
+EXTRACTION=zstd -dc ARCHIVE | setpriv --reuid=65534 --regid=65534 --clear-groups tar --no-same-owner --no-same-permissions --no-overwrite-dir --delay-directory-restore -x -f - -C DEST
+EXTRACTION_EXIT=zstd:0; tar:0
+POSTCHECK=315 archive members match extracted types, sizes and regular-file SHA256; 316 filesystem entries include one implicit tools/ parent; all extracted objects UID/GID 65534; no symlinks or special files.
+EXTRACTED_TREE_SHA256=6877e3aedbfc2ccf18b3e9d7c1084d885e8278060b44167291681afccfb6a72e
+QUALIFICATION=T2 PASS_SCOPED archive integrity, path/type preflight and non-root extraction only; original package runtime NOT_RUN; no T3/T4/T5/T6 promotion.
