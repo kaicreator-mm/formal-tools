@@ -1,0 +1,162 @@
+{
+  "schema": "formal-tools/i24-why3-relocation-probe/1.0",
+  "output_label": "FORMAL_TOOLS_I24_WHY3_R22_RELOCATION_PROBE",
+  "date": "2026-11-15",
+  "repository": "kaicreator-mm/formal-tools",
+  "issue": 59,
+  "main_sha_at_execution": "6e98fef47b15592c327523916048280c363acf06",
+  "main_sha_at_evidence_pr_creation": "4a733d0c7e33da5ed77ff7e3a8e628b3c8bb369b",
+  "scope": "Candidate-only Why3 relocation research evidence. This sync changes no candidate/archive/source bytes or execution claim. The validation-only candidate is not an official release; original unsafe archive remains quarantined. This evidence does not qualify original-package T2/T3, current-main T4, T5/T6, Product or Release.",
+  "source": {
+    "drive_file_id": "1HwD8zM9uayJkGtpDuKZL9hdNdzVXo6Sb",
+    "filename": "why3-1.8.0-sanitized-safe-only-CANDIDATE.tar.zst",
+    "size_bytes": 54709487,
+    "sha256": "62a16b57fd90ed6fdded53c34ddeeddbd375e05d0eb6ab905b4ee82715ce6ed2",
+    "sha256_expected": "62a16b57fd90ed6fdded53c34ddeeddbd375e05d0eb6ab905b4ee82715ce6ed2",
+    "sha256_match": true,
+    "provenance": "validation-only repack candidate, not an official or publisher-attested Why3 release; original Drive archive and SHA256SUMS were not modified",
+    "safe_run_shim_sha256": "cb1bbd86dd12df0f28610f76c0628705581350e1a03ad5a9d5e3dd7e3ff4dc19"
+  },
+  "environment": {
+    "os": "Debian GNU/Linux 13.3 (trixie) x86_64",
+    "uid": 1000,
+    "gid": 1000,
+    "privilege": "non-root",
+    "python": "3.13.5 (archive inspection/extraction only)",
+    "extraction_root": "/mnt/data/why3-r22-candidate-extract",
+    "isolation": "private filesystem directory; no chroot/user namespace available (unshare -Ur failed Invalid argument)",
+    "host_ocaml_path_before": {
+      "path": "/usr/lib/x86_64-linux-gnu/ocaml",
+      "exists": false
+    },
+    "host_ocaml_path_after": {
+      "path": "/usr/lib/x86_64-linux-gnu/ocaml",
+      "exists": false
+    }
+  },
+  "archive_integrity": {
+    "zstd_test_exit_code": 0,
+    "zstd_decoded_bytes": 176814080,
+    "tar_stream_exit_code": 0,
+    "tar_member_count": 5319,
+    "member_types": {
+      "regular_files": 3681,
+      "directories": 1350,
+      "relative_symlinks": 288,
+      "hardlinks": 0,
+      "special_entries": 0
+    },
+    "unsafe_member_paths": 0,
+    "absolute_symlinks": 0,
+    "escaping_symlinks": 0,
+    "symlink_chain_errors": 0,
+    "members_under_symlink_parent": 0,
+    "duplicate_paths": 0,
+    "extraction": "two-pass non-root extraction: regular files/directories first, then only preflighted relative symlinks; no archive owner/permission restoration"
+  },
+  "safe_shim_observations": {
+    "shim_path": "tools/why3/run",
+    "shim_sha256": "cb1bbd86dd12df0f28610f76c0628705581350e1a03ad5a9d5e3dd7e3ff4dc19",
+    "environment": {
+      "WHY3LIB": "$TOOL_DIR/usr/lib/x86_64-linux-gnu/ocaml/5.3.0/why3",
+      "WHY3DATA": "$TOOL_DIR/usr/share/why3",
+      "OCAMLLIB": "$TOOL_DIR/usr/lib/x86_64-linux-gnu/ocaml/5.3.0",
+      "WHY3CONFIG": "empty private config file"
+    },
+    "commands": [
+      {
+        "argv": [
+          "./tools/why3/run",
+          "--version"
+        ],
+        "exit_code": 0,
+        "stdout": "Why3 platform, version 1.8.0",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "./tools/why3/run",
+          "--print-libdir"
+        ],
+        "exit_code": 0,
+        "stdout": "/usr/lib/x86_64-linux-gnu/ocaml/5.3.0/why3",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "./tools/why3/run",
+          "--print-datadir"
+        ],
+        "exit_code": 0,
+        "stdout": "/usr/share/why3",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "./tools/why3/run",
+          "config",
+          "detect"
+        ],
+        "exit_code": 2,
+        "stdout": "",
+        "stderr": "WHY3_RELOCATION_NOT_QUALIFIED: proof commands require isolated root or relocatable build"
+      }
+    ],
+    "expected_bundle_libdir": "/mnt/data/why3-r22-candidate-extract/tools/why3/usr/lib/x86_64-linux-gnu/ocaml/5.3.0/why3",
+    "expected_bundle_datadir": "/mnt/data/why3-r22-candidate-extract/tools/why3/usr/share/why3",
+    "bundle_commands_dir_exists": true,
+    "interpretation": "The safe shim exports WHY3LIB and WHY3DATA to bundle-relative locations, but the exact Debian Why3 1.8.0 binary still reports compiled-in absolute /usr libdir/datadir. The overrides do not relocate these printed paths in this build. Since the plugin loader points outside the candidate bundle, proof/config commands were not invoked."
+  },
+  "safety": {
+    "original_delivered_archive_executed": false,
+    "original_unsafe_run_executed": false,
+    "privileged_execution": false,
+    "host_usr_writes": false,
+    "host_ocaml_path_unchanged": true,
+    "proof_commands_invoked": false,
+    "z3_invoked": false
+  },
+  "conclusion": {
+    "status": "RELOCATION_BLOCKED_ON_ORDINARY_HOST",
+    "detail": "The validation-only candidate is structurally safe to extract as non-root, and Why3 --version works. However, --print-libdir and --print-datadir remain compiled-in host paths despite bundle environment overrides. The safe shim correctly refuses config/proof commands with exit 2. Do not promote T2/T3/T4/T5.",
+    "next": "Use an actual private root/chroot with the required paths inside the isolated filesystem, or rebuild exact Why3 1.8.0 source with a verified relocation configuration supported by that exact release. Verify command-plugin path and Z3 detector compatibility before attempting POS/NEG/ERR proof cases."
+  },
+  "qualification": {
+    "t0": "candidate archive SHA verified only; not canonical publisher source or rights attestation",
+    "t1": "not a reproducible official source build",
+    "t2": "candidate safe extraction scoped only; original package not admitted",
+    "t3": "NOT_QUALIFIED; proof commands not run",
+    "t4": "NOT_QUALIFIED; no current-main Runner/CLI/MCP/SDK execution",
+    "t5": "NOT_QUALIFIED",
+    "t6": "OPEN",
+    "product_release": "NOT_GRANTED"
+  },
+  "main_sha_at_sync": "5f188dec4c98bb4195619b560b86a210d9c2788e",
+  "current_main_builder_blob": "a955cd5169e42495b46a3b52b245307f98774bb2",
+  "sync": {
+    "previous_head": "3d201e88ecb49dc0d9bdc1159c23869d4f8ebc61",
+    "previous_base": "4a733d0c7e33da5ed77ff7e3a8e628b3c8bb369b",
+    "current_main": "5f188dec4c98bb4195619b560b86a210d9c2788e",
+    "current_main_push_ci": 1284,
+    "current_main_push_state": "SUCCESS",
+    "exact_head_push_ci": 1295,
+    "exact_head_pr_ci": 1296,
+    "fresh_independent_review": "PENDING_ON_FINAL_STATUS_RECORDING_HEAD",
+    "previous_sync_head": "2f6fe4b59645bdc7648cca1f783ce069cdf7ef04",
+    "exact_head_push_state": "SUCCESS",
+    "exact_head_pr_state": "SUCCESS",
+    "exact_head_ci_head": "3e324b40eb873f4ca1bd003ac71f4b434226a205",
+    "exact_head_ci_scope_note": "The recorded #1295/#1296 SUCCESS pair belongs to exact head 3e324b40...; subsequent metadata-only commits must be qualified by live Woodpecker status contexts on the current PR head. Do not rewrite this JSON to self-record the CI run for its own new head."
+  },
+  "prior_review": {
+    "exact_head": "3d201e88ecb49dc0d9bdc1159c23869d4f8ebc61",
+    "verdict": "ACCEPTED_SCOPED",
+    "p0": 0,
+    "p1": 0,
+    "p2": 0,
+    "ci_push": 1183,
+    "ci_pr": 1184,
+    "disposition": "Research evidence accepted on prior head; this sync does not change the candidate bytes or research findings. Fresh confirmation is required on the synchronized head."
+  },
+  "current_head_review": "PENDING_FRESH_INDEPENDENT_SOURCE_FIRST_CONFIRMATION"
+}
