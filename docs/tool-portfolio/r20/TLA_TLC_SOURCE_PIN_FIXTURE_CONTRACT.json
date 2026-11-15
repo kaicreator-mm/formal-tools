@@ -14,7 +14,21 @@
     "github_release_api_sha256": "7e53aa636dac8a3cb0533f343115c0548e03fc0ce5edc7739becf58d3d0fb84f",
     "size_bytes": 4510884,
     "digest_authority": "GitHub Releases API asset digest; not described as a publisher signature",
-    "asset_kind": "prebuilt official Java jar; not a reproducible source build"
+    "asset_kind": "prebuilt upstream Java jar from a rolling GitHub pre-release; not a reproducible source build and not a publisher-signed artifact",
+    "release_name": "The Clarke release",
+    "prerelease": true,
+    "mutable": true,
+    "channel_classification": "ROLLING_PRE_RELEASE_MUTABLE_TAG_AND_ASSET",
+    "tag_ref_sha": "bc1b506bdcad80bb518bf3776a9161c34ff0fc4c",
+    "tag_ref_type": "commit",
+    "asset_id": 749260120,
+    "asset_created_at": "2026-11-15T00:27:39Z",
+    "asset_updated_at": "2026-11-15T00:27:39Z",
+    "api_snapshot_observed_at": "2026-11-15T19:56:00+08:00",
+    "source_revision_relation": "The v1.8.0 tag ref resolved to bc1b506bdcad80bb518bf3776a9161c34ff0fc4c at the same API observation when the asset digest/size were read. This is contemporaneous GitHub metadata, not a cryptographic attestation that the asset was built from that commit.",
+    "immutability_note": "The upstream README states every master commit is built and uploaded to the same v1.8.0 Clarke pre-release. Upstream issue #1399 documents in-place replacement of the v1.8.0 JAR. The tag and asset URL are therefore mutable; the expected digest+size guard fails closed if bytes change, but does not make the asset retrievable or immutable.",
+    "upstream_readme_url": "https://github.com/tlaplus/tlaplus",
+    "upstream_mutability_issue_url": "https://github.com/tlaplus/tlaplus/issues/1399"
   },
   "prior_build_receipt": {
     "path": "portable/status/receipts/build-tla-tlc.json",
@@ -41,7 +55,7 @@
     "test_blob": "3ff3b4a1ffe02ce1c986c8b094dec7f7ff937fce"
   },
   "qualification": {
-    "t0": "PASS_SCOPED_GITHUB_RELEASE_ASSET_DIGEST_AND_VERSION_PIN; publisher signature not established",
+    "t0": "PASS_SCOPED_GITHUB_RELEASE_API_ASSET_DIGEST_AND_SIZE_AT_OBSERVATION; mutable rolling pre-release channel; tag/asset not immutable; publisher signature not established",
     "t1": "NOT_QUALIFIED_UNTIL_FRESH_BUILDER_EXECUTION_AND_REPACK",
     "t2": "PRESERVE_EXISTING_R3_SCOPED_PASS; no new install run",
     "t3": "PRESERVE_EXISTING_R3_SCOPED_2_CASE_PASS; NEG exit now pinned to 12; ERR case remains absent",
@@ -80,19 +94,19 @@
       "expected_size_bytes": 4510884,
       "digest_match": false,
       "size_match": false,
-      "disposition": "DRIVE_BUNDLE_IS_NOT_THE_PINNED_OFFICIAL_V1_8_0_ASSET; it contains a rolling/master build. Keep it quarantined from T1/T3 qualification and replace/rebuild from the pinned official release asset."
+      "disposition": "DRIVE_BUNDLE_IS_NOT_THE_CURRENT_PINNED_V1_8_0_ASSET_SNAPSHOT; it contains an older rolling/master build (revision d8fb231, 2026-11-06), whereas the observed v1.8.0 pre-release asset snapshot was uploaded 2026-11-15 and currently resolves to tag commit bc1b506. Keep the Drive archive quarantined from T1/repack evidence."
     },
     "qualification": "AUDIT_ONLY; does not invalidate the source-level immutable builder pin, but proves the existing Drive package bundle cannot be reused as official v1.8.0 build/repack evidence."
   },
   "current_main_sync": {
-    "main_sha": "19e349fcf96f8883be6a46c654046f1b0e6c66bd",
-    "sync_commit": "ae58c9d5aac8962ece988a31d48d1bda8fab6017",
+    "main_sha": "90b7f3206d401aa5a2634d775c6f16487f0f1b0f",
+    "sync_commit": "PENDING_COMMIT_SHA",
     "changed_paths_expected": [
-      "docs/tool-portfolio/r20/TLA_TLC_SOURCE_PIN_FIXTURE_CONTRACT.json",
       "portable/builders/tools/tla-tlc.sh",
       "portable/verification/cases/tla-tlc/expect.sh",
-      "tests/tla-tlc-source-fixture-contract.test.mjs"
+      "tests/tla-tlc-source-fixture-contract.test.mjs",
+      "docs/tool-portfolio/r20/TLA_TLC_SOURCE_PIN_FIXTURE_CONTRACT.json"
     ],
-    "note": "The source PR is synced to current main. Existing Drive bundle audit is kept separate from the newly pinned official upstream asset."
+    "note": "Synced to current main after the disjoint causal-learn PR #103 merge. Source/test Blobs are unchanged; evidence adds explicit rolling pre-release identity and contemporaneous asset/tag metadata."
   }
 }
