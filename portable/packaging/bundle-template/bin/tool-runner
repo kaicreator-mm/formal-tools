@@ -267,7 +267,8 @@ ft_is_static_elf() { # $1=file -> 0 proven static ET_EXEC, 1 known dynamic, 2 un
     *) return 2 ;;
   esac
   case "$entry$phoff$phent$phnum" in ''|*[!0-9a-f]*) return 2 ;; esac
-  case "$entry" in *[1-9a-f]*) ;; *) return 2 ;; esac # no entry point is not an executable
+  # ET_DYN shared objects legitimately have e_entry=0; only the final
+  # ET_EXEC static verdict requires a nonzero executable entry point.
   phoff=$((16#$phoff)); phent=$((16#$phent)); phnum=$((16#$phnum))
   [ "$phnum" -gt 0 ] && [ "$phnum" -le 4096 ] || return 2
   if [ "$class" -eq 2 ]; then [ "$phent" -eq 56 ] || return 2
@@ -344,6 +345,7 @@ ft_is_static_elf() { # $1=file -> 0 proven static ET_EXEC, 1 known dynamic, 2 un
   # static linkage from that combination; only a dependency-free ET_EXEC can
   # use the static shortcut.
   [ "$etype" -eq 2 ] || return 2
+  case "$entry" in *[1-9a-f]*) ;; *) return 2 ;; esac # ET_EXEC needs a nonzero entry point
   return 0
 }
 ft_ldd_output_valid() { # captured ldd output -> rc 0 for recognized report
