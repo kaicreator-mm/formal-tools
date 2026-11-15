@@ -34,6 +34,9 @@ test("rdf-shacl portable verification has typed positive, violation and invalid-
   }
   assert.match(expect, /Conforms: True/);
   assert.match(expect, /Conforms: False/);
+  assert.match(expect, /EXPECT_NEG_EXIT=1/);
+  assert.match(expect, /EXPECT_ERR_EXIT=1/);
+  assert.match(expect, /BadSyntax/);
   assert.match(expect, /INVALID_RDF/);
   const invalid = readFileSync(resolve("portable/verification/cases/rdf-shacl/err.ttl"), "utf8");
   assert.match(invalid, /"unterminated/);
