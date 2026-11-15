@@ -146,13 +146,51 @@
   "findings": {
     "P0": 0,
     "P1": 1,
-    "P2": 0,
-    "p1": "The original package's meta.sh is incompatible with the current main Runner because it exports TOOL_TOOL_ID rather than TOOL_ID. The current builder fixes this, but no reproducible rebuild/current-main package exists yet."
+    "P2": 1,
+    "p1": "The original package's meta.sh is incompatible with the current main Runner because it exports TOOL_TOOL_ID rather than TOOL_ID. The current builder fixes this, but no reproducible rebuild/current-main package exists yet.",
+    "p2": "Upstream v0.40.2 declares pyshacl_server = pyshacl.http:cli, but pyshacl/http.py is absent from the tagged source and archived payload; source instead contains pyshacl/sh_http.py and __main__.py routes server mode there. The portable shim uses python -m pyshacl, so this is a scoped optional-server entrypoint discrepancy, not proof of core CLI failure. Runtime behavior remains NOT_RUN."
   },
   "next_actions": [
     "Retrieve the shared Python 3.13.5 runtime through a host/local agent or a chunked transfer path that can handle 294,346,075 bytes; verify SHA256 against App/packages/SHA256SUMS.",
-    "Rebuild rdf-shacl 0.40.2 using exact current main 19e349fcf96f8883be6a46c654046f1b0e6c66bd and the pinned dependency closure; emit canonical TOOL_ID metadata and a reproducible build receipt.",
+    "Rebuild rdf-shacl 0.40.2 using exact current main 90b7f3206d401aa5a2634d775c6f16487f0f1b0f and the pinned dependency closure; emit canonical TOOL_ID metadata and a reproducible build receipt.",
     "Run the rebuilt package through current main tool-runner doctor/version/verify; record actual POS/NEG/ERR outputs and exit codes without reusing the historical wheelhouse receipt.",
+    "Before exposing the optional pyshacl_server console entry point, resolve the pyshacl.http:cli versus pyshacl.sh_http discrepancy or explicitly exclude that entry point.",
     "Obtain independent review on the exact rebuilt package HEAD before any T3/T4 promotion."
-  ]
+  ],
+  "package_integrity": {
+    "dist_info_record": "pyshacl-0.40.2.dist-info/RECORD",
+    "record_rows": 151,
+    "hashed_entries_verified": 81,
+    "unhashed_entries": 66,
+    "absent_generated_console_script_records": [
+      "../../../bin/pyshacl",
+      "../../../bin/pyshacl_rules",
+      "../../../bin/pyshacl_server",
+      "../../../bin/pyshacl_validate"
+    ],
+    "other_missing_entries": 0,
+    "hash_mismatches": 0,
+    "verification": "PASS_SCOPED",
+    "note": "All 81 RECORD entries carrying SHA-256 matched the extracted bytes. The four absent paths are installer-generated console-script wrappers, not missing pyshacl modules; the portable run shim invokes python -m pyshacl. The 66 rows without RECORD hashes are not presented as hashed verification."
+  },
+  "upstream_packaging_findings": {
+    "optional_server_entrypoint": {
+      "severity": "P2",
+      "pyproject_scripts_target": "pyshacl_server = pyshacl.http:cli",
+      "installed_entry_points_target": "pyshacl.http:cli",
+      "source_module_present": false,
+      "alternative_source_module": "pyshacl/sh_http.py",
+      "source_blobs": {
+        "pyproject.toml": "c0f4c0b7aa215c056303da247edbeb1ee8a103a2",
+        "pyshacl/sh_http.py": "06abe00b72a0cb731a3e779e7730d7ead0c9bf6a",
+        "pyshacl/__main__.py": "0c53f60029c52ad123dbb5272b9d15086f81cf2b",
+        "pyshacl/cli.py": "fdb869fbb82cfd4471a9434e3b908c4af60df96d",
+        "pyshacl/cli_rules.py": "dfbbb2a6c66609fd75a62c426765250bda7a7f66"
+      },
+      "module_not_found": "pyshacl/http.py is absent at upstream tag v0.40.2 and from the archived payload.",
+      "supported_module_path": "pyshacl.__main__ routes server mode to pyshacl.sh_http.main.",
+      "impact": "Potentially broken optional generated pyshacl_server console entry point; core portable shim uses python -m pyshacl and does not depend on that wrapper. No HTTP server runtime test was performed.",
+      "disposition": "TRACK_BEFORE_EXPOSING_OPTIONAL_SERVER_ENTRYPOINT; do not infer core CLI failure or T3 result."
+    }
+  }
 }
