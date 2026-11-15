@@ -73,7 +73,7 @@ test("Jena source pins reject shell-valid overrides for URL and SHA512", () => {
   const controls = [
     value => `KEY=${value}`,
     value => ` KEY=${value}`,
-    value => `\\tKEY=${value}`,
+    value => `\tKEY=${value}`,
     value => `export KEY=${value}`,
     value => `readonly KEY=${value}`,
     value => `declare KEY=${value}`,
