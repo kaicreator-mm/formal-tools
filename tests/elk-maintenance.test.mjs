@@ -206,7 +206,7 @@ test("independent Oracle drift stales use and maintain only", () => {
   assert.deepEqual(report.stale_gates, ["T5", "T6"]);
 });
 
-test("missing tracked fixture becomes UNKNOWN rather than CURRENT", () => {
+test("missing observed fixture pin remains UNKNOWN without proof of source deletion", () => {
   const base = baseline();
   const current = currentFrom(base);
   delete current.source_blobs["portable/verification/cases/elk/neg.ofn"];
@@ -272,6 +272,10 @@ test("missing external asset file and malformed external values remain UNKNOWN",
     assert.equal(malformedReport.status, "UNKNOWN");
     assert.deepEqual(malformedReport.unknown_gates, gates);
     assert.deepEqual(malformedReport.stale_gates, []);
+    await assert.rejects(
+      readCurrentElkState(root, base, "../outside-external.json"),
+      /safe path inside root|remain inside root/
+    );
   } finally {
     await rm(root, { recursive: true, force: true });
   }
@@ -310,6 +314,79 @@ test("current-state reader rejects symlinked pinned source files", async () => {
     await assert.rejects(readCurrentElkState(root, base), /regular non-symlink file/);
   } finally {
     await rm(root, { recursive: true, force: true });
+  }
+});
+
+
+test("a physically missing tracked source file is STALE, not UNKNOWN", async () => {
+  const base = baseline();
+  const root = await mkdtemp(join(tmpdir(), "elk-maintenance-missing-source-"));
+  try {
+    await writeMatchingSourceTree(root, base);
+    const missingPath = "portable/verification/cases/elk/neg.ofn";
+    await rm(join(root, missingPath));
+    const current = await readCurrentElkState(root, base);
+    current.asset_pins = { ...base.asset_pins };
+    assert.deepEqual(current.missing_source_paths, [missingPath]);
+    const report = assessElkMaintenance(base, current);
+    assert.equal(report.status, "STALE");
+    assert.deepEqual(report.stale_gates, ["T3", "T4", "T5", "T6"]);
+    assert.deepEqual(report.unknown_gates, []);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("a physically missing version source stales all gates", async () => {
+  const base = baseline();
+  const root = await mkdtemp(join(tmpdir(), "elk-maintenance-missing-version-"));
+  try {
+    await writeMatchingSourceTree(root, base);
+    await rm(join(root, base.version_source));
+    const current = await readCurrentElkState(root, base);
+    current.asset_pins = { ...base.asset_pins };
+    assert.equal(current.missing_version_source, true);
+    const report = assessElkMaintenance(base, current);
+    assert.equal(report.status, "STALE");
+    assert.deepEqual(report.stale_gates, gates);
+    assert.deepEqual(report.unknown_gates, []);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("current-state reader rejects symlinked parent directories for tracked source files", async () => {
+  const base = baseline();
+  const root = await mkdtemp(join(tmpdir(), "elk-maintenance-parent-link-"));
+  const outside = await mkdtemp(join(tmpdir(), "elk-maintenance-outside-"));
+  try {
+    await mkdir(join(outside, "builders", "tools"), { recursive: true });
+    await writeFile(join(outside, "builders", "tools", "elk.sh"), "FT_TOOL_VERSION=0.6.0\n");
+    await symlink(outside, join(root, "portable"), "dir");
+    await assert.rejects(readCurrentElkState(root, base), /symlinked parent component/);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+    await rm(outside, { recursive: true, force: true });
+  }
+});
+
+test("current-state reader rejects a symlinked parent of version_source", async () => {
+  const base = baseline();
+  base.source_files = {
+    "docs/pinned.txt": { git_blob_sha1: gitBlobSha1(Buffer.from("pinned\n")), gates: ["T6"] }
+  };
+  const root = await mkdtemp(join(tmpdir(), "elk-maintenance-version-parent-link-"));
+  const outside = await mkdtemp(join(tmpdir(), "elk-maintenance-version-outside-"));
+  try {
+    await mkdir(join(root, "docs"), { recursive: true });
+    await writeFile(join(root, "docs", "pinned.txt"), "pinned\n");
+    await mkdir(join(outside, "builders", "tools"), { recursive: true });
+    await writeFile(join(outside, "builders", "tools", "elk.sh"), "FT_TOOL_VERSION=0.6.0\n");
+    await symlink(outside, join(root, "portable"), "dir");
+    await assert.rejects(readCurrentElkState(root, base), /symlinked parent component/);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+    await rm(outside, { recursive: true, force: true });
   }
 });
 

@@ -4,8 +4,9 @@
  * This is a deterministic identity/freshness check only; it never executes ELK.
  */
 import { createHash } from "node:crypto";
-import { readFile, lstat } from "node:fs/promises";
-import { resolve } from "node:path";
+import { constants } from "node:fs";
+import { open, readFile, lstat, realpath } from "node:fs/promises";
+import { isAbsolute, relative, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 
 const GATES = ["T0", "T1", "T2", "T3", "T4", "T5", "T6"];
@@ -25,10 +26,10 @@ function validRelativePath(value) {
   return typeof value === "string" &&
     value.length > 0 &&
     !value.includes("\0") &&
+    !value.includes("\\") &&
     !value.startsWith("/") &&
-    !value.startsWith("\\") &&
     !/^[A-Za-z]:/.test(value) &&
-    !value.split(/[\\/]/).includes("..");
+    value.split("/").every(part => part.length > 0 && part !== "." && part !== "..");
 }
 
 export function validateBaseline(baseline) {
@@ -105,18 +106,42 @@ export function assessElkMaintenance(baselineInput, current) {
   const unknown = new Map();
   const changes = [];
   const unknownEvidence = [];
+  if (current.missing_source_paths !== undefined &&
+      (!Array.isArray(current.missing_source_paths) ||
+       current.missing_source_paths.some(path => typeof path !== "string"))) {
+    throw new TypeError("current missing_source_paths must be an array of paths");
+  }
+  const missingSourcePaths = new Set(current.missing_source_paths ?? []);
+  const trackedPaths = new Set([...Object.keys(baseline.source_files), baseline.version_source]);
+  for (const path of missingSourcePaths) {
+    if (!trackedPaths.has(path))
+      throw new TypeError("current missing_source_paths contains an untracked path: " + path);
+  }
+  if (current.missing_version_source !== undefined && typeof current.missing_version_source !== "boolean") {
+    throw new TypeError("current missing_version_source must be boolean");
+  }
 
-  comparePin({
-    name: "tool_version",
-    expected: baseline.tool.version,
-    observed: current.version ?? null,
-    gates: GATES,
-    stale,
-    unknown,
-    changes
-  });
+  if (current.missing_version_source === true || missingSourcePaths.has(baseline.version_source)) {
+    addReasons(stale, GATES, "version_source: tracked builder file is missing");
+    changes.push({ name: "tool_version", expected: baseline.tool.version, observed: null, gates: GATES });
+  } else {
+    comparePin({
+      name: "tool_version",
+      expected: baseline.tool.version,
+      observed: current.version ?? null,
+      gates: GATES,
+      stale,
+      unknown,
+      changes
+    });
+  }
 
   for (const [path, pin] of Object.entries(baseline.source_files)) {
+    if (missingSourcePaths.has(path)) {
+      addReasons(stale, pin.gates, "source_blob:" + path + ": tracked source file is missing");
+      changes.push({ name: "source_blob:" + path, expected: pin.git_blob_sha1, observed: null, gates: pin.gates });
+      continue;
+    }
     comparePin({
       name: "source_blob:" + path,
       expected: pin.git_blob_sha1,
@@ -214,35 +239,102 @@ function normalizeExternalPins(value) {
   };
 }
 
-async function readRegularFile(path) {
-  const info = await lstat(path);
-  if (!info.isFile() || info.isSymbolicLink())
-    throw new TypeError("pinned evidence path must be a regular non-symlink file: " + path);
-  return readFile(path);
+function isPathInsideRoot(root, target) {
+  const pathFromRoot = relative(root, target);
+  return pathFromRoot !== "" && pathFromRoot !== "." &&
+    pathFromRoot !== ".." && !pathFromRoot.startsWith(".." + sep) &&
+    !isAbsolute(pathFromRoot);
+}
+
+function resolveExternalRelativePath(root, externalPath) {
+  if (typeof externalPath !== "string" || externalPath.length === 0 ||
+      externalPath.includes("\0") || externalPath.split(/[\\/]/).includes("..")) {
+    throw new TypeError("external evidence path must be a safe path inside root");
+  }
+  if (!isAbsolute(externalPath) && !validRelativePath(externalPath)) {
+    throw new TypeError("external evidence path must be a safe relative path");
+  }
+  const absolutePath = isAbsolute(externalPath)
+    ? resolve(externalPath)
+    : resolve(root, externalPath);
+  if (!isPathInsideRoot(root, absolutePath)) {
+    throw new TypeError("external evidence path must remain inside root");
+  }
+  const relativePath = relative(root, absolutePath).split(sep).join("/");
+  if (!validRelativePath(relativePath)) {
+    throw new TypeError("external evidence path must be a safe relative path inside root");
+  }
+  return relativePath;
+}
+
+async function readRegularFile(root, relativePath) {
+  if (!validRelativePath(relativePath))
+    throw new TypeError("pinned evidence path must be a safe relative path: " + relativePath);
+  const absolutePath = resolve(root, relativePath);
+  if (!isPathInsideRoot(root, absolutePath))
+    throw new TypeError("pinned evidence path escapes root: " + relativePath);
+
+  const components = relative(root, absolutePath).split(sep);
+  let cursor = root;
+  for (let index = 0; index < components.length; index += 1) {
+    cursor = resolve(cursor, components[index]);
+    const info = await lstat(cursor);
+    const finalComponent = index === components.length - 1;
+    if (info.isSymbolicLink()) {
+      const message = finalComponent
+        ? "pinned evidence path must be a regular non-symlink file: " + relativePath
+        : "pinned evidence path contains a symlinked parent component: " + relativePath;
+      throw new TypeError(message);
+    }
+    if (finalComponent ? !info.isFile() : !info.isDirectory()) {
+      throw new TypeError("pinned evidence path must resolve through directories to a regular file: " + relativePath);
+    }
+  }
+
+  const physicalPath = await realpath(cursor);
+  if (!isPathInsideRoot(root, physicalPath))
+    throw new TypeError("pinned evidence path resolves outside root: " + relativePath);
+
+  const handle = await open(physicalPath, constants.O_RDONLY | (constants.O_NOFOLLOW ?? 0));
+  try {
+    const info = await handle.stat();
+    if (!info.isFile())
+      throw new TypeError("pinned evidence path must be a regular non-symlink file: " + relativePath);
+    return await handle.readFile();
+  } finally {
+    await handle.close();
+  }
 }
 
 export async function readCurrentElkState(root, baselineInput, externalPath = null) {
   const baseline = validateBaseline(baselineInput);
-  const absoluteRoot = resolve(root);
+  const absoluteRoot = await realpath(resolve(root));
+  const rootInfo = await lstat(absoluteRoot);
+  if (!rootInfo.isDirectory()) throw new TypeError("ELK maintenance root must be a directory");
   const sourceBlobs = {};
+  const missingSourcePaths = [];
 
   for (const path of Object.keys(baseline.source_files)) {
     try {
-      const bytes = await readRegularFile(resolve(absoluteRoot, path));
+      const bytes = await readRegularFile(absoluteRoot, path);
       sourceBlobs[path] = gitBlobSha1(bytes);
     } catch (error) {
-      if (error?.code === "ENOENT") sourceBlobs[path] = null;
-      else throw error;
+      if (error?.code === "ENOENT") {
+        sourceBlobs[path] = null;
+        missingSourcePaths.push(path);
+      } else throw error;
     }
   }
 
   let version = null;
+  let missingVersionSource = false;
   try {
-    const builder = (await readRegularFile(resolve(absoluteRoot, baseline.version_source))).toString("utf8");
+    const builder = (await readRegularFile(absoluteRoot, baseline.version_source)).toString("utf8");
     const match = /^FT_TOOL_VERSION=([^\r\n]+)$/m.exec(builder);
     version = match ? match[1].trim() : null;
   } catch (error) {
-    if (error?.code !== "ENOENT") throw error;
+    if (error?.code === "ENOENT") missingVersionSource = true;
+    else throw error;
   }
 
   let assetPins = {
@@ -252,14 +344,21 @@ export async function readCurrentElkState(root, baselineInput, externalPath = nu
     oracle_sha256: null
   };
   if (externalPath) {
+    const relativeExternalPath = resolveExternalRelativePath(absoluteRoot, externalPath);
     try {
-      const raw = (await readRegularFile(resolve(absoluteRoot, externalPath))).toString("utf8");
+      const raw = (await readRegularFile(absoluteRoot, relativeExternalPath)).toString("utf8");
       assetPins = normalizeExternalPins(JSON.parse(raw));
     } catch (error) {
       if (error?.code !== "ENOENT") throw error;
     }
   }
-  return { version, source_blobs: sourceBlobs, asset_pins: assetPins };
+  return {
+    version,
+    source_blobs: sourceBlobs,
+    asset_pins: assetPins,
+    missing_source_paths: missingSourcePaths,
+    missing_version_source: missingVersionSource
+  };
 }
 
 export async function runElkMaintenanceCli(args = process.argv.slice(2)) {
