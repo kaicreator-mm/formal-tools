@@ -14,11 +14,21 @@
       "portable/verification/cases/causal-learn/neg.py": "92b6c23455f62882c124de7bdfe706f189fd71d2"
     },
     "repaired_fixture_blobs": {
-      "portable/verification/cases/causal-learn/neg.py": "51dce05196e54e74e0c66a627d018306d5705155",
-      "portable/verification/cases/causal-learn/expect.sh": "377fdd4bceec42a3441f7ae2a0fe3fdd2805ea3b",
-      "portable/verification/cases/causal-learn/err.py": "6061b1f0eeaaba65574c6094f6f3cbd7e58dd44c"
+      "portable/verification/cases/causal-learn/neg.py": "764d17899af89f138e8d3e34a3318d075a3e5005",
+      "portable/verification/cases/causal-learn/expect.sh": "d747aa58e2f42b37b618208eeca75d74bb9c402f",
+      "portable/verification/cases/causal-learn/err.py": "6061b1f0eeaaba65574c6094f6f3cbd7e58dd44c",
+      "portable/verification/cases/causal-learn/pos.py": "bb65d4439b8209cf84c15097d66ad05210f5a40a"
     },
-    "contract_test_blob": "c5e9a1fdc1ae34d2675c568ba2053bf40b2585cf"
+    "contract_test_blob": "de4aa30b56d2c66dbd7dc8718d0c8499f9b711e2",
+    "reviewed_head_before_r22": "d658e74a6a2164c5e8ad9615adbcf2d00401e470",
+    "rework_base_main_sha": "6e98fef47b15592c327523916048280c363acf06",
+    "review_findings_repair": {
+      "previous_review_head": "d658e74a6a2164c5e8ad9615adbcf2d00401e470",
+      "findings": {
+        "P2-01": "Replace QR-orthogonalized columns with independent fixed-seed Gaussian streams and assert the Fisher-Z p-value is > 0.05 before PC.",
+        "P2-02": "The chain X->Y->Z is marginally dependent between X and Z but conditionally independent given Y; POS fixture now asserts both facts."
+      }
+    }
   },
   "assets": {
     "original_tool_archive": {
@@ -36,8 +46,30 @@
     "tool_meta_sha256": "eaae4cd4674f967745f0fd88c94b16a4d469486292ee86e49df8998a92d57989",
     "run_shim_sha256": "8d7575b3f3490633a6be68fd78b758bd49c8b8c2a75fc257518fd3b06fc97df7"
   },
-  "defect_found": "The old NEG fixture passed malformed ragged input and caught ValueError; it was an ERR test mislabeled as a semantic NEG. This repair moves malformed input to ERR and makes NEG a valid independent-data graph with no edge.",
+  "defect_found": "The original NEG was malformed input mislabeled as semantic negative; the first repair used QR orthogonalization, which imposed zero sample correlation rather than independent Gaussian sampling. R22 now uses independent seeded Gaussian streams with a Fisher-Z non-rejection assertion; POS explicitly distinguishes marginal dependence from conditional independence given Y.",
   "execution": {
+    "status": "NOT_RUN_AFTER_R22_SEMANTIC_REPAIR",
+    "reason": "The POS/NEG fixture semantics changed after the previous host-Python substitute receipt. The prior receipt is retained under historical_execution_before_r22 and does not apply to the new fixture blobs.",
+    "canonical_runtime": "NOT_RUN; 294346075-byte Python 3.13.5 archive exceeds the Drive connector's 268435456-byte download ceiling.",
+    "next": "Re-execute exact new POS/NEG/ERR fixture blobs under a verified runtime and current-main Runner before any T3 promotion."
+  },
+  "canonical_runtime": {
+    "file": "python313-3.13.5-linux-x86_64.tar.zst",
+    "expected_sha256": "1dbbc431b578da5139c8f1993d5c138582dee577804fca9e85936b490606f1d5",
+    "size_bytes": 294346075,
+    "status": "NOT_DOWNLOADED_CONNECTOR_HTTP_413",
+    "limit_bytes": 268435456
+  },
+  "qualification": {
+    "t3": "NOT_RUN_AFTER_R22_SEMANTIC_REPAIR; previous host-Python substitute receipt applies only to pre-R22 fixture blobs; canonical portable runtime not executed",
+    "t4": "NOT_QUALIFIED",
+    "t5": "NOT_QUALIFIED_NO_INDEPENDENT_ORACLE_OR_BUSINESS_CASE",
+    "t6": "OPEN"
+  },
+  "ci": {
+    "status": "PR_CHECKS_AUTHORITATIVE; this JSON does not duplicate or freeze CI state"
+  },
+  "historical_execution_before_r22": {
     "status": "HOST_PYTHON_SUBSTITUTE_SCOPED_PASS",
     "os": "Linux x86_64",
     "uid": 65534,
@@ -112,21 +144,5 @@
         }
       ]
     }
-  },
-  "canonical_runtime": {
-    "file": "python313-3.13.5-linux-x86_64.tar.zst",
-    "expected_sha256": "1dbbc431b578da5139c8f1993d5c138582dee577804fca9e85936b490606f1d5",
-    "size_bytes": 294346075,
-    "status": "NOT_DOWNLOADED_CONNECTOR_HTTP_413",
-    "limit_bytes": 268435456
-  },
-  "qualification": {
-    "t3": "SCOPED_HOST_RUNTIME_OBSERVATION_ONLY; canonical portable runtime not executed",
-    "t4": "NOT_QUALIFIED",
-    "t5": "NOT_QUALIFIED_NO_INDEPENDENT_ORACLE_OR_BUSINESS_CASE",
-    "t6": "OPEN"
-  },
-  "ci": {
-    "status": "PR_CHECKS_AUTHORITATIVE; this JSON does not duplicate or freeze CI state"
   }
 }
