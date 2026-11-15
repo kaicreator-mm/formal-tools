@@ -2,15 +2,16 @@
  * Issue #24 T4 gateway: one capability-linked portfolio, never 23 MCP servers.
  *
  * The original 13 native operations retain their existing executable catalog.
- * Candidate tools are discoverable here, but the ONLY currently admitted
- * candidate execution is the portable bundle's committed pos/neg/err fixture.
- * No raw argv, caller-provided script, shell, or arbitrary file input crosses
- * the MCP boundary. T3/T4/T5 qualifications are deliberately independent.
+ * Candidate tools share this one registry/runner gateway. The generic candidate
+ * execution remains a committed pos/neg/err fixture; the first typed candidate
+ * operation is Highs 1.15.1 solve-lp. No raw argv, caller script, shell or
+ * arbitrary file input crosses the MCP boundary. T3/T4/T5 stay independent.
  */
 import { readFileSync } from "node:fs";
-import { readFile, lstat, mkdtemp, rm } from "node:fs/promises";
+import { readFile, writeFile, lstat, mkdtemp, rm } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
+import { types as utilTypes } from "node:util";
 import { join, resolve, isAbsolute } from "node:path";
 import { tmpdir } from "node:os";
 import { toolIds } from "./native-catalog.mjs";
@@ -34,6 +35,7 @@ const maxBytes=1024*1024;
 const maxMetadataBytes=65536;
 const maxFixtureBytes=65536;
 const maxRunnerBytes=1024*1024;
+const highsSolveScriptSha256="6b43add5fbb8dc3b2aa65b951f85d9ee41f7827921d8d624588fe3aaae339136";
 function verifyOptionalPin(variable,actual) {
   const expected=process.env[variable];
   if(expected===undefined)return;
@@ -55,7 +57,7 @@ export function listPortfolioTools(){
   return capabilityRegistry.tools.map(t=>({
     id:t.id,origin:t.origin,expected_version:versionById.get(t.id),
     capability_ids:[...t.capability_ids],
-    execution_adapter:t.origin==="native-ref"?"NATIVE_CATALOG_13":"PORTABLE_FIXTURE_GATE_ONLY",
+    execution_adapter:t.origin==="native-ref"?"NATIVE_CATALOG_13":t.id==="highs"?"PORTABLE_TYPED_PYTHON_LIBRARY_CANDIDATE":"PORTABLE_FIXTURE_GATE_ONLY",
     t4_status:"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
     t5_status:"NOT_QUALIFIED"
   }));
@@ -63,7 +65,7 @@ export function listPortfolioTools(){
 export function describePortfolioTool(id){
   const t=profile(id);
   return {...listPortfolioTools().find(x=>x.id===id),official_url:t.official_url,
-    operations:t.origin==="candidate"?["doctor","verify-fixture"]:["EXISTING_NATIVE_CATALOG"],
+    operations:t.origin==="candidate"?(id==="highs"?["doctor","verify-fixture","solve-lp"]:["doctor","verify-fixture"]):["EXISTING_NATIVE_CATALOG"],
     raw_argv_allowed:false};
 }
 function context(){
@@ -134,6 +136,175 @@ export function planPortfolioFixture(id){
   candidate(id);
   return {tool:id,operation:"verify-fixture",entry:"portable/bin/tool-runner",
     args:["verify",id],mode:"typed",scope:"COMMITTED_POS_NEG_ERR_ONLY"};
+}
+function exactRecordKeys(value,expected){
+  if(value===null||typeof value!=="object"||utilTypes.isProxy(value)||Array.isArray(value)||
+     !(Object.getPrototypeOf(value)===Object.prototype||Object.getPrototypeOf(value)===null))
+    return false;
+  const keys=Reflect.ownKeys(value);
+  if(keys.length!==expected.length||keys.some(k=>typeof k!=="string"))return false;
+  const actual=keys.slice().sort().join("\\0");
+  if(actual!==expected.slice().sort().join("\\0"))return false;
+  return expected.every(key=>{
+    const descriptor=Object.getOwnPropertyDescriptor(value,key);
+    return descriptor!==undefined&&Object.hasOwn(descriptor,"value")&&descriptor.enumerable===true;
+  });
+}
+function denseModelArray(value,min,max){
+  if(utilTypes.isProxy(value)||!Array.isArray(value)||Object.getPrototypeOf(value)!==Array.prototype||
+     value.length<min||value.length>max)return false;
+  const keys=Reflect.ownKeys(value);
+  if(keys.length!==value.length+1||!keys.includes("length"))return false;
+  for(let i=0;i<value.length;i++){
+    const descriptor=Object.getOwnPropertyDescriptor(value,String(i));
+    if(descriptor===undefined||!Object.hasOwn(descriptor,"value")||descriptor.enumerable!==true)return false;
+  }
+  return true;
+}
+function finiteModelNumber(value){return typeof value==="number"&&Number.isFinite(value);}
+function numpyVersionSupported(value){
+  if(typeof value!=="string")return false;
+  const match=/^(\d+)\.(\d+)(?:\.\d+)?(?:[A-Za-z0-9.+-].*)?$/.exec(value);
+  if(!match)return false;
+  const major=Number(match[1]),minor=Number(match[2]);
+  return Number.isSafeInteger(major)&&Number.isSafeInteger(minor)&&
+    (major>2||(major===2&&minor>=1));
+}
+function validModelBound(value){return value===null||finiteModelNumber(value);}
+function validateHighsModel(model){
+  if(!exactRecordKeys(model,["sense","objective","variables","constraints"]))
+    throw new TypeError("HIGHS_MODEL_SCHEMA_INVALID");
+  if(!["min","max"].includes(model.sense))throw new TypeError("HIGHS_MODEL_SENSE_INVALID");
+  if(!denseModelArray(model.objective,1,64))
+    throw new TypeError("HIGHS_OBJECTIVE_INVALID");
+  const objective=[];
+  for(let i=0;i<model.objective.length;i++){
+    const value=model.objective[i];
+    if(!finiteModelNumber(value))throw new TypeError("HIGHS_OBJECTIVE_INVALID_"+i);
+    objective.push(value);
+  }
+  if(!denseModelArray(model.variables,objective.length,objective.length))
+    throw new TypeError("HIGHS_VARIABLE_COUNT_MISMATCH");
+  const variables=[];
+  for(let i=0;i<model.variables.length;i++){
+    const v=model.variables[i];
+    if(!exactRecordKeys(v,["lower","upper"])||!validModelBound(v.lower)||!validModelBound(v.upper)||
+       (v.lower!==null&&v.upper!==null&&v.lower>v.upper))
+      throw new TypeError("HIGHS_VARIABLE_BOUNDS_INVALID_"+i);
+    variables.push({lower:v.lower,upper:v.upper});
+  }
+  if(!denseModelArray(model.constraints,0,128))
+    throw new TypeError("HIGHS_CONSTRAINT_COUNT_INVALID");
+  const constraints=[];
+  for(let i=0;i<model.constraints.length;i++){
+    const c=model.constraints[i];
+    if(!exactRecordKeys(c,["lower","upper","coefficients"])||
+       !validModelBound(c.lower)||!validModelBound(c.upper)||
+       (c.lower!==null&&c.upper!==null&&c.lower>c.upper)||
+       !denseModelArray(c.coefficients,objective.length,objective.length))
+      throw new TypeError("HIGHS_CONSTRAINT_INVALID_"+i);
+    const coefficients=[];
+    for(let j=0;j<c.coefficients.length;j++){
+      const value=c.coefficients[j];
+      if(!finiteModelNumber(value))throw new TypeError("HIGHS_CONSTRAINT_INVALID_"+i);
+      coefficients.push(value);
+    }
+    constraints.push({lower:c.lower,upper:c.upper,coefficients});
+  }
+  const normalized={sense:model.sense,objective,variables,constraints};
+  const bytes=Buffer.from(JSON.stringify(normalized));
+  if(bytes.length>maxFixtureBytes)throw new RangeError("HIGHS_MODEL_SIZE_LIMIT");
+  return {model:normalized,bytes,input_sha256:digest(bytes)};
+}
+export function planPortfolioOperation(id,operation,model){
+  if(id!=="highs"||operation!=="solve-lp")
+    throw new TypeError("unadmitted typed portfolio operation");
+  const t=candidate(id),normalized=validateHighsModel(model);
+  return {tool:id,operation,schema:"formal-tools/highs-solve-lp/1.0",
+    capability_ids:[...t.capability_ids],model:normalized.model,
+    input_sha256:normalized.input_sha256,mode:"typed",
+    budget:{max_variables:64,max_constraints:128,max_input_bytes:maxFixtureBytes,max_timeout_s:30},
+    raw_argv_allowed:false};
+}
+function portfolioTimeout(options){
+  if(options===undefined)return 30;
+  if(options===null||typeof options!=="object"||Array.isArray(options)||utilTypes.isProxy(options)||
+     !(Object.getPrototypeOf(options)===Object.prototype||Object.getPrototypeOf(options)===null))
+    throw new TypeError("portfolio operation options must be a plain data object");
+  const keys=Reflect.ownKeys(options);
+  if(keys.some(key=>key!=="timeoutS")||keys.length>1)
+    throw new TypeError("unknown portfolio operation option");
+  const descriptor=Object.getOwnPropertyDescriptor(options,"timeoutS");
+  if(descriptor!==undefined&&(!Object.hasOwn(descriptor,"value")||descriptor.enumerable!==true))
+    throw new TypeError("portfolio timeout option must be a data property");
+  const value=descriptor===undefined?30:descriptor.value;
+  if(!Number.isInteger(value)||value<1||value>30)
+    throw new TypeError("timeoutS must be integer 1..30");
+  return value;
+}
+/** The first candidate typed operation: fixed Highs Python Library LP model, no argv or user paths. */
+export async function runPortfolioOperation(id,operation,model,options={}){
+  const timeoutS=portfolioTimeout(options);
+  const plan=planPortfolioOperation(id,operation,model);
+  let tmp=null;
+  try{
+    const x=await installed(id);
+    if(x.meta.kind!=="python-lib")throw new Error("HIGHS_ADAPTER_KIND_MISMATCH");
+    tmp=await mkdtemp(join(tmpdir(),"formal-highs-operation-"));
+    const script=join(x.ctx.root,"tests","highs","solve-lp.py");
+    const scriptStat=await regular(script);
+    if(scriptStat.size>maxFixtureBytes)throw new Error("HIGHS_OPERATION_SCRIPT_SIZE_LIMIT");
+    const scriptBytes=await readFile(script);
+    const scriptHash=digest(scriptBytes);
+    if(scriptHash!==highsSolveScriptSha256)throw new Error("HIGHS_OPERATION_SCRIPT_SHA256_MISMATCH");
+    if(digest(plan.model?Buffer.from(JSON.stringify(plan.model)):Buffer.alloc(0))!==plan.input_sha256)
+      throw new Error("HIGHS_OPERATION_INPUT_HASH_MISMATCH");
+    const inputPath=join(tmp,"model.json");
+    await writeFile(inputPath,JSON.stringify(plan.model),{flag:"wx",mode:0o600});
+    const solverTimeLimit=Math.max(0.1,timeoutS-0.5);
+    const p=await capture([x.ctx.runner,"run","highs",script,inputPath],{
+      ...process.env,FORMAL_PORTABLE_ROOT:x.ctx.root,FT_EVIDENCE_DIR:tmp,
+      FORMAL_TOOLS_HIGHS_TIME_LIMIT_S:String(solverTimeLimit)
+    },timeoutS);
+    let solver=null,parseError=null;
+    if(p.exit_code===0&&!p.timed_out&&!p.output_limit&&!p.error){
+      try{
+        solver=JSON.parse(p.stdout);
+        const allowed=new Set(["kOptimal","kInfeasible","kUnbounded","kUnboundedOrInfeasible","kTimeLimit"]);
+        if(solver.schema!=="formal-tools/highs-solve-lp/1.0"||solver.tool!=="highs"||
+           solver.highspy_version!=="1.15.1"||solver.input_sha256!==plan.input_sha256||
+           solver.solver_api_status!=="kOk"||!allowed.has(solver.model_status)||
+           solver.python_version!=="3.13.5"||!numpyVersionSupported(solver.numpy_version))
+          throw new Error("HIGHS_RESULT_SCHEMA_OR_VERSION_INVALID");
+        if(solver.model_status==="kOptimal"){
+          if(!finiteModelNumber(solver.objective)||!Array.isArray(solver.variables)||
+             solver.variables.length!==plan.model.objective.length||!solver.variables.every(finiteModelNumber))
+            throw new Error("HIGHS_OPTIMAL_RESULT_INVALID");
+        }else if(solver.objective!==null||!Array.isArray(solver.variables)||solver.variables.length!==0){
+          throw new Error("HIGHS_NONOPTIMAL_RESULT_INVALID");
+        }
+      }catch(e){parseError=String(e);solver=null;}
+    }
+    const complete=p.exit_code===0&&!p.timed_out&&!p.output_limit&&!p.error&&!parseError&&solver!==null;
+    return {schema:"formal-tools/portfolio-operation/0.1",tool:id,operation,
+      status:complete?"T4_OPERATION_EXECUTED_UNREVIEWED":"PORTFOLIO_OPERATION_FAILED",
+      qualification:"NOT_T4_ACCEPTED_INDEPENDENT_REVIEW_PENDING",
+      capability_ids:plan.capability_ids,
+      process:{exit_code:p.exit_code,signal:p.signal,timed_out:p.timed_out,
+        output_limit:p.output_limit,elapsed_ms:p.elapsed_ms,error:p.error??parseError},
+      runner_sha256:x.ctx.expected,metadata_sha256:x.meta_sha256,
+      fixture_contract_sha256:x.fixture_contract_sha256,
+      operation_script_sha256:scriptHash,input_sha256:plan.input_sha256,
+      solver,streams:{stdout:p.stdout,stderr:p.stderr,
+        stdout_sha256:p.stdout_sha256,stderr_sha256:p.stderr_sha256},
+      budget:{timeout_s:timeoutS,solver_time_limit_s:solverTimeLimit,
+        max_variables:64,max_constraints:128},
+      scope:"T4_TECHNICAL_OPERATION_ONLY_T5_BUSINESS_SEMANTICS_NOT_EVALUATED"};
+  }catch(e){
+    return {schema:"formal-tools/portfolio-operation/0.1",tool:id,operation,
+      status:"NOT_RUN_FAIL_CLOSED",qualification:"NOT_T4_ACCEPTED",
+      reason:String(e),scope:"T3_T4_T5_NOT_QUALIFIED"};
+  }finally{if(tmp)await rm(tmp,{recursive:true,force:true});}
 }
 function parseReceipt(id,tsv){
   if(Buffer.byteLength(tsv)>65536)throw new Error("PORTABLE_RECEIPT_TOO_LARGE");
