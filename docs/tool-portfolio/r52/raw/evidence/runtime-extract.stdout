@@ -1,0 +1,16 @@
+{
+  "archive": "/incoming/python313-3.13.5-linux-x86_64.tar.zst",
+  "destination": "/work/python313",
+  "members": 41093,
+  "ownership_inherited": false,
+  "result": "PASS",
+  "sha256": "1dbbc431b578da5139c8f1993d5c138582dee577804fca9e85936b490606f1d5",
+  "size": 294346075,
+  "types": {
+    "directory": 3585,
+    "hardlink": 0,
+    "regular": 37500,
+    "symlink": 8
+  },
+  "uid": 1000
+}

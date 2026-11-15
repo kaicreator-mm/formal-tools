@@ -1,0 +1,3 @@
+os=debian-13 arch=x86_64 uid=1000
+size=294346075 mode=644
+1dbbc431b578da5139c8f1993d5c138582dee577804fca9e85936b490606f1d5  /incoming/python313-3.13.5-linux-x86_64.tar.zst

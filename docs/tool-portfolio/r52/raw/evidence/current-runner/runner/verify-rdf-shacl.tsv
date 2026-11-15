@@ -1,0 +1,5 @@
+runner_schema	formal-tools/portable-verify/0.2
+rdf-shacl	pos	0	256	1	1	CONFORMS
+rdf-shacl	neg	1	259	1	1	VIOLATION
+rdf-shacl	err	1	257	1	1	INVALID_RDF
+verdict	PASS

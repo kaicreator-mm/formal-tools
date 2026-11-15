@@ -1,0 +1,14 @@
+== assemble bundle tree ==
+== manifest + hashes ==
+manifest.json: 1 tools; 188 python packages listed
+== per-tool packages (zstd -22, versioned names) ==
+verify OK: rdf-shacl-0.40.2-linux-x86_64.tar.zst (6 entries)
+== runtime packages (zstd -22, versioned names) ==
+verify OK: python313-3.13.5-linux-x86_64.tar.zst (41100 entries)
+== core archive (zstd -22): runner + tests + registry + manifest + evidence ==
+verify OK: formal-tools-portable-core-linux-x86_64.tar.zst (196 entries)
+== SHA256SUMS + unpack script ==
+bundle: /task/out/bundle/formal-tools-portable-debian13-x86_64
+1.7G	/task/out/bundle/formal-tools-portable-debian13-x86_64
+281M	/task/out/packages
+pack OK (all archives verified)
