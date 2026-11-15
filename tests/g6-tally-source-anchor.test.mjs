@@ -9,7 +9,7 @@ import {join} from 'node:path';
 const sourcePath=new URL('../validation/g6-tally-source-anchor-2026-11-15/TALLY_BUSINESS_SOURCE.mjs',import.meta.url);
 const manifestPath=new URL('../validation/g6-tally-source-anchor-2026-11-15/SOURCE_ANCHOR.json',import.meta.url);
 const gitBlob=bytes=>createHash('sha1')
-  .update(Buffer.concat([Buffer.from('blob '+bytes.length+'\\0'),bytes])).digest('hex');
+  .update(Buffer.concat([Buffer.from('blob '+bytes.length+'\0'),bytes])).digest('hex');
 const expectedSourceBlob='54015fb63ffb13b4f4e562f660d2172098b5f7f4';
 const sourceBytes=readFileSync(sourcePath);
 const verifiedSourceBlob=gitBlob(sourceBytes);
