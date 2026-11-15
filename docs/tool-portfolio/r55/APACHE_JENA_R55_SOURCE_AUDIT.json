@@ -1,0 +1,106 @@
+{
+  "schema": "formal-tools/i24-apache-jena-r55-source-native-replay/1.0",
+  "output_label": "FORMAL_TOOLS_I24_APACHE_JENA_R55_SOURCE_NATIVE_REPLAY",
+  "repository": "kaicreator-mm/formal-tools",
+  "main_issue": 24,
+  "tool_issue": 27,
+  "exact_main": "d996d168812f51d131b3f3f9c525cc1bd161d087",
+  "source_archive": {
+    "drive_file_id": "1YSoQtIQmRExE5x-QjB8Ifno9Xmrk28NZ",
+    "size_bytes": 22751175,
+    "sha256": "6cf2dff4e97a946534428c679af7da4c80e832a0e496f3f6306114118a432855",
+    "manifest_sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64",
+    "manifest_match": true,
+    "modified_time": "2026-11-12T07:48:13.358Z"
+  },
+  "upstream_release": {
+    "url": "https://archive.apache.org/dist/jena/binaries/apache-jena-5.5.0.tar.gz",
+    "sha512": "f9ae68a748e642c6a8175ee25afdfa37ce057ed37e7caf279a8a46ad93284bea808cf14d96bf30b6e4e6a4ddaf30cf5ee9d441f48a9a3d3c9e647a9b71645e0c",
+    "sidecar": "https://archive.apache.org/dist/jena/binaries/apache-jena-5.5.0.tar.gz.sha512",
+    "signature_verified": false,
+    "asset_bytes_fetched": false
+  },
+  "historical_build_receipt": {
+    "blob": "8dd68b337f5f898c5188c7833fad2ec2998b0720",
+    "build_ts": "2026-11-10T22:26:52Z",
+    "package_sha256": "12e882fb3892b83421501b503970daf43fad9a2c2011fa5cb9afeb649695c690",
+    "upstream": null,
+    "disposition": "stale/historical; predates current Drive archive modification"
+  },
+  "evidence_bundle": {
+    "drive_file_id": "1HZkOHWoa_z5Tu-nRPOQFjcljeNtgA-2u",
+    "url": "https://drive.google.com/file/d/1HZkOHWoa_z5Tu-nRPOQFjcljeNtgA-2u/view?usp=drivesdk",
+    "size_bytes": 1589011,
+    "sha256": "6b6a49937874efc19651883d681f965ef6bedcc3c0fdbc761c24b0b9c8fd1ec2",
+    "zip_entries": 45,
+    "sha256sum_entries": 43,
+    "drive_readback_verified": true
+  },
+  "archive_safety": {
+    "zstd_test": 0,
+    "decompress": 0,
+    "tar_listing": 0,
+    "member_count": 304,
+    "regular_files": 254,
+    "directories": 50,
+    "symlinks": 0,
+    "hardlinks": 0,
+    "special_files": 0,
+    "unsafe_paths": 0,
+    "nonroot_extract": 0,
+    "extracted_entries": 305,
+    "all_entries_owned_by_65534": true
+  },
+  "native": {
+    "riot_version": "5.5.0",
+    "uid_gid": "65534:65534",
+    "pos": {
+      "exit": 0,
+      "stderr": ""
+    },
+    "neg": {
+      "exit": 1,
+      "stderr": "Undefined prefix: rdfs"
+    },
+    "err": {
+      "exit": 2,
+      "stderr": "Not found: does-not-exist.ttl"
+    }
+  },
+  "proposed_fixes": {
+    "builder_blob": "777abe37c6b180ba448d93331cdada86142c4b4f",
+    "expect_blob": "a73bd895a41ace7dba5d5b1768da091b5abeda30",
+    "source_test_blob": "43a11e2671ff5b4f7a0ee5c3572f3bd5537ea030",
+    "fixture_test_blob": "0648aed7bf090b79ac9c633f865a5a7bf0caab39",
+    "local_tests": "4/4 PASS",
+    "shell_syntax": "bash -n PASS"
+  },
+  "current_main": {
+    "runner_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "meta_generator_blob": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+    "current_package_meta": "TOOL_TOOL_ID=apache-jena",
+    "runner_requires": "TOOL_ID"
+  },
+  "qualification": {
+    "T0": "PASS_SCOPED_CURRENT_DRIVE_ARCHIVE_HASH_MATCHES_PRODUCER_MANIFEST; official SHA512 sidecar pinned in proposed builder; full T0 pending license inventory and publisher-byte rebuild",
+    "T1": "NOT_QUALIFIED; no upstream asset bytes/build",
+    "T2": "PASS_SCOPED_ZSTD_TAR_PREFLIGHT_AND_NONROOT_EXTRACTION_ONLY",
+    "T3": "SCOPED_NATIVE_POS_NEG_ERR_REPRODUCED_WITH_HOST_JAVA21; pending independent review",
+    "T4": "NOT_ACCEPTED; legacy TOOL_TOOL_ID; no current Runner/CLI/MCP/SDK run",
+    "T5": "NOT_QUALIFIED",
+    "T6": "OPEN",
+    "Product": "NOT_QUALIFIED",
+    "Release": "NOT_AUTHORIZED"
+  },
+  "findings": {
+    "P0": 0,
+    "P1": 1,
+    "P2": 0,
+    "P1_detail": "Upstream SHA512 pin and exact NEG/ERR exits proposed; pending exact-head CI, independent review and official asset fetch/rebuild. P2 stale receipt discrepancy resolved by current Drive byte+manifest rehash."
+  },
+  "limitations": [
+    "Official .tar.gz bytes not fetched; sidecar SHA512 is not a PGP signature verification.",
+    "No T1 source build or current Runner/CLI/MCP/SDK route.",
+    "Full third-party license inventory and T5/T6/Product/Release remain open."
+  ]
+}
