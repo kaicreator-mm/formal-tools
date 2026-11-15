@@ -91,7 +91,7 @@ test("Highs candidate exposes one bounded typed Python Library operation, never 
   assert.throws(()=>planPortfolioOperation("highs","solve-lp",{...model,objective:proxyArray}),/HIGHS_OBJECTIVE_INVALID/);
   const proxyOptions=new Proxy({timeoutS:10},{get(){throw new Error("option proxy trap must not run");}});
   await assert.rejects(sdk.runPortfolioOperation("highs","solve-lp",model,proxyOptions),/plain data object/);
-  await assert.rejects(sdk.runPortfolioOperation("highs","solve-lp",model,{get timeoutS(){throw new Error("option getter must not run");}}),/data property/);
+  await assert.rejects(sdk.runPortfolioOperation("highs","solve-lp",model,{get timeoutS(){return assert.fail("option getter must not run");}}),/data property/);
 });
 
 test("SDK and CLI use the same pinned typed operation; CLI opens model with O_NOFOLLOW",{skip:process.platform!=="linux"||process.arch!=="x64"},async()=>{
