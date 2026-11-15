@@ -306,3 +306,72 @@ test("MCP stdio invokes the same typed Highs operation and rejects arbitrary fie
     assert.ok(rejected.error||rejected.result?.isError===true,"unknown argv field must be rejected");
   }finally{await bundle.cleanup();}
 });
+
+test("Python Highs operation rejects value_valid=false before reading solution values",async t=>{
+  const python=process.env.PYTHON??"python3";
+  const probe=spawnSync(python,["-c","import platform; print(platform.python_version())"],{encoding:"utf8",timeout:5000});
+  if(probe.status!==0||probe.stdout.trim()!=="3.13.5"){
+    t.skip("requires the canonical Python 3.13.5 runtime; "+(probe.stderr||probe.stdout||probe.error?.message||"python3 unavailable").trim());
+    return;
+  }
+  const root=await mkdtemp(join(tmpdir(),"ft-highs-invalid-solution-"));
+  const fake=join(root,"fake-modules");
+  await mkdir(fake,{recursive:true});
+  try{
+    await writeFile(join(fake,"numpy.py"),[
+      '__version__ = "2.5.4"',
+      'int32 = "int32"',
+      'float64 = "float64"',
+      'def arange(size, dtype=None): return list(range(size))',
+      'def asarray(values, dtype=None): return list(values)',
+      ''
+    ].join("\\n"));
+    await writeFile(join(fake,"highspy.py"),[
+      'class _Status:',
+      '    def __init__(self, name): self.name = name',
+      'class HighsStatus:',
+      '    kOk = _Status("kOk")',
+      'class HighsModelStatus:',
+      '    kOptimal = _Status("kOptimal")',
+      '    kInfeasible = _Status("kInfeasible")',
+      '    kUnbounded = _Status("kUnbounded")',
+      '    kUnboundedOrInfeasible = _Status("kUnboundedOrInfeasible")',
+      '    kTimeLimit = _Status("kTimeLimit")',
+      'class ObjSense:',
+      '    kMaximize = _Status("kMaximize")',
+      '    kMinimize = _Status("kMinimize")',
+      'kHighsInf = 1e30',
+      'class _InvalidSolution:',
+      '    value_valid = False',
+      '    @property',
+      '    def col_value(self):',
+      '        raise AssertionError("INVALID_SOLUTION_VECTOR_WAS_READ")',
+      'class Highs:',
+      '    def version(self): return "1.15.1"',
+      '    def setOptionValue(self, *args): return HighsStatus.kOk',
+      '    def addVar(self, *args): return HighsStatus.kOk',
+      '    def changeColCost(self, *args): return HighsStatus.kOk',
+      '    def addRow(self, *args): return HighsStatus.kOk',
+      '    def changeObjectiveSense(self, *args): return HighsStatus.kOk',
+      '    def run(self): return HighsStatus.kOk',
+      '    def getModelStatus(self): return HighsModelStatus.kOptimal',
+      '    def getSolution(self): return _InvalidSolution()',
+      '    def getObjectiveValue(self): raise AssertionError("INVALID_OBJECTIVE_WAS_READ")',
+      ''
+    ].join("\\n"));
+    const request=join(root,"request.json");
+    await writeFile(request,JSON.stringify(model));
+    const script=join(repoRoot,"portable/verification/cases/highs/solve-lp.py");
+    const result=spawnSync(python,[script,request],{
+      cwd:root,encoding:"utf8",timeout:10000,
+      env:{...process.env,TMPDIR:root,PYTHONPATH:fake}
+    });
+    assert.equal(result.error,undefined,result.error?.message);
+    assert.equal(result.status,3,result.stderr);
+    assert.match(result.stderr,/OPTIMAL_SOLUTION_VALUE_INVALID/);
+    assert.doesNotMatch(result.stderr,/INVALID_SOLUTION_VECTOR_WAS_READ|INVALID_OBJECTIVE_WAS_READ/);
+    assert.equal(result.stdout.trim(),"");
+  }finally{
+    await rm(root,{recursive:true,force:true});
+  }
+});
