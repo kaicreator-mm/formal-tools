@@ -11,20 +11,22 @@
     "previous_reviewed_head": "3a789d11ee39e94287b94604fff190fe2037be8f",
     "previous_runner_blob": "d83baae8ba36fc17504033dc0eaae0ad3a148ec4",
     "runner_path": "portable/packaging/bundle-template/bin/tool-runner",
-    "runner_blob_after_repair": "0bed20a6e6fe384bf48f17b9e4dc9873fdbdc616",
-    "runner_repair_commit": "PENDING_COMMIT",
+    "runner_blob_after_repair": "6ccc68a7269239a2f6ac3987e270274e54307f6e",
+    "runner_repair_commit": "181806e1dee6e3473d406687f269c4f5dbd62a8f",
     "test_path": "tests/tool-runner-ldd-report.test.mjs",
-    "test_blob_after_repair": "8c666a7ae0f43d6768a4fac2d414e8f8bcb51f74",
-    "test_repair_commit": "PENDING_COMMIT",
-    "runner_blob_after_r20_repair": "6ccc68a7269239a2f6ac3987e270274e54307f6e",
-    "test_blob_after_r20_repair": "2191e65bc441652f320f7f12955948e734e900d4",
+    "test_blob_after_repair": "2191e65bc441652f320f7f12955948e734e900d4",
+    "test_repair_commit": "181806e1dee6e3473d406687f269c4f5dbd62a8f",
     "r20_repair": {
       "previous_reviewed_head": "3a789d11ee39e94287b94604fff190fe2037be8f",
       "findings": {
         "P1": "ft_has_elf_magic was called but not defined; add a bounded four-byte ELF magic reader and fail closed when the header is absent.",
         "P2": "An ET_EXEC with e_entry=0 and an executable file-backed PT_LOAD beginning at zero could be treated as a static candidate; require a nonzero entry and add an explicit zero-entry fixture."
       }
-    }
+    },
+    "runner_blob_before_r20": "0bed20a6e6fe384bf48f17b9e4dc9873fdbdc616",
+    "runner_repair_commit_r18": "1b2df30dcd26e99cd46990b586cc0a4b04976fba",
+    "test_blob_before_r20": "8c666a7ae0f43d6768a4fac2d414e8f8bcb51f74",
+    "test_repair_commit_r18": "faf64278913fa1cd0ecf951925680c2e1bcfe9a7"
   },
   "problem": {
     "review_finding": "P1: absence of PT_INTERP alone is not proof of static linkage. An ET_DYN shared object may contain PT_DYNAMIC and DT_NEEDED without PT_INTERP; skipping ldd can hide missing dependencies.",
