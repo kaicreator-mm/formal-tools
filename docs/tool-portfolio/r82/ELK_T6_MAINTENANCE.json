@@ -1,0 +1,200 @@
+{
+  "schema": "formal-tools/elk-t6-maintenance-baseline/1",
+  "snapshot_head": "069444c176bbacc804f107482f356dbc2eb95736",
+  "tool": {
+    "id": "elk",
+    "version": "0.6.0",
+    "upstream_release_tag": "v0.6.0",
+    "upstream_asset": "elk-distribution-cli-0.6.0.zip"
+  },
+  "version_source": "portable/builders/tools/elk.sh",
+  "asset_pins": {
+    "portable_package_sha256": "c98892d52e46a03a6e2c354cf7cc78b9f0c3d9dfb8b24a9cfa3e00e226b12fdf",
+    "upstream_source_archive_sha256": null,
+    "binary_sha256": null,
+    "oracle_sha256": null
+  },
+  "source_files": {
+    "portable/builders/tools/elk.sh": {
+      "git_blob_sha1": "a6fcbf1ea2916e8cd80f2798116be64ba39d307b",
+      "gates": [
+        "T1",
+        "T2",
+        "T3",
+        "T6"
+      ]
+    },
+    "portable/verification/cases/elk/expect.sh": {
+      "git_blob_sha1": "82bb3272d0d21b73757f5f0d6d8bf6b5d6ce150f",
+      "gates": [
+        "T3",
+        "T4",
+        "T5",
+        "T6"
+      ]
+    },
+    "portable/verification/cases/elk/pos.ofn": {
+      "git_blob_sha1": "e8ec42d6580452dfd8c3a5fea4f714ac8fa82318",
+      "gates": [
+        "T3",
+        "T4",
+        "T5",
+        "T6"
+      ]
+    },
+    "portable/verification/cases/elk/neg.ofn": {
+      "git_blob_sha1": "279795bf2dd90087cc8ec43793208f43daaaadc5",
+      "gates": [
+        "T3",
+        "T4",
+        "T5",
+        "T6"
+      ]
+    },
+    "portable/builders/make_meta.py": {
+      "git_blob_sha1": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+      "gates": [
+        "T0",
+        "T1",
+        "T2",
+        "T6"
+      ]
+    },
+    "portable/packaging/bundle-template/bin/tool-runner": {
+      "git_blob_sha1": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+      "gates": [
+        "T2",
+        "T3",
+        "T4",
+        "T6"
+      ]
+    },
+    "portable/packaging/pack.sh": {
+      "git_blob_sha1": "4b3cae235643f8554f1e62001268816ba205bcac",
+      "gates": [
+        "T0",
+        "T1",
+        "T2",
+        "T6"
+      ]
+    },
+    "portable/packaging/make-manifest.py": {
+      "git_blob_sha1": "f48318997276289f049260902c474650907e96ec",
+      "gates": [
+        "T0",
+        "T1",
+        "T2",
+        "T6"
+      ]
+    },
+    "portable/packaging/unpack-template/unpack.sh": {
+      "git_blob_sha1": "ad8ba2330a7b3bd66f5508563774b7b472fae977",
+      "gates": [
+        "T2",
+        "T3",
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/tool-portfolio-t4.mjs": {
+      "git_blob_sha1": "922a7c208beaa0e48346403a29ec2d927189319f",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/cli.mjs": {
+      "git_blob_sha1": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/sdk.mjs": {
+      "git_blob_sha1": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/mcp.mjs": {
+      "git_blob_sha1": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "registry/PROBLEM_CAPABILITIES.json": {
+      "git_blob_sha1": "faa89997c3f7c8c71da0a69aa90e8ff37461cde0",
+      "gates": [
+        "T4",
+        "T5",
+        "T6"
+      ]
+    },
+    "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json": {
+      "git_blob_sha1": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+      "gates": [
+        "T0",
+        "T4",
+        "T6"
+      ]
+    }
+  },
+  "component_applicability": {
+    "native_adapter": "NOT_APPLICABLE_JAVA_BUNDLE",
+    "runner": "APPLICABLE",
+    "gateway": "APPLICABLE",
+    "cli": "APPLICABLE",
+    "sdk": "APPLICABLE",
+    "mcp": "APPLICABLE"
+  },
+  "gate_revalidation": {
+    "T0": [
+      "Re-fetch the original ELK 0.6.0 portable archive and producer manifest; verify archive bytes, upstream release identity, rights and license scope. Do not substitute the R12 metadata-corrected candidate archive."
+    ],
+    "T1": [
+      "Reproduce the ELK 0.6.0 package from the pinned upstream distribution and canonical builder in two clean Debian 13 x86_64 environments; record Java21 toolchain, dependency graph and exact binary/package hashes."
+    ],
+    "T2": [
+      "Repeat safe ZIP/tar member and link preflight, non-root extraction, read-only payload and Java21 runtime checks; preserve the original archive."
+    ],
+    "T3": [
+      "Re-run only changed native ELK POS/NEG/ERR cases with raw inputs, stdout/stderr/exit, generated taxonomy hashes and exact runtime identity; preserve that NEG is a valid inconsistent ontology while the ERR case is missing-source."
+    ],
+    "T4": [
+      "Re-run exact-current-main original-package doctor/version/verify and bounded Runner, CLI, SDK and MCP routes; the metadata-corrected R12 candidate is not the canonical original package."
+    ],
+    "T5": [
+      "Use a source-backed ontology case and an independent domain semantic Oracle; ELK's own classification output is not an independent Oracle."
+    ],
+    "T6": [
+      "Re-fetch all pinned source and asset identities, classify STALE/UNKNOWN, update the versioned baseline only after evidence review, and retain exact-head CI and independent review."
+    ]
+  },
+  "qualification_boundary": {
+    "T0": "PASS_SCOPED_ORIGINAL_PORTABLE_ARCHIVE_SHA_AND_PRODUCER_MANIFEST_ONLY; NOT_PUBLISHER_SIGNATURE",
+    "T1": "NOT_QUALIFIED_REPRODUCIBLE_SOURCE_BUILD",
+    "T2": "PASS_SCOPED_R3_SAFE_NONROOT_INSTALL",
+    "T3": "PASS_SCOPED_R9_NATIVE_POS_NEG_ERR_TECHNICAL_REVIEW; NOT_AN_INDEPENDENT_DOMAIN_ORACLE",
+    "T4": "NOT_ACCEPTED_ORIGINAL_PACKAGE_CURRENT_MAIN_RUNNER_CLI_SDK_MCP; R12_METADATA_CORRECTED_ARCHIVE_IS_NONCANONICAL",
+    "T5": "NOT_QUALIFIED_INDEPENDENT_SEMANTIC_ORACLE",
+    "T6": "ASSESSOR_IMPLEMENTATION_PENDING_INDEPENDENT_REVIEW",
+    "product_or_release": "NOT_GRANTED"
+  },
+  "notes": [
+    "Original ELK 0.6.0 portable package SHA256 c98892d52e46a03a6e2c354cf7cc78b9f0c3d9dfb8b24a9cfa3e00e226b12fdf was recorded in the R12 source/package audit and matched the canonical producer manifest; it is not a publisher signature.",
+    "The upstream GitHub release v0.6.0 asset elk-distribution-cli-0.6.0.zip is 5,539,502 bytes; GitHub Release API exposes no digest for this asset, so upstream_source_archive_sha256 remains UNKNOWN.",
+    "The original package's exact ELK binary/JAR digest is not established in the current evidence; binary_sha256 remains UNKNOWN.",
+    "No independent domain ontology Oracle digest is established; oracle_sha256 remains UNKNOWN.",
+    "R12 metadata-corrected candidate archive SHA256 19bd813e936ab020cda42a4968c466432dce9a60f0a665aa2ddc360220e4d87e is noncanonical and differs from the original package; it is not used as the baseline package pin.",
+    "ELK uses the Java bundle route; native adapter applicability is NOT_APPLICABLE. The assessor only checks identities and does not execute ELK or qualify T4/T5/Product/Release.",
+    "Current-main snapshot 069444c176bbacc804f107482f356dbc2eb95736 has Woodpecker main Push #1610 SUCCESS; 15/15 source pins were fetched from this exact tree."
+  ],
+  "current_main_snapshot": {
+    "commit": "069444c176bbacc804f107482f356dbc2eb95736",
+    "woodpecker_push_pipeline": 1610,
+    "woodpecker_push_status": "SUCCESS",
+    "source_blob_pin_verification": "15_OF_15_EXACT_GIT_BLOB_MATCHES"
+  }
+}
