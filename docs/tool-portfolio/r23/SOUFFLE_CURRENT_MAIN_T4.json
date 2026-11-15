@@ -11,17 +11,17 @@
     ]
   },
   "result": {
-    "status": "PARTIAL_PORTABLE_RUNNER_CLI_SDK_TECHNICAL_PASS_MCP_NOT_RUN",
+    "status": "PARTIAL_DIRECT_NATIVE_REPLAY_CLI_SDK_WRITER_REPORTED_ONLY_MCP_NOT_RUN",
     "overall_t4_qualification": "NOT_QUALIFIED",
     "t3": "PRIOR_R3_RECEIPT_REUSED_NOT_REQUALIFIED",
     "t5": "NOT_QUALIFIED",
     "t6": "OPEN",
     "product": "NOT_SIGNED",
     "release": "NOT_SIGNED",
-    "independent_source_first_review": "PENDING"
+    "independent_source_first_review": "PENDING_R27_REPAIR"
   },
   "current_main": {
-    "commit": "74b511e27ed2b2690be6c7e292400c723c6b9b88",
+    "commit": "250d20ec782785f13d4d027f7ab79e005feacc76",
     "blobs": {
       "portable_runner": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
       "native_adapter": "1af7a7db7523985f810e545860000c5d745de0b5",
@@ -37,7 +37,10 @@
       "registry": "faa89997c3f7c8c71da0a69aa90e8ff37461cde0",
       "lifecycle_dag": "250b84ae0638d98115d748a32ae2f2c9357942b0"
     },
-    "runner_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a"
+    "runner_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a",
+    "source_pins_verified_at_current_main": true,
+    "source_pin_count": 13,
+    "branch_sync_status": "NOT_SYNCED_MAIN_PUSH_1450_FAILURE_UNCLASSIFIED"
   },
   "package": {
     "drive_file_id": "1f2doUFxpGxHALhoZ2vrm5O6WLr6bjPOj",
@@ -78,14 +81,14 @@
   },
   "portable_fixture": {
     "expect_path": "portable/verification/cases/souffle/expect.sh",
-    "expect_blob": "67965f3157009d8a4b40a5e65807a0a2f0ded01b",
-    "expect_sha256": "86892c1e7f9cf1925e592e117d4f79dbccfc5bbf57e56de76826328d3e1f60aa",
+    "expect_blob": "c6a378daec67f4c62568af6d29d920b5ef844859",
+    "expect_sha256": "f53a7df48add8a7c030629fa9e57b92de6ffc6820948651c2db6e15d16097d74",
     "pos_blob": "cca8867dac602f5b567cccf7e28b3218f51d4704",
-    "neg_blob": "a905fd35fe4aff2a681f62b764a16d1047c81ea8",
+    "neg_blob": "57b2891fce98786a3e3e9677730896de7275ee7a",
     "badtypes_blob": "57b2891fce98786a3e3e9677730896de7275ee7a",
     "test_path": "tests/souffle-current-main-t4.test.mjs",
-    "test_blob": "b2260dd09d82804e99642a60725c15c4af12d453",
-    "test_result": "4/4 PASS",
+    "test_blob": "bcb08b5c018661c8aad3b431362822e85d3ef195",
+    "test_result": "5/5 PASS",
     "direct_runner": {
       "status": "PASS",
       "tsv_sha256": "c9682b69d1143a7dba7929b4eea895cb2c2c098388014e4019d8d14e01587d9d",
@@ -106,7 +109,10 @@
           "label": "MISSING_INPUT_REJECTED"
         }
       }
-    }
+    },
+    "alternate_neg_blob": "a905fd35fe4aff2a681f62b764a16d1047c81ea8",
+    "test_sha256": "48f60719a2f4b280b7fe2371e198fd21c876247bcba985525bc4dc577aa61944",
+    "negative_fixture_binding": "EXPECT_NEG_ARGS=tests/souffle/badtypes.dl; test reads exact same fixture; duplicate-declaration neg.dl is separately recorded as alternate"
   },
   "native_cli": {
     "fixture_positive": {
@@ -141,7 +147,11 @@
       "run_status": "EXECUTED",
       "version_verdict": "UNVERIFIED",
       "version": "2.5"
-    }
+    },
+    "evidence_level": "WRITER_REPORTED_ONLY",
+    "independently_replayed": false,
+    "raw_stdout_stderr_available": false,
+    "qualification": "NOT_GRANTED"
   },
   "sdk": {
     "typed_invoke": {
@@ -154,7 +164,11 @@
     "observed_output": {
       "reach_csv": "A\\tB\\nA\\tC\\nB\\tC\\n",
       "cycle_csv": ""
-    }
+    },
+    "evidence_level": "WRITER_REPORTED_ONLY",
+    "independently_replayed": false,
+    "raw_stdout_stderr_available": false,
+    "qualification": "NOT_GRANTED"
   },
   "environment": {
     "os": "Debian GNU/Linux 13 (trixie), Debian 13.3",
@@ -187,12 +201,68 @@
     "npm_cache_contains_required_packages": false
   },
   "qualification_boundaries": [
-    "The portable Runner uses the package run shim, which sets private PATH and LD_LIBRARY_PATH; POS/NEG/ERR all passed with fixed exits 0/1/1.",
-    "The native CLI/SDK adapter executes the binary directly. The host must configure FORMAL_TOOLS_BIN_DIR, PATH and LD_LIBRARY_PATH; native.mjs does not inject the private library path. This environment requirement is recorded, not silently treated as self-contained.",
-    "Native CLI fixture positive/negative passed as ACYCLIC/CYCLIC; these are structural cases, not an independent valid-but-false business property.",
-    "Typed CLI and SDK operations returned EXIT_ZERO but UNPARSED/NOT_EVALUATED; the SDK did not collect artifacts. Output files were inspected separately and are not acceptance verdicts.",
-    "The current main MCP source parses, but the MCP runtime was not executed because npm dependencies are absent.",
-    "The original Drive package meta.sh used TOOL_TOOL_ID and was rejected by the current Runner. Exact current-main make_meta.py regenerated canonical TOOL_ID while preserving meta.json byte-for-byte.",
-    "Prior R3 POS/NEG evidence is reused; no new T3, T5, T6, Product, or Release qualification is claimed."
-  ]
+    "The R27 replay is the original Souffle 2.5 package run shim directly as UID/GID 65534 and captures native stdout/stderr/exit bytes with a relative-path SHA256 manifest.",
+    "POS matches the exact derived CSV row 1<TAB>3; NEG matches the exact undefined-relation diagnostic from the selected badtypes.dl fixture; ERR matches the exact missing-file diagnostic.",
+    "The selected negative fixture is badtypes.dl; duplicate-declaration neg.dl is an alternate fixture and is not the selected EXPECT_NEG_ARGS input.",
+    "The current-main portable Runner TSV, native CLI and SDK execution fields remain WRITER_REPORTED_ONLY; they are not independently reproduced by R27.",
+    "MCP runtime remains NOT_RUN because @modelcontextprotocol/server and zod dependencies are absent.",
+    "Prior R3 T3 evidence is reused, not requalified. No T3/T4/T5/T6/Product/Release promotion."
+  ],
+  "direct_runner": {
+    "status": "WRITER_REPORTED_ONLY_NOT_REPLAYED_IN_R27",
+    "tsv_sha256": "c9682b69d1143a7dba7929b4eea895cb2c2c098388014e4019d8d14e01587d9d",
+    "phases": {
+      "pos": {
+        "exit_code": 0,
+        "matched": true,
+        "label": "DERIVED"
+      },
+      "neg": {
+        "exit_code": 1,
+        "matched": true,
+        "label": "INVALID_REJECTED"
+      },
+      "err": {
+        "exit_code": 1,
+        "matched": true,
+        "label": "MISSING_INPUT_REJECTED"
+      }
+    },
+    "evidence_level": "WRITER_REPORTED_ONLY",
+    "reason": "R27 raw evidence below is direct package run-shim output, not a new portable Runner verify TSV receipt."
+  },
+  "native_shim_replay": {
+    "status": "INDEPENDENT_NONROOT_REPLAY_PASS",
+    "evidence_directory": "docs/tool-portfolio/r27/raw/",
+    "receipt": "docs/tool-portfolio/r27/raw/receipt.json",
+    "archive_member_manifest": "docs/tool-portfolio/r27/raw/archive-members.json",
+    "checksum_manifest": "docs/tool-portfolio/r27/raw/SHA256SUMS",
+    "execution_uid_gid": "65534:65534",
+    "version": {
+      "exit_code": 0,
+      "stdout_sha256": "189a327e08c521cd3d22fee1ab6c908eca5953a78b210ee541c15465cb2522b2"
+    },
+    "cases": {
+      "pos": {
+        "exit_code": 0,
+        "stdout_sha256": "dfbb05a2e730e655e68047a485e44af98f297193d86bc1dff4a705a93b46cc28",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "marker": "CSV row 1,3"
+      },
+      "neg": {
+        "exit_code": 1,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "ae31f698870f7e794c80747b32ec1f98c3254311902dc83ebbb1491ebcaab124",
+        "marker": "Undefined relation path in badtypes.dl line 4"
+      },
+      "err": {
+        "exit_code": 1,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "39995500186e59d4e2a707d96200d5ec14c24c62d710aba956943f5cb16185f9",
+        "marker": "cannot open file tests/souffle/does-not-exist.dl"
+      }
+    },
+    "raw_file_count": 14,
+    "raw_checksum_manifest_entries": 13
+  }
 }
