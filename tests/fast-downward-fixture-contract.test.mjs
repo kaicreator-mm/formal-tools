@@ -42,5 +42,5 @@ test("the effective values after Bash sources the contract are exactly 0/11/31",
   const script = 'set -eu; source "$1"; printf "%s\\n" "$EXPECT_POS_EXIT" "$EXPECT_NEG_EXIT" "$EXPECT_ERR_EXIT"';
   const result = spawnSync("bash", ["-c", script, "bash", contractPath], { encoding: "utf8" });
   assert.equal(result.status, 0, result.stderr || result.stdout);
-  assert.deepEqual(result.stdout.trim().split(/\\r?\\n/), ["0", "11", "31"]);
+  assert.deepEqual(result.stdout.trim().split(/\r?\n/), ["0", "11", "31"]);
 });
