@@ -14,8 +14,9 @@ test("Fast Downward source builder pins the declared 24.06 release to its offici
   assert.match(spec, /git clone --depth 1 --branch "\$FT_UPSTREAM_TAG" --single-branch/);
   assert.match(spec, /git -C "\$src" rev-parse HEAD/);
   assert.match(spec, /grep -Fxq '__version__ = "24\.06"'/);
-  assert.match(spec, /git_revision\.h/);
-  assert.match(spec, /grep -Fq "\$FT_UPSTREAM_COMMIT" "\$revision_header"/);
+  assert.match(spec, /git -C "\$src" diff --quiet "\$FT_UPSTREAM_COMMIT"/);
+  assert.match(spec, /formal-tools-source\.json/);
+  assert.match(spec, /downward_source_tree/);
   assert.match(spec, /^FT_PROBE=\(run --version\)$/m);
   assert.doesNotMatch(spec, /refs\/heads\/main|archive\/refs\/heads\/main|downward-main\.tar\.gz/);
   assert.doesNotMatch(spec, /sha256sum "\$tgz"/);
