@@ -1,0 +1,149 @@
+{
+  "schema": "formal-tools/llm-methods-ci-root-cause/0.1",
+  "output_label": "FORMAL_TOOLS_I11_CI_ROOT_CAUSE_EVIDENCE_R31",
+  "role": "ORIGINAL_LOCAL_EXECUTOR",
+  "execution_platform": "WINDOWS_NODE24_LOCAL",
+  "node_local": "24.21.0",
+  "npm_local": "11.19.0",
+  "ci": "WOODPECKER",
+  "ci_host": "ci.kaicreator.com",
+  "woodpecker_repo_id": 39,
+  "investigated_at": "2026-11-15",
+  "log_sha256_convention": "SHA256 of the full decoded step log text as returned by the Woodpecker logs API (base64 lines decoded, joined with LF, Woodpecker line-status marker characters retained)",
+  "pipelines": [
+    {
+      "pipeline": 971,
+      "pr": 97,
+      "event": "pull_request",
+      "ref": "refs/pull/97/merge",
+      "exact_sha": "a6316dfaece88b3ba0eb1b1af97e36b4b6c27917",
+      "first_failed_step": "clone",
+      "exit_code": 128,
+      "root_error": "fatal: unable to access 'https://github.com/kaicreator-mm/formal-tools.git/': TLS connect error: error:0A000126:SSL routines::unexpected eof while reading (x4: first attempt + 3 git-wrapper retries, all failed)",
+      "downstream": "formal-js-source-and-finite-model skipped (never started, no log)",
+      "classification": "INFRASTRUCTURE",
+      "rationale": "clone network transient with the known TLS unexpected_eof signature; zero build steps executed. The same exact SHA succeeded on the push pipeline #970 (its clone hit the same TLS transient but the 3rd wrapper retry succeeded), proving the code at a6316dfa is sound. PR #963's green ran on an older head 76a8dba8 and is not citable for this head.",
+      "logs": {
+        "clone": {"step_id": 25198, "sha256": "2a04fa2b37e4a3f9e5fb6c737075817012908e9eefe058d993317df5355822b8", "chars": 1269},
+        "formal-js-source-and-finite-model": {"step_id": 25199, "sha256": null, "chars": 0, "note": "skipped, no log"}
+      },
+      "resolution": "API restart of the same SHA: POST /api/repos/39/pipelines/971 -> pipeline #989 SUCCESS"
+    },
+    {
+      "pipeline": 973,
+      "pr": 98,
+      "event": "push",
+      "ref": "refs/heads/fix/i11-g3-isolated-native-env-r29",
+      "exact_sha": "f3b0ac94f03ed5dca95d50d53bf8be9283157d1a",
+      "first_failed_step": "formal-js-source-and-finite-model",
+      "exit_code": 1,
+      "root_error": "SyntaxError: Invalid or unexpected token at tests/ads-native-replay.test.mjs:71 (module parse: escaped-backslash+quote sequence \\\" inside a double-quoted JS string terminated the literal early)",
+      "secondary_error": "AssertionError at tests/i11-dag-receipt-reconciliation.test.mjs:174: strictEqual actual '9794ec4b62d3f5e9c22fa1f45ee3999565aa9a68' (receipt-pinned source_git_blob) != expected 'cb807f27da46e8de3b9de797fc344f0bcc99da3e' (gitBlob of the edited frozen source)",
+      "classification": "SOURCE",
+      "rationale": "clone succeeded (fetched f3b0ac94); the test step failed on a real source defect in the PR branch version (invalid JS string escaping), plus the frozen-provenance binding failure. Both are code/test defects, not environment or infra.",
+      "logs": {
+        "clone": {"step_id": 25222, "sha256": "1c13c77d631b04d9f47b5d6ddc75354ed18fa7c560979b73ddc72d412e407d36", "chars": 817},
+        "formal-js-source-and-finite-model": {"step_id": 25223, "sha256": "ba30f8844c61022fe0f5a023539c6f7ec90be04b5cb1ab222c1f534aafeab261", "chars": 32762}
+      },
+      "resolution": "SyntaxError was fixed by the writer in d65eb49b (current head); the binding failure is fixed by R31 commit 38258be"
+    },
+    {
+      "pipeline": 976,
+      "pr": 98,
+      "event": "pull_request",
+      "ref": "refs/pull/98/merge",
+      "exact_sha": "f3b0ac94f03ed5dca95d50d53bf8be9283157d1a",
+      "first_failed_step": "formal-js-source-and-finite-model",
+      "exit_code": 1,
+      "root_error": "identical to #973: SyntaxError tests/ads-native-replay.test.mjs:71 + R21 binding AssertionError (same actual/expected values)",
+      "classification": "SOURCE",
+      "rationale": "PR pipeline checked out the same SHA as the push pipeline (clone log: fetch+reset f3b0ac94); failures are identical in kind and value. No PR-vs-push environment difference.",
+      "logs": {
+        "clone": {"step_id": 25228, "sha256": "cb98b921efc8dd96ad11572b50acc07b25718cd63b79c52485843d699d29d3c7", "chars": 757},
+        "formal-js-source-and-finite-model": {"step_id": 25229, "sha256": "5394f8d245db5ac3c40bc19141616e11945de8c5461d2314f24a470dde871bc1", "chars": 32740}
+      },
+      "resolution": "same as #973"
+    },
+    {
+      "pipeline": 977,
+      "pr": 98,
+      "event": "push",
+      "ref": "refs/heads/fix/i11-g3-isolated-native-env-r29",
+      "exact_sha": "d65eb49b42f6700c84e4637032193f7e4f40cb8f",
+      "first_failed_step": "formal-js-source-and-finite-model",
+      "exit_code": 1,
+      "root_error": "AssertionError at tests/i11-dag-receipt-reconciliation.test.mjs:174: strictEqual actual '9794ec4b62d3f5e9c22fa1f45ee3999565aa9a68' != expected 'cb807f27da46e8de3b9de797fc344f0bcc99da3e' (assert.equal(native.original_js_runner_replay.source_git_blob, gitBlob('benchmarks/llm-methods/g3/ads-native-replay.mjs')))",
+      "classification": "SOURCE",
+      "rationale": "The recorded native receipt validation/ads24-native-2026-11-13/NATIVE_PAIR.json pins original_js_runner_replay.source_git_blob=9794ec4b62... (the replay source as it existed when the real Z3/cvc5 24x2 execution was recorded; this is also main's current blob). PR98 commit f3b0ac9 edited that frozen source (blob became cb807f27da...) without re-recording the receipt. The R21 reconciliation binding test failed closed by design. The SyntaxError of the prior head is gone in this version (writer fixed it in d65eb49b); the ads-native-replay test file passes here.",
+      "logs": {
+        "clone": {"step_id": 25230, "sha256": "39031c5eb0fa797583172897ec7ba54f955badf675c20b3108b55d143f234f40", "chars": 1041},
+        "formal-js-source-and-finite-model": {"step_id": 25231, "sha256": "346dcc63dc011618e1d9847abbe2bcd7c1be51b62e9646ea0c61283560a716c7", "chars": 31988}
+      },
+      "resolution": "R31 commit 38258be on the writer branch: restore frozen source to receipt-pinned bytes; keep isolation at the runner layer; add regression test"
+    },
+    {
+      "pipeline": 978,
+      "pr": 98,
+      "event": "pull_request",
+      "ref": "refs/pull/98/merge",
+      "exact_sha": "d65eb49b42f6700c84e4637032193f7e4f40cb8f",
+      "first_failed_step": "formal-js-source-and-finite-model",
+      "exit_code": 1,
+      "root_error": "identical to #977 (same assertion, same actual/expected values)",
+      "classification": "SOURCE",
+      "rationale": "PR pipeline checked out the same SHA d65eb49b (clone log verified); merge with main takes the branch version of the frozen source (main did not touch it since cfb5bd5), so the failure is identical to push. Its clone had one TLS transient that the git-wrapper retried successfully - evidence the #971 failure window is intermittent.",
+      "logs": {
+        "clone": {"step_id": 25232, "sha256": "16d60d621ef167b2d4624aaa9fb702463bdb6a6c4250ec8d69e798d02eb239a6", "chars": 981},
+        "formal-js-source-and-finite-model": {"step_id": 25233, "sha256": "39c9d2a06952cd79c1909d425160f9c9f1f1d1393ef29b6697e5070edc7f46e3", "chars": 31988}
+      },
+      "resolution": "same as #977"
+    }
+  ],
+  "environment_observed": {
+    "ci_step_node": "v24.21.0",
+    "ci_step_npm": "11.19.0",
+    "backend": "local (agent container exec; clone workspace under /var/lib/woodpecker/tmp/woodpecker-local-*)",
+    "npm_ci": "added 8 packages in ~630ms on all runs (shared pull-through cache healthy)",
+    "node_version_skew": "none - all five pipelines and all three new pipelines report node v24.21.0",
+    "pr_vs_push_sha_skew": "none - #973/#976 both f3b0ac94, #977/#978 both d65eb49b (verified from clone logs, list-view sha field was empty)"
+  },
+  "fix": {
+    "commit": "38258be59ff304de8645cc6a1f92179a730daecb",
+    "branch": "fix/i11-g3-isolated-native-env-r29",
+    "changes": [
+      "benchmarks/llm-methods/g3/ads-native-replay.mjs restored to the receipt-pinned bytes (git blob 9794ec4b62d3f5e9c22fa1f45ee3999565aa9a68, byte-exact match verified)",
+      "tests/ads-native-replay.test.mjs: env-mutation assertion retargeted to the runner layer; the concurrent-isolation test now exercises doctor()/executeNativePlan() with explicit {env} (the real per-execution isolation delivered by f3b0ac9+d65eb49b in packages/runner/js/native.mjs); frozen source is not edited to carry behavior",
+      "new regression test 'G3 frozen ADS24 replay source stays byte-identical to its recorded receipt provenance' reproduces the original CI failure if the frozen source is edited without re-recording the receipt"
+    ],
+    "not_done": [
+      "receipt NATIVE_PAIR.json untouched (its blob is itself pinned by TASK_DAG.reconciliation)",
+      "no Z3/cvc5 24x2 native re-verification executed (out of scope for this round per task constraints)"
+    ]
+  },
+  "local_verification": {
+    "windows_node24": {
+      "node": "v24.21.0",
+      "npm": "11.19.0",
+      "npm_ci_exit": 0,
+      "targeted_tests": "node --test tests/ads-native-replay.test.mjs tests/i11-dag-receipt-reconciliation.test.mjs -> exit 0, 13 tests / 11 pass / 0 fail / 2 skipped (linux-only)",
+      "full_suite_windows": "355 tests / 329 pass / 7 fail / 19 skipped - all 7 failures are Windows-environment-incompatible (R13 symlink x3, R13 P2 ldd, doctor bundled-library, G6/G4 fail-closed real-call) and every one of them passes on CI Linux (#978 log verified); none intersects the repair surface",
+      "typecheck_exit": 0,
+      "cli_smoke_exits": [0, 0, 0, 0, 0]
+    },
+    "wsl_linux_node24": {
+      "node": "v24.21.0",
+      "full_suite": "356 tests / 355 pass / 0 fail / 1 skipped, exit code 0 (CI-equivalent environment)"
+    }
+  },
+  "post_fix_ci": [
+    {"pipeline": 987, "event": "push", "sha": "38258be59ff304de8645cc6a1f92179a730daecb", "status": "success", "tests": "356/355 pass/0 fail", "logs": {"clone_sha256": "99a833d26492a3111f20a8bc466ff4924978bde3ee441818294017c13445748e", "main_sha256": "76f0485b88545eab03f63339e61841cee88d6c9e6683d1d2f73716eef897ff0f"}},
+    {"pipeline": 988, "event": "pull_request", "sha": "38258be59ff304de8645cc6a1f92179a730daecb", "status": "success", "tests": "356/355 pass/0 fail (new regression test and runner-isolation test both pass)", "logs": {"clone_sha256": "a3736c592de52a7a3a992002b7461fcb2c99a54258e5dba154cf5cbffc0597ce", "main_sha256": "38a4eea211935dc5c40dfcff4079ac02fa776f2cf6089c80acad871c402e14e5"}},
+    {"pipeline": 989, "event": "pull_request", "sha": "a6316dfaece88b3ba0eb1b1af97e36b4b6c27917", "status": "success", "tests": "362/361 pass/0 fail", "note": "restart of #971 for PR #97, same exact SHA", "logs": {"clone_sha256": "c3cdfa5d5c7d9b005a06dbe8fc181118239ab58ca722d8be7fef68c56eed1b57", "main_sha256": "bdbab87e9dd6a4407c8d06baac76c1313a603b24334c1c0429903cb14581555c"}}
+  ],
+  "pr97_verdict": "no source defect at a6316dfa; #971 was a clone network transient; push #970 (same SHA) and restarted PR #989 (same SHA) both SUCCESS",
+  "open_blocks": [],
+  "observations": [
+    "TASK_DAG.reconciliation.reconciled_against_main_sha points at an older main (eeabfc96); the test only asserts the 40-hex format, not the value - recorded as an observation, not blocking, out of R31 scope",
+    "the frozen provenance chain is: TASK_DAG pins the receipt file blob (cee8f188), the receipt pins the frozen replay source blob (9794ec4b); both layers are enforced fail-closed by the R21 reconciliation test"
+  ]
+}

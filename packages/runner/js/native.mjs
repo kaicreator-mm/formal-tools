@@ -66,72 +66,86 @@ export async function validateSource() {
   return {status:issues.length?"STATIC_FAIL":"STATIC_PASS",count:TOOLS.length,
     issues,warnings,native_runtime:"NOT_RUN"};
 }
-function executable(name) {
-  const directory=process.env.FORMAL_TOOLS_BIN_DIR;
+function executable(name,env=process.env) {
+  const directory=env.FORMAL_TOOLS_BIN_DIR;
   return directory ? join(directory,name) : name;
 }
-function toolPython(tool) { return process.env[tool === "clingo" ? "FORMAL_CLINGO_PYTHON" : "FORMAL_PYSHACL_PYTHON"] || "python3"; }
-function jar(variable) {
-  const p=process.env[variable];
+function toolPython(tool,env=process.env) {
+  return env[tool === "clingo" ? "FORMAL_CLINGO_PYTHON" : "FORMAL_PYSHACL_PYTHON"] || "python3";
+}
+function jar(variable,env=process.env) {
+  const p=env[variable];
   if (!p) throw new TypeError(variable+" must point to an installed jar");
   return resolve(p);
 }
-function commands(tool,which,output,inputDir) {
+function commands(tool,which,output,inputDir,env=process.env) {
   const model = name => join(inputDir,name);
   assertTool(tool);
   if (!["positive","negative"].includes(which)) throw new TypeError("case must be positive/negative");
   const positive=which==="positive", stem=positive?"positive":"negative";
-  if (tool==="z3") return [[executable("z3"),"-smt2",model(stem+".smt2")]];
-  if (tool==="cvc5") return [[executable("cvc5"),"--lang","smt2",model(stem+".smt2")]];
-  if (tool==="lean4") return [[executable("lean"),model(positive?"Positive.lean":"Negative.lean")]];
-  if (tool==="dafny") return [[executable("dafny"),"verify",model(positive?"Positive.dfy":"Negative.dfy")]];
-  if (tool==="vampire") return [[executable("vampire"),"--mode","casc",model(stem+".p")]];
+  if (tool==="z3") return [[executable("z3",env),"-smt2",model(stem+".smt2")]];
+  if (tool==="cvc5") return [[executable("cvc5",env),"--lang","smt2",model(stem+".smt2")]];
+  if (tool==="lean4") return [[executable("lean",env),model(positive?"Positive.lean":"Negative.lean")]];
+  if (tool==="dafny") return [[executable("dafny",env),"verify",model(positive?"Positive.dfy":"Negative.dfy")]];
+  if (tool==="vampire") return [[executable("vampire",env),"--mode","casc",model(stem+".p")]];
   if (tool==="clingo") {
     // Same allowlisted committed-fixture argv shape for both launchers: the
     // explicit pinned native binary (FORMAL_CLINGO_BIN, e.g. the canonical #24
     // deb13 bundle executable) or the explicitly configured Python module. The
     // pinned path is resolved once here and never taken from PATH or
     // FORMAL_TOOLS_BIN_DIR.
-    const pinned=process.env.FORMAL_CLINGO_BIN;
-    return pinned?[[resolve(pinned),model(stem+".lp"),"0"]]:[[toolPython(tool),"-m","clingo",model(stem+".lp"),"0"]];
+    const pinned=env.FORMAL_CLINGO_BIN;
+    return pinned?[[resolve(pinned),model(stem+".lp"),"0"]]:[[toolPython(tool,env),"-m","clingo",model(stem+".lp"),"0"]];
   }
-  if (tool==="rdf-shacl") return [[toolPython(tool),"-m","pyshacl","-s",model("shapes.ttl"),"-df","turtle","-sf","turtle","-f","human",model(stem+".ttl")]];
-  if (tool==="souffle") return [[executable("souffle"),model(stem+".dl"),"-D",output]];
-  if (tool==="tla-tlc") return [[executable("java"),"-cp",jar("TLA2TOOLS_JAR"),"tlc2.TLC","-config",model("Toggle.cfg"),model(positive?"TogglePositive.tla":"ToggleNegative.tla")]];
-  if (tool==="apalache") return [[executable("apalache-mc"),"check","--init=Init","--next=Next","--inv=Inv","--length=3",model(positive?"TogglePositive.tla":"ToggleNegative.tla")]];
+  if (tool==="rdf-shacl") return [[toolPython(tool,env),"-m","pyshacl","-s",model("shapes.ttl"),"-df","turtle","-sf","turtle","-f","human",model(stem+".ttl")]];
+  if (tool==="souffle") return [[executable("souffle",env),model(stem+".dl"),"-D",output]];
+  if (tool==="tla-tlc") return [[executable("java",env),"-cp",jar("TLA2TOOLS_JAR",env),"tlc2.TLC","-config",model("Toggle.cfg"),model(positive?"TogglePositive.tla":"ToggleNegative.tla")]];
+  if (tool==="apalache") return [[executable("apalache-mc",env),"check","--init=Init","--next=Next","--inv=Inv","--length=3",model(positive?"TogglePositive.tla":"ToggleNegative.tla")]];
   if (tool==="alloy") {
     // "alloy" can resolve to unrelated Grafana Alloy. Require explicit
     // official Alloy Analyzer JAR/bin for every native execution path.
-    const prefix=process.env.FORMAL_ALLOY_JAR
-      ?[executable("java"),"-jar",jar("FORMAL_ALLOY_JAR")]
-      :process.env.FORMAL_ALLOY_BIN?[resolve(process.env.FORMAL_ALLOY_BIN)]
+    const prefix=env.FORMAL_ALLOY_JAR
+      ?[executable("java",env),"-jar",jar("FORMAL_ALLOY_JAR",env)]
+      :env.FORMAL_ALLOY_BIN?[resolve(env.FORMAL_ALLOY_BIN)]
       :null;
     if(!prefix)throw new TypeError("Configure FORMAL_ALLOY_JAR or FORMAL_ALLOY_BIN for Alloy Analyzer");
     return [[...prefix,"exec","-c","0",model(stem+".als")]];
   }
-  if (tool==="prob") return [[executable("probcli"),model(positive?"Positive.mch":"Negative.mch"),"-model_check"]];
+  if (tool==="prob") return [[executable("probcli",env),model(positive?"Positive.mch":"Negative.mch"),"-model_check"]];
   if (tool==="apache-jena") {
     const tt=model(positive?"data.ttl":"invalid.ttl");
-    return positive ? [[executable("riot"),"--validate",tt],[executable("arq"),"--data",tt,"--query",model("query.rq")]] : [[executable("riot"),"--validate",tt]];
+    return positive ? [[executable("riot",env),"--validate",tt],[executable("arq",env),"--data",tt,"--query",model("query.rq")]] : [[executable("riot",env),"--validate",tt]];
   }
   throw new TypeError("unknown tool");
 }
-function versionCommand(tool) {
+function versionCommand(tool,env=process.env) {
   // Keep doctor() and the read-only environment inspector on the same catalog.
-  const probe=planToolProbe(tool,process.env);
+  const probe=planToolProbe(tool,env);
   if(probe.status!=="PLANNED"||!probe.argv)throw new TypeError(
     "Missing tool configuration for "+tool+": "+(probe.missing??[]).join(", "));
   const argv=[...probe.argv];
   if(["binary","java-jar","alloy-jar"].includes(probe.launcher))
-    argv[0]=executable(argv[0]);
+    argv[0]=executable(argv[0],env);
   return argv;
 }
-async function capture(argv,{cwd,timeoutMs}) {
+function snapshotEnvironment(env=process.env) {
+  if(!env||typeof env!=="object"||Array.isArray(env))
+    throw new TypeError("child environment must be an object");
+  const snapshot={};
+  for(const [key,value] of Object.entries(env)){
+    if(typeof value!=="string"||key.includes("\0")||value.includes("\0"))
+      throw new TypeError("child environment must contain only NUL-free strings");
+    snapshot[key]=value;
+  }
+  return Object.freeze(snapshot);
+}
+async function capture(argv,{cwd,timeoutMs,env=process.env}) {
   if (!Array.isArray(argv)||!argv.length) throw new TypeError("empty command");
+  const childEnv=snapshotEnvironment(env);
   return await new Promise(resolveResult=>{
     let stdout=[],stderr=[],bytes=0,timeout=false,error=null,settled=false;
     const start=Date.now();
-    const child=spawn(argv[0],argv.slice(1),{cwd,shell:false,stdio:["ignore","pipe","pipe"],env:process.env});
+    const child=spawn(argv[0],argv.slice(1),{cwd,shell:false,stdio:["ignore","pipe","pipe"],env:childEnv});
     const finish=(code,signal)=>{
       if (settled) return;
       settled=true;clearTimeout(timer);
@@ -152,11 +166,12 @@ async function capture(argv,{cwd,timeoutMs}) {
     const timer=setTimeout(()=>{timeout=true;child.kill("SIGKILL");},timeoutMs);
   });
 }
-export async function doctor(tool,timeout=15) {
+export async function doctor(tool,timeout=15,{env=process.env}={}) {
   assertTool(tool);assertTimeout(timeout);
   try {
-    const argv=versionCommand(tool);
-    const p=await capture(argv,{cwd:ROOT,timeoutMs:timeout*1000});
+    const environment=snapshotEnvironment(env);
+    const argv=versionCommand(tool,environment);
+    const p=await capture(argv,{cwd:ROOT,timeoutMs:timeout*1000,env:environment});
     return {tool,run_status:p.error?"NOT_RUN":"EXECUTED",version_verdict:"UNVERIFIED",...p};
   } catch(e) {return {tool,run_status:"NOT_RUN",version_verdict:"UNVERIFIED",error:String(e)};}
 }
@@ -296,34 +311,34 @@ const TOOL_CLASSES=Object.freeze({
  tlc:"tlc2.TLC",sany:"tla2sany.SANY",pcal:"pcal.trans",
  "xml-exporter":"tla2sany.xml.XMLExporter"
 });
-function nativeCommand(plan) {
+function nativeCommand(plan,env=process.env) {
  const {entry,args}=plan;
  const known=describeNativeTool(plan.tool);
  if(!known.entries.includes(entry)) throw new TypeError("native entry not registered for "+plan.tool);
  if(!Array.isArray(args)||args.some(x=>typeof x!=="string"||x.includes("\0")))
    throw new TypeError("invalid native argv");
  if(Object.hasOwn(TOOL_CLASSES,entry)) {
-   const jar=process.env.TLA2TOOLS_JAR;
+   const jar=env.TLA2TOOLS_JAR;
    if(!jar)throw new TypeError("TLA2TOOLS_JAR missing");
-   return [executable("java"),"-cp",resolve(jar),TOOL_CLASSES[entry],...args];
+   return [executable("java",env),"-cp",resolve(jar),TOOL_CLASSES[entry],...args];
  }
  if(entry==="clingo"||entry==="pyshacl"){
-   const pinned=entry==="clingo"?process.env.FORMAL_CLINGO_BIN:undefined;
+   const pinned=entry==="clingo"?env.FORMAL_CLINGO_BIN:undefined;
    if(pinned)return [resolve(pinned),...args];
    return [
-   process.env[entry==="clingo"?"FORMAL_CLINGO_PYTHON":"FORMAL_PYSHACL_PYTHON"]||"python3",
+   env[entry==="clingo"?"FORMAL_CLINGO_PYTHON":"FORMAL_PYSHACL_PYTHON"]||"python3",
    "-m",entry,...args
    ];
  }
  if(entry==="alloy"){
-   if(process.env.FORMAL_ALLOY_JAR)
-     return [executable("java"),"-jar",resolve(process.env.FORMAL_ALLOY_JAR),...args];
-   if(process.env.FORMAL_ALLOY_BIN)
-     return [resolve(process.env.FORMAL_ALLOY_BIN),...args];
+   if(env.FORMAL_ALLOY_JAR)
+     return [executable("java",env),"-jar",resolve(env.FORMAL_ALLOY_JAR),...args];
+   if(env.FORMAL_ALLOY_BIN)
+     return [resolve(env.FORMAL_ALLOY_BIN),...args];
    throw new TypeError("Alloy Analyzer can be confused with Grafana Alloy: configure FORMAL_ALLOY_JAR or FORMAL_ALLOY_BIN");
  }
  // The tool ID/entry combination was validated in native-catalog.mjs.
- return [executable(entry),...args];
+ return [executable(entry,env),...args];
 }
 export function interpretNativeObservation(tool,stdout,stderr,exitCode) {
  const output=(stdout+"\n"+stderr).trim();
@@ -345,15 +360,16 @@ export function interpretNativeObservation(tool,stdout,stderr,exitCode) {
    claim_verdict:"NOT_EVALUATED",
    note:"Native command output only; solver result is not an acceptance verdict"};
 }
-export async function executeNativePlan(plan,{cwd=process.cwd(),timeout=30,allowRaw=false}={}) {
+export async function executeNativePlan(plan,{cwd=process.cwd(),timeout=30,allowRaw=false,env=process.env}={}) {
  if(!plan||typeof plan!=="object")throw new TypeError("invalid plan");
  if(plan.mode==="LOCAL_CLI_ONLY"&&!allowRaw)
    throw new TypeError("raw native pass-through is disabled for this caller");
  if(!["LOCAL_CLI_ONLY","LOCAL_CLI","typed"].includes(plan.mode))
    throw new TypeError("unsupported plan mode");
  if(!Number.isInteger(timeout)||timeout<1||timeout>120)throw new TypeError("timeout must be 1..120 s");
- const argv=nativeCommand(plan);
- const receipt=await capture(argv,{cwd:resolve(cwd),timeoutMs:timeout*1000});
+ const environment=snapshotEnvironment(env);
+ const argv=nativeCommand(plan,environment);
+ const receipt=await capture(argv,{cwd:resolve(cwd),timeoutMs:timeout*1000,env:environment});
  const observed=interpretNativeObservation(plan.tool,receipt.stdout,receipt.stderr,receipt.exit_code);
  return {tool:plan.tool,operation:plan.operation,mode:plan.mode,
    run_status:receipt.error?"NOT_RUN":"EXECUTED",...observed,
