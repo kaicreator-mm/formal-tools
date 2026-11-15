@@ -1,0 +1,217 @@
+{
+  "schema": "formal-tools/tool-source-audit/1",
+  "output_label": "FORMAL_TOOLS_I24_PYMC_T0_SOURCE_AUDIT",
+  "repository": "kaicreator-mm/formal-tools",
+  "tool_issue": 49,
+  "tool_id": "pymc",
+  "upstream_product": "PyMC",
+  "version": "6.4.0",
+  "audit_date": "2026-11-15",
+  "baseline": {
+    "main_sha": "90b7f3206d401aa5a2634d775c6f16487f0f1b0f",
+    "runner_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "make_meta_blob": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+    "tool_builder_blob": "92b0f60a87e9b115f9f0d9864411665e85a78b76"
+  },
+  "source": {
+    "repository": "pymc-devs/pymc",
+    "tag": "v6.4.0",
+    "pypi_publish_commit": "9af5038e05a2dfca9256b5bd24d44b63085d4f02",
+    "version": "6.4.0",
+    "python_requires": ">=3.12,<3.15",
+    "license": "Apache-2.0",
+    "source_blobs": {
+      "pyproject.toml": "eebfdd696aae3a6a822631485d638a4a6ccbe774",
+      "pymc/__init__.py": "be115418d21d272529ef059860f31ec5f589e12f",
+      "pymc/_version.py": "9b37d0adc88a0c83c25733ae65da9384e129f7ae",
+      "LICENSE": "8a53247c40c863c3abb13c2e9fb059af7c1e0e47"
+    },
+    "release_url": "https://pypi.org/project/pymc/6.4.0/",
+    "upstream_repository_url": "https://github.com/pymc-devs/pymc",
+    "pypi_provenance": {
+      "trusted_publishing": true,
+      "publisher": "GitHub Actions",
+      "publishing_repository": "pymc-devs/pymc",
+      "publishing_commit": "9af5038e05a2dfca9256b5bd24d44b63085d4f02",
+      "workflow": ".github/workflows/release.yml",
+      "verified_by_pypi": "2026-11-01",
+      "sdist": {
+        "name": "pymc-6.4.0.tar.gz",
+        "size_bytes": 579789,
+        "sha256": "319348878ec698b6cc406320456b2bc00d80bea9bfb72b6ab02b2ce6b179e3b5",
+        "provenance": true
+      },
+      "wheel": {
+        "name": "pymc-6.4.0-py3-none-any.whl",
+        "size_bytes": 634470,
+        "sha256": "fa0dd3574b4465662f7aa70e8f1bd02dc2081e05a99ba65fb33c3f3614271f86",
+        "provenance": true
+      }
+    },
+    "caveat": "PyPI attestations bind the official sdist and wheel to the publisher commit; they do not attest the custom portable tar.zst built for this portfolio."
+  },
+  "original_portable_archive": {
+    "drive_file_id": "105Aq1lrpCglTe5WLJY0Nxbw4YtnCZBkW",
+    "name": "pymc-6.4.0-linux-x86_64.tar.zst",
+    "manifest_drive_file_id": "1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1",
+    "manifest_sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64",
+    "size_bytes": 1072092,
+    "sha256": "f70fd5fc32ba835262642eedf761cdea4b1b1398c4877014f0e7cbcc734fbff4",
+    "manifest_entry_matches": true,
+    "zstd_integrity": {
+      "reported_result": "PASS",
+      "evidence_status": "WRITER_REPORTED",
+      "independent_replay": "NOT_PERFORMED",
+      "raw_receipt": "NOT_PRESERVED"
+    },
+    "tar_members": {
+      "total": 315,
+      "regular_files": 271,
+      "directories": 44,
+      "symlinks": 0,
+      "hardlinks": 0,
+      "special_files": 0,
+      "absolute_or_parent_traversal_paths": 0,
+      "evidence_status": "WRITER_REPORTED",
+      "independent_replay": "NOT_PERFORMED",
+      "raw_preflight_listing": "NOT_PRESERVED"
+    },
+    "extraction": {
+      "result": "WRITER_REPORTED",
+      "uid": 65534,
+      "gid": 65534,
+      "no_same_owner": true,
+      "no_same_permissions": true,
+      "evidence_status": "WRITER_REPORTED",
+      "independent_replay": "NOT_PERFORMED",
+      "raw_extraction_log": "NOT_PRESERVED"
+    },
+    "embedded_file_sha256": {
+      "meta.sh": "086441cd0ed2c75d03818cc4d5205450985852e4961559bc035bc097d08d1855",
+      "meta.json": "4fb1e8e0526776308c7bed072fd3a373086284ec7ce1c3f8aff5e3f144c256ab",
+      "PACKAGE-INFO.txt": "85822d9632e38c5fdf899bfbdd9cebc86ff86ff823e14cb4c37f4df3652fdb4a",
+      "run": "384c689522df4620b91addc75f73e8f992deeb3d5e53d824a4a2b2fcf78367b8",
+      "pymc-6.4.0.dist-info/METADATA": "7ecc6e9fb73c4c840d556e7a78e3887c0518ec14313bdec73c228113efc31582"
+    },
+    "embedded_metadata": {
+      "tool_id_json": "pymc",
+      "legacy_shell_key": "TOOL_TOOL_ID",
+      "version": "6.4.0",
+      "kind": "python-lib",
+      "main_bin": "",
+      "upstream_url": "pypi:pymc",
+      "build_ts": "2026-11-10T22:34:39Z",
+      "builder_image": "ft-builder:deb13",
+      "target": {
+        "os": "debian-13",
+        "arch": "x86_64",
+        "glibc_max": "2.41"
+      },
+      "payload": "shared runtime: runtimes/python313-3.13.5-linux-x86_64.tar.zst"
+    },
+    "distribution_metadata": {
+      "name": "pymc",
+      "version": "6.4.0",
+      "license_expression": "Apache-2.0",
+      "requires_python": ">=3.12,<3.15"
+    },
+    "safety_evidence": {
+      "status": "WRITER_REPORTED",
+      "writer_report_reference": "kaicreator-mm/formal-tools#125 comment 6894311642",
+      "independent_review_reference": "kaicreator-mm/formal-tools#125 comment 6894532907",
+      "independent_reproduction": "NOT_PERFORMED",
+      "preserved_receipts": {
+        "zstd_integrity_output": "NOT_PRESERVED",
+        "tar_member_listing_or_manifest": "NOT_PRESERVED",
+        "non_root_extraction_log": "NOT_PRESERVED"
+      },
+      "interpretation": "The original archive SHA256/size and SHA256SUMS match were independently verified in the prior Source-First review. The zstd integrity result, 315-member tar preflight counts/path checks, and UID/GID 65534 extraction are retained only as writer-reported observations because raw command outputs, member manifest and extraction log were not preserved for independent replay.",
+      "qualification_boundary": "Do not claim an independently verified T2 PASS from these observations. T2 remains WRITER_REPORTED_ONLY_NOT_INDEPENDENTLY_REPLAYABLE until immutable raw receipts are preserved and independently checked."
+    }
+  },
+  "current_main_compatibility": {
+    "runner_contract": "tool_meta unsets TOOL_ID, sources tools/<id>/meta.sh, then requires TOOL_ID == <id>, TOOL_VERSION and TOOL_KIND. Historical TOOL_TOOL_ID is explicitly documented as invalid.",
+    "runner_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "meta_generator_contract": "make_meta.py writes TOOL_ID, TOOL_VERSION, TOOL_KIND; it does not emit TOOL_TOOL_ID.",
+    "meta_generator_blob": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+    "current_tool_builder_blob": "92b0f60a87e9b115f9f0d9864411665e85a78b76",
+    "package_shell_metadata_compatible": false,
+    "t4_blocker": "Original archive meta.sh contains TOOL_TOOL_ID only. Current main Runner rejects this metadata. Rebuild with current main builder/metadata generator; do not silently alias or patch the old archive."
+  },
+  "execution_environment": {
+    "host": "Debian 13 x86_64",
+    "system_python": "3.13.5",
+    "shared_python_runtime": {
+      "drive_file_id": "1zmyt4xVpJ8eyXZlN9xWljBkyQal5rpyX",
+      "drive_name": "python313-3.13.5-linux-x86_64.tar.zst",
+      "size_bytes": 294346075,
+      "sha256_from_manifest": "1dbbc431b578da5139c8f1993d5c138582dee577804fca9e85936b490606f1d5",
+      "connector_download_limit_bytes": 268435456,
+      "retrieval_result": "BLOCKED_HTTP_413_SIZE_EXCEEDS_CONNECTOR_LIMIT"
+    },
+    "original_archive_native_execution": "NOT_RUN",
+    "prior_wheelhouse_result": "WHL_OFFLINE_SCOPED_PASS; historical alternate route, not repeated and not original portable Runner proof"
+  },
+  "qualification": {
+    "T0": "PASS_SCOPED_UPSTREAM_VERSION_LICENSE_AND_PYPI_PROVENANCE; custom portable archive SHA/size independently verified but not covered by PyPI attestation",
+    "T1": "NOT_QUALIFIED",
+    "T2": "WRITER_REPORTED_ONLY_NOT_INDEPENDENTLY_REPLAYABLE",
+    "T3": "NOT_RUN_ON_ORIGINAL_PORTABLE_BUNDLE",
+    "T4": "BLOCKED_LEGACY_TOOL_TOOL_ID_METADATA; current-main builder rebuild required",
+    "T5": "NOT_QUALIFIED",
+    "T6": "OPEN",
+    "product": "NOT_QUALIFIED",
+    "release": "NOT_AUTHORIZED"
+  },
+  "findings": {
+    "P0": 0,
+    "P1": 1,
+    "P2": 0,
+    "p1": "Original package meta.sh exports TOOL_TOOL_ID rather than TOOL_ID, so current main Runner rejects it. Rebuild with current main builder and canonical metadata before T4.",
+    "p2_resolution": {
+      "P2-01": "RESOLVED_IN_RECORD: added the explicit AePPL MIT, aesara-devs MIT, and historical Academic Free License notices, while retaining Apache-2.0 as the project license expression and leaving unspecified AFL version unresolved.",
+      "P2-02": "RESOLVED_BY_SCOPE_DOWNGRADE: no raw zstd/tar/extraction receipts were found in the evidence folder or PR artifact. All such results are now explicitly WRITER_REPORTED; T2 is not claimed as independently passed."
+    }
+  },
+  "next_actions": [
+    "Retrieve the shared Python 3.13.5 runtime through a host/local agent or a chunked transfer path that can handle 294,346,075 bytes; verify SHA256 against App/packages/SHA256SUMS.",
+    "Rebuild pymc 6.4.0 using the exact current main builder and pinned PyMC/NumPy/SciPy/PyTensor dependency closure; emit canonical TOOL_ID metadata and a reproducible build receipt.",
+    "Run the rebuilt package through current main tool-runner doctor/version/verify and capture real POS/NEG/ERR outcomes, exit codes and hashes.",
+    "To upgrade original portable archive T2 beyond WRITER_REPORTED, preserve immutable zstd integrity output, complete tar member preflight listing/manifest, and non-root UID/GID 65534 extraction logs with hashes; obtain independent replay before changing the T2 status.",
+    "Obtain independent review on the exact repaired evidence PR HEAD before any merge or qualification change."
+  ],
+  "license_scope": {
+    "project_license_expression": "Apache-2.0",
+    "project_license_expression_source": {
+      "path": "pyproject.toml",
+      "blob": "eebfdd696aae3a6a822631485d638a4a6ccbe774",
+      "field": "license = \"Apache-2.0\""
+    },
+    "upstream_license_file_blob": "8a53247c40c863c3abb13c2e9fb059af7c1e0e47",
+    "third_party_notices": [
+      {
+        "subject": "AePPL code",
+        "license": "MIT",
+        "notice": "The pinned upstream LICENSE states that PyMC contains code from AePPL distributed under the MIT License."
+      },
+      {
+        "subject": "aesara-devs copyright notice",
+        "copyright": "2021-2023 aesara-devs",
+        "license": "MIT",
+        "notice": "The pinned upstream LICENSE includes a separate MIT License section carrying the aesara-devs copyright notice."
+      },
+      {
+        "subject": "Historical copyright notices",
+        "copyrights": [
+          "2006 Christopher J. Fonnesbeck",
+          "2007-2008 Christopher J. Fonnesbeck, Anand Prabhakar Patil, David Huard"
+        ],
+        "license_label": "Academic Free License",
+        "license_version": "NOT_SPECIFIED_IN_PINNED_LICENSE",
+        "notice": "The pinned upstream LICENSE annotates these historical copyright lines with '(Academic Free License)'; it does not identify an AFL version or include a separate AFL license text."
+      }
+    ],
+    "interpretation": "Apache-2.0 is the project's declared license expression. The pinned LICENSE also records the component-level MIT and historical Academic Free License notices above. Do not describe the entire distribution as exclusively Apache-2.0, infer an AFL version, or infer component mapping/terms beyond the upstream notices.",
+    "audit_scope_note": "This records the notices present in the pinned upstream LICENSE and pyproject.toml; it is not a legal opinion or a complete component-by-component SBOM."
+  }
+}
