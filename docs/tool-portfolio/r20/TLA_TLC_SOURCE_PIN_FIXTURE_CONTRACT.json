@@ -100,7 +100,7 @@
   },
   "current_main_sync": {
     "main_sha": "90b7f3206d401aa5a2634d775c6f16487f0f1b0f",
-    "sync_commit": "PENDING_COMMIT_SHA",
+    "sync_commit": "c42b7fec95d160f08a34e2a1be38a2d249d20ffe",
     "changed_paths_expected": [
       "portable/builders/tools/tla-tlc.sh",
       "portable/verification/cases/tla-tlc/expect.sh",
