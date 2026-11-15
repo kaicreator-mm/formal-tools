@@ -85,9 +85,9 @@
         "command substitution",
         "duplicate, missing, quoted, leading-space, export and chained assignments"
       ],
-      "bash_source_regression": "The Node test sources the canonical contract through Bash and asserts 0:0:1; it also verifies the readonly override mutant is rejected by the static validator and demonstrates the runtime override that would otherwise occur.",
+      "bash_source_regression": "Node test creates a real temporary expect.sh file, sources it with Bash and asserts 0:0:1; it rejects a readonly override mutant in the static validator and demonstrates the overridden 0:0:77 runtime value. Test execution is pending.",
       "test_file": "tests/alloy-exit-contract.test.mjs",
-      "test_blob": "b07886a3240b25a342223e5d117b0d4722a5150d",
+      "test_blob": "b33fc49457a8db4b6b186df34239a881d1173c83",
       "status": "IMPLEMENTED_PENDING_EXACT_HEAD_CI_AND_FRESH_INDEPENDENT_REVIEW"
     }
   },
