@@ -62,6 +62,35 @@ for tid, dists in DISTS.items():
                 shutil.rmtree(dst)
             shutil.copytree(src, dst, symlinks=True)
             copied.append(os.path.basename(src))
+    # OR-Tools wheels ship hashed private libraries in a sibling ortools.libs directory.
+    # Copy that directory as well as the ortools package; copying only ortools silently
+    # drops DT_NEEDED targets such as libabsl_strings-<hash>.so.
+    if tid == "ortools":
+        libs_src = os.path.join(SITE, "ortools.libs")
+        if not os.path.isdir(libs_src):
+            raise SystemExit("ortools wheel is missing required sibling ortools.libs")
+        libs_dst = os.path.join(pylib, "ortools.libs")
+        if os.path.exists(libs_dst):
+            shutil.rmtree(libs_dst)
+        shutil.copytree(libs_src, libs_dst, symlinks=True)
+        copied.append("ortools.libs")
+        # Verify the embedded package closure before repacking the tool archive.
+        env = os.environ.copy()
+        env["PYTHONPATH"] = pylib
+        env["LD_LIBRARY_PATH"] = ":".join([
+            libs_dst,
+            os.path.join(pylib, "ortools", ".libs"),
+            os.path.join(OUT, "runtimes", "python313", "lib"),
+            env.get("LD_LIBRARY_PATH", ""),
+        ])
+        py = os.path.join(OUT, "runtimes", "python313", "bin", "python3.13")
+        probe = subprocess.run(
+            [py, "-s", "-c", "from ortools.sat.python import cp_model"],
+            env=env, capture_output=True, text=True,
+        )
+        if probe.returncode != 0:
+            raise SystemExit("embedded OR-Tools CP-SAT import failed: " + probe.stderr[-1200:])
+
     # runtime version of the dist (from meta)
     meta = json.load(open(os.path.join(tdir, "meta.json"), encoding="utf-8"))
     ver = meta.get("version", "?")
