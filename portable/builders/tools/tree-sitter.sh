@@ -7,6 +7,7 @@ FT_UPSTREAM_URL="https://github.com/tree-sitter/tree-sitter/releases/download/v0
 # Hash of the official 0.27.2 Linux x86_64 executable extracted from the
 # canonical Drive package. Verify the decompressed executable, not just the
 # transport archive (the upstream release does not publish a sibling checksum).
+FT_TREE_SITTER_ARCHIVE_SHA256=7ed56d152c52437397b9fcaa43cf341f49933cecc1ca291843f0d347c6e2cb3a
 FT_TREE_SITTER_CLI_SHA256=a658dfc7704d6595a3d2f50eba2590f5919ecd54beedf978ba9888ec914fec1f
 FT_PROBE=(bin/tree-sitter --version)
 
@@ -18,7 +19,7 @@ ft_tool_build() {
     ft::note "binary_source" "caller-supplied canonical offline executable; executable SHA-256 pinned"
   else
     local gz
-    gz=$(ft::fetch "$FT_UPSTREAM_URL")
+    gz=$(ft::fetch "$FT_UPSTREAM_URL" "$FT_TREE_SITTER_ARCHIVE_SHA256")
     gunzip -c "$gz" > "$FT_TOOL_DIR/bin/tree-sitter"
     chmod 0755 "$FT_TOOL_DIR/bin/tree-sitter"
     ft::note "binary_source" "official upstream v0.27.2 Linux x86_64 release asset"
