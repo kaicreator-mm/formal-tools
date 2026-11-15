@@ -57,10 +57,44 @@
   },
   "defect_found": "The original NEG was malformed input mislabeled as semantic negative; the first repair used QR orthogonalization, which imposed zero sample correlation rather than independent Gaussian sampling. R22 corrected POS/NEG semantics. R23 changes ERR to an empty numeric ndarray that reaches causal-learn PC.pc and asserts invocation before catching the package ValueError; the Node contract pins exact 0/0/0 POS/NEG/ERR exits and rejects wildcard/duplicate assignments.",
   "execution": {
-    "status": "NOT_RUN_AFTER_R23_ERR_AND_EXIT_REPAIR",
-    "reason": "The ERR fixture and contract test changed after R22. Previous R22 host-Python replay applies only to the prior fixture Blobs; do not reuse it for these new bytes.",
+    "status": "HOST_PYTHON_SUBSTITUTE_SCOPED_PASS_AFTER_R23",
+    "reason": "The R24 independent Source-First review comment #6891975608 records a successful replay of the exact R23 POS/NEG/ERR fixture set and Node contract test under a host Python substitute. This is evidence of scoped host execution only; raw stdout/stderr and receipt bytes were not committed or included with recomputable hashes, and this is not canonical portable-runtime/current-main Runner T3 qualification.",
+    "host_substitute_replay": {
+      "review_comment_id": 6891975608,
+      "reviewed_pr_head": "b7509e9645c6ce0b1ae656ca3be684b0cb848831",
+      "original_archive_sha256": "9c41aa7eb57bff4ef124438382f6f5b3ff9088fb6108b7fe6b5d7ee939e853bf",
+      "host_os": "Linux x86_64",
+      "host_python": "3.13.5 (host venv; not canonical portable runtime)",
+      "uid": 65534,
+      "read_only_bundle": true,
+      "fixture_results": {
+        "pos": {
+          "exit_code": 0,
+          "matched": true
+        },
+        "neg": {
+          "exit_code": 0,
+          "matched": true
+        },
+        "err": {
+          "exit_code": 0,
+          "matched": true,
+          "traceback_reached": [
+            "causallearn/search/ConstraintBased/PC.py",
+            "causallearn/utils/cit.py"
+          ]
+        }
+      },
+      "node_contract": {
+        "status": "PASS",
+        "passed": 1,
+        "failed": 0
+      },
+      "raw_artifacts": "NOT_COMMITTED; per-case stdout/stderr and aggregate receipt bytes are not available from the cited review comment, so no raw log SHA-256 is asserted or independently recomputed."
+    },
     "canonical_runtime": "NOT_RUN; 294346075-byte Python 3.13.5 archive exceeds the Drive connector's 268435456-byte download ceiling.",
-    "next": "Re-execute exact R23 POS/NEG/ERR fixture Blobs under a verified runtime and current-main Runner before any T3 promotion."
+    "current_main_runner": "NOT_RUN; the host replay used the archived portable-core Runner that predates current main.",
+    "next": "Re-execute exact current fixture Blobs with canonical portable Python313 and current-main Runner before any T3 promotion."
   },
   "canonical_runtime": {
     "file": "python313-3.13.5-linux-x86_64.tar.zst",
@@ -70,7 +104,7 @@
     "limit_bytes": 268435456
   },
   "qualification": {
-    "t3": "NOT_RUN_AFTER_R23_ERR_AND_EXIT_REPAIR; previous R22 host-Python replay applies only to pre-R23 fixture Blobs; canonical portable runtime not executed",
+    "t3": "HOST_PYTHON_SUBSTITUTE_SCOPED_PASS_ONLY; canonical portable Python313 and current-main Runner NOT_RUN; formal T3 NOT_GRANTED",
     "t4": "NOT_QUALIFIED",
     "t5": "NOT_QUALIFIED_NO_INDEPENDENT_ORACLE_OR_BUSINESS_CASE",
     "t6": "OPEN"

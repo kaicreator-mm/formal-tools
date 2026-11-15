@@ -40,8 +40,12 @@ test("causal-learn T3 POS/NEG/ERR fixtures pin exact exits and distinct outcomes
   assert.doesNotMatch(neg, /np\.linalg\.qr|ragged|expected exception|except Exception/);
 
   assert.match(err, /invoke_pc\(np\.empty\(\(0, 2\), dtype=np\.float64\)\)/);
+  assert.match(err, /from causallearn\.search\.ConstraintBased\.PC import pc/);
   assert.match(err, /pc_invoked = True/);
   assert.match(err, /assert pc_invoked/);
+  const invokeBody = err.match(/def invoke_pc\(data\):([\s\S]*?)\n\ntry:/);
+  assert.ok(invokeBody, "ERR fixture must define the package-call wrapper");
+  assert.match(invokeBody[1], /return pc\(data, alpha=0\.05, indep_test="fisherz"\)/);
   assert.match(err, /except ValueError as exc/);
   assert.match(err, /INVALID_INPUT_REJECTED/);
   assert.doesNotMatch(err, /np\.array\(\[\[1\.0, 2\.0\], \[3\.0\]\]\)/);
