@@ -57,11 +57,12 @@ test('ldd truly missing dependency fails closed',{skip:!isLinux},()=>{
 // only (no sections, no code). doctor never executes MAIN_BIN; it only probes
 // dependency metadata, so the header structure is what the gate must judge.
 const PT_LOAD=1, PT_INTERP=3, PT_NOTE=4;
-function elf64Image(phdrs,{type=2,entry=64+56*phdrs.length}={}) {
+function elf64Image(phdrs,{type=2,entry=0x400080,machine=0x3e,loadFlags=5}={}) {
   const eh=Buffer.alloc(64), ph=Buffer.alloc(56*phdrs.length);
+  const fileBytes=BigInt(64+56*phdrs.length);
   eh.set([0x7f,0x45,0x4c,0x46, 2, 1, 1, 0]); // magic, ELF64, little-endian, v1
   eh.writeUInt16LE(type, 16); // e_type (ET_REL=1, ET_EXEC=2, ET_DYN=3)
-  eh.writeUInt16LE(0x3e, 18); // e_machine = EM_X86_64
+  eh.writeUInt16LE(machine, 18); // e_machine
   eh.writeUInt32LE(1, 20);    // e_version
   eh.writeBigUInt64LE(BigInt(entry), 24); // e_entry
   eh.writeBigUInt64LE(64n, 32); // e_phoff
@@ -69,12 +70,24 @@ function elf64Image(phdrs,{type=2,entry=64+56*phdrs.length}={}) {
   eh.writeUInt16LE(56, 54);   // e_phentsize
   eh.writeUInt16LE(phdrs.length, 56); // e_phnum
   eh.writeUInt16LE(64, 58);   // e_shentsize
-  phdrs.forEach((t,i)=>ph.writeUInt32LE(t, i*56));
+  phdrs.forEach((t,i)=>{
+    ph.writeUInt32LE(t,i*56);
+    if(t===PT_LOAD){
+      ph.writeUInt32LE(loadFlags,i*56+4); // p_flags
+      ph.writeBigUInt64LE(0n,i*56+8); // p_offset
+      ph.writeBigUInt64LE(0x400000n,i*56+16); // p_vaddr
+      ph.writeBigUInt64LE(fileBytes,i*56+32); // p_filesz
+      ph.writeBigUInt64LE(fileBytes,i*56+40); // p_memsz
+    }
+  });
   return Buffer.concat([eh, ph]);
 }
-const staticElf=elf64Image([PT_LOAD, PT_LOAD, PT_NOTE]);
-const dynamicElf=elf64Image([PT_LOAD, PT_INTERP, PT_LOAD, PT_NOTE]);
+const staticElf=elf64Image([PT_LOAD,PT_NOTE]);
+const dynamicElf=elf64Image([PT_LOAD, PT_INTERP, PT_NOTE]);
 const relocatableElf=elf64Image([PT_LOAD,PT_NOTE],{type:1,entry:0});
+const foreignMachineElf=elf64Image([PT_LOAD,PT_NOTE],{machine:183});
+const nonExecutableElf=elf64Image([PT_LOAD,PT_NOTE],{loadFlags:4}); // PF_R without PF_X
+const entryOutsideElf=elf64Image([PT_LOAD,PT_NOTE],{entry:0x500000});
 // Real GNU ldd behavior on a static ELF (Debian 13 probe 2026-11-14, uid 65534
 // identical to root): rc 1, empty stdout, "\tnot a dynamic executable" on stderr.
 const gnuLddOnStatic="printf '\\tnot a dynamic executable' >&2; exit 1";
@@ -105,6 +118,16 @@ const hasReadelf=isLinux&&spawnSync('readelf',['--version'],{encoding:'utf8'}).s
 test('ET_REL ELF is not a static executable and must use the fail-closed ldd path',{skip:!isLinux},()=>{
   const p=doctorWithLdd("echo 'not a dynamic executable' >&2; exit 1",1,unhealthy,relocatableElf);
   assert.match(p.stdout,/ldd probe FAILED/);
+});
+
+test('foreign-machine ET_EXEC cannot use the x86_64 static shortcut',{skip:!isLinux},()=>{
+  doctorWithLdd("echo 'not a dynamic executable' >&2; exit 1",1,unhealthy,foreignMachineElf);
+});
+test('ET_EXEC without an executable PF_X load cannot use the static shortcut',{skip:!isLinux},()=>{
+  doctorWithLdd("echo 'not a dynamic executable' >&2; exit 1",1,unhealthy,nonExecutableElf);
+});
+test('ET_EXEC entry outside every executable file-backed PT_LOAD cannot use the static shortcut',{skip:!isLinux},()=>{
+  doctorWithLdd("echo 'not a dynamic executable' >&2; exit 1",1,unhealthy,entryOutsideElf);
 });
 
 function compileGcc(outName, flags) {
