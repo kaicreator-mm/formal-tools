@@ -234,6 +234,13 @@ verify_one() {
 # nor PT_DYNAMIC is accepted as static. ET_DYN is never promoted by absence
 # of PT_INTERP; its PT_DYNAMIC table is scanned for DT_NEEDED and then sent
 # through the ordinary fail-closed ldd path.
+ft_has_elf_magic() { # $1=file -> 0 only when the ELF magic header is present
+  local f="$1" magic
+  [ -f "$f" ] || return 1
+  magic=$(LC_ALL=C od -An -N4 -t x1 -- "$f" 2>/dev/null | tr -d ' \n')
+  [ "$magic" = "7f454c46" ]
+}
+
 ft_is_static_elf() { # $1=file -> 0 structurally eligible x86_64 static ET_EXEC, 1 known dynamic, 2 unsupported/ambiguous
   local f="$1" class data etype machine entry phoff phent phnum file_size
   local i off ptype load_seen=0 interp_seen=0 dynamic_seen=0 exec_entry_seen=0
@@ -378,6 +385,7 @@ ft_is_static_elf() { # $1=file -> 0 structurally eligible x86_64 static ET_EXEC,
   # static linkage from that combination; only an x86_64 ET_EXEC with a real
   # executable PT_LOAD containing its file-backed entry point can use shortcut.
   [ "$etype" -eq 2 ] || return 2
+  [ "$entry_num" -gt 0 ] || return 2 # zero entry is not a runnable static ET_EXEC
   [ "$exec_entry_seen" -eq 1 ] || return 2
   return 0
 }

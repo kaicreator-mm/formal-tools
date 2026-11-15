@@ -57,7 +57,7 @@ test('ldd truly missing dependency fails closed',{skip:!isLinux},()=>{
 // only (no sections, no code). doctor never executes MAIN_BIN; it only probes
 // dependency metadata, so the header structure is what the gate must judge.
 const PT_LOAD=1, PT_INTERP=3, PT_NOTE=4;
-function elf64Image(phdrs,{type=2,entry=0x400080,machine=0x3e,loadFlags=5}={}) {
+function elf64Image(phdrs,{type=2,entry=0x400080,machine=0x3e,loadFlags=5,loadVaddr=0x400000}={}) {
   const eh=Buffer.alloc(64), ph=Buffer.alloc(56*phdrs.length);
   const fileBytes=BigInt(64+56*phdrs.length);
   eh.set([0x7f,0x45,0x4c,0x46, 2, 1, 1, 0]); // magic, ELF64, little-endian, v1
@@ -75,7 +75,7 @@ function elf64Image(phdrs,{type=2,entry=0x400080,machine=0x3e,loadFlags=5}={}) {
     if(t===PT_LOAD){
       ph.writeUInt32LE(loadFlags,i*56+4); // p_flags
       ph.writeBigUInt64LE(0n,i*56+8); // p_offset
-      ph.writeBigUInt64LE(0x400000n,i*56+16); // p_vaddr
+      ph.writeBigUInt64LE(BigInt(loadVaddr),i*56+16); // p_vaddr
       ph.writeBigUInt64LE(fileBytes,i*56+32); // p_filesz
       ph.writeBigUInt64LE(fileBytes,i*56+40); // p_memsz
     }
@@ -88,6 +88,7 @@ const relocatableElf=elf64Image([PT_LOAD,PT_NOTE],{type:1,entry:0});
 const foreignMachineElf=elf64Image([PT_LOAD,PT_NOTE],{machine:183});
 const nonExecutableElf=elf64Image([PT_LOAD,PT_NOTE],{loadFlags:4}); // PF_R without PF_X
 const entryOutsideElf=elf64Image([PT_LOAD,PT_NOTE],{entry:0x500000});
+const zeroEntryElf=elf64Image([PT_LOAD,PT_NOTE],{entry:0,loadVaddr:0}); // zero entry lies inside executable file-backed PT_LOAD
 // Real GNU ldd behavior on a static ELF (Debian 13 probe 2026-11-14, uid 65534
 // identical to root): rc 1, empty stdout, "\tnot a dynamic executable" on stderr.
 const gnuLddOnStatic="printf '\\tnot a dynamic executable' >&2; exit 1";
@@ -128,6 +129,12 @@ test('ET_EXEC without an executable PF_X load cannot use the static shortcut',{s
 });
 test('ET_EXEC entry outside every executable file-backed PT_LOAD cannot use the static shortcut',{skip:!isLinux},()=>{
   doctorWithLdd("echo 'not a dynamic executable' >&2; exit 1",1,unhealthy,entryOutsideElf);
+});
+
+test('ET_EXEC with zero entry cannot use the static shortcut even when PT_LOAD starts at zero',{skip:!isLinux},()=>{
+  const p=doctorWithLdd(gnuLddOnStatic,1,unhealthy,zeroEntryElf);
+  assert.match(p.stdout,/ldd probe FAILED/);
+  assert.doesNotMatch(p.stdout,/static ELF OK/);
 });
 
 function compileGcc(outName, flags) {
