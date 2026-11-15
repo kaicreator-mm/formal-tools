@@ -1,0 +1,132 @@
+{
+  "schema": "formal-tools/cvc5-native-replay/0.1",
+  "tool_id": "cvc5",
+  "version": "1.4.2",
+  "repo_main_sha": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
+  "archive": {
+    "drive_file_id": "1HZ3ZswUQq8haSzgM-phJ_OgnXFBDqHfU",
+    "file_name": "cvc5-1.4.2-linux-x86_64.tar.zst",
+    "size_bytes": 8783688,
+    "sha256": "b7a5f6d1740086347d8055dab7fd1216960e19ab7a769fa2b15c1ec76ed0c193",
+    "zstd_integrity": "PASS",
+    "decompressed_tar_sha256": "c4b37cdb456a8e8ad5b56dff7482783b187bc1c4576a8a03cdd1ca5a23d04f73",
+    "member_manifest": "docs/tool-portfolio/r27/raw/cvc5/portable/archive-members.json",
+    "member_count": 6,
+    "regular_files": 4,
+    "directories": 2,
+    "symlinks": 0,
+    "hardlinks": 0,
+    "special_entries": 0,
+    "unsafe_paths": 0,
+    "duplicate_paths": 0
+  },
+  "environment": {
+    "os": "Debian GNU/Linux 13 (trixie)",
+    "architecture": "x86_64",
+    "kernel": "Linux 6.18.57",
+    "glibc": "2.41-12+deb13u3",
+    "node": "v22.16.0",
+    "python": "3.13.5",
+    "extraction_uid_gid": "65534:65534",
+    "execution_uid_gid": "65534:65534",
+    "network_isolation": "NOT_CLAIMED"
+  },
+  "installed_binary": {
+    "path": "tools/cvc5/bin/cvc5",
+    "size_bytes": 32241592,
+    "sha256": "6aecddf466552b83bb5883756c7955e0c9d5ddcc6d7f45b48c2f6e06a741b102",
+    "elf": "ELF 64-bit LSB x86-64, statically linked, GNU/Linux 3.2.0",
+    "ldd": "not a dynamic executable",
+    "version_exit": 0,
+    "version": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]",
+    "version_stdout_sha256": "b6c312e4bb0062a7683ca82eb08f0b25beb4e6c67f22a62a6841a8f4192fde4a",
+    "run_shim_sha256": "54f3e10049a7fe65d8983a6294e945508783ca12e624aaa5d50dd1af3c083c2d",
+    "meta_sh_sha256": "c6aa7502ab238e17b444680c7d6c2155c5126f8a390cc449c09249aa0401656b",
+    "meta_json_sha256": "e53cdca8186eb81b11acaf5b69a0e9dbfabb3be16950a9f73e8f7cb14c18fbe8",
+    "metadata_note": "Original archive retains legacy TOOL_TOOL_ID=cvc5; this receipt does not rewrite package metadata."
+  },
+  "portable_verification_replay": {
+    "execution": "original package run shim; --lang smt2; UID/GID 65534:65534",
+    "expect_blob": "c2878e30501777263a1d967baefb9e73c617588b",
+    "fixtures": {
+      "pos": {
+        "blob": "899525e97fe53f9c6aab6450e0bd6db850dd65ae",
+        "exit": 0,
+        "stdout": "sat\n",
+        "stdout_sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+        "stderr_sha256": "b78c05c277a0e5f76f3ecb3b6c409513303e8083324fde96754fc54837a8572d"
+      },
+      "neg": {
+        "blob": "0182d2b520ab9830c003043123f23e72a961d181",
+        "exit": 0,
+        "stdout": "unsat\n",
+        "stdout_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+        "stderr_sha256": "8079aed9420d5ed9ad5c3cd04848703651c948a7c713501d0887f2091a2390aa"
+      },
+      "err": {
+        "blob": "c3ccb9045ae5758f0dbd7bb662401badd3382823",
+        "exit": 1,
+        "stdout_sha256": "7db1bbd30c6f1b83c621caf8771147706fb791e781aa14606b530beed141bb23",
+        "stderr_sha256": "eee2db3473e25ad25c170159bb1eb3c9fd5f9e9a3308381e6c9c9af4aa793228",
+        "marker": "Parse Error; Symbol check-sat not declared"
+      }
+    },
+    "raw_directory": "docs/tool-portfolio/r27/raw/cvc5/portable/",
+    "checksum_manifest": "docs/tool-portfolio/r27/raw/cvc5/portable/SHA256SUMS",
+    "checksum_manifest_entries": 13,
+    "checksum_validation": "13/13 PASS"
+  },
+  "current_main_native_adapter_fixture_direct_replay": {
+    "execution": "direct original package run shim replay; same argv shape as current-main native.mjs; not executed through Node Runner/CLI/SDK",
+    "native_mjs_blob": "2e0e669e4fa66cb27654644705e76794c0727004",
+    "native_catalog_blob": "02f628947be3e5c270d802be150ab220e14fc2b8",
+    "fixtures": {
+      "positive": {
+        "blob": "725d7613923b7b2dc2c7b2cc1181b2300df4c33f",
+        "exit": 0,
+        "stdout": "unsat\n",
+        "stdout_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "interpretation": "UNSAT; current native.mjs positive fixture expects UNSAT"
+      },
+      "negative": {
+        "blob": "3f65d6cbe7cd67223d85f22a391935e1b78d8ba5",
+        "exit": 0,
+        "stdout": "sat\n",
+        "stdout_sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "interpretation": "SAT; current native.mjs negative fixture expects SAT"
+      }
+    },
+    "raw_directory": "docs/tool-portfolio/r27/raw/cvc5/adapter/",
+    "checksum_manifest": "docs/tool-portfolio/r27/raw/cvc5/adapter/SHA256SUMS",
+    "checksum_manifest_entries": 6,
+    "checksum_validation": "6/6 PASS"
+  },
+  "current_main_source_pins": {
+    "builder": "d239d10e257c0948bf020367a91a24b24e92d5a4",
+    "portable_expect": "c2878e30501777263a1d967baefb9e73c617588b",
+    "portable_pos": "899525e97fe53f9c6aab6450e0bd6db850dd65ae",
+    "portable_neg": "0182d2b520ab9830c003043123f23e72a961d181",
+    "portable_err": "c3ccb9045ae5758f0dbd7bb662401badd3382823",
+    "native_mjs": "2e0e669e4fa66cb27654644705e76794c0727004",
+    "native_catalog_mjs": "02f628947be3e5c270d802be150ab220e14fc2b8",
+    "cli_mjs": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
+    "sdk_mjs": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+    "tool_result_mjs": "a2c61c50658fc3d7e578ffbf7ee018f707e15841",
+    "mcp_mjs": "27f654b99a49a86a148f4b86f01cf7b5b85c0754",
+    "skill_positive": "725d7613923b7b2dc2c7b2cc1181b2300df4c33f",
+    "skill_negative": "3f65d6cbe7cd67223d85f22a391935e1b78d8ba5"
+  },
+  "qualification": {
+    "T0": "PASS_SCOPED_ARCHIVE_IDENTITY_AND_DRIVE_HASH_MATCH; publisher-signature-chain not claimed",
+    "T1": "NOT_QUALIFIED_REPRODUCIBLE_BUILD_NOT_PERFORMED",
+    "T2": "PASS_SCOPED_SAFE_ARCHIVE_PREFLIGHT_AND_NONROOT_EXTRACTION",
+    "T3": "PASS_SCOPED_DIRECT_NATIVE_POS_NEG_ERR_REPLAY_ONLY",
+    "T4": "NOT_QUALIFIED_NODE_RUNNER_CLI_SDK_MCP_EXECUTION_NOT_PERFORMED",
+    "T5": "NOT_QUALIFIED_NO_BUSINESS_CASE_OR_INDEPENDENT_ORACLE",
+    "T6": "OPEN",
+    "Product": "NOT_GRANTED",
+    "Release": "NOT_AUTHORIZED"
+  }
+}

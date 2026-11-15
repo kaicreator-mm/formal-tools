@@ -1,0 +1,1 @@
+(error "Parse Error: tests/cvc5/err.smt2:2.11: Symbol 'check-sat' not declared as a variable")
