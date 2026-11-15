@@ -4,7 +4,11 @@
     "issue": 53,
     "id": "souffle",
     "expected_version": "2.5",
-    "capability": "logic.rules"
+    "capability": "logic.rules",
+    "origin": "native-ref",
+    "capability_ids": [
+      "logic.rules"
+    ]
   },
   "result": {
     "status": "PARTIAL_PORTABLE_RUNNER_CLI_SDK_TECHNICAL_PASS_MCP_NOT_RUN",
@@ -29,7 +33,9 @@
       "skill_positive": "d2c1f5b4a359fac8cf536f41f6fd32f8cf347725",
       "skill_negative": "44aef3679ea0e895815a0ef2624ebf787fb9e73a",
       "package_json": "99cd24d1c71d2c12297730056f1b1882a770c851",
-      "make_meta_py": "2e02fb79aed836ee6cd4698415af43b7cce44da6"
+      "make_meta_py": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+      "registry": "faa89997c3f7c8c71da0a69aa90e8ff37461cde0",
+      "lifecycle_dag": "250b84ae0638d98115d748a32ae2f2c9357942b0"
     },
     "runner_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a"
   },
@@ -65,7 +71,10 @@
     "version_probe": {
       "stdout_contains": "Version: 2.5 (2.5)",
       "exit_code": 0
-    }
+    },
+    "publisher_checksum_verified": false,
+    "source_signature_verified": false,
+    "archive_digest_provenance": "computed-from-the-Google-Drive-copy-in-this-run"
   },
   "portable_fixture": {
     "expect_path": "portable/verification/cases/souffle/expect.sh",
