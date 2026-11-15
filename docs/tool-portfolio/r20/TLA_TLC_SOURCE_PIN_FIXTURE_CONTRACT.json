@@ -1,0 +1,57 @@
+{
+  "schema": "formal-tools/tla-tlc-source-pin-fixture-contract/1.0",
+  "output_label": "FORMAL_TOOLS_I24_UNIFIED_PARALLEL_DELIVERY",
+  "portfolio_issue": 24,
+  "tool_issue": 56,
+  "tool_id": "tla-tlc",
+  "version": "1.8.0",
+  "baseline_main": "cbd7f173b05c4f329bf9e37c2f9a06006526ba08",
+  "upstream_release": {
+    "repository": "tlaplus/tlaplus",
+    "tag": "v1.8.0",
+    "asset": "tla2tools.jar",
+    "url": "https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar",
+    "github_release_api_sha256": "7e53aa636dac8a3cb0533f343115c0548e03fc0ce5edc7739becf58d3d0fb84f",
+    "size_bytes": 4510884,
+    "digest_authority": "GitHub Releases API asset digest; not described as a publisher signature",
+    "asset_kind": "prebuilt official Java jar; not a reproducible source build"
+  },
+  "prior_build_receipt": {
+    "path": "portable/status/receipts/build-tla-tlc.json",
+    "blob": "8a378d4276ca75c630e96cb0ef16686f997ef0b0",
+    "previous_packaged_bundle_sha256": "7458f213af5c5d20d412532037bdbb5094367c31a55d663453e44832016b76e8",
+    "observed_probe_output": "TLC2 Version 2026.11.06.222357 (rev: d8fb231); Error: unrecognized option: -version",
+    "status": "historical builder output; not rebuilt under new hard pin"
+  },
+  "prior_verify_receipt": {
+    "path": "portable/status/receipts/verify-tla-tlc.json",
+    "blob": "ae5386c0e83b3bc472ff83622cef08d3b3026546",
+    "observed_exit_codes": {
+      "setup": 0,
+      "pos": 0,
+      "neg": 12
+    },
+    "limitation": "2-case narrow fixture; no invalid-input ERR phase in this receipt"
+  },
+  "changes": {
+    "builder_blob": "d82454d5b746801b2d7fc46fe242118d8a311ec1",
+    "expect_blob": "9cd5269aea0e2589fcc4758f2c2fc109c286d831",
+    "tests_path": "tests/tla-tlc-source-fixture-contract.test.mjs",
+    "test_scope": "static assertions for pinned asset SHA/size, explicit cache-hit digest verification, corrected -help version probe and exact NEG exit"
+  },
+  "qualification": {
+    "t0": "PASS_SCOPED_GITHUB_RELEASE_ASSET_DIGEST_AND_VERSION_PIN; publisher signature not established",
+    "t1": "NOT_QUALIFIED_UNTIL_FRESH_BUILDER_EXECUTION_AND_REPACK",
+    "t2": "PRESERVE_EXISTING_R3_SCOPED_PASS; no new install run",
+    "t3": "PRESERVE_EXISTING_R3_SCOPED_2_CASE_PASS; NEG exit now pinned to 12; ERR case remains absent",
+    "t4": "NOT_ACCEPTED",
+    "t5": "NOT_QUALIFIED_REAL_SEMANTICS",
+    "t6": "OPEN"
+  },
+  "exclusions": [
+    "No shared Runner/Registry/CLI/MCP/SDK edits",
+    "No #24 total ledger edits",
+    "No Product/Release promotion",
+    "No claim that prebuilt Java jar is a reproducible source build"
+  ]
+}
