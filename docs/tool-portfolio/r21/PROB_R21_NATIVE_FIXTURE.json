@@ -33,7 +33,8 @@
     },
     "contract_test": {
       "path": "tests/prob-fixture-contract.test.mjs",
-      "blob": "c079a654fd0345c0143cebf3498865c3aa7c4872"
+      "blob": "e19ec9e26a1ac5866a3d9a71f41f6d0c85b301c2",
+      "scope": "static contract test asserts exactly three cp commands from immutable bundle fixtures to distinct FT_TMP destinations, plus POS/NEG/ERR exact exits and outcome patterns"
     },
     "semantics": {
       "pos": "ALL OPERATIONS COVERED",
