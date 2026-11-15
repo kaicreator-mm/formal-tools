@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { classifyAdsNativeObservation, executeAds24 } from "../benchmarks/llm-methods/g3/ads-native-replay.mjs";
 import { doctor, executeNativePlan } from "../packages/runner/js/native.mjs";
+import { executeAds24Isolated } from "../benchmarks/llm-methods/g3/ads-native-isolated.mjs";
 import { planNative } from "../packages/runner/js/native-catalog.mjs";
 
 const sha=b=>createHash("sha256").update(b).digest("hex");
@@ -120,4 +121,43 @@ test("G3 frozen ADS24 replay source stays byte-identical to its recorded receipt
  const blob=createHash("sha1").update(Buffer.concat([
    Buffer.from("blob "+Buffer.byteLength(bytes)+"\0"),Buffer.from(bytes,"utf8")])).digest("hex");
  assert.equal(blob,receipt.original_js_runner_replay.source_git_blob);
+});
+
+test("G3 concurrent frozen ADS24 orchestrations isolate each worker's native environment",{
+  skip:process.platform!=="linux"
+},async()=>{
+ const root=mkdtempSync(join(tmpdir(),"ft-ads24-worker-env-"));
+ try{
+  const makeTool=(name,status)=>{
+   const dir=join(root,name);mkdirSync(dir);
+   const exe=join(dir,"z3");
+   const script="#!/bin/sh\\n"+
+     "if [ \\"$1\\" = \\"-version\\" ]; then echo \\"worker-"+name+"\\"; sleep 0.03; exit 0; fi\\n"+
+     "sleep 0.003\\n"+
+     "echo "+status+"\\n"+
+     "exit 0\\n";
+   writeFileSync(exe,script);chmodSync(exe,0o755);
+   return {dir,sha256:sha(readFileSync(exe))};
+  };
+  const a=makeTool("arm-a","sat"),b=makeTool("arm-b","unsat");
+  const previousBinDir=process.env.FORMAL_TOOLS_BIN_DIR;
+  const [ra,rb]=await Promise.all([
+   executeAds24Isolated({tool:"z3",binary_dir:a.dir,
+     expected_binary_sha256:a.sha256,output_dir:join(root,"out-a"),timeout_s:5}),
+   executeAds24Isolated({tool:"z3",binary_dir:b.dir,
+     expected_binary_sha256:b.sha256,output_dir:join(root,"out-b"),timeout_s:5})
+  ]);
+  assert.equal(process.env.FORMAL_TOOLS_BIN_DIR,previousBinDir,
+    "isolated worker execution must not mutate the parent process environment");
+  const ar=JSON.parse(readFileSync(ra.file,"utf8"));
+  const br=JSON.parse(readFileSync(rb.file,"utf8"));
+  assert.match(ar.version_probe.output,/worker-arm-a/);
+  assert.match(br.version_probe.output,/worker-arm-b/);
+  assert.equal(ar.receipts.length,24);
+  assert.equal(br.receipts.length,24);
+  assert.ok(ar.receipts.every(x=>x.status==="SAT"));
+  assert.ok(br.receipts.every(x=>x.status==="UNSAT"));
+ }finally{
+  rmSync(root,{recursive:true,force:true});
+ }
 });
