@@ -196,15 +196,15 @@ ft::set_version() {
 ft::elf_arch() {
   local machine="${1:-}"
   case "$machine" in
-    *"X86-64"*) printf '%s\\n' "x86_64" ;;
-    "AArch64") printf '%s\\n' "aarch64" ;;
-    "Intel 80386") printf '%s\\n' "i386" ;;
-    "PowerPC64 LE") printf '%s\\n' "ppc64le" ;;
-    "PowerPC64") printf '%s\\n' "ppc64" ;;
-    *"RISC-V"*) printf '%s\\n' "riscv" ;;
-    "ARM") printf '%s\\n' "arm" ;;
-    "") printf '%s\\n' "" ;;
-    *) printf '%s\\n' "$machine" ;;
+    *"X86-64"*) printf '%s\n' "x86_64" ;;
+    "AArch64") printf '%s\n' "aarch64" ;;
+    "Intel 80386") printf '%s\n' "i386" ;;
+    "PowerPC64 LE") printf '%s\n' "ppc64le" ;;
+    "PowerPC64") printf '%s\n' "ppc64" ;;
+    *"RISC-V"*) printf '%s\n' "riscv" ;;
+    "ARM") printf '%s\n' "arm" ;;
+    "") printf '%s\n' "" ;;
+    *) printf '%s\n' "$machine" ;;
   esac
 }
 
