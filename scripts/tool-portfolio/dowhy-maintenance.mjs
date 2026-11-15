@@ -80,6 +80,7 @@ export const GATE_DEPENDENCIES = Object.freeze({
     "license",
     "licenseEvidenceBlob",
     "canonicalArchiveDriveId",
+    "canonicalArchiveManifestDriveId",
     "canonicalArchiveBytes",
     "canonicalArchiveBytesVerified",
     "canonicalArchiveObservedSha256",
