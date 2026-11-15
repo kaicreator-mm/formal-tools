@@ -908,7 +908,7 @@
       "t4_full_accepted": false,
       "t5_business_accepted": false,
       "t6_final_accepted": false,
-      "pending": "PR86 shared Runner Writer scope remains OPEN; ELF no-PT_INTERP false-static P1 must be closed before current-main portable bundle requalification",
+      "pending": "PR #86 shared Runner ELF classifier remains OPEN and blocks current-main portable bundle requalification. R21 source now contains the false-static P1 repair and the R20/R21 header/entry guards, but exact-head independent review is REWORK P0=0/P1=0/P2=2: (1) R17 evidence CI/review metadata is stale; (2) a valid ELF32 header negative regression is missing. Exact R21 HEAD 3eb6d5d5b31b0dc09d3c85f7f112e88a12d4e2ab has Woodpecker #1233/#1234 SUCCESS; local R20/R21 execution remains NOT_RUN. Require writer R22 repairs, fresh exact-head CI/review and guarded merge before current-main Runner requalification; no T4/T5/Product/Release promotion.",
       "source_snapshot_status": {
         "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
         "snapshot_date": "2026-11-12",
