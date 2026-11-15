@@ -182,8 +182,9 @@
     "P2": 0,
     "status": "ALL_FIVE_R58_P2_ITEMS_REPAIRED_PENDING_FRESH_REVIEW",
     "previous_review": "REWORK P0=0 P1=0 P2=5",
-    "repaired_head": "PENDING_FINAL_COMMIT_HEAD",
-    "detail": "See proposed_fixes.review_findings; no T1/T4/T5/T6/Product/Release promotion."
+    "detail": "See proposed_fixes.review_findings; no T1/T4/T5/T6/Product/Release promotion.",
+    "source_repair_commit": "cb855bdec485438628bf44431b990391894eab52",
+    "review_status": "FRESH_NON_WRITER_REVIEW_REQUIRED_AFTER_EXACT_HEAD_CI"
   },
   "limitations": [
     "Official .tar.gz bytes not fetched; the Apache SHA512 sidecar is not a PGP signature verification.",
@@ -318,5 +319,11 @@
     "stderr_excerpt": "[line: 4, col: 18] Triples not terminated properly in []-list",
     "stderr_sha256": "723f247a502b22c5d290e7c175554b0c3f3bbfc186f7209af88d2d75ec7fd3ed",
     "stderr_sha256_note": "Raw stderr includes a wall-clock timestamp; hash is for the exact captured stderr bytes in this replay."
+  },
+  "writer_status": {
+    "writer_claim": "RELEASED_AFTER_IMPLEMENTATION",
+    "source_repair_commit": "cb855bdec485438628bf44431b990391894eab52",
+    "evidence_json_last_updated": true,
+    "exact_head_and_ci": "See PR #131 metadata and exact-head status contexts; do not infer from historical CI."
   }
 }
