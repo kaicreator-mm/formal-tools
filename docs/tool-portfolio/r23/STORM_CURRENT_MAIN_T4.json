@@ -294,7 +294,7 @@
       "writer": "CHATGPT_INTEGRATOR_STORM_R84_SINGLE_WRITER_20261116"
     }
   },
-  "pr_base": "d996d168812f51d131b3f3f9c525cc1bd161d087",
+  "pr_base": "8c0811a7baa5f79953a85a190595995f2463f7d0",
   "pr_compare_to_base": {
     "ahead": 9,
     "behind": 0,
@@ -329,7 +329,7 @@
     ],
     "overlap_with_storm_paths": false
   },
-  "current_main_sync_status": "SYNCED_TO_LATEST_MAIN_069444c176bbacc804f107482f356dbc2eb95736; the six commits/24 paths since the immutable 0f214 execution snapshot are CVC5 R27 evidence plus G4 tests only, disjoint from the three Storm PR paths and all 17 recorded current-main source pins; no Storm solver replay.",
+  "current_main_sync_status": "SYNCED_TO_LATEST_MAIN_8c0811a7baa5f79953a85a190595995f2463f7d0; latest main delta from 069444 is the three-file Robot #129 merge, disjoint from all Storm paths and all 17 recorded source/runtime pins; no Storm solver replay.",
   "source_evidence_head": "6a069dfee98633b42e625b295f3cc42c74afb414",
   "source_evidence_ci": {
     "push": "#1404 SUCCESS",
@@ -337,19 +337,18 @@
     "note": "These runs validate the unchanged source/test/evidence content before the current-main metadata-only refresh; new exact-head CI for the metadata refresh is tracked in the PR body."
   },
   "pr_compare_to_current_main": {
-    "measured_at_head": "71593435328a7fa406c15c8e376229ba6d8084dd",
-    "base": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
-    "ahead": 9,
-    "behind": 32,
+    "base": "8c0811a7baa5f79953a85a190595995f2463f7d0",
+    "ahead": 14,
+    "behind": 0,
     "changed_files": 3,
     "paths": [
       "docs/tool-portfolio/r23/STORM_CURRENT_MAIN_T4.json",
       "portable/verification/cases/storm/expect.sh",
       "tests/storm-current-main-t4.test.mjs"
     ],
-    "synced": false,
+    "synced": true,
     "merge": "NOT_PERFORMED",
-    "note": "Exact final pre-R56 repair HEAD; current main is 32 commits ahead and the delta is disjoint from the three Storm-owned PR paths. Integrator controls any sync/merge."
+    "note": "R84 repair and current-main ancestry sync; no Storm solver replay. Exact HEAD and CI are recorded in the PR body after final CI."
   },
   "source_to_current_main_compare": {
     "base": "6a069dfee98633b42e625b295f3cc42c74afb414",
@@ -477,6 +476,39 @@
     }
   },
   "latest_integration_main": {
+    "commit": "8c0811a7baa5f79953a85a190595995f2463f7d0",
+    "woodpecker_push_pipeline": 1635,
+    "woodpecker_push_status": "SUCCESS",
+    "previous_main_snapshot": "069444c176bbacc804f107482f356dbc2eb95736",
+    "compare": {
+      "ahead": 3,
+      "behind": 0,
+      "changed_files": 3,
+      "paths": [
+        "docs/tool-portfolio/r56/ROBOT_CURRENT_MAIN_T4.json",
+        "portable/verification/cases/robot/expect.sh",
+        "tests/robot-portfolio-contract.test.mjs"
+      ]
+    },
+    "overlap_with_storm_paths": false,
+    "storm_native_execution": "NOT_RUN"
+  },
+  "previous_ci_failure": {
+    "head": "1b37404ef3dfe2cf4de772d2c2f63a9d0fc96e20",
+    "pipelines": [
+      1566,
+      1567
+    ],
+    "status": "FAILURE",
+    "root_cause": "UNKNOWN_NOT_CLASSIFIED_FROM_RAW_LOGS",
+    "same_sha_followup_pipelines": [
+      1594,
+      1595
+    ],
+    "same_sha_followup_status": "SUCCESS",
+    "note": "The successful follow-up does not retrospectively classify the original failures as infrastructure."
+  },
+  "previous_latest_integration_main": {
     "commit": "069444c176bbacc804f107482f356dbc2eb95736",
     "woodpecker_push_pipeline": 1610,
     "woodpecker_push_status": "SUCCESS",
@@ -515,20 +547,5 @@
     "overlap_with_storm_paths": false,
     "overlap_with_17_pinned_source_paths": false,
     "storm_native_execution": "NOT_RUN"
-  },
-  "previous_ci_failure": {
-    "head": "1b37404ef3dfe2cf4de772d2c2f63a9d0fc96e20",
-    "pipelines": [
-      1566,
-      1567
-    ],
-    "status": "FAILURE",
-    "root_cause": "UNKNOWN_NOT_CLASSIFIED_FROM_RAW_LOGS",
-    "same_sha_followup_pipelines": [
-      1594,
-      1595
-    ],
-    "same_sha_followup_status": "SUCCESS",
-    "note": "The successful follow-up does not retrospectively classify the original failures as infrastructure."
   }
 }
