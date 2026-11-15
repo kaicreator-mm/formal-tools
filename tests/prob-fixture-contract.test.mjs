@@ -23,8 +23,13 @@ test("ProB POS/NEG/ERR contract pins actual exit codes and typed outcomes",()=>{
 test("ProB model files are copied to writable FT_TMP before model checking",()=>{
   assert.equal(field("EXPECT_SETUP_VIA"),"sh");
   const setup=field("EXPECT_SETUP_ARGS");
+  const commands=setup.split(";").map(command=>command.trim());
+  assert.deepEqual(commands,[
+    "cp $BUNDLE/tests/prob/pos.mch $FT_TMP/pos.mch",
+    "cp $BUNDLE/tests/prob/neg.mch $FT_TMP/neg.mch",
+    "cp $BUNDLE/tests/prob/err.mch $FT_TMP/err.mch"
+  ]);
   for(const name of ["pos","neg","err"]){
-    assert.match(setup,new RegExp("tests/prob/"+name+"\\.mch \\$FT_TMP/"+name+"\\.mch"));
     assert.match(field("EXPECT_"+name.toUpperCase()+"_ARGS"),new RegExp("\\$FT_TMP/"+name+"\\.mch"));
   }
 });
