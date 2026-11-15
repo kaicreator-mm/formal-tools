@@ -124,8 +124,8 @@ function compileSharedWithMissingDependency() {
     const consumerSource=join(dir,'consumer.c');
     const dependency=join(dir,'libft-missing-dependency.so');
     const out=join(dir,'libconsumer.so');
-    writeFileSync(dependencySource,'int ft_missing_dependency(void){return 7;}\\n');
-    writeFileSync(consumerSource,'extern int ft_missing_dependency(void); int ft_consumer(void){return ft_missing_dependency();}\\n');
+    writeFileSync(dependencySource,'int ft_missing_dependency(void){return 7;}\n');
+    writeFileSync(consumerSource,'extern int ft_missing_dependency(void); int ft_consumer(void){return ft_missing_dependency();}\n');
     const dep=spawnSync('gcc',['-shared','-fPIC','-o',dependency,dependencySource],{encoding:'utf8',timeout:30000});
     assert.equal(dep.status,0,dep.stderr);
     const built=spawnSync('gcc',['-shared','-fPIC','-Wl,--no-as-needed','-L',dir,
@@ -176,18 +176,18 @@ test('real ET_DYN without PT_INTERP but with DT_NEEDED missing library fails doc
   try {
     const header=spawnSync('readelf',['-h',out],{encoding:'utf8'});
     assert.equal(header.status,0,header.stderr);
-    assert.match(header.stdout,/Type:\\s+DYN/);
+    assert.match(header.stdout,/Type:\s+DYN/);
     const programHeaders=spawnSync('readelf',['-l',out],{encoding:'utf8'});
     assert.equal(programHeaders.status,0,programHeaders.stderr);
     assert.match(programHeaders.stdout,/DYNAMIC/);
-    assert.doesNotMatch(programHeaders.stdout,/\\bINTERP\\b/);
+    assert.doesNotMatch(programHeaders.stdout,/\bINTERP\b/);
     const dynamic=spawnSync('readelf',['-d',out],{encoding:'utf8'});
     assert.equal(dynamic.status,0,dynamic.stderr);
-    assert.match(dynamic.stdout,/NEEDED.*libft-missing-dependency\\.so/);
+    assert.match(dynamic.stdout,/NEEDED.*libft-missing-dependency\.so/);
     // Remove the library after linking: the ET_DYN object retains DT_NEEDED,
     // has no PT_INTERP, and the real host ldd must report the missing library.
     rmSync(dependency);
-    const p=doctorWithRealBin(out,1,/ldd missing libs: 1 FAIL[\\s\\S]*verdict: FAIL/);
+    const p=doctorWithRealBin(out,1,/ldd missing libs: 1 FAIL[\s\S]*verdict: FAIL/);
     assert.doesNotMatch(p.stdout,/static ELF OK/);
   } finally { rmSync(dir,{recursive:true,force:true}); }
 });
