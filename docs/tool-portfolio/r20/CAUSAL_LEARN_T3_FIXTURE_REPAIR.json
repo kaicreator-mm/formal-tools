@@ -60,7 +60,7 @@
         "label": "PC_CHAIN",
         "exit_code": 0,
         "matched": true,
-        "duration_ms": 4378,
+        "duration_ms": 4281,
         "log_sha256": "6b330fae34829e30c118b655a47f8d23e81457939778b6cc3a6ea2e6094bce33"
       },
       {
@@ -68,7 +68,7 @@
         "label": "INDEPENDENT_NO_EDGE",
         "exit_code": 0,
         "matched": true,
-        "duration_ms": 2004,
+        "duration_ms": 1824,
         "log_sha256": "de74adf355d5e8e9a85cb906d0cedb86d00170f6fe046a5b08452eea04982e0a"
       },
       {
@@ -76,17 +76,41 @@
         "label": "INVALID_INPUT_REJECTED",
         "exit_code": 0,
         "matched": true,
-        "duration_ms": 1905,
+        "duration_ms": 2042,
         "log_sha256": "a378bd6abe0b05fd0d421725f94ca562574aea4aedf7dd2452b1d661951e9d11"
       }
     ],
-    "runner_receipt_sha256": "649a58ada4025db135480d90209c01e3d4af741b2fa67e8063db99ada9c4a5db",
-    "verification_log_sha256": "1435108aece4b2b64d67286e780d6ae19ee6bd0111d79968ecfb6c830e7a2794",
+    "runner_receipt_sha256": "e70d3864c83088ccd5ae2b3377a75b6f6c4d538fe13a18b373a60c6b7a609404",
+    "verification_log_sha256": "b55485a313d69d2d266891c977278731f02956747b49eaeed933b084a446d2f9",
     "contract_test": {
       "node": "22.16.0",
       "passed": 1,
       "failed": 0,
       "blob_sha256": "c5e9a1fdc1ae34d2675c568ba2053bf40b2585cf"
+    },
+    "doctor_log_sha256": "e1fa5fc03dffdb0417c81a57875ee52cb8dc454f3cec349b35bfa1595f1b1a20",
+    "direct_run_shim": {
+      "status": "3/3 cases executed via original causal-learn run shim; host Python substitute",
+      "cases": [
+        {
+          "phase": "pos",
+          "exit_code": 0,
+          "marker": "PYVERIFY: OK PC_CHAIN",
+          "log_sha256": "e346a7880a1310e18d2bbaec3c73f840edf1f82c0d297d83af5193e02314ae5e"
+        },
+        {
+          "phase": "neg",
+          "exit_code": 0,
+          "marker": "PYVERIFY: OK INDEPENDENT_NO_EDGE",
+          "log_sha256": "10e33184f851aa06c78672717ed4eecc194f5cdadb3db7c6dc61acdcf2e6525b"
+        },
+        {
+          "phase": "err",
+          "exit_code": 0,
+          "marker": "PYVERIFY: OK INVALID_INPUT_REJECTED ValueError",
+          "log_sha256": "d25d4ee6304844cec539f0a5aefdcc284a347b1ba5a2339eb71dfe6fdca61cde"
+        }
+      ]
     }
   },
   "canonical_runtime": {
