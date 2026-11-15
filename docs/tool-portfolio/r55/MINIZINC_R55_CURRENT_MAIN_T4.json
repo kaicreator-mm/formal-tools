@@ -1,0 +1,121 @@
+{
+  "schema": "formal-tools/i24-minizinc-r55-current-main-t4/1.0",
+  "output_label": "FORMAL_TOOLS_I24_MINIZINC_R55_CURRENT_MAIN_T4",
+  "repository": "kaicreator-mm/formal-tools",
+  "main_issue": 24,
+  "tool_issue": 43,
+  "exact_main": "d996d168812f51d131b3f3f9c525cc1bd161d087",
+  "prior_fixture_pr": {
+    "number": 117,
+    "merge_commit": "97e0d0bf6a0b197ee9e7008703646a98db907de6",
+    "reviewed_head": "86f81a33dd6401761b0350aaf5a8914654ca9cd8",
+    "scope": "fixture exit contract only; POS/NEG/ERR 0/0/1"
+  },
+  "source_archive": {
+    "drive_file_id": "1Vmn_FKlmXjXrpor46EU-7bU_Q0jJj9Pv",
+    "size_bytes": 79397709,
+    "sha256": "fae47a82ff39aa3122cd7825d225721f2cbc8b8c84bc92d0b74f3f31c08835e4",
+    "manifest_sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64",
+    "manifest_match": true,
+    "drive_modified_time": "2026-11-12T09:01:45.230Z"
+  },
+  "upstream_release": {
+    "repository": "MiniZinc/MiniZincIDE",
+    "tag": "2.10.1",
+    "published_at": "2026-08-31T03:09:51Z",
+    "prerelease": false,
+    "asset": "MiniZincIDE-2.10.1-x86_64-linux-gnu.tgz",
+    "asset_id": 537371691,
+    "size_bytes": 80669849,
+    "sha256": "b63dd88491d47b05d0eb0ff4aa1112d1e6f77292c023800b20b98851458ce01c",
+    "tag_object": "d38e338cd88a57af83267844101d29acd0b8210c",
+    "tag_signed": false
+  },
+  "historical_build_receipt": {
+    "blob": "bc546f68bce457215228016f69fee53b30a1b7a9",
+    "package_sha256": "63dc43b77cb42e491f2510bffd5d5aa5caaee0330e0ac75c7a5533a8e406aa1b",
+    "build_ts": "2026-11-10T22:28:33Z",
+    "disposition": "stale/historical receipt; it predates Drive archive modified 2026-11-12 and does not identify the current Drive bytes"
+  },
+  "evidence_bundle": {
+    "drive_file_id": "1TrURK4wpHAJYpHLLMUFMUnIOGgsxfJb5",
+    "url": "https://drive.google.com/file/d/1TrURK4wpHAJYpHLLMUFMUnIOGgsxfJb5/view?usp=drivesdk",
+    "size_bytes": 105601,
+    "sha256": "dd4c94356a9c5d5d1ee914b9656f06a242f3359b29b171ad92c6f7213784e6ff",
+    "zip_entries": 43,
+    "sha256sum_entries": 42,
+    "drive_readback_verified": true
+  },
+  "archive_safety": {
+    "zstd_test": 0,
+    "decompress": 0,
+    "tar_listing": 0,
+    "member_count": 1240,
+    "regular_files": 1199,
+    "directories": 39,
+    "symlinks": 2,
+    "hardlinks": 0,
+    "special": 0,
+    "unsafe_or_duplicate_paths": 0,
+    "nonroot_extract": 0,
+    "extracted_entries": 1241,
+    "all_entries_owned_by_65534": true
+  },
+  "native": {
+    "minizinc": "2.10.1 build 33348285743",
+    "uid_gid": "65534:65534",
+    "solver": "Chuffed 0.14.0",
+    "pos": {
+      "exit": 0,
+      "output": "x = 10"
+    },
+    "neg": {
+      "exit": 0,
+      "output": "=====UNSATISFIABLE====="
+    },
+    "err": {
+      "exit": 1,
+      "output": "undefined identifier y"
+    },
+    "node_fixture_contract": "1/1 PASS"
+  },
+  "builder_fix": {
+    "file": "portable/builders/tools/minizinc.sh",
+    "proposed_sha256": "f81f15f2dba5a0686eaf9c60181c7a38aaa65df0",
+    "regression_test": "tests/minizinc-upstream-source-pin.test.mjs",
+    "proposed_test_blob": "146f832a2fd2ca8ad8f70dcd31abdd38998fc2c9",
+    "checks": "SHA256 and size after ft::fetch and before ft::extract; fail-closed on mismatch or metadata read failure",
+    "local_tests": "3/3 PASS",
+    "builder_blob": "f81f15f2dba5a0686eaf9c60181c7a38aaa65df0",
+    "test_blob": "146f832a2fd2ca8ad8f70dcd31abdd38998fc2c9"
+  },
+  "current_main": {
+    "runner_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "meta_generator_blob": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+    "runner_requires": "TOOL_ID",
+    "current_archive_meta": "TOOL_TOOL_ID=minizinc"
+  },
+  "qualification": {
+    "T0": "PASS_SCOPED_CURRENT_DRIVE_ARCHIVE_HASH_MATCHES_PRODUCER_MANIFEST; upstream API digest pinned in proposed builder; full T0 still pending full bundled-license inventory and publisher-byte rebuild",
+    "T1": "NOT_QUALIFIED; no official asset rebuild",
+    "T2": "PASS_SCOPED_ZSTD_TAR_PREFLIGHT_AND_NONROOT_EXTRACTION",
+    "T3": "SCOPED_NATIVE_POS_NEG_ERR_REPRODUCED_WITH_CHUFFED; pending fresh independent review",
+    "T4": "NOT_ACCEPTED; legacy TOOL_TOOL_ID metadata; no current Runner/CLI/SDK/MCP execution",
+    "T5": "NOT_QUALIFIED",
+    "T6": "OPEN",
+    "product": "NOT_QUALIFIED",
+    "release": "NOT_AUTHORIZED"
+  },
+  "findings": {
+    "P0": 0,
+    "P1": 1,
+    "P2": 0,
+    "P1_detail": "Upstream pin fix is proposed but pending exact-head Woodpecker CI and independent review; no upstream asset fetch/rebuild yet. The old build receipt mismatch is resolved as a stale historical receipt because actual current Drive bytes match producer manifest."
+  },
+  "limitations": [
+    "Official upstream .tgz bytes were not fetched; no T1 build.",
+    "Current package uses TOOL_TOOL_ID; current Runner rejects it; no current Runner/CLI/SDK/MCP run.",
+    "Full third-party bundle license inventory remains open.",
+    "No independent semantic Oracle, T5/T6 or Product/Release claim."
+  ]
+}
