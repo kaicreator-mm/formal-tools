@@ -325,7 +325,7 @@ test("Python Highs operation rejects value_valid=false before reading solution v
       'def arange(size, dtype=None): return list(range(size))',
       'def asarray(values, dtype=None): return list(values)',
       ''
-    ].join("\\n"));
+    ].join("\n"));
     await writeFile(join(fake,"highspy.py"),[
       'class _Status:',
       '    def __init__(self, name): self.name = name',
@@ -358,7 +358,7 @@ test("Python Highs operation rejects value_valid=false before reading solution v
       '    def getSolution(self): return _InvalidSolution()',
       '    def getObjectiveValue(self): raise AssertionError("INVALID_OBJECTIVE_WAS_READ")',
       ''
-    ].join("\\n"));
+    ].join("\n"));
     const request=join(root,"request.json");
     await writeFile(request,JSON.stringify(model));
     const script=join(repoRoot,"portable/verification/cases/highs/solve-lp.py");
