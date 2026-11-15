@@ -1,0 +1,196 @@
+{
+  "schema": "formal-tools/tool-source-audit/1",
+  "output_label": "FORMAL_TOOLS_I24_RDF_SHACL_T0_SOURCE_AUDIT",
+  "repository": "kaicreator-mm/formal-tools",
+  "tool_issue": 50,
+  "tool_id": "rdf-shacl",
+  "product": "pySHACL",
+  "audit_date": "2026-11-15",
+  "baseline": {
+    "main_sha": "90b7f3206d401aa5a2634d775c6f16487f0f1b0f",
+    "current_main_runner_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "current_main_meta_generator_blob": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+    "current_main_tool_builder_blob": "e2cfcc05d02ccf097c26a11c1906e853c639fbab"
+  },
+  "source": {
+    "upstream_repository": "RDFLib/pySHACL",
+    "release_tag": "v0.40.2",
+    "release_commit": "df57bd4390bd397811d7c2d3b7cf0e49cd21c189",
+    "version": "0.40.2",
+    "python_requires": ">=3.9",
+    "license": "Apache-2.0",
+    "source_blobs": {
+      "pyproject.toml": "c0f4c0b7aa215c056303da247edbeb1ee8a103a2",
+      "LICENSE.txt": "d645695673349e3947e8e5ae42332d0ac3164cd7",
+      "pyshacl/__init__.py": "ae229c900eb7a1e3f38bf2e23f18f94d74a54e7a"
+    },
+    "release_url": "https://github.com/RDFLib/pySHACL/releases/tag/v0.40.2",
+    "pypi_url": "https://pypi.org/project/pyshacl/0.40.2/",
+    "pypi_files": {
+      "sdist_sha256": "3b089fcfe82dccca2a9d560d88665ca0345f828b9cf21de554e611a55c2c7277",
+      "wheel_sha256": "edf0a7c15074902a1a420e8cfb89a764a9eed990b6ea15b8c30c40f2220eef61",
+      "upload_date": "2026-10-28",
+      "provenance": "NOT_PROVIDED"
+    },
+    "github_tag_signature": "VERIFIED_SIGNATURE_BUT_SIGNING_KEY_EXPIRED",
+    "publisher_attestation": false
+  },
+  "original_portable_archive": {
+    "drive_file_id": "1JyKDgIZt1MdAnEZi0DowX6npELHCycvU",
+    "drive_name": "rdf-shacl-0.40.2-linux-x86_64.tar.zst",
+    "manifest_drive_file_id": "1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1",
+    "manifest_sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64",
+    "manifest_size_bytes": 4514,
+    "manifest_entry": "0f88a6a5f402df63d8e336786caf3177d595a16eb538193a2de27249de0f2fe3  tools/rdf-shacl-0.40.2-linux-x86_64.tar.zst",
+    "size_bytes": 1004578,
+    "sha256": "0f88a6a5f402df63d8e336786caf3177d595a16eb538193a2de27249de0f2fe3",
+    "zstd_integrity": "PASS",
+    "tar_members": {
+      "total": 187,
+      "regular_files": 151,
+      "directories": 36,
+      "symlinks": 0,
+      "hardlinks": 0,
+      "special_files": 0,
+      "absolute_or_parent_traversal_paths": 0
+    },
+    "extraction": {
+      "result": "PASS_SCOPED",
+      "uid": 65534,
+      "gid": 65534,
+      "no_same_owner": true,
+      "no_same_permissions": true
+    },
+    "embedded_file_sha256": {
+      "meta.sh": "d2e6eb7e205b265fef08a9fc94e6ee5521b8df4fd3ac959c7804bec5c04ca390",
+      "meta.json": "f0e55eff1627fc2638c2d53c151eb5dceda8d3e991cb1316927ebe873f4944e8",
+      "PACKAGE-INFO.txt": "42cfd04af53c4579116f274a735f1ed551666e8db6ad8dcb8d6f7d645b9967e1",
+      "run": "c7a8964f75a05b5b4927386c941cb383007ef682ec2b4aaaff3cfde3e091bafb",
+      "pyshacl-0.40.2.dist-info/METADATA": "2ee60729eeb2c6f15a1ec182bd7b91fde64a6d73fc148f87ffff5ad4a865fa81"
+    },
+    "embedded_metadata": {
+      "tool_id_json": "rdf-shacl",
+      "legacy_shell_key": "TOOL_TOOL_ID",
+      "shell_version": "0.40.2",
+      "kind": "python-lib",
+      "main_bin": "",
+      "upstream_url": "pypi:pyshacl",
+      "build_ts": "2026-11-10T22:34:39Z",
+      "builder_image": "ft-builder:deb13",
+      "target": {
+        "os": "debian-13",
+        "arch": "x86_64",
+        "glibc_max": "2.41"
+      },
+      "payload": "shared runtime: runtimes/python313-3.13.5-linux-x86_64.tar.zst",
+      "dist_info": "/out/runtimes/python313/lib/python3.13/site-packages/pyshacl-0.40.2.dist-info"
+    }
+  },
+  "dependency_closure": {
+    "source": "Drive wheels/rdf-shacl/pip-download.log",
+    "packages": [
+      "pyshacl==0.40.2",
+      "owlrl==7.6.2",
+      "rdflib==7.6.0",
+      "pyparsing==3.3.3",
+      "html5rdf==1.2.1",
+      "packaging==26.3",
+      "prettytable==3.18.0",
+      "wcwidth==0.9.4"
+    ],
+    "note": "Download log is dependency evidence only; it is not the original archive or a publisher attestation."
+  },
+  "current_main_compatibility": {
+    "runner_contract": "tool_meta unsets TOOL_ID, sources tools/<id>/meta.sh, then requires TOOL_ID == <id>, TOOL_VERSION and TOOL_KIND. Historical TOOL_TOOL_ID is explicitly documented as invalid.",
+    "runner_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "meta_generator_contract": "make_meta.py writes TOOL_ID, TOOL_VERSION, TOOL_KIND, etc.; it explicitly does not write TOOL_TOOL_ID.",
+    "meta_generator_blob": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+    "current_tool_builder_blob": "e2cfcc05d02ccf097c26a11c1906e853c639fbab",
+    "package_shell_metadata_compatible": false,
+    "t4_blocker": "Original archive meta.sh contains TOOL_TOOL_ID only. Current main Runner unsets TOOL_ID and rejects this metadata. Rebuild with the current main builder/metadata generator; do not patch or silently alias the old archive."
+  },
+  "execution_environment": {
+    "host": "Debian 13 x86_64",
+    "system_python": "3.13.5",
+    "system_python_mismatches": {
+      "rdflib": "7.5.0 (expected 7.6.0)",
+      "pyparsing": "3.3.2 (expected 3.3.3)",
+      "missing": [
+        "owlrl==7.6.2",
+        "html5rdf==1.2.1",
+        "prettytable==3.18.0"
+      ]
+    },
+    "shared_python_runtime": {
+      "drive_file_id": "1zmyt4xVpJ8eyXZlN9xWljBkyQal5rpyX",
+      "drive_name": "python313-3.13.5-linux-x86_64.tar.zst",
+      "size_bytes": 294346075,
+      "sha256_from_manifest": "1dbbc431b578da5139c8f1993d5c138582dee577804fca9e85936b490606f1d5",
+      "connector_download_limit_bytes": 268435456,
+      "retrieval_result": "BLOCKED_HTTP_413_SIZE_EXCEEDS_CONNECTOR_LIMIT"
+    },
+    "original_archive_native_execution": "NOT_RUN",
+    "prior_wheelhouse_result": "HISTORICAL_SCOPED_PASS_ONLY; not repeated"
+  },
+  "qualification": {
+    "T0": "PASS_SCOPED_VERSION_LICENSE_AND_ORIGINAL_ARCHIVE_SHA",
+    "T1": "NOT_QUALIFIED",
+    "T2": "PASS_SCOPED_ARCHIVE_SAFETY_AND_NONROOT_EXTRACTION_ONLY",
+    "T3": "NOT_RUN_ON_ORIGINAL_PORTABLE_BUNDLE",
+    "T4": "BLOCKED_LEGACY_TOOL_TOOL_ID_METADATA; current-main builder rebuild required",
+    "T5": "NOT_QUALIFIED",
+    "T6": "OPEN",
+    "product": "NOT_QUALIFIED",
+    "release": "NOT_AUTHORIZED"
+  },
+  "findings": {
+    "P0": 0,
+    "P1": 1,
+    "P2": 1,
+    "p1": "The original package's meta.sh is incompatible with the current main Runner because it exports TOOL_TOOL_ID rather than TOOL_ID. The current builder fixes this, but no reproducible rebuild/current-main package exists yet.",
+    "p2": "Upstream v0.40.2 declares pyshacl_server = pyshacl.http:cli, but pyshacl/http.py is absent from the tagged source and archived payload; source instead contains pyshacl/sh_http.py and __main__.py routes server mode there. The portable shim uses python -m pyshacl, so this is a scoped optional-server entrypoint discrepancy, not proof of core CLI failure. Runtime behavior remains NOT_RUN."
+  },
+  "next_actions": [
+    "Retrieve the shared Python 3.13.5 runtime through a host/local agent or a chunked transfer path that can handle 294,346,075 bytes; verify SHA256 against App/packages/SHA256SUMS.",
+    "Rebuild rdf-shacl 0.40.2 using exact current main 90b7f3206d401aa5a2634d775c6f16487f0f1b0f and the pinned dependency closure; emit canonical TOOL_ID metadata and a reproducible build receipt.",
+    "Run the rebuilt package through current main tool-runner doctor/version/verify; record actual POS/NEG/ERR outputs and exit codes without reusing the historical wheelhouse receipt.",
+    "Before exposing the optional pyshacl_server console entry point, resolve the pyshacl.http:cli versus pyshacl.sh_http discrepancy or explicitly exclude that entry point.",
+    "Obtain independent review on the exact rebuilt package HEAD before any T3/T4 promotion."
+  ],
+  "package_integrity": {
+    "dist_info_record": "pyshacl-0.40.2.dist-info/RECORD",
+    "record_rows": 151,
+    "hashed_entries_verified": 81,
+    "unhashed_entries": 66,
+    "absent_generated_console_script_records": [
+      "../../../bin/pyshacl",
+      "../../../bin/pyshacl_rules",
+      "../../../bin/pyshacl_server",
+      "../../../bin/pyshacl_validate"
+    ],
+    "other_missing_entries": 0,
+    "hash_mismatches": 0,
+    "verification": "PASS_SCOPED",
+    "note": "All 81 RECORD entries carrying SHA-256 matched the extracted bytes. The four absent paths are installer-generated console-script wrappers, not missing pyshacl modules; the portable run shim invokes python -m pyshacl. The 66 rows without RECORD hashes are not presented as hashed verification."
+  },
+  "upstream_packaging_findings": {
+    "optional_server_entrypoint": {
+      "severity": "P2",
+      "pyproject_scripts_target": "pyshacl_server = pyshacl.http:cli",
+      "installed_entry_points_target": "pyshacl.http:cli",
+      "source_module_present": false,
+      "alternative_source_module": "pyshacl/sh_http.py",
+      "source_blobs": {
+        "pyproject.toml": "c0f4c0b7aa215c056303da247edbeb1ee8a103a2",
+        "pyshacl/sh_http.py": "06abe00b72a0cb731a3e779e7730d7ead0c9bf6a",
+        "pyshacl/__main__.py": "0c53f60029c52ad123dbb5272b9d15086f81cf2b",
+        "pyshacl/cli.py": "fdb869fbb82cfd4471a9434e3b908c4af60df96d",
+        "pyshacl/cli_rules.py": "dfbbb2a6c66609fd75a62c426765250bda7a7f66"
+      },
+      "module_not_found": "pyshacl/http.py is absent at upstream tag v0.40.2 and from the archived payload.",
+      "supported_module_path": "pyshacl.__main__ routes server mode to pyshacl.sh_http.main.",
+      "impact": "Potentially broken optional generated pyshacl_server console entry point; core portable shim uses python -m pyshacl and does not depend on that wrapper. No HTTP server runtime test was performed.",
+      "disposition": "TRACK_BEFORE_EXPOSING_OPTIONAL_SERVER_ENTRYPOINT; do not infer core CLI failure or T3 result."
+    }
+  }
+}
