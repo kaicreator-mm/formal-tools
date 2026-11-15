@@ -1,19 +1,32 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {readFileSync} from 'node:fs';
-// Load the byte-pinned snapshot through a computed URL string, like the
-// benchmarks/llm-methods/g6 chain does: a statically resolvable import would
-// pull the unmodified upstream file into the tsc checkJs program and fail the
-// typecheck gate on upstream-only JS patterns.
+import {mkdtempSync,readFileSync,rmSync,writeFileSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+// Never execute a path-loaded module. Read once, verify the Git Blob,
+// then import a data URL constructed from those exact verified bytes.
 const sourcePath=new URL('../validation/g6-tally-source-anchor-2026-11-15/TALLY_BUSINESS_SOURCE.mjs',import.meta.url);
-const {assessTaskEvidence}=await import(sourcePath.href);
 const manifestPath=new URL('../validation/g6-tally-source-anchor-2026-11-15/SOURCE_ANCHOR.json',import.meta.url);
-const sourceBytes=readFileSync(sourcePath);
-const manifest=JSON.parse(readFileSync(manifestPath,'utf8'));
 const gitBlob=bytes=>createHash('sha1')
-  .update(Buffer.concat([Buffer.from('blob '+bytes.length+'\0'),bytes])).digest('hex');
+  .update(Buffer.concat([Buffer.from('blob '+bytes.length+'\\0'),bytes])).digest('hex');
 const expectedSourceBlob='54015fb63ffb13b4f4e562f660d2172098b5f7f4';
+const sourceBytes=readFileSync(sourcePath);
+const verifiedSourceBlob=gitBlob(sourceBytes);
+if(verifiedSourceBlob!==expectedSourceBlob){
+  throw new Error('SOURCE_GIT_BLOB_MISMATCH expected='+expectedSourceBlob+' actual='+verifiedSourceBlob);
+}
+const importVerifiedBuffer=async(bytes,identity='')=>{
+  const actual=gitBlob(bytes);
+  if(actual!==expectedSourceBlob){
+    throw new Error('SOURCE_GIT_BLOB_MISMATCH expected='+expectedSourceBlob+' actual='+actual);
+  }
+  const fragment=identity?'#'+encodeURIComponent(identity):'';
+  const dataUrl='data:text/javascript;base64,'+Buffer.from(bytes).toString('base64')+fragment;
+  return import(dataUrl);
+};
+const {assessTaskEvidence}=await importVerifiedBuffer(sourceBytes);
+const manifest=JSON.parse(readFileSync(manifestPath,'utf8'));
 const valid={
   issueRef:'https://github.com/kaicreator-mm/tally/issues/108',
   issueNumber:108,
@@ -22,6 +35,38 @@ const valid={
   dependenciesComplete:true
 };
 const view=value=>({state:value.state,reason:value.reason,admitted:value.admitted,taskPass:value.taskPass});
+test('G6 mismatched source Buffer is rejected before module evaluation',async()=>{
+  const marker='__g6_unverified_source_module_executed__';
+  delete globalThis[marker];
+  const mismatched=Buffer.from(
+    'globalThis['+JSON.stringify(marker)+']=true; export const executed=true;'
+  );
+  await assert.rejects(
+    importVerifiedBuffer(mismatched,'mismatched-buffer-proof'),
+    /SOURCE_GIT_BLOB_MISMATCH/
+  );
+  assert.equal(Object.hasOwn(globalThis,marker),false);
+});
+test('G6 path replacement after read cannot change the executed verified Buffer',async()=>{
+  const directory=mkdtempSync(join(tmpdir(),'formal-tools-g6-verified-bytes-'));
+  const path=join(directory,'TALLY_BUSINESS_SOURCE.mjs');
+  const marker='__g6_replaced_path_module_executed__';
+  delete globalThis[marker];
+  try{
+    writeFileSync(path,sourceBytes);
+    const verifiedBuffer=readFileSync(path);
+    assert.equal(gitBlob(verifiedBuffer),expectedSourceBlob);
+    writeFileSync(path,Buffer.from(
+      'globalThis['+JSON.stringify(marker)+']=true; export const replaced=true;'
+    ));
+    const loaded=await importVerifiedBuffer(verifiedBuffer,'path-replacement-proof');
+    assert.equal(loaded.assessTaskEvidence(valid).state,'OBSERVED_INPUT_ONLY');
+    assert.equal(loaded.replaced,undefined);
+    assert.equal(Object.hasOwn(globalThis,marker),false);
+  }finally{
+    rmSync(directory,{recursive:true,force:true});
+  }
+});
 test('G6 Tally source snapshot is byte-identical to upstream and DIS consumer pin',()=>{
   assert.equal(gitBlob(sourceBytes),expectedSourceBlob);
   assert.equal(manifest.source.git_blob,expectedSourceBlob);
