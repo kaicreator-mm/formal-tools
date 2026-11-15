@@ -57,18 +57,19 @@ export async function executeAds24(args) {
   const matrix=generateAdsMatrix();
   if(matrix.entries.length!==24)throw new Error("source-frozen ADS case count drift");
   const sandbox=mkdtempSync(join(tmpdir(),"ft-ads24-"));
-  const executionEnv={...process.env,FORMAL_TOOLS_BIN_DIR:dir};
+  const old=process.env.FORMAL_TOOLS_BIN_DIR;
   const outcomes=Object.create(null),receipts=[];
   let before,after,probe;
   try {
-    probe=await doctor(args.tool,Math.min(10,args.timeout_s??10),{env:executionEnv});
+    process.env.FORMAL_TOOLS_BIN_DIR=dir;
+    probe=await doctor(args.tool,Math.min(10,args.timeout_s??10));
     for(const entry of matrix.entries){
       const input=join(sandbox,entry.id+".smt2");
       // Only the deterministic frozen generator can author this input.
       if(digest(entry.smt2)!==entry.input_sha256)throw new Error("matrix input SHA drift");
       writeFileSync(input,entry.smt2,{mode:0o600});
       const plan=planNative(args.tool,"solve",{input});
-      const result=await executeNativePlan(plan,{cwd:sandbox,timeout:args.timeout_s??10,env:executionEnv});
+      const result=await executeNativePlan(plan,{cwd:sandbox,timeout:args.timeout_s??10});
       const status=classifyAdsNativeObservation(result);
       outcomes[entry.id]=status;
       const step=result.executions?.[0];
@@ -84,6 +85,8 @@ export async function executeAds24(args) {
         stdout_status:["SAT","UNSAT","UNKNOWN"].includes(status)?status:null});
     }
   } finally {
+    if(old===undefined)delete process.env.FORMAL_TOOLS_BIN_DIR;
+    else process.env.FORMAL_TOOLS_BIN_DIR=old;
     rmSync(sandbox,{recursive:true,force:true});
   }
   // Verify on-disk executable did not change while executing. This is a

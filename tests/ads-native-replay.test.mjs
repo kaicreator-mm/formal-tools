@@ -5,6 +5,8 @@ import { mkdtempSync, writeFileSync, chmodSync, readFileSync, rmSync, mkdirSync 
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { classifyAdsNativeObservation, executeAds24 } from "../benchmarks/llm-methods/g3/ads-native-replay.mjs";
+import { doctor, executeNativePlan } from "../packages/runner/js/native.mjs";
+import { planNative } from "../packages/runner/js/native-catalog.mjs";
 
 const sha=b=>createHash("sha256").update(b).digest("hex");
 const observed=(stdout,opts={})=>({run_status:"EXECUTED",process_outcome:"EXIT_ZERO",
@@ -42,11 +44,10 @@ test("G3 24 actual subprocess observations are NOT semantic Oracle or supply-cha
    await assert.rejects(()=>executeAds24({tool:"z3",binary_dir:dir,
       expected_binary_sha256:"0".repeat(64),output_dir:out}),/SHA mismatch/);
    const previousBinDir=process.env.FORMAL_TOOLS_BIN_DIR;
-   const pending=executeAds24({tool:"z3",binary_dir:dir,
+   const result=await executeAds24({tool:"z3",binary_dir:dir,
       expected_binary_sha256:sha(readFileSync(exe)),output_dir:out,timeout_s:5});
    assert.equal(process.env.FORMAL_TOOLS_BIN_DIR,previousBinDir,
-     "executeAds24 must not mutate process-global tool configuration");
-   const result=await pending;
+     "executeAds24 must restore the process-global tool configuration");
    const receipt=JSON.parse(readFileSync(result.file,"utf8"));
    assert.equal(result.observed,24);
    assert.equal(receipt.receipts.length,24);
@@ -59,7 +60,12 @@ test("G3 24 actual subprocess observations are NOT semantic Oracle or supply-cha
  }finally{rmSync(root,{recursive:true,force:true});}
 });
 
-test("G3 concurrent ADS24 calls keep each caller's native binary directory isolated",{
+// The per-execution environment isolation lives in the typed Native Runner
+// (doctor/executeNativePlan accept {env} and resolve executables from that
+// environment). The frozen ADS24 replay source is provenance-pinned by the
+// recorded receipt and must not be edited to carry behavior, so the isolation
+// contract is tested directly against the runner layer here.
+test("G3 runner binds concurrent native executions to their own environments",{
   skip:process.platform!=="linux"
 },async()=>{
  const root=mkdtempSync(join(tmpdir(),"ft-ads24-concurrent-env-"));
@@ -77,20 +83,41 @@ test("G3 concurrent ADS24 calls keep each caller's native binary directory isola
   };
   const a=makeTool("arm-a","sat"),b=makeTool("arm-b","unsat");
   const previousBinDir=process.env.FORMAL_TOOLS_BIN_DIR;
-  const [ra,rb]=await Promise.all([
-   executeAds24({tool:"z3",binary_dir:a.dir,expected_binary_sha256:a.sha256,
-     output_dir:join(root,"out-a"),timeout_s:5}),
-   executeAds24({tool:"z3",binary_dir:b.dir,expected_binary_sha256:b.sha256,
-     output_dir:join(root,"out-b"),timeout_s:5})
+  const envA={...process.env,FORMAL_TOOLS_BIN_DIR:a.dir};
+  const envB={...process.env,FORMAL_TOOLS_BIN_DIR:b.dir};
+  const [da,db]=await Promise.all([
+    doctor("z3",5,{env:envA}),
+    doctor("z3",5,{env:envB}),
   ]);
-  assert.equal(process.env.FORMAL_TOOLS_BIN_DIR,previousBinDir);
-  const aReceipt=JSON.parse(readFileSync(ra.file,"utf8"));
-  const bReceipt=JSON.parse(readFileSync(rb.file,"utf8"));
-  assert.match(aReceipt.version_probe.output,/isolated-arm-a/);
-  assert.match(bReceipt.version_probe.output,/isolated-arm-b/);
-  assert.ok(aReceipt.receipts.every(x=>x.status==="SAT"));
-  assert.ok(bReceipt.receipts.every(x=>x.status==="UNSAT"));
+  assert.equal(process.env.FORMAL_TOOLS_BIN_DIR,previousBinDir,
+    "passing an execution environment must not mutate process-global state");
+  assert.match(da.stdout,/isolated-arm-a/);
+  assert.match(db.stdout,/isolated-arm-b/);
+  const input=join(root,"case.smt2");
+  writeFileSync(input,"(set-logic QF_LIA)\n(check-sat)\n");
+  const plan=planNative("z3","solve",{input});
+  const [sa,sb]=await Promise.all([
+    executeNativePlan(plan,{cwd:root,timeout:5,env:envA}),
+    executeNativePlan(plan,{cwd:root,timeout:5,env:envB}),
+  ]);
+  assert.equal(classifyAdsNativeObservation(sa),"SAT");
+  assert.equal(classifyAdsNativeObservation(sb),"UNSAT");
  }finally{
   rmSync(root,{recursive:true,force:true});
  }
+});
+
+// R31 regression: CI #973/#976/#977/#978 failed here because editing the frozen
+// replay source without re-recording the native receipt broke the recorded
+// provenance binding. The receipt pins this file's Git blob; any byte change
+// must fail closed until a real native re-verification re-records it.
+test("G3 frozen ADS24 replay source stays byte-identical to its recorded receipt provenance",()=>{
+ const receipt=JSON.parse(readFileSync(
+   new URL("../validation/ads24-native-2026-11-13/NATIVE_PAIR.json",import.meta.url),"utf8"));
+ const bytes=readFileSync(
+   new URL("../benchmarks/llm-methods/g3/ads-native-replay.mjs",import.meta.url))
+   .toString("utf8").replace(/\r\n/g,"\n");
+ const blob=createHash("sha1").update(Buffer.concat([
+   Buffer.from("blob "+Buffer.byteLength(bytes)+"\0"),Buffer.from(bytes,"utf8")])).digest("hex");
+ assert.equal(blob,receipt.original_js_runner_replay.source_git_blob);
 });
