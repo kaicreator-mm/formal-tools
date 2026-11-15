@@ -29,7 +29,8 @@ test("Vampire POS/NEG/ERR fixture contract pins historical exit codes and typed 
   assert.equal(field("EXPECT_NEG_EXIT"), "0");
   assert.equal(field("EXPECT_ERR_EXIT"), "4");
   assert.equal(field("EXPECT_POS_REGEX"), "Refutation found");
-  assert.equal(field("EXPECT_NEG_REGEX"), "Termination reason: Saturation");
+  assert.equal(field("EXPECT_NEG_REGEX"), "SZS status CounterSatisfiable for neg");
+  assert.doesNotMatch(contract, /Termination reason: Saturation/);
   assert.equal(field("EXPECT_ERR_REGEX"), "parse error in");
   assert.equal(field("EXPECT_NEG_LABEL"), "NOT_PROVED");
   assert.equal(field("EXPECT_ERR_LABEL"), "ERROR");

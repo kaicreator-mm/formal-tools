@@ -5,7 +5,7 @@
   "tool_issue": 58,
   "tool_id": "vampire",
   "version": "5.1.0",
-  "baseline_main": "cbd7f173b05c4f329bf9e37c2f9a06006526ba08",
+  "baseline_main": "19e349fcf96f8883be6a46c654046f1b0e6c66bd",
   "upstream_release": {
     "repository": "vprover/vampire",
     "tag": "v5.1.0",
@@ -41,7 +41,7 @@
     },
     "new_markers": {
       "pos": "Refutation found",
-      "neg": "Termination reason: Saturation",
+      "neg": "SZS status CounterSatisfiable for neg",
       "err": "parse error in"
     },
     "upstream_source_pins": {
@@ -55,23 +55,35 @@
         "path": "Shell/Statistics.cpp",
         "ref": "v5.1.0",
         "blob": "f559d0278815c11ff3f8c09c9c1479ef9b4e7810",
-        "meaning": "SATURATION phase maps to 'Saturation'; runtime line format is 'Termination reason: ...'"
+        "meaning": "TerminationReason::SATISFIABLE emits Satisfiable; ExecutionPhase::SATURATION is printed separately as Termination phase, not Termination reason."
+      },
+      "result_status": {
+        "path": "Shell/UIHelper.cpp",
+        "ref": "v5.1.0",
+        "blob": "1ef28bf471a1deff507ac7ae9a1246e504c1e629",
+        "meaning": "UIHelper::outputSatisfiableResult emits SZS status CounterSatisfiable for conjecture problems."
       }
     },
-    "replay": "NOT_RUN_IN_THIS_ENVIRONMENT; exact markers are source-backed and must be confirmed by the next healthy native replay"
+    "replay": "R47 exact pinned-asset native replay confirmed POS/NEG/ERR markers and exits 0/0/4; raw streams and hashes are stored in the immutable validation receipt.",
+    "raw_replay_receipt": {
+      "path": "validation/local-runtime-receipts/i24-r47/vampire-native-replay.json",
+      "git_blob": "cf4cc7ae72a19e233774673085d1482cbed2df49"
+    }
   },
   "changes": {
     "builder_blob": "00086f1a10cba384b60950b1a90ea89141542d60",
-    "expect_blob": "0107769a651740636eed2a2f1bc8808259c2dd8f",
+    "expect_blob": "0f6b55268b4273ddb64bf136227c61f2157fba20",
     "tests_path": "tests/vampire-source-fixture-contract.test.mjs",
-    "test_scope": "static assertions for pinned asset SHA/size, explicit cache-hit digest verification, whitespace-safe size guard, exact NEG/ERR exits, narrow source-backed markers and malformed input",
-    "test_blob": "a0f5bb9872e246749062c9c38bae97de8897ce9e"
+    "test_scope": "static assertions for pinned asset SHA/size, explicit cache-hit digest verification, whitespace-safe size guard, exact POS/NEG/ERR exits, replay-confirmed SZS NEG marker, rejection of impossible Termination reason: Saturation phrase, and malformed input",
+    "test_blob": "b17acb4a34bab6c712290a3dd74aa62480ed9048",
+    "raw_replay_receipt_path": "validation/local-runtime-receipts/i24-r47/vampire-native-replay.json",
+    "raw_replay_receipt_blob": "cf4cc7ae72a19e233774673085d1482cbed2df49"
   },
   "qualification": {
     "t0": "PASS_SCOPED_GITHUB_RELEASE_ASSET_DIGEST_AND_VERSION_PIN; publisher signature not established",
     "t1": "NOT_QUALIFIED_UNTIL_FRESH_BUILDER_EXECUTION_AND_REPACK",
     "t2": "PRESERVE_EXISTING_R3_SCOPED_PASS; no new install run",
-    "t3": "PRESERVE_EXISTING_R3_SCOPED_PASS; exit contract now pinned to observed 0/0/4, but raw outputs unavailable and new markers require fresh replay",
+    "t3": "PRESERVE_EXISTING_R3_SCOPED_PASS; R47 direct native replay confirms exact 0/0/4 fixture markers and raw streams; no shared Runner requalification or new T3 grant",
     "t4": "NOT_ACCEPTED",
     "t5": "NOT_QUALIFIED_REAL_SEMANTICS",
     "t6": "OPEN"
@@ -81,5 +93,36 @@
     "No #24 total ledger edits",
     "No Product/Release promotion",
     "No claim that prebuilt binary asset is a reproducible source build"
-  ]
+  ],
+  "native_replay": {
+    "receipt_path": "validation/local-runtime-receipts/i24-r47/vampire-native-replay.json",
+    "receipt_blob": "cf4cc7ae72a19e233774673085d1482cbed2df49",
+    "archive_sha256": "495828dc76cb17a27080d62dedce755e46de96f47f06f5f0ad4be9cdaf6f968f",
+    "binary_sha256": "1bc3c598494d790f9b385d1118c7ab9c03f8f146721a6567700679c407314444",
+    "host": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "uid": 1000,
+    "gid": 1000,
+    "exits": {
+      "pos": 0,
+      "neg": 0,
+      "err": 4
+    },
+    "stdout_sha256": {
+      "pos": "20d72a722cc1f445609623565bcb69edf1d89808e3cc6ad618190846392916ed",
+      "neg": "74adf05ad5660684965522155ba466212b2c084dd468b17a4a95aadc7644729e",
+      "err": "83df3ed8eb5aa034541f8123a0ebae04d4028a34730bcb62142d5858190563d5"
+    },
+    "stderr_sha256": {
+      "pos": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "neg": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "replay_source_comment": 6893389292,
+    "status": "DIRECT_NATIVE_REPLAY_CONFIRMED; NOT_RUNNER_T3_REQUALIFICATION"
+  },
+  "current_main_sync": {
+    "main_sha": "19e349fcf96f8883be6a46c654046f1b0e6c66bd",
+    "status": "SYNCED_IN_FINAL_WRITER_COMMIT_AS_SECOND_PARENT",
+    "scope": "current-main delta preserved; tool-owned Vampire changes remain confined"
+  }
 }

@@ -1,0 +1,105 @@
+{
+  "schema": "formal-tools/vampire-native-replay/1.0",
+  "output_label": "FORMAL_TOOLS_I24_VAMPIRE_R47_NATIVE_REPLAY",
+  "repository": "kaicreator-mm/formal-tools",
+  "portfolio_issue": 24,
+  "tool_issue": 58,
+  "pr": 106,
+  "reviewed_source_head_before_sync": "3b33affcf1b26de14db4d1d2b60c83622d3fa1f7",
+  "current_main_at_sync": "19e349fcf96f8883be6a46c654046f1b0e6c66bd",
+  "source": {
+    "builder_blob": "00086f1a10cba384b60950b1a90ea89141542d60",
+    "fixture_blobs": {
+      "pos": "4cf4ddb81c5525fa338c7e6b98b0136c49a0f2ca",
+      "neg": "4cac7fad1d3dad979444bb7435ed12b8158a221d",
+      "err": "c0a80d83b29a4d102721198e4ec85ede24c182b4"
+    }
+  },
+  "archive": {
+    "drive_file_id": "1MUyjPaqwE-GV2iMHNEKR1nBE9sotFF8L",
+    "file_name": "vampire-Linux-X64.zip",
+    "size_bytes": 21664799,
+    "sha256": "495828dc76cb17a27080d62dedce755e46de96f47f06f5f0ad4be9cdaf6f968f",
+    "unzip_test": "PASS",
+    "members": [
+      {
+        "name": "vampire",
+        "type": "regular",
+        "size_bytes": 55131792,
+        "mode": "0755"
+      }
+    ],
+    "unsafe_members": 0
+  },
+  "binary": {
+    "sha256": "1bc3c598494d790f9b385d1118c7ab9c03f8f146721a6567700679c407314444",
+    "size_bytes": 55131792,
+    "version": "Vampire 5.1.0 (Release build, commit 7b2f410 on 2026-08-13 10:17:34 +0200)",
+    "version_command_exit": 0,
+    "ldd_exit": 0,
+    "ldd_missing_libraries": 0
+  },
+  "host": {
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "architecture": "x86_64",
+    "uid": 1000,
+    "gid": 1000,
+    "privilege": "non-root",
+    "network_used": false,
+    "network_isolation": "NOT_PROVEN",
+    "execution": "direct pinned native binary invocation; not shared Runner/CLI/SDK/MCP"
+  },
+  "invocation": {
+    "working_directory": "fixture working directory",
+    "argv_template": [
+      "/mnt/data/vampire-extracted/vampire",
+      "--time_limit",
+      "10",
+      "tests/vampire/<phase>.p"
+    ],
+    "timeout_seconds": 20,
+    "runtime_note": "Per-case direct invocation of the extracted official release binary against exact committed fixture bytes."
+  },
+  "cases": {
+    "pos": {
+      "exit_code": 0,
+      "elapsed_ms": 14,
+      "stdout_sha256": "20d72a722cc1f445609623565bcb69edf1d89808e3cc6ad618190846392916ed",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_utf8": "% Running in auto input_syntax mode. Trying TPTP\n% Refutation found. Thanks to Tanya!\n% SZS status Theorem for pos\n% SZS output start Proof for pos\n1. p(a) [input(axiom) ax1 \"tests/vampire/pos.p\"]\n2. ! [X0] : (p(X0) => p(f(X0))) [input(axiom) ax2 \"tests/vampire/pos.p\"]\n3. p(f(a)) [input(conjecture) goal \"tests/vampire/pos.p\"]\n4. ~ p(f(a)) [negated conjecture 3]\n5. ~p(f(a)) [flattening 4]\n6. ! [X0] : (p(f(X0)) | ~p(X0)) [ennf transformation 2]\n7. p(a) [cnf transformation 1]\n8. p(f(X0)) | ~p(X0) [cnf transformation 6]\n9. ~p(f(a)) [cnf transformation 5]\n10. ~p(a) [resolution 8,9]\n11. $false [forward subsumption resolution 10,7]\n% SZS output end Proof for pos\n% ------------------------------\n% Version: Vampire 5.1.0 (Release build, commit 7b2f410 on 2026-08-13 10:17:34 +0200)\n% Linked with Z3 4.14.0.0 3c47fd96cf5645d0c42b2c819d9e9a84380aa721 NOTFOUND\n% CaDiCaL version: 2.1.3\n% Termination reason: Refutation\n% Time elapsed: 0.002 s\n% Peak memory usage: 163 MB\n% ------------------------------\n% ------------------------------\n",
+      "stderr_utf8": ""
+    },
+    "neg": {
+      "exit_code": 0,
+      "elapsed_ms": 17,
+      "stdout_sha256": "74adf05ad5660684965522155ba466212b2c084dd468b17a4a95aadc7644729e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_utf8": "% Running in auto input_syntax mode. Trying TPTP\n% SZS status CounterSatisfiable for neg\n% SZS output start Saturation.\n% SZS output end Saturation.\n% SZS output start Definitions and Model Updates.\nfor all inputs,\n    define p(X0) := $true\nfor all inputs,\n    define q(X0) := $false\n% SZS output end Definitions and Model Updates.\n% ------------------------------\n% Version: Vampire 5.1.0 (Release build, commit 7b2f410 on 2026-08-13 10:17:34 +0200)\n% Linked with Z3 4.14.0.0 3c47fd96cf5645d0c42b2c819d9e9a84380aa721 NOTFOUND\n% CaDiCaL version: 2.1.3\n% Termination reason: Satisfiable\n% Time elapsed: 0.001 s\n% Peak memory usage: 163 MB\n% ------------------------------\n% ------------------------------\n",
+      "stderr_utf8": ""
+    },
+    "err": {
+      "exit_code": 4,
+      "elapsed_ms": 11,
+      "stdout_sha256": "83df3ed8eb5aa034541f8123a0ebae04d4028a34730bcb62142d5858190563d5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_utf8": "% Running in auto input_syntax mode. Trying TPTP\n% Failed with\n% parse error in \"tests/vampire/err.p\", line 3: term or formula expected (text: <eof>)\n% Trying SMTLIB2\nParser exception: unmatched left parenthesis in line 2 at \n",
+      "stderr_utf8": ""
+    }
+  },
+  "static_checks": {
+    "node_version": "v22.16.0",
+    "node_contract_test": "2/2 PASS",
+    "bash_n_builder": "PASS",
+    "bash_n_expect": "PASS",
+    "qualification": "local validation only; project Node24 exact-head CI remains authoritative"
+  },
+  "qualification": {
+    "t0": "PASS_SCOPED_GITHUB_RELEASE_ASSET_DIGEST_AND_VERSION_PIN; publisher signature not established",
+    "t1": "NOT_QUALIFIED_BUILDER_EXECUTION_AND_REPACK_NOT_PERFORMED",
+    "t2": "PRESERVE_EXISTING_R3_SCOPED_PASS; this replay was not a new isolated installation gate",
+    "t3": "PRESERVE_EXISTING_R3_SCOPED_PASS; R47 direct native replay confirms exact fixture markers and exits only; no Runner requalification",
+    "t4": "NOT_ACCEPTED",
+    "t5": "NOT_QUALIFIED_REAL_SEMANTICS",
+    "t6": "OPEN"
+  }
+}
