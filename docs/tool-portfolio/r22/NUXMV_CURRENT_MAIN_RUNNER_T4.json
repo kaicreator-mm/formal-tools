@@ -1,0 +1,199 @@
+{
+  "schema": "formal-tools/i24-nuxmv-current-main-runner-t4/1.0",
+  "output_label": "FORMAL_TOOLS_I24_NUXMV_R22_CURRENT_MAIN_RUNNER_T4",
+  "date": "2026-11-15",
+  "repository": "kaicreator-mm/formal-tools",
+  "tool_issue": 45,
+  "main_sha": "cbd7f173b05c4f329bf9e37c2f9a06006526ba08",
+  "environment": {
+    "os": "Debian GNU/Linux 13.3 (trixie) x86_64",
+    "uid": 1000,
+    "node": "22.16.0",
+    "python": "3.13.5",
+    "network_isolation": "NOT_PROVEN",
+    "execution": "non-root, private temporary bundle root; original delivered archive not modified"
+  },
+  "source_pins": {
+    "runner": {
+      "path": "portable/packaging/bundle-template/bin/tool-runner",
+      "git_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+      "sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a"
+    },
+    "cli": {
+      "path": "packages/runner/js/cli.mjs",
+      "git_blob": "05a0693f1ab34a881c7fd8de81b3d609e6568047"
+    },
+    "sdk": {
+      "path": "packages/runner/js/sdk.mjs",
+      "git_blob": "774899d95911f9650f12f4de0dbfa38dc3f4d07d"
+    },
+    "mcp": {
+      "path": "packages/runner/js/mcp.mjs",
+      "git_blob": "27f654b99a49d86a148f4b86f01cf7b5b85c0754"
+    },
+    "portfolio_t4": {
+      "path": "packages/runner/js/tool-portfolio-t4.mjs",
+      "git_blob": "922a7c208beaa0e48346403a29ec2d927189319f"
+    },
+    "registry": {
+      "path": "registry/PROBLEM_CAPABILITIES.json",
+      "git_blob": "faa89997c3f7c8c71da0a69aa90e8ff37461cde0"
+    },
+    "dag": {
+      "path": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+      "git_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0"
+    },
+    "fixtures": {
+      "expect": {
+        "path": "portable/verification/cases/nuxmv/expect.sh",
+        "git_blob": "24e670e3420afa61c800396d5b5154b8bd1a3898",
+        "sha256": "08d828816fa987d55be130093e8d6307b65bfbb4c32a206fe1f6a2474c82cc82"
+      },
+      "pos": {
+        "path": "portable/verification/cases/nuxmv/pos.smv",
+        "git_blob": "2602e4a50b6e5ba375897e800f12311a5127ed67"
+      },
+      "neg": {
+        "path": "portable/verification/cases/nuxmv/neg.smv",
+        "git_blob": "dfc25f926a74ad8277567d5869e4f7cf55655df2"
+      },
+      "err": {
+        "path": "portable/verification/cases/nuxmv/err.smv",
+        "git_blob": "0a67b57e7ba971976aebe11baa129802969ace47"
+      }
+    }
+  },
+  "candidate_asset": {
+    "drive_file_id": "1yjneRDGdgF5MAob2SKiCr3l3ZqqPe_wJ",
+    "filename": "nuxmv-2.2.0-meta-corrected-CANDIDATE.tar.zst",
+    "size_bytes": 46687342,
+    "sha256": "2d7b2f0037a043c35616198e2ee916a88d48e3abf54b99e6709c911a78b2b777",
+    "zstd_test_exit_code": 0,
+    "tar_members": 39,
+    "preflight": "no path traversal, absolute/escaping links, hardlinks or special files",
+    "status": "VALIDATION_ONLY_NONCANONICAL_CANDIDATE_NOT_OFFICIAL"
+  },
+  "local_metadata": {
+    "meta_json_sha256": "56723243fcd039724647d3d834c1c8c3897cebeefadfc8ca91ee2341feecd82e",
+    "meta_json_discrepancies": {
+      "elf_arch": "Advanced (not a valid x86_64 machine label; metadata parser/receipt defect)",
+      "version_output": "Historical missing libicuuc.so.70 error, stale relative to current Runner LD_LIBRARY_PATH execution",
+      "impact": "Current T4 gateway checks tool_id/version/kind/unavailable and pins the entire metadata bytes; it does not use these two fields for execution. Keep the candidate noncanonical and do not promote official T0/T1/T2."
+    }
+  },
+  "current_main_runner": {
+    "doctor": {
+      "exit_code": 0,
+      "stdout": "doctor: nuxmv kind=binary version=2.2.0\n  binary: tools/nuxmv/bin/nuXmv OK (glibc_max=2.34)\n  ldd: no missing libs OK\n  verdict: OK\n",
+      "stderr": ""
+    },
+    "verify": {
+      "exit_code": 0,
+      "tsv": "runner_schema\tformal-tools/portable-verify/0.2\nnuxmv\tpos\t0\t91\t1\t1\tPROPERTY_HOLDS\nnuxmv\tneg\t0\t104\t1\t1\tPROPERTY_FAILS\nnuxmv\terr\t1\t65\t1\t1\tERROR\nverdict\tPASS\n",
+      "scope": "candidate package + current-main Runner only; technical fixture receipt, not publisher/canonical T3"
+    }
+  },
+  "cli": {
+    "inspect": {
+      "exit_code": 0,
+      "status": "FOUND_PINNED_NOT_EXECUTED"
+    },
+    "doctor": {
+      "exit_code": 0,
+      "status": "DOCTOR_EXECUTED_NOT_T3"
+    },
+    "verify": {
+      "exit_code": 0,
+      "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "receipt_sha256": "c86d581d29c41c2541296ac02e607fc6a73aad8dd54ecfca37ad8df2bd51804b",
+      "cases": [
+        {
+          "phase": "pos",
+          "exit_code": 0,
+          "semantic_pattern_matched": true,
+          "exit_contract_matched": true,
+          "label": "PROPERTY_HOLDS"
+        },
+        {
+          "phase": "neg",
+          "exit_code": 0,
+          "semantic_pattern_matched": true,
+          "exit_contract_matched": true,
+          "label": "PROPERTY_FAILS"
+        },
+        {
+          "phase": "err",
+          "exit_code": 1,
+          "semantic_pattern_matched": true,
+          "exit_contract_matched": true,
+          "label": "ERROR"
+        }
+      ]
+    },
+    "negative_control": {
+      "wrong_runner_sha256": 0,
+      "exit_code": 2,
+      "status": "NOT_RUN_FAIL_CLOSED",
+      "reason": "PORTABLE_RUNNER_SHA256_MISMATCH"
+    }
+  },
+  "sdk": {
+    "exported_call": "runPortableGate('nuxmv',{mode:'verify-fixture',timeoutS:120})",
+    "exit_code": 0,
+    "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+    "receipt_sha256": "449105942cc88ba0b3ab941b00ee31f03842c01cfa04ba9d38a747d71bc8ff0f",
+    "cases": [
+      {
+        "phase": "pos",
+        "exit_code": 0,
+        "matched": true,
+        "label": "PROPERTY_HOLDS"
+      },
+      {
+        "phase": "neg",
+        "exit_code": 0,
+        "matched": true,
+        "label": "PROPERTY_FAILS"
+      },
+      {
+        "phase": "err",
+        "exit_code": 1,
+        "matched": true,
+        "label": "ERROR"
+      }
+    ]
+  },
+  "mcp": {
+    "syntax_check": {
+      "cli": 0,
+      "sdk": 0,
+      "mcp": 0,
+      "portfolio_t4": 0
+    },
+    "actual_stdio_host": "NOT_RUN",
+    "missing_dependencies": {
+      "@modelcontextprotocol/server": "2.4.0 not installed",
+      "zod": "4.6.7 not installed"
+    },
+    "package_lock": "root package-lock pins @modelcontextprotocol/server 2.4.0, @modelcontextprotocol/core 2.4.0, zod 4.6.7",
+    "disposition": "requires authenticated/local Node24 agent to npm ci and execute initialize/list_tools/inspect_portfolio_tool/verify_portable_fixture over stdio"
+  },
+  "qualification": {
+    "runner_cli_sdk": "CURRENT_MAIN_SCOPED_TECHNICAL_EXECUTION_PASS_UNREVIEWED",
+    "mcp": "NOT_RUN",
+    "t0": "candidate only; no publisher source/rights admission",
+    "t1": "no reproducible official build",
+    "t2": "candidate safe extraction only; canonical original package not admitted",
+    "t3": "candidate technical receipt only; no independent technical review",
+    "t4": "NOT_ACCEPTED; MCP host pending and candidate package is noncanonical",
+    "t5": "NOT_QUALIFIED; no independent business semantic Oracle",
+    "t6": "OPEN",
+    "product_release": "NOT_GRANTED"
+  },
+  "next": [
+    "Run the exact current-main MCP stdio host on Node 24 with package-lock npm ci and record initialize/list_tools/inspect_portfolio_tool/verify_portable_fixture request/response, stdout/stderr and exit status.",
+    "Correct the nuxmv meta.json ELF machine label and stale version_output in the canonical builder/rebuild; do not patch the validation-only archive as official.",
+    "Obtain independent non-Writer Source-First review of these exact Runner/CLI/SDK receipts; retain candidate-only scope.",
+    "Do not update #24 full T4/T5/T6 counts."
+  ]
+}
