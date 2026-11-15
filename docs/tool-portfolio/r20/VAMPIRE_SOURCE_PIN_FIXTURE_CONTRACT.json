@@ -65,7 +65,7 @@
     "expect_blob": "0107769a651740636eed2a2f1bc8808259c2dd8f",
     "tests_path": "tests/vampire-source-fixture-contract.test.mjs",
     "test_scope": "static assertions for pinned asset SHA/size, explicit cache-hit digest verification, whitespace-safe size guard, exact NEG/ERR exits, narrow source-backed markers and malformed input",
-    "test_blob": "2de76c4349cddc2cf295313fa4164313a69ea941"
+    "test_blob": "a0f5bb9872e246749062c9c38bae97de8897ce9e"
   },
   "qualification": {
     "t0": "PASS_SCOPED_GITHUB_RELEASE_ASSET_DIGEST_AND_VERSION_PIN; publisher signature not established",
