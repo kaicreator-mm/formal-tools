@@ -234,7 +234,7 @@ verify_one() {
 # nor PT_DYNAMIC is accepted as static. ET_DYN is never promoted by absence
 # of PT_INTERP; its PT_DYNAMIC table is scanned for DT_NEEDED and then sent
 # through the ordinary fail-closed ldd path.
-ft_is_static_elf() { # $1=file -> 0 proven runnable x86_64 static ET_EXEC, 1 known dynamic, 2 unsupported/ambiguous
+ft_is_static_elf() { # $1=file -> 0 structurally eligible x86_64 static ET_EXEC, 1 known dynamic, 2 unsupported/ambiguous
   local f="$1" class data etype machine entry phoff phent phnum file_size
   local i off ptype load_seen=0 interp_seen=0 dynamic_seen=0 exec_entry_seen=0
   local pflags p_offset p_vaddr p_filesz p_memsz p_offset_num p_vaddr_num p_filesz_num p_memsz_num pflags_num load_end entry_num=0
