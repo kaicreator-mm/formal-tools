@@ -12,7 +12,7 @@ const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 function uniqueNumericExitAssignments(source) {
   const values = {};
   for (const phase of ["POS", "NEG", "ERR"]) {
-    const matches = [...source.matchAll(new RegExp("^EXPECT_" + phase + "_EXIT=([0-9]+)[ \\t]*$", "gm"))];
+    const matches = [...source.matchAll(new RegExp("^EXPECT_" + phase + "_EXIT=([0-9]+)[ \t]*$", "gm"))];
     assert.equal(matches.length, 1, phase + " must have exactly one numeric exit assignment");
     values[phase] = Number(matches[0][1]);
   }
@@ -21,17 +21,17 @@ function uniqueNumericExitAssignments(source) {
 
 test("Storm current-main fixture pins exactly one numeric POS/NEG/ERR exit assignment", () => {
   assert.deepEqual(uniqueNumericExitAssignments(fixture), { POS: 0, NEG: 0, ERR: 1 });
-  assert.match(fixture, /EXPECT_POS_ARGS=.*P>=0\\.1/);
-  assert.match(fixture, /EXPECT_NEG_ARGS=.*P<=0\\.5/);
+  assert.match(fixture, /EXPECT_POS_ARGS=.*P>=0\.1/);
+  assert.match(fixture, /EXPECT_NEG_ARGS=.*P<=0\.5/);
   assert.match(fixture, /EXPECT_POS_LABEL=PROPERTY_HOLDS/);
   assert.match(fixture, /EXPECT_NEG_LABEL=PROPERTY_FAILS/);
 });
 
 test("Storm exit contract rejects duplicate, wildcard, missing, and quoted assignments", () => {
   const negativeControls = [
-    { label: "duplicate", source: fixture + "\\nEXPECT_POS_EXIT=77\\n" },
-    { label: "wildcard", source: fixture.replace(/^EXPECT_NEG_EXIT=0$/m, "EXPECT_NEG_EXIT=*\\n") },
-    { label: "missing", source: fixture.replace(/^EXPECT_ERR_EXIT=1\\n/m, "") },
+    { label: "duplicate", source: fixture + "\nEXPECT_POS_EXIT=77\n" },
+    { label: "wildcard", source: fixture.replace(/^EXPECT_NEG_EXIT=0$/m, "EXPECT_NEG_EXIT=*\n") },
+    { label: "missing", source: fixture.replace(/^EXPECT_ERR_EXIT=1$/m, "") },
     { label: "quoted", source: fixture.replace(/^EXPECT_POS_EXIT=0$/m, "EXPECT_POS_EXIT='0'") }
   ];
   for (const control of negativeControls) {
@@ -41,8 +41,8 @@ test("Storm exit contract rejects duplicate, wildcard, missing, and quoted assig
 
 test("Storm ERR is a real deterministic missing-model-file rejection", async t => {
   assert.match(fixture, /EXPECT_ERR_VIA=run/);
-  assert.match(fixture, /EXPECT_ERR_ARGS=.*missing\\.pm/);
-  assert.match(fixture, /EXPECT_ERR_REGEX='Unable to read from \\(non-existing \\)\\?file'/);
+  assert.match(fixture, /EXPECT_ERR_ARGS=.*missing\.pm/);
+  assert.match(fixture, /EXPECT_ERR_REGEX='Unable to read from \(non-existing \)\?file'/);
   assert.match(fixture, /EXPECT_ERR_LABEL=MISSING_PRISM_FILE_REJECTED/);
   const missing = new URL("../portable/verification/cases/storm/missing.pm", import.meta.url);
   await assert.rejects(readFile(missing), { code: "ENOENT" });
@@ -51,7 +51,7 @@ test("Storm ERR is a real deterministic missing-model-file rejection", async t =
 test("Storm fixture's positive and negative claims use the same committed DTMC model", () => {
   assert.match(model, /^dtmc/m);
   assert.match(model, /label "done" = s=7;/);
-  assert.match(model, /\\[\\] s=0 -> 0\\.5 : \\(s'=1\\) \\+ 0\\.5 : \\(s'=2\\);/);
+  assert.match(model, /\[\] s=0 -> 0\.5 : \(s'=1\) \+ 0\.5 : \(s'=2\);/);
 });
 
 test("the actual MCP stdio server initializes, exposes Storm, and fails closed without a pinned bundle", async t => {
@@ -79,7 +79,7 @@ test("the actual MCP stdio server initializes, exposes Storm, and fails closed w
   child.stdout.on("data", chunk => {
     buffer += chunk.toString("utf8");
     while (true) {
-      const newline = buffer.indexOf("\\n");
+      const newline = buffer.indexOf("\n");
       if (newline < 0) break;
       const line = buffer.slice(0, newline);
       buffer = buffer.slice(newline + 1);
@@ -108,10 +108,10 @@ test("the actual MCP stdio server initializes, exposes Storm, and fails closed w
       reject(new Error("MCP_RESPONSE_TIMEOUT:" + method + ":" + stderr));
     }, 8000);
     pending.set(id, { resolve: resolveResponse, reject, timer });
-    child.stdin.write(JSON.stringify({ jsonrpc: "2.0", id, method, params }) + "\\n");
+    child.stdin.write(JSON.stringify({ jsonrpc: "2.0", id, method, params }) + "\n");
   });
   const notify = (method, params = {}) => {
-    child.stdin.write(JSON.stringify({ jsonrpc: "2.0", method, params }) + "\\n");
+    child.stdin.write(JSON.stringify({ jsonrpc: "2.0", method, params }) + "\n");
   };
 
   const initialized = await request(1, "initialize", {
