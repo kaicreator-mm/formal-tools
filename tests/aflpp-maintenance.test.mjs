@@ -21,7 +21,8 @@ function baseline() {
     tool: { id: "aflpp", version: "5.03c" },
     version_source: "portable/builders/tools/aflpp.sh",
     asset_pins: {
-      original_archive_sha256: sha256("a"),
+      portable_package_sha256: sha256("a"),
+      upstream_source_archive_sha256: sha256("d"),
       binary_sha256: sha256("b"),
       oracle_sha256: sha256("c")
     },
@@ -88,13 +89,20 @@ test("version drift stales all lifecycle gates", () => {
   assert.deepEqual(report.stale_gates, gates);
 });
 
-test("original archive drift stales every dependent lifecycle gate", () => {
+test("portable package drift stales source, install, verify, integrate and maintain", () => {
   const base = baseline();
   const current = currentFrom(base);
-  current.asset_pins.original_archive_sha256 = sha256("d");
+  current.asset_pins.portable_package_sha256 = sha256("e");
   const report = assessAflppMaintenance(base, current);
-  assert.equal(report.status, "STALE");
-  assert.deepEqual(report.stale_gates, gates);
+  assert.deepEqual(report.stale_gates, ["T0", "T2", "T3", "T4", "T6"]);
+});
+
+test("upstream source archive drift stales source, build and maintain", () => {
+  const base = baseline();
+  const current = currentFrom(base);
+  current.asset_pins.upstream_source_archive_sha256 = sha256("e");
+  const report = assessAflppMaintenance(base, current);
+  assert.deepEqual(report.stale_gates, ["T0", "T1", "T6"]);
 });
 
 test("binary drift stales build, install, verify, integrate, use and maintain", () => {
@@ -159,11 +167,13 @@ test("missing tracked files produce UNKNOWN, never a false CURRENT or fabricated
 
 test("unestablished binary and Oracle baselines remain UNKNOWN, not PASS", () => {
   const base = baseline();
+  base.asset_pins.upstream_source_archive_sha256 = null;
   base.asset_pins.binary_sha256 = null;
   base.asset_pins.oracle_sha256 = null;
   const current = currentFrom(base);
   const report = assessAflppMaintenance(base, current);
   assert.equal(report.status, "UNKNOWN");
+  assert.ok(report.unknown_gates.includes("T0"));
   assert.ok(report.unknown_gates.includes("T1"));
   assert.ok(report.unknown_gates.includes("T5"));
 });
@@ -227,13 +237,15 @@ test("current state reader hashes exact repository bytes and extracts the pinned
     }
     const externalPath = join(root, "external.json");
     await writeFile(externalPath, JSON.stringify({
-      original_archive_sha256: base.asset_pins.original_archive_sha256,
+      portable_package_sha256: base.asset_pins.portable_package_sha256,
+      upstream_source_archive_sha256: base.asset_pins.upstream_source_archive_sha256,
       binary_sha256: base.asset_pins.binary_sha256,
       oracle_sha256: base.asset_pins.oracle_sha256
     }));
     const current = await readCurrentAflppState(root, base, externalPath);
     assert.equal(current.version, "5.03c");
     assert.equal(current.source_blobs["portable/builders/tools/aflpp.sh"], base.source_files["portable/builders/tools/aflpp.sh"].git_blob_sha1);
+    assert.equal(current.asset_pins.portable_package_sha256, base.asset_pins.portable_package_sha256);
     assert.equal(current.asset_pins.binary_sha256, base.asset_pins.binary_sha256);
   } finally {
     await rm(root, { recursive: true, force: true });

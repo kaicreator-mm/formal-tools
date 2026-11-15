@@ -57,7 +57,7 @@ export function validateBaseline(baseline) {
   const assets = baseline.asset_pins;
   if (!assets || typeof assets !== "object" || Array.isArray(assets))
     throw new TypeError("baseline asset_pins must be an object");
-  for (const key of ["original_archive_sha256", "binary_sha256", "oracle_sha256"]) {
+  for (const key of ["portable_package_sha256", "upstream_source_archive_sha256", "binary_sha256", "oracle_sha256"]) {
     const value = assets[key];
     if (value !== null && value !== undefined && !SHA256.test(value))
       throw new TypeError("invalid SHA256 baseline pin: " + key);
@@ -128,7 +128,8 @@ export function assessAflppMaintenance(baselineInput, current) {
   }
 
   const assetGates = {
-    original_archive_sha256: GATES,
+    portable_package_sha256: ["T0", "T2", "T3", "T4", "T6"],
+    upstream_source_archive_sha256: ["T0", "T1", "T6"],
     binary_sha256: ["T1", "T2", "T3", "T4", "T5", "T6"],
     oracle_sha256: ["T5", "T6"]
   };
@@ -201,7 +202,7 @@ function normalizeExternalPins(value) {
   if (!value || typeof value !== "object" || Array.isArray(value))
     throw new TypeError("external asset evidence must be a JSON object");
   const out = {};
-  for (const key of ["original_archive_sha256", "binary_sha256", "oracle_sha256"]) {
+  for (const key of ["portable_package_sha256", "upstream_source_archive_sha256", "binary_sha256", "oracle_sha256"]) {
     const candidate = value[key];
     out[key] = typeof candidate === "string" && SHA256.test(candidate)
       ? candidate.toLowerCase()
@@ -242,7 +243,8 @@ export async function readCurrentAflppState(root, baselineInput, externalPath = 
   }
 
   let assetPins = {
-    original_archive_sha256: null,
+    portable_package_sha256: null,
+    upstream_source_archive_sha256: null,
     binary_sha256: null,
     oracle_sha256: null
   };

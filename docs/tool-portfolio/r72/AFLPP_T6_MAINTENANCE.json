@@ -7,7 +7,8 @@
   },
   "version_source": "portable/builders/tools/aflpp.sh",
   "asset_pins": {
-    "original_archive_sha256": "728a9e2cdd38704b1270c478fccfe476e012bbb866b61c9984d274bd8a8cf157",
+    "portable_package_sha256": "728a9e2cdd38704b1270c478fccfe476e012bbb866b61c9984d274bd8a8cf157",
+    "upstream_source_archive_sha256": null,
     "binary_sha256": null,
     "oracle_sha256": null
   },
@@ -167,8 +168,8 @@
     ]
   },
   "qualification_boundary": {
-    "T0": "PASS_SCOPED_ORIGINAL_ARCHIVE_SHA_MATCHED_PRODUCER_MANIFEST_ONLY",
-    "T1": "NOT_QUALIFIED_REPRODUCIBLE_SOURCE_BUILD",
+    "T0": "PASS_SCOPED_PORTABLE_PACKAGE_PRODUCER_MANIFEST_ONLY; UPSTREAM_SOURCE_ARCHIVE_PIN_UNKNOWN",
+    "T1": "NOT_QUALIFIED_REPRODUCIBLE_SOURCE_BUILD; UPSTREAM_SOURCE_ARCHIVE_PIN_UNKNOWN",
     "T2": "PASS_SCOPED_R3_NONROOT_INSTALL",
     "T3": "PASS_SCOPED_R8_R9_NATIVE_FIXTURE_REVIEWED",
     "T4": "NOT_ACCEPTED_FULL_CURRENT_MAIN_RUNNER_CLI_MCP_SDK",
@@ -177,7 +178,8 @@
     "product_or_release": "NOT_GRANTED"
   },
   "notes": [
-    "Original AFL++ 5.03c package archive SHA256 728a9e2c... was recorded by R12 and matched the canonical producer manifest; this is not publisher-signature verification.",
+    "Original AFL++ 5.03c portable package archive SHA256 728a9e2c... was recorded by R12 and matched the canonical producer manifest; this is not publisher-signature verification and is not the upstream source tarball hash.",
+    "The exact upstream source archive SHA256 is not present in the current versioned receipt and remains UNKNOWN for T0/T1.",
     "The binary SHA256 is not present in the current versioned receipt and remains UNKNOWN; no binary digest is invented.",
     "The R12 meta.sh-corrected archive is a noncanonical validation candidate, not the original package and not a T1 build.",
     "AFL++ is a candidate portfolio route; it does not use the 13-tool native.mjs adapter/catalog. Native adapter is explicitly NOT_APPLICABLE.",
