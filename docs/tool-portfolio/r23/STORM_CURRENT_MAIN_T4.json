@@ -7,17 +7,17 @@
     "capability": "model.probabilistic"
   },
   "result": {
-    "status": "PARTIAL_CLI_SDK_AND_MCP_SERVER_TRANSPORT_FAILCLOSED_PASS_STORM_MCP_SOLVER_NOT_RUN; EXIT_CONTRACT_REWORK_P2_01_CLOSED_P2_02_PENDING_NEW_HEAD_CI",
+    "status": "PARTIAL_CLI_SDK_AND_MCP_SERVER_TRANSPORT_FAILCLOSED_PASS_STORM_MCP_SOLVER_NOT_RUN; R52_EXIT_CONTRACT_AND_CURRENT_MAIN_CI_METADATA_REPAIRED; FRESH_REVIEW_REQUIRED",
     "overall_t4_qualification": "NOT_QUALIFIED",
     "t3": "NOT_REQUALIFIED_PRIOR_R4_POS_NEG_RECEIPT_REUSED",
     "t5": "NOT_QUALIFIED",
     "t6": "OPEN",
     "product": "NOT_SIGNED",
     "release": "NOT_SIGNED",
-    "independent_source_first_review": "REWORK_P2_01_CLOSED_P2_02_PENDING_NEW_HEAD_CI_AND_FRESH_REVIEW"
+    "independent_source_first_review": "R28_REWORK_P2_01_AND_P2_02; P2_01_FIXED; P2_02_METADATA_FIXED; FRESH_NON_WRITER_REVIEW_REQUIRED"
   },
   "current_main": {
-    "commit": "d996d168812f51d131b3f3f9c525cc1bd161d087",
+    "commit": "250d20ec782785f13d4d027f7ab79e005feacc76",
     "blobs": {
       "runner": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
       "portfolio_t4": "922a7c208beaa0e48346403a29ec2d927189319f",
@@ -32,7 +32,11 @@
     },
     "runner_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a",
     "gateway_execution_scope": "fixed POS/NEG/ERR fixture only; no raw argv",
-    "pin_verification_note": "The ten source blobs were independently confirmed unchanged at current main 5f188dec...; compare 5f188dec... to d996d168... contains only disjoint R20/R22/R50/Causal Learn files, so the ten recorded shared source pins remain unchanged at d996d168."
+    "pin_verification_note": "All ten recorded source blobs were independently checked at historical current main 5f188dec... and d996d168...; compare d996d168... to latest main 250d20e... is four commits/nine files, exclusively disjoint TLA-TLC, MiniZinc and ProB evidence/builder/test paths. No pinned Runner/portfolio T4/CLI/MCP/SDK/catalog/registry/lifecycle/package.json/make_meta path changed, so the ten source Blob pins remain valid at 250d20e.",
+    "same_sha_followup_push_pipeline": 1468,
+    "same_sha_followup_push_status": "SUCCESS",
+    "push_1450_status": "FAILURE_UNCLASSIFIED",
+    "push_1450_root_cause": "UNKNOWN; later same-SHA #1468 success does not establish the first failure cause"
   },
   "package": {
     "drive_file_id": "1r38Hl46oPr_Y1WP-0CQJClBCPwFNBWD6",
@@ -133,14 +137,15 @@
       "ci_integration_test": {
         "path": "tests/storm-current-main-t4.test.mjs",
         "test_blob": "18342714833be4f37100d4ef336f78b8db11abc6",
-        "exact_head": "26701367e704ceff84f35891d7841f795209b0ae",
-        "woodpecker_push": "PENDING_NEW_EXACT_HEAD",
-        "woodpecker_pr": "PENDING_NEW_EXACT_HEAD",
+        "exact_head": "6a069dfee98633b42e625b295f3cc42c74afb414",
+        "woodpecker_push": "SUCCESS #1404",
+        "woodpecker_pr": "SUCCESS #1405",
         "protocol": "MCP stdio initialize 2025-03-26 + tools/list",
         "storm_inspect": "NOT_AVAILABLE_FAIL_CLOSED",
         "verify_portable_fixture": "NOT_RUN_FAIL_CLOSED",
         "reason": "PORTABLE_ROOT_NOT_CONFIGURED",
-        "scope": "actual server/transport/tool-dispatch fail-closed integration; no Storm solver execution through MCP"
+        "scope": "actual server/transport/tool-dispatch fail-closed integration; no Storm solver execution through MCP",
+        "status": "PASS_SCOPED_STDIO_INITIALIZE_TOOLS_LIST_INSPECT_FAILCLOSED_DISPATCH_ONLY"
       }
     }
   },
@@ -156,7 +161,10 @@
   "test": {
     "path": "tests/storm-current-main-t4.test.mjs",
     "blob": "18342714833be4f37100d4ef336f78b8db11abc6",
-    "local_result": "R28 four-test revision passed CI #1241/#1242 but was returned REWORK P2-01/P2-02. This R52 revision adds exact unique numeric POS/NEG/ERR assignment parsing plus duplicate, wildcard, missing and quoted negative controls; full Node24 exact-head CI pending."
+    "local_result": "R52 exact-one numeric POS/NEG/ERR parser and duplicate/wildcard/missing/quoted negative controls passed locally on Node v22.16.0; exact-head Woodpecker #1404/#1405 SUCCESS on HEAD 6a069dfee98633b42e625b295f3cc42c74afb414.",
+    "exact_head": "6a069dfee98633b42e625b295f3cc42c74afb414",
+    "woodpecker_push": "#1404 SUCCESS",
+    "woodpecker_pr": "#1405 SUCCESS"
   },
   "boundaries": [
     "R4 native POS/NEG semantics reused; the exact current-main Runner rerun is scoped to the fixed fixture transport/gateway, not a new independent T3 qualification.",
@@ -166,7 +174,8 @@
     "No shared Runner, Registry, CLI/MCP/SDK gateway, runtime, #24 ledger, Product, or Release files were modified or signed.",
     "The MCP stdio integration harness was added after the initial local evidence; exact-head push/PR CI failed (#1224/#1223), first failing step/log unavailable, so MCP runtime remains NOT_QUALIFIED and no same-SHA retry or speculative fix is claimed.",
     "Earlier exact-head CI #1223/#1224 failed with raw logs unavailable; later source-identical test/evidence revision passed exact-head CI #1237/#1238. Do not infer the earlier failure's root cause.",
-    "R52 P2-01 repair adds exactly-one numeric POS/NEG/ERR assignment validation and duplicate/wildcard/missing/quoted negative controls. The previous #1241/#1242 CI results apply only to old HEAD 960b681; this revision requires fresh exact-head CI."
+    "R52 P2-01 repair adds exactly-one numeric POS/NEG/ERR assignment validation and duplicate/wildcard/missing/quoted negative controls. Exact-head Woodpecker #1404/#1405 SUCCESS applies to HEAD 6a069dfee98633b42e625b295f3cc42c74afb414; #1241/#1242 remain historical results for old HEAD 960b681.",
+    "Latest main is 250d20ec...; the four-commit/nine-file main-side delta from PR base d996d168... is disjoint from Storm and all ten pinned shared source files. Branch intentionally remains unsynced pending Integrator release of the #1450 first-failure hold; same-SHA #1468 later success is not root-cause evidence."
   ],
   "rework": {
     "previous_review_head": "960b6811db42a29d9033dc326cc3284123f6b77f",
@@ -177,13 +186,39 @@
       "details": "Require exactly one numeric assignment for each of POS/NEG/ERR and reject appended duplicate, wildcard, missing and quoted assignments."
     },
     "p2_02": {
-      "status": "IN_PROGRESS",
-      "details": "Refresh current-main pin to d996d168..., evidence and PR body with new exact-head Woodpecker results after the rebase."
+      "status": "RESOLVED_METADATA_ONLY",
+      "details": "current_main.commit now records 250d20e; exact-head #1404/#1405 are SUCCESS; PR base and current-main delta are separately recorded; #1450 failure and later same-SHA #1468 success are distinguished without inferring cause. Branch ancestry sync remains an Integrator hold, not a metadata defect."
     },
     "previous_ci": {
       "push": "#1241 SUCCESS",
       "pr": "#1242 SUCCESS",
       "applies_to_head": "960b6811db42a29d9033dc326cc3284123f6b77f"
-    }
-  }
+    },
+    "fresh_review_status": "REQUIRED_AFTER_NEW_EXACT_HEAD_CI"
+  },
+  "pr_base": "d996d168812f51d131b3f3f9c525cc1bd161d087",
+  "pr_head": "6a069dfee98633b42e625b295f3cc42c74afb414",
+  "pr_compare_to_base": {
+    "ahead": 4,
+    "behind": 0,
+    "changed_files": 3
+  },
+  "latest_main_delta_from_pr_base": {
+    "ahead": 4,
+    "behind": 0,
+    "changed_files": 9,
+    "paths": [
+      "docs/tool-portfolio/r20/TLA_TLC_SOURCE_PIN_FIXTURE_CONTRACT.json",
+      "docs/tool-portfolio/r55/MINIZINC_R55_CURRENT_MAIN_T4.json",
+      "docs/tool-portfolio/r55/PROB_R55_ORIGINAL_TAR_REPLAY.json",
+      "portable/builders/tools/minizinc.sh",
+      "portable/builders/tools/tla-tlc.sh",
+      "portable/verification/cases/tla-tlc/expect.sh",
+      "tests/minizinc-upstream-source-pin.test.mjs",
+      "tests/solution-store.test.mjs",
+      "tests/tla-tlc-source-fixture-contract.test.mjs"
+    ],
+    "overlap_with_storm_paths": false
+  },
+  "current_main_sync_status": "NO_SYNC_OR_MERGE_UNTIL_INTEGRATOR_RELEASES_HOLD_ON_MAIN_PUSH_1450_FIRST_FAILURE; LATER_SAME_SHA_1468_SUCCESS_RECORDED_BUT_CAUSE_UNCLASSIFIED"
 }
