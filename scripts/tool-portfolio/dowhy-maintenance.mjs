@@ -89,7 +89,10 @@ export const GATE_DEPENDENCIES = Object.freeze({
     "upstreamCommit",
     "sourceSdistSha256",
     "sourceSdistBytesVerified",
+    "builderBlob",
     "buildToolBlob",
+    "metaGeneratorBlob",
+    "packagerBlob",
     "buildRecipeBlob",
     "toolchainFingerprint",
     "rebuiltPackageTreeSha256"
