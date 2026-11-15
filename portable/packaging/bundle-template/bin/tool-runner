@@ -227,50 +227,123 @@ verify_one() {
 # a healthy dependency probe. A successful ldd exit that prints an arbitrary
 # diagnostic must not be treated as "no missing libs".
 #
-# Static-ELF detection is header-based (ELF without PT_INTERP), because real
-# ldd implementations disagree on static binaries (2026-11-14 Debian 13 +
-# alpine probe, uid 65534 behaving identically to root): GNU ldd exits 1
-# printing "\tnot a dynamic executable" on stderr, musl ldso --list exits 1
-# "Not a valid dynamic program", and the busybox-style LD_TRACE_LOADED_OBJECTS
-# probe is ignored entirely (the binary silently executes, rc 0, empty output).
-# No ldd output is a trustworthy static-ELF report, so the ELF header is the
-# arbiter (x86_64 hosts with od/coreutils; big-endian or non-ELF files fall
-# back to the unchanged fail-closed ldd path below).
-ft_has_elf_magic() { # $1=file -> rc 0 when the file starts with the ELF magic
-  [ "$(od -An -N4 -t x1 -- "$1" 2>/dev/null | tr -d ' \n')" = "7f454c46" ]
-}
-ft_is_static_elf() { # $1=file -> 0 static ELF, 1 dynamic ELF, 2 not ELF/unsupported
-  local f="$1" class data phoff phent phnum i off ptype
+# Static-ELF detection is deliberately narrow. Missing PT_INTERP alone is
+# insufficient: ET_DYN shared objects commonly have PT_DYNAMIC + DT_NEEDED
+# without an interpreter, and ldd must inspect them for missing libraries.
+# Only a runnable ET_EXEC with PT_LOAD, nonzero entry, and neither PT_INTERP
+# nor PT_DYNAMIC is accepted as static. ET_DYN is never promoted by absence
+# of PT_INTERP; its PT_DYNAMIC table is scanned for DT_NEEDED and then sent
+# through the ordinary fail-closed ldd path.
+ft_is_static_elf() { # $1=file -> 0 proven static ET_EXEC, 1 known dynamic, 2 unsupported/ambiguous
+  local f="$1" class data etype entry phoff phent phnum file_size
+  local i off ptype load_seen=0 interp_seen=0 dynamic_seen=0
+  local dyn_offset=0 dyn_filesz=0 dyn_ent dyn_count j tag needed_seen=0 null_seen=0
   [ -f "$f" ] || return 2
   ft_has_elf_magic "$f" || return 2
+
   class=$(od -An -j4 -N1 -t x1 -- "$f" 2>/dev/null | tr -d ' \n')
   data=$(od -An -j5 -N1 -t x1 -- "$f" 2>/dev/null | tr -d ' \n')
-  case "$class$data" in ''|*[!0-9a-f]*) return 2 ;; esac
-  class=$((16#$class)); data=$((16#$data))
-  case "$class:$data" in
-    # little-endian only (bundle targets x86_64); anything else falls to ldd
-    2:1) phoff=$(od -An -j32 -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
-         phent=$(od -An -j54 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
-         phnum=$(od -An -j56 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n') ;;
-    1:1) phoff=$(od -An -j28 -N4 -t x4 -- "$f" 2>/dev/null | tr -d ' \n')
-         phent=$(od -An -j42 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
-         phnum=$(od -An -j44 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n') ;;
+  etype=$(od -An -j16 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
+  case "$class$data$etype" in ''|*[!0-9a-f]*) return 2 ;; esac
+  class=$((16#$class)); data=$((16#$data)); etype=$((16#$etype))
+  [ "$data" -eq 1 ] || return 2 # little-endian only (bundle target: x86_64)
+  case "$etype" in 2|3) ;; *) return 2 ;; esac # ET_EXEC or ET_DYN only
+
+  case "$class" in
+    2)
+      entry=$(od -An -j24 -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+      phoff=$(od -An -j32 -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+      phent=$(od -An -j54 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
+      phnum=$(od -An -j56 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
+      dyn_ent=16
+      ;;
+    1)
+      entry=$(od -An -j24 -N4 -t x4 -- "$f" 2>/dev/null | tr -d ' \n')
+      phoff=$(od -An -j28 -N4 -t x4 -- "$f" 2>/dev/null | tr -d ' \n')
+      phent=$(od -An -j42 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
+      phnum=$(od -An -j44 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
+      dyn_ent=8
+      ;;
     *) return 2 ;;
   esac
-  case "$phoff$phent$phnum" in
-    ''|*[!0-9a-f]*) return 2 ;; # od unreadable: fail closed into the ldd path
-  esac
+  case "$entry$phoff$phent$phnum" in ''|*[!0-9a-f]*) return 2 ;; esac
+  case "$entry" in *[1-9a-f]*) ;; *) return 2 ;; esac # no entry point is not an executable
   phoff=$((16#$phoff)); phent=$((16#$phent)); phnum=$((16#$phnum))
-  [ "$phent" -gt 0 ] || return 2
-  if [ "$phnum" -eq 0 ]; then return 0; fi # no program headers: never dynamically linked
+  [ "$phnum" -gt 0 ] && [ "$phnum" -le 4096 ] || return 2
+  if [ "$class" -eq 2 ]; then [ "$phent" -eq 56 ] || return 2
+  else [ "$phent" -eq 32 ] || return 2; fi
+
+  file_size=$(wc -c < "$f" 2>/dev/null | tr -d '[:space:]')
+  case "$file_size" in ''|*[!0-9]*) return 2 ;; esac
+  [ "$phoff" -le "$file_size" ] || return 2
+  [ $((phnum * phent)) -le $((file_size - phoff)) ] || return 2
+
   i=0
   while [ "$i" -lt "$phnum" ]; do
     off=$((phoff + i * phent))
     ptype=$(od -An -j"$off" -N4 -t x4 -- "$f" 2>/dev/null | tr -d ' \n')
     case "$ptype" in ''|*[!0-9a-f]*) return 2 ;; esac
-    [ "$((16#$ptype))" -eq 3 ] && return 1 # PT_INTERP found: dynamically linked
+    case "$ptype" in
+      00000001) load_seen=1 ;; # PT_LOAD
+      00000002)
+        [ "$dynamic_seen" -eq 0 ] || return 2 # ambiguous duplicate PT_DYNAMIC
+        dynamic_seen=1
+        if [ "$class" -eq 2 ]; then
+          dyn_offset=$(od -An -j"$((off + 8))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+          dyn_filesz=$(od -An -j"$((off + 32))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+        else
+          dyn_offset=$(od -An -j"$((off + 4))" -N4 -t x4 -- "$f" 2>/dev/null | tr -d ' \n')
+          dyn_filesz=$(od -An -j"$((off + 16))" -N4 -t x4 -- "$f" 2>/dev/null | tr -d ' \n')
+        fi
+        case "$dyn_offset$dyn_filesz" in ''|*[!0-9a-f]*) return 2 ;; esac
+        dyn_offset=$((16#$dyn_offset)); dyn_filesz=$((16#$dyn_filesz))
+        ;;
+      00000003) interp_seen=1 ;; # PT_INTERP
+    esac
     i=$((i + 1))
   done
+
+  [ "$load_seen" -eq 1 ] || return 2
+  [ "$interp_seen" -eq 0 ] || return 1 # a program interpreter proves dynamic linking
+
+  if [ "$dynamic_seen" -eq 1 ]; then
+    # A PT_DYNAMIC segment is not proof of static linkage. Parse its bounded
+    # entries and explicitly detect DT_NEEDED; even a table without DT_NEEDED
+    # remains ambiguous and is delegated to ldd, never called static.
+    [ "$dyn_filesz" -gt 0 ] || return 2
+    [ "$dyn_offset" -le "$file_size" ] || return 2
+    [ "$dyn_filesz" -le $((file_size - dyn_offset)) ] || return 2
+    [ $((dyn_filesz % dyn_ent)) -eq 0 ] || return 2
+    dyn_count=$((dyn_filesz / dyn_ent))
+    [ "$dyn_count" -gt 0 ] && [ "$dyn_count" -le 65536 ] || return 2
+    j=0
+    while [ "$j" -lt "$dyn_count" ]; do
+      if [ "$class" -eq 2 ]; then
+        tag=$(od -An -j"$((dyn_offset + j * dyn_ent))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+        case "$tag" in ''|*[!0-9a-f]*) return 2 ;; esac
+        case "$tag" in
+          0000000000000001) needed_seen=1 ;; # DT_NEEDED
+          0000000000000000) null_seen=1; break ;; # DT_NULL
+        esac
+      else
+        tag=$(od -An -j"$((dyn_offset + j * dyn_ent))" -N4 -t x4 -- "$f" 2>/dev/null | tr -d ' \n')
+        case "$tag" in ''|*[!0-9a-f]*) return 2 ;; esac
+        case "$tag" in
+          00000001) needed_seen=1 ;; # DT_NEEDED
+          00000000) null_seen=1; break ;; # DT_NULL
+        esac
+      fi
+      j=$((j + 1))
+    done
+    [ "$null_seen" -eq 1 ] || return 2 # malformed/unbounded dynamic table
+    [ "$needed_seen" -eq 0 ] || return 1 # DT_NEEDED requires the ldd dependency gate
+    return 2 # PT_DYNAMIC without DT_NEEDED is still not proof of static linkage
+  fi
+
+  # ET_DYN may be a shared object or PIE even without PT_INTERP. Never infer
+  # static linkage from that combination; only a dependency-free ET_EXEC can
+  # use the static shortcut.
+  [ "$etype" -eq 2 ] || return 2
   return 0
 }
 ft_ldd_output_valid() { # captured ldd output -> rc 0 for recognized report
