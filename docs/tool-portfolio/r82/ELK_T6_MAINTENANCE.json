@@ -1,6 +1,6 @@
 {
   "schema": "formal-tools/elk-t6-maintenance-baseline/1",
-  "snapshot_head": "8c0811a7baa5f79953a85a190595995f2463f7d0",
+  "snapshot_head": "a229566c14a0d00b9b05a4a3d5e018b487cf1c73",
   "tool": {
     "id": "elk",
     "version": "0.6.0",
@@ -194,11 +194,23 @@
     "Current-main refresh R83: main advanced to 8c0811a7baa5f79953a85a190595995f2463f7d0 through a Robot-only change. The exact main diff from 069444c... contains only docs/tool-portfolio/r56/ROBOT_CURRENT_MAIN_T4.json, portable/verification/cases/robot/expect.sh and tests/robot-portfolio-contract.test.mjs. This is disjoint from all 15 ELK pins; main Push #1635 is SUCCESS."
   ],
   "current_main_snapshot": {
-    "commit": "8c0811a7baa5f79953a85a190595995f2463f7d0",
-    "woodpecker_push_pipeline": 1635,
+    "commit": "a229566c14a0d00b9b05a4a3d5e018b487cf1c73",
+    "woodpecker_push_pipeline": 1655,
     "woodpecker_push_status": "SUCCESS",
-    "source_blob_pin_verification": "15_OF_15_EXACT_GIT_BLOB_MATCHES",
-    "delta_from_previous_snapshot": "Nine disjoint main commits after 069444c... contain only Robot-owned expect/test/evidence files; no ELK source or evidence pin overlaps. All 15 ELK source pins remain exact."
+    "source_blob_pin_verification": "15_OF_15_PINS_REMAIN_EXACT_BY_DISJOINT_MAIN_DELTA",
+    "previous_snapshot": "8c0811a7baa5f79953a85a190595995f2463f7d0",
+    "delta_from_previous_snapshot": {
+      "ahead": 8,
+      "behind": 0,
+      "changed_files": 3,
+      "paths": [
+        "docs/tool-portfolio/r60/CLINGO_T6_MAINTENANCE.json",
+        "scripts/tool-portfolio/clingo-maintenance.mjs",
+        "tests/clingo-maintenance.test.mjs"
+      ],
+      "overlap_with_elk_paths": false
+    },
+    "note": "All 15 ELK source pins were matched at 8c0811a...; the only 8-commit delta to a229566... is the Clingo T6 assessor integration, disjoint from every ELK source pin. No ELK source or solver execution is claimed by this metadata refresh."
   },
-  "previous_snapshot_head": "069444c176bbacc804f107482f356dbc2eb95736"
+  "previous_snapshot_head": "8c0811a7baa5f79953a85a190595995f2463f7d0"
 }
