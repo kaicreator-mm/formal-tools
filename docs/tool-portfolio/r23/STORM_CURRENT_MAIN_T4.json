@@ -17,7 +17,7 @@
     "independent_source_first_review": "R53_REWORK_P1_01_P1_02_P2_01_P2_02; P1_01_REPAIRED_R54; P1_02_PINNED_AND_STORM_ROUTE_IMPACT_ASSESSED; P2_METADATA_REFRESHED; FRESH_NON_WRITER_REVIEW_REQUIRED"
   },
   "current_main": {
-    "commit": "a82b16a985aaa0154234cf491ca6aecdb2b254a9",
+    "commit": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
     "blobs": {
       "runner": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
       "portfolio_t4": "922a7c208beaa0e48346403a29ec2d927189319f",
@@ -39,16 +39,16 @@
     },
     "runner_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a",
     "gateway_execution_scope": "fixed POS/NEG/ERR fixture only; no raw argv",
-    "pin_verification_note": "All 17 recorded execution/runtime source blobs were independently fetched by exact path at current main a82b16a985aaa0154234cf491ca6aecdb2b254a9 and all 17/17 matched. This extends the previous ten pins with native.mjs, package-lock.json, packages/core/src/finite.mjs, tool-manager.mjs, tool-workspace.mjs, artifact-collector.mjs and tool-result.mjs. Between source evidence HEAD 6a069dfee... and current main a82b16a..., six added dependency pins are unchanged; native.mjs alone changed from 1af7a7db... to 2e0e669e.... The native.mjs delta only adds explicit environment snapshots with process.env defaults. The Storm CLI/SDK/MCP fixed-fixture route calls runPortableGate in tool-portfolio-t4.mjs, which spawns the pinned portable/bin/tool-runner; it does not invoke native.mjs execution functions. No solver rerun was required; this is a scoped static impact analysis, not a new native or MCP solver receipt.",
+    "pin_verification_note": "All 17 recorded execution/runtime source blobs were independently fetched by exact path at current main 0f2141dc4dcecacd5a6db72b22c28af447b50b23 and all 17/17 matched. The main advance from a82b16a... to 0f2141d... added only portable/builders/tools/cbmc.sh and tests/cbmc-upstream-source-pin.test.mjs; neither changes the Storm route or any of the 17 pinned paths. The earlier native.mjs delta remains the only changed entrypoint dependency since source evidence HEAD 6a069dfee...; it adds explicit environment snapshots with process.env defaults. Storm CLI/SDK/MCP fixed-fixture route calls runPortableGate in tool-portfolio-t4.mjs, which spawns the pinned portable/bin/tool-runner; it does not invoke native.mjs execution functions. No solver rerun was required; this is scoped static impact analysis, not a new native or MCP solver receipt.",
     "same_sha_followup_push_pipeline": 1468,
     "same_sha_followup_push_status": "SUCCESS",
     "push_1450_status": "FAILURE_UNCLASSIFIED",
     "push_1450_root_cause": "UNKNOWN; later same-SHA #1468 success does not establish the first failure cause",
-    "push_pipeline": 1503,
+    "push_pipeline": 1526,
     "push_status": "SUCCESS",
-    "push_sha": "a82b16a985aaa0154234cf491ca6aecdb2b254a9",
+    "push_sha": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
     "pin_verification": {
-      "ref": "a82b16a985aaa0154234cf491ca6aecdb2b254a9",
+      "ref": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
       "count": 17,
       "matched": 17,
       "status": "ALL_17_EXACT_PATH_BLOB_MATCH",
@@ -83,9 +83,16 @@
     "same_sha_followup_push_sha": "250d20ec782785f13d4d027f7ab79e005feacc76",
     "push_1450_sha": "250d20ec782785f13d4d027f7ab79e005feacc76",
     "status_classification_owner": "MAIN_ISSUE_24_INTEGRATOR; THIS_TOOL_REPAIR_PRESERVES_HISTORICAL_1450_FAILURE_AND_1468_SAME_SHA_SUCCESS_RECORDS_WITHOUT_RECLASSIFICATION",
-    "latest_observed_push_pipeline": 1512,
+    "latest_observed_push_pipeline": 1526,
     "latest_observed_push_status": "SUCCESS",
-    "latest_observed_push_sha": "a82b16a985aaa0154234cf491ca6aecdb2b254a9"
+    "latest_observed_push_sha": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
+    "previous_main_snapshot": {
+      "commit": "a82b16a985aaa0154234cf491ca6aecdb2b254a9",
+      "historical_push_pipeline": 1503,
+      "historical_push_status": "SUCCESS",
+      "latest_push_pipeline": 1512,
+      "latest_push_status": "SUCCESS"
+    }
   },
   "package": {
     "drive_file_id": "1r38Hl46oPr_Y1WP-0CQJClBCPwFNBWD6",
@@ -262,9 +269,9 @@
     "changed_files": 3
   },
   "latest_main_delta_from_pr_base": {
-    "ahead": 31,
+    "ahead": 32,
     "behind": 0,
-    "changed_files": 19,
+    "changed_files": 21,
     "paths": [
       "benchmarks/llm-methods/g3/ads-native-isolated-worker.mjs",
       "benchmarks/llm-methods/g3/ads-native-isolated.mjs",
@@ -276,10 +283,12 @@
       "docs/tool-portfolio/r55/MINIZINC_R55_CURRENT_MAIN_T4.json",
       "docs/tool-portfolio/r55/PROB_R55_ORIGINAL_TAR_REPLAY.json",
       "packages/runner/js/native.mjs",
+      "portable/builders/tools/cbmc.sh",
       "portable/builders/tools/minizinc.sh",
       "portable/builders/tools/tla-tlc.sh",
       "portable/verification/cases/tla-tlc/expect.sh",
       "tests/ads-native-replay.test.mjs",
+      "tests/cbmc-upstream-source-pin.test.mjs",
       "tests/minizinc-upstream-source-pin.test.mjs",
       "tests/solution-store.test.mjs",
       "tests/tla-tlc-source-fixture-contract.test.mjs",
@@ -288,7 +297,7 @@
     ],
     "overlap_with_storm_paths": false
   },
-  "current_main_sync_status": "NOT_SYNCED; PR branch remains based on historical PR base d996d168812f51d131b3f3f9c525cc1bd161d087 and is 31 commits behind current main a82b16a985aaa0154234cf491ca6aecdb2b254a9; no sync or merge was performed; Integrator-controlled.",
+  "current_main_sync_status": "NOT_SYNCED; PR branch remains based on historical PR base d996d168812f51d131b3f3f9c525cc1bd161d087 and is 32 commits behind current main 0f2141dc4dcecacd5a6db72b22c28af447b50b23; no sync or merge was performed; Integrator-controlled.",
   "source_evidence_head": "6a069dfee98633b42e625b295f3cc42c74afb414",
   "source_evidence_ci": {
     "push": "#1404 SUCCESS",
@@ -296,9 +305,10 @@
     "note": "These runs validate the unchanged source/test/evidence content before the current-main metadata-only refresh; new exact-head CI for the metadata refresh is tracked in the PR body."
   },
   "pr_compare_to_current_main": {
-    "base": "a82b16a985aaa0154234cf491ca6aecdb2b254a9",
-    "ahead": 7,
-    "behind": 31,
+    "measured_at_head": "97a39ec49e32c7f6412a1c25315c3efc6897ca86",
+    "base": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
+    "ahead": 8,
+    "behind": 32,
     "changed_files": 3,
     "paths": [
       "docs/tool-portfolio/r23/STORM_CURRENT_MAIN_T4.json",
@@ -306,18 +316,19 @@
       "tests/storm-current-main-t4.test.mjs"
     ],
     "synced": false,
-    "merge": "NOT_PERFORMED"
+    "merge": "NOT_PERFORMED",
+    "note": "Historical snapshot immediately before the final R54 metadata commit; final live counts are recorded in PR #115 and Issue #54."
   },
   "source_to_current_main_compare": {
     "base": "6a069dfee98633b42e625b295f3cc42c74afb414",
-    "head": "a82b16a985aaa0154234cf491ca6aecdb2b254a9",
-    "ahead": 31,
+    "head": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
+    "ahead": 32,
     "behind": 4,
-    "changed_files": 19
+    "changed_files": 21
   },
   "r54_repair": {
     "previous_pr_head": "1b63f8580a1569ed803e263d5a1920b9326f09e2",
-    "current_main": "a82b16a985aaa0154234cf491ca6aecdb2b254a9",
+    "current_main": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
     "parser_test": {
       "path": "tests/storm-current-main-t4.test.mjs",
       "previous_blob": "18342714833be4f37100d4ef336f78b8db11abc6",
@@ -353,7 +364,8 @@
     "runtime_source_pins": {
       "count": 17,
       "matched": 17,
-      "status": "ALL_MATCH_CURRENT_MAIN_A82"
+      "status": "ALL_MATCH_CURRENT_MAIN_A82",
+      "ref": "0f2141dc4dcecacd5a6db72b22c28af447b50b23"
     },
     "native_mjs_impact": "The current-main native.mjs change is pinned but does not participate in the Storm runPortableGate -> tool-runner execution path; no re-execution of the prior POS/NEG/ERR route was necessary.",
     "historical_ci": {
@@ -380,7 +392,17 @@
         "sha": "a82b16a985aaa0154234cf491ca6aecdb2b254a9",
         "status": "SUCCESS"
       },
-      "classification": "INTEGRATOR_OWNED; NOT_RECLASSIFIED_BY_THIS_REPAIR"
+      "classification": "INTEGRATOR_OWNED; NOT_RECLASSIFIED_BY_THIS_REPAIR",
+      "current_main_push_1512": {
+        "pipeline": 1512,
+        "sha": "a82b16a985aaa0154234cf491ca6aecdb2b254a9",
+        "status": "SUCCESS"
+      },
+      "current_main_push_1526": {
+        "pipeline": 1526,
+        "sha": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
+        "status": "SUCCESS"
+      }
     },
     "exact_head_ci": "AUTHORITATIVE_FINAL_HEAD_AND_PIPELINE_IDS_RECORDED_EXTERNALLY_IN_PR_BODY_AND_ISSUE_54_CLOSEOUT; NOT_SELF_EMBEDDED",
     "fresh_independent_review": "PENDING_AFTER_FINAL_EXACT_HEAD_DUAL_CI",
