@@ -57,13 +57,13 @@ test('ldd truly missing dependency fails closed',{skip:!isLinux},()=>{
 // only (no sections, no code). doctor never executes MAIN_BIN; it only probes
 // dependency metadata, so the header structure is what the gate must judge.
 const PT_LOAD=1, PT_INTERP=3, PT_NOTE=4;
-function elf64Image(phdrs) { // phdrs: array of p_type numbers
+function elf64Image(phdrs,{type=2,entry=64+56*phdrs.length}={}) {
   const eh=Buffer.alloc(64), ph=Buffer.alloc(56*phdrs.length);
   eh.set([0x7f,0x45,0x4c,0x46, 2, 1, 1, 0]); // magic, ELF64, little-endian, v1
-  eh.writeUInt16LE(2, 16);    // e_type = ET_EXEC
+  eh.writeUInt16LE(type, 16); // e_type (ET_REL=1, ET_EXEC=2, ET_DYN=3)
   eh.writeUInt16LE(0x3e, 18); // e_machine = EM_X86_64
   eh.writeUInt32LE(1, 20);    // e_version
-  eh.writeBigUInt64LE(64n+56n*BigInt(phdrs.length), 24); // e_entry
+  eh.writeBigUInt64LE(BigInt(entry), 24); // e_entry
   eh.writeBigUInt64LE(64n, 32); // e_phoff
   eh.writeUInt16LE(64, 52);   // e_ehsize
   eh.writeUInt16LE(56, 54);   // e_phentsize
@@ -74,6 +74,7 @@ function elf64Image(phdrs) { // phdrs: array of p_type numbers
 }
 const staticElf=elf64Image([PT_LOAD, PT_LOAD, PT_NOTE]);
 const dynamicElf=elf64Image([PT_LOAD, PT_INTERP, PT_LOAD, PT_NOTE]);
+const relocatableElf=elf64Image([PT_LOAD,PT_NOTE],{type:1,entry:0});
 // Real GNU ldd behavior on a static ELF (Debian 13 probe 2026-11-14, uid 65534
 // identical to root): rc 1, empty stdout, "\tnot a dynamic executable" on stderr.
 const gnuLddOnStatic="printf '\\tnot a dynamic executable' >&2; exit 1";
@@ -100,6 +101,12 @@ test('crafted dynamic ELF with missing dependency fails closed',{skip:!isLinux},
 });
 
 const hasGcc=isLinux&&spawnSync('gcc',['--version'],{encoding:'utf8'}).status===0;
+const hasReadelf=isLinux&&spawnSync('readelf',['--version'],{encoding:'utf8'}).status===0;
+test('ET_REL ELF is not a static executable and must use the fail-closed ldd path',{skip:!isLinux},()=>{
+  const p=doctorWithLdd("echo 'not a dynamic executable' >&2; exit 1",1,unhealthy,relocatableElf);
+  assert.match(p.stdout,/ldd probe FAILED/);
+});
+
 function compileGcc(outName, flags) {
   const dir=mkdtempSync(join(tmpdir(),'ft-r15-gcc-'));
   try {
@@ -109,6 +116,27 @@ function compileGcc(outName, flags) {
     assert.equal(p.status,0,p.stderr);
     return {dir,out};
   } catch(e){ rmSync(dir,{recursive:true,force:true}); throw e; }
+}
+function compileSharedWithMissingDependency() {
+  const dir=mkdtempSync(join(tmpdir(),'ft-r17-missing-needed-'));
+  try {
+    const dependencySource=join(dir,'missing.c');
+    const consumerSource=join(dir,'consumer.c');
+    const dependency=join(dir,'libft-missing-dependency.so');
+    const out=join(dir,'libconsumer.so');
+    writeFileSync(dependencySource,'int ft_missing_dependency(void){return 7;}\\n');
+    writeFileSync(consumerSource,'extern int ft_missing_dependency(void); int ft_consumer(void){return ft_missing_dependency();}\\n');
+    const dep=spawnSync('gcc',['-shared','-fPIC','-o',dependency,dependencySource],{encoding:'utf8',timeout:30000});
+    assert.equal(dep.status,0,dep.stderr);
+    const built=spawnSync('gcc',['-shared','-fPIC','-Wl,--no-as-needed','-L',dir,
+      '-Wl,-rpath,$ORIGIN','-o',out,consumerSource,'-lft-missing-dependency'],
+      {encoding:'utf8',timeout:30000});
+    assert.equal(built.status,0,built.stderr);
+    return {dir,out,dependency};
+  } catch(e) {
+    rmSync(dir,{recursive:true,force:true});
+    throw e;
+  }
 }
 function doctorWithRealBin(binPath, expectedStatus, expectedText) {
   const root=mkdtempSync(join(tmpdir(),'ft-r15-real-elf-'));
@@ -140,6 +168,27 @@ test('real gcc dynamic ELF passes doctor via real system ldd dependency table',{
   const {dir,out}=compileGcc('dyn', []);
   try {
     doctorWithRealBin(out,0,/ldd: no missing libs OK[\s\S]*verdict: OK/);
+  } finally { rmSync(dir,{recursive:true,force:true}); }
+});
+
+test('real ET_DYN without PT_INTERP but with DT_NEEDED missing library fails doctor',{skip:!hasGcc||!hasReadelf},()=>{
+  const {dir,out,dependency}=compileSharedWithMissingDependency();
+  try {
+    const header=spawnSync('readelf',['-h',out],{encoding:'utf8'});
+    assert.equal(header.status,0,header.stderr);
+    assert.match(header.stdout,/Type:\\s+DYN/);
+    const programHeaders=spawnSync('readelf',['-l',out],{encoding:'utf8'});
+    assert.equal(programHeaders.status,0,programHeaders.stderr);
+    assert.match(programHeaders.stdout,/DYNAMIC/);
+    assert.doesNotMatch(programHeaders.stdout,/\\bINTERP\\b/);
+    const dynamic=spawnSync('readelf',['-d',out],{encoding:'utf8'});
+    assert.equal(dynamic.status,0,dynamic.stderr);
+    assert.match(dynamic.stdout,/NEEDED.*libft-missing-dependency\\.so/);
+    // Remove the library after linking: the ET_DYN object retains DT_NEEDED,
+    // has no PT_INTERP, and the real host ldd must report the missing library.
+    rmSync(dependency);
+    const p=doctorWithRealBin(out,1,/ldd missing libs: 1 FAIL[\\s\\S]*verdict: FAIL/);
+    assert.doesNotMatch(p.stdout,/static ELF OK/);
   } finally { rmSync(dir,{recursive:true,force:true}); }
 });
 
