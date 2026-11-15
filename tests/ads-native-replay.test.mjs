@@ -67,11 +67,11 @@ test("G3 concurrent ADS24 calls keep each caller's native binary directory isola
   const makeTool=(name,status)=>{
    const dir=join(root,name);mkdirSync(dir);
    const exe=join(dir,"z3");
-   const script="#!/bin/sh\\n"+
-     "if [ \\"$1\\" = \\"-version\\" ]; then echo \\"isolated-"+name+"\\"; sleep 0.03; exit 0; fi\\n"+
-     "sleep 0.003\\n"+
-     "echo "+status+"\\n"+
-     "exit 0\\n";
+   const script="#!/bin/sh\n"+
+     "if [ \"$1\" = \"-version\" ]; then echo \"isolated-"+name+"\"; sleep 0.03; exit 0; fi\n"+
+     "sleep 0.003\n"+
+     "echo "+status+"\n"+
+     "exit 0\n";
    writeFileSync(exe,script);chmodSync(exe,0o755);
    return {dir,sha256:sha(readFileSync(exe))};
   };

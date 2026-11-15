@@ -83,11 +83,11 @@ function commands(tool,which,output,inputDir,env=process.env) {
   assertTool(tool);
   if (!["positive","negative"].includes(which)) throw new TypeError("case must be positive/negative");
   const positive=which==="positive", stem=positive?"positive":"negative";
-  if (tool==="z3") return [[executable("z3"),"-smt2",model(stem+".smt2")]];
-  if (tool==="cvc5") return [[executable("cvc5"),"--lang","smt2",model(stem+".smt2")]];
-  if (tool==="lean4") return [[executable("lean"),model(positive?"Positive.lean":"Negative.lean")]];
-  if (tool==="dafny") return [[executable("dafny"),"verify",model(positive?"Positive.dfy":"Negative.dfy")]];
-  if (tool==="vampire") return [[executable("vampire"),"--mode","casc",model(stem+".p")]];
+  if (tool==="z3") return [[executable("z3",env),"-smt2",model(stem+".smt2")]];
+  if (tool==="cvc5") return [[executable("cvc5",env),"--lang","smt2",model(stem+".smt2")]];
+  if (tool==="lean4") return [[executable("lean",env),model(positive?"Positive.lean":"Negative.lean")]];
+  if (tool==="dafny") return [[executable("dafny",env),"verify",model(positive?"Positive.dfy":"Negative.dfy")]];
+  if (tool==="vampire") return [[executable("vampire",env),"--mode","casc",model(stem+".p")]];
   if (tool==="clingo") {
     // Same allowlisted committed-fixture argv shape for both launchers: the
     // explicit pinned native binary (FORMAL_CLINGO_BIN, e.g. the canonical #24
@@ -98,23 +98,23 @@ function commands(tool,which,output,inputDir,env=process.env) {
     return pinned?[[resolve(pinned),model(stem+".lp"),"0"]]:[[toolPython(tool,env),"-m","clingo",model(stem+".lp"),"0"]];
   }
   if (tool==="rdf-shacl") return [[toolPython(tool,env),"-m","pyshacl","-s",model("shapes.ttl"),"-df","turtle","-sf","turtle","-f","human",model(stem+".ttl")]];
-  if (tool==="souffle") return [[executable("souffle"),model(stem+".dl"),"-D",output]];
+  if (tool==="souffle") return [[executable("souffle",env),model(stem+".dl"),"-D",output]];
   if (tool==="tla-tlc") return [[executable("java",env),"-cp",jar("TLA2TOOLS_JAR",env),"tlc2.TLC","-config",model("Toggle.cfg"),model(positive?"TogglePositive.tla":"ToggleNegative.tla")]];
-  if (tool==="apalache") return [[executable("apalache-mc"),"check","--init=Init","--next=Next","--inv=Inv","--length=3",model(positive?"TogglePositive.tla":"ToggleNegative.tla")]];
+  if (tool==="apalache") return [[executable("apalache-mc",env),"check","--init=Init","--next=Next","--inv=Inv","--length=3",model(positive?"TogglePositive.tla":"ToggleNegative.tla")]];
   if (tool==="alloy") {
     // "alloy" can resolve to unrelated Grafana Alloy. Require explicit
     // official Alloy Analyzer JAR/bin for every native execution path.
     const prefix=env.FORMAL_ALLOY_JAR
-      ?[executable("java",env),"-jar",jar("FORMAL_ALLOY_JAR")]
+      ?[executable("java",env),"-jar",jar("FORMAL_ALLOY_JAR",env)]
       :env.FORMAL_ALLOY_BIN?[resolve(env.FORMAL_ALLOY_BIN)]
       :null;
     if(!prefix)throw new TypeError("Configure FORMAL_ALLOY_JAR or FORMAL_ALLOY_BIN for Alloy Analyzer");
     return [[...prefix,"exec","-c","0",model(stem+".als")]];
   }
-  if (tool==="prob") return [[executable("probcli"),model(positive?"Positive.mch":"Negative.mch"),"-model_check"]];
+  if (tool==="prob") return [[executable("probcli",env),model(positive?"Positive.mch":"Negative.mch"),"-model_check"]];
   if (tool==="apache-jena") {
     const tt=model(positive?"data.ttl":"invalid.ttl");
-    return positive ? [[executable("riot"),"--validate",tt],[executable("arq"),"--data",tt,"--query",model("query.rq")]] : [[executable("riot"),"--validate",tt]];
+    return positive ? [[executable("riot",env),"--validate",tt],[executable("arq",env),"--data",tt,"--query",model("query.rq")]] : [[executable("riot",env),"--validate",tt]];
   }
   throw new TypeError("unknown tool");
 }
@@ -137,7 +137,7 @@ function snapshotEnvironment(env=process.env) {
       throw new TypeError("child environment must contain only NUL-free strings");
     snapshot[key]=value;
   }
-  return snapshot;
+  return Object.freeze(snapshot);
 }
 async function capture(argv,{cwd,timeoutMs,env=process.env}) {
   if (!Array.isArray(argv)||!argv.length) throw new TypeError("empty command");
@@ -338,7 +338,7 @@ function nativeCommand(plan,env=process.env) {
    throw new TypeError("Alloy Analyzer can be confused with Grafana Alloy: configure FORMAL_ALLOY_JAR or FORMAL_ALLOY_BIN");
  }
  // The tool ID/entry combination was validated in native-catalog.mjs.
- return [executable(entry),...args];
+ return [executable(entry,env),...args];
 }
 export function interpretNativeObservation(tool,stdout,stderr,exitCode) {
  const output=(stdout+"\n"+stderr).trim();
