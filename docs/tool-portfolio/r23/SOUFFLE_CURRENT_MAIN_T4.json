@@ -1,0 +1,189 @@
+{
+  "schema": "formal-tools/souffle-current-main-t4/0.1",
+  "tool": {
+    "issue": 53,
+    "id": "souffle",
+    "expected_version": "2.5",
+    "capability": "logic.rules"
+  },
+  "result": {
+    "status": "PARTIAL_PORTABLE_RUNNER_CLI_SDK_TECHNICAL_PASS_MCP_NOT_RUN",
+    "overall_t4_qualification": "NOT_QUALIFIED",
+    "t3": "PRIOR_R3_RECEIPT_REUSED_NOT_REQUALIFIED",
+    "t5": "NOT_QUALIFIED",
+    "t6": "OPEN",
+    "product": "NOT_SIGNED",
+    "release": "NOT_SIGNED",
+    "independent_source_first_review": "PENDING"
+  },
+  "current_main": {
+    "commit": "74b511e27ed2b2690be6c7e292400c723c6b9b88",
+    "blobs": {
+      "portable_runner": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+      "native_adapter": "1af7a7db7523985f810e545860000c5d745de0b5",
+      "cli": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
+      "sdk": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+      "mcp": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+      "native_catalog": "02f628947be3e5c270d802be150ab220e14fc2b8",
+      "validation_manifest": "b52076bc6d129f6f6b416e040863e71aa9108234",
+      "skill_positive": "d2c1f5b4a359fac8cf536f41f6fd32f8cf347725",
+      "skill_negative": "44aef3679ea0e895815a0ef2624ebf787fb9e73a",
+      "package_json": "99cd24d1c71d2c12297730056f1b1882a770c851",
+      "make_meta_py": "2e02fb79aed836ee6cd4698415af43b7cce44da6"
+    },
+    "runner_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a"
+  },
+  "package": {
+    "drive_file_id": "1f2doUFxpGxHALhoZ2vrm5O6WLr6bjPOj",
+    "archive": "souffle-2.5-linux-x86_64.tar.zst",
+    "size_bytes": 4755814,
+    "sha256": "e3b04c0491998c51c69172d2f2fec6c1896c74a1aaab3750e56e831935648e71",
+    "zstd_integrity": "PASS",
+    "tar_entries": 17,
+    "regular_files": 14,
+    "directories": 3,
+    "symlinks": 0,
+    "special_entries": 0,
+    "unsafe_paths": 0,
+    "extraction_uid": 1000,
+    "package_root_read_only": true,
+    "souffle_binary_sha256": "28b6284150aae6c77fd5294aabe146058624f5b70a981ade7d8b843581995da0",
+    "mcpp_binary_sha256": "918f25da39869bfe5e1d0f8d6fbe595badc5c8ee4c268fab259210cb44edbd39",
+    "original_meta_json_sha256": "742c8af3de504aacb23eb90855ccbd4a16a3dbdb408914a064961cfd0edcf22d",
+    "original_meta_json_byte_identical_after_regeneration": true,
+    "original_meta_sh_sha256": "878093f3e5442cf56d2bda62a47bd29d867c509be4d4550dde29b1f01c6e2036",
+    "original_meta_sh_identity": "TOOL_TOOL_ID=souffle",
+    "original_meta_sh_rejected_by_current_runner": true,
+    "canonical_meta_sh_regenerated_with_current_main_make_meta": true,
+    "canonical_meta_sh_sha256": "8ab72a6a1abc8b4fedb52e18a404d4432dfe8ff318a2ad0c324b7ad6661b76dc",
+    "version": "2.5",
+    "doctor": {
+      "status": "OK",
+      "missing_shared_libraries": 0,
+      "glibc_max": "2.38"
+    },
+    "version_probe": {
+      "stdout_contains": "Version: 2.5 (2.5)",
+      "exit_code": 0
+    }
+  },
+  "portable_fixture": {
+    "expect_path": "portable/verification/cases/souffle/expect.sh",
+    "expect_blob": "67965f3157009d8a4b40a5e65807a0a2f0ded01b",
+    "expect_sha256": "86892c1e7f9cf1925e592e117d4f79dbccfc5bbf57e56de76826328d3e1f60aa",
+    "pos_blob": "cca8867dac602f5b567cccf7e28b3218f51d4704",
+    "neg_blob": "a905fd35fe4aff2a681f62b764a16d1047c81ea8",
+    "badtypes_blob": "57b2891fce98786a3e3e9677730896de7275ee7a",
+    "test_path": "tests/souffle-current-main-t4.test.mjs",
+    "test_blob": "b2260dd09d82804e99642a60725c15c4af12d453",
+    "test_result": "4/4 PASS",
+    "direct_runner": {
+      "status": "PASS",
+      "tsv_sha256": "c9682b69d1143a7dba7929b4eea895cb2c2c098388014e4019d8d14e01587d9d",
+      "phases": {
+        "pos": {
+          "exit_code": 0,
+          "matched": true,
+          "label": "DERIVED"
+        },
+        "neg": {
+          "exit_code": 1,
+          "matched": true,
+          "label": "INVALID_REJECTED"
+        },
+        "err": {
+          "exit_code": 1,
+          "matched": true,
+          "label": "MISSING_INPUT_REJECTED"
+        }
+      }
+    }
+  },
+  "native_cli": {
+    "fixture_positive": {
+      "exit_code": 0,
+      "test_verdict": "PASS",
+      "tool_outcome": "ACYCLIC",
+      "stdout_sha256": "ce5b2cc8a1748d7b49e1fdeaae6808c8a8274419c9fc17f15287d191b4c1c5a4"
+    },
+    "fixture_negative": {
+      "exit_code": 0,
+      "test_verdict": "PASS",
+      "tool_outcome": "CYCLIC",
+      "stdout_sha256": "cd286f49112aaa3f7d63f211cb421a511ed49178ecb12f4fbc4ab0fc297a318d"
+    },
+    "typed_exec": {
+      "exit_code": 0,
+      "process_outcome": "EXIT_ZERO",
+      "tool_outcome": "UNPARSED",
+      "test_verdict": "NOT_EVALUATED",
+      "stdout_sha256": "14b3afa14adaaa2e6add77b5144e276830707238383eec17357324d4ba97c019"
+    },
+    "catalog": {
+      "status": "PASS",
+      "operations": [
+        "run",
+        "compile",
+        "generate",
+        "parse"
+      ]
+    },
+    "doctor": {
+      "run_status": "EXECUTED",
+      "version_verdict": "UNVERIFIED",
+      "version": "2.5"
+    }
+  },
+  "sdk": {
+    "typed_invoke": {
+      "exit_code": 0,
+      "process_status": "EXIT_ZERO",
+      "tool_status": "UNPARSED",
+      "artifacts_status": "NOT_COLLECTED",
+      "stdout_sha256": "bf17d5816119fd179c7d4e6e2ba0bc23b532c3d1d15f95ec47b84b9e0ad47670"
+    },
+    "observed_output": {
+      "reach_csv": "A\\tB\\nA\\tC\\nB\\tC\\n",
+      "cycle_csv": ""
+    }
+  },
+  "environment": {
+    "os": "Debian GNU/Linux 13 (trixie), Debian 13.3",
+    "kernel": "Linux 6.18.57-x86_64-with-glibc2.41",
+    "architecture": "x86_64",
+    "uid": 1000,
+    "node": "v22.16.0",
+    "python": "3.13.5",
+    "native_adapter_env": {
+      "FORMAL_TOOLS_BIN_DIR": "bundle/tools/souffle/bin",
+      "PATH": "must include bundle/tools/souffle/bin for mcpp",
+      "LD_LIBRARY_PATH": "must include bundle/tools/souffle/lib for mcpp private libmcpp.so.0"
+    },
+    "without_ld_library_path": "native CLI fixture aborts when mcpp cannot load libmcpp.so.0",
+    "with_ld_library_path": "native CLI fixture and SDK typed invocation execute successfully",
+    "network_isolation": "UNKNOWN_NOT_PROVEN"
+  },
+  "mcp": {
+    "syntax_check_exit": 0,
+    "runtime_command": "node packages/runner/js/mcp.mjs",
+    "runtime_exit": 1,
+    "status": "NOT_RUN_DEPENDENCIES_UNAVAILABLE",
+    "error_code": "ERR_MODULE_NOT_FOUND",
+    "missing_package": "@modelcontextprotocol/server",
+    "package_json_dependencies": {
+      "@modelcontextprotocol/server": "^2.0.0",
+      "zod": "^4.0.0"
+    },
+    "node_modules_present": false,
+    "npm_cache_contains_required_packages": false
+  },
+  "qualification_boundaries": [
+    "The portable Runner uses the package run shim, which sets private PATH and LD_LIBRARY_PATH; POS/NEG/ERR all passed with fixed exits 0/1/1.",
+    "The native CLI/SDK adapter executes the binary directly. The host must configure FORMAL_TOOLS_BIN_DIR, PATH and LD_LIBRARY_PATH; native.mjs does not inject the private library path. This environment requirement is recorded, not silently treated as self-contained.",
+    "Native CLI fixture positive/negative passed as ACYCLIC/CYCLIC; these are structural cases, not an independent valid-but-false business property.",
+    "Typed CLI and SDK operations returned EXIT_ZERO but UNPARSED/NOT_EVALUATED; the SDK did not collect artifacts. Output files were inspected separately and are not acceptance verdicts.",
+    "The current main MCP source parses, but the MCP runtime was not executed because npm dependencies are absent.",
+    "The original Drive package meta.sh used TOOL_TOOL_ID and was rejected by the current Runner. Exact current-main make_meta.py regenerated canonical TOOL_ID while preserving meta.json byte-for-byte.",
+    "Prior R3 POS/NEG evidence is reused; no new T3, T5, T6, Product, or Release qualification is claimed."
+  ]
+}
