@@ -1,7 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { assessClingoMaintenance } from "../scripts/tool-portfolio/clingo-maintenance.mjs";
+import {
+  assessClingoMaintenance,
+  GATE_DEPENDENCIES,
+  IDENTITY_FIELDS
+} from "../scripts/tool-portfolio/clingo-maintenance.mjs";
 
 const baseline = JSON.parse(readFileSync(
   new URL("../docs/tool-portfolio/r60/CLINGO_T6_MAINTENANCE.json", import.meta.url),
@@ -33,7 +37,15 @@ test("documentation-only observation changes do not stale execution evidence", (
   assert.deepEqual(result.revalidationGates, []);
 });
 
-test("version drift invalidates all dependent gates and marks only previously scoped passes stale", () => {
+test("baseline dependency documentation matches the executable gate map", () => {
+  for (const gate of ["T0", "T1", "T2", "T3", "T4", "T5"]) {
+    assert.deepEqual(baseline.gateDependencies[gate], GATE_DEPENDENCIES[gate]);
+  }
+  assert.equal(baseline.gateDependencies.T6, "ALL_TRACKED_IDENTITY_FIELDS");
+  assert.deepEqual(GATE_DEPENDENCIES.T6, IDENTITY_FIELDS);
+});
+
+test("synthetic version drift invalidates dependent gates without claiming a real release", () => {
   const observed = observedSnapshot();
   observed.identity.version = "5.8.4";
   const result = assessClingoMaintenance(baseline, observed);
