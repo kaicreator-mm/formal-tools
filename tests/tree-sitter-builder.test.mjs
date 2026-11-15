@@ -12,6 +12,7 @@ test("Tree-sitter rebuild pins both the official release asset and canonical exe
   assert.match(builder, /FT_TREE_SITTER_CLI_SHA256=a658dfc7704d6595a3d2f50eba2590f5919ecd54beedf978ba9888ec914fec1f/);
   assert.match(builder, /gz=\$\(ft::fetch "\$FT_UPSTREAM_URL" "\$FT_TREE_SITTER_ARCHIVE_SHA256"\)/);
   assert.match(builder, /FT_TREE_SITTER_CLI_BIN/);
+  assert.match(builder, /archive_sha256/);
   assert.match(builder, /binary_sha_verified/);
   assert.match(builder, /version_output=\$\(/);
   assert.match(builder, /tree-sitter 0\.27\.2/);
