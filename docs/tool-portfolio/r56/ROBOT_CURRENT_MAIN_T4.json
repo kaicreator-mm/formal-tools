@@ -2,7 +2,7 @@
   "schema": "formal-tools/robot-current-main-t4/0.1",
   "record_type": "technical_replay_not_qualification",
   "output_label": "FORMAL_TOOLS_I24_UNIFIED_PARALLEL_DELIVERY",
-  "worker_id": "CHATGPT_AUTO_WRITER_ROBOT_R56_CURRENT_MAIN_T4_20261115",
+  "worker_id": "CHATGPT_AUTO_WRITER_ROBOT_R57_REVIEW_REPAIR_20261115",
   "issue": 51,
   "baseline_main": "d996d168812f51d131b3f3f9c525cc1bd161d087",
   "tool": {
@@ -39,8 +39,10 @@
     "robot_archive": {
       "drive_file_id": "1y2vjymKixthdBdnv-QkMCf2Dl_CWdfl4",
       "manifest_path": "tools/robot-1.9.11-linux-x86_64.tar.zst",
-      "size_bytes": 82718720,
-      "sha256": "14c2680ededcccaa47edf7b793d4625c3b18a312cc91ee1ffb4757c771b7c23b"
+      "sha256": "14c2680ededcccaa47edf7b793d4625c3b18a312cc91ee1ffb4757c771b7c23b",
+      "compressed_size_bytes": 72767623,
+      "decompressed_tar_bytes": 82718720,
+      "expanded_regular_bytes": 82709558
     },
     "java_archive": {
       "drive_file_id": "1SLlkltuIQ3p6-ougFiuet9qEIZRB0Cc5",
@@ -96,7 +98,13 @@
       "exit_code": 0,
       "stdout": "ROBOT version 1.9.11\n",
       "stderr": ""
-    }
+    },
+    "original_archive_meta_sh_sha256": "ddeb337e84bacd06e9c5e5ad66efc9658d778ef5be94e4b0310380fe63a797e6",
+    "original_archive_meta_sh_identity": "TOOL_TOOL_ID=robot",
+    "original_archive_meta_sh_disposition": "LEGACY_TOOL_TOOL_ID; INCOMPATIBLE_WITH_CURRENT_MAIN_RUNNER",
+    "generated_replay_meta_sh_identity": "TOOL_ID=robot",
+    "generated_replay_meta_sh_sha256": "721e6060ad3797f0daf924bceb3cac02ba0a441a13555cb31f083b90d869b7c5",
+    "generated_replay_meta_sh_disposition": "GENERATED_FOR_REPLAY_ONLY; NOT_A_FULL_REBUILD_OR_ORIGINAL_ARCHIVE_REWRITE"
   },
   "contract_repair": {
     "previous_blob": "a449d3ed3d857423c721478a0f5542aebfc23e84",
@@ -113,14 +121,15 @@
       "ERR pins exit 1 and matches 'INVALID ONTOLOGY FILE ERROR'"
     ],
     "test_path": "tests/robot-portfolio-contract.test.mjs",
-    "test_blob": "1c03723c944074776de55b19533bf203c0fbad60",
-    "test_sha256": "aca9a0aa2a09048706f19a9ba0438ba6be412c7acf840ab10d5c0518700956c2",
+    "test_blob": "8a33a02279a5c479571ba1166097b44917e89f0c",
+    "test_sha256": "0141426feec962654ee3e6851ce965aa46499fe8ef4c3ecc18fc33a7def885f6",
     "local_test": {
       "node": "v22.16.0",
       "command": "node --test tests/robot-portfolio-contract.test.mjs",
-      "passed": 2,
+      "passed": 4,
       "failed": 0
-    }
+    },
+    "rework_status": "P1_01_DOWNGRADED_TO_WRITER_REPORTED_ONLY; P2_01_SIZE_CORRECTED; P2_02_EXACT_ASSIGNMENT_PARSER_ADDED; P2_03_ORIGINAL_META_PROVENANCE_PINNED"
   },
   "current_main_runner": {
     "source_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
@@ -165,10 +174,13 @@
     "inspect": "FOUND_PINNED_NOT_EXECUTED",
     "doctor": {
       "status": "DOCTOR_EXECUTED_NOT_T3",
-      "exit_code": 0
+      "exit_code": 0,
+      "evidence_level": "WRITER_REPORTED_ONLY",
+      "raw_stdout_available": false,
+      "raw_stderr_available": false
     },
     "verify": {
-      "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "status": "WRITER_REPORTED_ONLY_RAW_OUTPUTS_AND_RECEIPT_NOT_AVAILABLE",
       "process_exit_code": 0,
       "receipt_sha256": "5b3ba0d62ee40225d63f5f860d3e25557619719108c557392a021748b010f623",
       "stdout_sha256": "1d020fc1b500d3edaff73eac4dbd83440c299432ed39b978b5c3c7522f83859a",
@@ -192,7 +204,13 @@
           "matched": true,
           "exit_contract_matched": true
         }
-      ]
+      ],
+      "evidence_level": "WRITER_REPORTED_ONLY",
+      "raw_receipt_available": false,
+      "raw_stdout_available": false,
+      "raw_stderr_available": false,
+      "hashes_status": "WRITER_REPORTED_ONLY_NOT_INDEPENDENTLY_RECOMPUTED",
+      "case_outcomes_status": "WRITER_REPORTED_ONLY"
     }
   },
   "sdk": {
@@ -201,10 +219,13 @@
     "inspect": "FOUND_PINNED_NOT_EXECUTED",
     "doctor": {
       "status": "DOCTOR_EXECUTED_NOT_T3",
-      "exit_code": 0
+      "exit_code": 0,
+      "evidence_level": "WRITER_REPORTED_ONLY",
+      "raw_stdout_available": false,
+      "raw_stderr_available": false
     },
     "verify": {
-      "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "status": "WRITER_REPORTED_ONLY_RAW_OUTPUTS_AND_RECEIPT_NOT_AVAILABLE",
       "process_exit_code": 0,
       "receipt_sha256": "6da4459ce884b73df20b50a3bc37f8ad07d5f59a171684bee85cb19055b6c38e",
       "stdout_sha256": "5915db8503f1de0e0301a277bfd6bcba567744a04960e9c41964f74793b87c6b",
@@ -228,7 +249,13 @@
           "matched": true,
           "exit_contract_matched": true
         }
-      ]
+      ],
+      "evidence_level": "WRITER_REPORTED_ONLY",
+      "raw_receipt_available": false,
+      "raw_stdout_available": false,
+      "raw_stderr_available": false,
+      "hashes_status": "WRITER_REPORTED_ONLY_NOT_INDEPENDENTLY_RECOMPUTED",
+      "case_outcomes_status": "WRITER_REPORTED_ONLY"
     }
   },
   "mcp": {
@@ -247,10 +274,32 @@
     "T1": "NOT_QUALIFIED_FULL_REPRODUCIBLE_BUILD_NOT_RUN",
     "T2": "NON_ROOT_SAFE_EXTRACTION_REPLAY_PASS_SCOPED",
     "T3": "HISTORICAL_R3_SCOPED_RECEIPT_REUSED; this round repeated POS/NEG/ERR observations but grants no new independent qualification",
-    "T4": "PARTIAL_TECHNICAL_EXECUTION_UNREVIEWED; current-main Runner+CLI+SDK pass; MCP not run because required npm dependencies are absent",
+    "T4": "PARTIAL_TECHNICAL_EXECUTION_UNREVIEWED; current-main Runner inline POS/NEG/ERR logs are reviewable; CLI and SDK outcomes are WRITER_REPORTED_ONLY because raw stdout/stderr/receipt bytes are unavailable; MCP NOT_RUN because dependencies are absent",
     "T5": "NOT_QUALIFIED_NO_DOMAIN_CASE_OR_INDEPENDENT_ORACLE",
     "T6": "OPEN_NO_MAINTENANCE_UPGRADE_OR_REVALIDATION_JOB",
     "Product": "NOT_GRANTED",
     "Release": "NOT_GRANTED"
+  },
+  "rework": {
+    "p1_01": {
+      "status": "RESOLVED_BY_DOWNGRADE",
+      "details": "CLI and SDK verify/doctor outcomes are explicitly WRITER_REPORTED_ONLY; no raw stdout/stderr/receipt bytes or independently recomputed hashes are claimed."
+    },
+    "p2_01": {
+      "status": "RESOLVED",
+      "details": "robot_archive.compressed_size_bytes=72767623; decompressed_tar_bytes=82718720; expanded_regular_bytes=82709558."
+    },
+    "p2_02": {
+      "status": "RESOLVED",
+      "details": "Exact-one numeric POS/NEG/ERR assignment parser plus duplicate, wildcard, missing and quoted negative controls; Node 22.16.0 local 4/4."
+    },
+    "p2_03": {
+      "status": "RESOLVED",
+      "details": "Original archive meta.sh SHA256 and legacy TOOL_TOOL_ID=robot disposition pinned separately from generated replay TOOL_ID=robot metadata."
+    },
+    "current_main_sync": {
+      "status": "PENDING_MAIN_PUSH_1450_FIRST_FAILURE_TRIAGE",
+      "details": "Do not sync to or claim qualification against current main until its post-merge push failure is classified and main is healthy."
+    }
   }
 }
