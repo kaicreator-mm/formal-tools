@@ -11,11 +11,11 @@
     "previous_reviewed_head": "b9e4e419e1a144c7cb1e3b8e6ccee74d50d66871",
     "previous_runner_blob": "d83baae8ba36fc17504033dc0eaae0ad3a148ec4",
     "runner_path": "portable/packaging/bundle-template/bin/tool-runner",
-    "runner_blob_after_repair": "949416b353d836de63210dd03c6ca5482966ded9",
-    "runner_repair_commit": "3b085f19d0e8e1c208110ac58724092b14a83714",
+    "runner_blob_after_repair": "a818cc0ba9f7a50dd7a632bbbec9d48c25ab05b0",
+    "runner_repair_commit": "412a77d7f18306569771c9da823ff4853c0fd258",
     "test_path": "tests/tool-runner-ldd-report.test.mjs",
-    "test_blob_after_repair": "0a307a9a984d32ff34d0ef9f89ed0fd6facc5dfe",
-    "test_repair_commit": "9a305d5f0d3fe033cc06be4d1303df11bc6d37c8"
+    "test_blob_after_repair": "8c666a7ae0f43d6768a4fac2d414e8f8bcb51f74",
+    "test_repair_commit": "faf64278913fa1cd0ecf951925680c2e1bcfe9a7"
   },
   "problem": {
     "review_finding": "P1: absence of PT_INTERP alone is not proof of static linkage. An ET_DYN shared object may contain PT_DYNAMIC and DT_NEEDED without PT_INTERP; skipping ldd can hide missing dependencies.",
@@ -36,19 +36,25 @@
       "PT_INTERP",
       "PT_DYNAMIC",
       "DT_NEEDED",
-      "DT_NULL"
+      "DT_NULL",
+      "e_machine=EM_X86_64",
+      "PT_LOAD p_flags/PF_X",
+      "PT_LOAD p_offset/p_vaddr/p_filesz/p_memsz"
     ],
-    "static_shortcut": "Only ET_EXEC with PT_LOAD, nonzero e_entry, and no PT_INTERP or PT_DYNAMIC is accepted as static.",
-    "dynamic_or_ambiguous": "PT_INTERP, ET_DYN, PT_DYNAMIC, or an unrecognized/unsupported ELF does not receive a static verdict; the normal fail-closed ldd path is used.",
+    "static_shortcut": "Only ELF64 little-endian EM_X86_64 ET_EXEC with PT_LOAD carrying PF_X and a file-backed p_vaddr..p_vaddr+p_filesz range containing e_entry, nonzero, and neither PT_INTERP nor PT_DYNAMIC is accepted as static.",
+    "dynamic_or_ambiguous": "PT_INTERP, ET_DYN, PT_DYNAMIC, foreign machine/class, non-executable load segments, entry outside executable file-backed PT_LOAD, or unrecognized/unsupported ELF does not receive a static verdict; it uses the normal fail-closed ldd path.",
     "dynamic_table": "For PT_DYNAMIC, parse the bounded p_offset/p_filesz region using ELF32/ELF64 entry sizes, require DT_NULL termination, and detect DT_NEEDED. Any DT_NEEDED routes to ldd; malformed, unterminated, or dependency-free PT_DYNAMIC remains ambiguous and also routes to ldd.",
-    "bounds": "Validate program-header and dynamic-table ranges against file size; cap program headers at 4096 and dynamic entries at 65536; reject duplicate PT_DYNAMIC and malformed tables."
+    "bounds": "Validate ELF header, program-header and dynamic-table ranges against file size; validate PT_LOAD p_offset+p_filesz and p_vaddr+p_filesz without signed overflow; require p_filesz <= p_memsz; cap program headers at 4096 and dynamic entries at 65536; reject duplicate PT_DYNAMIC and malformed tables."
   },
   "regressions": {
     "et_rel": "A crafted ET_REL image with PT_LOAD but no executable entry must not take the static shortcut.",
     "missing_needed": "Compile a real ET_DYN shared object with -shared -fPIC and DT_NEEDED for a private library; verify readelf reports Type DYN, PT_DYNAMIC present, PT_INTERP absent, and DT_NEEDED present; remove the library; real host ldd must cause doctor FAIL.",
     "static_positive": "Preserve the existing real gcc -static executable positive.",
     "dynamic_positive": "Preserve the existing real GCC dynamic PIE positive.",
-    "existing_controls": "Preserve the previous GNU/musl dependency listing, missing-library, malformed diagnostic, vDSO-only, static marker, doctor argument, and private-library containment controls."
+    "existing_controls": "Preserve the previous GNU/musl dependency listing, missing-library, malformed diagnostic, vDSO-only, static marker, doctor argument, and private-library containment controls.",
+    "wrong_machine": "An ELF64-LE ET_EXEC with e_machine=EM_AARCH64 on the x86_64 bundle host must not take the static shortcut.",
+    "non_executable_load": "An ET_EXEC whose PT_LOAD lacks PF_X must not take the static shortcut.",
+    "entry_outside_load": "An ET_EXEC whose e_entry is outside every executable file-backed PT_LOAD must not take the static shortcut."
   },
   "local_probe": {
     "host": "Debian 13 x86_64",
@@ -58,10 +64,13 @@
     "et_dyn_no_interp_with_dt_needed": "ft_is_static_elf=1",
     "et_rel": "ft_is_static_elf=2",
     "real_missing_dependency_ldd": "libft-missing-dependency.so => not found",
-    "scope": "Local ELF parser reproduction; not a substitute for the exact-head Node24 CI."
+    "scope": "Local ELF parser reproduction; not a substitute for the exact-head Node24 CI.",
+    "wrong_machine_et_exec": "REWORK_COUNTEREXAMPLE_REPRODUCED on prior code; fixed path must return unsupported and delegate to fail-closed ldd.",
+    "non_executable_load": "REWORK_COUNTEREXAMPLE_REPRODUCED on prior code; fixed path must return unsupported and delegate to fail-closed ldd.",
+    "entry_outside_load": "New regression added; exact local return to be captured."
   },
   "ci": {
-    "exact_head": "PENDING_AFTER_EVIDENCE_COMMIT",
+    "exact_head": "PENDING_AFTER_R18_SOURCE_AND_EVIDENCE_COMMITS",
     "push": "PENDING",
     "pull_request": "PENDING",
     "required_runtime": "Node.js 24.21.0",
@@ -72,7 +81,7 @@
     ]
   },
   "qualification": {
-    "review": "PENDING_FRESH_OTHER_CONVERSATION_NON_WRITER_SOURCE_FIRST",
+    "review": "PENDING_FRESH_OTHER_CONVERSATION_NON_WRITER_SOURCE_FIRST_REVIEW_ON_R18_HEAD",
     "formal_t4": false,
     "t5": false,
     "product_11_acceptance": false,
