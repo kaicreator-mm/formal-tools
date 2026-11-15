@@ -57,17 +57,18 @@ test('ldd truly missing dependency fails closed',{skip:!isLinux},()=>{
 // only (no sections, no code). doctor never executes MAIN_BIN; it only probes
 // dependency metadata, so the header structure is what the gate must judge.
 const PT_LOAD=1, PT_INTERP=3, PT_NOTE=4;
-function elf64Image(phdrs,{type=2,entry=0x400080,machine=0x3e,loadFlags=5,loadVaddr=0x400000}={}) {
+function elf64Image(phdrs,{type=2,entry=0x400080,machine=0x3e,loadFlags=5,loadVaddr=0x400000,eiVersion=1,eVersion=1,eEhsize=64,ePhentsize=56}={}) {
   const eh=Buffer.alloc(64), ph=Buffer.alloc(56*phdrs.length);
   const fileBytes=BigInt(64+56*phdrs.length);
   eh.set([0x7f,0x45,0x4c,0x46, 2, 1, 1, 0]); // magic, ELF64, little-endian, v1
   eh.writeUInt16LE(type, 16); // e_type (ET_REL=1, ET_EXEC=2, ET_DYN=3)
   eh.writeUInt16LE(machine, 18); // e_machine
-  eh.writeUInt32LE(1, 20);    // e_version
+  eh.writeUInt8(eiVersion, 6); // EI_VERSION
+  eh.writeUInt32LE(eVersion, 20); // e_version
   eh.writeBigUInt64LE(BigInt(entry), 24); // e_entry
   eh.writeBigUInt64LE(64n, 32); // e_phoff
-  eh.writeUInt16LE(64, 52);   // e_ehsize
-  eh.writeUInt16LE(56, 54);   // e_phentsize
+  eh.writeUInt16LE(eEhsize, 52); // e_ehsize
+  eh.writeUInt16LE(ePhentsize, 54); // e_phentsize
   eh.writeUInt16LE(phdrs.length, 56); // e_phnum
   eh.writeUInt16LE(64, 58);   // e_shentsize
   phdrs.forEach((t,i)=>{
@@ -89,6 +90,10 @@ const foreignMachineElf=elf64Image([PT_LOAD,PT_NOTE],{machine:183});
 const nonExecutableElf=elf64Image([PT_LOAD,PT_NOTE],{loadFlags:4}); // PF_R without PF_X
 const entryOutsideElf=elf64Image([PT_LOAD,PT_NOTE],{entry:0x500000});
 const zeroEntryElf=elf64Image([PT_LOAD,PT_NOTE],{entry:0,loadVaddr:0}); // zero entry lies inside executable file-backed PT_LOAD
+const badIdentVersionElf=elf64Image([PT_LOAD,PT_NOTE],{eiVersion:0});
+const badHeaderVersionElf=elf64Image([PT_LOAD,PT_NOTE],{eVersion:0});
+const badHeaderSizeElf=elf64Image([PT_LOAD,PT_NOTE],{eEhsize:52});
+const badProgramHeaderEntrySizeElf=elf64Image([PT_LOAD,PT_NOTE],{ePhentsize:48});
 // Real GNU ldd behavior on a static ELF (Debian 13 probe 2026-11-14, uid 65534
 // identical to root): rc 1, empty stdout, "\tnot a dynamic executable" on stderr.
 const gnuLddOnStatic="printf '\\tnot a dynamic executable' >&2; exit 1";
@@ -136,6 +141,19 @@ test('ET_EXEC with zero entry cannot use the static shortcut even when PT_LOAD s
   assert.match(p.stdout,/ldd probe FAILED/);
   assert.doesNotMatch(p.stdout,/static ELF OK/);
 });
+
+for (const [label,image] of [
+  ["EI_VERSION",badIdentVersionElf],
+  ["e_version",badHeaderVersionElf],
+  ["e_ehsize",badHeaderSizeElf],
+  ["e_phentsize",badProgramHeaderEntrySizeElf]
+]) {
+  test(`malformed ELF ${label} is not accepted as a static candidate`,{skip:!isLinux},()=>{
+    const p=doctorWithLdd("echo 'not a dynamic executable' >&2; exit 1",1,unhealthy,image);
+    assert.match(p.stdout,/ldd probe FAILED/);
+    assert.doesNotMatch(p.stdout,/static ELF OK/);
+  });
+}
 
 function compileGcc(outName, flags) {
   const dir=mkdtempSync(join(tmpdir(),'ft-r15-gcc-'));

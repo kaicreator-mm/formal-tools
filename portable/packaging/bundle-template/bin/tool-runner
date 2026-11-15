@@ -242,7 +242,7 @@ ft_has_elf_magic() { # $1=file -> 0 only when the ELF magic header is present
 }
 
 ft_is_static_elf() { # $1=file -> 0 structurally eligible x86_64 static ET_EXEC, 1 known dynamic, 2 unsupported/ambiguous
-  local f="$1" class data etype machine entry phoff phent phnum file_size
+  local f="$1" class data etype machine ident_version e_version e_ehsize e_phentsize entry phoff phent phnum file_size
   local i off ptype load_seen=0 interp_seen=0 dynamic_seen=0 exec_entry_seen=0
   local pflags p_offset p_vaddr p_filesz p_memsz p_offset_num p_vaddr_num p_filesz_num p_memsz_num pflags_num load_end entry_num=0
   local dyn_offset=0 dyn_filesz=0 dyn_ent dyn_count j tag needed_seen=0 null_seen=0
@@ -251,43 +251,38 @@ ft_is_static_elf() { # $1=file -> 0 structurally eligible x86_64 static ET_EXEC,
 
   class=$(od -An -j4 -N1 -t x1 -- "$f" 2>/dev/null | tr -d ' \n')
   data=$(od -An -j5 -N1 -t x1 -- "$f" 2>/dev/null | tr -d ' \n')
+  ident_version=$(od -An -j6 -N1 -t x1 -- "$f" 2>/dev/null | tr -d ' \n')
   etype=$(od -An -j16 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
   machine=$(od -An -j18 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
-  case "$class$data$etype$machine" in ''|*[!0-9a-f]*) return 2 ;; esac
+  e_version=$(od -An -j20 -N4 -t x1 -- "$f" 2>/dev/null | tr -d ' \n')
+  e_ehsize=$(od -An -j52 -N2 -t x1 -- "$f" 2>/dev/null | tr -d ' \n')
+  e_phentsize=$(od -An -j54 -N2 -t x1 -- "$f" 2>/dev/null | tr -d ' \n')
+  case "$class$data$ident_version$etype$machine$e_version$e_ehsize$e_phentsize" in ''|*[!0-9a-f]*) return 2 ;; esac
   class=$((16#$class)); data=$((16#$data)); etype=$((16#$etype)); machine=$((16#$machine))
   [ "$data" -eq 1 ] || return 2 # little-endian only
-  # The bundle host contract is Linux x86_64. Other ELF machines/classes are
-  # delegated to ldd (and fail closed if the host cannot inspect them).
+  [ "$ident_version" = "01" ] || return 2 # EI_VERSION == EV_CURRENT
+  [ "$e_version" = "01000000" ] || return 2 # e_version == EV_CURRENT (little-endian)
+  [ "$e_ehsize" = "4000" ] || return 2 # ELF64 header size == 64
+  [ "$e_phentsize" = "3800" ] || return 2 # ELF64 program-header entry size == 56
+  # The bundle host contract is Linux x86_64 ELF64 only. ELF32 and foreign
+  # machines are unsupported and delegated to the fail-closed ldd path.
   [ "$class" -eq 2 ] && [ "$machine" -eq 62 ] || return 2 # ELF64 / EM_X86_64
   case "$etype" in 2|3) ;; *) return 2 ;; esac # ET_EXEC or ET_DYN only
 
-  case "$class" in
-    2)
-      entry=$(od -An -j24 -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
-      phoff=$(od -An -j32 -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
-      phent=$(od -An -j54 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
-      phnum=$(od -An -j56 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
-      dyn_ent=16
-      ;;
-    1)
-      entry=$(od -An -j24 -N4 -t x4 -- "$f" 2>/dev/null | tr -d ' \n')
-      phoff=$(od -An -j28 -N4 -t x4 -- "$f" 2>/dev/null | tr -d ' \n')
-      phent=$(od -An -j42 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
-      phnum=$(od -An -j44 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
-      dyn_ent=8
-      ;;
-    *) return 2 ;;
-  esac
-  case "$entry$phoff$phent$phnum" in ''|*[!0-9a-f]*) return 2 ;; esac
+  entry=$(od -An -j24 -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+  phoff=$(od -An -j32 -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+  phnum=$(od -An -j56 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
+  phent=56
+  dyn_ent=16
+  case "$entry$phoff$phnum" in ''|*[!0-9a-f]*) return 2 ;; esac
   # Reject addresses that cannot be represented safely by signed shell arithmetic.
   case "$entry" in [0-7]*) ;; *) return 2 ;; esac
   entry_num=$((16#$entry))
   # ET_DYN shared objects legitimately have e_entry=0; only the final
   # ET_EXEC static verdict requires an executable file-backed load containing it.
-  phoff=$((16#$phoff)); phent=$((16#$phent)); phnum=$((16#$phnum))
+  phoff=$((16#$phoff)); phnum=$((16#$phnum))
+  [ "$phoff" -ge 64 ] || return 2
   [ "$phnum" -gt 0 ] && [ "$phnum" -le 4096 ] || return 2
-  if [ "$class" -eq 2 ]; then [ "$phent" -eq 56 ] || return 2
-  else [ "$phent" -eq 32 ] || return 2; fi
 
   file_size=$(wc -c < "$f" 2>/dev/null | tr -d '[:space:]')
   case "$file_size" in ''|*[!0-9]*) return 2 ;; esac
@@ -329,13 +324,8 @@ ft_is_static_elf() { # $1=file -> 0 structurally eligible x86_64 static ET_EXEC,
       00000002)
         [ "$dynamic_seen" -eq 0 ] || return 2 # ambiguous duplicate PT_DYNAMIC
         dynamic_seen=1
-        if [ "$class" -eq 2 ]; then
-          dyn_offset=$(od -An -j"$((off + 8))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
-          dyn_filesz=$(od -An -j"$((off + 32))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
-        else
-          dyn_offset=$(od -An -j"$((off + 4))" -N4 -t x4 -- "$f" 2>/dev/null | tr -d ' \n')
-          dyn_filesz=$(od -An -j"$((off + 16))" -N4 -t x4 -- "$f" 2>/dev/null | tr -d ' \n')
-        fi
+        dyn_offset=$(od -An -j"$((off + 8))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+        dyn_filesz=$(od -An -j"$((off + 32))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
         case "$dyn_offset$dyn_filesz" in ''|*[!0-9a-f]*) return 2 ;; esac
         dyn_offset=$((16#$dyn_offset)); dyn_filesz=$((16#$dyn_filesz))
         ;;
@@ -359,21 +349,12 @@ ft_is_static_elf() { # $1=file -> 0 structurally eligible x86_64 static ET_EXEC,
     [ "$dyn_count" -gt 0 ] && [ "$dyn_count" -le 65536 ] || return 2
     j=0
     while [ "$j" -lt "$dyn_count" ]; do
-      if [ "$class" -eq 2 ]; then
-        tag=$(od -An -j"$((dyn_offset + j * dyn_ent))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
-        case "$tag" in ''|*[!0-9a-f]*) return 2 ;; esac
-        case "$tag" in
-          0000000000000001) needed_seen=1 ;; # DT_NEEDED
-          0000000000000000) null_seen=1; break ;; # DT_NULL
-        esac
-      else
-        tag=$(od -An -j"$((dyn_offset + j * dyn_ent))" -N4 -t x4 -- "$f" 2>/dev/null | tr -d ' \n')
-        case "$tag" in ''|*[!0-9a-f]*) return 2 ;; esac
-        case "$tag" in
-          00000001) needed_seen=1 ;; # DT_NEEDED
-          00000000) null_seen=1; break ;; # DT_NULL
-        esac
-      fi
+      tag=$(od -An -j"$((dyn_offset + j * dyn_ent))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+      case "$tag" in ''|*[!0-9a-f]*) return 2 ;; esac
+      case "$tag" in
+        0000000000000001) needed_seen=1 ;; # DT_NEEDED
+        0000000000000000) null_seen=1; break ;; # DT_NULL
+      esac
       j=$((j + 1))
     done
     [ "$null_seen" -eq 1 ] || return 2 # malformed/unbounded dynamic table

@@ -5,17 +5,15 @@
   "pr": 86,
   "scope": "Repair only the shared portable doctor static-ELF classifier and its regression tests; no registry, tool payload, MCP, SDK, CLI interface, or unrelated native solver changes.",
   "source": {
-    "current_main_at_sync": "b1cecc5937c9f3a6b6a5cd70f480d32ce61019d9",
+    "current_main_at_sync": "74b511e27ed2b2690be6c7e292400c723c6b9b88",
     "user_expected_main_parent": "9a997e980c4f3202620f189eb9c935b941b57f1e",
-    "sync_merge_commit": "d7af66b9dbd77d2f97e5ca4219512fb378313e51",
-    "previous_reviewed_head": "3a789d11ee39e94287b94604fff190fe2037be8f",
+    "sync_merge_commit": "98ea23e56dedb1d7220c9c32ae3166819a6e4033",
+    "previous_reviewed_head": "a300fe3ca6a8c7e5dc628d6a876464eb10e29d44",
     "previous_runner_blob": "d83baae8ba36fc17504033dc0eaae0ad3a148ec4",
     "runner_path": "portable/packaging/bundle-template/bin/tool-runner",
-    "runner_blob_after_repair": "6ccc68a7269239a2f6ac3987e270274e54307f6e",
-    "runner_repair_commit": "181806e1dee6e3473d406687f269c4f5dbd62a8f",
+    "runner_blob_after_repair": "40427c1e541f294d71d803b0225984175708391e",
     "test_path": "tests/tool-runner-ldd-report.test.mjs",
-    "test_blob_after_repair": "2191e65bc441652f320f7f12955948e734e900d4",
-    "test_repair_commit": "181806e1dee6e3473d406687f269c4f5dbd62a8f",
+    "test_blob_after_repair": "b964a18907a4fa4c8097aae466cfc8f464f1b0d7",
     "r20_repair": {
       "previous_reviewed_head": "3a789d11ee39e94287b94604fff190fe2037be8f",
       "findings": {
@@ -26,7 +24,19 @@
     "runner_blob_before_r20": "0bed20a6e6fe384bf48f17b9e4dc9873fdbdc616",
     "runner_repair_commit_r18": "1b2df30dcd26e99cd46990b586cc0a4b04976fba",
     "test_blob_before_r20": "8c666a7ae0f43d6768a4fac2d414e8f8bcb51f74",
-    "test_repair_commit_r18": "faf64278913fa1cd0ecf951925680c2e1bcfe9a7"
+    "test_repair_commit_r18": "faf64278913fa1cd0ecf951925680c2e1bcfe9a7",
+    "runner_blob_before_r21": "6ccc68a7269239a2f6ac3987e270274e54307f6e",
+    "test_blob_before_r21": "2191e65bc441652f320f7f12955948e734e900d4",
+    "evidence_blob_before_r21": "1393d4a3ebfb7aa9e0e6f18633e40182c4f291f4",
+    "runner_repair_commit_r20": "181806e1dee6e3473d406687f269c4f5dbd62a8f",
+    "test_repair_commit_r20": "181806e1dee6e3473d406687f269c4f5dbd62a8f",
+    "r21_repair": {
+      "previous_reviewed_head": "a300fe3ca6a8c7e5dc628d6a876464eb10e29d44",
+      "findings": {
+        "P2-01": "Validate EI_VERSION=1, e_version=1, e_ehsize=64 and e_phentsize=56 before interpreting the program-header table; add malformed-header regressions.",
+        "P2-02": "The host gate is explicitly ELF64 little-endian EM_X86_64 only. Remove unreachable ELF32 parsing branches and describe PT_DYNAMIC as ELF64-only."
+      }
+    }
   },
   "problem": {
     "review_finding": "P1: absence of PT_INTERP alone is not proof of static linkage. An ET_DYN shared object may contain PT_DYNAMIC and DT_NEEDED without PT_INTERP; skipping ldd can hide missing dependencies.",
@@ -50,12 +60,15 @@
       "DT_NULL",
       "e_machine=EM_X86_64",
       "PT_LOAD p_flags/PF_X",
-      "PT_LOAD p_offset/p_vaddr/p_filesz/p_memsz"
+      "PT_LOAD p_offset/p_vaddr/p_filesz/p_memsz",
+      "EI_VERSION",
+      "e_version",
+      "e_ehsize"
     ],
     "static_shortcut": "Only ELF64 little-endian EM_X86_64 ET_EXEC with PT_LOAD carrying PF_X and a file-backed p_vaddr..p_vaddr+p_filesz range containing e_entry, nonzero, and neither PT_INTERP nor PT_DYNAMIC is accepted as static.",
     "dynamic_or_ambiguous": "PT_INTERP, ET_DYN, PT_DYNAMIC, foreign machine/class, non-executable load segments, entry outside executable file-backed PT_LOAD, or unrecognized/unsupported ELF does not receive a static verdict; it uses the normal fail-closed ldd path.",
-    "dynamic_table": "For PT_DYNAMIC, parse the bounded p_offset/p_filesz region using ELF32/ELF64 entry sizes, require DT_NULL termination, and detect DT_NEEDED. Any DT_NEEDED routes to ldd; malformed, unterminated, or dependency-free PT_DYNAMIC remains ambiguous and also routes to ldd.",
-    "bounds": "Validate ELF header, program-header and dynamic-table ranges against file size; validate PT_LOAD p_offset+p_filesz and p_vaddr+p_filesz without signed overflow; require p_filesz <= p_memsz; cap program headers at 4096 and dynamic entries at 65536; reject duplicate PT_DYNAMIC and malformed tables."
+    "dynamic_table": "For PT_DYNAMIC, parse the bounded p_offset/p_filesz region using ELF64 16-byte entries only, require DT_NULL termination, and detect DT_NEEDED. ELF32 is explicitly unsupported and delegates to the fail-closed ldd path. Any DT_NEEDED routes to ldd; malformed, unterminated, or dependency-free PT_DYNAMIC remains ambiguous and also routes to ldd.",
+    "bounds": "Validate ELF64 EI_VERSION=1, e_version=1, e_ehsize=64, e_phentsize=56, program-header and dynamic-table ranges against file size; validate PT_LOAD p_offset+p_filesz and p_vaddr+p_filesz without signed overflow; require p_filesz <= p_memsz; cap program headers at 4096 and dynamic entries at 65536; reject duplicate PT_DYNAMIC and malformed tables."
   },
   "regressions": {
     "et_rel": "A crafted ET_REL image with PT_LOAD but no executable entry must not take the static shortcut.",
@@ -66,7 +79,8 @@
     "wrong_machine": "An ELF64-LE ET_EXEC with e_machine=EM_AARCH64 on the x86_64 bundle host must not take the static shortcut.",
     "non_executable_load": "An ET_EXEC whose PT_LOAD lacks PF_X must not take the static shortcut.",
     "entry_outside_load": "An ET_EXEC whose e_entry is outside every executable file-backed PT_LOAD must not take the static shortcut.",
-    "zero_entry": "An ELF64-LE x86_64 ET_EXEC with e_entry=0 and PF_X PT_LOAD starting at virtual address 0 (so the entry is otherwise inside the file-backed range) must not use the static shortcut and must follow fail-closed ldd."
+    "zero_entry": "An ELF64-LE x86_64 ET_EXEC with e_entry=0 and PF_X PT_LOAD starting at virtual address 0 (so the entry is otherwise inside the file-backed range) must not use the static shortcut and must follow fail-closed ldd.",
+    "malformed_header": "ELF64 candidates with EI_VERSION != 1, e_version != 1, e_ehsize != 64, or e_phentsize != 56 must fail closed and never take the static shortcut."
   },
   "local_probe": {
     "host": "Debian 13 x86_64",
@@ -95,10 +109,14 @@
     "r20": {
       "status": "NOT_RUN_EXECUTION_BACKEND_CLIENTERROR",
       "note": "R20 helper and zero-entry regression were added from exact source review. The local execution backend returned ClientError; no shell or Node replay is claimed. Exact-head Woodpecker CI is required."
+    },
+    "r21": {
+      "status": "NOT_RUN_EXECUTION_BACKEND_CLIENTERROR",
+      "note": "R21 header-version/size checks and ELF64-only parser simplification were added from exact source review. Local shell/Node replay was unavailable; no new runtime PASS is claimed."
     }
   },
   "ci": {
-    "exact_head": "PENDING_AFTER_R20_FINAL_SOURCE_AND_EVIDENCE_COMMIT",
+    "exact_head": "PENDING_AFTER_R21_FINAL_SOURCE_AND_EVIDENCE_COMMIT",
     "push": "PENDING",
     "pull_request": "PENDING",
     "required_runtime": "Node.js 24.21.0",
@@ -109,13 +127,14 @@
     ]
   },
   "qualification": {
-    "review": "PENDING_FRESH_OTHER_CONVERSATION_NON_WRITER_SOURCE_FIRST_REVIEW_ON_R20_HEAD",
+    "review": "PENDING_FRESH_OTHER_CONVERSATION_NON_WRITER_SOURCE_FIRST_REVIEW_ON_R21_HEAD",
     "formal_t4": false,
     "t5": false,
     "product_11_acceptance": false,
     "release": false,
     "tool_payload_changes": false,
     "shared_runner_other_writer": false,
-    "issue_7_or_14_reopened": false
+    "issue_7_or_14_reopened": false,
+    "elf_class_scope": "ELF64_LE_EM_X86_64_ONLY"
   }
 }
