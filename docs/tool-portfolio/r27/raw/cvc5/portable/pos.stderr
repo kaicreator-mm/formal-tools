@@ -1,0 +1,4 @@
+tests/cvc5/pos.smt2:1.2: No set-logic command was given before this point.
+tests/cvc5/pos.smt2:1.2: cvc5 will make all theories available.
+tests/cvc5/pos.smt2:1.2: Consider setting a stricter logic for (likely) better performance.
+tests/cvc5/pos.smt2:1.2: To suppress this warning in the future use (set-logic ALL).
