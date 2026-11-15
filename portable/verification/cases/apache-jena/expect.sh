@@ -5,7 +5,7 @@ EXPECT_POS_REGEX='PHASE_DONE.*rc=0'
 EXPECT_POS_LABEL=RDF_VALID
 EXPECT_NEG_ARGS='--validate tests/apache-jena/neg.ttl'
 EXPECT_NEG_EXIT=1
-EXPECT_NEG_REGEX='Triples not terminated properly in \\[\\]-list'
+EXPECT_NEG_REGEX='Triples not terminated properly in \[\]-list'
 EXPECT_NEG_LABEL=MALFORMED_RDF_SYNTAX_REJECTED
 EXPECT_ERR_ARGS='--validate tests/apache-jena/does-not-exist.ttl'
 EXPECT_ERR_EXIT=2
