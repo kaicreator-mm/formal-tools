@@ -189,11 +189,12 @@
     "No independent domain ontology Oracle digest is established; oracle_sha256 remains UNKNOWN.",
     "R12 metadata-corrected candidate archive SHA256 19bd813e936ab020cda42a4968c466432dce9a60f0a665aa2ddc360220e4d87e is noncanonical and differs from the original package; it is not used as the baseline package pin.",
     "ELK uses the Java bundle route; native adapter applicability is NOT_APPLICABLE. The assessor only checks identities and does not execute ELK or qualify T4/T5/Product/Release.",
-    "Current-main snapshot 069444c176bbacc804f107482f356dbc2eb95736 has Woodpecker main Push #1610 SUCCESS; 15/15 source pins were fetched from this exact tree."
+    "Current-main snapshot 069444c176bbacc804f107482f356dbc2eb95736 has Woodpecker main Push #1610 SUCCESS; 15/15 source pins were fetched from this exact tree.",
+    "Same current-main commit 069444c176bbacc804f107482f356dbc2eb95736 also passed a later main Push #1629; the earlier same-SHA Push #1610 remains SUCCESS."
   ],
   "current_main_snapshot": {
     "commit": "069444c176bbacc804f107482f356dbc2eb95736",
-    "woodpecker_push_pipeline": 1610,
+    "woodpecker_push_pipeline": 1629,
     "woodpecker_push_status": "SUCCESS",
     "source_blob_pin_verification": "15_OF_15_EXACT_GIT_BLOB_MATCHES"
   }
