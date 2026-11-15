@@ -322,10 +322,10 @@ function requireCanonicalPython3135(t,probe,ci){
 }
 
 test("missing canonical Python fails in CI and is an explicit local-only skip",()=>{
-  const wrongVersion={status:0,stdout:"3.13.4\\n",stderr:""};
+  const wrongVersion={status:0,stdout:"3.13.4",stderr:""};
   assert.throws(
     ()=>requireCanonicalPython3135({skip:()=>assert.fail("CI must not skip")},wrongVersion,true),
-    /CI requires Python 3\\.13\\.5/
+    /CI requires Python 3\.13\.5/
   );
   let skipReason="";
   assert.equal(requireCanonicalPython3135({skip:reason=>{skipReason=reason;}},wrongVersion,false),false);
