@@ -58,7 +58,7 @@
         "exit": 2,
         "stderr": "invalid tool metadata: lean4 (TOOL_ID/version/kind missing or mismatched)"
       },
-      "staged_overlay_git_blob": null,
+      "staged_overlay_git_blob": "24983fa185b817217159bfea23c60cb2496d567b",
       "staged_overlay_sha256": "784c927e0428b29d79cf0eeb1b8f530e6d2d3ac5e7f30dd4ed2c6357a7f0f45c",
       "staged_overlay": "TOOL_ID=lean4; TOOL_VERSION=4.35.0; TOOL_KIND=binary",
       "limitation": "The original archive's legacy metadata was not modified. Current-main Runner execution used an explicit staged metadata overlay. Current-main lean4 builder uses ft::make_meta; canonical rebuilt package still needs its own exact artifact verification."
