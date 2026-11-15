@@ -20,7 +20,7 @@ test("Vampire 5.1.0 builder pins the official Linux X64 release asset", () => {
   // hit before checking a newly supplied expected SHA256.
   assert.match(builder, /got=\$\(sha256sum "\$zip" \| cut -d' ' -f1\)/);
   assert.match(builder, /\[ "\$got" = "\$FT_UPSTREAM_SHA256" \] \|\| ft::die/);
-  assert.match(builder, /size=\$\(wc -c < "\$zip" \| tr -d '[:space:]'\)/);
+  assert.ok(builder.includes(`size=$(wc -c < "$zip" | tr -d '[:space:]')`));
   assert.match(builder, /\[ "\$size" = "\$FT_UPSTREAM_SIZE_BYTES" \] \|\| ft::die/);
 });
 
