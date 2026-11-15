@@ -144,7 +144,9 @@
     "fresh_independent_review": "PENDING_ON_FINAL_STATUS_RECORDING_HEAD",
     "previous_sync_head": "2f6fe4b59645bdc7648cca1f783ce069cdf7ef04",
     "exact_head_push_state": "SUCCESS",
-    "exact_head_pr_state": "SUCCESS"
+    "exact_head_pr_state": "SUCCESS",
+    "exact_head_ci_head": "3e324b40eb873f4ca1bd003ac71f4b434226a205",
+    "exact_head_ci_scope_note": "The recorded #1295/#1296 SUCCESS pair belongs to exact head 3e324b40...; subsequent metadata-only commits must be qualified by live Woodpecker status contexts on the current PR head. Do not rewrite this JSON to self-record the CI run for its own new head."
   },
   "prior_review": {
     "exact_head": "3d201e88ecb49dc0d9bdc1159c23869d4f8ebc61",
