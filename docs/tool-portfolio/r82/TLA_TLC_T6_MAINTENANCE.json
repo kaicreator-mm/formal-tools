@@ -1,0 +1,249 @@
+{
+  "schema": "formal-tools/tla-tlc-t6-maintenance-baseline/1",
+  "snapshot_head": "8c0811a7baa5f79953a85a190595995f2463f7d0",
+  "build_source_head": "0faaa8f693106280bd4f63ddb0a47b8267db4a5b",
+  "tool": {
+    "id": "tla-tlc",
+    "version": "1.8.0",
+    "upstream_release_tag": "v1.8.0",
+    "upstream_asset": "tla2tools.jar"
+  },
+  "version_source": "portable/builders/tools/tla-tlc.sh",
+  "asset_pins": {
+    "portable_package_sha256": "498553c7ae3273d6087c5ebdd5d13133e35277702686659810824576d02d82ac",
+    "upstream_jar_sha256": "7e53aa636dac8a3cb0533f343115c0548e03fc0ce5edc7739becf58d3d0fb84f",
+    "bundled_jar_sha256": "7e53aa636dac8a3cb0533f343115c0548e03fc0ce5edc7739becf58d3d0fb84f",
+    "java21_runtime_sha256": "7e9b1bfdc120d17a4af2eb2baaf4b3772b2c7a2114248ed1a5967af89c5387ca",
+    "oracle_sha256": null
+  },
+  "source_files": {
+    "portable/builders/tools/tla-tlc.sh": {
+      "git_blob_sha1": "d82454d5b746801b2d7fc46fe242118d8a311ec1",
+      "gates": [
+        "T1",
+        "T2",
+        "T3",
+        "T6"
+      ]
+    },
+    "portable/verification/cases/tla-tlc/expect.sh": {
+      "git_blob_sha1": "9cd5269aea0e2589fcc4758f2c2fc109c286d831",
+      "gates": [
+        "T3",
+        "T4",
+        "T5",
+        "T6"
+      ]
+    },
+    "portable/verification/cases/tla-tlc/pos.tla": {
+      "git_blob_sha1": "9bcce945f13faa0ff4e9992ca58a465d994609eb",
+      "gates": [
+        "T3",
+        "T4",
+        "T5",
+        "T6"
+      ]
+    },
+    "portable/verification/cases/tla-tlc/pos.cfg": {
+      "git_blob_sha1": "e457ef1d951ac18b80a302c49c0ce577b5f3db57",
+      "gates": [
+        "T3",
+        "T4",
+        "T5",
+        "T6"
+      ]
+    },
+    "portable/verification/cases/tla-tlc/neg.tla": {
+      "git_blob_sha1": "4069f3f6ec7bf586339a3bb2e322becd88b71cb1",
+      "gates": [
+        "T3",
+        "T4",
+        "T5",
+        "T6"
+      ]
+    },
+    "portable/verification/cases/tla-tlc/neg.cfg": {
+      "git_blob_sha1": "149a56925db42cd3da761bd8c5af780d811b659f",
+      "gates": [
+        "T3",
+        "T4",
+        "T5",
+        "T6"
+      ]
+    },
+    "tests/tla-tlc-source-fixture-contract.test.mjs": {
+      "git_blob_sha1": "3ff3b4a1ffe02ce1c986c8b094dec7f7ff937fce",
+      "gates": [
+        "T3",
+        "T6"
+      ]
+    },
+    "portable/builders/make_meta.py": {
+      "git_blob_sha1": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+      "gates": [
+        "T0",
+        "T1",
+        "T2",
+        "T6"
+      ]
+    },
+    "portable/packaging/bundle-template/bin/tool-runner": {
+      "git_blob_sha1": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+      "gates": [
+        "T2",
+        "T3",
+        "T4",
+        "T6"
+      ]
+    },
+    "portable/packaging/pack.sh": {
+      "git_blob_sha1": "4b3cae235643f8554f1e62001268816ba205bcac",
+      "gates": [
+        "T0",
+        "T1",
+        "T2",
+        "T6"
+      ]
+    },
+    "portable/packaging/make-manifest.py": {
+      "git_blob_sha1": "f48318997276289f049260902c474650907e96ec",
+      "gates": [
+        "T0",
+        "T1",
+        "T2",
+        "T6"
+      ]
+    },
+    "portable/packaging/unpack-template/unpack.sh": {
+      "git_blob_sha1": "ad8ba2330a7b3bd66f5508563774b7b472fae977",
+      "gates": [
+        "T2",
+        "T3",
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/tool-portfolio-t4.mjs": {
+      "git_blob_sha1": "922a7c208beaa0e48346403a29ec2d927189319f",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/cli.mjs": {
+      "git_blob_sha1": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/sdk.mjs": {
+      "git_blob_sha1": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/mcp.mjs": {
+      "git_blob_sha1": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "registry/PROBLEM_CAPABILITIES.json": {
+      "git_blob_sha1": "faa89997c3f7c8c71da0a69aa90e8ff37461cde0",
+      "gates": [
+        "T4",
+        "T5",
+        "T6"
+      ]
+    },
+    "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json": {
+      "git_blob_sha1": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+      "gates": [
+        "T0",
+        "T4",
+        "T6"
+      ]
+    },
+    "portable/status/receipts/build-tla-tlc.json": {
+      "git_blob_sha1": "8a378d4276ca75c630e96cb0ef16686f997ef0b0",
+      "gates": [
+        "T1",
+        "T6"
+      ]
+    },
+    "portable/status/receipts/verify-tla-tlc.json": {
+      "git_blob_sha1": "ae5386c0e83b3bc472ff83622cef08d3b3026546",
+      "gates": [
+        "T3",
+        "T6"
+      ]
+    },
+    "docs/tool-portfolio/r20/TLA_TLC_SOURCE_PIN_FIXTURE_CONTRACT.json": {
+      "git_blob_sha1": "f707577d22cdc99c8de2415059e8cd6048416403",
+      "gates": [
+        "T0",
+        "T1",
+        "T3",
+        "T6"
+      ]
+    }
+  },
+  "component_applicability": {
+    "native_adapter": "NOT_APPLICABLE_JAVA_JAR",
+    "runner": "APPLICABLE",
+    "gateway": "APPLICABLE",
+    "cli": "APPLICABLE",
+    "sdk": "APPLICABLE",
+    "mcp": "APPLICABLE"
+  },
+  "gate_revalidation": {
+    "T0": [
+      "Re-fetch the mutable v1.8.0 GitHub pre-release JAR and contemporaneous tag/asset metadata; verify SHA256/size and preserve that this is not a publisher signature or immutable tag."
+    ],
+    "T1": [
+      "Rebuild the scoped one-tool package from the exact official JAR and pinned Java21 runtime; record builder/toolchain, package SHA256/size and archive-member parity. This is a prebuilt upstream JAR build, not a reproducible source build."
+    ],
+    "T2": [
+      "Repeat safe archive-member/link preflight, non-root extraction, Java21 runtime and resource-bound checks; do not substitute the quarantined older Drive JAR."
+    ],
+    "T3": [
+      "Re-run the current two-case POS/NEG model-checking fixtures with exact inputs, configs, stdout/stderr, exit codes and artifact hashes. Add and qualify an ERR case before claiming complete T3."
+    ],
+    "T4": [
+      "Re-run exact-current-main original-package doctor/version/verify and bounded Runner, CLI, SDK and MCP routes; current T4 remains NOT_ACCEPTED until real current-main receipts and independent review."
+    ],
+    "T5": [
+      "Use a source-backed state-machine case with an independent semantic Oracle; TLC output alone is not an independent business/domain Oracle."
+    ],
+    "T6": [
+      "Re-fetch exact source, JAR, package and runtime identities; classify STALE/UNKNOWN; record mutable release/tag observations; update the versioned baseline only with source-backed evidence and independent review."
+    ]
+  },
+  "qualification_boundary": {
+    "T0": "PASS_SCOPED_GITHUB_RELEASE_API_JAR_DIGEST_AND_SIZE_AT_OBSERVATION; MUTABLE_ROLLING_PRERELEASE; NO_PUBLISHER_SIGNATURE",
+    "T1": "ACCEPTED_SCOPED_PREBUILT_OFFICIAL_JAR_BUILD_AND_SINGLE_TOOL_PACK; NOT_REPRODUCIBLE_SOURCE_BUILD",
+    "T2": "HISTORICAL_R3_SCOPED_INSTALL_ONLY",
+    "T3": "ACCEPTED_SCOPED_R48_POS_NEG_ONLY; ERR_ABSENT",
+    "T4": "NOT_ACCEPTED",
+    "T5": "NOT_QUALIFIED_INDEPENDENT_SEMANTIC_ORACLE",
+    "T6": "ASSESSOR_IMPLEMENTATION_PENDING_INDEPENDENT_REVIEW",
+    "product_or_release": "NOT_GRANTED"
+  },
+  "notes": [
+    "R48 build source HEAD 0faaa8f693106280bd4f63ddb0a47b8267db4a5b. The builder, expect, test and all pinned shared packaging/Runner/gateway/CLI/SDK/MCP/Registry paths were re-fetched and match current main 8c0811a7baa5f79953a85a190595995f2463f7d0.",
+    "Official upstream asset: tlaplus/tlaplus v1.8.0 pre-release tla2tools.jar; GitHub Releases API SHA256 7e53aa636dac8a3cb0533f343115c0548e03fc0ce5edc7739becf58d3d0fb84f; size 4,510,884 bytes; asset id 749260120. The release/tag is rolling and mutable; no publisher signature is claimed.",
+    "R48 one-tool Portable package SHA256 498553c7ae3273d6087c5ebdd5d13133e35277702686659810824576d02d82ac; size 4,219,861; archive has six entries with parity PASS. It embeds the exact official JAR and Java21 package SHA256 7e9b1bfdc120d17a4af2eb2baaf4b3772b2c7a2114248ed1a5967af89c5387ca.",
+    "Older Drive archive SHA256 3fbc410808b4daf915d9c5ddf1500b67f65d0b97a7777b56f8d9c6cbc7573fd5 contains an older JAR SHA256 e1f11b75c4b5bc4478ba0ac5cb6ae28e40a01b0016bc33e0aa97da22dfdbcd7f and is quarantined; it is not used as T1 evidence.",
+    "R48 native execution is limited to Debian13 offline non-root Runner POS/NEG exits 0/12; no ERR phase. T2 is historical R3 only. T4 remains NOT_ACCEPTED, T5 has no independent semantic Oracle, and T6 assessor is not itself lifecycle qualification.",
+    "Current main 8c0811a7baa5f79953a85a190595995f2463f7d0 has Push #1635 SUCCESS. The nine commits after 069444c are Robot-only and disjoint from all 21 TLA-TLC source/evidence pins."
+  ],
+  "current_main_snapshot": {
+    "commit": "8c0811a7baa5f79953a85a190595995f2463f7d0",
+    "woodpecker_push_pipeline": 1635,
+    "woodpecker_push_status": "SUCCESS",
+    "source_blob_pin_verification": "21_OF_21_MATCH_CURRENT_MAIN"
+  }
+}
