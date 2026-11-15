@@ -67,10 +67,22 @@
     "scope": "Local ELF parser reproduction; not a substitute for the exact-head Node24 CI.",
     "wrong_machine_et_exec": "REWORK_COUNTEREXAMPLE_REPRODUCED on prior code; fixed path must return unsupported and delegate to fail-closed ldd.",
     "non_executable_load": "REWORK_COUNTEREXAMPLE_REPRODUCED on prior code; fixed path must return unsupported and delegate to fail-closed ldd.",
-    "entry_outside_load": "New regression added; exact local return to be captured."
+    "entry_outside_load": "New regression added; exact local return to be captured.",
+    "r18_static_elf_executability": {
+      "host": "Debian 13 x86_64",
+      "runtime": "Bash shell replay; GNU od 9.7 and BusyBox od; GCC and readelf installed",
+      "harness_scope": "Direct replay of the updated ft_is_static_elf classifier; not full Node24 CI or a complete package doctor run",
+      "valid_x86_64_et_exec_pf_x_entry_inside": "return 0 (static candidate)",
+      "foreign_machine_em_aarch64_et_exec": "return 2 (unsupported; fail-closed ldd path)",
+      "x86_64_et_exec_without_pf_x": "return 2 (unsupported; fail-closed ldd path)",
+      "x86_64_et_exec_entry_outside_file_backed_executable_pt_load": "return 2 (unsupported; fail-closed ldd path)",
+      "real_gcc_static_et_exec": "return 0",
+      "real_gcc_dynamic_pie": "return 1",
+      "busybox_od_replay": "same 0/2/2/2/0/1 results as GNU od"
+    }
   },
   "ci": {
-    "exact_head": "PENDING_AFTER_R18_SOURCE_AND_EVIDENCE_COMMITS",
+    "exact_head": "PENDING_AFTER_R18_SOURCE_TEST_AND_EVIDENCE_COMMITS",
     "push": "PENDING",
     "pull_request": "PENDING",
     "required_runtime": "Node.js 24.21.0",
