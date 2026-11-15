@@ -1,0 +1,160 @@
+{
+  "schema": "formal-tools/lean4-current-main-runner-recheck/1.0",
+  "output_label": "FORMAL_TOOLS_I24_UNIFIED_PARALLEL_DELIVERY",
+  "status": "REVIEW_REQUIRED",
+  "portfolio_issue": 24,
+  "tool_issue": 41,
+  "tool": "lean4",
+  "expected_version": "4.35.0",
+  "worker_id": "I24_AUTO_THIS_CONVERSATION_LEAN4_R22",
+  "branch": "feat/i24-lean4-current-runner-r22",
+  "branch_start_sha": "9a997e980c4f3202620f189eb9c935b941b57f1e",
+  "observed_main_sha_at_execution": "6e98fef47b15592c327523916048280c363acf06",
+  "implementation_head_ci": "4d8175c2794672aaa33cd2031a12954c321efaed",
+  "runner": {
+    "path": "portable/packaging/bundle-template/bin/tool-runner",
+    "git_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "command": "verify lean4",
+    "doctor_exit": 0,
+    "doctor_result": "binary OK; ldd no missing libs",
+    "pr86_elf_false_static": "NOT_REPRODUCED_FOR_LEAN4; verify and doctor passed on this dynamically linked tool"
+  },
+  "source": {
+    "archive": "lean4-4.35.0-linux-x86_64.tar.zst",
+    "bytes": 567187865,
+    "sha256": "671b172f8dacc4a7fd405852a2286e7657ec8c4414d301a73ece6f98f39bde62",
+    "sha256_matches_source_manifest": true,
+    "zstd_test": "PASS",
+    "tar_preflight": {
+      "exit": 0,
+      "members": 18574,
+      "files": 17928,
+      "directories": 633,
+      "symlinks": 13,
+      "hardlinks": 0,
+      "special_files": 0,
+      "absolute_names": 0,
+      "absolute_links": 0,
+      "escaping_links": 0,
+      "path_traversal": 0,
+      "top_level": [
+        "tools"
+      ]
+    },
+    "extraction": {
+      "uid": 65534,
+      "gid": 65534,
+      "flags": "--no-same-owner --no-same-permissions",
+      "package_read_only": true,
+      "writable_package_files": 0
+    },
+    "lean_binary_sha256": "bf8d54e4714cc4b03d3f6bb34c83b7202b87e49c8bfcbff6895c085bb90ceb38",
+    "run_shim_sha256": "a48472b99e7798ab7d254ba0ebd91d0e8f9c5bea3ef2d01d723b880ca4f6ca12",
+    "metadata": {
+      "original_git_blob": "e15cd30d24efe6c7609ba6c381eb05549b159cbd",
+      "original_sha256": "56f459f1596afee5e2589f8e1711bbe0e8ea8ce880c0e4de235341bf3b0f61fc",
+      "original_key": "TOOL_TOOL_ID=lean4",
+      "current_main_runner_rejects_legacy_alias": {
+        "exit": 2,
+        "stderr": "invalid tool metadata: lean4 (TOOL_ID/version/kind missing or mismatched)"
+      },
+      "staged_overlay_git_blob": "24983fa185b817217159bfea23c60cb2496d567b",
+      "staged_overlay_sha256": "784c927e0428b29d79cf0eeb1b8f530e6d2d3ac5e7f30dd4ed2c6357a7f0f45c",
+      "staged_overlay": "TOOL_ID=lean4; TOOL_VERSION=4.35.0; TOOL_KIND=binary",
+      "limitation": "The original archive's legacy metadata was not modified. Current-main Runner execution used an explicit staged metadata overlay. Current-main lean4 builder uses ft::make_meta; canonical rebuilt package still needs its own exact artifact verification."
+    }
+  },
+  "fixture_contract": {
+    "path": "portable/verification/cases/lean4/expect.sh",
+    "git_blob": "3dc8789e49f088bc8c533f00ef01d3877d1768c0",
+    "change": "Pin NEG and ERR exact exit codes to 1; replace broad regex with observed Type mismatch and Unknown identifier no_such_tactic messages",
+    "static_test_path": "tests/lean4-fixture-contract.test.mjs",
+    "static_test_git_blob": "a99f988db259e7c65b773f39331a5d824ab226fe",
+    "original_false_pass_risk": "EXPECT_NEG_EXIT=* and EXPECT_ERR_EXIT=* allowed timeout/launch errors to satisfy output-only verdicts",
+    "fixed": true
+  },
+  "environment": {
+    "os": "Debian GNU/Linux 13 (trixie)",
+    "arch": "x86_64",
+    "uid": 65534,
+    "gid": 65534,
+    "cgroup_memory_max_bytes": 4294967296,
+    "cgroup_cpu_max": "400000 100000",
+    "cpu_affinity": "0-3",
+    "limits": "timeout=180s; ulimit -c 0; ulimit -f 65536 blocks; ulimit -s 1024; no RLIMIT_AS",
+    "network_namespace": "NOT_AVAILABLE",
+    "network_isolation": "NOT_PROVEN"
+  },
+  "execution": {
+    "version": {
+      "exit": 0,
+      "stdout": "tool: lean4\nversion: 4.35.0\nprobe: n/a"
+    },
+    "verify": {
+      "exit": 0,
+      "runner_schema": "formal-tools/portable-verify/0.2",
+      "verdict": "PASS",
+      "rows": [
+        {
+          "phase": "pos",
+          "exit": 0,
+          "duration_ms": 502,
+          "matched": 1,
+          "exit_ok": 1,
+          "label": "PROVED"
+        },
+        {
+          "phase": "neg",
+          "exit": 1,
+          "duration_ms": 199,
+          "matched": 1,
+          "exit_ok": 1,
+          "label": "REJECTED"
+        },
+        {
+          "phase": "err",
+          "exit": 1,
+          "duration_ms": 182,
+          "matched": 1,
+          "exit_ok": 1,
+          "label": "ERROR"
+        }
+      ]
+    },
+    "receipt_sha256": "487668497638deac340fd00ee44acf62bf3b7b7fdab8708cbe4371169b25ff67",
+    "logs_sha256": {
+      "pos": "9b1196c08c82bfeae21b9d1da2a76e4981cc1407f162da5ca4f26367bdf0b531",
+      "neg": "3d87c0f4da6b69fb142db267fa92d0c978990f9e3fcf3462f22d052a9df8c5df",
+      "err": "720be20bd27510399142e44324669a2f26262089cef49c9a0d2f12fd09fb4041",
+      "doctor_stdout": "806767e8a4803426ea649931f118b5225a9f86fdb79bc698d45aeaf28a263e29"
+    },
+    "initial_failure": "A first attempt imposed RLIMIT_AS=4GiB and Lean failed to create a thread. This was a harness-imposed virtual-address-space cap, not a tool/Runner defect. Re-run without RLIMIT_AS under the existing 4GiB cgroup memory cap and 4-CPU affinity passed all phases."
+  },
+  "ci_on_implementation_head": {
+    "head": "4d8175c2794672aaa33cd2031a12954c321efaed",
+    "woodpecker_push": "#1005 SUCCESS",
+    "woodpecker_pr": "#1006 SUCCESS",
+    "note": "The evidence-only commit will trigger fresh exact-HEAD CI; use GitHub PR statuses for the final PR HEAD rather than self-referentially embedding its own future SHA."
+  },
+  "qualification": {
+    "t0": "PASS_SCOPED_ARCHIVE_SHA256_MATCHES_SOURCE_MANIFEST; publisher signature/rights qualification not established",
+    "t1": "NOT_QUALIFIED_REPRODUCIBLE_SOURCE_BUILD",
+    "t2": "PASS_SCOPED_NONROOT_READONLY_EXTRACTION; NETWORK_ISOLATION_NOT_PROVEN",
+    "t3": "PASS_SCOPED_ORIGINAL_LEAN4_BINARY_VIA_CURRENT_MAIN_RUNNER_WITH_STAGED_METADATA_OVERLAY; independent technical review pending",
+    "t4": "NOT_ACCEPTED",
+    "t5": "NOT_ACCEPTED",
+    "t6": "NOT_ACCEPTED",
+    "product_or_release": "NOT_GRANTED"
+  },
+  "next": [
+    "Fresh exact-HEAD Woodpecker push and PR statuses after this evidence commit",
+    "Independent Source-First review by another conversation",
+    "Integrator decides guarded merge and updates #41/#24 lifecycle ledger",
+    "Rebuild canonical Lean4 package with current main builder and independently verify metadata/source rights before any broader T2/T3 qualification"
+  ],
+  "exclusions": [
+    "No shared Runner/Registry/CLI/MCP/SDK edits",
+    "No #24 total ledger edits",
+    "No T4/T5/Product/Release promotion"
+  ]
+}

@@ -4,10 +4,10 @@ EXPECT_POS_EXIT=0
 EXPECT_POS_REGEX='PHASE_DONE.*rc=0'
 EXPECT_POS_LABEL=PROVED
 EXPECT_NEG_ARGS='tests/lean4/neg.lean'
-EXPECT_NEG_EXIT='*'
-EXPECT_NEG_REGEX='(error|type mismatch|mismatched)'
+EXPECT_NEG_EXIT=1
+EXPECT_NEG_REGEX='error: Type mismatch'
 EXPECT_NEG_LABEL=REJECTED
 EXPECT_ERR_ARGS='tests/lean4/err.lean'
-EXPECT_ERR_EXIT='*'
-EXPECT_ERR_REGEX='(unknown identifier|error)'
+EXPECT_ERR_EXIT=1
+EXPECT_ERR_REGEX='Unknown identifier `no_such_tactic`'
 EXPECT_ERR_LABEL=ERROR
