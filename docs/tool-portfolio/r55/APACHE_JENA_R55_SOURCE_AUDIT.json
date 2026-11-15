@@ -155,7 +155,7 @@
       "P2-04": "FIXED: ambiguous exact_main removed; historical evidence baseline, PR base and latest main snapshot/#1450 status are separate fields.",
       "P2-05": "FIXED: NEG fixture now declares rdfs prefix and reaches the intended malformed []-list syntax error; direct native replay as UID/GID 65534 returned exit 1 with exact diagnostic."
     },
-    "status": "REVIEW_REWORK_ITEMS_FIXED_PENDING_FRESH_INDEPENDENT_REVIEW_AND_EXACT_HEAD_CI"
+    "status": "ALL_FIVE_R58_REVIEW_FINDINGS_REPAIRED; EXACT_HEAD_CI_RESULTS_TRACKED_IN_PR_BODY; FRESH_NON_WRITER_REVIEW_REQUIRED"
   },
   "current_main": {
     "runner_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
@@ -257,8 +257,11 @@
     "commit": "250d20ec782785f13d4d027f7ab79e005feacc76",
     "push_pipeline": 1450,
     "push_status": "FAILURE_UNCLASSIFIED",
-    "sync_merge_status": "BLOCKED_UNTIL_AUTHENTICATED_FIRST_FAILURE_TRIAGE_AND_GREEN_MAIN",
-    "note": "Do not infer infrastructure/source cause and do not sync or merge while #1450 is unclassified."
+    "sync_merge_status": "MAIN_HAS_LATER_SAME_SHA_SUCCESS_BUT_1450_REMAINS_UNCLASSIFIED; FOLLOW_EXISTING_INTEGRATOR_HOLD_UNTIL_TRIAGE_OR_EXPLICIT_RELEASE",
+    "note": "Do not infer infrastructure/source cause and do not sync or merge while #1450 is unclassified.",
+    "same_sha_followup_push_pipeline": 1468,
+    "same_sha_followup_push_status": "SUCCESS",
+    "root_cause_1450": "UNCLASSIFIED; no first-failure log evidence available in this conversation"
   },
   "environment": {
     "collector_snapshot": {
@@ -324,6 +327,6 @@
     "writer_claim": "RELEASED_AFTER_IMPLEMENTATION",
     "source_repair_commit": "cb855bdec485438628bf44431b990391894eab52",
     "evidence_json_last_updated": true,
-    "exact_head_and_ci": "See PR #131 metadata and exact-head status contexts; do not infer from historical CI."
+    "exact_head_and_ci": "Exact-head CI results are tracked in PR metadata; this JSON does not self-reference its own commit or pipeline."
   }
 }
