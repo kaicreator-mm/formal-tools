@@ -1,0 +1,108 @@
+{
+  "schema": "formal-tools/causal-learn-t3-fixture-repair/1.0",
+  "authority": {
+    "portfolio_issue": 24,
+    "tool_issue": 29,
+    "product_issue": 11,
+    "runtime_issue": 4
+  },
+  "source": {
+    "base_head": "9a997e980c4f3202620f189eb9c935b941b57f1e",
+    "previous_fixture_blobs": {
+      "portable/verification/cases/causal-learn/expect.sh": "b728ce36dda7542450d3f0f26340b36bc90fb28a",
+      "portable/verification/cases/causal-learn/pos.py": "4924f6c7253409208bc79e8895e1ebeefac35ddb",
+      "portable/verification/cases/causal-learn/neg.py": "92b6c23455f62882c124de7bdfe706f189fd71d2"
+    },
+    "repaired_fixture_blobs": {
+      "portable/verification/cases/causal-learn/neg.py": "51dce05196e54e74e0c66a627d018306d5705155",
+      "portable/verification/cases/causal-learn/expect.sh": "377fdd4bceec42a3441f7ae2a0fe3fdd2805ea3b",
+      "portable/verification/cases/causal-learn/err.py": "6061b1f0eeaaba65574c6094f6f3cbd7e58dd44c"
+    },
+    "contract_test_blob": "c5e9a1fdc1ae34d2675c568ba2053bf40b2585cf"
+  },
+  "assets": {
+    "original_tool_archive": {
+      "drive_id": "1UNAWi3EnSuOzsJOjs1W90WMno5-HpS2V",
+      "file": "causal-learn-0.1.4.8-linux-x86_64.tar.zst",
+      "size_bytes": 454971,
+      "sha256": "9c41aa7eb57bff4ef124438382f6f5b3ff9088fb6108b7fe6b5d7ee939e853bf"
+    },
+    "portable_core_archive": {
+      "drive_id": "1xEUgLSTDO6xj8ij_hvAgnHkOeq2aMrl7",
+      "file": "formal-tools-portable-core-linux-x86_64.tar.zst",
+      "size_bytes": 27989,
+      "sha256": "fe9699e6ba503d94826551bc8e82c70c7c267191a89a6a14941e3551e2b23990"
+    },
+    "tool_meta_sha256": "eaae4cd4674f967745f0fd88c94b16a4d469486292ee86e49df8998a92d57989",
+    "run_shim_sha256": "8d7575b3f3490633a6be68fd78b758bd49c8b8c2a75fc257518fd3b06fc97df7"
+  },
+  "defect_found": "The old NEG fixture passed malformed ragged input and caught ValueError; it was an ERR test mislabeled as a semantic NEG. This repair moves malformed input to ERR and makes NEG a valid independent-data graph with no edge.",
+  "execution": {
+    "status": "HOST_PYTHON_SUBSTITUTE_SCOPED_PASS",
+    "os": "Linux x86_64",
+    "uid": 65534,
+    "python": "3.13.5 (host venv; not the canonical portable runtime)",
+    "dependencies": {
+      "numpy": "2.3.5",
+      "scipy": "1.17.0",
+      "scikit_learn": "1.8.0",
+      "pandas": "2.2.3",
+      "networkx": "3.6.1",
+      "matplotlib": "3.10.8",
+      "statsmodels": "0.14.6",
+      "momentchi2": "0.1.8 (Drive wheel)"
+    },
+    "runner": "Drive portable-core archive above; archive predates current main tool-runner and is not claimed as current shared Runner",
+    "read_only_bundle": true,
+    "cases": [
+      {
+        "phase": "pos",
+        "label": "PC_CHAIN",
+        "exit_code": 0,
+        "matched": true,
+        "duration_ms": 4378,
+        "log_sha256": "6b330fae34829e30c118b655a47f8d23e81457939778b6cc3a6ea2e6094bce33"
+      },
+      {
+        "phase": "neg",
+        "label": "INDEPENDENT_NO_EDGE",
+        "exit_code": 0,
+        "matched": true,
+        "duration_ms": 2004,
+        "log_sha256": "de74adf355d5e8e9a85cb906d0cedb86d00170f6fe046a5b08452eea04982e0a"
+      },
+      {
+        "phase": "err",
+        "label": "INVALID_INPUT_REJECTED",
+        "exit_code": 0,
+        "matched": true,
+        "duration_ms": 1905,
+        "log_sha256": "a378bd6abe0b05fd0d421725f94ca562574aea4aedf7dd2452b1d661951e9d11"
+      }
+    ],
+    "runner_receipt_sha256": "649a58ada4025db135480d90209c01e3d4af741b2fa67e8063db99ada9c4a5db",
+    "verification_log_sha256": "1435108aece4b2b64d67286e780d6ae19ee6bd0111d79968ecfb6c830e7a2794",
+    "contract_test": {
+      "node": "22.16.0",
+      "passed": 1,
+      "failed": 0,
+      "blob_sha256": "c5e9a1fdc1ae34d2675c568ba2053bf40b2585cf"
+    }
+  },
+  "canonical_runtime": {
+    "file": "python313-3.13.5-linux-x86_64.tar.zst",
+    "expected_sha256": "1dbbc431b578da5139c8f1993d5c138582dee577804fca9e85936b490606f1d5",
+    "size_bytes": 294346075,
+    "status": "NOT_DOWNLOADED_CONNECTOR_HTTP_413",
+    "limit_bytes": 268435456
+  },
+  "qualification": {
+    "t3": "SCOPED_HOST_RUNTIME_OBSERVATION_ONLY; canonical portable runtime not executed",
+    "t4": "NOT_QUALIFIED",
+    "t5": "NOT_QUALIFIED_NO_INDEPENDENT_ORACLE_OR_BUSINESS_CASE",
+    "t6": "OPEN"
+  },
+  "ci": {
+    "status": "PR_CHECKS_AUTHORITATIVE; this JSON does not duplicate or freeze CI state"
+  }
+}
