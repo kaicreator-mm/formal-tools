@@ -1,0 +1,118 @@
+{
+  "schema": "formal-tools/i24-prob-native-fixture/1.0",
+  "output_label": "FORMAL_TOOLS_I24_TOOL_INTEGRATION_CONTINUE",
+  "recorded_at": "2026-11-15",
+  "repository": "kaicreator-mm/formal-tools",
+  "issue": 48,
+  "main_base": "9a997e980c4f3202620f189eb9c935b941b57f1e",
+  "tool": {
+    "id": "prob",
+    "version": "1.16.1",
+    "reported_version": "1.16.1-final (716929f528b333dd3901a0521fc0d3460a488af7)",
+    "capability_ids": [
+      "model.state"
+    ],
+    "native_adapter": "existing-13-tool-catalog"
+  },
+  "source": {
+    "expect_path": "portable/verification/cases/prob/expect.sh",
+    "expect_blob": "f8c4fdec2028a94905f385d154248ecc2ef35bfe",
+    "fixtures": {
+      "pos": {
+        "path": "portable/verification/cases/prob/pos.mch",
+        "blob": "a0ec10bfa1e0b09555ccd76baf8d109a008c533c"
+      },
+      "neg": {
+        "path": "portable/verification/cases/prob/neg.mch",
+        "blob": "6f733207d6b2b4a012458d5de5d321d26c2a92cf"
+      },
+      "err": {
+        "path": "portable/verification/cases/prob/err.mch",
+        "blob": "cdfe14ef2e61e5082a1e685c3053c6de061137c9"
+      }
+    },
+    "contract_test": {
+      "path": "tests/prob-fixture-contract.test.mjs",
+      "blob": "c079a654fd0345c0143cebf3498865c3aa7c4872"
+    },
+    "semantics": {
+      "pos": "ALL OPERATIONS COVERED",
+      "neg": "COUNTER EXAMPLE FOUND",
+      "err": "source: parse_error",
+      "exit_codes": {
+        "setup": 0,
+        "pos": 0,
+        "neg": 0,
+        "err": 0
+      },
+      "rationale": "The original ProB 1.16.1 CLI returns exit 0 for all three model-checking outcomes; typed output patterns distinguish the outcomes. Exact exit pins reject timeout/launch failures that '*' would accept."
+    }
+  },
+  "assets": {
+    "original_prob_archive_sha256": "5f62f29a338ec0f06796cc78de6e26aa2447061c33811a1d972202907b644537",
+    "original_prob_archive_bytes": 34278304,
+    "original_prob_meta_version": "1.16.1",
+    "probcli_sha256": "029d38ba5b8ffbc8685bb7ba8e58ee43c6261ba689690ecebfb1aa33de932565",
+    "prob_run_shim_sha256": "8dfd68e92408853b51e5d45f4b5e719be8971fe379792941ba19e1486dae09ab",
+    "java21_archive_sha256": "7e9b1bfdc120d17a4af2eb2baaf4b3772b2c7a2114248ed1a5967af89c5387ca",
+    "java_version": "21.0.13+9",
+    "portable_core_archive_sha256": "fe9699e6ba503d94826551bc8e82c70c7c267191a89a6a14941e3551e2b23990",
+    "portable_core_runner_git_blob": "b9f8620dfc86f5a11f265c9eaa125abe86521509",
+    "current_main_tool_runner_git_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "current_main_meta_generator_git_blob": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+    "package_meta_sha256": "a8b13c3d8710058be7191e262fba4af687d4e92f3536d655a4dfdf0e97f5dc89",
+    "package_meta_legacy_key": "TOOL_TOOL_ID=prob",
+    "package_disposition": "Drive portable core and ProB archive are historical/stale relative to current main Runner. Current make_meta.py emits TOOL_ID; current main Runner rejects TOOL_TOOL_ID. Rebuild package/core from the current source after shared Runner PR #86 is resolved. The execution below is not current-main Runner qualification."
+  },
+  "execution": {
+    "os": "Debian GNU/Linux 13 (trixie)",
+    "arch": "x86_64",
+    "uid_gid": "65534:65534",
+    "network_isolation": "NOT_PROVEN; unshare -n unavailable in this container",
+    "runner": "Drive portable core tool-runner (Git blob b9f8620dfc86f5a11f265c9eaa125abe86521509), not current main source",
+    "runner_sha256": "d232a39e4ec99b745918f6ea7d206df488b9ffc3f37a5d11012fc9651c0a9c2e",
+    "prob_version": "1.16.1-final",
+    "java_version": "21.0.13+9",
+    "fixture_setup": "copied committed pos/neg/err files from read-only source into FT_TMP; all phases ran from writable temp",
+    "results": {
+      "setup": {
+        "exit": 0,
+        "duration_ms": 8,
+        "stdout_sha256": "d713f2a0376c14b23e2122428130f695785eaf0d71caf8a9cf1238366f30cc17"
+      },
+      "pos": {
+        "exit": 0,
+        "duration_ms": 2151,
+        "matched": "ALL OPERATIONS COVERED",
+        "stdout_sha256": "a500b6f84d21e05055c80565cdf4976a5a0bc8366ea5a8d156616b75118622dd"
+      },
+      "neg": {
+        "exit": 0,
+        "duration_ms": 1777,
+        "matched": "COUNTER EXAMPLE FOUND",
+        "stdout_sha256": "c847fded65cf46598b1fb4c3834bc8cb6ffec7f95dc612077be1dbefea2b5f30"
+      },
+      "err": {
+        "exit": 0,
+        "duration_ms": 1474,
+        "matched": "source: parse_error",
+        "stdout_sha256": "a37376a7131477b5829065209067075b59a4189e4f34a9a540e1d6a9574df068"
+      }
+    },
+    "receipt_tsv_sha256": "d16d2d4be1569e862fc653255bd63e94d916677943b4a221fae83bb75dd4df5f",
+    "receipt_verdict": "PASS"
+  },
+  "qualification": {
+    "native_execution": "SCOPED_ORIGINAL_PROB_1.16.1_POS_NEG_ERR_TECHNICAL_PASS",
+    "t3": "NOT_PROMOTED: Drive portable core runner differs from current main source and package meta uses legacy TOOL_TOOL_ID; network isolation not proven",
+    "t4": "NOT_GRANTED: ProB already has an existing native catalog adapter; current-main portable package/Runner compatibility must be rebuilt and independently reviewed",
+    "t5": "NOT_QUALIFIED",
+    "t6": "OPEN"
+  },
+  "next": [
+    "Run Node contract tests and exact-head Woodpecker CI.",
+    "Rebuild canonical ProB package metadata from current make_meta.py (TOOL_ID), after shared Runner PR #86 closes; regenerate the portable core from exact main.",
+    "Re-run ProB POS/NEG/ERR through exact current main Runner as UID 65534, read-only bundle, network NONE.",
+    "Independent review and update #48/#24; keep T5 separate."
+  ]
+}
