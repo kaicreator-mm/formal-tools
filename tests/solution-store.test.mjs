@@ -118,7 +118,7 @@ onSupported("G4 persisted candidate invalidates every source/oracle/model/tool/e
      const drift=await inspectStoredReplay({...request,
        current_provenance_json:encode({...f.provenance,[key]:value})});
      assert.equal(drift.status,"STALE",key);
-     assert.ok(drift.changed_fields.includes(key),key);
+     assert.deepEqual(drift.changed_fields,[key],key);
      assert.equal(drift.claim_result,"UNVERIFIED",key);
      assert.equal(drift.replay_allowed,false,key);
      assert.equal(drift.solution_promotable,false,key);
@@ -126,10 +126,14 @@ onSupported("G4 persisted candidate invalidates every source/oracle/model/tool/e
    const invalidSchema=await inspectStoredReplay({...request,
      current_provenance_json:encode({...f.provenance,schema:"forged/0.1"})});
    assert.equal(invalidSchema.status,"BLOCKED","invalid provenance schema must fail closed");
+   assert.equal(invalidSchema.claim_result,"UNVERIFIED");
+   assert.equal(invalidSchema.replay_allowed,false);
+   assert.equal(invalidSchema.solution_promotable,false);
    const unchanged=await inspectStoredReplay({...request,
      current_provenance_json:f.provenance_json});
    assert.equal(unchanged.status,"REPLAY_BLOCKED_UNQUALIFIED",
      "provenance probes must not mutate or promote the persisted candidate");
+   assert.equal(unchanged.claim_result,"UNVERIFIED");
    assert.equal(unchanged.replay_allowed,false);
    assert.equal(unchanged.solution_promotable,false);
  }finally{rmSync(dir,{recursive:true,force:true});}
