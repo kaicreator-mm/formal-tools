@@ -54,5 +54,45 @@
     "No #24 total ledger edits",
     "No Product/Release promotion",
     "No claim that prebuilt Java jar is a reproducible source build"
-  ]
+  ],
+  "drive_bundle_audit": {
+    "drive_file_id": "1zMJIekGb23rveSITIR1fJ5VdtGSSCgE1",
+    "drive_title": "tla-tlc-1.8.0-linux-x86_64.tar.zst",
+    "archive_size_bytes": 4218934,
+    "archive_sha256": "3fbc410808b4daf915d9c5ddf1500b67f65d0b97a7777b56f8d9c6cbc7573fd5",
+    "zstd_integrity": "PASS",
+    "tar_members": 5,
+    "tar_regular_files": 3,
+    "tar_directories": 2,
+    "tar_symlinks": 0,
+    "tar_special_files": 0,
+    "unsafe_paths": 0,
+    "embedded_jar": {
+      "size_bytes": 4510215,
+      "sha256": "e1f11b75c4b5bc4478ba0ac5cb6ae28e40a01b0016bc33e0aa97da22dfdbcd7f",
+      "sha1": "0b57675323babad8ab3815b1db9f30e75dac1cdb",
+      "manifest_build_revision": "d8fb231de4e4b5d02c1b2ed1ac759c086f694021",
+      "manifest_build_timestamp": "2026-11-06T22:23:57.662Z",
+      "tlc_help_version": "2026.11.06.222357"
+    },
+    "comparison_to_official_release": {
+      "expected_sha256": "7e53aa636dac8a3cb0533f343115c0548e03fc0ce5edc7739becf58d3d0fb84f",
+      "expected_size_bytes": 4510884,
+      "digest_match": false,
+      "size_match": false,
+      "disposition": "DRIVE_BUNDLE_IS_NOT_THE_PINNED_OFFICIAL_V1_8_0_ASSET; it contains a rolling/master build. Keep it quarantined from T1/T3 qualification and replace/rebuild from the pinned official release asset."
+    },
+    "qualification": "AUDIT_ONLY; does not invalidate the source-level immutable builder pin, but proves the existing Drive package bundle cannot be reused as official v1.8.0 build/repack evidence."
+  },
+  "current_main_sync": {
+    "main_sha": "19e349fcf96f8883be6a46c654046f1b0e6c66bd",
+    "sync_commit": "PENDING_COMMIT_SHA",
+    "changed_paths_expected": [
+      "docs/tool-portfolio/r20/TLA_TLC_SOURCE_PIN_FIXTURE_CONTRACT.json",
+      "portable/builders/tools/tla-tlc.sh",
+      "portable/verification/cases/tla-tlc/expect.sh",
+      "tests/tla-tlc-source-fixture-contract.test.mjs"
+    ],
+    "note": "The source PR is synced to current main. Existing Drive bundle audit is kept separate from the newly pinned official upstream asset."
+  }
 }

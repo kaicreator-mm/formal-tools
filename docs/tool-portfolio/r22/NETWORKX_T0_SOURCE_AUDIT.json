@@ -1,0 +1,146 @@
+{
+  "schema": "formal-tools/i24-tool-t0-source-audit/1.0",
+  "output_label": "FORMAL_TOOLS_I24_NETWORKX_T0_SOURCE_AUDIT_R22",
+  "repository": "kaicreator-mm/formal-tools",
+  "portfolio_issue": 24,
+  "tool_issue": 44,
+  "tool_id": "networkx",
+  "expected_version": "3.7",
+  "audit_date": "2026-11-15",
+  "current_main_sha": "56ca5ebb180433a7c391f640b607be8c2977cffd",
+  "upstream": {
+    "repository": "networkx/networkx",
+    "release_url": "https://github.com/networkx/networkx/releases/tag/networkx-3.7",
+    "release_tag": "networkx-3.7",
+    "release_published_at": "2026-09-21T16:46:13Z",
+    "annotated_tag_object": "c7845e90bc0c5b9f470b9a3695256bdbf3b38bd6",
+    "tag_target_commit": "49ca2290b80c1389eb4d8d8e49dcba73f8fec016",
+    "tag_signature": {
+      "verified": true,
+      "reason": "valid",
+      "verified_at": "2026-09-21T16:44:45Z",
+      "signer": "Jarrod Millman"
+    },
+    "commit_signature": {
+      "verified": true,
+      "reason": "valid",
+      "verified_at": "2026-09-21T16:44:24Z"
+    },
+    "version_file": {
+      "path": "networkx/__init__.py",
+      "blob": "645bb6cecfa06a33905f758efa29f2c7c04d99df",
+      "declared_version": "3.7"
+    },
+    "project_metadata": {
+      "path": "pyproject.toml",
+      "blob": "1ed9bd5c144c34a435dcd293d9381646246588b1",
+      "license": "BSD-3-Clause"
+    },
+    "license_file": {
+      "path": "LICENSE.txt",
+      "blob": "02547fc890c22287c5cacfc4ec6bfc384e6ce785",
+      "license": "BSD-3-Clause"
+    }
+  },
+  "package_archive": {
+    "drive_file_id": "1juU5Qkft0OnkHhdZ1hnrBS3IcuT4P7Fo",
+    "drive_name": "networkx-3.7-linux-x86_64.tar.zst",
+    "size_bytes": 3246378,
+    "sha256": "0f01a999cff09606ebe5cb9e773cc6fa45e0c38fd7ec2b8b6e25c102c796bdcb",
+    "sha256_manifest": {
+      "drive_file_id": "1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1",
+      "name": "SHA256SUMS",
+      "size_bytes": 4514,
+      "sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64",
+      "entry": "0f01a999cff09606ebe5cb9e773cc6fa45e0c38fd7ec2b8b6e25c102c796bdcb  tools/networkx-3.7-linux-x86_64.tar.zst"
+    },
+    "local_verification": {
+      "sha256_matches_manifest": true,
+      "zstd_test": "PASS",
+      "tar_members": 1298,
+      "top_level": [
+        "tools"
+      ],
+      "symlinks": 0,
+      "hardlinks": 0,
+      "special_files": 0,
+      "unsafe_path_candidates": 0
+    }
+  },
+  "packaged_metadata": {
+    "metadata_path": "tools/networkx/pylib/networkx-3.7.dist-info/METADATA",
+    "version": "3.7",
+    "license_expression": "BSD-3-Clause",
+    "requires_python": "!=3.14.1,>=3.12",
+    "meta_json_path": "tools/networkx/meta.json",
+    "meta_sh_path": "tools/networkx/meta.sh",
+    "upstream_url": "pypi:networkx",
+    "build_timestamp": "2026-11-10T22:34:37Z",
+    "builder_image": "ft-builder:deb13",
+    "target": {
+      "os": "debian-13",
+      "arch": "x86_64",
+      "glibc_max": "2.41"
+    },
+    "runtime_payload": "shared runtime: runtimes/python313-3.13.5-linux-x86_64.tar.zst",
+    "meta_sh_identifier": "TOOL_TOOL_ID=networkx"
+  },
+  "source_blob_matches": [
+    {
+      "path": "networkx/__init__.py",
+      "upstream_blob": "645bb6cecfa06a33905f758efa29f2c7c04d99df",
+      "archive_git_blob": "645bb6cecfa06a33905f758efa29f2c7c04d99df",
+      "match": true
+    },
+    {
+      "path": "networkx/algorithms/shortest_paths/generic.py",
+      "upstream_blob": "e9da3b21251e2cdcbe8b2c845f7960a50e76d1b8",
+      "archive_git_blob": "e9da3b21251e2cdcbe8b2c845f7960a50e76d1b8",
+      "match": true
+    },
+    {
+      "path": "networkx/algorithms/components/connected.py",
+      "upstream_blob": "903c4251ea98f94aed0da5d75a788880c03f889c",
+      "archive_git_blob": "903c4251ea98f94aed0da5d75a788880c03f889c",
+      "match": true
+    },
+    {
+      "path": "networkx/algorithms/centrality/betweenness.py",
+      "upstream_blob": "19bfdbf1faf3d4a8f7bdf9e5b550aedbf483374e",
+      "archive_git_blob": "19bfdbf1faf3d4a8f7bdf9e5b550aedbf483374e",
+      "match": true
+    },
+    {
+      "path": "networkx/algorithms/flow/maxflow.py",
+      "upstream_blob": "ac1ba5bf82549e319966a26244c8e3117eb6163c",
+      "archive_git_blob": "ac1ba5bf82549e319966a26244c8e3117eb6163c",
+      "match": true
+    },
+    {
+      "path": "networkx-3.7.dist-info/licenses/LICENSE.txt",
+      "upstream_blob": "02547fc890c22287c5cacfc4ec6bfc384e6ce785",
+      "archive_git_blob": "02547fc890c22287c5cacfc4ec6bfc384e6ce785",
+      "match": true
+    }
+  ],
+  "disposition": {
+    "source_version": "PASS_SCOPED",
+    "source_license": "PASS_SCOPED",
+    "archive_sha": "PASS_SCOPED_PRODUCER_MANIFEST_MATCH",
+    "full_t0": "NOT_ACCEPTED",
+    "t1": "NOT_ACCEPTED",
+    "t2": "REUSE_PRIOR_R3_SCOPED_ONLY",
+    "t3": "REUSE_PRIOR_R7_SCOPED_ONLY_NO_NEW_CLAIM",
+    "t4": "NOT_ACCEPTED",
+    "t5": "NOT_ACCEPTED",
+    "t6": "NOT_ACCEPTED"
+  },
+  "limitations": [
+    "Archive SHA is matched to the locally supplied Drive SHA256SUMS producer manifest; this is not a publisher signature or independent upstream attestation.",
+    "Six sampled source/license Git blobs match the signed upstream networkx-3.7 tag; the entire archive source tree has not been exhaustively blob-compared.",
+    "The package metadata does not pin the upstream source commit or builder source/recipe digest; build timestamp and builder image label are not reproducible-build evidence.",
+    "meta.sh uses legacy TOOL_TOOL_ID rather than the current main TOOL_ID convention; current-main T4 compatibility is not established.",
+    "The shared Python 3.13.5 runtime is a separate asset and its source/license/provenance must be assessed independently."
+  ],
+  "qualification_boundary": "This audit improves source/version/license and archive identity evidence only. It does not qualify reproducible build T1, current install T2, current-main T3/T4, business-semantic T5, maintenance T6, Product #11, or Release."
+}
