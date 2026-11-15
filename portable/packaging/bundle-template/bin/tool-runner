@@ -234,9 +234,10 @@ verify_one() {
 # nor PT_DYNAMIC is accepted as static. ET_DYN is never promoted by absence
 # of PT_INTERP; its PT_DYNAMIC table is scanned for DT_NEEDED and then sent
 # through the ordinary fail-closed ldd path.
-ft_is_static_elf() { # $1=file -> 0 proven static ET_EXEC, 1 known dynamic, 2 unsupported/ambiguous
-  local f="$1" class data etype entry phoff phent phnum file_size
-  local i off ptype load_seen=0 interp_seen=0 dynamic_seen=0
+ft_is_static_elf() { # $1=file -> 0 proven runnable x86_64 static ET_EXEC, 1 known dynamic, 2 unsupported/ambiguous
+  local f="$1" class data etype machine entry phoff phent phnum file_size
+  local i off ptype load_seen=0 interp_seen=0 dynamic_seen=0 exec_entry_seen=0
+  local pflags p_offset p_vaddr p_filesz p_memsz p_offset_num p_vaddr_num p_filesz_num p_memsz_num pflags_num load_end entry_num=0
   local dyn_offset=0 dyn_filesz=0 dyn_ent dyn_count j tag needed_seen=0 null_seen=0
   [ -f "$f" ] || return 2
   ft_has_elf_magic "$f" || return 2
@@ -244,9 +245,13 @@ ft_is_static_elf() { # $1=file -> 0 proven static ET_EXEC, 1 known dynamic, 2 un
   class=$(od -An -j4 -N1 -t x1 -- "$f" 2>/dev/null | tr -d ' \n')
   data=$(od -An -j5 -N1 -t x1 -- "$f" 2>/dev/null | tr -d ' \n')
   etype=$(od -An -j16 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
-  case "$class$data$etype" in ''|*[!0-9a-f]*) return 2 ;; esac
-  class=$((16#$class)); data=$((16#$data)); etype=$((16#$etype))
-  [ "$data" -eq 1 ] || return 2 # little-endian only (bundle target: x86_64)
+  machine=$(od -An -j18 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
+  case "$class$data$etype$machine" in ''|*[!0-9a-f]*) return 2 ;; esac
+  class=$((16#$class)); data=$((16#$data)); etype=$((16#$etype)); machine=$((16#$machine))
+  [ "$data" -eq 1 ] || return 2 # little-endian only
+  # The bundle host contract is Linux x86_64. Other ELF machines/classes are
+  # delegated to ldd (and fail closed if the host cannot inspect them).
+  [ "$class" -eq 2 ] && [ "$machine" -eq 62 ] || return 2 # ELF64 / EM_X86_64
   case "$etype" in 2|3) ;; *) return 2 ;; esac # ET_EXEC or ET_DYN only
 
   case "$class" in
@@ -267,8 +272,11 @@ ft_is_static_elf() { # $1=file -> 0 proven static ET_EXEC, 1 known dynamic, 2 un
     *) return 2 ;;
   esac
   case "$entry$phoff$phent$phnum" in ''|*[!0-9a-f]*) return 2 ;; esac
+  # Reject addresses that cannot be represented safely by signed shell arithmetic.
+  case "$entry" in [0-7]*) ;; *) return 2 ;; esac
+  entry_num=$((16#$entry))
   # ET_DYN shared objects legitimately have e_entry=0; only the final
-  # ET_EXEC static verdict requires a nonzero executable entry point.
+  # ET_EXEC static verdict requires an executable file-backed load containing it.
   phoff=$((16#$phoff)); phent=$((16#$phent)); phnum=$((16#$phnum))
   [ "$phnum" -gt 0 ] && [ "$phnum" -le 4096 ] || return 2
   if [ "$class" -eq 2 ]; then [ "$phent" -eq 56 ] || return 2
@@ -285,7 +293,32 @@ ft_is_static_elf() { # $1=file -> 0 proven static ET_EXEC, 1 known dynamic, 2 un
     ptype=$(od -An -j"$off" -N4 -t x4 -- "$f" 2>/dev/null | tr -d ' \n')
     case "$ptype" in ''|*[!0-9a-f]*) return 2 ;; esac
     case "$ptype" in
-      00000001) load_seen=1 ;; # PT_LOAD
+      00000001)
+        load_seen=1
+        # A PT_LOAD is not proof of executable code: require PF_X and prove
+        # that e_entry lies inside its file-backed virtual-address range.
+        pflags=$(od -An -j"$((off + 4))" -N4 -t x4 -- "$f" 2>/dev/null | tr -d ' \n')
+        p_offset=$(od -An -j"$((off + 8))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+        p_vaddr=$(od -An -j"$((off + 16))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+        p_filesz=$(od -An -j"$((off + 32))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+        p_memsz=$(od -An -j"$((off + 40))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+        case "$pflags$p_offset$p_vaddr$p_filesz$p_memsz" in ''|*[!0-9a-f]*) return 2 ;; esac
+        case "$p_offset" in [0-7]*) ;; *) return 2 ;; esac
+        case "$p_vaddr" in [0-7]*) ;; *) return 2 ;; esac
+        case "$p_filesz" in [0-7]*) ;; *) return 2 ;; esac
+        case "$p_memsz" in [0-7]*) ;; *) return 2 ;; esac
+        pflags_num=$((16#$pflags)); p_offset_num=$((16#$p_offset))
+        p_vaddr_num=$((16#$p_vaddr)); p_filesz_num=$((16#$p_filesz)); p_memsz_num=$((16#$p_memsz))
+        [ "$p_filesz_num" -le "$p_memsz_num" ] || return 2
+        [ "$p_offset_num" -le "$file_size" ] || return 2
+        [ "$p_filesz_num" -le $((file_size - p_offset_num)) ] || return 2
+        [ "$p_vaddr_num" -le $((9223372036854775807 - p_filesz_num)) ] || return 2
+        load_end=$((p_vaddr_num + p_filesz_num))
+        if [ $((pflags_num & 1)) -ne 0 ] && [ "$p_filesz_num" -gt 0 ] \
+          && [ "$entry_num" -ge "$p_vaddr_num" ] && [ "$entry_num" -lt "$load_end" ]; then
+          exec_entry_seen=1
+        fi
+        ;; # PT_LOAD
       00000002)
         [ "$dynamic_seen" -eq 0 ] || return 2 # ambiguous duplicate PT_DYNAMIC
         dynamic_seen=1
@@ -342,10 +375,10 @@ ft_is_static_elf() { # $1=file -> 0 proven static ET_EXEC, 1 known dynamic, 2 un
   fi
 
   # ET_DYN may be a shared object or PIE even without PT_INTERP. Never infer
-  # static linkage from that combination; only a dependency-free ET_EXEC can
-  # use the static shortcut.
+  # static linkage from that combination; only an x86_64 ET_EXEC with a real
+  # executable PT_LOAD containing its file-backed entry point can use shortcut.
   [ "$etype" -eq 2 ] || return 2
-  case "$entry" in *[1-9a-f]*) ;; *) return 2 ;; esac # ET_EXEC needs a nonzero entry point
+  [ "$exec_entry_seen" -eq 1 ] || return 2
   return 0
 }
 ft_ldd_output_valid() { # captured ldd output -> rc 0 for recognized report
