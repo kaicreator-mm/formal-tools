@@ -72,8 +72,9 @@
     "expect_blob": "a73bd895a41ace7dba5d5b1768da091b5abeda30",
     "source_test_blob": "3bddfb70cadb45b0d9cc5977b398102d12b0cbe0",
     "fixture_test_blob": "506c93d34061a77bd9b64c23e0cd2b166742a06c",
-    "local_tests": "7/7 PASS (pending exact-head CI)",
-    "shell_syntax": "bash -n PASS"
+    "local_tests": "7/7 PASS",
+    "shell_syntax": "bash -n PASS",
+    "shim_replay": "PASS_SCOPED writer-side reconstructed generated-shim replay; bundled Java21 selected with host java shadowed"
   },
   "current_main": {
     "runner_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
@@ -101,6 +102,60 @@
   "limitations": [
     "Official .tar.gz bytes not fetched; sidecar SHA512 is not a PGP signature verification.",
     "No T1 source build or current Runner/CLI/MCP/SDK route.",
-    "Full third-party license inventory and T5/T6/Product/Release remain open."
-  ]
+    "Full third-party license inventory and T5/T6/Product/Release remain open.",
+    "Bundled Java21 shim replay validates the generated run shim directly only; no current tool-runner run or full CLI/MCP/SDK T4 route."
+  ],
+  "bundled_java_shim_replay": {
+    "status": "PASS_SCOPED_WRITER_SIDE_REPLAY",
+    "route": "Reconstructed generated tools/apache-jena/run shim executed directly; not tool-runner run and not full T4",
+    "execution_uid_gid": "65534:65534",
+    "host": "Debian GNU/Linux 13 x86_64; Linux 6.18; Node 22.16.0",
+    "bundled_java_runtime": {
+      "filename": "java21-21.0.13.9-linux-x86_64.tar.zst",
+      "size_bytes": 32262489,
+      "sha256": "7e9b1bfdc120d17a4af2eb2baaf4b3772b2c7a2114248ed1a5967af89c5387ca",
+      "shared_manifest_file_id": "1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1",
+      "shared_manifest_sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64",
+      "manifest_match": true
+    },
+    "system_java_shadowed": true,
+    "incoming_path": "/tmp/jena-nojava-bin:/usr/bin:/bin (fake java stub precedes system java)",
+    "initial_java_home": "UNSET",
+    "shim_exports": [
+      "JAVA_HOME=$FT_ROOT/runtimes/java21",
+      "PATH=$JAVA_HOME/bin:$TOOL_DIR/bin:$PATH",
+      "JENA_HOME=$TOOL_DIR"
+    ],
+    "cases": {
+      "version": {
+        "exit": 0,
+        "stdout": "Apache Jena RIOT version 5.5.0\n",
+        "stderr": "",
+        "stdout_sha256": "09a3f7ac4842cf5be527ca5b315b82bdc896444f570c92bbdab7d8a6b1e333fc",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "pos": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "neg": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "15:07:55 ERROR riot            :: [line: 3, col: 5 ] Undefined prefix: rdfs\n",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "4bbc94b41d0c93af0c5349c20e88b974c52f4ba54540e76a3441482a6322f72e"
+      },
+      "err": {
+        "exit": 2,
+        "stdout": "",
+        "stderr": "15:07:56 ERROR riot            :: Not found: file:///mnt/data/jena-r57-bundle/tests/apache-jena/does-not-exist.ttl\norg.apache.jena.riot.RiotException: Not found: file:///mnt/data/jena-r57-bundle/tests/apache-jena/does-not-exist.ttl\n\tat riotcmd.ErrorHandlerCLI.error(ErrorHandlerCLI.java:65)\n\tat riotcmd.CmdLangParse.parseRIOT(CmdLangParse.java:399)\n\tat riotcmd.CmdLangParse.parseFile(CmdLangParse.java:337)\n\tat riotcmd.CmdLangParse.exec$(CmdLangParse.java:234)\n\tat riotcmd.CmdLangParse.exec(CmdLangParse.java:174)\n\tat org.apache.jena.cmd.CmdMain.mainMethod(CmdMain.java:86)\n\tat org.apache.jena.cmd.CmdMain.mainRun(CmdMain.java:55)\n\tat org.apache.jena.cmd.CmdMain.mainRun(CmdMain.java:43)\n\tat riotcmd.riot.main(riot.java:29)\n",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "2cd02db5150c2a90668f49e425f6fa355fd0239df51d6731e461cd788855d6bb"
+      }
+    },
+    "interpretation": "The shim-selected bundled Java 21 runtime is usable when host java is shadowed by a failing stub; version and native POS/NEG/ERR outcomes are correct. This validates the Java environment setup in the generated shim only. Current tool-runner run, metadata, CLI/MCP/SDK integration remain untested and T4 is not granted."
+  }
 }
