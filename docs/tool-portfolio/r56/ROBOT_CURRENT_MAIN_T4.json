@@ -1,0 +1,256 @@
+{
+  "schema": "formal-tools/robot-current-main-t4/0.1",
+  "record_type": "technical_replay_not_qualification",
+  "output_label": "FORMAL_TOOLS_I24_UNIFIED_PARALLEL_DELIVERY",
+  "worker_id": "CHATGPT_AUTO_WRITER_ROBOT_R56_CURRENT_MAIN_T4_20261115",
+  "issue": 51,
+  "baseline_main": "d996d168812f51d131b3f3f9c525cc1bd161d087",
+  "tool": {
+    "id": "robot",
+    "expected_version": "1.9.11",
+    "capability_ids": [
+      "ontology.processing"
+    ],
+    "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY"
+  },
+  "source_blobs": {
+    "packages/runner/js/cli.mjs": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
+    "packages/runner/js/sdk.mjs": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+    "packages/runner/js/mcp.mjs": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+    "packages/runner/js/tool-portfolio-t4.mjs": "922a7c208beaa0e48346403a29ec2d927189319f",
+    "packages/runner/js/native.mjs": "1af7a7db7523985f810e545860000c5d745de0b5",
+    "packages/runner/js/native-catalog.mjs": "02f628947be3e5c270d802be150ab220e14fc2b8",
+    "packages/runner/js/tool-manager.mjs": "a8e547718b8242c9d27f9e906b1c1ebaa2d80de6",
+    "packages/runner/js/tool-workspace.mjs": "354809f169dac5b1fef31e64eb3aa7965ea0b88f",
+    "packages/runner/js/artifact-collector.mjs": "8881dcb65f97f74036ad90e2ca01a600c2daaec8",
+    "packages/runner/js/tool-result.mjs": "a2c61c50658fc3d7e578ffbf7ee018f707e15841",
+    "packages/core/src/finite.mjs": "c717cb3b2eb4d13422fbdfb859aa3fcceee3851a",
+    "registry/PROBLEM_CAPABILITIES.json": "faa89997c3f7c8c71da0a69aa90e8ff37461cde0",
+    "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+    "portable/packaging/bundle-template/bin/tool-runner": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "portable/builders/make_meta.py": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+    "portable/builders/tools/robot.sh": "9d3b0c3993c6d3ab5198627de7a7f5492b1dc636"
+  },
+  "assets": {
+    "manifest": {
+      "drive_file_id": "1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1",
+      "sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64"
+    },
+    "robot_archive": {
+      "drive_file_id": "1y2vjymKixthdBdnv-QkMCf2Dl_CWdfl4",
+      "manifest_path": "tools/robot-1.9.11-linux-x86_64.tar.zst",
+      "size_bytes": 82718720,
+      "sha256": "14c2680ededcccaa47edf7b793d4625c3b18a312cc91ee1ffb4757c771b7c23b"
+    },
+    "java_archive": {
+      "drive_file_id": "1SLlkltuIQ3p6-ougFiuet9qEIZRB0Cc5",
+      "manifest_path": "runtimes/java21-21.0.13.9-linux-x86_64.tar.zst",
+      "size_bytes": 32262489,
+      "sha256": "7e9b1bfdc120d17a4af2eb2baaf4b3772b2c7a2114248ed1a5967af89c5387ca"
+    },
+    "robot_jar": {
+      "size_bytes": 82708624,
+      "sha256": "53cd275c8e4c0dad1fc2c1c34174876795cd7d6b6926e1444adcbb0cb3c7ab26"
+    },
+    "robot_run_shim_sha256": "691b2cc23fb07cdcdb151801bacc32ef33aee9cd973788915341884b1fc609ee",
+    "java_binary_sha256": "7afc28801f744050aeba646b20e7314265279f76f9d0273b21a2b66411e1bf6d"
+  },
+  "extraction": {
+    "host": "Debian GNU/Linux 13 x86_64",
+    "uid": 65534,
+    "gid": 65534,
+    "account": "nobody",
+    "robot_tar_preflight": {
+      "members": 5,
+      "directories": 1,
+      "regular_files": 4,
+      "symlinks": 0,
+      "hardlinks": 0,
+      "special_files": 0,
+      "expanded_regular_bytes": 82709558,
+      "result": "PASS"
+    },
+    "java_tar_preflight": {
+      "members": 320,
+      "directories": 63,
+      "regular_files": 112,
+      "symlinks": 145,
+      "special_files": 0,
+      "expanded_regular_bytes": 165569769,
+      "symlink_targets": "relative_and_contained",
+      "result": "PASS"
+    },
+    "java_version": "openjdk version \"21.0.13\" 2026-10-20 LTS",
+    "java_runtime": "OpenJDK Runtime Environment Temurin-21.0.13+9"
+  },
+  "metadata": {
+    "generator_blob": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+    "generated_for_replay_not_full_rebuild": true,
+    "tool_id": "robot",
+    "version": "1.9.11",
+    "kind": "jar",
+    "meta_json_sha256": "7d344284b6612c677102ed4b9ad47785b789c8471b98d2f1c5e0fe819c0b1efb",
+    "meta_sh_sha256": "721e6060ad3797f0daf924bceb3cac02ba0a441a13555cb31f083b90d869b7c5",
+    "version_probe": {
+      "command": "tools/robot/run --version",
+      "exit_code": 0,
+      "stdout": "ROBOT version 1.9.11\n",
+      "stderr": ""
+    }
+  },
+  "contract_repair": {
+    "previous_blob": "a449d3ed3d857423c721478a0f5542aebfc23e84",
+    "new_blob": "1ae53df4a37965157c479919b6dd832cb373ebac",
+    "new_sha256": "fa602c77bb46b509d27d2151e7144e0fb09fffb45176e767087cef490e6b1aa9",
+    "findings": [
+      "NEG and ERR previously accepted any process exit code (*)",
+      "NEG and ERR regexes admitted generic Exception/error text rather than the observed typed outcomes",
+      "POS only matched the Runner's PHASE_DONE marker and did not require the reasoned output artifact"
+    ],
+    "changes": [
+      "POS now runs the fixed reason command and requires a non-empty reasoned.ttl containing ex:alice",
+      "NEG pins exit 1 and matches 'The ontology is inconsistent'",
+      "ERR pins exit 1 and matches 'INVALID ONTOLOGY FILE ERROR'"
+    ],
+    "test_path": "tests/robot-portfolio-contract.test.mjs",
+    "test_blob": "1c03723c944074776de55b19533bf203c0fbad60",
+    "test_sha256": "aca9a0aa2a09048706f19a9ba0438ba6be412c7acf840ab10d5c0518700956c2",
+    "local_test": {
+      "node": "v22.16.0",
+      "command": "node --test tests/robot-portfolio-contract.test.mjs",
+      "passed": 2,
+      "failed": 0
+    }
+  },
+  "current_main_runner": {
+    "source_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "file_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a",
+    "command": "bin/tool-runner verify robot",
+    "exit_code": 0,
+    "verdict": "PASS",
+    "receipt_sha256": "adb674dbfd92868100174ccd09ea1817bd790059558d107c8add3686f0c42c0c",
+    "cases": [
+      {
+        "phase": "pos",
+        "exit_code": 0,
+        "duration_ms": 1295,
+        "matched": true,
+        "exit_contract_matched": true,
+        "label": "CONSISTENT",
+        "log": "ROBOT_REASONED_OUTPUT_OK\n\nPHASE_DONE phase=pos rc=0\n"
+      },
+      {
+        "phase": "neg",
+        "exit_code": 1,
+        "duration_ms": 885,
+        "matched": true,
+        "exit_contract_matched": true,
+        "label": "INCONSISTENT",
+        "log": "2026-11-15 14:21:57,820 ERROR org.obolibrary.robot.ReasonerHelper - The ontology is inconsistent. TIP: use a tool like Protege to find explanations\n\nPHASE_DONE phase=neg rc=1\n"
+      },
+      {
+        "phase": "err",
+        "exit_code": 1,
+        "duration_ms": 703,
+        "matched": true,
+        "exit_contract_matched": true,
+        "label": "ERROR",
+        "log": "INVALID ONTOLOGY FILE ERROR Could not load a valid ontology from file: err.ttl\nFor details see: http://robot.obolibrary.org/errors#invalid-ontology-file-error\nUse the -vvv option to see the stack trace.\nUse the --help option to see usage information.\n\nPHASE_DONE phase=err rc=1\n"
+      }
+    ]
+  },
+  "cli": {
+    "source_blob": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
+    "node": "v22.16.0",
+    "inspect": "FOUND_PINNED_NOT_EXECUTED",
+    "doctor": {
+      "status": "DOCTOR_EXECUTED_NOT_T3",
+      "exit_code": 0
+    },
+    "verify": {
+      "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "process_exit_code": 0,
+      "receipt_sha256": "5b3ba0d62ee40225d63f5f860d3e25557619719108c557392a021748b010f623",
+      "stdout_sha256": "1d020fc1b500d3edaff73eac4dbd83440c299432ed39b978b5c3c7522f83859a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "cases": [
+        {
+          "phase": "pos",
+          "exit_code": 0,
+          "matched": true,
+          "exit_contract_matched": true
+        },
+        {
+          "phase": "neg",
+          "exit_code": 1,
+          "matched": true,
+          "exit_contract_matched": true
+        },
+        {
+          "phase": "err",
+          "exit_code": 1,
+          "matched": true,
+          "exit_contract_matched": true
+        }
+      ]
+    }
+  },
+  "sdk": {
+    "source_blob": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+    "node": "v22.16.0",
+    "inspect": "FOUND_PINNED_NOT_EXECUTED",
+    "doctor": {
+      "status": "DOCTOR_EXECUTED_NOT_T3",
+      "exit_code": 0
+    },
+    "verify": {
+      "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "process_exit_code": 0,
+      "receipt_sha256": "6da4459ce884b73df20b50a3bc37f8ad07d5f59a171684bee85cb19055b6c38e",
+      "stdout_sha256": "5915db8503f1de0e0301a277bfd6bcba567744a04960e9c41964f74793b87c6b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "cases": [
+        {
+          "phase": "pos",
+          "exit_code": 0,
+          "matched": true,
+          "exit_contract_matched": true
+        },
+        {
+          "phase": "neg",
+          "exit_code": 1,
+          "matched": true,
+          "exit_contract_matched": true
+        },
+        {
+          "phase": "err",
+          "exit_code": 1,
+          "matched": true,
+          "exit_contract_matched": true
+        }
+      ]
+    }
+  },
+  "mcp": {
+    "source_blob": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+    "status": "NOT_RUN_DEPENDENCY_MISSING",
+    "dependencies": {
+      "@modelcontextprotocol/server": "^2.0.0",
+      "zod": "^4.0.0"
+    },
+    "probe_exit_code": 1,
+    "error": "ERR_MODULE_NOT_FOUND: Cannot find package '@modelcontextprotocol/server'",
+    "npm_cache": "no matching @modelcontextprotocol/server or zod packages"
+  },
+  "qualification": {
+    "T0": "ARCHIVE_SHA256_MATCHES_DRIVE_SHA256SUMS_ENTRY; source/license scope not re-reviewed",
+    "T1": "NOT_QUALIFIED_FULL_REPRODUCIBLE_BUILD_NOT_RUN",
+    "T2": "NON_ROOT_SAFE_EXTRACTION_REPLAY_PASS_SCOPED",
+    "T3": "HISTORICAL_R3_SCOPED_RECEIPT_REUSED; this round repeated POS/NEG/ERR observations but grants no new independent qualification",
+    "T4": "PARTIAL_TECHNICAL_EXECUTION_UNREVIEWED; current-main Runner+CLI+SDK pass; MCP not run because required npm dependencies are absent",
+    "T5": "NOT_QUALIFIED_NO_DOMAIN_CASE_OR_INDEPENDENT_ORACLE",
+    "T6": "OPEN_NO_MAINTENANCE_UPGRADE_OR_REVALIDATION_JOB",
+    "Product": "NOT_GRANTED",
+    "Release": "NOT_GRANTED"
+  }
+}
