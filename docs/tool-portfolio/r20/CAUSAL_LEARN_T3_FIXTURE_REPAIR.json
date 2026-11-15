@@ -19,7 +19,7 @@
       "portable/verification/cases/causal-learn/err.py": "bd7ab23b997d876ac2da6d9e6fb92c89017768dc",
       "portable/verification/cases/causal-learn/pos.py": "bb65d4439b8209cf84c15097d66ad05210f5a40a"
     },
-    "contract_test_blob": "c88311d2c1c3ecccee9613c33ea9a7cc03441704",
+    "contract_test_blob": "821e929eb216bae4d1ba5811bb7f7f02b5d18f20",
     "reviewed_head_before_r22": "d658e74a6a2164c5e8ad9615adbcf2d00401e470",
     "rework_base_main_sha": "b1cecc5937c9f3a6b6a5cd70f480d32ce61019d9",
     "review_findings_repair": {
@@ -88,13 +88,19 @@
       "node_contract": {
         "status": "PASS",
         "passed": 1,
-        "failed": 0
+        "failed": 0,
+        "test_blob": "c88311d2c1c3ecccee9613c33ea9a7cc03441704"
       },
       "raw_artifacts": "NOT_COMMITTED; per-case stdout/stderr and aggregate receipt bytes are not available from the cited review comment, so no raw log SHA-256 is asserted or independently recomputed."
     },
     "canonical_runtime": "NOT_RUN; 294346075-byte Python 3.13.5 archive exceeds the Drive connector's 268435456-byte download ceiling.",
     "current_main_runner": "NOT_RUN; the host replay used the archived portable-core Runner that predates current main.",
-    "next": "Re-execute exact current fixture Blobs with canonical portable Python313 and current-main Runner before any T3 promotion."
+    "next": "Re-execute exact current fixture Blobs with canonical portable Python313 and current-main Runner before any T3 promotion.",
+    "current_static_contract_test": {
+      "blob": "821e929eb216bae4d1ba5811bb7f7f02b5d18f20",
+      "status": "EXACT_SOURCE_ASSERTION_VERIFIED; CURRENT_HEAD_WOODPECKER_CI_PENDING",
+      "note": "This is the current source contract test Blob. The historical R23 host replay executed the older test Blob recorded separately under host_substitute_replay.node_contract.test_blob."
+    }
   },
   "canonical_runtime": {
     "file": "python313-3.13.5-linux-x86_64.tar.zst",
