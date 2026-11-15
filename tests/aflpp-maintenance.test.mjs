@@ -206,7 +206,7 @@ test("current state reader rejects symlinked pinned source files", async () => {
   const root = await mkdtemp(join(tmpdir(), "aflpp-maintenance-link-"));
   try {
     const outside = join(root, "outside.sh");
-    await writeFile(outside, "FT_TOOL_VERSION=5.03c\\n");
+    await writeFile(outside, "FT_TOOL_VERSION=5.03c\n");
     const builder = join(root, base.version_source);
     await mkdir(builder.slice(0, builder.lastIndexOf("/")), { recursive: true });
     await symlink(outside, builder);
@@ -226,7 +226,7 @@ test("external asset pins preserve all four fields and cause UNKNOWN when missin
     for (const path of Object.keys(base.source_files)) {
       const full = join(root, path);
       await mkdir(full.slice(0, full.lastIndexOf("/")), { recursive: true });
-      const content = path === base.version_source ? "FT_TOOL_VERSION=5.03c\\n" : "fixture:" + path + "\\n";
+      const content = path === base.version_source ? "FT_TOOL_VERSION=5.03c\\n" : "fixture:" + path + "\n";
       await writeFile(full, content);
       base.source_files[path].git_blob_sha1 = gitBlobSha1(Buffer.from(content));
     }
