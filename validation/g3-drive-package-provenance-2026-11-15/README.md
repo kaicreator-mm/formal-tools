@@ -33,12 +33,14 @@ Z3 version output is byte-identical to the pinned version-output digest in NATIV
 
 ## Source/model/oracle bindings
 
-Current main's source files match the exact source pins embedded in NATIVE_PAIR:
+The following three source Git Blob pins are embedded in NATIVE_PAIR and match the exact current-main source files:
 - Frozen fixture `benchmarks/llm-methods/r0/spec-fidelity-cases.json`: Git Blob `33952ec8f460f022e750f91543c7dafbae35c9e2`.
 - Native matrix generator `benchmarks/llm-methods/g3/ads-native-matrix.mjs`: Git Blob `ce3a2dc2dde0ce7805c610e1caf4dfa524904e2e`.
 - Frozen replay driver `benchmarks/llm-methods/g3/ads-native-replay.mjs`: Git Blob `9794ec4b62d3f5e9c22fa1f45ee3999565aa9a68`.
-- NATIVE_PAIR receipt: Git Blob `cee8f188cce20b042df505f824cccae64d2c9b1c`.
-- Independent finite verifier source: Git Blob `2213cf7f3025a32923625e9276d5dc42c7c1db42`.
+
+The following are supplemental Git identities recorded by this reconciliation, not source pins embedded in NATIVE_PAIR:
+- NATIVE_PAIR receipt itself: Git Blob `cee8f188cce20b042df505f824cccae64d2c9b1c`. This identifies the receipt object externally; a Git object cannot embed its own final Blob ID.
+- Independent finite verifier source `benchmarks/llm-methods/g3/independent-finite-verifier.mjs`: Git Blob `2213cf7f3025a32923625e9276d5dc42c7c1db42`. This is a supplemental current-main source identity recorded in RECONCILIATION.json and is not a field in NATIVE_PAIR.
 
 The fixture itself explicitly states `SOURCE_AUTHORED_NOT_INDEPENDENTLY_AUDITED`. Hash binding proves which bytes were used; it does not establish professional semantic truth. The G4 candidate's model/oracle content digests remain engineering provenance values only.
 
