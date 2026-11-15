@@ -1,0 +1,49 @@
+{
+  "schema": "formal-tools/lean4-current-main-runner-recheck/1.0",
+  "output_label": "FORMAL_TOOLS_I24_UNIFIED_PARALLEL_DELIVERY",
+  "status": "IN_PROGRESS",
+  "portfolio_issue": 24,
+  "tool_issue": 41,
+  "tool": "lean4",
+  "expected_version": "4.35.0",
+  "worker_id": "I24_AUTO_THIS_CONVERSATION_LEAN4_R22",
+  "branch": "feat/i24-lean4-current-runner-r22",
+  "base_main_sha": "9a997e980c4f3202620f189eb9c935b941b57f1e",
+  "runner": {
+    "path": "portable/packaging/bundle-template/bin/tool-runner",
+    "git_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd"
+  },
+  "source": {
+    "archive": "lean4-4.35.0-linux-x86_64.tar.zst",
+    "expected_sha256": "671b172f8dacc4a7fd405852a2286e7657ec8c4414d301a73ece6f98f39bde62",
+    "bytes": 567187865,
+    "transport": "five independently sized Drive chunks; original R19 byte/hash evidence exists"
+  },
+  "scope": {
+    "only": "Current-main portable Runner fixed Lean4 verify POS/NEG/ERR path",
+    "host": "Debian 13 x86_64",
+    "identity": "non-root UID/GID 65534",
+    "bundle": "read-only",
+    "network": "attempt namespace isolation; report unsupported isolation without promotion",
+    "limits": "bounded time/memory/output"
+  },
+  "dependencies": {
+    "shared_runner_pr": 86,
+    "blocking_question": "Does the PR #86 ELF doctor false-static P1 affect the verify path? Do not edit shared Runner."
+  },
+  "exclusions": [
+    "No shared Runner/Registry/CLI/MCP/SDK edits",
+    "No #24 total ledger edits",
+    "No T4/T5/Product/Release promotion"
+  ],
+  "acceptance": [
+    "Reassembled archive SHA matches exact source manifest",
+    "Safe tar preflight has no path traversal or escaping/absolute links",
+    "Current-main Runner blob is exact",
+    "Actual Lean4 version 4.35.0",
+    "POS/NEG/ERR typed outcomes and exact exits captured",
+    "All execution non-root against read-only package",
+    "Exact HEAD and CI recorded"
+  ],
+  "note": "This is a work-in-progress task claim, not an acceptance or PASS record."
+}
