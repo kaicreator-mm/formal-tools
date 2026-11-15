@@ -39,14 +39,16 @@ ft_tool_build() {
 
   ( cd "$src" && python3 build.py release >>"$FT_LOG" 2>&1 ) || \
     ft::die "downward build.py failed"
-
-  local revision_header="$src/builds/release/search/git_revision.h"
-  [ -f "$revision_header" ] || ft::die "Fast Downward git_revision.h missing after build"
-  grep -Fq "$FT_UPSTREAM_COMMIT" "$revision_header" || \
-    ft::die "Fast Downward binary source revision is not pinned to $FT_UPSTREAM_COMMIT"
+  git -C "$src" diff --quiet "$FT_UPSTREAM_COMMIT" -- || \
+    ft::die "Fast Downward build modified tracked upstream source files"
 
   [ -x "$src/builds/release/bin/downward" ] || ft::die "downward binary missing after build"
   cp -a "$src" "$FT_TOOL_DIR/payload"
+  # The exact Git source identity is retained in a sidecar; do not ship the .git database.
+  rm -rf "$FT_TOOL_DIR/payload/.git"
+  cat > "$FT_TOOL_DIR/payload/.formal-tools-source.json" <<EOF
+{"schema":"formal-tools/upstream-source/1.0","repository":"aibasel/downward","tag":"$FT_UPSTREAM_TAG","commit":"$commit","tree":"$tree","version":"$FT_TOOL_VERSION"}
+EOF
 
   ft::make_shim 'export PATH="$TOOL_DIR/payload/builds/release/bin:$PATH"
 exec "$FT_ROOT/runtimes/python313/bin/python3.13" -s "$TOOL_DIR/payload/fast-downward.py" --build=release "$@"'
