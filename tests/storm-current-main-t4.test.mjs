@@ -1,6 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
@@ -9,36 +13,45 @@ const fixture = await readFile(new URL("../portable/verification/cases/storm/exp
 const model = await readFile(new URL("../portable/verification/cases/storm/pos.pm", import.meta.url), "utf8");
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
+const stormExpectKeys = [
+  "EXPECT_TIMEOUT",
+  "EXPECT_POS_ARGS", "EXPECT_POS_EXIT", "EXPECT_POS_REGEX", "EXPECT_POS_LABEL",
+  "EXPECT_NEG_ARGS", "EXPECT_NEG_EXIT", "EXPECT_NEG_REGEX", "EXPECT_NEG_LABEL",
+  "EXPECT_ERR_VIA", "EXPECT_ERR_ARGS", "EXPECT_ERR_EXIT", "EXPECT_ERR_REGEX", "EXPECT_ERR_LABEL"
+];
+const requiredStormExpectKeys = [
+  "EXPECT_POS_ARGS", "EXPECT_POS_EXIT", "EXPECT_POS_REGEX", "EXPECT_POS_LABEL",
+  "EXPECT_NEG_ARGS", "EXPECT_NEG_EXIT", "EXPECT_NEG_REGEX", "EXPECT_NEG_LABEL",
+  "EXPECT_ERR_ARGS", "EXPECT_ERR_EXIT", "EXPECT_ERR_REGEX", "EXPECT_ERR_LABEL"
+];
+
 function uniqueNumericExitAssignments(source) {
   const values = {};
-  const lines = source.split(/\r?\n/);
-  // expect.sh is sourced by tool-runner. Restrict every executable line to
-  // a simple EXPECT_* assignment so readonly/declare/typeset/local or shell
-  // commands cannot override values after this static contract check.
+  const assignments = new Map();
+  const lines = source.split(/\\r?\\n/);
+  // This is the exact Storm fixture contract. Timeout and ERR_VIA retain
+  // their Runner-supported optional semantics; every other phase key is required.
   for (const [index, line] of lines.entries()) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith("#")) continue;
-    const assignment = line.match(/^[\t ]*(?:export[\t ]+)?(EXPECT_[A-Z0-9_]+)=(.*)$/);
+    const assignment = line.match(/^[\\t ]*(?:export[\\t ]+)?(EXPECT_[A-Z0-9_]+)=(.*)$/);
     assert.ok(assignment, "unsupported shell command in sourced expect.sh at line " + (index + 1));
-    const raw = assignment[2];
+    const [, name, raw] = assignment;
+    assert.ok(stormExpectKeys.includes(name), "unknown Storm EXPECT key " + name + " at line " + (index + 1));
+    assert.equal(assignments.has(name), false, "duplicate EXPECT assignment " + name + " at line " + (index + 1));
     const singleQuoted = raw.length >= 2 && raw.startsWith("'") && raw.endsWith("'") && !raw.slice(1, -1).includes("'");
-    const doubleQuoted = raw.length >= 2 && raw.startsWith('"') && raw.endsWith('"') && !/["$\x60\\]/.test(raw.slice(1, -1));
+    const doubleQuoted = raw.length >= 2 && raw.startsWith('"') && raw.endsWith('"') && !/["$\\x60\\\\]/.test(raw.slice(1, -1));
     const unquotedLiteral = /^[A-Za-z0-9_./:*?+-]+$/.test(raw);
     assert.ok(singleQuoted || doubleQuoted || unquotedLiteral,
       "unsafe shell assignment value in sourced expect.sh at line " + (index + 1));
+    assignments.set(name, { raw, line: index + 1 });
+  }
+  for (const name of requiredStormExpectKeys) {
+    assert.ok(assignments.has(name), name + " must have exactly one assignment");
   }
   for (const phase of ["POS", "NEG", "ERR"]) {
     const name = "EXPECT_" + phase + "_EXIT";
-    // Shell permits leading blanks and the export NAME=value form. Count
-    // every assignment first (including nonnumeric ones), then validate value.
-    const assignmentPattern = new RegExp("^[\\t ]*(?:export[\\t ]+)?" + name + "=(.*)$");
-    const matches = [];
-    for (const [index, line] of lines.entries()) {
-      const match = line.match(assignmentPattern);
-      if (match) matches.push({ raw: match[1], line: index + 1 });
-    }
-    assert.equal(matches.length, 1, name + " must have exactly one assignment");
-    const raw = matches[0].raw.replace(/[ \t]+#.*$/, "").trim();
+    const raw = assignments.get(name).raw.replace(/[ \\t]+#.*$/, "").trim();
     assert.match(raw, /^[0-9]+$/, name + " must be an unquoted numeric exit assignment");
     const value = Number(raw);
     assert.ok(Number.isSafeInteger(value), name + " must be a safe integer");
@@ -133,6 +146,38 @@ test("Storm exit parser rejects shell expansion and command chaining in EXPECT a
   }
 });
 
+test("Storm parser rejects duplicate non-exit keys that Bash would otherwise apply", () => {
+  const mutants = [
+    { key: "EXPECT_NEG_ARGS", assignment: "EXPECT_NEG_ARGS='--prism tests/storm/missing.pm --prop \\"P<=0.5 [F s=7]\\"'", index: 3,
+      expected: '--prism tests/storm/missing.pm --prop "P<=0.5 [F s=7]"' },
+    { key: "EXPECT_ERR_REGEX", assignment: "EXPECT_ERR_REGEX='MUTATED_ERROR_PATTERN'", index: 4, expected: "MUTATED_ERROR_PATTERN" },
+    { key: "EXPECT_TIMEOUT", assignment: "EXPECT_TIMEOUT=1", index: 5, expected: "1" },
+    { key: "EXPECT_NEG_LABEL", assignment: "EXPECT_NEG_LABEL=UNEXPECTED_LABEL", index: 6, expected: "UNEXPECTED_LABEL" }
+  ];
+  const directory = mkdtempSync(join(tmpdir(), "storm-expect-source-"));
+  const path = join(directory, "expect.sh");
+  const sourceWithBash = source => {
+    writeFileSync(path, source);
+    return execFileSync("bash", ["-c",
+      'set -euo pipefail; source "$1"; printf "%s\\n" "$EXPECT_POS_EXIT" "$EXPECT_NEG_EXIT" "$EXPECT_ERR_EXIT" "$EXPECT_NEG_ARGS" "$EXPECT_ERR_REGEX" "$EXPECT_TIMEOUT" "$EXPECT_NEG_LABEL"',
+      "storm-expect-source", path], { encoding: "utf8" }).trimEnd().split("\\n");
+  };
+  try {
+    assert.deepEqual(sourceWithBash(fixture), [
+      "0", "0", "1",
+      '--prism tests/storm/pos.pm --prop "P<=0.5 [F s=7]"',
+      "Unable to read from (non-existing )?file", "180", "PROPERTY_FAILS"
+    ]);
+    for (const mutant of mutants) {
+      const changed = fixture + "\\n" + mutant.assignment + "\\n";
+      const bashValues = sourceWithBash(changed);
+      assert.equal(bashValues[mutant.index], mutant.expected, mutant.key + " must demonstrate Bash last-assignment semantics");
+      assert.throws(() => uniqueNumericExitAssignments(changed), new RegExp("duplicate EXPECT assignment " + mutant.key));
+    }
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
 test("Storm ERR is a real deterministic missing-model-file rejection", async t => {
   assert.match(fixture, /EXPECT_ERR_VIA=run/);
   assert.match(fixture, /EXPECT_ERR_ARGS=.*missing\.pm/);

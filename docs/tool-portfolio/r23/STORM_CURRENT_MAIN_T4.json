@@ -7,14 +7,14 @@
     "capability": "model.probabilistic"
   },
   "result": {
-    "status": "PARTIAL_CLI_SDK_AND_MCP_SERVER_TRANSPORT_FAILCLOSED_PASS_STORM_MCP_SOLVER_NOT_RUN; R54_P1_EXIT_PARSER_AND_RUNTIME_SOURCE_PINS_REPAIRED; EXACT_HEAD_CI_PENDING; FRESH_REVIEW_REQUIRED",
+    "status": "R84_DUPLICATE_ALL_EXPECT_KEYS_AND_REAL_BASH_SOURCE_REGRESSION_IMPLEMENTED; EXACT_HEAD_CI_PENDING; FRESH_NON_WRITER_REVIEW_REQUIRED",
     "overall_t4_qualification": "NOT_QUALIFIED",
     "t3": "NOT_REQUALIFIED_PRIOR_R4_POS_NEG_RECEIPT_REUSED",
     "t5": "NOT_QUALIFIED",
     "t6": "OPEN",
     "product": "NOT_SIGNED",
     "release": "NOT_SIGNED",
-    "independent_source_first_review": "R53_REWORK_P1_01_P1_02_P2_01_P2_02; P1_01_REPAIRED_R54; P1_02_PINNED_AND_STORM_ROUTE_IMPACT_ASSESSED; P2_METADATA_REFRESHED; FRESH_NON_WRITER_REVIEW_REQUIRED"
+    "independent_source_first_review": "R83_REWORK_P0_0_P1_1_P2_2; R84_REPAIRS_DUPLICATE_ALL_EXPECT_KEYS_AND_BASH_LAST_ASSIGNMENT_MUTANTS; EXACT_HEAD_CI_AND_FRESH_REVIEW_PENDING"
   },
   "current_main": {
     "commit": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
@@ -220,7 +220,19 @@
     "local_result": "R52 exact-one numeric POS/NEG/ERR parser and duplicate/wildcard/missing/quoted negative controls passed locally on Node v22.16.0; exact-head Woodpecker #1404/#1405 SUCCESS on HEAD 6a069dfee98633b42e625b295f3cc42c74afb414.",
     "exact_head": "6a069dfee98633b42e625b295f3cc42c74afb414",
     "woodpecker_push": "#1404 SUCCESS",
-    "woodpecker_pr": "#1405 SUCCESS"
+    "woodpecker_pr": "#1405 SUCCESS",
+    "latest_repair": {
+      "path": "tests/storm-current-main-t4.test.mjs",
+      "blob": "539614f7a4b37f9af03dd0b092e4fd8b22a39978",
+      "based_on_previous_blob": "a5ae7f399cf8c7b4b13d285b0adc597a6e43737e",
+      "changes": [
+        "Explicit Storm EXPECT_* allowlist; all duplicate keys rejected, not only POS/NEG/ERR exit variables.",
+        "Required phase args/exit/regex/label keys; EXPECT_TIMEOUT and EXPECT_ERR_VIA remain optional.",
+        "Duplicate negative controls cover EXPECT_NEG_ARGS, EXPECT_ERR_REGEX, EXPECT_TIMEOUT and EXPECT_NEG_LABEL.",
+        "Real Bash temp-file source regression proves canonical values and demonstrates last-assignment behavior for each duplicate mutant; static parser rejects each mutant."
+      ],
+      "local_validation": "NOT_RUN_IN_CHAT_EXECUTION; exact-head Woodpecker dual CI required"
+    }
   },
   "boundaries": [
     "R4 native POS/NEG semantics reused; the exact current-main Runner rerun is scoped to the fixed fixture transport/gateway, not a new independent T3 qualification.",
@@ -260,6 +272,26 @@
       "p1": 2,
       "p2": 2,
       "issue_comment": "https://github.com/kaicreator-mm/formal-tools/issues/54#issuecomment-6897948106"
+    },
+    "r83_repair": {
+      "previous_head": "96e628f0a1bdc99f1adcdc87ec6be62a4ea3d9bd",
+      "verdict": "REWORK",
+      "p0": 0,
+      "p1": 1,
+      "p2": 2,
+      "p1_01": {
+        "status": "REPAIRED_PENDING_EXACT_HEAD_CI_AND_FRESH_REVIEW",
+        "detail": "Explicit allowlist and Map uniqueness now cover every Storm EXPECT_* key. Required phase args/exit/regex/label keys are checked; EXPECT_TIMEOUT and EXPECT_ERR_VIA remain optional. Duplicate non-exit args/regex/timeout/label mutants are rejected."
+      },
+      "p2_01": {
+        "status": "REPAIRED_PENDING_EXACT_HEAD_CI_AND_FRESH_REVIEW",
+        "detail": "Bash sources the canonical fixture from a real temporary file, asserts POS/NEG/ERR plus args/regex/timeout, then sources duplicate non-exit mutants to demonstrate last-assignment semantics; the static parser rejects each mutant."
+      },
+      "p2_02": {
+        "status": "MUTABLE_CI_REVIEW_METADATA_PENDING_FINAL_EXACT_HEAD",
+        "detail": "Historical #1566/#1567 FAILURE and #1594/#1595 same-SHA SUCCESS remain unchanged; original failure root cause remains UNKNOWN. Final exact-head CI and review fields must be updated after pipelines and independent review exist."
+      },
+      "writer": "CHATGPT_INTEGRATOR_STORM_R84_SINGLE_WRITER_20261116"
     }
   },
   "pr_base": "d996d168812f51d131b3f3f9c525cc1bd161d087",
