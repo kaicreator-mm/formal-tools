@@ -349,6 +349,15 @@ export function interpretNativeObservation(tool,stdout,stderr,exitCode) {
  } else if(tool==="clingo") {
    outcome=/(?:^|\n)UNSATISFIABLE\s*$/m.test(output)?"UNSATISFIABLE":
            /(?:^|\n)SATISFIABLE\s*$/m.test(output)?"SATISFIABLE":"UNPARSED";
+ } else if(tool==="dafny") {
+   // Dafny's process exit and verifier summary are both required. Keep this a
+   // technical observation only: no business/property verdict is inferred.
+   const summary=output.match(/Dafny program verifier finished with (\d+) verified,\s*(\d+) errors?\b/i);
+   const verified=summary?Number(summary[1]):0;
+   const errors=summary?Number(summary[2]):0;
+   if(exitCode===0&&summary&&verified>0&&errors===0) outcome="VERIFIED";
+   else if(exitCode===4&&summary&&errors>0&&/\bpostcondition could not be proved\b/i.test(output)) outcome="VERIFICATION_ERROR";
+   else if(exitCode===2&&/\bparse errors detected in [^\r\n]+/i.test(output)) outcome="PARSE_ERROR";
  } else if(tool==="vampire") {
    outcome=output.match(/SZS status ([A-Za-z]+)/)?.[1]?.toUpperCase()??"UNPARSED";
  } else if(tool==="rdf-shacl") {
