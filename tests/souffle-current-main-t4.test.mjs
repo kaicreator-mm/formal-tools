@@ -38,7 +38,7 @@ test("Bash-sourced effective exit values are exactly POS=0 NEG=1 ERR=1", () => {
   const script = 'set -eu; source "$1"; printf "%s\\n" "$EXPECT_POS_EXIT" "$EXPECT_NEG_EXIT" "$EXPECT_ERR_EXIT"';
   const result = spawnSync("bash", ["-c", script, "bash", expectPath], { encoding: "utf8" });
   assert.equal(result.status, 0, result.stderr || result.stdout);
-  assert.deepEqual(result.stdout.trim().split(/\\r?\\n/), ["0", "1", "1"]);
+  assert.deepEqual(result.stdout.trim().split(/\r?\n/), ["0", "1", "1"]);
 });
 
 test("the NEG fixture is genuinely invalid input, not a valid-but-false model result", () => {
