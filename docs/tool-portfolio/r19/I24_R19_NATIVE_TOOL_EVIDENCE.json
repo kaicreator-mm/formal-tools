@@ -220,18 +220,24 @@
       "fixture_contract": {
         "main_current": "POS/NEG/ERR (ERR added in this PR branch; not yet merged)",
         "branch": "fix/i24-fast-downward-err-fixture-r19b",
-        "proposed_change": "add committed malformed PDDL ERR phase, exit wildcard + parser diagnostic",
+        "proposed_change": "add committed malformed PDDL ERR phase; pin observed NEG=11 and ERR=31; retain exact parser diagnostic",
         "err_fixture_path": "portable/verification/cases/fast-downward/err.pddl",
         "expect_before_r19_blob": "6dc4077e6e62ceca0f7cca4ace2b8563efcd9f31",
-        "expect_r19_blob": "d291a8ecae4d5357470f086cef84b4ed8ade6fbd",
-        "err_pddl_blob": "f5350b2fddb807530b2c029652708af861440427"
+        "expect_r19_blob": "7b81249a54146d8d7bad8388ae72a341fb4733fc",
+        "err_pddl_blob": "f5350b2fddb807530b2c029652708af861440427",
+        "contract_test_blob": "678d9f21aa252b72681f0493127af821970feafc",
+        "expected_exit_codes": {
+          "pos": 0,
+          "neg": 11,
+          "err": 31
+        }
       },
       "qualification": "POS/NEG/ERR technical execution observed, but T3 version identity/source provenance REWORK P1; no T4/T5"
     }
   },
   "next": {
     "fast_downward_version": "obtain exact upstream source tag/commit or rebuild actual 24.06; update package/catalog only with provenance",
-    "fast_downward_error_fixture": "PR branch adds committed ERR fixture; require exact-SHA CI and independent review",
+    "fast_downward_error_fixture": "PR branch now pins NEG=11 and ERR=31 with a static wildcard-rejection regression; require exact-SHA CI and fresh independent review",
     "highs": "reuse exact 1.15.1 original tar evidence; separate 1.16.0 wheelhouse must be renamed/reclassified or removed from 1.15.1 lane",
     "lean4": "retain scoped native result; next integration step is actual official portable Runner with canonical Python/Lean runtime and independent source review",
     "shared_runner": "PR #86 P1 must be fixed by original single Writer; no concurrent edit"
