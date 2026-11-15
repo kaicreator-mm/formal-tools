@@ -11,8 +11,8 @@
     "previous_reviewed_head": "b9e4e419e1a144c7cb1e3b8e6ccee74d50d66871",
     "previous_runner_blob": "d83baae8ba36fc17504033dc0eaae0ad3a148ec4",
     "runner_path": "portable/packaging/bundle-template/bin/tool-runner",
-    "runner_blob_after_repair": "a818cc0ba9f7a50dd7a632bbbec9d48c25ab05b0",
-    "runner_repair_commit": "412a77d7f18306569771c9da823ff4853c0fd258",
+    "runner_blob_after_repair": "0bed20a6e6fe384bf48f17b9e4dc9873fdbdc616",
+    "runner_repair_commit": "1b2df30dcd26e99cd46990b586cc0a4b04976fba",
     "test_path": "tests/tool-runner-ldd-report.test.mjs",
     "test_blob_after_repair": "8c666a7ae0f43d6768a4fac2d414e8f8bcb51f74",
     "test_repair_commit": "faf64278913fa1cd0ecf951925680c2e1bcfe9a7"
@@ -82,7 +82,7 @@
     }
   },
   "ci": {
-    "exact_head": "PENDING_AFTER_R18_SOURCE_TEST_AND_EVIDENCE_COMMITS",
+    "exact_head": "PENDING_AFTER_R18_FINAL_SOURCE_AND_EVIDENCE_COMMIT",
     "push": "PENDING",
     "pull_request": "PENDING",
     "required_runtime": "Node.js 24.21.0",
