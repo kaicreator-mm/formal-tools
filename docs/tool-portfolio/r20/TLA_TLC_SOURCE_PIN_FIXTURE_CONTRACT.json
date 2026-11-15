@@ -1,6 +1,6 @@
 {
-  "schema": "formal-tools/tla-tlc-source-pin-fixture-contract/1.0",
-  "output_label": "FORMAL_TOOLS_I24_UNIFIED_PARALLEL_DELIVERY",
+  "schema": "formal-tools/tla-tlc-source-pin-fixture-contract/1.1",
+  "output_label": "FORMAL_TOOLS_I24_TLA_TLC_R48_NATIVE_REBUILD",
   "portfolio_issue": 24,
   "tool_issue": 56,
   "tool_id": "tla-tlc",
@@ -54,11 +54,116 @@
     "test_scope": "static assertions for pinned asset SHA/size, explicit cache-hit digest verification, corrected -help version probe and exact NEG exit",
     "test_blob": "3ff3b4a1ffe02ce1c986c8b094dec7f7ff937fce"
   },
+  "native_rebuild": {
+    "status": "PASS_SCOPED_EXECUTION_PENDING_INDEPENDENT_REVIEW",
+    "source_head": "0faaa8f693106280bd4f63ddb0a47b8267db4a5b",
+    "source_binding_note": "The native build/replay used exact source HEAD 0faaa8f693106280bd4f63ddb0a47b8267db4a5b with zero dirty files. R48 adds only this evidence JSON and keeps builder, expect and static-test Blobs unchanged, so the native evidence applies to the subsequent evidence-only PR head.",
+    "build_root": "/home/cc/formal-tools-build-i24-tla-r48",
+    "environment": {
+      "host": "CC-LAN200",
+      "architecture": "x86_64",
+      "builder_os": "Debian 13",
+      "verify_os": "Debian 13",
+      "builder_image_id": "sha256:efd209e914109c281cd40a7089aadb8eaeb7b3bf8ecdbaeafaa8603f850905c2",
+      "verify_image_id": "sha256:9c6e381421d0f48d1b8133e573f33c185ee16cbf505eda9c4a8a4791b25ea8a6",
+      "verify_user": "65534:65534",
+      "verify_network": "none",
+      "java_runtime": "Eclipse Adoptium 21.0.13 64bit"
+    },
+    "official_asset": {
+      "url": "https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar",
+      "download_exit": 0,
+      "http_code": 200,
+      "observed_sha256": "7e53aa636dac8a3cb0533f343115c0548e03fc0ce5edc7739becf58d3d0fb84f",
+      "observed_size_bytes": 4510884,
+      "magic": "Java archive data (JAR)",
+      "retry_note": "Three connect-timeout attempts are preserved in raw stderr; the fourth curl attempt succeeded. No Drive or other substitute bytes were used.",
+      "stdout_sha256": "955fd3dc8c4483ba662c7aa49f65b0ad5ac6fd4a96445e7662840cf337c7f837",
+      "stderr_sha256": "d0f68b9c52185675b7d997ac969c6a1fbe48e5a08b127365d581e00047deaeb0"
+    },
+    "build": {
+      "orchestrate_exit": 0,
+      "build_tool_exit": 0,
+      "build_status_event": "SUCCESS",
+      "built_at": "2026-11-15T13:09:26Z",
+      "jar_sha256": "7e53aa636dac8a3cb0533f343115c0548e03fc0ce5edc7739becf58d3d0fb84f",
+      "jar_size_bytes": 4510884,
+      "run_shim_sha256": "2cf5deb447352629b57fce2c57457f9b494f29a13af03f8acd7b2f1697aa99e6",
+      "meta_json_sha256": "44be9b0d9e2cf0e786069b6d3b8b68fee7cf055ca000372b825d9782f0d376d1",
+      "actual_help_probe": "TLC - provides model checking and simulation of TLA+ specifications - Version 2026.11.15.002146",
+      "actual_runtime_revision": "bc1b506",
+      "build_tool_log_sha256": "c4951d3b379eb5561204e15ce153411a8440ddcee1e77bd5d11880ffd5fc05aa",
+      "setup_note": "Preliminary isolated-root symlink/probe attempts were discarded. The authoritative build used a container-visible java21 directory and has a clean single-round two-line build log."
+    },
+    "package": {
+      "scope": "tla-tlc plus java21, current Runner, registry and TLC POS/NEG fixtures; isolated one-tool Portable assembly, not a claim that all 36 tools were rebuilt",
+      "pack_exit": 0,
+      "path": "/home/cc/formal-tools-build-i24-tla-r48/out/packages/tools/tla-tlc-1.8.0-linux-x86_64.tar.zst",
+      "sha256": "498553c7ae3273d6087c5ebdd5d13133e35277702686659810824576d02d82ac",
+      "size_bytes": 4219861,
+      "zstd_test_exit": 0,
+      "tar_entry_parity": "PASS; 6 entries",
+      "embedded_jar_sha256": "7e53aa636dac8a3cb0533f343115c0548e03fc0ce5edc7739becf58d3d0fb84f",
+      "embedded_jar_size_bytes": 4510884,
+      "java21_package_sha256": "7e9b1bfdc120d17a4af2eb2baaf4b3772b2c7a2114248ed1a5967af89c5387ca",
+      "java21_package_size_bytes": 32262489,
+      "core_package_sha256": "1579816f3d62811c7c1e063aac261e8ccbfdb16ffa6a91f51dab83d1f53da751",
+      "core_package_size_bytes": 25035,
+      "bundle_manifest_sha256": "c6d6bbfdb1e2652ffb2ddac9f62a4c5fbbe60390536e9b2ec6d8704d15429f2f",
+      "runner_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a",
+      "pack_stdout_sha256": "71990c9322349e17b72cb6d83b4ce13fcf10207f7d51bf166a6516488b27a0ce",
+      "pack_stderr_sha256": "0fa82ddbf1c1ccaf82443967e7820e08957f69258023c1e7aa9d0d42543ec4d8"
+    },
+    "runner_verify": {
+      "command": "docker run --rm --network none --user 65534:65534 -v <scoped-bundle>:/bundle:ro -v <runner-evidence>:/evidence -e FT_EVIDENCE_DIR=/evidence -e HOME=/tmp debian:13 /bundle/bin/tool-runner verify tla-tlc",
+      "exit": 0,
+      "runner_schema": "formal-tools/portable-verify/0.2",
+      "verdict": "PASS",
+      "tsv_sha256": "50a9b8f529cb9e2072f38802b94b62f9b0411df7b7a24ca2c3ac355ff42e25ae",
+      "stdout_sha256": "acb4c24df243173c1f2e72466f3726eb004a429931c07cb3fe3111a64c042785",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "cases": {
+        "setup": {"exit": 0, "duration_ms": 4, "matched": 1, "exit_ok": 1},
+        "pos": {"exit": 0, "duration_ms": 519, "matched": 1, "exit_ok": 1, "label": "PROPERTY_HOLDS"},
+        "neg": {"exit": 12, "duration_ms": 499, "matched": 1, "exit_ok": 1, "label": "COUNTEREXAMPLE"}
+      }
+    },
+    "direct_cases": {
+      "common_command_prefix": "docker run --rm --network none --user 65534:65534 -v <scoped-bundle>:/bundle:ro -v <case-work>:/work -w /work -e HOME=/tmp debian:13 timeout -k 10 300 /bundle/bin/tool-runner run tla-tlc",
+      "pos": {
+        "arguments": "/work/pos.tla -config /work/pos.cfg",
+        "exit": 0,
+        "stdout_sha256": "e926973a6dbc7d1a1ddf269d2d3f2820f7b04b98269d581ccce3617b494ddc7f",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "typed_outcome": "Model checking completed. No error has been found.",
+        "states": "7 generated, 6 distinct, 0 left on queue; complete graph depth 6"
+      },
+      "neg": {
+        "arguments": "/work/neg.tla -config /work/neg.cfg",
+        "exit": 12,
+        "stdout_sha256": "5a56b0143b75693373c6ed115085e412c04532d472d2da9e8b31489a983656e8",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "typed_outcome": "Error: Invariant BadInv is violated by the initial state: x = 0"
+      }
+    },
+    "raw_evidence": {
+      "root": "/home/cc/formal-tools-build-i24-tla-r48/out/evidence/r48",
+      "manifest": "evidence-files.sha256",
+      "manifest_sha256": "18abf464cfaeec65f18bf6dda6313364271c27ae46d0c5ccf5e0bbe946b51330",
+      "coverage": "The manifest binds every raw download/build/pack/verify stream, exit file, TSV, metadata and artifact hash file under the evidence root except the manifest itself. Preliminary cancelled pack logs are explicitly named pack-preliminary-cancelled.*; authoritative final files are pack.*.",
+      "exit_file_sha256": {
+        "zero_exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "negative_12_exit": "a1fb50e6c86fae1679ef3351296fd6713411a08cf8dd1790a4fd05fae8688164"
+      },
+      "environment_sha256": "6cbff7d1029118071e3cba770c9e1310509a752454a06fc8f0a3d2b34e555798",
+      "artifact_sha256_manifest_sha256": "74ae1162053e630b30745dac0edafd8b1d0e9d811571f3af9963307aa8daaa09"
+    }
+  },
   "qualification": {
     "t0": "PASS_SCOPED_GITHUB_RELEASE_API_ASSET_DIGEST_AND_SIZE_AT_OBSERVATION; mutable rolling pre-release channel; tag/asset not immutable; publisher signature not established",
-    "t1": "NOT_QUALIFIED_UNTIL_FRESH_BUILDER_EXECUTION_AND_REPACK",
+    "t1": "NATIVE_OFFICIAL_ASSET_BUILD_AND_SCOPED_PACK_PASS_PENDING_INDEPENDENT_REVIEW; prebuilt upstream Java jar, not a reproducible source build",
     "t2": "PRESERVE_EXISTING_R3_SCOPED_PASS; no new install run",
-    "t3": "PRESERVE_EXISTING_R3_SCOPED_2_CASE_PASS; NEG exit now pinned to 12; ERR case remains absent",
+    "t3": "CURRENT_SCOPED_PACKAGE_2_CASE_POS_NEG_PASS_PENDING_INDEPENDENT_REVIEW; real offline non-root Runner and direct replay, exits 0/12; ERR case remains absent and no broader T3 claim",
     "t4": "NOT_ACCEPTED",
     "t5": "NOT_QUALIFIED_REAL_SEMANTICS",
     "t6": "OPEN"
