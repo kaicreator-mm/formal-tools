@@ -68,7 +68,28 @@
     "native_cases_reused_from_r3": [
       "POS",
       "NEG"
-    ]
+    ],
+    "review_p1_01": {
+      "finding": "Shell-valid readonly/declare/declare -g/typeset/local and other executable constructs could override EXPECT_*_EXIT while the prior narrow parser ignored them.",
+      "repair": "The contract test now fails closed for the entire sourced expect.sh: only blank lines, full-line comments, and the exact allowlisted 13 simple static EXPECT_* assignments are accepted. POS/NEG/ERR exits must be unquoted numeric literals.",
+      "negative_controls": [
+        "readonly EXPECT_ERR_EXIT=77",
+        "declare EXPECT_ERR_EXIT=77",
+        "declare -g EXPECT_ERR_EXIT=77",
+        "typeset EXPECT_ERR_EXIT=77",
+        "local EXPECT_ERR_EXIT=77",
+        "builtin readonly EXPECT_ERR_EXIT=77",
+        "printf -v EXPECT_ERR_EXIT 77",
+        "eval 'EXPECT_ERR_EXIT=77'",
+        "arbitrary executable command",
+        "command substitution",
+        "duplicate, missing, quoted, leading-space, export and chained assignments"
+      ],
+      "bash_source_regression": "The Node test sources the canonical contract through Bash and asserts 0:0:1; it also verifies the readonly override mutant is rejected by the static validator and demonstrates the runtime override that would otherwise occur.",
+      "test_file": "tests/alloy-exit-contract.test.mjs",
+      "test_blob": "b07886a3240b25a342223e5d117b0d4722a5150d",
+      "status": "IMPLEMENTED_PENDING_EXACT_HEAD_CI_AND_FRESH_INDEPENDENT_REVIEW"
+    }
   },
   "qualification": {
     "T0": "HISTORICAL_R3_ARCHIVE_SHA_MATCH_PRODUCER_MANIFEST_ONLY",
