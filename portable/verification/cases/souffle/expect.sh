@@ -6,11 +6,11 @@ EXPECT_POS_LABEL=DERIVED
 # negative: undeclared attribute name must be rejected (souffle is a positive-only
 # engine; rejection of an invalid program is its real negative-path behavior)
 EXPECT_NEG_ARGS='tests/souffle/badtypes.dl'
-EXPECT_NEG_EXIT=*
+EXPECT_NEG_EXIT=1
 EXPECT_NEG_REGEX='(Error|error|undeclared|unknown)'
 EXPECT_NEG_LABEL=INVALID_REJECTED
 # invalid input: missing file
 EXPECT_ERR_ARGS='tests/souffle/does-not-exist.dl'
-EXPECT_ERR_EXIT=*
+EXPECT_ERR_EXIT=1
 EXPECT_ERR_REGEX='(Error|error|Could not|cannot)'
-EXPECT_ERR_LABEL=ERROR
+EXPECT_ERR_LABEL=MISSING_INPUT_REJECTED
