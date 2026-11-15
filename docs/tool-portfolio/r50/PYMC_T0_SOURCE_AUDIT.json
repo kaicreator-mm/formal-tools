@@ -8,7 +8,7 @@
   "version": "6.4.0",
   "audit_date": "2026-11-15",
   "baseline": {
-    "main_sha": "90b7f3206d401aa5a2634d775c6f16487f0f1b0f",
+    "main_sha": "d996d168812f51d131b3f3f9c525cc1bd161d087",
     "runner_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
     "make_meta_blob": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
     "tool_builder_blob": "92b0f60a87e9b115f9f0d9864411665e85a78b76"
@@ -59,10 +59,14 @@
     "sha256": "f70fd5fc32ba835262642eedf761cdea4b1b1398c4877014f0e7cbcc734fbff4",
     "manifest_entry_matches": true,
     "zstd_integrity": {
-      "reported_result": "PASS",
-      "evidence_status": "WRITER_REPORTED",
-      "independent_replay": "NOT_PERFORMED",
-      "raw_receipt": "NOT_PRESERVED"
+      "result": "PASS",
+      "command": "zstd -t pymc-6.4.0-linux-x86_64.tar.zst.bin",
+      "exit_code": 0,
+      "decompression_exit_code": 0,
+      "evidence_status": "INDEPENDENTLY_REPLAYED",
+      "replay_log_path": "docs/tool-portfolio/r50/evidence/PYMC_T2_REPLAY_LOG.txt",
+      "replay_log_blob": "23216bc38ffc53f98ca1eb86504114663f88685c",
+      "replay_log_sha256": "e6880cca97275e6a197997ce5ceb5d7a881f0b488caaf7d67f889d652f71e6bb"
     },
     "tar_members": {
       "total": 315,
@@ -72,19 +76,45 @@
       "hardlinks": 0,
       "special_files": 0,
       "absolute_or_parent_traversal_paths": 0,
-      "evidence_status": "WRITER_REPORTED",
-      "independent_replay": "NOT_PERFORMED",
-      "raw_preflight_listing": "NOT_PRESERVED"
+      "duplicate_normalized_paths": 0,
+      "regular_payload_bytes": 4762659,
+      "evidence_status": "INDEPENDENT_MEMBER_MANIFEST",
+      "manifest_path": "docs/tool-portfolio/r50/evidence/PYMC_T2_MEMBER_MANIFEST.json.zlib.b64",
+      "manifest_encoding": "base64(zlib(UTF-8 JSON)); decode base64 then zlib decompress",
+      "manifest_uncompressed_size_bytes": 29557,
+      "manifest_uncompressed_sha256": "c51c2643e1f171545c9401e905b986653977c5db873985ddb09030bc0aa22d05",
+      "manifest_compressed_size_bytes": 3327,
+      "manifest_compressed_sha256": "5d56f17047d9ce4a5b89b6503cd5ec9c261e7d474ab3ec757539119b3969c320",
+      "manifest_base64_size_bytes": 4436,
+      "manifest_base64_sha256": "582982f86e7f9113f897c62a49b5b0920cb894c2d2fdec7bc094eb83931fc9c7",
+      "manifest_git_blob": "46ac724f5ffa92c5896d221f0ed09818e03bf3ed"
     },
     "extraction": {
-      "result": "WRITER_REPORTED",
+      "result": "PASS_SCOPED_INDEPENDENT_REPLAY",
       "uid": 65534,
       "gid": 65534,
       "no_same_owner": true,
       "no_same_permissions": true,
-      "evidence_status": "WRITER_REPORTED",
-      "independent_replay": "NOT_PERFORMED",
-      "raw_extraction_log": "NOT_PRESERVED"
+      "zstd_exit": 0,
+      "tar_exit": 0,
+      "all_extracted_objects_uid": 65534,
+      "all_extracted_objects_gid": 65534,
+      "explicit_archive_members": 315,
+      "extracted_filesystem_entries": 316,
+      "implicit_parent_directories": [
+        "tools"
+      ],
+      "symlinks_after_extraction": 0,
+      "special_files_after_extraction": 0,
+      "extracted_tree_sha256": "6877e3aedbfc2ccf18b3e9d7c1084d885e8278060b44167291681afccfb6a72e",
+      "receipt_path": "docs/tool-portfolio/r50/evidence/PYMC_T2_EXTRACTION_RECEIPT.json",
+      "receipt_blob": "4b2747b0e1dc656590522165d2fa6679979a3349",
+      "receipt_sha256": "38c523827ba62a4e3c6a604ccc4887aa32ce14e60c5ce26a3bd1c04ca66878dd",
+      "replay_log_path": "docs/tool-portfolio/r50/evidence/PYMC_T2_REPLAY_LOG.txt",
+      "replay_log_blob": "23216bc38ffc53f98ca1eb86504114663f88685c",
+      "replay_log_sha256": "e6880cca97275e6a197997ce5ceb5d7a881f0b488caaf7d67f889d652f71e6bb",
+      "execution_user": "uid=65534(nobody) gid=65534(nogroup) groups=65534(nogroup)",
+      "command": "zstd -dc ARCHIVE | setpriv --reuid=65534 --regid=65534 --clear-groups tar --no-same-owner --no-same-permissions --no-overwrite-dir --delay-directory-restore -x -f - -C DEST"
     },
     "embedded_file_sha256": {
       "meta.sh": "086441cd0ed2c75d03818cc4d5205450985852e4961559bc035bc097d08d1855",
@@ -116,17 +146,18 @@
       "requires_python": ">=3.12,<3.15"
     },
     "safety_evidence": {
-      "status": "WRITER_REPORTED",
+      "status": "INDEPENDENTLY_REPLAYED_SCOPED",
       "writer_report_reference": "kaicreator-mm/formal-tools#125 comment 6894311642",
-      "independent_review_reference": "kaicreator-mm/formal-tools#125 comment 6894532907",
-      "independent_reproduction": "NOT_PERFORMED",
+      "independent_replay_reference": "kaicreator-mm/formal-tools#125 comment 6895383716",
+      "independent_reproduction": "PASS_IN_CURRENT_EXECUTION_ENVIRONMENT",
       "preserved_receipts": {
-        "zstd_integrity_output": "NOT_PRESERVED",
-        "tar_member_listing_or_manifest": "NOT_PRESERVED",
-        "non_root_extraction_log": "NOT_PRESERVED"
+        "member_manifest": "docs/tool-portfolio/r50/evidence/PYMC_T2_MEMBER_MANIFEST.json.zlib.b64",
+        "extraction_receipt": "docs/tool-portfolio/r50/evidence/PYMC_T2_EXTRACTION_RECEIPT.json",
+        "replay_log": "docs/tool-portfolio/r50/evidence/PYMC_T2_REPLAY_LOG.txt",
+        "archive_sha256sum_manifest": "Drive file 1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1"
       },
-      "interpretation": "The original archive SHA256/size and SHA256SUMS match were independently verified in the prior Source-First review. The zstd integrity result, 315-member tar preflight counts/path checks, and UID/GID 65534 extraction are retained only as writer-reported observations because raw command outputs, member manifest and extraction log were not preserved for independent replay.",
-      "qualification_boundary": "Do not claim an independently verified T2 PASS from these observations. T2 remains WRITER_REPORTED_ONLY_NOT_INDEPENDENTLY_REPLAYABLE until immutable raw receipts are preserved and independently checked."
+      "interpretation": "The original archive and SHA256SUMS were fetched again as raw bytes and independently re-hashed. zstd -t passed; every TAR member was preflighted for path/type safety and every regular payload hashed; extraction was run as UID/GID 65534; all 315 archive members matched the extracted filesystem. The archive omits an explicit tools/ directory entry, so tar creates one implicit parent; the final comparator permits only that implied directory. Raw member manifest, extraction receipt and replay log are committed in this PR.",
+      "qualification_boundary": "T2 PASS_SCOPED covers archive integrity, member path/type preflight and non-root extraction only. It does not prove original package runtime execution (T3), current Runner integration (T4), business semantics (T5) or maintenance (T6)."
     }
   },
   "current_main_compatibility": {
@@ -155,7 +186,7 @@
   "qualification": {
     "T0": "PASS_SCOPED_UPSTREAM_VERSION_LICENSE_AND_PYPI_PROVENANCE; custom portable archive SHA/size independently verified but not covered by PyPI attestation",
     "T1": "NOT_QUALIFIED",
-    "T2": "WRITER_REPORTED_ONLY_NOT_INDEPENDENTLY_REPLAYABLE",
+    "T2": "PASS_SCOPED_INDEPENDENT_ARCHIVE_INTEGRITY_TAR_PREFLIGHT_AND_NONROOT_EXTRACTION_ONLY",
     "T3": "NOT_RUN_ON_ORIGINAL_PORTABLE_BUNDLE",
     "T4": "BLOCKED_LEGACY_TOOL_TOOL_ID_METADATA; current-main builder rebuild required",
     "T5": "NOT_QUALIFIED",
@@ -170,14 +201,14 @@
     "p1": "Original package meta.sh exports TOOL_TOOL_ID rather than TOOL_ID, so current main Runner rejects it. Rebuild with current main builder and canonical metadata before T4.",
     "p2_resolution": {
       "P2-01": "RESOLVED_IN_RECORD: added the explicit AePPL MIT, aesara-devs MIT, and historical Academic Free License notices, while retaining Apache-2.0 as the project license expression and leaving unspecified AFL version unresolved.",
-      "P2-02": "RESOLVED_BY_SCOPE_DOWNGRADE: no raw zstd/tar/extraction receipts were found in the evidence folder or PR artifact. All such results are now explicitly WRITER_REPORTED; T2 is not claimed as independently passed."
+      "P2-02": "RESOLVED_BY_INDEPENDENT_REPLAY: raw zstd integrity result, complete 315-member path/type/size manifest, non-root extraction receipt and replay log are now committed with hashes; T2 remains scoped to archive safety/extraction only."
     }
   },
   "next_actions": [
+    "T2 archive integrity, member preflight and UID/GID 65534 extraction were independently replayed and their immutable receipts are committed; do not infer T3 or T4 from this result.",
     "Retrieve the shared Python 3.13.5 runtime through a host/local agent or a chunked transfer path that can handle 294,346,075 bytes; verify SHA256 against App/packages/SHA256SUMS.",
     "Rebuild pymc 6.4.0 using the exact current main builder and pinned PyMC/NumPy/SciPy/PyTensor dependency closure; emit canonical TOOL_ID metadata and a reproducible build receipt.",
     "Run the rebuilt package through current main tool-runner doctor/version/verify and capture real POS/NEG/ERR outcomes, exit codes and hashes.",
-    "To upgrade original portable archive T2 beyond WRITER_REPORTED, preserve immutable zstd integrity output, complete tar member preflight listing/manifest, and non-root UID/GID 65534 extraction logs with hashes; obtain independent replay before changing the T2 status.",
     "Obtain independent review on the exact repaired evidence PR HEAD before any merge or qualification change."
   ],
   "license_scope": {
@@ -213,5 +244,9 @@
     ],
     "interpretation": "Apache-2.0 is the project's declared license expression. The pinned LICENSE also records the component-level MIT and historical Academic Free License notices above. Do not describe the entire distribution as exclusively Apache-2.0, infer an AFL version, or infer component mapping/terms beyond the upstream notices.",
     "audit_scope_note": "This records the notices present in the pinned upstream LICENSE and pyproject.toml; it is not a legal opinion or a complete component-by-component SBOM."
-  }
+  },
+  "replay_notes": [
+    "The first post-extraction tree comparator flagged the implicit tools/ parent directory because the archive contains tools/pymc/... entries but no explicit tools/ directory member. The comparator was narrowed to allow only parent directories implied by archive member paths; final result matched all 315 archive members plus this single implicit parent.",
+    "The compact member manifest is stored as base64(zlib(JSON)); its uncompressed SHA256 and compressed SHA256 are recorded above so the exact member list can be reconstructed and verified."
+  ]
 }
