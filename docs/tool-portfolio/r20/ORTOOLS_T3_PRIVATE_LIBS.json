@@ -1,0 +1,101 @@
+{
+  "schema": "formal-tools/ortools-private-libs-t3-repair/1.0",
+  "authority": {
+    "portfolio_issue": 24,
+    "tool_issue": 46,
+    "product_issue": 11,
+    "runtime_issue": 4
+  },
+  "source": {
+    "base_head": "4a733d0c7e33da5ed77ff7e3a8e628b3c8bb369b",
+    "original_files": {
+      "portable/packaging/embed-pylib.sh": "463f5eeae6f5ce064f449ad95f4867fef6cf1273",
+      "portable/builders/tools/ortools.sh": "d0673ebcfee4b9c3e4aa627378ed524d4d6b52a4",
+      "portable/verification/cases/ortools/expect.sh": "5fbd6c7aae4786c2d5f7ca55f037c5c7295ebc08"
+    }
+  },
+  "assets": {
+    "original_tool_archive": {
+      "drive_id": "156MgXEaLAkcOC_vNyBGienf6IXsFyw_2",
+      "file": "ortools-9.15.6755-linux-x86_64.tar.zst",
+      "size_bytes": 21850419,
+      "sha256": "7979eeb9d8b55975da8c1736b87a1ba54e370b5eed34264aa6d2920de6f1cf1e"
+    },
+    "upstream_wheel": {
+      "drive_id": "1u60WLufww2cTiDmP-ojY_J0uVKYAE5qq",
+      "file": "ortools-9.15.6755-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "size_bytes": 29838741,
+      "sha256": "ebd5aea00374e3aad7a78de59058aca5e871a26a3c385cd0860ef1d685d03c9a"
+    },
+    "original_archive_meta_version": "9.15.6755",
+    "original_archive_meta_kind": "python-lib"
+  },
+  "diagnosis": {
+    "exact_archive_failure": "ImportError: libabsl_strings-4511cb6b.so.2508.0.0: cannot open shared object file",
+    "wheel_private_libs": "Upstream wheel contains sibling ortools.libs with hashed Abseil/protobuf dependencies (including libabsl_strings-4511cb6b.so.2508.0.0).",
+    "packager_bug": "portable/packaging/embed-pylib.sh copied only SITE/ortools; it omitted sibling SITE/ortools.libs.",
+    "launcher_bug": "portable/builders/tools/ortools.sh generated a run shim without LD_LIBRARY_PATH for tool-local private libraries.",
+    "fixture_bug": "expect.sh used VIA=py, bypassing the tool run shim and its package-specific loader environment."
+  },
+  "repair": {
+    "embed_pylib": "Copy SITE/ortools.libs into tools/ortools/pylib/ortools.libs; fail closed if absent; run CP-SAT import probe with the embedded library path before repacking.",
+    "run_shim": "Export LD_LIBRARY_PATH for pylib/ortools.libs, pylib/ortools/.libs and the shared Python runtime lib directory.",
+    "fixture": "Use VIA=run for POS/NEG/ERR; ERR asserts MODEL_INVALID for a reversed domain and TypeError for malformed constraint input."
+  },
+  "local_execution": {
+    "status": "HOST_PYTHON_SUBSTITUTE_PASS_AFTER_LOCAL_PRIVATE_LIB_REPAIR",
+    "os": "Linux x86_64",
+    "uid": 65534,
+    "python": "3.13.5 host venv substitute; canonical portable runtime not used",
+    "bundle_read_only": true,
+    "package_source": "original Drive tool archive plus sibling ortools.libs extracted from the exact-version upstream wheel",
+    "cases": [
+      {
+        "phase": "pos",
+        "label": "OPTIMAL",
+        "exit_code": 0,
+        "matched": true,
+        "duration_ms": 892,
+        "log_sha256": "3d2b128e194e1af4a53a9a655ce7ef101b41f4257ae344fe379d91ff83c1f815",
+        "assertion": "objective=11"
+      },
+      {
+        "phase": "neg",
+        "label": "INFEASIBLE",
+        "exit_code": 0,
+        "matched": true,
+        "duration_ms": 746,
+        "log_sha256": "8eb94e0ca990360b11a940d3a0348e63ffbf22660f013a30a8967f9cd5d7f222"
+      },
+      {
+        "phase": "err",
+        "label": "MODEL_INVALID_AND_TYPE_REJECTED",
+        "exit_code": 0,
+        "matched": true,
+        "duration_ms": 752,
+        "log_sha256": "e481ef8bc32eef48ac00537192eda6f15279561532a8747272bb29b5acafb7d0"
+      }
+    ],
+    "verify_tsv_sha256": "fa3bbc731f580cb82011f05ad84607dc65a867a139ff3fee85249986b16151b5",
+    "verify_log_sha256": "a4d347020882567045a826499ea1411c1b0c5710f9667555a833d01dabab1d78",
+    "doctor_log_sha256": "1710a9219b6853837bb5390631d7ea89856dde0b63faa23cad982b6c0ec8c8b9"
+  },
+  "canonical_runtime": {
+    "file": "python313-3.13.5-linux-x86_64.tar.zst",
+    "size_bytes": 294346075,
+    "sha256": "1dbbc431b578da5139c8f1993d5c138582dee577804fca9e85936b490606f1d5",
+    "status": "NOT_DOWNLOADED_CONNECTOR_HTTP_413",
+    "connector_limit_bytes": 268435456
+  },
+  "qualification": {
+    "current_original_archive": "FAIL_P1_PRIVATE_LIBS_MISSING",
+    "local_augmented_archive": "SCOPED_HOST_PYTHON_PASS_3_OF_3",
+    "t3": "NOT_ACCEPTED until rebuilt tool archive and canonical runtime execution",
+    "t4": "NOT_QUALIFIED",
+    "t5": "NOT_QUALIFIED_NO_INDEPENDENT_ORACLE",
+    "t6": "OPEN"
+  },
+  "ci": {
+    "status": "PR_CHECKS_AUTHORITATIVE; no CI result embedded here"
+  }
+}
