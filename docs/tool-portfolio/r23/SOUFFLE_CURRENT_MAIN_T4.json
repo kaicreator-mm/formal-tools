@@ -90,25 +90,31 @@
     "test_blob": "bcb08b5c018661c8aad3b431362822e85d3ef195",
     "test_result": "5/5 PASS",
     "direct_runner": {
-      "status": "PASS",
+      "status": "WRITER_REPORTED_ONLY",
       "tsv_sha256": "c9682b69d1143a7dba7929b4eea895cb2c2c098388014e4019d8d14e01587d9d",
       "phases": {
         "pos": {
           "exit_code": 0,
           "matched": true,
-          "label": "DERIVED"
+          "label": "DERIVED",
+          "evidence_level": "WRITER_REPORTED_ONLY"
         },
         "neg": {
           "exit_code": 1,
           "matched": true,
-          "label": "INVALID_REJECTED"
+          "label": "INVALID_REJECTED",
+          "evidence_level": "WRITER_REPORTED_ONLY"
         },
         "err": {
           "exit_code": 1,
           "matched": true,
-          "label": "MISSING_INPUT_REJECTED"
+          "label": "MISSING_INPUT_REJECTED",
+          "evidence_level": "WRITER_REPORTED_ONLY"
         }
-      }
+      },
+      "evidence_level": "WRITER_REPORTED_ONLY",
+      "independently_reproduced_in_r27": false,
+      "reason": "R27 replay captures direct package run-shim stdout/stderr/exit, not a new portable Runner verify TSV receipt."
     },
     "alternate_neg_blob": "a905fd35fe4aff2a681f62b764a16d1047c81ea8",
     "test_sha256": "48f60719a2f4b280b7fe2371e198fd21c876247bcba985525bc4dc577aa61944",
