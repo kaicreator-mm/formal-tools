@@ -31,11 +31,13 @@ export const IDENTITY_FIELDS = Object.freeze([
   "canonicalArchiveBytesVerified",
   "canonicalArchiveObservedSha256",
   "canonicalArchiveManifestDriveId",
+  "canonicalArchiveDeclaredSha256",
   "canonicalArchiveManifestMatch",
   "alternateWheelhouseDriveId",
   "alternateWheelhouseBytes",
   "alternateWheelhouseSha256",
-  "alternateWheelhouseManifestSha256",
+  "alternateWheelhouseManifestDriveId",
+  "alternateWheelhouseManifestFileSha256",
   "alternateWheelhouseBytesVerified",
   "wheelhousePythonTag",
   "hostPythonVersion",
@@ -81,7 +83,7 @@ export const GATE_DEPENDENCIES = Object.freeze({
     "canonicalArchiveBytes",
     "canonicalArchiveBytesVerified",
     "canonicalArchiveObservedSha256",
-    "canonicalArchiveManifestSha256",
+    "canonicalArchiveDeclaredSha256",
     "canonicalArchiveManifestMatch"
   ]),
   T1: Object.freeze([
