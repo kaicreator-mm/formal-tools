@@ -1,8 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, mkdtempSync, writeFileSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 const contract = readFileSync(new URL('../portable/verification/cases/alloy/expect.sh', import.meta.url), 'utf8');
 const evidence = JSON.parse(readFileSync(new URL('../docs/tool-portfolio/r77/ALLOY_EXIT_CONTRACT.json', import.meta.url), 'utf8'));
@@ -75,14 +77,22 @@ test('Alloy sourced expect.sh rejects shell commands and every noncanonical assi
 });
 
 test('Bash sourcing uses the exact validated POS NEG ERR exits and rejects a live builtin override', () => {
-  const command = 'set -euo pipefail; source /dev/stdin; printf "%s:%s:%s" "$EXPECT_POS_EXIT" "$EXPECT_NEG_EXIT" "$EXPECT_ERR_EXIT"';
-  const sourced = execFileSync('bash', ['-c', command], { input: contract, encoding: 'utf8' });
-  assert.equal(sourced, '0:0:1');
+  const command = 'set -euo pipefail; source "$1"; printf "%s:%s:%s" "$EXPECT_POS_EXIT" "$EXPECT_NEG_EXIT" "$EXPECT_ERR_EXIT"';
+  const directory = mkdtempSync(join(tmpdir(), 'alloy-exit-contract-'));
+  const path = join(directory, 'expect.sh');
+  try {
+    writeFileSync(path, contract);
+    const sourced = execFileSync('bash', ['-c', command, 'alloy-exit-contract', path], { encoding: 'utf8' });
+    assert.equal(sourced, '0:0:1');
 
-  const override = contract + '\nreadonly EXPECT_ERR_EXIT=77\n';
-  assert.throws(() => exactNumericExits(override));
-  const overriddenAtRuntime = execFileSync('bash', ['-c', command], { input: override, encoding: 'utf8' });
-  assert.equal(overriddenAtRuntime, '0:0:77');
+    const override = contract + '\nreadonly EXPECT_ERR_EXIT=77\n';
+    assert.throws(() => exactNumericExits(override));
+    writeFileSync(path, override);
+    const overriddenAtRuntime = execFileSync('bash', ['-c', command, 'alloy-exit-contract', path], { encoding: 'utf8' });
+    assert.equal(overriddenAtRuntime, '0:0:77');
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
 });
 
 test('Alloy new native ERR evidence binds raw output to observed Java failure and source pins', () => {
