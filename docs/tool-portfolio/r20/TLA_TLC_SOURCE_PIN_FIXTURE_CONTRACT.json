@@ -38,7 +38,7 @@
     "expect_blob": "9cd5269aea0e2589fcc4758f2c2fc109c286d831",
     "tests_path": "tests/tla-tlc-source-fixture-contract.test.mjs",
     "test_scope": "static assertions for pinned asset SHA/size, explicit cache-hit digest verification, corrected -help version probe and exact NEG exit",
-    "test_blob": "244e1d5c60b171abf8cb28f004d18c0f1500604b"
+    "test_blob": "abeaa51a42b416481d04cd0a29c21ec1b6e71f5d"
   },
   "qualification": {
     "t0": "PASS_SCOPED_GITHUB_RELEASE_ASSET_DIGEST_AND_VERSION_PIN; publisher signature not established",
