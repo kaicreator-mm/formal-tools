@@ -86,7 +86,7 @@
   },
   "current_main_sync": {
     "main_sha": "19e349fcf96f8883be6a46c654046f1b0e6c66bd",
-    "sync_commit": "PENDING_COMMIT_SHA",
+    "sync_commit": "ae58c9d5aac8962ece988a31d48d1bda8fab6017",
     "changed_paths_expected": [
       "docs/tool-portfolio/r20/TLA_TLC_SOURCE_PIN_FIXTURE_CONTRACT.json",
       "portable/builders/tools/tla-tlc.sh",
