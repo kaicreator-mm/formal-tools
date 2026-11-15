@@ -98,8 +98,18 @@
     "next": "Re-execute exact current fixture Blobs with canonical portable Python313 and current-main Runner before any T3 promotion.",
     "current_static_contract_test": {
       "blob": "821e929eb216bae4d1ba5811bb7f7f02b5d18f20",
-      "status": "EXACT_SOURCE_ASSERTION_VERIFIED; CURRENT_HEAD_WOODPECKER_CI_PENDING",
-      "note": "This is the current source contract test Blob. The historical R23 host replay executed the older test Blob recorded separately under host_substitute_replay.node_contract.test_blob."
+      "source_assertion": "PASS_EXACT_PC_CALL_PINNED",
+      "previous_exact_head": "3571073ba3781d7d85360037e45fec7af6f99ba9",
+      "previous_exact_head_push_ci": {
+        "pipeline": 1305,
+        "state": "SUCCESS"
+      },
+      "previous_exact_head_pr_ci": {
+        "pipeline": 1306,
+        "state": "SUCCESS"
+      },
+      "current_head_ci": "USE_LIVE_WOODPECKER_STATUS_CONTEXTS_AFTER_METADATA_COMMIT",
+      "note": "The exact source assertion is unchanged. The cited #1305/#1306 pair qualifies only previous head 3571073...; do not reuse those IDs for this new metadata-only head."
     }
   },
   "canonical_runtime": {
