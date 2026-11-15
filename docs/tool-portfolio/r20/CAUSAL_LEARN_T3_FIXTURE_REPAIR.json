@@ -16,17 +16,26 @@
     "repaired_fixture_blobs": {
       "portable/verification/cases/causal-learn/neg.py": "764d17899af89f138e8d3e34a3318d075a3e5005",
       "portable/verification/cases/causal-learn/expect.sh": "d747aa58e2f42b37b618208eeca75d74bb9c402f",
-      "portable/verification/cases/causal-learn/err.py": "6061b1f0eeaaba65574c6094f6f3cbd7e58dd44c",
+      "portable/verification/cases/causal-learn/err.py": "bd7ab23b997d876ac2da6d9e6fb92c89017768dc",
       "portable/verification/cases/causal-learn/pos.py": "bb65d4439b8209cf84c15097d66ad05210f5a40a"
     },
-    "contract_test_blob": "de4aa30b56d2c66dbd7dc8718d0c8499f9b711e2",
+    "contract_test_blob": "c88311d2c1c3ecccee9613c33ea9a7cc03441704",
     "reviewed_head_before_r22": "d658e74a6a2164c5e8ad9615adbcf2d00401e470",
-    "rework_base_main_sha": "6e98fef47b15592c327523916048280c363acf06",
+    "rework_base_main_sha": "b1cecc5937c9f3a6b6a5cd70f480d32ce61019d9",
     "review_findings_repair": {
       "previous_review_head": "d658e74a6a2164c5e8ad9615adbcf2d00401e470",
       "findings": {
         "P2-01": "Replace QR-orthogonalized columns with independent fixed-seed Gaussian streams and assert the Fisher-Z p-value is > 0.05 before PC.",
         "P2-02": "The chain X->Y->Z is marginally dependent between X and Z but conditionally independent given Y; POS fixture now asserts both facts."
+      }
+    },
+    "reviewed_head_before_r23": "b1cf3c5f4b591b9c7031109e5d35cb8d8e5085d8",
+    "current_main_sync_commit": "5e66f1eb168c26867c101b4149840408fe8e7bec",
+    "review_findings_repair_r23": {
+      "previous_review_head": "b1cf3c5f4b591b9c7031109e5d35cb8d8e5085d8",
+      "findings": {
+        "P2-01": "The ragged np.array expression failed before causal-learn PC.pc was called. Replace it with an empty numeric ndarray passed through invoke_pc; the wrapper records that the package entry point is invoked before the package-level ValueError is classified.",
+        "P2-02": "Node contract now requires exactly one POS/NEG/ERR exit assignment, pins all three to 0, and rejects wildcard exit values."
       }
     }
   },
@@ -46,12 +55,12 @@
     "tool_meta_sha256": "eaae4cd4674f967745f0fd88c94b16a4d469486292ee86e49df8998a92d57989",
     "run_shim_sha256": "8d7575b3f3490633a6be68fd78b758bd49c8b8c2a75fc257518fd3b06fc97df7"
   },
-  "defect_found": "The original NEG was malformed input mislabeled as semantic negative; the first repair used QR orthogonalization, which imposed zero sample correlation rather than independent Gaussian sampling. R22 now uses independent seeded Gaussian streams with a Fisher-Z non-rejection assertion; POS explicitly distinguishes marginal dependence from conditional independence given Y.",
+  "defect_found": "The original NEG was malformed input mislabeled as semantic negative; the first repair used QR orthogonalization, which imposed zero sample correlation rather than independent Gaussian sampling. R22 corrected POS/NEG semantics. R23 changes ERR to an empty numeric ndarray that reaches causal-learn PC.pc and asserts invocation before catching the package ValueError; the Node contract pins exact 0/0/0 POS/NEG/ERR exits and rejects wildcard/duplicate assignments.",
   "execution": {
-    "status": "NOT_RUN_AFTER_R22_SEMANTIC_REPAIR",
-    "reason": "The POS/NEG fixture semantics changed after the previous host-Python substitute receipt. The prior receipt is retained under historical_execution_before_r22 and does not apply to the new fixture blobs.",
+    "status": "NOT_RUN_AFTER_R23_ERR_AND_EXIT_REPAIR",
+    "reason": "The ERR fixture and contract test changed after R22. Previous R22 host-Python replay applies only to the prior fixture Blobs; do not reuse it for these new bytes.",
     "canonical_runtime": "NOT_RUN; 294346075-byte Python 3.13.5 archive exceeds the Drive connector's 268435456-byte download ceiling.",
-    "next": "Re-execute exact new POS/NEG/ERR fixture blobs under a verified runtime and current-main Runner before any T3 promotion."
+    "next": "Re-execute exact R23 POS/NEG/ERR fixture Blobs under a verified runtime and current-main Runner before any T3 promotion."
   },
   "canonical_runtime": {
     "file": "python313-3.13.5-linux-x86_64.tar.zst",
@@ -61,7 +70,7 @@
     "limit_bytes": 268435456
   },
   "qualification": {
-    "t3": "NOT_RUN_AFTER_R22_SEMANTIC_REPAIR; previous host-Python substitute receipt applies only to pre-R22 fixture blobs; canonical portable runtime not executed",
+    "t3": "NOT_RUN_AFTER_R23_ERR_AND_EXIT_REPAIR; previous R22 host-Python replay applies only to pre-R23 fixture Blobs; canonical portable runtime not executed",
     "t4": "NOT_QUALIFIED",
     "t5": "NOT_QUALIFIED_NO_INDEPENDENT_ORACLE_OR_BUSINESS_CASE",
     "t6": "OPEN"
@@ -144,5 +153,11 @@
         }
       ]
     }
+  },
+  "historical_execution_before_r23": {
+    "status": "NOT_RUN_AFTER_R22_SEMANTIC_REPAIR",
+    "reason": "The POS/NEG fixture semantics changed after the previous host-Python substitute receipt. The prior receipt is retained under historical_execution_before_r22 and does not apply to the new fixture blobs.",
+    "canonical_runtime": "NOT_RUN; 294346075-byte Python 3.13.5 archive exceeds the Drive connector's 268435456-byte download ceiling.",
+    "next": "Re-execute exact new POS/NEG/ERR fixture blobs under a verified runtime and current-main Runner before any T3 promotion."
   }
 }

@@ -10,13 +10,25 @@ const pos = read("pos.py");
 const neg = read("neg.py");
 const err = read("err.py");
 
-test("causal-learn T3 POS/NEG/ERR fixtures are distinct and correctly classified", () => {
-  assert.match(expect, /EXPECT_POS_ARGS='tests\/causal-learn\/pos\.py'/);
-  assert.match(expect, /EXPECT_NEG_ARGS='tests\/causal-learn\/neg\.py'/);
-  assert.match(expect, /EXPECT_ERR_ARGS='tests\/causal-learn\/err\.py'/);
-  assert.match(expect, /EXPECT_POS_REGEX='PYVERIFY: OK PC_CHAIN'/);
-  assert.match(expect, /EXPECT_NEG_REGEX='PYVERIFY: OK INDEPENDENT_GAUSSIAN_NO_EDGE'/);
-  assert.match(expect, /EXPECT_ERR_REGEX='PYVERIFY: OK INVALID_INPUT_REJECTED'/);
+function field(name) {
+  const matches = [...expect.matchAll(new RegExp("^" + name + "=(.*)$", "gm"))];
+  assert.equal(matches.length, 1, name + " must be declared exactly once");
+  return matches[0][1].replace(/^['"]|['"]$/g, "");
+}
+
+test("causal-learn T3 POS/NEG/ERR fixtures pin exact exits and distinct outcomes", () => {
+  assert.match(field("EXPECT_POS_ARGS"), /tests\/causal-learn\/pos\.py/);
+  assert.equal(field("EXPECT_POS_EXIT"), "0");
+  assert.equal(field("EXPECT_POS_REGEX"), "PYVERIFY: OK PC_CHAIN");
+
+  assert.match(field("EXPECT_NEG_ARGS"), /tests\/causal-learn\/neg\.py/);
+  assert.equal(field("EXPECT_NEG_EXIT"), "0");
+  assert.equal(field("EXPECT_NEG_REGEX"), "PYVERIFY: OK INDEPENDENT_GAUSSIAN_NO_EDGE");
+
+  assert.match(field("EXPECT_ERR_ARGS"), /tests\/causal-learn\/err\.py/);
+  assert.equal(field("EXPECT_ERR_EXIT"), "0");
+  assert.equal(field("EXPECT_ERR_REGEX"), "PYVERIFY: OK INVALID_INPUT_REJECTED");
+  assert.doesNotMatch(expect, /^EXPECT_(?:POS|NEG|ERR)_EXIT=['"]?\*['"]?$/m);
 
   assert.match(pos, /marginally dependent/);
   assert.match(pos, /conditionally independent given Y/);
@@ -27,8 +39,11 @@ test("causal-learn T3 POS/NEG/ERR fixtures are distinct and correctly classified
   assert.match(neg, /INDEPENDENT_GAUSSIAN_NO_EDGE/);
   assert.doesNotMatch(neg, /np\.linalg\.qr|ragged|expected exception|except Exception/);
 
-  assert.match(err, /np\.array\(\[\[1\.0, 2\.0\], \[3\.0\]\]\)/);
-  assert.match(err, /except \(ValueError, TypeError\)/);
+  assert.match(err, /invoke_pc\(np\.empty\(\(0, 2\), dtype=np\.float64\)\)/);
+  assert.match(err, /pc_invoked = True/);
+  assert.match(err, /assert pc_invoked/);
+  assert.match(err, /except ValueError as exc/);
   assert.match(err, /INVALID_INPUT_REJECTED/);
+  assert.doesNotMatch(err, /np\.array\(\[\[1\.0, 2\.0\], \[3\.0\]\]\)/);
   assert.notEqual(neg, err);
 });
