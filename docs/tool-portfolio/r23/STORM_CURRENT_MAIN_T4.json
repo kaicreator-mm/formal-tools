@@ -197,7 +197,6 @@
     "fresh_review_status": "REQUIRED_AFTER_NEW_EXACT_HEAD_CI"
   },
   "pr_base": "d996d168812f51d131b3f3f9c525cc1bd161d087",
-  "pr_head": "6a069dfee98633b42e625b295f3cc42c74afb414",
   "pr_compare_to_base": {
     "ahead": 4,
     "behind": 0,
@@ -220,5 +219,11 @@
     ],
     "overlap_with_storm_paths": false
   },
-  "current_main_sync_status": "NO_SYNC_OR_MERGE_UNTIL_INTEGRATOR_RELEASES_HOLD_ON_MAIN_PUSH_1450_FIRST_FAILURE; LATER_SAME_SHA_1468_SUCCESS_RECORDED_BUT_CAUSE_UNCLASSIFIED"
+  "current_main_sync_status": "NO_SYNC_OR_MERGE_UNTIL_INTEGRATOR_RELEASES_HOLD_ON_MAIN_PUSH_1450_FIRST_FAILURE; LATER_SAME_SHA_1468_SUCCESS_RECORDED_BUT_CAUSE_UNCLASSIFIED",
+  "source_evidence_head": "6a069dfee98633b42e625b295f3cc42c74afb414",
+  "source_evidence_ci": {
+    "push": "#1404 SUCCESS",
+    "pr": "#1405 SUCCESS",
+    "note": "These runs validate the unchanged source/test/evidence content before the current-main metadata-only refresh; new exact-head CI for the metadata refresh is tracked in the PR body."
+  }
 }
