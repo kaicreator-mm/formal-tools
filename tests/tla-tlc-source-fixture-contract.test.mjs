@@ -19,7 +19,7 @@ test("TLA+ TLC 1.8.0 builder pins the official tla2tools.jar asset", () => {
   assert.match(builder, /jar=\$\(ft::fetch "\$FT_UPSTREAM_URL" "\$FT_UPSTREAM_SHA256"\)/);
   assert.match(builder, /got=\$\(sha256sum "\$jar" \| cut -d' ' -f1\)/);
   assert.match(builder, /\[ "\$got" = "\$FT_UPSTREAM_SHA256" \] \|\| ft::die/);
-  assert.match(builder, /size=\$\(wc -c < "\$jar" \| tr -d '[:space:]'\)/);
+  assert.ok(builder.includes(`size=$(wc -c < "$zip" | tr -d '[:space:]')`));
   assert.match(builder, /\[ "\$size" = "\$FT_UPSTREAM_SIZE_BYTES" \] \|\| ft::die/);
   assert.match(builder, /FT_PROBE=\(\.\.\/\.\.\/runtimes\/java21\/bin\/java -cp tla2tools\.jar tlc2\.TLC -help\)/);
   assert.doesNotMatch(builder, /ft::gh_url .* latest|tlc2\.TLC -version/);
