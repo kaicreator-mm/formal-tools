@@ -17,7 +17,8 @@ test("PyMC T2 audit references the immutable receipt ZIP members, not missing re
   assert.equal(members.manifest_archive_member, "tar-members.json");
   assert.equal(members.manifest_encoding, "UTF-8 JSON; member of the immutable T2 receipt ZIP");
   assert.equal(members.manifest_uncompressed_size_bytes, 92163);
-  assert.equal(members.manifest_uncompressed_sha256, "a9ee1149c87c84c713cbfd8b6f9267afc15b73849e5c04ba72eb21cf80566927");
+  assert.equal(members.manifest_uncompressed_sha256, "c51c2643e1f171545c9401e905b986653977c5db873985ddb09030bc0aa22d05");
+  assert.equal(members.manifest_source.sha256, "a9ee1149c87c84c713cbfd8b6f9267afc15b73849e5c04ba72eb21cf80566927");
   assert.equal(members.manifest_source.archive_entry, "tar-members.json");
 
   const extraction = archive.extraction;
