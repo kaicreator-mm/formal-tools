@@ -132,6 +132,63 @@ test("fixture and exit-contract drift invalidates scoped T3 and dependent T4/T5 
   assert.equal(result.qualificationGranted, false);
 });
 
+test("R77 audit evidence mutation invalidates the scoped T3 native verification provenance", () => {
+  const changed = observedSnapshot();
+  changed.identity.auditEvidenceBlob = "f".repeat(40);
+  const changedResult = assessAlloyMaintenance(baseline, changed);
+  assert.equal(changedResult.status, "STALE_REVERIFY_REQUIRED");
+  assert.deepEqual(changedResult.revalidationGates, ["T3", "T4", "T5", "T6"]);
+  assert.deepEqual(changedResult.staleGates, ["T3"]);
+  assert.equal(changedResult.qualificationGranted, false);
+
+  const missing = observedSnapshot();
+  delete missing.identity.auditEvidenceBlob;
+  const missingResult = assessAlloyMaintenance(baseline, missing);
+  assert.equal(missingResult.status, "INCOMPLETE_OBSERVATION");
+  assert.deepEqual(missingResult.missingFields, ["auditEvidenceBlob"]);
+  assert.deepEqual(missingResult.revalidationGates, ["T3", "T4", "T5", "T6"]);
+  assert.deepEqual(missingResult.staleGates, ["T3"]);
+
+  const nullObservation = observedSnapshot();
+  nullObservation.identity.auditEvidenceBlob = null;
+  const nullResult = assessAlloyMaintenance(baseline, nullObservation);
+  assert.equal(nullResult.status, "INCOMPLETE_OBSERVATION");
+  assert.deepEqual(nullResult.unknownFields, ["auditEvidenceBlob"]);
+  assert.deepEqual(nullResult.revalidationGates, ["T3", "T4", "T5", "T6"]);
+  assert.deepEqual(nullResult.staleGates, ["T3"]);
+});
+
+test("manifest generator drift revalidates T1 packaging without pretending build qualification", () => {
+  const observed = observedSnapshot();
+  observed.identity.manifestGeneratorBlob = "e".repeat(40);
+  const result = assessAlloyMaintenance(baseline, observed);
+  assert.equal(result.status, "STALE_REVERIFY_REQUIRED");
+  assert.deepEqual(result.revalidationGates, ["T1", "T6"]);
+  assert.deepEqual(result.staleGates, []);
+  assert.equal(result.qualificationGranted, false);
+});
+
+test("every gate dependency is a unique tracked identity field and T3 binds the real R77 Git Blob", () => {
+  const allowed = new Set(IDENTITY_FIELDS);
+  for (const [gate, dependencies] of Object.entries(GATE_DEPENDENCIES)) {
+    assert.ok(dependencies.length > 0, gate);
+    assert.equal(new Set(dependencies).size, dependencies.length, gate);
+    for (const field of dependencies) {
+      assert.ok(allowed.has(field), gate + " has an untracked dependency " + field);
+    }
+    assert.deepEqual(baseline.gateDependencies[gate], dependencies, gate);
+  }
+  assert.ok(GATE_DEPENDENCIES.T3.includes("auditEvidenceBlob"));
+  assert.ok(GATE_DEPENDENCIES.T4.includes("auditEvidenceBlob"));
+  assert.ok(GATE_DEPENDENCIES.T5.includes("auditEvidenceBlob"));
+  assert.ok(!GATE_DEPENDENCIES.T3.includes("nativeAcceptanceEvidenceBlob"));
+  assert.equal(baseline.identity.auditEvidenceBlob, baseline.sourcePins[
+    "docs/tool-portfolio/r77/ALLOY_EXIT_CONTRACT.json"
+  ]);
+  assert.equal(baseline.currentMainSnapshot.changedPaths, 44);
+  assert.equal(baseline.currentMainSnapshot.otherToolAndG4Paths, 41);
+});
+
 test("Runner, gateway and registry drift requests T4 revalidation without promoting T4", () => {
   const observed = observedSnapshot();
   observed.identity.runnerBlob = "c".repeat(40);
@@ -214,7 +271,15 @@ test("baseline must explicitly carry every identity field and a valid source-pin
 test("baseline gate dependencies and blocker records are strict", () => {
   const badDependencies = structuredClone(baseline);
   badDependencies.gateDependencies.T3.push("untrackedField");
-  assert.throws(() => assessAlloyMaintenance(badDependencies, observedSnapshot()), /gateDependencies mismatch/);
+  assert.throws(() => assessAlloyMaintenance(badDependencies, observedSnapshot()), /unknown or duplicate identity field/);
+
+  const duplicateDependencies = structuredClone(baseline);
+  duplicateDependencies.gateDependencies.T3.push("auditEvidenceBlob");
+  assert.throws(() => assessAlloyMaintenance(duplicateDependencies, observedSnapshot()), /unknown or duplicate identity field/);
+
+  const missingDependencies = structuredClone(baseline);
+  delete missingDependencies.gateDependencies.T3;
+  assert.throws(() => assessAlloyMaintenance(missingDependencies, observedSnapshot()), /missing array for T3/);
 
   const missingBlockers = structuredClone(baseline);
   delete missingBlockers.openBlockers;
