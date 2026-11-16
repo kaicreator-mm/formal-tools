@@ -13,15 +13,28 @@ FT_PROBE=(probcli -version)
 ft_tool_build() {
   local f
   f=$(ft::fetch "$FT_UPSTREAM_URL") || ft::unavailable "ProB.linux64.tar.gz unreachable at stups.hhu-hosting.de"
-  ft::extract "$f" /tmp/probx
-  local src; src=$(find /tmp/probx -maxdepth 1 -type d -name 'ProB' | head -1)
-  [ -n "$src" ] || ft::die "ProB dir not found in tarball"
-  cp -a "$src/." "$FT_TOOL_DIR/"
+  # The official archive's SHA256 is NOT independently pinned here. The
+  # historical Drive .tar.zst hash is for a different derived package.
+  ft::note "upstream_archive_sha256_attestation" "UNVERIFIED_OFFICIAL_TAR_GZ"
+  # Use a per-invocation staging root to prevent a stale /tmp/ProB source
+  # directory from being silently selected on a subsequent builder run.
+  local work_dir src
+  work_dir=$(mktemp -d /tmp/ft-prob-source.XXXXXXXX) || ft::die "ProB staging creation failed"
+  # The driver invokes ft_tool_build in a dedicated subshell; EXIT also runs
+  # on ft::die and keeps a failed build from leaving reusable source contents.
+  trap "rm -rf -- '$work_dir'" EXIT
+  ft::extract "$f" "$work_dir" || ft::die "ProB source extraction failed"
+  src="$work_dir/ProB"
+  [ -d "$src" ] || ft::die "ProB dir not found in tarball"
+  cp -a "$src/." "$FT_TOOL_DIR/" || ft::die "ProB payload copy failed"
   find "$FT_TOOL_DIR" -maxdepth 2 -type f -name 'probcli' -exec chmod +x {} + 2>/dev/null || true
   [ -f "$FT_TOOL_DIR/lib/probcliparser.jar" ] || ft::die "probcliparser.jar missing (incomplete distribution)"
+  [ -x "$FT_TOOL_DIR/probcli" ] || ft::die "probcli executable missing"
   local v
-  v=$( ( cd "$FT_TOOL_DIR" && ./probcli -version 2>/dev/null | head -1 ) || true)
-  [ -n "$v" ] && ft::note prob_version_line "$v"
+  v=$(cd "$FT_TOOL_DIR" && ./probcli -version 2>&1) || ft::die "ProB version probe failed"
+  printf '%s\n' "$v" | grep -Eq '(^|[^[:digit:]])1[.]16[.]1-final([^[:alnum:]]|$)' \
+    || ft::die "ProB binary version is not 1.16.1-final"
+  ft::note "prob_version_line" "$v"
   ft::make_shim 'export JAVA_HOME="$FT_ROOT/runtimes/java21"
 export PATH="$JAVA_HOME/bin:$TOOL_DIR:$PATH"
 export PROB_HOME="$TOOL_DIR"
