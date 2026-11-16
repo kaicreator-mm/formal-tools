@@ -1,0 +1,131 @@
+{
+  "schema": "formal-tools/i24-prob-r55-original-tar-replay/1.0",
+  "output_label": "FORMAL_TOOLS_I24_PROB_R55_ORIGINAL_TAR_REPLAY",
+  "repository": "kaicreator-mm/formal-tools",
+  "main_issue": 24,
+  "tool_issue": 48,
+  "exact_main": "d996d168812f51d131b3f3f9c525cc1bd161d087",
+  "prior_fixture_pr": {
+    "number": 99,
+    "merge_commit": "56ca5ebb180433a7c391f640b607be8c2977cffd",
+    "reviewed_source_head": "29d20f7caab1e07a4dd2fc488a67d28c43707830"
+  },
+  "source_archive": {
+    "drive_file_id": "1OJ81TtXhbSvyrIuDvz28Vq41hwZbOaQm",
+    "size_bytes": 34278304,
+    "sha256": "5f62f29a338ec0f06796cc78de6e26aa2447061c33811a1d972202907b644537",
+    "manifest_sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64",
+    "manifest_entry_matches": true
+  },
+  "evidence_bundle": {
+    "drive_file_id": "1uZVvjRThEQbr-zLc04GY8FhrojwRKKMU",
+    "url": "https://drive.google.com/file/d/1uZVvjRThEQbr-zLc04GY8FhrojwRKKMU/view?usp=drivesdk",
+    "size_bytes": 52857,
+    "sha256": "87f62efa5c8e3968943aab439d9a93b2ca2538d53e0362b53e3998c26f632ed8",
+    "zip_entries": 52,
+    "sha256sum_entries": 50,
+    "drive_readback_verified": true
+  },
+  "environment": {
+    "os": "Debian GNU/Linux 13.3 x86_64",
+    "kernel": "6.18.60",
+    "python": "3.13.5",
+    "node": "22.16.0",
+    "java": "OpenJDK 21.0.12.1+1-1-deb13u1-Debian",
+    "zstd": "1.5.7",
+    "gnu_tar": "1.35",
+    "extraction_uid_gid": "65534:65534",
+    "native_execution_uid_gid": "65534:65534",
+    "network_isolation": "NOT_PROVEN",
+    "java_runtime": "host substitute; not archived portable Java 21.0.13"
+  },
+  "archive_safety": {
+    "zstd_test_exit": 0,
+    "decompression_exit": 0,
+    "tar_listing_exit": 0,
+    "member_count": 432,
+    "regular_files": 393,
+    "explicit_directories": 39,
+    "symlinks": 0,
+    "hardlinks": 0,
+    "special_files": 0,
+    "unsafe_or_duplicate_paths": 0,
+    "nonroot_extract_exit": 0,
+    "extracted_entries": 433,
+    "extracted_files": 393,
+    "extracted_directories": 40,
+    "all_entries_owned_by_65534": true,
+    "implicit_parent_directory": "tools"
+  },
+  "package": {
+    "prob_version": "1.16.1-final (716929f528b333dd3901a0521fc0d3460a488af7)",
+    "probcli_sha256": "029d38ba5b8ffbc8685bb7ba8e58ee43c6261ba689690ecebfb1aa33de932565",
+    "probcli_parser_jar_sha256": "0ec589e0a9f23c48dc7cb8ca5bac8d31ea92283eb220656779d6b7eaced8502d",
+    "legacy_meta_key": "TOOL_TOOL_ID=prob",
+    "current_main_runner_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "current_main_meta_generator_blob": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+    "current_main_behavior": "Runner rejects missing/mismatched TOOL_ID; metadata generator emits TOOL_ID; rebuild required before T4"
+  },
+  "fixtures": {
+    "expect_blob": "f8c4fdec2028a94905f385d154248ecc2ef35bfe",
+    "pos_blob": "a0ec10bfa1e0b09555ccd76baf8d109a008c533c",
+    "neg_blob": "6f733207d6b2b4a012458d5de5d321d26c2a92cf",
+    "err_blob": "cdfe14ef2e61e5082a1e685c3053c6de061137c9",
+    "contract_test_blob": "e19ec9e26a1ac5866a3d9a71f41f6d0c85b301c2",
+    "node_contract_tests": "3/3 PASS"
+  },
+  "execution": {
+    "method": "Exact current-main expect.sh three-copy setup executed manually as UID/GID 65534; direct native probcli -mc 100 runs from FT_TMP; current Runner/CLI/MCP/SDK not executed.",
+    "setup_exit": 0,
+    "pos": {
+      "exit": 0,
+      "matched": "ALL OPERATIONS COVERED",
+      "stdout_sha256": "410ad1eb560f53588e06b0644ea39c979bc46aa4aa61b8e94b9c4226f82d9bad"
+    },
+    "neg": {
+      "exit": 0,
+      "matched": "COUNTER EXAMPLE FOUND",
+      "stdout_sha256": "e7db2b765ccf0586934104ab45d7d75a56bd43312c752c2ceef60be3d88f3ca0"
+    },
+    "err": {
+      "exit": 0,
+      "matched": "source: parse_error",
+      "stderr_sha256": "17066d2e8640fdf33130b37a2d94fe6e2a462675ae66dd85460adc73f2b50009"
+    },
+    "readonly_source_diagnostic": {
+      "exit": 137,
+      "timeout_seconds": 12,
+      "finding": "parsercall io_exception while writing .<pid>.inprogress.prob beside read-only source fixture; forced SIGKILL after timeout"
+    },
+    "resource_stress": {
+      "rlimit_nproc": 16,
+      "rlimit_nofile": 64,
+      "exit": 1,
+      "finding": "Java VM thread creation EAGAIN; internal parser error; no false PASS"
+    },
+    "source_scratch_files": 0
+  },
+  "qualification": {
+    "T0": "PASS_SCOPED_DRIVE_ARCHIVE_HASH_AND_PRODUCER_MANIFEST_MATCH; no publisher attestation",
+    "T1": "NOT_QUALIFIED",
+    "T2": "PASS_SCOPED_ZSTD_TAR_PREFLIGHT_AND_NONROOT_EXTRACTION_ONLY",
+    "T3": "SCOPED_NATIVE_POS_NEG_ERR_REPRODUCED_WITH_HOST_JAVA21; pending independent review, not full T3 qualification",
+    "T4": "NOT_ACCEPTED; legacy TOOL_TOOL_ID metadata blocks current Runner",
+    "T5": "NOT_QUALIFIED",
+    "T6": "OPEN",
+    "product": "NOT_QUALIFIED",
+    "release": "NOT_AUTHORIZED"
+  },
+  "findings": {
+    "P0": 0,
+    "P1": 1,
+    "P2": 0,
+    "P1_detail": "Rebuild ProB package with current TOOL_ID metadata and current portable core; no T4 integration yet."
+  },
+  "limitations": [
+    "Host Java 21.0.12.1 substituted for portable Java 21.0.13.",
+    "Direct probcli execution only; no current-main Runner/CLI/MCP/SDK execution.",
+    "Network isolation not proven.",
+    "No independent business semantic Oracle or T5/T6 qualification."
+  ]
+}

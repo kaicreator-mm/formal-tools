@@ -5,7 +5,7 @@ FT_TOOL_VERSION=2.2.0
 FT_TOOL_KIND=binary
 FT_MAIN_BIN="tools/nuxmv/bin/nuXmv"
 FT_UPSTREAM_URL="https://nuxmv.fbk.eu/downloads/2.2.0/nuXmv-2.2.0-linux64.tar.xz"
-FT_PROBE=(bin/nuXmv -h)
+FT_PROBE=(run -h)
 
 ft_tool_build() {
   # official .sha256sum sibling: `hash *nuXmv-2.2.0-linux64.tar.xz`

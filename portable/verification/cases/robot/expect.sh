@@ -1,13 +1,14 @@
 EXPECT_TIMEOUT=180
-EXPECT_POS_ARGS='reason --reasoner ELK --input tests/robot/pos.ttl --output $FT_TMP/reasoned.ttl'
+EXPECT_POS_VIA=sh
+EXPECT_POS_ARGS='"$BUNDLE/tools/robot/run" reason --reasoner ELK --axiom-generators ClassAssertion --include-indirect true --create-new-ontology true --input "$BUNDLE/tests/robot/pos.ttl" --output "$FT_TMP/reasoned.ttl" && test -s "$FT_TMP/reasoned.ttl" && grep -A4 -F "ex:alice rdf:type owl:NamedIndividual" "$FT_TMP/reasoned.ttl" | grep -Fq "ex:Person" && echo ROBOT_INFERRED_CLASS_ASSERTION_CONFIRMED'
 EXPECT_POS_EXIT=0
-EXPECT_POS_REGEX='PHASE_DONE.*rc=0'
-EXPECT_POS_LABEL=CONSISTENT
+EXPECT_POS_REGEX='ROBOT_INFERRED_CLASS_ASSERTION_CONFIRMED'
+EXPECT_POS_LABEL=INFERRED_PERSON
 EXPECT_NEG_ARGS='reason --reasoner ELK --input tests/robot/neg.ttl'
-EXPECT_NEG_EXIT=*
-EXPECT_NEG_REGEX='(Inconsistent|inconsistent|Exception|error)'
+EXPECT_NEG_EXIT=1
+EXPECT_NEG_REGEX='The ontology is inconsistent'
 EXPECT_NEG_LABEL=INCONSISTENT
 EXPECT_ERR_ARGS='reason --reasoner ELK --input tests/robot/err.ttl'
-EXPECT_ERR_EXIT='*'
-EXPECT_ERR_REGEX='(Exception|error|Error|parse)'
+EXPECT_ERR_EXIT=1
+EXPECT_ERR_REGEX='INVALID ONTOLOGY FILE ERROR'
 EXPECT_ERR_LABEL=ERROR

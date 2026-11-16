@@ -52,9 +52,9 @@ function fixture(){
       provides:["logic.smt"],depends_on:[],source_refs:["requirements"],
       estimated_cost_units:2,timeout_ms:300,destination:"LOCAL",
       output_classification:"PUBLIC"}]};
-  const provenance={schema:"formal-tools/solution-provenance/0.1",
+  const provenance={schema:"formal-tools/solution-provenance/0.2",
     source_id:"requirements",source_sha256:sha("a"),
-    oracle_id:"oracle1",oracle_sha256:sha("a"),
+    oracle_id:"oracle1",oracle_source_id:"requirements",oracle_sha256:sha("a"),
     model_sha256:sha("b"),tool_id:"z3",tool_version:"5.4.0",
     tool_binary_sha256:sha("c"),platform:"debian13-x86_64",
     evidence_sha256:sha("d"),evidence_gate:"BYTES_BOUND_UNATTESTED"};
@@ -93,6 +93,50 @@ onSupported("G4 content-addressed candidate persists, reopens and refuses all se
    const different=await revokeStoredCandidate({store_dir:dir,
      candidate_sha256:first.candidate_sha256,reason:"SOURCE_REVOKED"});
    assert.equal(different.status,"BLOCKED","revocation may not be overwritten");
+ }finally{rmSync(dir,{recursive:true,force:true});}
+});
+onSupported("G4 persisted candidate invalidates every source/oracle/model/tool/evidence provenance dimension",async()=>{
+ const dir=mkdtempSync(join(tmpdir(),"ft-g4-provenance-drift-"));
+ try{
+   const f=fixture(),stored=await persistSolutionCandidate({store_dir:dir,...f});
+   assert.equal(stored.status,"CANDIDATE_PERSISTED");
+   const request={store_dir:dir,candidate_sha256:stored.candidate_sha256};
+   const mutations=[
+     ["source_id","requirements-v2"],
+     ["source_sha256",sha("e")],
+     ["oracle_id","oracle-v2"],
+     ["oracle_source_id","oracle-source-v2"],
+     ["oracle_sha256",sha("e")],
+     ["model_sha256",sha("e")],
+     ["tool_id","cvc5"],
+     ["tool_version","5.4.1"],
+     ["tool_binary_sha256",sha("e")],
+     ["platform","debian13-arm64"],
+     ["evidence_sha256",sha("e")],
+     ["evidence_gate","NOT_RUN"]
+   ];
+   for(const [key,value] of mutations){
+     const drift=await inspectStoredReplay({...request,
+       current_provenance_json:encode({...f.provenance,[key]:value})});
+     assert.equal(drift.status,"STALE",key);
+     assert.deepEqual(drift.changed_fields,[key],key);
+     assert.equal(drift.claim_result,"UNVERIFIED",key);
+     assert.equal(drift.replay_allowed,false,key);
+     assert.equal(drift.solution_promotable,false,key);
+   }
+   const invalidSchema=await inspectStoredReplay({...request,
+     current_provenance_json:encode({...f.provenance,schema:"forged/0.1"})});
+   assert.equal(invalidSchema.status,"BLOCKED","invalid provenance schema must fail closed");
+   assert.equal(invalidSchema.claim_result,"UNVERIFIED");
+   assert.equal(invalidSchema.replay_allowed,false);
+   assert.equal(invalidSchema.solution_promotable,false);
+   const unchanged=await inspectStoredReplay({...request,
+     current_provenance_json:f.provenance_json});
+   assert.equal(unchanged.status,"REPLAY_BLOCKED_UNQUALIFIED",
+     "provenance probes must not mutate or promote the persisted candidate");
+   assert.equal(unchanged.claim_result,"UNVERIFIED");
+   assert.equal(unchanged.replay_allowed,false);
+   assert.equal(unchanged.solution_promotable,false);
  }finally{rmSync(dir,{recursive:true,force:true});}
 });
 onSupported("G4 stored candidate rejects modified evidence, forged gate and path traversal",async()=>{

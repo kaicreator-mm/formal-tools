@@ -1,0 +1,75 @@
+{
+  "archive_sha256": "b7a5f6d1740086347d8055dab7fd1216960e19ab7a769fa2b15c1ec76ed0c193",
+  "decompressed_tar_sha256": "c4b37cdb456a8e8ad5b56dff7482783b187bc1c4576a8a03cdd1ca5a23d04f73",
+  "member_count": 6,
+  "regular_files": 4,
+  "directories": 2,
+  "symlinks": 0,
+  "hardlinks": 0,
+  "special_entries": 0,
+  "absolute_paths": 0,
+  "traversal_paths": 0,
+  "duplicate_paths": 0,
+  "members": [
+    {
+      "path": "tools/cvc5",
+      "type": "directory",
+      "size_bytes": 0,
+      "mode": "0755",
+      "archive_uid": 1000,
+      "archive_gid": 1000
+    },
+    {
+      "path": "tools/cvc5/run",
+      "type": "regular_file",
+      "size_bytes": 193,
+      "mode": "0755",
+      "archive_uid": 1000,
+      "archive_gid": 1000,
+      "sha256": "54f3e10049a7fe65d8983a6294e945508783ca12e624aaa5d50dd1af3c083c2d"
+    },
+    {
+      "path": "tools/cvc5/bin",
+      "type": "directory",
+      "size_bytes": 0,
+      "mode": "0755",
+      "archive_uid": 1000,
+      "archive_gid": 1000
+    },
+    {
+      "path": "tools/cvc5/bin/cvc5",
+      "type": "regular_file",
+      "size_bytes": 32241592,
+      "mode": "0755",
+      "archive_uid": 1000,
+      "archive_gid": 1000,
+      "sha256": "6aecddf466552b83bb5883756c7955e0c9d5ddcc6d7f45b48c2f6e06a741b102"
+    },
+    {
+      "path": "tools/cvc5/meta.sh",
+      "type": "regular_file",
+      "size_bytes": 143,
+      "mode": "0644",
+      "archive_uid": 1000,
+      "archive_gid": 1000,
+      "sha256": "c6aa7502ab238e17b444680c7d6c2155c5126f8a390cc449c09249aa0401656b"
+    },
+    {
+      "path": "tools/cvc5/meta.json",
+      "type": "regular_file",
+      "size_bytes": 959,
+      "mode": "0644",
+      "archive_uid": 1000,
+      "archive_gid": 1000,
+      "sha256": "e53cdca8186eb81b11acaf5b69a0e9dbfabb3be16950a9f73e8f7cb14c18fbe8"
+    }
+  ],
+  "extraction": {
+    "uid": 65534,
+    "gid": 65534,
+    "no_same_owner": true,
+    "no_same_permissions": true,
+    "observed_files_owned_by_uid": 65534,
+    "observed_files_owned_by_gid": 65534
+  }
+}

@@ -24,9 +24,9 @@ function fixture(){
     steps:[{id:"step01",tool_id:"z3",operation:"solve",claim_ids:["claim1"],
       provides:["logic.smt"],depends_on:[],source_refs:["requirements"],
       estimated_cost_units:2,timeout_ms:300,destination:"LOCAL",output_classification:"PUBLIC"}]};
-  const provenance={schema:"formal-tools/solution-provenance/0.1",
+  const provenance={schema:"formal-tools/solution-provenance/0.2",
     source_id:"requirements",source_sha256:"a".repeat(64),
-    oracle_id:"oracle1",oracle_sha256:"a".repeat(64),
+    oracle_id:"oracle1",oracle_source_id:"requirements",oracle_sha256:"a".repeat(64),
     model_sha256:"b".repeat(64),tool_id:"z3",tool_version:"5.1.0",
     tool_binary_sha256:"c".repeat(64),platform:"debian13-x86_64-glibc2.41",
     evidence_sha256:"d".repeat(64),evidence_gate:"BYTES_BOUND_UNATTESTED"};
@@ -82,4 +82,64 @@ test("G4 source/oracle/tool mismatch, fake PASS and unbounded input fail closed"
  const huge=sealSolutionCandidate({problem_json:"x".repeat(200000),
    method_json:encode(f.method),provenance_json:encode(f.provenance)});
  assert.equal(huge.status,"BLOCKED");
+});
+
+test("G4 Candidate binds an independently sourced frozen Oracle separately from Claim source",()=>{
+ const f=fixture();
+ f.problem.source_refs.push({id:"independent_oracle",sha256:"e".repeat(64),
+  classification:"PUBLIC",purpose:"independent frozen Oracle cases",consumer:"formal_tools"});
+ f.problem.oracles[0].source_ref="independent_oracle";
+ f.provenance.oracle_source_id="independent_oracle";
+ f.provenance.oracle_sha256="e".repeat(64);
+ const candidate=seal(f);
+ assert.equal(candidate.status,"CANDIDATE",JSON.stringify(candidate.issues));
+ assert.equal(candidate.provenance.source_sha256,"a".repeat(64));
+ assert.equal(candidate.provenance.oracle_sha256,"e".repeat(64));
+ assert.notEqual(candidate.provenance.source_sha256,candidate.provenance.oracle_sha256);
+ const replay=inspectCandidateReplay(encode(candidate),encode(f.provenance));
+ assert.equal(replay.status,"REPLAY_BLOCKED_UNQUALIFIED");
+ assert.equal(replay.replay_allowed,false);
+ assert.equal(replay.solution_promotable,false);
+});
+
+test("G4 rejects unknown Oracle source refs and mismatched Oracle source hashes",()=>{
+ const f=fixture();
+ f.problem.source_refs.push({id:"independent_oracle",sha256:"e".repeat(64),
+  classification:"PUBLIC",purpose:"independent frozen Oracle cases",consumer:"formal_tools"});
+ f.problem.oracles[0].source_ref="independent_oracle";
+ f.provenance.oracle_source_id="independent_oracle";
+ f.provenance.oracle_sha256="e".repeat(64);
+ assert.equal(seal({...f,problem:{...f.problem,oracles:[{...f.problem.oracles[0],source_ref:"missing_oracle"}]}}).status,"BLOCKED");
+ assert.equal(seal({...f,provenance:{...f.provenance,oracle_source_id:"missing_oracle"}}).status,"BLOCKED");
+ assert.equal(seal({...f,provenance:{...f.provenance,oracle_sha256:"f".repeat(64)}}).status,"BLOCKED");
+ const candidate=seal(f);
+ const drift=inspectCandidateReplay(encode(candidate),encode({...f.provenance,oracle_sha256:"f".repeat(64)}));
+ assert.equal(drift.status,"STALE");
+ assert.deepEqual(drift.changed_fields,["oracle_sha256"]);
+ const sourceDrift=inspectCandidateReplay(encode(candidate),encode({...f.provenance,oracle_source_id:"another_oracle"}));
+ assert.equal(sourceDrift.status,"STALE");
+ assert.deepEqual(sourceDrift.changed_fields,["oracle_source_id"]);
+});
+
+test("G4 v0.1 legacy Candidate remains same-source only and preserves its historical fingerprint",()=>{
+ const f=fixture();
+ delete f.provenance.oracle_source_id;
+ f.provenance.schema="formal-tools/solution-provenance/0.1";
+ const candidate=seal(f);
+ assert.equal(candidate.status,"CANDIDATE",JSON.stringify(candidate.issues));
+ assert.equal(candidate.provenance.oracle_source_id,undefined);
+ const replay=inspectCandidateReplay(encode(candidate),encode(f.provenance));
+ assert.equal(replay.status,"REPLAY_BLOCKED_UNQUALIFIED");
+ const upgraded=inspectCandidateReplay(encode(candidate),encode({
+  ...f.provenance,schema:"formal-tools/solution-provenance/0.2",oracle_source_id:"requirements"
+ }));
+ assert.equal(upgraded.status,"STALE");
+ assert.deepEqual(upgraded.changed_fields,["schema"]);
+ const independent={...f,problem:structuredClone(f.problem),provenance:{...f.provenance}};
+ independent.problem.source_refs.push({id:"independent_oracle",sha256:"e".repeat(64),
+  classification:"PUBLIC",purpose:"independent frozen Oracle cases",consumer:"formal_tools"});
+ independent.problem.oracles[0].source_ref="independent_oracle";
+ independent.provenance.oracle_sha256="e".repeat(64);
+ assert.equal(seal(independent).status,"BLOCKED",
+  "legacy v0.1 cannot silently infer an independent Oracle source");
 });

@@ -28,9 +28,9 @@ function frozenMethod(){
       provides:["logic.smt"],depends_on:[],source_refs:["requirements"],
       estimated_cost_units:2,timeout_ms:300,destination:"LOCAL",
       output_classification:"PUBLIC"}]};
-  const provenance={schema:"formal-tools/solution-provenance/0.1",
+  const provenance={schema:"formal-tools/solution-provenance/0.2",
     source_id:"requirements",source_sha256:sha("a"),
-    oracle_id:"oracle1",oracle_sha256:sha("a"),
+    oracle_id:"oracle1",oracle_source_id:"requirements",oracle_sha256:sha("a"),
     model_sha256:sha("b"),tool_id:"z3",tool_version:"5.4.0",
     tool_binary_sha256:sha("c"),platform:"debian13-x86_64",
     evidence_sha256:sha("d"),evidence_gate:"BYTES_BOUND_UNATTESTED"};
@@ -60,10 +60,11 @@ test("G6 real DIS example is source-pinned, unqualified candidate maps to no-aut
 });
 test("G6 changed Source/Oracle/Model/Tool/Evidence and DIS target become STALE",()=>{
  const x=frozenMethod();
- for(const field of ["source_sha256","oracle_sha256","model_sha256",
+ for(const field of ["source_sha256","oracle_source_id","oracle_sha256","model_sha256",
    "tool_binary_sha256","evidence_sha256","tool_version","platform"]){
    const p=JSON.parse(x.current_provenance_json);
-   p[field]=field==="tool_version"?"6.0":field==="platform"?"different-host":sha("e");
+   p[field]=field==="tool_version"?"6.0":field==="platform"?"different-host":
+     field==="oracle_source_id"?"another_oracle":sha("e");
    const v=inspectDisV020Consumption({...x,current_provenance_json:encode(p)});
    assert.equal(v.status,"STALE",field);
    assert.equal(v.kind,"UNKNOWN");
