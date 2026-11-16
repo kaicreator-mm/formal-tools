@@ -110,7 +110,7 @@ export const GATE_DEPENDENCIES = Object.freeze({
   T1: Object.freeze([
     "version", "upstreamCommit", "upstreamAssetSha256", "builderBlob",
     "alloyRunnerSourceBlob", "buildToolBlob", "metaGeneratorBlob", "packagerBlob",
-    "toolchainFingerprint", "rebuiltPackageTreeSha256"
+    "manifestGeneratorBlob", "toolchainFingerprint", "rebuiltPackageTreeSha256"
   ]),
   T2: Object.freeze([
     "version", "canonicalArchiveDriveId", "canonicalArchiveBytes",
@@ -123,7 +123,7 @@ export const GATE_DEPENDENCIES = Object.freeze({
     "version", "canonicalArchiveSha256", "bundledJarSha256", "alloyRunnerClassSha256",
     "expectBlob", "positiveFixtureBlob", "negativeFixtureBlob", "errorFixtureBlob",
     "exitContractTestBlob", "observedHostJavaVersion", "observedHostJavaSha256",
-    "nativeAcceptanceEvidenceBlob", "nativeAcceptanceEvidenceRef"
+    "auditEvidenceBlob", "nativeAcceptanceEvidenceRef"
   ]),
   T4: Object.freeze([
     "version", "canonicalArchiveSha256", "bundledJarSha256", "alloyRunnerClassSha256",
@@ -131,15 +131,15 @@ export const GATE_DEPENDENCIES = Object.freeze({
     "exitContractTestBlob", "runnerBlob", "nativeAdapterBlob", "nativeCatalogBlob",
     "toolManagerBlob", "cliDriverBlob", "sdkDriverBlob", "toolResultBlob",
     "mcpDriverBlob", "portfolioGatewayBlob", "registryBlob", "portfolioDagBlob",
-    "observedHostJavaVersion", "observedHostJavaSha256", "portableJavaRuntimeSha256",
+    "auditEvidenceBlob", "observedHostJavaVersion", "observedHostJavaSha256", "portableJavaRuntimeSha256",
     "runtimeImageDigest"
   ]),
   T5: Object.freeze([
     "version", "canonicalArchiveSha256", "bundledJarSha256", "alloyRunnerClassSha256",
     "installedPackageTreeSha256", "observedHostJavaVersion", "observedHostJavaSha256",
     "portableJavaRuntimeSha256", "runtimeImageDigest", "positiveFixtureBlob",
-    "negativeFixtureBlob", "errorFixtureBlob", "oracleId", "oracleVersion",
-    "oracleCaseBlob"
+    "negativeFixtureBlob", "errorFixtureBlob", "auditEvidenceBlob",
+    "oracleId", "oracleVersion", "oracleCaseBlob"
   ]),
   T6: IDENTITY_FIELDS
 });
@@ -198,6 +198,34 @@ function validateBaseline(baseline) {
   }
   if (!isObject(baseline.gateDependencies)) {
     throw new TypeError("baseline gateDependencies object is required");
+  }
+  // Validate actual semantic field ownership, not just equality of two copies
+  // of the same dependency map: a shared typo must never silently mask drift.
+  const identityFieldSet = new Set(IDENTITY_FIELDS);
+  for (const [gate, dependencies] of Object.entries(GATE_DEPENDENCIES)) {
+    if (!Array.isArray(dependencies) || !dependencies.length) {
+      throw new TypeError("invalid gate dependency list: " + gate);
+    }
+    const seen = new Set();
+    for (const field of dependencies) {
+      if (!identityFieldSet.has(field) || seen.has(field)) {
+        throw new TypeError("unknown or duplicate gate dependency field in " + gate + ": " + field);
+      }
+      seen.add(field);
+    }
+  }
+  for (const gate of Object.keys(GATE_DEPENDENCIES)) {
+    const deps = baseline.gateDependencies[gate];
+    if (!Array.isArray(deps)) {
+      throw new TypeError("baseline gateDependencies missing array for " + gate);
+    }
+    const seen = new Set();
+    for (const field of deps) {
+      if (typeof field !== "string" || !identityFieldSet.has(field) || seen.has(field)) {
+        throw new TypeError("baseline gateDependencies contains unknown or duplicate identity field in " + gate + ": " + field);
+      }
+      seen.add(field);
+    }
   }
   for (const gate of Object.keys(GATE_DEPENDENCIES)) {
     if (!hasOwn(baseline.gateStatus, gate)) {
