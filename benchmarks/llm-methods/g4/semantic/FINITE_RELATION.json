@@ -1,6 +1,6 @@
 {
   "schema": "formal-tools/g4-finite-source-model-relation/0.1",
-  "version": "R85",
+  "version": "R86",
   "source": {
     "path": "benchmarks/llm-methods/g4/semantic/source/download-goal.mjs",
     "git_blob": "f57747aa7996c88833e72288a0acd594a7ce5468",
@@ -63,8 +63,10 @@
       "false": 0
     },
     "answers_allowed": {
-      "true": "EMPTY_OBJECT",
-      "false": "UNDECLARED_answer_FIELD"
+      "true": {},
+      "false": {
+        "unapproved": "x"
+      }
     },
     "confirmed": {
       "true": true,
@@ -107,5 +109,11 @@
     "predecessor_review": "ACCEPT_SCOPED",
     "predecessor_merge_commit": "e1081c7960622f3e6664ae4cb18851377912c636",
     "predecessor_main_ci": "#1983 SUCCESS"
+  },
+  "verification": {
+    "declaration_sha256": "38da062918df0aef95212458525ebef332582bb68f9edac19469ff7affb4c392",
+    "serialization": "sha256(UTF8(JSON.stringify({representative_values,equations})))",
+    "equation_grammar": "STRICT_FINITE_CONJUNCTION_ONLY",
+    "manifest_only_mutation_negative": "TESTED_IN_ISOLATED_IN_MEMORY_COPY"
   }
 }
