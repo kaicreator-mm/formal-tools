@@ -22,6 +22,12 @@ test("Dafny SDK adapter identifies parse errors and fails closed on unrelated fa
   assert.equal(err.tool_outcome,"PARSE_ERROR");
   assert.equal(err.process_outcome,"NONZERO_EXIT");
 
+  const zeroErrors=interpretNativeObservation("dafny","0 parse errors detected in err.dfy","",2);
+  assert.equal(zeroErrors.tool_outcome,"UNPARSED");
+  assert.equal(zeroErrors.process_outcome,"NONZERO_EXIT");
+  assert.equal(zeroErrors.test_verdict,"NOT_EVALUATED");
+  assert.equal(zeroErrors.claim_verdict,"NOT_EVALUATED");
+
   for(const [output,exit] of [
     ["timeout while starting runtime",124],
     ["Error: failed to load a runtime library",134],

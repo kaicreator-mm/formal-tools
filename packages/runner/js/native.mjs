@@ -357,7 +357,10 @@ export function interpretNativeObservation(tool,stdout,stderr,exitCode) {
    const errors=summary?Number(summary[2]):0;
    if(exitCode===0&&summary&&verified>0&&errors===0) outcome="VERIFIED";
    else if(exitCode===4&&summary&&errors>0&&/\bpostcondition could not be proved\b/i.test(output)) outcome="VERIFICATION_ERROR";
-   else if(exitCode===2&&/\bparse errors detected in [^\r\n]+/i.test(output)) outcome="PARSE_ERROR";
+   else {
+     const parseErrorSummary=output.match(/^\s*(\d+) parse errors detected in [^\r\n]+$/im);
+     if(exitCode===2&&parseErrorSummary&&Number(parseErrorSummary[1])>0) outcome="PARSE_ERROR";
+   }
  } else if(tool==="vampire") {
    outcome=output.match(/SZS status ([A-Za-z]+)/)?.[1]?.toUpperCase()??"UNPARSED";
  } else if(tool==="rdf-shacl") {
