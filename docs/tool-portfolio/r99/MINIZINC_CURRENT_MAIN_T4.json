@@ -1,0 +1,315 @@
+{
+  "schema": "formal-tools/i24-minizinc-current-main-t4/1.0",
+  "output_label": "FORMAL_TOOLS_I24_MINIZINC_CURRENT_MAIN_T4",
+  "repository": "kaicreator-mm/formal-tools",
+  "main_issue": 24,
+  "tool_issue": 43,
+  "ready_task_comment": 6917225321,
+  "exact_main": "530a2d7a8edf99106845be228b6451c6aa52be92",
+  "main_branch_reconfirmed": true,
+  "main_commit_ci": {
+    "context": "ci/woodpecker/push/formal-static",
+    "pipeline": 1831,
+    "status": "SUCCESS",
+    "url": "https://ci.kaicreator.com/repos/39/pipeline/1831/1",
+    "node_runtime": "24.21.0",
+    "executed_commands": [
+      "npm ci --ignore-scripts --no-audit --no-fund --prefer-offline",
+      "node --test tests/*.test.mjs",
+      "npm run typecheck",
+      "node packages/runner/js/cli.mjs validate",
+      "node packages/runner/js/cli.mjs pure dag --input validation/js/dag-positive.json",
+      "node packages/runner/js/cli.mjs catalog z3",
+      "node packages/runner/js/cli.mjs info z3",
+      "node packages/runner/js/cli.mjs plan z3 solve --input skills/z3/examples/positive.smt2"
+    ],
+    "limitation": "This is the current-main static/source CI; it does not execute the MiniZinc portable package through Runner/CLI/SDK/MCP."
+  },
+  "pr130": {
+    "head": "124e011e68d72be001491a4efcc2ab434b9d48eb",
+    "merge_commit": "211c7a83282a25c0387bce2dd4e8f632313b51b8",
+    "merged": true,
+    "independent_review_comment": 6896362387,
+    "independent_verdict": "ACCEPT_SCOPED",
+    "review_findings": {
+      "P0": 0,
+      "P1": 0,
+      "P2": 0
+    },
+    "upstream_asset_pin": {
+      "repository": "MiniZinc/MiniZincIDE",
+      "release": "2.10.1",
+      "asset_id": 537371691,
+      "asset": "MiniZincIDE-2.10.1-x86_64-linux-gnu.tgz",
+      "url": "https://github.com/MiniZinc/MiniZincIDE/releases/download/2.10.1/MiniZincIDE-2.10.1-x86_64-linux-gnu.tgz",
+      "sha256": "b63dd88491d47b05d0eb0ff4aa1112d1e6f77292c023800b20b98851458ce01c",
+      "size_bytes": 80669849,
+      "bytes_fetched_and_rebuilt": false
+    }
+  },
+  "current_main_source_pins": {
+    "portable/builders/tools/minizinc.sh": "f81f15f2dba5a0686eaf9c60181c7a38aaa65df0",
+    "portable/builders/make_meta.py": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+    "portable/builders/build-tool.sh": "82d945820c32ab2b952981e5678a9c7ddb2cd41d",
+    "portable/packaging/bundle-template/bin/tool-runner": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "packages/runner/js/tool-portfolio-t4.mjs": "922a7c208beaa0e48346403a29ec2d927189319f",
+    "packages/runner/js/cli.mjs": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
+    "packages/runner/js/sdk.mjs": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+    "packages/runner/js/mcp.mjs": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+    "tests/tool-portable-metadata.test.mjs": "c7cc0f2ec5be84b9f1f8607be9a25eb9f6d882c4",
+    "tests/minizinc-upstream-source-pin.test.mjs": "146f832a2fd2ca8ad8f70dcd31abdd38998fc2c9",
+    "tests/tool-portfolio-t4.test.mjs": "6b3d5490afa7cbfd29a24f7aac33428f98a446c8"
+  },
+  "drive_archive": {
+    "file_id": "1Vmn_FKlmXjXrpor46EU-7bU_Q0jJj9Pv",
+    "file_name": "minizinc-2.10.1-linux-x86_64.tar.zst",
+    "size_bytes": 79397709,
+    "sha256": "fae47a82ff39aa3122cd7825d225721f2cbc8b8c84bc92d0b74f3f31c08835e4",
+    "modified_time": "2026-11-12T09:01:45.230Z",
+    "producer_manifest": {
+      "file_id": "1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1",
+      "size_bytes": 4514,
+      "sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64",
+      "matching_entry": "fae47a82ff39aa3122cd7825d225721f2cbc8b8c84bc92d0b74f3f31c08835e4  tools/minizinc-2.10.1-linux-x86_64.tar.zst",
+      "actual_bytes_match_manifest": true
+    },
+    "package_metadata": {
+      "meta.json": {
+        "tool_id": "minizinc",
+        "version": "2.10.1",
+        "kind": "bundle",
+        "sha256": "c93c838ecd69285a8df7d8df05a6bf592b914a8a7cf975980cb3b03aa7428d7c"
+      },
+      "meta.sh": {
+        "legacy_key": "TOOL_TOOL_ID=minizinc",
+        "version": "TOOL_VERSION=2.10.1",
+        "kind": "TOOL_KIND=bundle",
+        "sha256": "719b348e347c0c226d3a60c9209b6091580e0fd3969f833e63d902b2fd1d8a38"
+      }
+    },
+    "historical_build_receipt": {
+      "package_sha256": "63dc43b77cb42e491f2510bffd5d5aa5caaee0330e0ac75c7a5533a8e406aa1b",
+      "build_time": "2026-11-10T22:28:33Z",
+      "disposition": "STALE_HISTORICAL_RECEIPT; it predates the Drive archive modified 2026-11-12 and is not the identity of the current Drive bytes."
+    }
+  },
+  "metadata_contract": {
+    "build_driver": "build-tool.sh exports M_TOOL_ID from the selected FT_TOOL_ID argument.",
+    "generator": "make_meta.py maps the tool_id field to TOOL_ID (not TOOL_TOOL_ID).",
+    "runner": "tool-runner clears inherited TOOL_ID and related keys, sources meta.sh, then requires exact TOOL_ID == requested id plus non-empty version and kind.",
+    "local_generator_reproduction": {
+      "make_meta_git_blob_recomputed": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+      "result": "PASS_SCOPED",
+      "generated_meta_sh": [
+        "TOOL_ID=minizinc",
+        "TOOL_VERSION=2.10.1",
+        "TOOL_KIND=bundle",
+        "TOOL_MAIN_BIN=tools/minizinc/bin/minizinc",
+        "TOOL_GLIBC_MAX=2.23",
+        "TOOL_ELF_ARCH=x86_64",
+        "UNAVAILABLE=0"
+      ],
+      "generated_meta_sh_sha256": "bf17ab7ae6e3c7b674fe757888ff76871a3953812cc0d8ca88f43d7743ecb285",
+      "scope": "The exact make_meta.py source blob was locally executed against a temporary metadata directory; this is not a package rebuild."
+    },
+    "local_runner_guard_reproduction": {
+      "current_runner_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+      "legacy_archive_metadata": {
+        "inherited_TOOL_ID_was_preset": true,
+        "guard_exit_code": 1,
+        "stderr": "invalid tool metadata: minizinc (TOOL_ID/version/kind missing or mismatched)",
+        "stderr_sha256": "daaff25ad1a6980d4078da03deb898921380488a590db82e0748756f048443f8"
+      },
+      "generated_canonical_metadata": {
+        "guard_exit_code": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "scope": "The exact tool_meta guard function was extracted from the current Runner blob and exercised against the real Drive package meta.sh and a temporary canonical meta.sh. This is a metadata-contract reproduction, not a full Runner doctor/version/verify execution."
+    },
+    "existing_regression_coverage": {
+      "test_blob": "c7cc0f2ec5be84b9f1f8607be9a25eb9f6d882c4",
+      "cases": [
+        "legacy TOOL_TOOL_ID fails closed for doctor, version and run",
+        "inherited TOOL_ID cannot spoof a missing canonical TOOL_ID"
+      ],
+      "current_main_ci": "SUCCESS"
+    }
+  },
+  "route_source_audit": {
+    "portfolio_gateway_blob": "922a7c208beaa0e48346403a29ec2d927189319f",
+    "cli_blob": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
+    "sdk_blob": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+    "mcp_blob": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+    "runner_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "cli": {
+      "source_verified": true,
+      "route": "portfolio doctor/verify -> runPortableGate -> current portable/bin/tool-runner",
+      "actual_minizinc_package_execution": "NOT_RUN",
+      "reason": "The only available Drive package has legacy TOOL_TOOL_ID and is rejected by the current Runner; no canonical rebuilt package exists."
+    },
+    "sdk": {
+      "source_verified": true,
+      "route": "SDK re-exports runPortableGate/portfolio operations from the same gateway.",
+      "actual_minizinc_package_execution": "NOT_RUN",
+      "reason": "No canonical rebuilt package exists; the actual CLI/SDK end-to-end routes were not executed."
+    },
+    "mcp": {
+      "source_verified": true,
+      "route": "MCP imports and calls the same runPortableGate gateway; unsuccessful technical receipts are surfaced as tool errors.",
+      "actual_minizinc_package_execution": "NOT_RUN",
+      "reason": "The environment lacks @modelcontextprotocol/server and a connected MCP host."
+    }
+  },
+  "reused_r55_native_evidence": {
+    "evidence_zip_id": "1TrURK4wpHAJYpHLLMUFMUnIOGgsxfJb5",
+    "size_bytes": 105601,
+    "sha256": "dd4c94356a9c5d5d1ee914b9656f06a242f3359b29b171ad92c6f7213784e6ff",
+    "zip_readback_and_hash_reverified": true,
+    "native_receipts": {
+      "runtime": "MiniZinc 2.10.1",
+      "solver": "Chuffed 0.14.0",
+      "uid_gid": "65534:65534",
+      "positive": {
+        "exit": 0,
+        "output": "x = 10"
+      },
+      "negative": {
+        "exit": 0,
+        "output": "=====UNSATISFIABLE====="
+      },
+      "error": {
+        "exit": 1,
+        "output": "undefined identifier y"
+      },
+      "fixture_contract": "1/1 PASS"
+    },
+    "qualification_scope": "REUSE_EXISTING_R55_NATIVE_EVIDENCE_ONLY; no solver rerun was performed in this task."
+  },
+  "environment_limitations": {
+    "local_node": "v22.16.0",
+    "docker": "NOT_AVAILABLE",
+    "podman": "NOT_AVAILABLE",
+    "outbound_dns": "UNAVAILABLE",
+    "full_repository_worktree": "NOT_AVAILABLE",
+    "model_context_protocol_server_dependency": "NOT_INSTALLED"
+  },
+  "qualification": {
+    "T0": "PASS_SCOPED_DRIVE_ARCHIVE_MATCHES_PRODUCER_MANIFEST; full T0 remains open for complete bundled-license inventory and official publisher-byte rebuild.",
+    "T1": "NOT_QUALIFIED; exact official release asset bytes were not fetched and no rebuild was performed.",
+    "T2": "PASS_SCOPED_REUSED_R55_NONROOT_EXTRACTION_AND_ARCHIVE_SAFETY_EVIDENCE.",
+    "T3": "SCOPED_NATIVE_POS_NEG_ERR_EVIDENCE_REUSED_FROM_R55; no new native execution or broader semantic qualification.",
+    "T4": "NOT_ACCEPTED; legacy Drive package is correctly rejected by current Runner; actual current-main Runner/CLI/SDK execution against a canonical rebuilt package is missing.",
+    "T5": "NOT_QUALIFIED",
+    "T6": "OPEN",
+    "product": "NOT_QUALIFIED",
+    "release": "NOT_AUTHORIZED"
+  },
+  "missing_evidence": [
+    "Fetch the exact official MiniZincIDE 2.10.1 .tgz bytes and verify SHA256 b63dd88491d47b05d0eb0ff4aa1112d1e6f77292c023800b20b98851458ce01c and size 80669849.",
+    "Run the current-main builder in its pinned Debian 13 build environment and capture the rebuilt package SHA256, generated meta.sh/meta.json hashes and binary hashes.",
+    "Execute the full current-main portable Runner doctor/version/verify against the rebuilt package as UID/GID 65534, preserving argv, streams, exit codes and raw receipt hashes.",
+    "Execute current-main CLI and SDK portfolio routes against that same canonical package and fixtures.",
+    "Run MCP only after the exact MCP dependencies and a connected host are available."
+  ],
+  "next_action": "Acquire the official pinned upstream asset and a networked Debian 13 builder environment; then rebuild and execute the unchanged current-main Runner/CLI/SDK paths. Do not add a legacy alias or weaken shared Runner.",
+  "current_main_reconciliation": {
+    "latest_main": "6991c7aae1026ea9bda9d49f43139e92437f0493",
+    "tested_main": "530a2d7a8edf99106845be228b6451c6aa52be92",
+    "main_push": {
+      "pipeline": 1903,
+      "status": "SUCCESS",
+      "url": "https://ci.kaicreator.com/repos/39/pipeline/1903/1"
+    },
+    "intervening_commits": [
+      {
+        "sha": "387a21d70c9a411117ffd75e312e72062649b8df",
+        "pull_request": 148,
+        "message": "fix(g4): support independently sourced Oracle provenance",
+        "changed_paths": [
+          "packages/runner/js/solution-candidate.mjs",
+          "tests/dis-v020-consumer-preflight.test.mjs",
+          "tests/solution-candidate.test.mjs",
+          "tests/solution-store-cross-process-replay.test.mjs",
+          "tests/solution-store.test.mjs"
+        ]
+      },
+      {
+        "sha": "68e9d08e99bb3bf4fe07cde116ec403fd10bc3e7",
+        "pull_request": 146,
+        "message": "feat(g4): add xDownload interaction dual-solver evidence",
+        "changed_paths": [
+          "benchmarks/llm-methods/g4/METHOD.json",
+          "benchmarks/llm-methods/g4/MODEL_SET.json",
+          "benchmarks/llm-methods/g4/PROBLEM.json",
+          "benchmarks/llm-methods/g4/PROVENANCE.json",
+          "benchmarks/llm-methods/g4/README.md",
+          "benchmarks/llm-methods/g4/cases/01-valid-inspect-and-confirm.smt2",
+          "benchmarks/llm-methods/g4/cases/02-unconfirmed-cannot-be-ready.smt2",
+          "benchmarks/llm-methods/g4/cases/03-invalid-input-cannot-be-ready.smt2",
+          "benchmarks/llm-methods/g4/cases/04-undeclared-answer-and-forged-draft-cannot-be-ready.smt2",
+          "benchmarks/llm-methods/g4/cases/05-effect-is-unreachable.smt2",
+          "tests/xdownload-interaction-g4-candidate.test.mjs",
+          "validation/xdownload-interaction-2026-11-16/"
+        ]
+      },
+      {
+        "sha": "6991c7aae1026ea9bda9d49f43139e92437f0493",
+        "pull_request": 152,
+        "message": "test(g4): cover independently sourced Oracle durable lifecycle",
+        "changed_paths": [
+          "tests/solution-store-cross-process-replay.test.mjs"
+        ]
+      }
+    ],
+    "source_pin_overlap": [],
+    "status": "SOURCE_PINS_UNCHANGED",
+    "branch_sync_parent_order": [
+      "6991c7aae1026ea9bda9d49f43139e92437f0493",
+      "ec3b56432b4fc8b39e50d777d12fb7517b4b10e1"
+    ],
+    "sync_history": [
+      {
+        "latest_main": "387a21d70c9a411117ffd75e312e72062649b8df",
+        "tested_main": "530a2d7a8edf99106845be228b6451c6aa52be92",
+        "main_push": {
+          "pipeline": 1882,
+          "status": "SUCCESS",
+          "url": "https://ci.kaicreator.com/repos/39/pipeline/1882/1"
+        },
+        "intervening_commits": [
+          {
+            "sha": "387a21d70c9a411117ffd75e312e72062649b8df",
+            "pull_request": 148,
+            "message": "fix(g4): support independently sourced Oracle provenance",
+            "changed_paths": [
+              "packages/runner/js/solution-candidate.mjs",
+              "tests/dis-v020-consumer-preflight.test.mjs",
+              "tests/solution-candidate.test.mjs",
+              "tests/solution-store-cross-process-replay.test.mjs",
+              "tests/solution-store.test.mjs"
+            ]
+          }
+        ],
+        "source_pin_overlap": [],
+        "status": "SOURCE_PINS_UNCHANGED",
+        "branch_sync_parent_order": [
+          "387a21d70c9a411117ffd75e312e72062649b8df",
+          "eb3caf87b365f10a96f472646da1b92b817b974d"
+        ]
+      }
+    ],
+    "latest_main_delta": {
+      "from": "68e9d08e99bb3bf4fe07cde116ec403fd10bc3e7",
+      "to": "6991c7aae1026ea9bda9d49f43139e92437f0493",
+      "commits": 3,
+      "changed_paths": [
+        "tests/solution-store-cross-process-replay.test.mjs"
+      ],
+      "pull_request": 152,
+      "source_pin_matches": "11/11",
+      "source_pin_overlap": [],
+      "qualification_effect": "NONE"
+    },
+    "latest_main_note": "R104 Integrator reconciliation: main advanced from 387a21d to 68e9d08 through PR #146 (36 G4 xDownload benchmark/validation paths), then from 68e9d08 to 6991c7a through PR #152 (one G4 cross-process test). Both deltas are disjoint from all 11 MiniZinc source pins and the one evidence JSON. All 11 source Git Blobs were re-fetched at 6991c7 and match 11/11. Historical tested_main=530a2d7 and its #1831 pipeline remain unchanged; no new MiniZinc execution is claimed on 6991c7."
+  }
+}
