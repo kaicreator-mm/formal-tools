@@ -9,7 +9,7 @@ const sourceUrl=new URL('../benchmarks/llm-methods/g4/semantic/source/download-g
 const mappingUrl=new URL('../benchmarks/llm-methods/g4/semantic/MAPPING.json',import.meta.url);
 const modelSetUrl=new URL('../benchmarks/llm-methods/g4/MODEL_SET.json',import.meta.url);
 const sha256=bytes=>createHash('sha256').update(bytes).digest('hex');
-const gitBlob=bytes=>createHash('sha1').update('blob '+bytes.length+'\\0').update(bytes).digest('hex');
+const gitBlob=bytes=>createHash('sha1').update('blob '+bytes.length+'\0').update(bytes).digest('hex');
 const valid=()=>({channel:'cli',requestId:'req_01',url:'https://example.com/a',declaredBytes:12});
 const confirm=(proposal=valid(),confirmed=true,answers={},draftFields={})=>
  confirmDownloadGoal({draft:{proposal,...draftFields},answers,confirmed});
