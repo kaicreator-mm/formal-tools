@@ -314,9 +314,18 @@
     "r77Err": {
       "executionIdentity": "UID_GID_65534_HOST_OPENJDK_21_0_12_1",
       "exitCode": 1,
-      "fixtureBlob": "9b3f8e5f6eedcced1710bf2e0713dd48e5",
+      "fixtureBlob": "9b3f8e5f6eedcced1710bf2e0713dd48e5bf2a4c",
       "stderrSha256": "28068944e2a3cfbe4fa095dd2c06ca8f270d7e41186c751c283255b68849f844",
       "sourceEvidenceBlob": "a4e2fa0cdae4ad8d2fbc38366c432671d8228948"
     }
-  }
+  },
+  "openBlockers": [
+    "T0: upstream source commit, publisher asset digest and license evidence are UNKNOWN; the archive hash match is only against the producer SHA256SUMS manifest.",
+    "T1: no independent reproducible source build or rebuilt package-tree hash is available.",
+    "T2: canonical bundled Java 21 runtime identity and installed package-tree hash are UNKNOWN; the recorded extraction is scoped only.",
+    "T3: POS/NEG/ERR evidence is historical R3; R77 directly reran ERR only on host OpenJDK 21.0.12.1.",
+    "T4: exact-current-main original-package Runner, CLI, SDK and MCP end-to-end receipts and independent admission review are absent.",
+    "T5: no source-backed Alloy business case or independent semantic Oracle is recorded.",
+    "T6: this assessor detects identity drift but no real release/version-change regression cycle has been completed."
+  ]
 }
