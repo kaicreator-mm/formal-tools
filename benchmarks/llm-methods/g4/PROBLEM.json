@@ -1,0 +1,41 @@
+{
+  "schema": "formal-tools/problem-spec/0.1",
+  "problem_id": "dis.xdownload.interaction.safety",
+  "source_refs": [
+    {
+      "id": "xdownload_interaction",
+      "sha256": "aa7dc083fd0a7dc6f9d98e0792058d567b16c1b4883f9fe9d80fa91733afe4c2",
+      "classification": "PUBLIC",
+      "purpose": "Exact source pin for bounded inspect/confirm interaction state model; Git blob f57747aa7996c88833e72288a0acd594a7ce5468",
+      "consumer": "domain_harness"
+    }
+  ],
+  "requirements": [
+    {"id": "r1", "source_ref": "xdownload_interaction", "text": "A complete valid interaction input can reach AWAITING_CONFIRMATION."},
+    {"id": "r2", "source_ref": "xdownload_interaction", "text": "READY_FOR_KDP requires a valid re-evaluated proposal, allowed answer fields and explicit confirmation."},
+    {"id": "r3", "source_ref": "xdownload_interaction", "text": "READY_FOR_KDP remains an observation: authority NONE, effectDispatched false, permittedEffect false."}
+  ],
+  "claims": [
+    {
+      "id": "claim1",
+      "text": "Within the declared Boolean abstraction, invalid input, unconfirmed input, undeclared answers or a forged draft-ready flag cannot yield READY_FOR_KDP, and neither effect dispatch nor effect permission is reachable.",
+      "kind": "bounded_model",
+      "requirement_ids": ["r1","r2","r3"],
+      "source_refs": ["xdownload_interaction"],
+      "capability_ids": ["logic.smt"]
+    }
+  ],
+  "oracles": [
+    {
+      "id": "xdownload_runtime_crosscheck",
+      "source_ref": "xdownload_interaction",
+      "frozen": true,
+      "positive_case_ids": ["valid_inspect_awaiting_confirmation","valid_confirm_ready_for_kdp"],
+      "negative_case_ids": ["unconfirmed_cannot_be_ready","unsafe_url_cannot_be_ready","oversized_or_invalid_size_cannot_be_ready","undeclared_answer_cannot_be_ready","forged_draft_status_does_not_bypass_revalidation","effect_dispatch_is_impossible","effect_permission_is_impossible"],
+      "review_identity": "engineering_runtime_crosscheck"
+    }
+  ],
+  "capability_ids": ["logic.smt"],
+  "budget": {"max_steps":2,"max_depth":2,"max_cost_units":2,"max_total_time_ms":2000,"max_retries":0},
+  "policy": {"allowed_tools":["z3","cvc5"],"allowed_operations":{"z3":["solve"],"cvc5":["solve"]},"destination":"LOCAL","max_input_classification":"PUBLIC","allow_network":false}
+}
