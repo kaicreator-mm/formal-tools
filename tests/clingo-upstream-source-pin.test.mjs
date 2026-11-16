@@ -163,11 +163,13 @@ test("fresh private source/build/install stages are unique and cleaned after suc
 });
 
 test("missing, duplicate and symlinked extraction roots cannot select stale source", () => {
-  for (const [mode, error] of [
+  /** @type {[Record<string,string>, RegExp][]} */
+  const cases = [
     [{ MOCK_NO_SOURCE: "1" }, /source dir not found in fresh stage/],
     [{ MOCK_SECOND_SOURCE: "1" }, /source dirs ambiguous in fresh stage/],
     [{ MOCK_SYMLINK_ONLY: "1" }, /source dir not found in fresh stage/]
-  ]) {
+  ];
+  for (const [mode, error] of cases) {
     const run = runMockBuild(mode);
     assert.equal(run.status, 3, run.stderr);
     assert.match(run.stderr, error);
@@ -178,11 +180,13 @@ test("missing, duplicate and symlinked extraction roots cannot select stale sour
 });
 
 test("failed extraction, source identity, and packaged executable also clean private stages", () => {
-  for (const [mode, error] of [
+  /** @type {[Record<string,string>, RegExp][]} */
+  const cases = [
     [{ MOCK_EXTRACT_FAIL: "1" }, /source extraction failed/],
     [{ MOCK_HEADER_VERSION: "6.0.0" }, /source version does not match/],
     [{ MOCK_VERSION_OUTPUT: "6.0.0" }, /packaged clingo version does not match/]
-  ]) {
+  ];
+  for (const [mode, error] of cases) {
     const run = runMockBuild(mode);
     assert.equal(run.status, 3, run.stderr);
     assert.match(run.stderr, error);
