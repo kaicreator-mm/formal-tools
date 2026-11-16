@@ -67,9 +67,9 @@ function fixture(){
       output_classification:"PUBLIC"}]
   };
   const provenance={
-    schema:"formal-tools/solution-provenance/0.1",
+    schema:"formal-tools/solution-provenance/0.2",
     source_id:"requirements",source_sha256:sha("a"),
-    oracle_id:"oracle1",oracle_sha256:sha("a"),
+    oracle_id:"oracle1",oracle_source_id:"requirements",oracle_sha256:sha("a"),
     model_sha256:sha("b"),tool_id:"z3",tool_version:"5.4.0",
     tool_binary_sha256:sha("c"),platform:"debian13-x86_64",
     evidence_sha256:sha("d"),evidence_gate:"BYTES_BOUND_UNATTESTED"
@@ -124,10 +124,16 @@ onSupported("G4 persisted candidate survives process restart but remains blocked
 
     const drift=inspectInFreshProcess({
       ...request,
-      current_provenance_json:encode({...f.provenance,tool_version:"5.4.1"})
+      current_provenance_json:encode({...f.provenance,oracle_source_id:"another_oracle"})
     });
     assert.equal(drift.status,"STALE");
-    assert.deepEqual(drift.changed_fields,["tool_version"]);
+    assert.deepEqual(drift.changed_fields,["oracle_source_id"]);
+    const toolDrift=inspectInFreshProcess({
+      ...request,
+      current_provenance_json:encode({...f.provenance,tool_version:"5.4.1"})
+    });
+    assert.equal(toolDrift.status,"STALE");
+    assert.deepEqual(toolDrift.changed_fields,["tool_version"]);
     assert.equal(drift.claim_result,"UNVERIFIED");
     assert.equal(drift.replay_allowed,false);
     assert.equal(drift.solution_promotable,false);
