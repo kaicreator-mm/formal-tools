@@ -1853,11 +1853,13 @@
       "intended_write_set": [
         "docs/tool-portfolio/r23/LEAN4_CURRENT_MAIN_T4.json"
       ],
-      "exact_head_dual_ci": "REQUIRED_ON_NEW_SYNC_HEAD",
-      "fresh_non_writer_review": "REQUIRED_ON_NEW_SYNC_HEAD",
+      "exact_head_dual_ci": "SUCCESS_ON_SYNC_HEAD_PUSH_1678_PR_1679",
+      "fresh_non_writer_review": "REQUIRED_ON_FINAL_PR_HEAD",
       "draft": true,
       "merge": "NOT_AUTHORIZED",
-      "previous_sync_head": "123289f160fbb4b2bc1e25734af38ae183787307"
+      "previous_sync_head": "123289f160fbb4b2bc1e25734af38ae183787307",
+      "sync_head": "db02f6f8942c45fae7bdfe1cd9818fc04b393c10",
+      "status": "SYNCED_TO_CURRENT_MAIN; FINAL_PR_HEAD_REVIEW_PENDING"
     },
     "qualification_boundary": {
       "t3": "Historical scoped execution evidence remains bound to exact_execution_source_head; no latest-main route requalification",
@@ -1938,7 +1940,10 @@
           "expected": "1af7a7db7523985f810e545860000c5d745de0b5",
           "observed": "2e0e669e4fa66cb27654644705e76794c0727004"
         },
-        "disposition": "CURRENT_MAIN_RECONCILIATION_REFRESHED; ANCESTRY_SYNC_PENDING"
+        "disposition": "SYNCED_TO_LATEST_MAIN_WITH_TWO_PARENT_COMMIT; EXACT_SYNC_HEAD_CI_SUCCESS",
+        "sync_head": "db02f6f8942c45fae7bdfe1cd9818fc04b393c10",
+        "ci_push_pipeline": 1678,
+        "ci_pr_pipeline": 1679
       }
     ],
     "main_delta_since_previous_sync": {
