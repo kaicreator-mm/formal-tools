@@ -25,14 +25,46 @@ ft_tool_build() {
   trap "rm -rf -- '$work_dir'" EXIT
   ft::extract "$f" "$work_dir" || ft::die "ProB source extraction failed"
   src="$work_dir/ProB"
+  [ -L "$src" ] && ft::die "ProB source root symlink is forbidden"
   [ -d "$src" ] || ft::die "ProB dir not found in tarball"
+  # Require the extracted top-level directory to be a real directory directly
+  # beneath our private stage, not a symlink to an external source tree.
+  local stage_real source_real
+  stage_real=$(cd -P -- "$work_dir" && pwd -P) || ft::die "ProB staging root cannot be resolved"
+  source_real=$(cd -P -- "$src" && pwd -P) || ft::die "ProB source root cannot be resolved"
+  [ "$source_real" = "$stage_real/ProB" ] || ft::die "ProB source root escapes private staging"
   cp -a "$src/." "$FT_TOOL_DIR/" || ft::die "ProB payload copy failed"
   find "$FT_TOOL_DIR" -maxdepth 2 -type f -name 'probcli' -exec chmod +x {} + 2>/dev/null || true
   [ -f "$FT_TOOL_DIR/lib/probcliparser.jar" ] || ft::die "probcliparser.jar missing (incomplete distribution)"
   [ -x "$FT_TOOL_DIR/probcli" ] || ft::die "probcli executable missing"
   local v
   v=$(cd "$FT_TOOL_DIR" && ./probcli -version 2>&1) || ft::die "ProB version probe failed"
-  printf '%s\n' "$v" | grep -Eq '(^|[^[:digit:]])1[.]16[.]1-final([^[:alnum:]]|$)' \
+  # A diagnostic merely mentioning 1.16.1-final must never certify the
+  # executable. Refuse ambiguous multi-line banners and match one complete
+  # product/version record, with an optional exact 40-hex source commit.
+  case "$v" in *
+  ft::make_shim 'export JAVA_HOME="$FT_ROOT/runtimes/java21"
+export PATH="$JAVA_HOME/bin:$TOOL_DIR:$PATH"
+export PROB_HOME="$TOOL_DIR"
+export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+exec "$TOOL_DIR/probcli" "$@"'
+}
+\n'*|*
+  ft::make_shim 'export JAVA_HOME="$FT_ROOT/runtimes/java21"
+export PATH="$JAVA_HOME/bin:$TOOL_DIR:$PATH"
+export PROB_HOME="$TOOL_DIR"
+export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+exec "$TOOL_DIR/probcli" "$@"'
+}
+\r'*) ft::die "ProB version probe returned ambiguous output" ;; esac
+  printf '%s\n' "$v" | grep -Eq '^ProB version 1[.]16[.]1-final( \([a-f0-9]{40}\))?
+  ft::make_shim 'export JAVA_HOME="$FT_ROOT/runtimes/java21"
+export PATH="$JAVA_HOME/bin:$TOOL_DIR:$PATH"
+export PROB_HOME="$TOOL_DIR"
+export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+exec "$TOOL_DIR/probcli" "$@"'
+}
+ \
     || ft::die "ProB binary version is not 1.16.1-final"
   ft::note "prob_version_line" "$v"
   ft::make_shim 'export JAVA_HOME="$FT_ROOT/runtimes/java21"
