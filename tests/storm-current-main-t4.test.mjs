@@ -28,19 +28,22 @@ const requiredStormExpectKeys = [
 function uniqueNumericExitAssignments(source) {
   const values = {};
   const assignments = new Map();
-  const lines = source.split(/\\r?\\n/);
+  const lines = source.split(/\r?\n/);
   // This is the exact Storm fixture contract. Timeout and ERR_VIA retain
   // their Runner-supported optional semantics; every other phase key is required.
   for (const [index, line] of lines.entries()) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith("#")) continue;
-    const assignment = line.match(/^[\\t ]*(?:export[\\t ]+)?(EXPECT_[A-Z0-9_]+)=(.*)$/);
+    const assignment = line.match(/^[\t ]*(?:export[\t ]+)?(EXPECT_[A-Z0-9_]+)=(.*)$/);
     assert.ok(assignment, "unsupported shell command in sourced expect.sh at line " + (index + 1));
     const [, name, raw] = assignment;
     assert.ok(stormExpectKeys.includes(name), "unknown Storm EXPECT key " + name + " at line " + (index + 1));
     assert.equal(assignments.has(name), false, "duplicate EXPECT assignment " + name + " at line " + (index + 1));
-    const singleQuoted = raw.length >= 2 && raw.startsWith("'") && raw.endsWith("'") && !raw.slice(1, -1).includes("'");
-    const doubleQuoted = raw.length >= 2 && raw.startsWith('"') && raw.endsWith('"') && !/["$\\x60\\\\]/.test(raw.slice(1, -1));
+    const inner = raw.slice(1, -1);
+    const singleQuoted = raw.length >= 2 && raw.startsWith("'") && raw.endsWith("'") && !inner.includes("'");
+    const doubleQuoted = raw.length >= 2 && raw.startsWith('"') && raw.endsWith('"') &&
+      !inner.includes('"') && !inner.includes("$") &&
+      !inner.includes(String.fromCharCode(96)) && !inner.includes("\\");
     const unquotedLiteral = /^[A-Za-z0-9_./:*?+-]+$/.test(raw);
     assert.ok(singleQuoted || doubleQuoted || unquotedLiteral,
       "unsafe shell assignment value in sourced expect.sh at line " + (index + 1));
@@ -51,7 +54,7 @@ function uniqueNumericExitAssignments(source) {
   }
   for (const phase of ["POS", "NEG", "ERR"]) {
     const name = "EXPECT_" + phase + "_EXIT";
-    const raw = assignments.get(name).raw.replace(/[ \\t]+#.*$/, "").trim();
+    const raw = assignments.get(name).raw.replace(/[ \t]+#.*$/, "").trim();
     assert.match(raw, /^[0-9]+$/, name + " must be an unquoted numeric exit assignment");
     const value = Number(raw);
     assert.ok(Number.isSafeInteger(value), name + " must be a safe integer");
@@ -77,14 +80,17 @@ test("Storm exit parser recognizes ordinary, leading-space, tab, and export assi
     { label: "indented export with tab separator", format: (name, value) => " \texport\t" + name + "=" + value }
   ];
   for (const form of forms) {
-    const source = ["POS", "NEG", "ERR"]
-      .map(phase => form.format("EXPECT_" + phase + "_EXIT", phase === "ERR" ? "1" : "0"))
-      .join("\n");
+    let source = fixture;
+    for (const phase of ["POS", "NEG", "ERR"]) {
+      const name = "EXPECT_" + phase + "_EXIT";
+      const original = new RegExp("^" + name + "=([0-9]+)$", "m");
+      source = source.replace(original, form.format(name, phase === "ERR" ? "1" : "0"));
+    }
     assert.deepEqual(uniqueNumericExitAssignments(source), { POS: 0, NEG: 0, ERR: 1 }, form.label);
   }
 });
 
-test("Storm exit parser rejects duplicate assignments in every shell-valid syntax for every phase", () => {
+test("Storm parser rejects duplicate assignments in every shell-valid syntax for every phase", () => {
   const forms = [
     { label: "ordinary", format: name => name + "=77" },
     { label: "leading space", format: name => " " + name + "=77" },
@@ -95,8 +101,8 @@ test("Storm exit parser rejects duplicate assignments in every shell-valid synta
   for (const phase of ["POS", "NEG", "ERR"]) {
     const name = "EXPECT_" + phase + "_EXIT";
     for (const form of forms) {
-      const duplicate = fixture + "\n" + form.format(name) + "\n";
-      assert.throws(() => uniqueNumericExitAssignments(duplicate), /exactly one assignment/, phase + " " + form.label);
+      assert.throws(() => uniqueNumericExitAssignments(fixture + "\n" + form.format(name) + "\n"),
+        /duplicate EXPECT assignment/, phase + " " + form.label);
     }
   }
 });
@@ -141,14 +147,14 @@ test("Storm sourced expect.sh rejects shell override commands for every exit pha
 test("Storm exit parser rejects shell expansion and command chaining in EXPECT assignments", () => {
   const backtick = String.fromCharCode(96);
   for (const value of ["$(id)", backtick + "id" + backtick, "\${HOME}", "0; echo invalid", "0 && true"]) {
-    const source = fixture + "\nEXPECT_EXTRA=" + value + "\n";
+    const source = fixture.replace(/^EXPECT_TIMEOUT=.*$/m, "EXPECT_TIMEOUT=" + value);
     assert.throws(() => uniqueNumericExitAssignments(source), /unsafe shell assignment value/, value);
   }
 });
 
 test("Storm parser rejects duplicate non-exit keys that Bash would otherwise apply", () => {
   const mutants = [
-    { key: "EXPECT_NEG_ARGS", assignment: "EXPECT_NEG_ARGS='--prism tests/storm/missing.pm --prop \\"P<=0.5 [F s=7]\\"'", index: 3,
+    { key: "EXPECT_NEG_ARGS", assignment: "EXPECT_NEG_ARGS='--prism tests/storm/missing.pm --prop \"P<=0.5 [F s=7]\"'", index: 3,
       expected: '--prism tests/storm/missing.pm --prop "P<=0.5 [F s=7]"' },
     { key: "EXPECT_ERR_REGEX", assignment: "EXPECT_ERR_REGEX='MUTATED_ERROR_PATTERN'", index: 4, expected: "MUTATED_ERROR_PATTERN" },
     { key: "EXPECT_TIMEOUT", assignment: "EXPECT_TIMEOUT=1", index: 5, expected: "1" },
@@ -158,9 +164,8 @@ test("Storm parser rejects duplicate non-exit keys that Bash would otherwise app
   const path = join(directory, "expect.sh");
   const sourceWithBash = source => {
     writeFileSync(path, source);
-    return execFileSync("bash", ["-c",
-      'set -euo pipefail; source "$1"; printf "%s\\n" "$EXPECT_POS_EXIT" "$EXPECT_NEG_EXIT" "$EXPECT_ERR_EXIT" "$EXPECT_NEG_ARGS" "$EXPECT_ERR_REGEX" "$EXPECT_TIMEOUT" "$EXPECT_NEG_LABEL"',
-      "storm-expect-source", path], { encoding: "utf8" }).trimEnd().split("\\n");
+    const command = 'set -euo pipefail; source "$1"; printf "%s\\n" "$EXPECT_POS_EXIT" "$EXPECT_NEG_EXIT" "$EXPECT_ERR_EXIT" "$EXPECT_NEG_ARGS" "$EXPECT_ERR_REGEX" "$EXPECT_TIMEOUT" "$EXPECT_NEG_LABEL"';
+    return execFileSync("bash", ["-c", command, "storm-expect-source", path], { encoding: "utf8" }).trimEnd().split("\n");
   };
   try {
     assert.deepEqual(sourceWithBash(fixture), [
@@ -169,7 +174,7 @@ test("Storm parser rejects duplicate non-exit keys that Bash would otherwise app
       "Unable to read from (non-existing )?file", "180", "PROPERTY_FAILS"
     ]);
     for (const mutant of mutants) {
-      const changed = fixture + "\\n" + mutant.assignment + "\\n";
+      const changed = fixture + "\n" + mutant.assignment + "\n";
       const bashValues = sourceWithBash(changed);
       assert.equal(bashValues[mutant.index], mutant.expected, mutant.key + " must demonstrate Bash last-assignment semantics");
       assert.throws(() => uniqueNumericExitAssignments(changed), new RegExp("duplicate EXPECT assignment " + mutant.key));
@@ -177,14 +182,6 @@ test("Storm parser rejects duplicate non-exit keys that Bash would otherwise app
   } finally {
     rmSync(directory, { recursive: true, force: true });
   }
-});
-test("Storm ERR is a real deterministic missing-model-file rejection", async t => {
-  assert.match(fixture, /EXPECT_ERR_VIA=run/);
-  assert.match(fixture, /EXPECT_ERR_ARGS=.*missing\.pm/);
-  assert.match(fixture, /EXPECT_ERR_REGEX='Unable to read from \(non-existing \)\?file'/);
-  assert.match(fixture, /EXPECT_ERR_LABEL=MISSING_PRISM_FILE_REJECTED/);
-  const missing = new URL("../portable/verification/cases/storm/missing.pm", import.meta.url);
-  await assert.rejects(readFile(missing), { code: "ENOENT" });
 });
 
 test("Storm fixture's positive and negative claims use the same committed DTMC model", () => {

@@ -7,14 +7,14 @@
     "capability": "model.probabilistic"
   },
   "result": {
-    "status": "R84_DUPLICATE_ALL_EXPECT_KEYS_AND_REAL_BASH_SOURCE_REGRESSION_IMPLEMENTED; EXACT_HEAD_CI_PENDING; FRESH_NON_WRITER_REVIEW_REQUIRED",
+    "status": "R84_DUPLICATE_ALL_EXPECT_KEYS_AND_BASH_SOURCE_REGRESSION_REPAIRED; FOLLOWUP_REGEX_ESCAPING_FIX_IMPLEMENTED; EXACT_HEAD_CI_PENDING; FRESH_NON_WRITER_REVIEW_REQUIRED",
     "overall_t4_qualification": "NOT_QUALIFIED",
     "t3": "NOT_REQUALIFIED_PRIOR_R4_POS_NEG_RECEIPT_REUSED",
     "t5": "NOT_QUALIFIED",
     "t6": "OPEN",
     "product": "NOT_SIGNED",
     "release": "NOT_SIGNED",
-    "independent_source_first_review": "R83_REWORK_P0_0_P1_1_P2_2; R84_REPAIRS_DUPLICATE_ALL_EXPECT_KEYS_AND_BASH_LAST_ASSIGNMENT_MUTANTS; EXACT_HEAD_CI_AND_FRESH_REVIEW_PENDING"
+    "independent_source_first_review": "R83_REWORK_P0_0_P1_1_P2_2; R84_DUPLICATE_ALL_EXPECT_KEYS_AND_BASH_LAST_ASSIGNMENT_MUTANTS_IMPLEMENTED; FOLLOWUP_REGEX_AND_NEWLINE_ESCAPING_REPAIRED; EXACT_HEAD_CI_AND_FRESH_REVIEW_PENDING"
   },
   "current_main": {
     "commit": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
@@ -223,15 +223,33 @@
     "woodpecker_pr": "#1405 SUCCESS",
     "latest_repair": {
       "path": "tests/storm-current-main-t4.test.mjs",
-      "blob": "539614f7a4b37f9af03dd0b092e4fd8b22a39978",
+      "blob": "dc48b451d42228b9a1c01b62473dd557afed1dbd",
       "based_on_previous_blob": "a5ae7f399cf8c7b4b13d285b0adc597a6e43737e",
       "changes": [
         "Explicit Storm EXPECT_* allowlist; all duplicate keys rejected, not only POS/NEG/ERR exit variables.",
         "Required phase args/exit/regex/label keys; EXPECT_TIMEOUT and EXPECT_ERR_VIA remain optional.",
         "Duplicate negative controls cover EXPECT_NEG_ARGS, EXPECT_ERR_REGEX, EXPECT_TIMEOUT and EXPECT_NEG_LABEL.",
-        "Real Bash temp-file source regression proves canonical values and demonstrates last-assignment behavior for each duplicate mutant; static parser rejects each mutant."
+        "Real Bash temp-file source regression proves canonical values and demonstrates last-assignment behavior for each duplicate mutant; static parser rejects each mutant.",
+        "Corrected JavaScript regex and newline escaping in the whole-file parser and Bash source regression; the first R84 commit had double-escaped regex delimiters and literal backslash-n separators."
       ],
-      "local_validation": "NOT_RUN_IN_CHAT_EXECUTION; exact-head Woodpecker dual CI required"
+      "local_validation": "NOT_RUN_IN_CHAT_EXECUTION; exact-head Woodpecker dual CI required",
+      "followup": {
+        "status": "IMPLEMENTED_PENDING_EXACT_HEAD_CI",
+        "test_blob": "dc48b451d42228b9a1c01b62473dd557afed1dbd",
+        "fixes": [
+          "Regexes now split actual CRLF/LF lines and recognize tab/space assignment indentation using single escaped regex tokens.",
+          "Bash source harness uses a real temp file, passes a valid printf newline format to Bash, and splits actual Node output newlines.",
+          "Duplicate mutant assignment strings are valid JavaScript and valid Bash single-quoted assignments."
+        ],
+        "previous_ci_failure": {
+          "head": "e9562683d8a5d9d9d9de8546cea53f5d46732511",
+          "push": 1652,
+          "pr": 1653,
+          "status": "FAILURE",
+          "first_failure": "UNKNOWN_NOT_CLASSIFIED_FROM_AUTHENTICATED_RAW_LOGS",
+          "note": "The committed test contained double-escaped parser regex and newline separators, a demonstrated source defect; this does not by itself establish that either pipeline's first failed step reached this test."
+        }
+      }
     }
   },
   "boundaries": [
