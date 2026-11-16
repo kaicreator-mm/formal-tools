@@ -21,6 +21,8 @@ test("Dafny SDK adapter identifies parse errors and fails closed on unrelated fa
   const err=interpretNativeObservation("dafny","2 parse errors detected in err.dfy","",2);
   assert.equal(err.tool_outcome,"PARSE_ERROR");
   assert.equal(err.process_outcome,"NONZERO_EXIT");
+  assert.equal(err.test_verdict,"NOT_EVALUATED");
+  assert.equal(err.claim_verdict,"NOT_EVALUATED");
 
   const zeroErrors=interpretNativeObservation("dafny","0 parse errors detected in err.dfy","",2);
   assert.equal(zeroErrors.tool_outcome,"UNPARSED");
