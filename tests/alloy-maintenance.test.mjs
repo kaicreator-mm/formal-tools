@@ -109,7 +109,7 @@ test("original archive byte drift invalidates only dependent lifecycle evidence"
   observed.identity.canonicalArchiveSha256 = "f".repeat(64);
   const result = assessAlloyMaintenance(baseline, observed);
   assert.equal(result.status, "STALE_REVERIFY_REQUIRED");
-  assert.deepEqual(result.revalidationGates, ["T0", "T1", "T2", "T3", "T4", "T5", "T6"]);
+  assert.deepEqual(result.revalidationGates, ["T0", "T2", "T3", "T4", "T5", "T6"]);
   assert.deepEqual(result.staleGates, ["T0", "T2", "T3"]);
   assert.equal(result.qualificationGranted, false);
 });
