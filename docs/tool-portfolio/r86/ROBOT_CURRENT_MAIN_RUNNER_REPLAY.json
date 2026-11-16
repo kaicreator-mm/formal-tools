@@ -1,0 +1,229 @@
+{
+  "schema": "formal-tools/robot-current-main-runner-replay/0.1",
+  "record_type": "runner_execution_evidence_not_qualification",
+  "output_label": "FORMAL_TOOLS_I24_UNIFIED_PARALLEL_DELIVERY",
+  "worker_id": "CHATGPT_AUTO_ROBOT_R86_CURRENT_MAIN_ROUTE_REPLAY_20261116",
+  "issue": 51,
+  "tool": {
+    "id": "robot",
+    "version": "1.9.11"
+  },
+  "execution": {
+    "execution_main": "8c0811a7baa5f79953a85a190595995f2463f7d0",
+    "integration_main": "a229566c14a0d00b9b05a4a3d5e018b487cf1c73",
+    "current_main_push_pipeline": 1655,
+    "current_main_push_status": "SUCCESS",
+    "main_delta_since_execution_main": {
+      "ahead": 8,
+      "behind": 0,
+      "files": [
+        "docs/tool-portfolio/r60/CLINGO_T6_MAINTENANCE.json",
+        "scripts/tool-portfolio/clingo-maintenance.mjs",
+        "tests/clingo-maintenance.test.mjs"
+      ],
+      "disposition": "All three changes are Clingo-owned and disjoint from all 25 Robot source/evidence pins below. Re-fetched all 25 pins at integration_main; 25/25 remain exact."
+    },
+    "environment": {
+      "os": "Debian GNU/Linux 13 (trixie)",
+      "kernel": "Linux 6.18.57 x86_64",
+      "architecture": "x86_64",
+      "node": "v22.16.0 (not used by direct shell Runner invocation)",
+      "java": "OpenJDK Runtime Environment Temurin-21.0.13+9",
+      "execution_uid": 65534,
+      "execution_gid": 65534,
+      "account": "nobody"
+    },
+    "runner": {
+      "path": "portable/packaging/bundle-template/bin/tool-runner",
+      "git_blob_sha1": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+      "file_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a",
+      "doctor": {
+        "argv": [
+          "bin/tool-runner",
+          "doctor",
+          "robot"
+        ],
+        "exit_code": 0,
+        "stdout": "doctor: robot kind=jar version=1.9.11\n  java openjdk version \"21.0.13\" 2026-10-20 LTS\n  verdict: OK\n",
+        "stderr": "",
+        "stdout_sha256": "c4cba0e53f4cc9492bde6b63273689716be07f5a851dbe7eddaa5a9b6f4bd89f",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "verify": {
+        "argv": [
+          "bin/tool-runner",
+          "verify",
+          "robot"
+        ],
+        "exit_code": 0,
+        "stdout": "   robot/pos: exit=0 dur=1204ms matched=1 exit_ok=1 label=CONSISTENT (log: /tmp/robot-evidence/verify-robot.pos.log)\n   robot/neg: exit=1 dur=1092ms matched=1 exit_ok=1 label=INCONSISTENT (log: /tmp/robot-evidence/verify-robot.neg.log)\n   robot/err: exit=1 dur=815ms matched=1 exit_ok=1 label=ERROR (log: /tmp/robot-evidence/verify-robot.err.log)\n",
+        "stderr": "",
+        "stdout_sha256": "b46ba2829b241f06af9107b454e8bb232f13b372974dab61820562e493f308da",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "receipt_tsv": "runner_schema\tformal-tools/portable-verify/0.2\nrobot\tpos\t0\t1204\t1\t1\tCONSISTENT\nrobot\tneg\t1\t1092\t1\t1\tINCONSISTENT\nrobot\terr\t1\t815\t1\t1\tERROR\nverdict\tPASS\n",
+        "receipt_tsv_sha256": "07a736d0d114c4f7e466ebcdc88b38c256176381168acd3a0cc210e75887510e",
+        "phases": [
+          {
+            "phase": "pos",
+            "exit_code": 0,
+            "duration_ms": 1204,
+            "matched": true,
+            "exit_contract_matched": true,
+            "label": "CONSISTENT",
+            "log": "ROBOT_REASONED_OUTPUT_OK\n\nPHASE_DONE phase=pos rc=0\n",
+            "log_sha256": "d34659aa611947185d9b03a6ccc55ea8ffc97c3377f6860c9b97b4d3d289fa2b"
+          },
+          {
+            "phase": "neg",
+            "exit_code": 1,
+            "duration_ms": 1092,
+            "matched": true,
+            "exit_contract_matched": true,
+            "label": "INCONSISTENT",
+            "log": "2026-11-15 23:55:38,761 ERROR org.obolibrary.robot.ReasonerHelper - The ontology is inconsistent. TIP: use a tool like Protege to find explanations\n\nPHASE_DONE phase=neg rc=1\n",
+            "log_sha256": "5a9edcd20f6e2a850523ac9296d86e4f09275ddeef517806ff05935035384228"
+          },
+          {
+            "phase": "err",
+            "exit_code": 1,
+            "duration_ms": 815,
+            "matched": true,
+            "exit_contract_matched": true,
+            "label": "ERROR",
+            "log": "INVALID ONTOLOGY FILE ERROR Could not load a valid ontology from file: err.ttl\nFor details see: http://robot.obolibrary.org/errors#invalid-ontology-file-error\nUse the -vvv option to show the stack trace.\nUse the --help option to show usage information.\n\nPHASE_DONE phase=err rc=1\n",
+            "log_sha256": "eb8a1821a4ef33c579b808126f4531452a8caacb518d7ea5f7ddbe83e61ee786"
+          }
+        ],
+        "integrity_reconciliation": {
+          "pos_log_sha256": "d34659aa611947185d9b03a6ccc55ea8ffc97c3377f6860c9b97b4d3d289fa2b",
+          "neg_log_sha256": "5a9edcd20f6e2a850523ac9296d86e4f09275ddeef517806ff05935035384228",
+          "err_log_sha256": "eb8a1821a4ef33c579b808126f4531452a8caacb518d7ea5f7ddbe83e61ee786",
+          "err_hash_corrected_from": "d3d52b7d637d1da2d3d5eea9f162ebb0a6a096edb24e2630a14b3793807cad4e",
+          "status": "EMBEDDED_LOG_HASHES_RECOMPUTED; EXECUTION_OVERLAY_BINDING_REMAINS_UNPROVEN"
+        }
+      }
+    },
+    "source_blobs": {
+      "packages/runner/js/native.mjs": "2e0e669e4fa66cb27654644705e76794c0727004",
+      "packages/runner/js/native-catalog.mjs": "02f628947be3e5c270d802be150ab220e14fc2b8",
+      "packages/runner/js/tool-portfolio-t4.mjs": "922a7c208beaa0e48346403a29ec2d927189319f",
+      "packages/runner/js/cli.mjs": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
+      "packages/runner/js/sdk.mjs": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+      "packages/runner/js/mcp.mjs": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+      "packages/runner/js/tool-result.mjs": "a2c61c50658fc3d7e578ffbf7ee018f707e15841",
+      "packages/runner/js/tool-manager.mjs": "a8e547718b8242c9d27f9e906b1c1ebaa2d80de6",
+      "packages/runner/js/tool-workspace.mjs": "354809f169dac5b1fef31e64eb3aa7965ea0b88f",
+      "packages/runner/js/artifact-collector.mjs": "8881dcb65f97f74036ad90e2ca01a600c2daaec8",
+      "packages/core/src/finite.mjs": "c717cb3b2eb4d13422fbdfb859aa3fcceee3851a",
+      "portable/packaging/bundle-template/bin/tool-runner": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+      "portable/builders/tools/robot.sh": "9d3b0c3993c6d3ab5198627de7a7f5492b1dc636",
+      "portable/builders/make_meta.py": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+      "portable/verification/cases/robot/expect.sh": "1ae53df4a37965157c479919b6dd832cb373ebac",
+      "portable/verification/cases/robot/pos.ttl": "c46de08fb524e09cb1c238515633852eaabef986",
+      "portable/verification/cases/robot/neg.ttl": "7ee6787a45cf75fe3405f940eb0a2a48f5489ec7",
+      "portable/verification/cases/robot/err.ttl": "f4a3b75c58d5d1152bc5ef01b6f26db26eda9168",
+      "tests/robot-portfolio-contract.test.mjs": "d1e9c3344275d8447cbd24c51437245f674f68f9",
+      "registry/PROBLEM_CAPABILITIES.json": "faa89997c3f7c8c71da0a69aa90e8ff37461cde0",
+      "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+      "portable/status/receipts/build-robot.json": "6f163ebbcc2a24445b43ab0c931fa330f8b45deb",
+      "portable/status/receipts/verify-robot.json": "8b8b0fa6073979f162d53f14a0c4a8bf79cb9e4d",
+      "package-lock.json": "2ad31f01195434617ac74d2f377287a15e062b95",
+      "package.json": "99cd24d1c71d2c12297730056f1b1882a770c851"
+    },
+    "source_change_from_prior_robot_snapshot": {
+      "path": "packages/runner/js/native.mjs",
+      "prior_blob": "1af7a7db7523985f810e545860000c5d745de0b5",
+      "current_blob": "2e0e669e4fa66cb27654644705e76794c0727004",
+      "summary": "The intervening native adapter change injects a validated immutable environment snapshot into native command construction and child spawning. The Robot candidate portfolio route uses tool-portfolio-t4.mjs -> runPortableGate -> portable/bin/tool-runner; the CLI imports native.mjs but dispatches portfolio doctor/verify to runPortableGate, SDK re-exports runPortableGate, and MCP verify_portable_fixture calls runPortableGate. This direct Runner replay does not execute the native adapter change."
+    },
+    "current_main_push_pipelines": [
+      1655,
+      1664
+    ],
+    "latest_current_main_push_pipeline": 1664
+  },
+  "assets": {
+    "manifest": {
+      "drive_file_id": "1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1",
+      "sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64"
+    },
+    "robot_archive": {
+      "drive_file_id": "1y2vjymKixthdBdnv-QkMCf2Dl_CWdfl4",
+      "manifest_path": "tools/robot-1.9.11-linux-x86_64.tar.zst",
+      "compressed_size_bytes": 72767623,
+      "sha256": "14c2680ededcccaa47edf7b793d4625c3b18a312cc91ee1ffb4757c771b7c23b",
+      "decompressed_tar_bytes": 82718720,
+      "expanded_regular_bytes": 82709558,
+      "member_count": 5
+    },
+    "java_archive": {
+      "drive_file_id": "1SLlkltuIQ3p6-ougFiuet9qEIZRB0Cc5",
+      "manifest_path": "runtimes/java21-21.0.13.9-linux-x86_64.tar.zst",
+      "size_bytes": 32262489,
+      "sha256": "7e9b1bfdc120d17a4af2eb2baaf4b3772b2c7a2114248ed1a5967af89c5387ca"
+    },
+    "robot_jar": {
+      "size_bytes": 82708624,
+      "sha256": "53cd275c8e4c0dad1fc2c1c34174876795cd7d6b6926e1444adcbb0cb3c7ab26"
+    },
+    "robot_run_shim_sha256": "691b2cc23fb07cdcdb151801bacc32ef33aee9cd973788915341884b1fc609ee",
+    "java_binary_sha256": "7afc28801f744050aeba646b20e7314265279f76f9d0273b21a2b66411e1bf6d",
+    "original_meta_sh_sha256": "ddeb337e84bacd06e9c5e5ad66efc9658d778ef5be94e4b0310380fe63a797e6",
+    "original_meta_sh_identity": "TOOL_TOOL_ID=robot",
+    "original_meta_json_sha256": "90d6ce9b3e53a07fce9e6c6315525dd81b53ffa18491af91fe48aef00a676ef7",
+    "replay_overlay_meta_sh_sha256": "607d8f0752750fe9b18845b4394d3b05042c79b000147c2727c3c70abf98a384",
+    "replay_overlay_meta_sh_identity": "TOOL_ID=robot",
+    "replay_overlay_disposition": "GENERATED_FOR_REPLAY_ONLY; ORIGINAL_ARCHIVE_NOT_REWRITTEN; NOT_A_FULL_REBUILD",
+    "canonical_replay_overlay_reconstruction": {
+      "content": "TOOL_ID=robot\nTOOL_VERSION=1.9.11\nTOOL_KIND=jar\nTOOL_MAIN_BIN=''\nTOOL_GLIBC_MAX=''\nTOOL_ELF_ARCH=''\nUNAVAILABLE=0\n",
+      "sha256": "721e6060ad3797f0daf924bceb3cac02ba0a441a13555cb31f083b90d869b7c5",
+      "construction": "Exact original archive meta.sh bytes with only the first key renamed from TOOL_TOOL_ID to TOOL_ID; all other bytes and line endings preserved.",
+      "original_meta_sh_sha256": "ddeb337e84bacd06e9c5e5ad66efc9658d778ef5be94e4b0310380fe63a797e6",
+      "previously_reported_overlay_sha256": "607d8f0752750fe9b18845b4394d3b05042c79b000147c2727c3c70abf98a384",
+      "prior_hash_disposition": "UNRECONCILED: previously reported digest does not match this deterministic reconstruction; exact bytes from the earlier invocation were not retained, so this reconstruction is not asserted to be the earlier executed file."
+    }
+  },
+  "negative_control": {
+    "scenario": "Run exact current-main tool-runner doctor against original archived meta.sh unchanged",
+    "exit_code": 2,
+    "stdout": "",
+    "stderr": "invalid tool metadata: robot (TOOL_ID/version/kind missing or mismatched)\n",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "a31723ab1b82ab19cb9a257a39efe9bd3faf67a42d757dee49e2c5d174c5ce2d",
+    "disposition": "EXPECTED_FAIL_CLOSED; confirms replay-only TOOL_ID overlay is required; original package remains unchanged and is not current-main T4-compatible"
+  },
+  "route_execution": {
+    "portable_runner_direct": "PASS_SCOPED",
+    "cli": "NOT_RUN",
+    "sdk": "NOT_RUN",
+    "mcp_stdio": "NOT_RUN",
+    "gateway_runPortableGate": "NOT_RUN",
+    "cli_route_source": "CLI portfolio doctor/verify dispatches to runPortableGate",
+    "sdk_route_source": "SDK re-exports runPortableGate",
+    "mcp_route_source": "MCP verify_portable_fixture calls runPortableGate",
+    "mcp_locked_dependencies": {
+      "@modelcontextprotocol/server": "2.4.0",
+      "zod": "4.6.7"
+    },
+    "mcp_reason": "No full local repository checkout or installed locked MCP dependency tree in this execution environment; outbound DNS unavailable. No MCP execution claimed."
+  },
+  "qualification": {
+    "T0": "PASS_SCOPED_ARCHIVE_SHA_MATCHES_DRIVE_MANIFEST; source/license scope not re-reviewed",
+    "T1": "NOT_QUALIFIED_FULL_REPRODUCIBLE_BUILD_NOT_RUN",
+    "T2": "HISTORICAL_R56_SAFE_EXTRACTION_PASS_SCOPED_REUSED; this replay does not grant installation admission",
+    "T3": "NOT_GRANTED: ERR embedded log hash corrected; prior execution's overlay bytes/hash remain unreconciled; canonical reproducible overlay is supplied but has not been rebound to a fresh execution.",
+    "T4": "NOT_ACCEPTED; direct Runner only, current-main gateway/CLI/SDK/MCP routes not executed, original archive metadata requires replay-only overlay",
+    "T5": "NOT_QUALIFIED_NO_INDEPENDENT_DOMAIN_ORACLE",
+    "T6": "OPEN_NO_VERSIONED_MAINTENANCE_UPGRADE_OR_REVALIDATION_JOB",
+    "Product": "NOT_GRANTED",
+    "Release": "NOT_GRANTED"
+  },
+  "notes": [
+    "The original archive was downloaded from its exact Drive file ID and independently hashed. SHA256SUMS was downloaded from its exact Drive file ID and independently hashed; both archive entries match the manifest.",
+    "The original archive's meta.sh and meta.json were preserved. The runner-level replay used a separate generated meta.sh with TOOL_ID=robot only because the exact current-main Runner intentionally rejects the historical TOOL_TOOL_ID alias. A separate negative control with original meta.sh failed closed with exit 2.",
+    "The exact current-main Runner source was copied by Git Blob identity and its SHA256 recomputed before execution. It is the same source blob at execution_main and integration_main.",
+    "The three phase logs and TSV are embedded above with raw SHA256. This is a scoped technical replay, not an independent business verification or qualification.",
+    "R88 review P2-01 corrected: the exact 280-byte embedded ERR log hashes to eb8a1821...; POS/NEG/ERR embedded log hashes are now recorded together for consistency.",
+    "R88 review P2-02 partially reconciled: deterministic original-meta key-rename bytes and SHA are supplied, but the earlier 607d... overlay digest is not reproducible from the original archive. This reconstruction is not falsely claimed as the earlier executed overlay. Fresh exact-main Runner replay is required before T3 can be reconsidered."
+  ]
+}
