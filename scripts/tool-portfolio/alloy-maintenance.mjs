@@ -256,7 +256,12 @@ export function assessAlloyMaintenance(baseline, observed) {
     const baselineValue = baseline.identity[field];
     const observedValue = observed.identity[field];
     if (observedValue === null) {
-      unknownFields.push(field);
+      // A null observation on a field the baseline already declares unknown is
+      // the inherited baseline state (reported via baselineUnknownFields), not
+      // a new incomplete observation. Nulling a known field is a regression.
+      if (baselineValue !== null) {
+        unknownFields.push(field);
+      }
       continue;
     }
     if (baselineValue === null) {

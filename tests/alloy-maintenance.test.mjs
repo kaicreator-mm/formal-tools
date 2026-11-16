@@ -171,10 +171,10 @@ test("missing and null observations are incomplete, not FRESH", () => {
   assert.deepEqual(missingResult.staleGates, ["T3"]);
 
   const unknown = observedSnapshot();
-  unknown.identity.observedHostJavaSha256 = null;
+  unknown.identity.observedHostJavaVersion = null;
   const unknownResult = assessAlloyMaintenance(baseline, unknown);
   assert.equal(unknownResult.status, "INCOMPLETE_OBSERVATION");
-  assert.deepEqual(unknownResult.unknownFields, ["observedHostJavaSha256"]);
+  assert.deepEqual(unknownResult.unknownFields, ["observedHostJavaVersion"]);
   assert.deepEqual(unknownResult.revalidationGates, ["T2", "T3", "T4", "T5", "T6"]);
   assert.deepEqual(unknownResult.staleGates, ["T2", "T3"]);
 });
@@ -251,7 +251,7 @@ test("CLI exits two for STALE and INCOMPLETE observations", () => {
   assert.equal(JSON.parse(staleResult.stdout).status, "STALE_REVERIFY_REQUIRED");
 
   const incomplete = observedSnapshot();
-  incomplete.identity.observedHostJavaSha256 = null;
+  incomplete.identity.observedHostJavaVersion = null;
   const incompleteResult = invokeCli(baseline, incomplete);
   assert.equal(incompleteResult.status, 2, incompleteResult.stderr);
   assert.equal(JSON.parse(incompleteResult.stdout).status, "INCOMPLETE_OBSERVATION");
