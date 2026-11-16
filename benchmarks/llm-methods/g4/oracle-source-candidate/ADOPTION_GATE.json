@@ -1,0 +1,88 @@
+{
+  "schema": "formal-tools/g4-distinct-policy-oracle-source-candidate/0.1",
+  "status": "UNADOPTED_DEMO_POLICY_REFERENCE",
+  "source": {
+    "repo": "kaicreator-mm/domain-harness",
+    "commit": "b3a962c673f2e623ccd3db8ba059c4bae456b9dd",
+    "path": "examples/dis-v020-interaction/download-goal.mjs",
+    "git_blob": "f57747aa7996c88833e72288a0acd594a7ce5468",
+    "sha256": "aa7dc083fd0a7dc6f9d98e0792058d567b16c1b4883f9fe9d80fa91733afe4c2"
+  },
+  "oracle_candidate": {
+    "repo": "kaicreator-mm/domain-harness",
+    "commit": "c553b5e0c717cdbc981f874ce0f60454cffcb9ab",
+    "path": "docs/standards/domain-intelligence/DIS-0.2.0/INTERACTION_NATIVE_R10.zh-CN.md",
+    "git_blob": "db6de58693614c6f653cce60f35c00d34be4829b",
+    "sha256": "c17135d98dfa2134a64d053328dc7b0440dab51a9e353215abe097e1335ca4b1",
+    "local_snapshot": "benchmarks/llm-methods/g4/oracle-source-candidate/DIS_R10_POLICY_SOURCE.md",
+    "status": "CANDIDATE_ONLY_NO_L2_FREEZE",
+    "is_distinct_source_file": true,
+    "independent_professional_review": "NOT_DONE",
+    "source_owner_adoption": "NOT_DONE",
+    "rights_and_scope_adoption": "NOT_DONE",
+    "qualified_oracle": false
+  },
+  "existing_native_evidence": {
+    "model_sha256": "ccffedd71e77e85faea3a98aee7e8b9a0bb3242d3b5e7fbf4103a974b571c7f2",
+    "evidence_sha256": "5e19c66133732a85f670acee7af97eadb3cac5f368dbdaf15ffb80466845c231",
+    "source_model_relation": "HISTORICAL_SOURCE_SOLVES_NOT_R10_ORACLE_PROOF",
+    "new_solver_runs": 0
+  },
+  "candidate": {
+    "schema": "formal-tools/solution-provenance/0.2",
+    "source_id": "xdownload_interaction",
+    "oracle_source_id": "xdownload_dis_r10_policy_source",
+    "oracle_id": "xdownload_r10_policy_candidate",
+    "qualification": "NOT_ADMITTED",
+    "claim": "UNVERIFIED",
+    "replay_allowed": false,
+    "evidence_gate": "BYTES_BOUND_UNATTESTED"
+  },
+  "policy": {
+    "trust_roots": "NOT_CONFIGURED",
+    "source_owner_signer": "NOT_PROVIDED",
+    "professional_oracle_signer": "NOT_PROVIDED",
+    "trusted_host_signer": "NOT_PROVIDED",
+    "effect_authorized": false,
+    "positive_replay": "BLOCKED_UNQUALIFIED"
+  },
+  "cases": [
+    {
+      "id": "case_valid",
+      "policy_area": "Actual user-oriented flow",
+      "target": "Complete input, explicit confirmation, READY observation",
+      "qualifier": "ENGINEERING_CASE_UNATTESTED"
+    },
+    {
+      "id": "case_unconfirmed",
+      "policy_area": "Actual user-oriented flow",
+      "target": "No explicit confirmation must not reach READY",
+      "qualifier": "ENGINEERING_CASE_UNATTESTED"
+    },
+    {
+      "id": "case_invalid_input",
+      "policy_area": "Actual user-oriented flow",
+      "target": "Reject invalid URL and oversized bytes; clarify missing fields",
+      "qualifier": "ENGINEERING_CASE_UNATTESTED"
+    },
+    {
+      "id": "case_undeclared_forged",
+      "policy_area": "Actual user-oriented flow",
+      "target": "Forged draft status is non-causal and full proposal is rechecked",
+      "qualifier": "ENGINEERING_CASE_UNATTESTED"
+    },
+    {
+      "id": "case_no_effect",
+      "policy_area": "Normalized contract",
+      "target": "Selected local Interaction effect:none, READY not KDP authorization",
+      "qualifier": "ENGINEERING_CASE_UNATTESTED"
+    }
+  ],
+  "limitations": [
+    "Distinct original policy document is from the same DomainHarness project and is not a genuinely independent professional Oracle review",
+    "R10 explicitly states Candidate only and no L2 Freeze; rights, scope and source-owner adoption are pending",
+    "Old Z3/cvc5 evidence was not generated from or independently checked against this R10 policy source",
+    "Candidate retains NOT_ADMITTED, no positive Replay, no Source Owner/Oracle/Host signatures or Product roots",
+    "R10 document describes interaction observation, not a permission to dispatch KDP Intent or Effect"
+  ]
+}
