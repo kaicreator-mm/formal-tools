@@ -1810,12 +1810,12 @@
     }
   },
   "latest_main_reconciliation": {
-    "observed_date": "2026-11-16",
-    "latest_main_head": "68e9d08e99bb3bf4fe07cde116ec403fd10bc3e7",
-    "previous_delivery_base": "721c1f5854e697db4534958de0bd21ee70bca108",
-    "previous_delivery_head": "8fb0e2104471a3dff14dc72bc4566d9316643e08",
+    "observed_date": "2026-11-17",
+    "latest_main_head": "6991c7aae1026ea9bda9d49f43139e92437f0493",
+    "previous_delivery_base": "68e9d08e99bb3bf4fe07cde116ec403fd10bc3e7",
+    "previous_delivery_head": "fcd0f0874af1bbac2fbb39491ca451af25527149",
     "previous_delivery_compare": {
-      "ahead": 11,
+      "ahead": 13,
       "behind": 0,
       "changed_files": 1,
       "paths": [
@@ -1825,15 +1825,15 @@
     "execution_provenance": {
       "exact_execution_source_head": "5f188dec4c98bb4195619b560b86a210d9c2788e",
       "historical_execution_receipt_preserved": true,
-      "source_blobs_at_previous_delivery_base": "17/18_MATCH_AT_721c1f5854e697db4534958de0bd21ee70bca108",
-      "source_blobs_at_latest_main": "17/18_MATCH_AT_68e9d08e99bb3bf4fe07cde116ec403fd10bc3e7; packages/runner/js/native.mjs remains the sole historical mismatch",
+      "source_blobs_at_previous_delivery_base": "17/18_MATCH_AT_68e9d08e99bb3bf4fe07cde116ec403fd10bc3e7",
+      "source_blobs_at_latest_main": "17/18_MATCH_AT_6991c7aae1026ea9bda9d49f43139e92437f0493; packages/runner/js/native.mjs remains the sole historical mismatch",
       "source_blobs_at_first_delivery_base": "18/18_MATCH_AT_250d20ec782785f13d4d027f7ab79e005feacc76"
     },
     "mismatched_transitive_dependency": {
       "path": "packages/runner/js/native.mjs",
       "historical_blob": "1af7a7db7523985f810e545860000c5d745de0b5",
       "latest_main_blob": "2e0e669e4fa66cb27654644705e76794c0727004",
-      "latest_main_change": "Introduced by PR #98 merged at 05947e0c89daa388129054dddbb56ca5446a109d; unchanged in 721c1f→387a21d and 387a21d→68e9d08 main deltas.",
+      "latest_main_change": "Introduced by PR #98 merged at 05947e0c89daa388129054dddbb56ca5446a109d; unchanged in the 68e9d08→6991c7a main delta.",
       "imported_by": [
         "packages/runner/js/cli.mjs",
         "packages/runner/js/sdk.mjs",
@@ -1849,18 +1849,23 @@
       "overall": "HISTORICAL_R23_LOCAL_EXECUTION_ONLY; NOT_LATEST_MAIN_REQUALIFIED"
     },
     "delivery_sync": {
-      "target_base": "68e9d08e99bb3bf4fe07cde116ec403fd10bc3e7",
+      "target_base": "6991c7aae1026ea9bda9d49f43139e92437f0493",
       "intended_write_set": [
         "docs/tool-portfolio/r23/LEAN4_CURRENT_MAIN_T4.json"
       ],
-      "exact_head_dual_ci": "PENDING_ON_FINAL_METADATA_HEAD",
-      "fresh_non_writer_review": "REQUIRED_ON_FINAL_METADATA_HEAD",
+      "exact_head_dual_ci": "AUTHORITATIVE_GITHUB_COMBINED_STATUS_FOR_EXACT_PR_HEAD",
+      "fresh_non_writer_review": "AUTHORITATIVE_PR_REVIEW_TIMELINE_FOR_EXACT_PR_HEAD; REQUIRED_FOR_NEW_HEAD",
       "draft": true,
       "merge": "NOT_AUTHORIZED",
-      "previous_sync_head": "138899a11341b5cbfd9d4cfff9b7e3a874f5411c",
-      "sync_head": "a5b13a3efb78c706ad2c3de64a636dbbcae41a3b",
-      "previous_pr_head": "8fb0e2104471a3dff14dc72bc4566d9316643e08",
-      "status": "SYNCED_TO_68E9D08; FINAL_METADATA_HEAD_CI_PENDING"
+      "previous_sync_head": "a5b13a3efb78c706ad2c3de64a636dbbcae41a3b",
+      "sync_head": "7b49e39bc36de336f6a8601b7f2bb5db88bfb9e9",
+      "previous_pr_head": "fcd0f0874af1bbac2fbb39491ca451af25527149",
+      "previous_review_comment": 6923390373,
+      "previous_review_verdict": "ACCEPT_SCOPED",
+      "previous_review_p0": 0,
+      "previous_review_p1": 0,
+      "previous_review_p2": 2,
+      "status": "SYNCED_TO_6991C7; FINAL_HEAD_CI_AND_REVIEW_STATUS_TRACKED_IN_GITHUB"
     },
     "qualification_boundary": {
       "t3": "Historical scoped execution evidence remains bound to exact_execution_source_head; no latest-main route requalification",
@@ -2078,60 +2083,65 @@
         "execution_receipt_changed": false,
         "sync_type": "ANCESTRY_AND_DELIVERY_METADATA_ONLY",
         "current_main_push_pipeline": 1893,
-        "status": "CREATED_PENDING_FINAL_METADATA_HEAD_CI"
+        "status": "ACCEPT_SCOPED; EXACT_HEAD_CI_SUCCESS; FRESH_REVIEW_COMPLETE",
+        "final_pr_head": "fcd0f0874af1bbac2fbb39491ca451af25527149",
+        "ci_push_pipeline": 1899,
+        "ci_pr_pipeline": 1900,
+        "review_comment": 6923390373,
+        "review_verdict": "ACCEPT_SCOPED",
+        "review_p0": 0,
+        "review_p1": 0,
+        "review_p2": 2,
+        "review_findings": [
+          {
+            "id": "P2-01",
+            "disposition": "RESOLVED_IN_R104_METADATA",
+            "note": "R103 exact-head Push #1899 and PR #1900 SUCCESS and ACCEPT_SCOPED verdict are recorded. Delivery CI/review state is sourced from GitHub exact-head status and PR review timeline, not frozen as PENDING."
+          },
+          {
+            "id": "P2-02",
+            "disposition": "CARRIED_FORWARD_NONBLOCKING",
+            "note": "Full external raw artifact bundle is not independently retrievable from immutable Git/Drive archive; 160-entry manifest remains intact and independently hash-verified. No stronger qualification is claimed."
+          }
+        ]
+      },
+      {
+        "sync_head": "7b49e39bc36de336f6a8601b7f2bb5db88bfb9e9",
+        "base": "6991c7aae1026ea9bda9d49f43139e92437f0493",
+        "previous_pr_head": "fcd0f0874af1bbac2fbb39491ca451af25527149",
+        "main_delta_since_previous_sync": {
+          "ahead": 3,
+          "behind": 0,
+          "changed_files": 1,
+          "paths": [
+            "tests/solution-store-cross-process-replay.test.mjs"
+          ],
+          "overlap_with_lean4_source_pins": false
+        },
+        "source_blobs_at_current_main": "17/18_MATCH; packages/runner/js/native.mjs remains the sole historical dependency mismatch",
+        "execution_receipt_changed": false,
+        "sync_type": "ANCESTRY_AND_DELIVERY_METADATA_ONLY",
+        "previous_sync_head": "a5b13a3efb78c706ad2c3de64a636dbbcae41a3b",
+        "previous_sync_review": {
+          "exact_head": "fcd0f0874af1bbac2fbb39491ca451af25527149",
+          "verdict": "ACCEPT_SCOPED",
+          "p0": 0,
+          "p1": 0,
+          "p2": 2,
+          "review_comment": 6923390373,
+          "ci_push_pipeline": 1899,
+          "ci_pr_pipeline": 1900
+        },
+        "current_main_push_pipeline": 1903,
+        "status": "SYNCED; EXACT_HEAD_CI_AND_REVIEW_STATUS_TRACKED_IN_GITHUB"
       }
     ],
     "main_delta_since_previous_sync": {
-      "ahead": 53,
+      "ahead": 3,
       "behind": 0,
-      "changed_files": 46,
+      "changed_files": 1,
       "paths": [
-        "benchmarks/llm-methods/g4/METHOD.json",
-        "benchmarks/llm-methods/g4/MODEL_SET.json",
-        "benchmarks/llm-methods/g4/PROBLEM.json",
-        "benchmarks/llm-methods/g4/PROVENANCE.json",
-        "benchmarks/llm-methods/g4/README.md",
-        "benchmarks/llm-methods/g4/cases/01-valid-inspect-and-confirm.smt2",
-        "benchmarks/llm-methods/g4/cases/02-unconfirmed-cannot-be-ready.smt2",
-        "benchmarks/llm-methods/g4/cases/03-invalid-input-cannot-be-ready.smt2",
-        "benchmarks/llm-methods/g4/cases/04-undeclared-answer-and-forged-draft-cannot-be-ready.smt2",
-        "benchmarks/llm-methods/g4/cases/05-effect-is-unreachable.smt2",
-        "tests/xdownload-interaction-g4-candidate.test.mjs",
-        "validation/xdownload-interaction-2026-11-16/01-valid-inspect-and-confirm.cvc5.stdout",
-        "validation/xdownload-interaction-2026-11-16/01-valid-inspect-and-confirm.z3.stdout",
-        "validation/xdownload-interaction-2026-11-16/02-unconfirmed-cannot-be-ready.cvc5.stdout",
-        "validation/xdownload-interaction-2026-11-16/02-unconfirmed-cannot-be-ready.z3.stdout",
-        "validation/xdownload-interaction-2026-11-16/03-invalid-input-cannot-be-ready.cvc5.stdout",
-        "validation/xdownload-interaction-2026-11-16/03-invalid-input-cannot-be-ready.z3.stdout",
-        "validation/xdownload-interaction-2026-11-16/04-undeclared-answer-and-forged-draft-cannot-be-ready.cvc5.stdout",
-        "validation/xdownload-interaction-2026-11-16/04-undeclared-answer-and-forged-draft-cannot-be-ready.z3.stdout",
-        "validation/xdownload-interaction-2026-11-16/05-effect-is-unreachable.cvc5.stdout",
-        "validation/xdownload-interaction-2026-11-16/05-effect-is-unreachable.z3.stdout",
-        "validation/xdownload-interaction-2026-11-16/EVIDENCE_INDEX.json",
-        "validation/xdownload-interaction-2026-11-16/PAIR-RERUN.json",
-        "validation/xdownload-interaction-2026-11-16/PAIR.json",
-        "validation/xdownload-interaction-2026-11-16/cvc5-push-pop-initial.stdout",
-        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/01-valid-inspect-and-confirm.cvc5.stdout",
-        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/01-valid-inspect-and-confirm.z3.stdout",
-        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/02-unconfirmed-cannot-be-ready.cvc5.stdout",
-        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/02-unconfirmed-cannot-be-ready.z3.stdout",
-        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/03-invalid-input-cannot-be-ready.cvc5.stdout",
-        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/03-invalid-input-cannot-be-ready.z3.stdout",
-        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/04-undeclared-answer-and-forged-draft-cannot-be-ready.cvc5.stdout",
-        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/04-undeclared-answer-and-forged-draft-cannot-be-ready.z3.stdout",
-        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/05-effect-is-unreachable.cvc5.stdout",
-        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/05-effect-is-unreachable.z3.stdout",
-        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/stderr.empty",
-        "docs/tool-portfolio/r27/WHY3_R27_SCOPED_REPLAY.json",
-        "docs/tool-portfolio/r27/WHY3_R27_VERIFICATION.zip",
-        "docs/tool-portfolio/r77/ALLOY_EXIT_CONTRACT.json",
-        "packages/runner/js/solution-candidate.mjs",
-        "portable/verification/cases/alloy/expect.sh",
-        "tests/alloy-exit-contract.test.mjs",
-        "tests/dis-v020-consumer-preflight.test.mjs",
-        "tests/solution-candidate.test.mjs",
-        "tests/solution-store-cross-process-replay.test.mjs",
-        "tests/solution-store.test.mjs"
+        "tests/solution-store-cross-process-replay.test.mjs"
       ],
       "overlap_with_lean4_source_pins": false
     },
@@ -2181,6 +2191,18 @@
       ],
       "overlap_with_lean4_source_pins": false,
       "note": "Current main is merge commit 68e9d08 with 387a21d as first parent and 8669555a as second parent."
+    },
+    "main_advance_after_r103_review": {
+      "base": "68e9d08e99bb3bf4fe07cde116ec403fd10bc3e7",
+      "head": "6991c7aae1026ea9bda9d49f43139e92437f0493",
+      "ahead": 3,
+      "behind": 0,
+      "changed_files": 1,
+      "paths": [
+        "tests/solution-store-cross-process-replay.test.mjs"
+      ],
+      "overlap_with_lean4_source_pins": false,
+      "note": "Post-R103 accepted-review main advance; only a G4 cross-process replay test changed. No Lean4 source-pin path changed."
     }
   },
   "main_delta_since_previous_sync": {
