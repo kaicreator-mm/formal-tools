@@ -1,0 +1,12 @@
+{
+  "schema": "formal-tools/method-proposal/0.1",
+  "method_id": "xdownload_interaction_safety_cross_solver",
+  "problem_id": "dis.xdownload.interaction.safety",
+  "goal_claim_ids": ["claim1"],
+  "oracle_ids": ["xdownload_runtime_crosscheck"],
+  "semantic_review": "PENDING",
+  "steps": [
+    {"id":"z3_solve","tool_id":"z3","operation":"solve","claim_ids":["claim1"],"provides":["logic.smt"],"depends_on":[],"source_refs":["xdownload_interaction"],"estimated_cost_units":1,"timeout_ms":1000,"destination":"LOCAL","output_classification":"PUBLIC"},
+    {"id":"cvc5_verify","tool_id":"cvc5","operation":"solve","claim_ids":["claim1"],"provides":["logic.smt"],"depends_on":[],"source_refs":["xdownload_interaction"],"estimated_cost_units":1,"timeout_ms":1000,"destination":"LOCAL","output_classification":"PUBLIC"}
+  ]
+}
