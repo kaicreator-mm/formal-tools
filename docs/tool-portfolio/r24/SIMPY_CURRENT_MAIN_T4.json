@@ -1,0 +1,317 @@
+{
+  "schema": "formal-tools/i24-simpy-current-main-t4/1.0",
+  "output_label": "FORMAL_TOOLS_I24_SIMPY_CURRENT_MAIN_T4_R24",
+  "date": "2026-11-15",
+  "repository": "kaicreator-mm/formal-tools",
+  "portfolio_issue": 24,
+  "tool_issue": 52,
+  "tool_id": "simpy",
+  "expected_version": "4.1.2",
+  "main_sha": "530a2d7a8edf99106845be228b6451c6aa52be92",
+  "branch": "docs/i24-simpy-current-main-t4-r24",
+  "scope": "Current-main Runner/T4 gateway/CLI/SDK bounded technical observation. Original archive requires local-only TOOL_ID metadata overlay and host-Python adapter; raw execution stdout/stderr/receipt bytes are not committed. All Runner/gateway/CLI/SDK execution hashes and summaries are writer-reported only and are not admissible for formal T4. This evidence does not qualify full portable T4.",
+  "source_blobs": {
+    "runner": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "runner_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a",
+    "t4_gateway": "922a7c208beaa0e48346403a29ec2d927189319f",
+    "cli": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
+    "sdk": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+    "mcp": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+    "native_catalog": "02f628947be3e5c270d802be150ab220e14fc2b8",
+    "registry": "faa89997c3f7c8c71da0a69aa90e8ff37461cde0",
+    "r1_dag": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+    "package_json": "99cd24d1c71d2c12297730056f1b1882a770c851",
+    "package_lock": "2ad31f01195434617ac74d2f377287a15e062b95",
+    "make_meta_py": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+    "simpy_builder": "2015ea103e492c9b80703bf9ce6cc252c3822e8a"
+  },
+  "package_archive": {
+    "drive_file_id": "1YkWjU-_p__2FYBWnu5cUqIsCqFpyUBd2",
+    "filename": "simpy-4.1.2-linux-x86_64.tar.zst",
+    "size_bytes": 46858,
+    "sha256": "a279a56aad013cd88f7883c81cd265adb1c4b9a00b06a20e3e8125c1d21576f0",
+    "manifest": {
+      "drive_file_id": "1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1",
+      "sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64",
+      "entry": "a279a56aad013cd88f7883c81cd265adb1c4b9a00b06a20e3e8125c1d21576f0  tools/simpy-4.1.2-linux-x86_64.tar.zst"
+    },
+    "zstd_test": "PASS",
+    "decoded_bytes": 204800,
+    "tar_members": 42,
+    "member_types": {
+      "directories": 8,
+      "regular_files": 34,
+      "symlinks": 0,
+      "hardlinks": 0,
+      "special": 0
+    },
+    "unsafe_paths": 0,
+    "duplicate_paths": 0,
+    "extraction": {
+      "uid": 65534,
+      "gid": 65534,
+      "non_root": true,
+      "no_same_owner": true,
+      "no_same_permissions": true,
+      "host_usr_writes": false
+    },
+    "qualification": "SHA256 matches local Drive producer manifest only; no publisher attestation or full T0 acceptance."
+  },
+  "package_identity": {
+    "meta_json_sha256": "7a6d0750788935a29876e04aae2ad1fffb7c42ed5a50b5cbd06105c26a181780",
+    "meta_json_git_blob": "c7320f86b9e7759c7670d57a40e109b7c658c1f0",
+    "declared_tool_id": "simpy",
+    "declared_version": "4.1.2",
+    "original_meta_sh_git_blob": "c9260bd69974f4feeafa3e682c5743f08860db5d",
+    "original_meta_sh_sha256": "88cdf4dd4f37908bb9063ef7f14970b3a3d1698e5260a8eb0696a4dcf894040d",
+    "original_meta_sh_identity": "TOOL_TOOL_ID=simpy (legacy double-prefix)",
+    "original_run_git_blob": "cac26700152d50ec14f9eb5f1129386f8b2e58c1",
+    "original_run_sha256": "a8acd3707232eb3b5e132420dcf3598e03a14c239d39628493c3c9c0bf18640b",
+    "original_run_requires": "$FT_ROOT/runtimes/python313/bin/python3.13",
+    "current_main_runner_original_metadata_result": {
+      "operation": "doctor simpy",
+      "exit_code": 2,
+      "stderr": "invalid tool metadata: simpy (TOOL_ID/version/kind missing or mismatched)",
+      "interpretation": "Expected fail-closed rejection: current Runner intentionally requires TOOL_ID and does not accept TOOL_TOOL_ID."
+    },
+    "current_main_builder_contract": {
+      "make_meta_py_blob": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+      "output_key": "TOOL_ID",
+      "simpy_builder_blob": "2015ea103e492c9b80703bf9ce6cc252c3822e8a",
+      "interpretation": "Current builder emits the current TOOL_ID contract; the Drive archive is stale and must be rebuilt to remove the overlay requirement."
+    }
+  },
+  "host_environment": {
+    "os": "Debian GNU/Linux 13 (trixie)",
+    "arch": "x86_64",
+    "glibc": "2.41",
+    "uid": 65534,
+    "gid": 65534,
+    "python": "3.13.5 host Python at /opt/pyvenv/bin/python3.13",
+    "node": "v22.16.0",
+    "package_node_engine": " >=20",
+    "network_isolation": "NOT_PROVEN",
+    "canonical_python313_runtime": "NOT_PRESENT",
+    "runtime_transfer_limit": "The complete 294,346,075-byte Python313 runtime exceeds the Drive connector 268,435,456-byte download ceiling recorded in prior #52 receipts."
+  },
+  "local_only_overlays": {
+    "original_archive_modified": false,
+    "drive_archive_modified": false,
+    "git_source_modified": false,
+    "meta_sh_overlay": {
+      "purpose": "map the old archive's TOOL_TOOL_ID to current Runner TOOL_ID contract for this bounded probe",
+      "git_blob": "7e1de478a1158929fdf9003c49220755085ec165",
+      "sha256": "39fcfcf4c03005a5c32f21b8c6b1420f6b4a9526bf384df0fdec865b21233849"
+    },
+    "python_runtime_adapter": {
+      "purpose": "host Python 3.13.5 adapter at the expected bundle path; unsets PYTHONHOME and sets PYTHONPATH to the extracted SimPy package",
+      "git_blob": "fcc63a4e0307e1094a39d29d03ca7fc5c62ce8ca",
+      "sha256": "e26003de01dbe321e5995e225611fbf8ce1ee11120c016e5359b8f52f7a257ee",
+      "portable_runtime_equivalent": false
+    }
+  },
+  "fixture_blobs": {
+    "expect": "360a56768b47767053a0d4b8c37259431909d4fd",
+    "pos": "1b94c60704c868db29f66fc7971f98ee6b8512d7",
+    "neg": "cf9a61f4cec0b01724e0a5d465f317a79c990f9b",
+    "err": "ec0ae27eb039a647c09836ab2635e1016093de56",
+    "fixture_contract_sha256": "3278a78e14397a60540bf80946062af935f44d1ba7278dd7ac132e07c986b5d2"
+  },
+  "runner_replay": {
+    "user": "65534:65534",
+    "doctor": {
+      "exit_code": 0,
+      "stdout": "doctor: simpy kind=python-lib version=4.1.2\n  python: 3.13.5 OK\n  verdict: OK\n"
+    },
+    "version": {
+      "metadata_version": "4.1.2",
+      "probe": "n/a"
+    },
+    "verify": {
+      "exit_code": 0,
+      "verdict": "PASS",
+      "tsv": "simpy pos=0 neg=0 err=1",
+      "phases": [
+        {
+          "phase": "pos",
+          "exit_code": 0,
+          "marker": "PYVERIFY: OK SIMULATED 4 events",
+          "duration_ms": 672
+        },
+        {
+          "phase": "neg",
+          "exit_code": 0,
+          "marker": "PYVERIFY: OK REFUTED",
+          "duration_ms": 728
+        },
+        {
+          "phase": "err",
+          "exit_code": 1,
+          "marker": "ValueError: Negative delay -1",
+          "duration_ms": 664
+        }
+      ]
+    },
+    "evidence_status": "WRITER_REPORTED_HOST_PYTHON_ONLY_RAW_OUTPUTS_NOT_COMMITTED",
+    "formal_portable_t4": "NOT_QUALIFIED"
+  },
+  "t4_gateway": {
+    "doctor": {
+      "status": "WRITER_REPORTED_DOCTOR_EXECUTED_NOT_T3",
+      "process_exit": 0,
+      "elapsed_ms": 842,
+      "stdout_sha256": "fc773162078ab0329fd0fe6621027f88fa56c63a55388ed3882b7fa4f5ffb89a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "verify_fixture": {
+      "status": "WRITER_REPORTED_FIXTURE_TECHNICAL_ONLY_RAW_RECEIPTS_NOT_COMMITTED",
+      "process_exit": 0,
+      "elapsed_ms": 1936,
+      "receipt_sha256": "afb99ba5fcd3a44335923903390eac14c59c630f2815c518a1a47e436781d3d7",
+      "stdout_sha256": "417378dd069fa7e96d4db1b6402f5d1b391b29b4c1bc5b2b7ffc61b0c6b85723",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "cases": [
+        {
+          "phase": "pos",
+          "exit_code": 0,
+          "duration_ms": 662,
+          "matched": true,
+          "label": "SIMULATED"
+        },
+        {
+          "phase": "neg",
+          "exit_code": 0,
+          "duration_ms": 634,
+          "matched": true,
+          "label": "REFUTED"
+        },
+        {
+          "phase": "err",
+          "exit_code": 1,
+          "duration_ms": 616,
+          "matched": true,
+          "label": "INVALID_DELAY"
+        }
+      ],
+      "scope": "T4_TECHNICAL_ONLY_T3_NATIVE_REVIEW_AND_T5_SEMANTICS_NOT_EVALUATED"
+    },
+    "inspect": {
+      "status": "FOUND_PINNED_NOT_EXECUTED",
+      "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+      "t5_status": "NOT_QUALIFIED",
+      "adapter": "PORTABLE_FIXTURE_GATE_ONLY"
+    }
+  },
+  "cli": {
+    "doctor": {
+      "status": "WRITER_REPORTED_DOCTOR_EXECUTED_NOT_T3",
+      "process_exit": 0
+    },
+    "verify": {
+      "status": "WRITER_REPORTED_FIXTURE_TECHNICAL_ONLY_RAW_RECEIPT_NOT_COMMITTED",
+      "process_exit": 0,
+      "receipt_sha256": "35cfaca4e87621b84fd6d953359900813806e1000eab330ebcb20919653b3374",
+      "cases": "POS/NEG/ERR=0/0/1"
+    }
+  },
+  "sdk": {
+    "verify": {
+      "status": "WRITER_REPORTED_FIXTURE_TECHNICAL_ONLY_RAW_RECEIPT_NOT_COMMITTED",
+      "process_exit": 0,
+      "receipt_sha256": "1b793e87303816688185274cb118f7a3ebf651374ddd9eb0293cd0b9569e0565",
+      "cases": "POS/NEG/ERR=0/0/1"
+    }
+  },
+  "mcp": {
+    "source_registers": "verify_portable_fixture",
+    "source_handler_calls": "runPortableGate(tool,{mode:'verify-fixture',timeoutS:timeout_s})",
+    "source_blob": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+    "runtime_status": "NOT_RUN",
+    "missing_dependencies": {
+      "zod/v4": "4.6.7",
+      "@modelcontextprotocol/server": "2.4.0"
+    },
+    "npm_cache": "No cached zod or MCP server packages in this environment.",
+    "qualification": "No MCP stdio E2E or MCP acceptance claimed."
+  },
+  "qualification": {
+    "t0": "NOT_ACCEPTED_FULL; local producer manifest SHA match only",
+    "t1": "NOT_QUALIFIED; no reproducible source build",
+    "t2": "SCOPED_NONROOT_EXTRACTION_ONLY; canonical Python runtime absent and package metadata overlay required",
+    "t3": "HOST_PYTHON_3_13_5_SCOPED_REPLAY_ONLY; no formal independent semantic Oracle",
+    "t4": "NOT_QUALIFIED; recorded gateway/CLI/SDK observations are writer-reported only because raw receipt bytes are absent; MCP NOT_RUN; overlays required.",
+    "t5": "NOT_QUALIFIED; no business-semantic independent Oracle",
+    "t6": "OPEN",
+    "product": "NOT_GRANTED",
+    "release": "NOT_GRANTED"
+  },
+  "blockers": [
+    "Rebuild the original package with current main portable builder so meta.sh contains TOOL_ID rather than legacy TOOL_TOOL_ID.",
+    "Provide the canonical shared Python 3.13.5 runtime or split/transport it safely; do not treat the host adapter as portable runtime.",
+    "Run the actual MCP stdio server with package-lock dependencies zod 4.6.7 and @modelcontextprotocol/server 2.4.0.",
+    "Network isolation was not proven.",
+    "Independent non-Writer Source-First review required.",
+    "Raw Runner/gateway/CLI/SDK stdout/stderr/receipt bytes are not committed; execution hashes remain writer-reported and cannot support formal T4 admission."
+  ],
+  "ci": {
+    "current_main_sha": "530a2d7a8edf99106845be228b6451c6aa52be92",
+    "current_main_status_contexts": "ci/woodpecker/push/formal-static=SUCCESS",
+    "current_main_push_pipeline": 1831,
+    "current_main_push_state": "SUCCESS",
+    "previous_exact_head": "296dc2ab0edb82e5be99efa9da5a2866270071b8",
+    "previous_exact_head_push_pipeline": 1289,
+    "previous_exact_head_push_state": "SUCCESS",
+    "previous_exact_head_pr_pipeline": 1290,
+    "previous_exact_head_pr_state": "SUCCESS",
+    "exact_head_push": "SUCCESS",
+    "exact_head_pull_request": "SUCCESS",
+    "fresh_independent_review": "PENDING_AFTER_R97_CURRENT_MAIN_SYNC_AND_EXACT_HEAD_CI",
+    "previous_sync_head": "296dc2ab0edb82e5be99efa9da5a2866270071b8",
+    "exact_head_push_pipeline": 1293,
+    "exact_head_push_state": "SUCCESS",
+    "exact_head_pr_pipeline": 1294,
+    "exact_head_pr_state": "SUCCESS",
+    "prior_reviewed_head": "af96a99151374218eddedec6c314e2827f25986c",
+    "prior_reviewed_head_push_pipeline": 1180,
+    "prior_reviewed_head_push_state": "SUCCESS",
+    "prior_reviewed_head_pr_pipeline": 1185,
+    "prior_reviewed_head_pr_state": "SUCCESS",
+    "reviewed_exact_head": "668d6b1e07ae1e8d04576b7521fe3ca835cdddac",
+    "previous_current_main_sha": "19e349fcf96f8883be6a46c654046f1b0e6c66bd",
+    "previous_current_main_push_pipeline": 1315,
+    "previous_current_main_push_state": "SUCCESS",
+    "current_pr_head_ci_source": "Use live Woodpecker status contexts for the current PR head; do not self-record pipeline IDs generated by this metadata commit.",
+    "previous_ancestry_sync_head": "1052e3b4275a69fcaeaef650c04ab3b679dab45b",
+    "previous_ancestry_sync_head_push_pipeline": 1332,
+    "previous_ancestry_sync_head_push_state": "SUCCESS",
+    "previous_ancestry_sync_head_pr_pipeline": 1333,
+    "previous_ancestry_sync_head_pr_state": "FAILURE"
+  },
+  "no_scope_inflation": true,
+  "no_shared_runner_or_cli_mcp_sdk_registry_writes": true,
+  "no_product_or_release_signature": true,
+  "raw_receipts": {
+    "status": "NOT_COMMITTED",
+    "missing": [
+      "Runner doctor/verify stdout and stderr bytes",
+      "T4 gateway doctor/verify stdout, stderr, and receipt bytes",
+      "CLI doctor/verify stdout, stderr, and receipt bytes",
+      "SDK verify stdout, stderr, and receipt bytes"
+    ],
+    "existing_hashes": "The SHA-256 values and phase summaries in runner_replay, t4_gateway, cli, and sdk are writer-reported; the PR does not contain bytes from which an independent reviewer can recompute them.",
+    "use_boundary": "TECHNICAL_OBSERVATION_ONLY; DO_NOT_USE_FOR_FORMAL_T4_ADMISSION",
+    "closure_condition": "If later proposed as T4 admission evidence, commit immutable raw outputs plus command/host/runtime/UID/permissions/fixture/Runner/source metadata and a manifest; rerun exact-head CI and fresh independent Source-First review."
+  },
+  "prior_review": {
+    "exact_head": "af96a99151374218eddedec6c314e2827f25986c",
+    "verdict": "ACCEPT_SCOPED",
+    "p0": 0,
+    "p1": 0,
+    "p2": 1,
+    "ci_push": 1180,
+    "ci_pr": 1185,
+    "disposition": "Scoped archive/source/fixture review accepted; raw execution receipts absent and execution claims remain writer-reported technical-only. This is not a review of the post-sync head."
+  },
+  "current_head_review": "PENDING_AFTER_R97_CURRENT_MAIN_SYNC_AND_EXACT_HEAD_CI",
+  "previous_current_main_sha": "19e349fcf96f8883be6a46c654046f1b0e6c66bd"
+}
