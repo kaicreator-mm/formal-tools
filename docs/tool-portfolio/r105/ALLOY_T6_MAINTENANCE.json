@@ -117,6 +117,7 @@
       "buildToolBlob",
       "metaGeneratorBlob",
       "packagerBlob",
+      "manifestGeneratorBlob",
       "toolchainFingerprint",
       "rebuiltPackageTreeSha256"
     ],
@@ -146,7 +147,7 @@
       "exitContractTestBlob",
       "observedHostJavaVersion",
       "observedHostJavaSha256",
-      "nativeAcceptanceEvidenceBlob",
+      "auditEvidenceBlob",
       "nativeAcceptanceEvidenceRef"
     ],
     "T4": [
@@ -170,6 +171,7 @@
       "portfolioGatewayBlob",
       "registryBlob",
       "portfolioDagBlob",
+      "auditEvidenceBlob",
       "observedHostJavaVersion",
       "observedHostJavaSha256",
       "portableJavaRuntimeSha256",
@@ -188,6 +190,7 @@
       "positiveFixtureBlob",
       "negativeFixtureBlob",
       "errorFixtureBlob",
+      "auditEvidenceBlob",
       "oracleId",
       "oracleVersion",
       "oracleCaseBlob"
@@ -253,15 +256,15 @@
     "previousSnapshot": "319367063177dec22a6df64233fae2a5fceef00f",
     "compareAhead": 55,
     "compareBehind": 0,
-    "changedPaths": 42,
+    "changedPaths": 44,
     "alloyOwnedDeltaPaths": [
       "docs/tool-portfolio/r77/ALLOY_EXIT_CONTRACT.json",
       "portable/verification/cases/alloy/expect.sh",
       "tests/alloy-exit-contract.test.mjs"
     ],
-    "otherToolAndG4Paths": 39,
+    "otherToolAndG4Paths": 41,
     "sourcePinVerification": "24_OF_24_MATCH_AT_6991",
-    "note": "The 3193670→6991 main delta is 55 commits / 42 paths. The three Alloy-owned paths are the R77 exit-contract evidence, its strict expect.sh contract and its regression test; the remaining 39 paths are disjoint from the 24 recorded Alloy identity pins. The 24 pins were independently re-fetched from exact main 6991.",
+    "note": "The 3193670→6991 main delta is 55 commits / 44 paths. The three Alloy-owned paths are the R77 exit-contract evidence, its strict expect.sh contract and its regression test; the remaining 41 paths are disjoint from the 24 recorded Alloy identity pins. The 24 pins were independently re-fetched from exact main 6991.",
     "coordinatorReportedMainPushPipeline": 1903,
     "mainPushStatusSource": "Exact commit status for 6991c7aae1026ea9bda9d49f43139e92437f0493; ci/woodpecker/push/formal-static -> pipeline 1910 SUCCESS. Coordinator comment also reported pipeline 1903 SUCCESS."
   },
