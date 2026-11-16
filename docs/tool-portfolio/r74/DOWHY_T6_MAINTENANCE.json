@@ -195,6 +195,8 @@
     "T5": [
       "version",
       "installedPackageTreeSha256",
+      "hostPythonVersion",
+      "runtimeImageDigest",
       "positiveFixtureBlob",
       "negativeFixtureBlob",
       "oracleId",
@@ -266,10 +268,10 @@
   "qualificationBoundary": "T0/T1/T2/T3/T4/T5/T6 full qualification is not granted by a freshness assessor. No #24 full-portfolio T4, #11 Product, or Release qualification.",
   "latestMainReconciliation": {
     "commit": "591d3914e0e99ec8e1bd3e12887f110d096208ce",
-    "mainPushPipeline": 1700,
-    "mainPushStatus": "FAILURE",
-    "mainPushFirstFailureClassification": "UNKNOWN_NOT_AVAILABLE_WITHOUT_AUTHENTICATED_WOODPECKER_LOGS",
-    "previousMainPushPipeline": 1685,
+    "mainPushPipeline": 1685,
+    "mainPushStatus": "SUCCESS",
+    "mainPushFirstFailureClassification": "NOT_APPLICABLE_PIPELINE_1700_WAS_TLA_BRANCH_PUSH",
+    "previousMainPushPipeline": 1664,
     "previousMainPushStatus": "SUCCESS",
     "previousSnapshotMain": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
     "deltaFromSnapshotMain": {
@@ -283,6 +285,13 @@
       "total": 17,
       "method": "Existing 17/17 source pins matched at snapshot main; all 24 commits / 31 paths from snapshot main to current main are disjoint from every DoWhy source-pin path."
     },
-    "note": "Delivery reconciliation only. snapshotMain and all historical R74 execution/evidence identities remain immutable. No current-main DoWhy Runner/CLI/SDK/MCP execution is claimed."
+    "note": "Delivery reconciliation only. Main Push #1685 for this exact main commit succeeded. Pipeline #1700 was actually a push to fix/i24-tla-tlc-r84 (not main); its same-SHA retry #1716 succeeded. snapshotMain and all historical R74 execution/evidence identities remain immutable. No current-main DoWhy Runner/CLI/SDK/MCP execution is claimed.",
+    "misattributedPipeline": {
+      "pipeline": 1700,
+      "branch": "fix/i24-tla-tlc-r84",
+      "status": "FAILURE",
+      "sameShaRetryPipeline": 1716,
+      "sameShaRetryStatus": "SUCCESS"
+    }
   }
 }

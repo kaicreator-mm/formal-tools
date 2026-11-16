@@ -1,6 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   assessDoWhyMaintenance,
   GATE_DEPENDENCIES,
@@ -11,6 +15,28 @@ const baseline = JSON.parse(readFileSync(
   new URL("../docs/tool-portfolio/r74/DOWHY_T6_MAINTENANCE.json", import.meta.url),
   "utf8"
 ));
+const CLI_PATH = fileURLToPath(new URL("../scripts/tool-portfolio/dowhy-maintenance.mjs", import.meta.url));
+
+function invokeCli(baselineValue, observedValue, extraArgs = []) {
+  const directory = mkdtempSync(join(tmpdir(), "dowhy-maintenance-cli-"));
+  const baselinePath = join(directory, "baseline.json");
+  const observedPath = join(directory, "observed.json");
+  const toText = value => typeof value === "string" ? value : JSON.stringify(value);
+  writeFileSync(baselinePath, toText(baselineValue));
+  writeFileSync(observedPath, toText(observedValue));
+  let result;
+  try {
+    result = spawnSync(process.execPath, [
+      CLI_PATH,
+      "--baseline", baselinePath,
+      "--observed", observedPath,
+      ...extraArgs
+    ], { encoding: "utf8" });
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+  return result;
+}
 
 function observedSnapshot(source = baseline) {
   return {
@@ -163,6 +189,24 @@ test("missing identity fields are incomplete and revalidate only dependent gates
   assert.deepEqual(result.revalidationGates, ["T2", "T3", "T4", "T6"]);
 });
 
+test("host Python runtime drift invalidates semantic-use T5 evidence", () => {
+  const complete = completeSyntheticBaseline();
+  const observed = observedSnapshot(complete);
+  observed.identity.hostPythonVersion = "3.14.0";
+  const result = assessDoWhyMaintenance(complete, observed);
+  assert.deepEqual(result.staleGates, ["T2", "T3", "T4", "T5", "T6"]);
+  assert.deepEqual(result.revalidationGates, ["T2", "T3", "T4", "T5", "T6"]);
+});
+
+test("runtime image drift invalidates semantic-use T5 evidence", () => {
+  const complete = completeSyntheticBaseline();
+  const observed = observedSnapshot(complete);
+  observed.identity.runtimeImageDigest = "sha256:" + "a".repeat(64);
+  const result = assessDoWhyMaintenance(complete, observed);
+  assert.deepEqual(result.staleGates, ["T2", "T4", "T5", "T6"]);
+  assert.deepEqual(result.revalidationGates, ["T2", "T4", "T5", "T6"]);
+});
+
 test("explicit null observations remain UNKNOWN rather than FRESH", () => {
   const complete = completeSyntheticBaseline();
   const observed = observedSnapshot(complete);
@@ -170,7 +214,7 @@ test("explicit null observations remain UNKNOWN rather than FRESH", () => {
   const result = assessDoWhyMaintenance(complete, observed);
   assert.equal(result.status, "INCOMPLETE_OBSERVATION");
   assert.deepEqual(result.unknownFields, ["runtimeImageDigest"]);
-  assert.deepEqual(result.revalidationGates, ["T2", "T4", "T6"]);
+  assert.deepEqual(result.revalidationGates, ["T2", "T4", "T5", "T6"]);
 });
 
 test("wrong tool identity is rejected", () => {
@@ -183,6 +227,20 @@ test("baseline must explicitly carry every identity field", () => {
   const incomplete = structuredClone(baseline);
   delete incomplete.identity.nativeAdapterBlob;
   assert.throws(() => assessDoWhyMaintenance(incomplete, observedSnapshot()), /nativeAdapterBlob/);
+});
+
+test("baseline must explicitly contain a valid openBlockers array", () => {
+  const missing = structuredClone(baseline);
+  delete missing.openBlockers;
+  assert.throws(() => assessDoWhyMaintenance(missing, observedSnapshot()), /openBlockers/);
+
+  const malformed = structuredClone(baseline);
+  malformed.openBlockers = {};
+  assert.throws(() => assessDoWhyMaintenance(malformed, observedSnapshot()), /openBlockers/);
+
+  const invalidEntry = structuredClone(baseline);
+  invalidEntry.openBlockers = [null];
+  assert.throws(() => assessDoWhyMaintenance(invalidEntry, observedSnapshot()), /openBlockers/);
 });
 
 test("baseline gate dependency declarations match the executable dependency map", () => {
@@ -200,4 +258,66 @@ test("an observation with no baseline blockers can be FRESH but still never gran
   assert.equal(result.qualificationGranted, false);
   assert.deepEqual(result.changedFields, []);
   assert.deepEqual(result.revalidationGates, []);
+});
+
+
+test("CLI emits FRESH JSON and exits zero without granting qualification", () => {
+  const complete = completeSyntheticBaseline();
+  const result = invokeCli(complete, observedSnapshot(complete));
+  assert.equal(result.status, 0, result.stderr);
+  const assessment = JSON.parse(result.stdout);
+  assert.equal(assessment.status, "FRESH");
+  assert.equal(assessment.qualificationGranted, false);
+});
+
+test("CLI emits FRESH_UNQUALIFIED JSON and exits zero while retaining blockers", () => {
+  const complete = completeSyntheticBaseline();
+  complete.openBlockers = ["synthetic known blocker"];
+  const result = invokeCli(complete, observedSnapshot(complete));
+  assert.equal(result.status, 0, result.stderr);
+  const assessment = JSON.parse(result.stdout);
+  assert.equal(assessment.status, "FRESH_UNQUALIFIED");
+  assert.deepEqual(assessment.baselineOpenBlockers, ["synthetic known blocker"]);
+  assert.equal(assessment.qualificationGranted, false);
+});
+
+test("CLI exits two for STALE and INCOMPLETE observations and emits fail-closed JSON", () => {
+  const complete = completeSyntheticBaseline();
+  const stale = observedSnapshot(complete);
+  stale.identity.version = "0.15";
+  const staleResult = invokeCli(complete, stale);
+  assert.equal(staleResult.status, 2, staleResult.stderr);
+  const staleAssessment = JSON.parse(staleResult.stdout);
+  assert.equal(staleAssessment.status, "STALE_REVERIFY_REQUIRED");
+  assert.equal(staleAssessment.qualificationGranted, false);
+
+  const incomplete = observedSnapshot(complete);
+  delete incomplete.identity.runtimeImageDigest;
+  const incompleteResult = invokeCli(complete, incomplete);
+  assert.equal(incompleteResult.status, 2, incompleteResult.stderr);
+  const incompleteAssessment = JSON.parse(incompleteResult.stdout);
+  assert.equal(incompleteAssessment.status, "INCOMPLETE_OBSERVATION");
+  assert.equal(incompleteAssessment.qualificationGranted, false);
+});
+
+test("CLI exits one for missing or unknown arguments, invalid JSON, and invalid schema", () => {
+  const complete = completeSyntheticBaseline();
+  const observed = observedSnapshot(complete);
+  const missingArgs = spawnSync(process.execPath, [CLI_PATH], { encoding: "utf8" });
+  assert.equal(missingArgs.status, 1);
+  assert.match(missingArgs.stderr, /both --baseline and --observed are required/);
+
+  const unknownArgs = invokeCli(complete, observed, ["--unknown"]);
+  assert.equal(unknownArgs.status, 1);
+  assert.match(unknownArgs.stderr, /unknown argument/);
+
+  const invalidJson = invokeCli("{", observed);
+  assert.equal(invalidJson.status, 1);
+  assert.ok(invalidJson.stderr.length > 0);
+
+  const invalidSchema = structuredClone(complete);
+  invalidSchema.schema = "wrong/schema";
+  const invalidSchemaResult = invokeCli(invalidSchema, observed);
+  assert.equal(invalidSchemaResult.status, 1);
+  assert.match(invalidSchemaResult.stderr, /baseline schema/);
 });

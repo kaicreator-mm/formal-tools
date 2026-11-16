@@ -146,6 +146,8 @@ export const GATE_DEPENDENCIES = Object.freeze({
   T5: Object.freeze([
     "version",
     "installedPackageTreeSha256",
+    "hostPythonVersion",
+    "runtimeImageDigest",
     "positiveFixtureBlob",
     "negativeFixtureBlob",
     "oracleId",
@@ -199,6 +201,12 @@ function validateBaseline(baseline) {
   }
   if (!baseline.gateDependencies || typeof baseline.gateDependencies !== "object") {
     throw new TypeError("baseline gateDependencies object is required");
+  }
+  if (!Array.isArray(baseline.openBlockers)) {
+    throw new TypeError("baseline openBlockers must be an array");
+  }
+  if (!baseline.openBlockers.every(blocker => typeof blocker === "string" && blocker.length > 0)) {
+    throw new TypeError("baseline openBlockers must contain non-empty strings");
   }
   for (const gate of Object.keys(GATE_DEPENDENCIES)) {
     if (!sameValue(baseline.gateDependencies[gate], GATE_DEPENDENCIES[gate])) {
@@ -266,9 +274,7 @@ export function assessDoWhyMaintenance(baseline, observed) {
   const baselineUnknownFields = IDENTITY_FIELDS.filter(field =>
     baseline.identity[field] === null
   );
-  const baselineOpenBlockers = Array.isArray(baseline.openBlockers)
-    ? baseline.openBlockers
-    : [];
+  const baselineOpenBlockers = baseline.openBlockers;
 
   let status = "FRESH";
   if (missingFields.length || unknownFields.length) {
