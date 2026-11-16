@@ -31,15 +31,15 @@ ft::fetch() {
 ft::extract() {
   local dest="$2"
   printf '%s\n' "$dest" >> "$MOCK_WORK/staged-roots"
-  if [ "${MOCK_EXTRACT_FAIL:-0}" = 1 ]; then return 43; fi
-  if [ "${MOCK_NO_SOURCE:-0}" = 1 ]; then return 0; fi
+  if [ "${"$"}{MOCK_EXTRACT_FAIL:-0}" = 1 ]; then return 43; fi
+  if [ "${"$"}{MOCK_NO_SOURCE:-0}" = 1 ]; then return 0; fi
   local candidate="$dest/clingo-$FT_UPSTREAM_COMMIT"
   mkdir -p "$candidate/libclingo"
-  if [ "${MOCK_HEADER:-valid}" != absent ]; then
-    printf '#define CLINGO_VERSION "%s"\n' "${MOCK_HEADER_VERSION:-5.8.3}" > "$candidate/libclingo/clingo.h"
+  if [ "${"$"}{MOCK_HEADER:-valid}" != absent ]; then
+    printf '#define CLINGO_VERSION "%s"\n' "${"$"}{MOCK_HEADER_VERSION:-5.8.3}" > "$candidate/libclingo/clingo.h"
   fi
-  if [ "${MOCK_SECOND_SOURCE:-0}" = 1 ]; then mkdir -p "$dest/clingo-second"; fi
-  if [ "${MOCK_SYMLINK_ONLY:-0}" = 1 ]; then
+  if [ "${"$"}{MOCK_SECOND_SOURCE:-0}" = 1 ]; then mkdir -p "$dest/clingo-second"; fi
+  if [ "${"$"}{MOCK_SYMLINK_ONLY:-0}" = 1 ]; then
     rm -rf -- "$candidate"
     ln -s "$MOCK_WORK/old-source" "$candidate"
   fi
