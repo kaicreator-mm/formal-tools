@@ -83,3 +83,34 @@ test("G4 source/oracle/tool mismatch, fake PASS and unbounded input fail closed"
    method_json:encode(f.method),provenance_json:encode(f.provenance)});
  assert.equal(huge.status,"BLOCKED");
 });
+
+test("G4 Candidate binds an independently sourced frozen Oracle separately from Claim source",()=>{
+ const f=fixture();
+ f.problem.source_refs.push({id:"independent_oracle",sha256:"e".repeat(64),
+  classification:"PUBLIC",purpose:"independent frozen Oracle cases",consumer:"formal_tools"});
+ f.problem.oracles[0].source_ref="independent_oracle";
+ f.provenance.oracle_sha256="e".repeat(64);
+ const candidate=seal(f);
+ assert.equal(candidate.status,"CANDIDATE",JSON.stringify(candidate.issues));
+ assert.equal(candidate.provenance.source_sha256,"a".repeat(64));
+ assert.equal(candidate.provenance.oracle_sha256,"e".repeat(64));
+ assert.notEqual(candidate.provenance.source_sha256,candidate.provenance.oracle_sha256);
+ const replay=inspectCandidateReplay(encode(candidate),encode(f.provenance));
+ assert.equal(replay.status,"REPLAY_BLOCKED_UNQUALIFIED");
+ assert.equal(replay.replay_allowed,false);
+ assert.equal(replay.solution_promotable,false);
+});
+
+test("G4 rejects unknown Oracle source refs and mismatched Oracle source hashes",()=>{
+ const f=fixture();
+ f.problem.source_refs.push({id:"independent_oracle",sha256:"e".repeat(64),
+  classification:"PUBLIC",purpose:"independent frozen Oracle cases",consumer:"formal_tools"});
+ f.problem.oracles[0].source_ref="independent_oracle";
+ f.provenance.oracle_sha256="e".repeat(64);
+ assert.equal(seal({...f,problem:{...f.problem,oracles:[{...f.problem.oracles[0],source_ref:"missing_oracle"}]}}).status,"BLOCKED");
+ assert.equal(seal({...f,provenance:{...f.provenance,oracle_sha256:"f".repeat(64)}}).status,"BLOCKED");
+ const candidate=seal(f);
+ const drift=inspectCandidateReplay(encode(candidate),encode({...f.provenance,oracle_sha256:"f".repeat(64)}));
+ assert.equal(drift.status,"STALE");
+ assert.deepEqual(drift.changed_fields,["oracle_sha256"]);
+});
