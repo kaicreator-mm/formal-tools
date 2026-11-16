@@ -75,7 +75,7 @@
     {
       "case_id": "case_undeclared_forged",
       "smt": "04-undeclared-answer-and-forged-draft-cannot-be-ready.smt2",
-      "git_blob": "a0a6d55e46b2e87b4f86eda15ce5b6c29e26d2",
+      "git_blob": "a0a6d55e46b2e87b4f86eda15ab4b6c29e26d2",
       "expected_solver": "UNSAT",
       "assumptions": [
         "answers_allowed=false",
