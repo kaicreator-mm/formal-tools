@@ -1,0 +1,247 @@
+{
+  "schema": "formal-tools/current-main-tool-replay/1",
+  "label": "FORMAL_TOOLS_I24_DAFNY_R61_CURRENT_MAIN_T4",
+  "tool_id": "dafny",
+  "tool_version": "4.11.0",
+  "source_main": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
+  "main_woodpecker_push": {
+    "context": "ci/woodpecker/push/formal-static",
+    "state": "SUCCESS",
+    "pipeline": 1540
+  },
+  "host": {
+    "os": "Debian GNU/Linux 13 (trixie)",
+    "node": "v22.16.0",
+    "execution_uid": 65534,
+    "execution_gid": 65534
+  },
+  "source_blobs": {
+    "portable/packaging/bundle-template/bin/tool-runner": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "registry/PROBLEM_CAPABILITIES.json": "faa89997c3f7c8c71da0a69aa90e8ff37461cde0",
+    "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+    "packages/core/src/finite.mjs": "c717cb3b2eb4d13422fbdfb859aa3fcceee3851a",
+    "packages/runner/js/cli.mjs": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
+    "packages/runner/js/sdk.mjs": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+    "packages/runner/js/native-catalog.mjs": "02f628947be3e5c270d802be150ab220e14fc2b8",
+    "packages/runner/js/native.mjs@BASE": "2e0e669e4fa66cb27654644705e76794c0727004",
+    "packages/runner/js/native.mjs@R61": "43580a043a487d7c4db166d5eb3d355ee36c41d5",
+    "packages/runner/js/tool-manager.mjs": "a8e547718b8242c9d27f9e906b1c1ebaa2d80de6",
+    "packages/runner/js/tool-result.mjs": "a2c61c50658fc3d7e578ffbf7ee018f707e15841",
+    "packages/runner/js/tool-workspace.mjs": "354809f169dac5b1fef31e64eb3aa7965ea0b88f",
+    "packages/runner/js/artifact-collector.mjs": "8881dcb65f97f74036ad90e2ca01a600c2daaec8",
+    "validation/SKILL_ACCEPTANCE_CASES.json": "b52076bc6d129f6f6b416e040863e71aa9108234",
+    "skills/dafny/examples/Positive.dfy": "3a2eb29a37c12ca5fa0fc6e10103bd14caec0924",
+    "skills/dafny/examples/Negative.dfy": "e8abb7af3ab7d435700424566b12efc55a6bb779",
+    "portable/verification/cases/dafny/pos.dfy": "5f0c3995131fb9a984d5dd5ed784799c8d75225b",
+    "portable/verification/cases/dafny/neg.dfy": "bd66f9931184a2762ec91b70bc043edccb9ad01e",
+    "portable/verification/cases/dafny/err.dfy": "6f05ceb09194a50e6b1e1ca0e04de2e964b21619",
+    "portable/verification/cases/dafny/expect.sh@BASE": "ab3fa88eb494214faffdf02e02ab8f48a3990d4e",
+    "portable/verification/cases/dafny/expect.sh@R61": "e3c373481959bc6e0297861b87bb3a8cb6b1a6e0",
+    "tests/dafny-sdk-outcome.test.mjs@R61": "56b5fbf401a382cf70cd98a955f5487c06c3daa9"
+  },
+  "assets": {
+    "original_tool_archive": {
+      "drive_file_id": "1-1BlYZi6JrUfKbXp5oHSaGB0sY-lYmgr",
+      "path": "tools/dafny-4.11.0-linux-x86_64.tar.zst",
+      "bytes": 46399875,
+      "sha256": "068b3111a5a5c842e5f5bed51c576cf4ed5c966503e97916a53c2a72eac43d5a",
+      "sha256sums_drive_file_id": "1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1",
+      "sha256sums_file_sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64",
+      "manifest_entry_match": true
+    },
+    "portable_core_harness_archive": {
+      "drive_file_id": "1xEUgLSTDO6xj8ij_hvAgnHkOeq2aMrl7",
+      "bytes": 27989,
+      "sha256": "fe9699e6ba503d94826551bc8e82c70c7c267191a89a6a14941e3551e2b23990",
+      "note": "Core harness was overlaid with the exact-current-main Runner, Registry, DAG, fixtures and JS source pins; it is not represented as an unmodified current-main bundle."
+    },
+    "archive_preflight": {
+      "zstd_test": "PASS",
+      "tar_members": 297,
+      "files": 293,
+      "directories": 4,
+      "symlinks": 0,
+      "hardlinks": 0,
+      "special_entries": 0,
+      "unsafe_paths": 0
+    },
+    "nonroot_extraction": {
+      "status": "PASS",
+      "uid": 65534,
+      "gid": 65534,
+      "files": 293,
+      "directories_including_implicit_tools_parent": 5,
+      "symlinks": 0,
+      "special_entries": 0,
+      "wrong_owner_entries": 0,
+      "payload_read_only_for_execution": true
+    },
+    "binary": {
+      "path": "tools/dafny/dafny/dafny",
+      "version": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2",
+      "sha256": "e540b4826363afb87c326446239a682d45086905425fa6299c103eca9693846d"
+    },
+    "legacy_metadata": {
+      "meta_sh_sha256": "b639df9fce1b86a8b72e1c9d8d844d09c7c8daafefd614a73549e722115bcb6",
+      "meta_json_sha256": "546647e04f24f9c87ef4b3b8d84bc5babb9b77c438390858dc6c05f4cadfb6ab",
+      "meta_sh_exports": "TOOL_TOOL_ID=dafny",
+      "meta_sh_missing": "TOOL_ID"
+    }
+  },
+  "execution": {
+    "portable_runner": {
+      "doctor": "PASS",
+      "verify_exit": 0,
+      "tsv_sha256": "7975f1fa73d699bd0bc71020ec5bf0075a3b44300bf5961d43a4d0729747ae47",
+      "cases": {
+        "pos": {
+          "exit": 0,
+          "matched": 1,
+          "exit_ok": 1,
+          "label": "VERIFIED",
+          "log_sha256": "a7e7807cb8ab9051b72092e5129f7ee1a086df19551c2ab9abf09c765dec656e"
+        },
+        "neg": {
+          "exit": 4,
+          "matched": 1,
+          "exit_ok": 1,
+          "label": "VERIFICATION_ERROR",
+          "log_sha256": "a09ecabd8db8dcb283f031ecf0b0a83ba651d7647b8a0b658a2b570e05fb2917"
+        },
+        "err": {
+          "exit": 2,
+          "matched": 1,
+          "exit_ok": 1,
+          "label": "PARSE_ERROR",
+          "log_sha256": "5bda941be971cfc88da44296312693ee00e60dd7f76c9983c5c7983533b6d78f"
+        }
+      },
+      "verdict": "PASS",
+      "version_command": {
+        "exit": 1,
+        "error": "TOOL_ID: unbound variable",
+        "stderr_sha256": "49f16362c62b5eec7d90ab06c0a8c2d44180973bb1ce517bd5d38de2c278f13b",
+        "status": "BLOCKED_LEGACY_META_ALIAS"
+      }
+    },
+    "cli": {
+      "doctor": {
+        "exit": 0,
+        "version": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2",
+        "stdout_sha256": "bf2b8ba6c2034e2b7cf3e6daaced0276b2dfa40e8a3a8216b4f2046206c3f585"
+      },
+      "pos": {
+        "exit": 0,
+        "run_status": "EXECUTED",
+        "tool_outcome": "VERIFIED",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "stdout_sha256": "8dda2cb342d6a5e11bf75096b3c1f3eb1fa0188949e9282d0d6cc3283b1db201"
+      },
+      "neg": {
+        "exit": 0,
+        "run_status": "EXECUTED",
+        "tool_outcome": "REFUTED",
+        "test_verdict": "PASS",
+        "claim_verdict": "NOT_EVALUATED",
+        "native_exit": 4,
+        "stdout_sha256": "1efe8da27f55882351e80f006f50c27940f321c0f430dd1ffb7b4f7ce6ffdaaa"
+      }
+    },
+    "sdk": {
+      "before_parser_fix": {
+        "pos": "UNPARSED",
+        "neg": "UNPARSED",
+        "err": "UNPARSED"
+      },
+      "after_parser_fix": {
+        "pos": {
+          "tool_status": "VERIFIED",
+          "process_status": "EXIT_ZERO",
+          "native_exit": 0,
+          "stdout_sha256": "9e6a2ceddd08dd9ad5ab95bbf31a754a61166bc66cf0c5ebd83f771a9a9629da"
+        },
+        "neg": {
+          "tool_status": "VERIFICATION_ERROR",
+          "process_status": "NONZERO_EXIT",
+          "native_exit": 4,
+          "stdout_sha256": "ba886636c9d5a2fc5f98140ec21ecf663de6aba6a4a4f097a596e63c6a0175be"
+        },
+        "err": {
+          "tool_status": "PARSE_ERROR",
+          "process_status": "NONZERO_EXIT",
+          "native_exit": 2,
+          "stdout_sha256": "40928181044cc391822ab69279640c3c0a86cc87eba4d712d4ce1b9ece469677"
+        }
+      },
+      "test_verdict": "NOT_EVALUATED",
+      "claim_verdict": "NOT_EVALUATED"
+    },
+    "unit_tests": {
+      "command": "node --test tests/dafny-sdk-outcome.test.mjs",
+      "passed": 3,
+      "failed": 0,
+      "stdout_sha256": "6257cb30d8d6628e8bdec62ceee82400919225078062e0412be6801f44d6985a"
+    },
+    "mcp": {
+      "status": "NOT_RUN",
+      "reason": "@modelcontextprotocol/server is absent in the local dependency environment (ERR_MODULE_NOT_FOUND)."
+    }
+  },
+  "findings": {
+    "fixed": [
+      "Native typed SDK maps Dafny exit 0 plus a verified summary to VERIFIED, exit 4 plus postcondition proof failure to VERIFICATION_ERROR, and exit 2 plus parser summary to PARSE_ERROR; unknown/inconsistent combinations remain UNPARSED.",
+      "Dafny portable Runner fixture pins POS/NEG/ERR exits 0/4/2 and specific diagnostics instead of wildcard exits and generic error patterns."
+    ],
+    "unresolved_shared_runner_issue": "The current-main portable Runner version command fails because original meta.sh exports legacy TOOL_TOOL_ID but current Runner expands TOOL_ID under set -u. Handed off to the active PR #86 Writer in comment #6898720061; no shared Runner files changed here.",
+    "semantics": "No property/business claim is inferred; SDK test_verdict and claim_verdict remain NOT_EVALUATED."
+  },
+  "qualification": {
+    "T0": "SCOPED_DRIVE_ARCHIVE_HASH_MATCHES_SHA256SUMS; publisher authenticity not independently established",
+    "T1": "NOT_QUALIFIED; no reproducible upstream source build",
+    "T2": "SCOPED_NONROOT_EXTRACTION_AND_READ_ONLY_EXECUTION",
+    "T3": "SCOPED_CURRENT_MAIN_POS_NEG_ERR_NATIVE_REPLAY; independent review pending",
+    "T4": "SCOPED_CURRENT_MAIN_PORTABLE_RUNNER_CLI_SDK_EXECUTION; MCP_NOT_RUN; Runner version alias blocker remains",
+    "T5": "NOT_QUALIFIED; no independent semantic Oracle",
+    "T6": "NOT_QUALIFIED; no executable maintenance/upgrade regression cycle",
+    "product": "NOT_GRANTED",
+    "release": "NOT_GRANTED"
+  },
+  "raw_output_sha256": {
+    "portable_runner_tsv": "7975f1fa73d699bd0bc71020ec5bf0075a3b44300bf5961d43a4d0729747ae47",
+    "portable_runner_version_stderr": "49f16362c62b5eec7d90ab06c0a8c2d44180973bb1ce517bd5d38de2c278f13b",
+    "cli_doctor": "bf2b8ba6c2034e2b7cf3e6daaced0276b2dfa40e8a3a8216b4f2046206c3f585",
+    "cli_pos": "8dda2cb342d6a5e11bf75096b3c1f3eb1fa0188949e9282d0d6cc3283b1db201",
+    "cli_neg": "1efe8da27f55882351e80f006f50c27940f321c0f430dd1ffb7b4f7ce6ffdaaa",
+    "sdk_pos": "9e6a2ceddd08dd9ad5ab95bbf31a754a61166bc66cf0c5ebd83f771a9a9629da",
+    "sdk_neg": "ba886636c9d5a2fc5f98140ec21ecf663de6aba6a4a4f097a596e63c6a0175be",
+    "sdk_err": "40928181044cc391822ab69279640c3c0a86cc87eba4d712d4ce1b9ece469677",
+    "unit_tests": "6257cb30d8d6628e8bdec62ceee82400919225078062e0412be6801f44d6985a"
+  },
+  "latest_main_reconciliation": {
+    "commit": "591d3914e0e99ec8e1bd3e12887f110d096208ce",
+    "main_push_pipeline": 1685,
+    "main_push_status": "SUCCESS",
+    "previous_sync_main": "a229566c14a0d00b9b05a4a3d5e018b487cf1c73",
+    "delta_from_previous_sync_main": {
+      "ahead": 1,
+      "behind": 0,
+      "changed_files": 1,
+      "changed_paths": [
+        "docs/tool-portfolio/r50/PYMC_T0_SOURCE_AUDIT.json"
+      ],
+      "overlap_with_dafny_paths": false
+    },
+    "current_main_native_adapter_blob": "2e0e669e4fa66cb27654644705e76794c0727004",
+    "current_main_runner_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "prior_exact_head_ci_triage": {
+      "push_pipeline": 1682,
+      "pr_pipeline": 1683,
+      "classification": "INFRASTRUCTURE_CLONE_TLS_EOF_EXIT_128",
+      "same_sha_push_retry": 1718,
+      "same_sha_pr_retry": 1719,
+      "retry_status": "SUCCESS"
+    },
+    "note": "Delivery ancestry reconciliation only. Historical source_main, R61 source_blobs, assets, execution receipts, native outputs and qualification remain unchanged. Main #1685 SUCCESS. The only main delta since a229566 is the disjoint PyMC audit JSON."
+  }
+}
