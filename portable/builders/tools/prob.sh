@@ -54,27 +54,3 @@ export PROB_HOME="$TOOL_DIR"
 export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 exec "$TOOL_DIR/probcli" "$@"'
 }
-\n'*|*
-  ft::make_shim 'export JAVA_HOME="$FT_ROOT/runtimes/java21"
-export PATH="$JAVA_HOME/bin:$TOOL_DIR:$PATH"
-export PROB_HOME="$TOOL_DIR"
-export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-exec "$TOOL_DIR/probcli" "$@"'
-}
-\r'*) ft::die "ProB version probe returned ambiguous output" ;; esac
-  printf '%s\n' "$v" | grep -Eq '^ProB version 1[.]16[.]1-final( \([a-f0-9]{40}\))?
-  ft::make_shim 'export JAVA_HOME="$FT_ROOT/runtimes/java21"
-export PATH="$JAVA_HOME/bin:$TOOL_DIR:$PATH"
-export PROB_HOME="$TOOL_DIR"
-export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-exec "$TOOL_DIR/probcli" "$@"'
-}
- \
-    || ft::die "ProB binary version is not 1.16.1-final"
-  ft::note "prob_version_line" "$v"
-  ft::make_shim 'export JAVA_HOME="$FT_ROOT/runtimes/java21"
-export PATH="$JAVA_HOME/bin:$TOOL_DIR:$PATH"
-export PROB_HOME="$TOOL_DIR"
-export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-exec "$TOOL_DIR/probcli" "$@"'
-}
