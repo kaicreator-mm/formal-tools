@@ -12,7 +12,9 @@
     "portable_package_sha256": "c98892d52e46a03a6e2c354cf7cc78b9f0c3d9dfb8b24a9cfa3e00e226b12fdf",
     "upstream_source_archive_sha256": null,
     "binary_sha256": null,
-    "oracle_sha256": null
+    "oracle_sha256": null,
+    "bundled_jar_sha256": "8340bc1421c28aa5f0affff3a5533ef3f24f6cf19b3df7bbe43e237f7633600c",
+    "java21_runtime_sha256": null
   },
   "source_files": {
     "portable/builders/tools/elk.sh": {
@@ -185,13 +187,15 @@
   "notes": [
     "Original ELK 0.6.0 portable package SHA256 c98892d52e46a03a6e2c354cf7cc78b9f0c3d9dfb8b24a9cfa3e00e226b12fdf was recorded in the R12 source/package audit and matched the canonical producer manifest; it is not a publisher signature.",
     "The upstream GitHub release v0.6.0 asset elk-distribution-cli-0.6.0.zip is 5,539,502 bytes; GitHub Release API exposes no digest for this asset, so upstream_source_archive_sha256 remains UNKNOWN.",
-    "The original package's exact ELK binary/JAR digest is not established in the current evidence; binary_sha256 remains UNKNOWN.",
+    "The upstream-published binary identity remains UNKNOWN. The bundle-local tools/elk/elk-cli.jar and tools/elk/elk.jar member SHA256 is independently verified and recorded separately as bundled_jar_sha256; this does not establish the upstream ZIP digest or publisher authenticity.",
     "No independent domain ontology Oracle digest is established; oracle_sha256 remains UNKNOWN.",
     "R12 metadata-corrected candidate archive SHA256 19bd813e936ab020cda42a4968c466432dce9a60f0a665aa2ddc360220e4d87e is noncanonical and differs from the original package; it is not used as the baseline package pin.",
     "ELK uses the Java bundle route; native adapter applicability is NOT_APPLICABLE. The assessor only checks identities and does not execute ELK or qualify T4/T5/Product/Release.",
     "Current-main snapshot 069444c176bbacc804f107482f356dbc2eb95736 has Woodpecker main Push #1610 SUCCESS; 15/15 source pins were fetched from this exact tree.",
     "Same current-main commit 069444c176bbacc804f107482f356dbc2eb95736 also passed a later main Push #1629; the earlier same-SHA Push #1610 remains SUCCESS.",
-    "Current-main refresh R83: main advanced to 8c0811a7baa5f79953a85a190595995f2463f7d0 through a Robot-only change. The exact main diff from 069444c... contains only docs/tool-portfolio/r56/ROBOT_CURRENT_MAIN_T4.json, portable/verification/cases/robot/expect.sh and tests/robot-portfolio-contract.test.mjs. This is disjoint from all 15 ELK pins; main Push #1635 is SUCCESS."
+    "Current-main refresh R83: main advanced to 8c0811a7baa5f79953a85a190595995f2463f7d0 through a Robot-only change. The exact main diff from 069444c... contains only docs/tool-portfolio/r56/ROBOT_CURRENT_MAIN_T4.json, portable/verification/cases/robot/expect.sh and tests/robot-portfolio-contract.test.mjs. This is disjoint from all 15 ELK pins; main Push #1635 is SUCCESS.",
+    "The ELK run shim depends on the shared Java21 runtime under FT_ROOT/runtimes/java21, managed by Issue #4. java21_runtime_sha256 remains UNKNOWN until the exact current shared runtime artifact identity is pinned; the assessor maps T1-T6 build/execution evidence to this dependency.",
+    "R86 current-main snapshot is a229566c14a0d00b9b05a4a3d5e018b487cf1c73; all 15 source pins were independently re-fetched from this tree and match. Main Push #1655 SUCCESS."
   ],
   "current_main_snapshot": {
     "commit": "a229566c14a0d00b9b05a4a3d5e018b487cf1c73",
@@ -212,5 +216,13 @@
     },
     "note": "All 15 ELK source pins were matched at 8c0811a...; the only 8-commit delta to a229566... is the Clingo T6 assessor integration, disjoint from every ELK source pin. No ELK source or solver execution is claimed by this metadata refresh."
   },
-  "previous_snapshot_head": "8c0811a7baa5f79953a85a190595995f2463f7d0"
+  "previous_snapshot_head": "8c0811a7baa5f79953a85a190595995f2463f7d0",
+  "asset_pin_scopes": {
+    "portable_package_sha256": "Original ELK portable tool archive; excludes the shared Java21 runtime.",
+    "upstream_source_archive_sha256": "Upstream GitHub release ZIP digest; unavailable from the v0.6.0 Release API.",
+    "binary_sha256": "Upstream-published binary identity; remains UNKNOWN because the upstream ZIP has no digest.",
+    "bundled_jar_sha256": "Bundle-local SHA256 of tools/elk/elk-cli.jar (also identical to tools/elk/elk.jar) inside the verified original portable archive; does not establish upstream publisher authenticity.",
+    "java21_runtime_sha256": "Shared Java21 runtime identity managed by formal-tools Issue #4; null until current exact runtime identity is captured.",
+    "oracle_sha256": "Independent domain ontology Oracle identity; not established."
+  }
 }

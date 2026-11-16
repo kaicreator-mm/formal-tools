@@ -58,7 +58,7 @@ export function validateBaseline(baseline) {
   const assets = baseline.asset_pins;
   if (!assets || typeof assets !== "object" || Array.isArray(assets))
     throw new TypeError("baseline asset_pins must be an object");
-  for (const key of ["portable_package_sha256", "upstream_source_archive_sha256", "binary_sha256", "oracle_sha256"]) {
+  for (const key of ["portable_package_sha256", "upstream_source_archive_sha256", "binary_sha256", "bundled_jar_sha256", "java21_runtime_sha256", "oracle_sha256"]) {
     const value = assets[key];
     if (value !== null && value !== undefined && !SHA256.test(value))
       throw new TypeError("invalid SHA256 baseline pin: " + key);
@@ -155,9 +155,11 @@ export function assessElkMaintenance(baselineInput, current) {
   }
 
   const assetGates = {
-    portable_package_sha256: ["T0", "T2", "T3", "T4", "T6"],
+    portable_package_sha256: ["T0", "T1", "T2", "T3", "T4", "T5", "T6"],
     upstream_source_archive_sha256: ["T0", "T1", "T6"],
     binary_sha256: ["T1", "T2", "T3", "T4", "T5", "T6"],
+    bundled_jar_sha256: ["T1", "T2", "T3", "T4", "T5", "T6"],
+    java21_runtime_sha256: ["T1", "T2", "T3", "T4", "T5", "T6"],
     oracle_sha256: ["T5", "T6"]
   };
   for (const key of Object.keys(assetGates)) {
@@ -201,6 +203,7 @@ export function assessElkMaintenance(baselineInput, current) {
     changes,
     unknown_evidence: unknownEvidence,
     revalidation_required: revalidationRequired,
+    qualification_granted: false,
     qualification_boundary: baseline.qualification_boundary,
     component_applicability: baseline.component_applicability,
     note: "Deterministic identity/drift assessment only. It does not execute ELK, prove a reproducible T1 build, admit original-package T4, provide an independent T5 Oracle, or grant Product/Release."
@@ -235,6 +238,8 @@ function normalizeExternalPins(value) {
     portable_package_sha256: normalize(value.portable_package_sha256),
     upstream_source_archive_sha256: normalize(value.upstream_source_archive_sha256),
     binary_sha256: normalize(value.binary_sha256),
+    bundled_jar_sha256: normalize(value.bundled_jar_sha256),
+    java21_runtime_sha256: normalize(value.java21_runtime_sha256),
     oracle_sha256: normalize(value.oracle_sha256)
   };
 }
@@ -341,6 +346,8 @@ export async function readCurrentElkState(root, baselineInput, externalPath = nu
     portable_package_sha256: null,
     upstream_source_archive_sha256: null,
     binary_sha256: null,
+    bundled_jar_sha256: null,
+    java21_runtime_sha256: null,
     oracle_sha256: null
   };
   if (externalPath) {

@@ -1,5 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import { mkdtemp, mkdir, writeFile, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -60,6 +62,8 @@ function baseline() {
       portable_package_sha256: sha256("c"),
       upstream_source_archive_sha256: sha256("d"),
       binary_sha256: sha256("b"),
+      bundled_jar_sha256: sha256("e"),
+      java21_runtime_sha256: sha256("f"),
       oracle_sha256: sha256("a")
     },
     source_files: Object.fromEntries(paths.map((path, index) => [
@@ -174,12 +178,28 @@ test("gateway, CLI, SDK and MCP drift each stale integrate and maintain", () => 
   }
 });
 
-test("original portable package drift stales source, install, verify, integrate and maintain", () => {
+test("original portable package drift stales every lifecycle gate", () => {
   const base = baseline();
   const current = currentFrom(base);
   current.asset_pins.portable_package_sha256 = sha256("e");
   const report = assessElkMaintenance(base, current);
-  assert.deepEqual(report.stale_gates, ["T0", "T2", "T3", "T4", "T6"]);
+  assert.deepEqual(report.stale_gates, gates);
+});
+
+test("bundled ELK JAR drift stales build, install, verify, integrate, use and maintain", () => {
+  const base = baseline();
+  const current = currentFrom(base);
+  current.asset_pins.bundled_jar_sha256 = sha256("d");
+  const report = assessElkMaintenance(base, current);
+  assert.deepEqual(report.stale_gates, ["T1", "T2", "T3", "T4", "T5", "T6"]);
+});
+
+test("shared Java21 runtime drift stales all execution-dependent gates", () => {
+  const base = baseline();
+  const current = currentFrom(base);
+  current.asset_pins.java21_runtime_sha256 = sha256("d");
+  const report = assessElkMaintenance(base, current);
+  assert.deepEqual(report.stale_gates, ["T1", "T2", "T3", "T4", "T5", "T6"]);
 });
 
 test("upstream release archive drift stales source, build and maintain", () => {
@@ -216,10 +236,11 @@ test("missing observed fixture pin remains UNKNOWN without proof of source delet
   assert.deepEqual(report.stale_gates, []);
 });
 
-test("unestablished upstream, binary and Oracle pins remain UNKNOWN", () => {
+test("unestablished upstream, shared-runtime and Oracle pins remain UNKNOWN", () => {
   const base = baseline();
   base.asset_pins.upstream_source_archive_sha256 = null;
   base.asset_pins.binary_sha256 = null;
+  base.asset_pins.java21_runtime_sha256 = null;
   base.asset_pins.oracle_sha256 = null;
   const report = assessElkMaintenance(base, currentFrom(base));
   assert.equal(report.status, "UNKNOWN");
@@ -248,6 +269,8 @@ test("missing external asset file and malformed external values remain UNKNOWN",
       portable_package_sha256: null,
       upstream_source_archive_sha256: null,
       binary_sha256: null,
+      bundled_jar_sha256: null,
+      java21_runtime_sha256: null,
       oracle_sha256: null
     });
     const missingReport = assessElkMaintenance(base, missing);
@@ -259,13 +282,17 @@ test("missing external asset file and malformed external values remain UNKNOWN",
     await writeFile(externalPath, JSON.stringify({
       portable_package_sha256: sha256("C").toUpperCase(),
       upstream_source_archive_sha256: "not-a-sha256",
-      binary_sha256: 17
+      binary_sha256: 17,
+      bundled_jar_sha256: sha256("E").toUpperCase(),
+      java21_runtime_sha256: "not-a-sha256"
     }));
     const malformed = await readCurrentElkState(root, base, externalPath);
     assert.deepEqual(malformed.asset_pins, {
       portable_package_sha256: sha256("c"),
       upstream_source_archive_sha256: null,
       binary_sha256: null,
+      bundled_jar_sha256: sha256("e"),
+      java21_runtime_sha256: null,
       oracle_sha256: null
     });
     const malformedReport = assessElkMaintenance(base, malformed);
@@ -410,9 +437,52 @@ test("Git blob hashing uses canonical header and byte length", () => {
   assert.equal(gitBlobSha1(bytes), "ce013625030ba8dba906f756967f9e9ca394464a");
 });
 
+test("CLI maps CURRENT/STALE/UNKNOWN/input error to 0/2/3/64 and emits no-grant JSON", async () => {
+  const base = baseline();
+  const root = await mkdtemp(join(tmpdir(), "elk-maintenance-cli-"));
+  try {
+    await writeMatchingSourceTree(root, base);
+    const baselineDir = join(root, "docs", "tool-portfolio", "r82");
+    await mkdir(baselineDir, { recursive: true });
+    await writeFile(join(baselineDir, "ELK_T6_MAINTENANCE.json"), JSON.stringify(base));
+    await writeFile(join(baselineDir, "external.json"), JSON.stringify(base.asset_pins));
+    const scriptPath = fileURLToPath(new URL("../scripts/tool-portfolio/elk-maintenance.mjs", import.meta.url));
+    const baselineArg = "docs/tool-portfolio/r82/ELK_T6_MAINTENANCE.json";
+    const externalArg = "docs/tool-portfolio/r82/external.json";
+    const run = (external = externalArg, baselinePath = baselineArg) => {
+      const args = [scriptPath, "--root", root, "--baseline", baselinePath];
+      if (external !== null) args.push("--external", external);
+      return spawnSync(process.execPath, args, { encoding: "utf8" });
+    };
+
+    let result = run();
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(JSON.parse(result.stdout).status, "CURRENT");
+    assert.equal(JSON.parse(result.stdout).qualification_granted, false);
+
+    await writeFile(join(root, "portable", "verification", "cases", "elk", "neg.ofn"), "drift\n");
+    result = run();
+    assert.equal(result.status, 2, result.stderr);
+    assert.equal(JSON.parse(result.stdout).status, "STALE");
+
+    await writeFile(join(root, "portable", "verification", "cases", "elk", "neg.ofn"), "fixture:portable/verification/cases/elk/neg.ofn\n");
+    result = run("docs/tool-portfolio/r82/missing-external.json");
+    assert.equal(result.status, 3, result.stderr);
+    assert.equal(JSON.parse(result.stdout).status, "UNKNOWN");
+
+    await writeFile(join(root, "invalid-baseline.json"), "{");
+    result = run(externalArg, "invalid-baseline.json");
+    assert.equal(result.status, 64);
+    assert.match(result.stderr, /ELK_MAINTENANCE_ERROR/);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("qualification boundaries remain scoped and non-promoting", () => {
   const base = baseline();
   const report = assessElkMaintenance(base, currentFrom(base));
+  assert.equal(report.qualification_granted, false);
   assert.match(report.qualification_boundary.T3, /NOT_AN_INDEPENDENT_DOMAIN_ORACLE/);
   assert.match(report.qualification_boundary.T4, /NOT_ACCEPTED/);
   assert.match(report.qualification_boundary.T5, /NOT_QUALIFIED/);
