@@ -138,7 +138,9 @@ test("Robot POS requires the inferred Person class assertion, not merely copied 
   assert.match(contract, /^EXPECT_POS_REGEX='ROBOT_INFERRED_CLASS_ASSERTION_CONFIRMED'$/m);
   assert.match(contract, /^EXPECT_POS_LABEL=INFERRED_PERSON$/m);
   assert.doesNotMatch(contract, /^EXPECT_POS_REGEX='PHASE_DONE/m);
-});test("Robot NEG and ERR keep their exact native exit codes, commands, regexes and labels", () => {
+});
+
+test("Robot NEG and ERR keep their exact native exit codes, commands, regexes and labels", () => {
   assert.match(contract, /^EXPECT_NEG_ARGS='reason --reasoner ELK --input tests\/robot\/neg\.ttl'$/m);
   assert.match(contract, /^EXPECT_NEG_EXIT=1$/m);
   assert.match(contract, /^EXPECT_NEG_REGEX='The ontology is inconsistent'$/m);
