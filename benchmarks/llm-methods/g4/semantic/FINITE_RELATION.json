@@ -1,0 +1,111 @@
+{
+  "schema": "formal-tools/g4-finite-source-model-relation/0.1",
+  "version": "R85",
+  "source": {
+    "path": "benchmarks/llm-methods/g4/semantic/source/download-goal.mjs",
+    "git_blob": "f57747aa7996c88833e72288a0acd594a7ce5468",
+    "sha256": "aa7dc083fd0a7dc6f9d98e0792058d567b16c1b4883f9fe9d80fa91733afe4c2",
+    "origin_repository": "kaicreator-mm/domain-harness",
+    "origin_commit": "b3a962c673f2e623ccd3db8ba059c4bae456b9dd"
+  },
+  "model": {
+    "path": "benchmarks/llm-methods/g4/MODEL_SET.json",
+    "git_blob": "f2d38a858cc89e03d2deecc332dc2b120c632f02",
+    "sha256": "ccffedd71e77e85faea3a98aee7e8b9a0bb3242d3b5e7fbf4103a974b571c7f2",
+    "original_case_git_blobs": [
+      {
+        "case_id": "case_valid",
+        "git_blob": "666cc63209c1aeb4fcb38ae3659f0a11db8a805d"
+      },
+      {
+        "case_id": "case_unconfirmed",
+        "git_blob": "c7596dbf1730285ab2290d1c31517d28f9e8233d"
+      },
+      {
+        "case_id": "case_invalid_input",
+        "git_blob": "d9ef670e296cb4feefad081787eaad15ce5b63fc"
+      },
+      {
+        "case_id": "case_undeclared_forged",
+        "git_blob": "a0a6d55e46b2e87b4f86eda15a7ab4b6c29e26d2"
+      },
+      {
+        "case_id": "case_no_effect",
+        "git_blob": "6871c29c0758a8326a3aa6499bafd1a5b13d4a3f"
+      }
+    ]
+  },
+  "domain": "ONLY_FIXED_ORDINARY_OWN_DATA_RECORD_REPRESENTATIVES",
+  "representative_flags": [
+    "channel_ok",
+    "request_id_ok",
+    "url_ok",
+    "size_ok",
+    "answers_allowed",
+    "confirmed",
+    "injected_draft_ready"
+  ],
+  "representative_values": {
+    "channel_ok": {
+      "true": "cli",
+      "false": "INVALID_CHANNEL"
+    },
+    "request_id_ok": {
+      "true": "req_01",
+      "false": "bad id"
+    },
+    "url_ok": {
+      "true": "https://example.com/a",
+      "false": "http://example.com/a"
+    },
+    "size_ok": {
+      "true": 12,
+      "false": 0
+    },
+    "answers_allowed": {
+      "true": "EMPTY_OBJECT",
+      "false": "UNDECLARED_answer_FIELD"
+    },
+    "confirmed": {
+      "true": true,
+      "false": false
+    },
+    "injected_draft_ready": {
+      "true": "READY_FOR_KDP",
+      "false": "REJECTED"
+    }
+  },
+  "equations": {
+    "input_valid": "channel_ok && request_id_ok && url_ok && size_ok",
+    "inspect_awaiting_confirmation": "input_valid",
+    "confirm_ready_for_kdp": "input_valid && answers_allowed && confirmed",
+    "injected_draft_ready": "NON_CAUSAL_NOT_IN_FROZEN_READY_FORMULA",
+    "effect_dispatched": "SOURCE_OUTPUT_ONLY_ALWAYS_FALSE_FOR_THIS_FIXED_DOMAIN",
+    "permitted_effect": "SOURCE_OUTPUT_ONLY_FALSE_ON_READY_FOR_KDP; NOT PRESENT_ON_NONREADY"
+  },
+  "expected_rows": 128,
+  "limitations": [
+    "Finite representative truth table tests concrete JS input records; not all possible strings/URLs/byte values or arbitrary JS objects",
+    "No evidence of source/model bisimulation or a verified general JS->SMT translator",
+    "Does not model prior inspect history; pure confirm allows valid supplied proposal without prior inspect",
+    "Frozen SMT case04 draft-ready flag is non-causal; not a rejection proof by itself",
+    "Frozen SMT case05 asserts no-effect as an axiom; source-only output checks cannot establish Host no-effect",
+    "No runtime Host, KDP Intent, external Effect, cross-layer STALE/INVALIDATED or positive Solution Replay",
+    "No original Product-admitted independent semantic Oracle, Source Owner or trusted Host trust anchors"
+  ],
+  "qualification": {
+    "gate": "BYTES_BOUND_UNATTESTED",
+    "candidate": "NOT_ADMITTED",
+    "claim": "UNVERIFIED",
+    "replay_allowed": false,
+    "trust_roots": "NOT_CONFIGURED",
+    "positive_replay": "BLOCKED_UNQUALIFIED",
+    "professional_oracle": "NOT_ATTESTED"
+  },
+  "provenance": {
+    "predecessor_pr": 156,
+    "predecessor_review": "ACCEPT_SCOPED",
+    "predecessor_merge_commit": "e1081c7960622f3e6664ae4cb18851377912c636",
+    "predecessor_main_ci": "#1983 SUCCESS"
+  }
+}
