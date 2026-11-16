@@ -74,9 +74,9 @@ export function buildRealLifecycleCandidate(){
     steps:[{id:"step01",tool_id:"z3",operation:"solve",claim_ids:claims.map(c=>c.id),
       provides:["logic.smt"],depends_on:[],source_refs:["requirements"],
       estimated_cost_units:2,timeout_ms:300,destination:"LOCAL",output_classification:"PUBLIC"}]};
-  const provenance={schema:"formal-tools/solution-provenance/0.1",
+  const provenance={schema:"formal-tools/solution-provenance/0.2",
     source_id:"requirements",source_sha256:FIXTURE_SHA256,
-    oracle_id:"oracle1",oracle_sha256:FIXTURE_SHA256,
+    oracle_id:"oracle1",oracle_source_id:"requirements",oracle_sha256:FIXTURE_SHA256,
     model_sha256:FAITHFUL_MODEL_SHA256,tool_id:"z3",tool_version:z3.version,
     tool_binary_sha256:z3.executable_sha256,platform:"debian13-x86_64",
     evidence_sha256:NAT_PAIR_SHA256,evidence_gate:"BYTES_BOUND_UNATTESTED"};
