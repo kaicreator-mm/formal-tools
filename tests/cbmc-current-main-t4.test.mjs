@@ -12,6 +12,7 @@ const CURRENT_MAIN = "530a2d7a8edf99106845be228b6451c6aa52be92";
 const ARCHIVE_ID = "11n3FyTfT_YXXdYgmWOsPB77e0LQpg7uX";
 const ARCHIVE_SIZE = 20600381;
 const ARCHIVE_SHA256 = "eaa049099a7a515631b4c82699b264e4bea1e677d9f65e8374cf212d30306369";
+const UPSTREAM_DEB = { asset_id: 523196902, filename: "ubuntu-24.04-cbmc-6.11.0-Linux.deb", size: 73477756, sha256: "b3721aa541038384d7801ea3aeabbcddc3e8845ac8f1cbff637cf8dec7481ac8" };
 const RUNNER_SHA256 = "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a";
 const ORIGINAL_META_SH_SHA256 = "72e74b130e631518223eb00d4123859d7d7032e2bdf9f6732858cab8e9de070d";
 const GENERATED_META_SH_SHA256 = "f424b16e05f8abf91a713e0e40026431ccf71f540248cac9380f9eed48a52c5c";
@@ -40,7 +41,8 @@ const SOURCE_BLOBS = {
   "packages/core/src/finite.mjs": "c717cb3b2eb4d13422fbdfb859aa3fcceee3851a",
   "registry/PROBLEM_CAPABILITIES.json": "faa89997c3f7c8c71da0a69aa90e8ff37461cde0",
   "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json": "250b84ae0638d98115d748a32ae2f2c9357942b0",
-  "package-lock.json": "2ad31f01195434617ac74d2f377287a15e062b95"
+  "package-lock.json": "2ad31f01195434617ac74d2f377287a15e062b95",
+  ".woodpecker/formal-static.yaml": "c7355c240d8e6d655322894389eb38f02cd6d532"
 };
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
@@ -267,6 +269,7 @@ test("CBMC current-main Runner/CLI/SDK/MCP T4 end-to-end", {
   }
 
   const work = await mkdtemp(join(tmpdir(), "cbmc-current-main-t4-"));
+  await chmod(work, 0o755);
   const root = join(work, "portable");
   const evidenceDir = join(root, "evidence");
   const archivePath = join(work, "cbmc-6.11.0-linux-x86_64.tar.zst");
@@ -298,6 +301,11 @@ test("CBMC current-main Runner/CLI/SDK/MCP T4 end-to-end", {
   try {
     const downloaded = await downloadOriginalArchive(archivePath);
     summary.package.archive = downloaded;
+    summary.package.upstream_deb = UPSTREAM_DEB;
+    const builderSource = await readFile(join(ROOT, "portable/builders/tools/cbmc.sh"), "utf8");
+    assert.match(builderSource, /523196902/);
+    assert.match(builderSource, /ubuntu-24\\.04-cbmc-6\\.11\\.0-Linux\\.deb/);
+    assert.match(builderSource, /b3721aa541038384d7801ea3aeabbcddc3e8845ac8f1cbff637cf8dec7481ac8/);
     const compressed = run("zstd", ["-t", archivePath]);
     assert.equal(compressed.exit_code, 0, compressed.stderr);
 
@@ -454,8 +462,8 @@ test("CBMC current-main Runner/CLI/SDK/MCP T4 end-to-end", {
     assert.equal(cliMalformed.exit_code, 2);
     assert.match(cliMalformed.stderr, /portfolio usage/);
     summary.cli = {
-      doctor: { argv: cliDoctor.argv, uid: cliDoctor.execution_uid, exit_code: cliDoctor.exit_code, stdout: cliDoctor.stdout, stderr: cliDoctor.stderr },
-      verify: { argv: cliVerify.argv, uid: cliVerify.execution_uid, exit_code: cliVerify.exit_code, stdout: cliVerify.stdout, stderr: cliVerify.stderr, cases: cliCases },
+      doctor: { argv: cliDoctor.argv, uid: cliDoctor.execution_uid, exit_code: cliDoctor.exit_code, stdout: cliDoctor.stdout, stderr: cliDoctor.stderr, stdout_sha256: sha256(cliDoctor.stdout), stderr_sha256: sha256(cliDoctor.stderr) },
+      verify: { argv: cliVerify.argv, uid: cliVerify.execution_uid, exit_code: cliVerify.exit_code, stdout: cliVerify.stdout, stderr: cliVerify.stderr, stdout_sha256: sha256(cliVerify.stdout), stderr_sha256: sha256(cliVerify.stderr), cases: cliCases },
       malformed: { argv: cliMalformed.argv, uid: cliMalformed.execution_uid, exit_code: cliMalformed.exit_code, stdout: cliMalformed.stdout, stderr: cliMalformed.stderr }
     };
 
@@ -487,6 +495,8 @@ test("CBMC current-main Runner/CLI/SDK/MCP T4 end-to-end", {
       exit_code: sdkRun.exit_code,
       stdout: sdkRun.stdout,
       stderr: sdkRun.stderr,
+      stdout_sha256: sha256(sdkRun.stdout),
+      stderr_sha256: sha256(sdkRun.stderr),
       inspect: sdkResult.inspect,
       plan: sdkResult.plan,
       doctor: sdkResult.doctor,
@@ -560,7 +570,9 @@ test("CBMC current-main Runner/CLI/SDK/MCP T4 end-to-end", {
       stdout_sha256: sha256(rpc.stdoutRaw),
       stderr: rpc.stderrRaw,
       stderr_sha256: sha256(rpc.stderrRaw),
-      protocol_noise: rpc.protocolNoise
+      protocol_noise: rpc.protocolNoise,
+      server_exit_code: mcpChild.exitCode,
+      server_signal: mcpChild.signalCode
     };
 
     summary.qualification.T4 = "TECHNICAL_E2E_PASS_UNREVIEWED";
