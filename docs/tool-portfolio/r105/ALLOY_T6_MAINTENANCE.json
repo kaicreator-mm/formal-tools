@@ -136,6 +136,7 @@
     ],
     "T3": [
       "version",
+      "canonicalArchiveSha256",
       "bundledJarSha256",
       "alloyRunnerClassSha256",
       "expectBlob",
@@ -150,6 +151,9 @@
     ],
     "T4": [
       "version",
+      "canonicalArchiveSha256",
+      "bundledJarSha256",
+      "alloyRunnerClassSha256",
       "expectBlob",
       "positiveFixtureBlob",
       "negativeFixtureBlob",
@@ -166,12 +170,20 @@
       "portfolioGatewayBlob",
       "registryBlob",
       "portfolioDagBlob",
+      "observedHostJavaVersion",
+      "observedHostJavaSha256",
+      "portableJavaRuntimeSha256",
       "runtimeImageDigest"
     ],
     "T5": [
       "version",
+      "canonicalArchiveSha256",
+      "bundledJarSha256",
+      "alloyRunnerClassSha256",
       "installedPackageTreeSha256",
       "observedHostJavaVersion",
+      "observedHostJavaSha256",
+      "portableJavaRuntimeSha256",
       "runtimeImageDigest",
       "positiveFixtureBlob",
       "negativeFixtureBlob",
