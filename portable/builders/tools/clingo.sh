@@ -3,14 +3,25 @@ FT_TOOL_ID=clingo
 FT_TOOL_VERSION=5.8.3
 FT_TOOL_KIND=binary
 FT_MAIN_BIN="tools/clingo/bin/clingo"
-FT_UPSTREAM_URL="https://github.com/potassco/clingo/archive/refs/tags/v5.8.3.tar.gz"
+# Upstream v5.8.3 tag was independently resolved to this commit at source review.
+# A commit-addressed archive avoids silently following a later retargeted tag.
+# The archive itself still needs a separately verified SHA256 for full T1.
+FT_UPSTREAM_COMMIT=2ef91640ed3355c3211e9995edecdb20b16b0e38
+FT_UPSTREAM_URL="https://github.com/potassco/clingo/archive/${FT_UPSTREAM_COMMIT}.tar.gz"
+FT_UPSTREAM_NOTE="clingo v5.8.3 tag resolved to commit ${FT_UPSTREAM_COMMIT}; source archive SHA256 not independently pinned"
 FT_PROBE=(bin/clingo --version)
 
 ft_tool_build() {
-  local tgz; tgz=$(ft::fetch "$FT_UPSTREAM_URL")
-  ft::extract "$tgz" /tmp/clingox
-  local src; src=$(find /tmp/clingox -maxdepth 1 -type d -name 'clingo-*' | head -1)
+  local tgz; tgz=$(ft::fetch "$FT_UPSTREAM_URL") || ft::die "clingo source download failed"
+  ft::extract "$tgz" /tmp/clingox || ft::die "clingo source extraction failed"
+  local src; src=$(find /tmp/clingox -mindepth 1 -maxdepth 1 -type d -name 'clingo-*' -print -quit)
   [ -n "$src" ] || ft::die "clingo source dir not found"
+  [ -f "$src/libclingo/clingo.h" ] || ft::die "clingo source version header missing"
+  grep -Fxq '#define CLINGO_VERSION "5.8.3"' "$src/libclingo/clingo.h" \
+    || ft::die "clingo source version does not match v5.8.3"
+  ft::note "upstream_tag" "v5.8.3"
+  ft::note "upstream_resolved_commit" "$FT_UPSTREAM_COMMIT"
+  ft::note "source_archive_sha256_attestation" "NOT_VERIFIED_COMMIT_ADDRESSED_ONLY"
   cmake -S "$src" -B /tmp/clingob -DCMAKE_BUILD_TYPE=Release -DCLINGO_BUILD_APPS=ON >>"$FT_LOG" 2>&1 \
     || ft::die "clingo cmake configure failed"
   cmake --build /tmp/clingob -j"$(nproc)" >>"$FT_LOG" 2>&1 || ft::die "clingo build failed"
@@ -22,6 +33,11 @@ ft_tool_build() {
   ft::copy_libs "$FT_TOOL_DIR/bin/clingo" "$FT_TOOL_DIR/lib" || true
   LD_LIBRARY_PATH="$FT_TOOL_DIR/lib" ft::copy_libs "$FT_TOOL_DIR/bin/clingo" "$FT_TOOL_DIR/lib" || true
   patchelf --set-rpath '$ORIGIN/../lib' "$FT_TOOL_DIR/bin/clingo" 2>/dev/null || true
+  local actual_version
+  actual_version=$(LD_LIBRARY_PATH="$FT_TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    "$FT_TOOL_DIR/bin/clingo" --version 2>&1) || ft::die "packaged clingo version probe failed"
+  printf '%s\n' "$actual_version" | grep -Fxq "clingo version $FT_TOOL_VERSION" \
+    || ft::die "packaged clingo version does not match $FT_TOOL_VERSION"
   ft::make_shim 'export LD_LIBRARY_PATH="$TOOL_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 exec "$TOOL_DIR/bin/clingo" "$@"'
 }
