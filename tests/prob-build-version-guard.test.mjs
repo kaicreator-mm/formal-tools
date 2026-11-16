@@ -70,7 +70,10 @@ test("wrong binary versions cannot pass the builder version gate", () => {
   ]) {
     const r = replay({ MOCK_VERSION_TEXT: version });
     assert.equal(r.status, 3, version + " " + r.stderr);
-    assert.match(r.stderr, /ProB binary version is not 1[.]16[.]1-final/);
+    const expectedError = version.includes("\n")
+      ? /ProB version probe returned ambiguous output/
+      : /ProB binary version is not 1[.]16[.]1-final/;
+    assert.match(r.stderr, expectedError);
     assert.doesNotMatch(r.notes, /prob_version_line/);
   }
 });
