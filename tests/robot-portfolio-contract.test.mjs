@@ -124,15 +124,21 @@ test("Bash source regression: an export override changes shell state but the con
   assert.throws(() => parseStaticContract(injected), /plain EXPECT_\* assignment/);
 });
 
-test("Robot POS requires a generated reasoning artifact and keeps its exact command and label", () => {
+test("Robot POS requires the inferred Person class assertion, not merely copied input", () => {
   assert.match(contract, /^EXPECT_POS_VIA=sh$/m);
-  assert.match(contract, /^EXPECT_POS_ARGS='"\$BUNDLE\/tools\/robot\/run" reason --reasoner ELK --input "\$BUNDLE\/tests\/robot\/pos\.ttl" --output "\$FT_TMP\/reasoned\.ttl" && test -s "\$FT_TMP\/reasoned\.ttl" && grep -q "ex:alice" "\$FT_TMP\/reasoned\.ttl" && echo ROBOT_REASONED_OUTPUT_OK'$/m);
+  const posLine = contract.split(/\r?\n/).find(line => line.startsWith("EXPECT_POS_ARGS='"));
+  const posArgs = posLine?.slice("EXPECT_POS_ARGS='".length, -1);
+  assert.ok(posArgs, "POS args must be a single-quoted static command");
+  assert.ok(posArgs.includes("--axiom-generators ClassAssertion"));
+  assert.ok(posArgs.includes("--include-indirect true"));
+  assert.ok(posArgs.includes("--create-new-ontology true"));
+  assert.ok(posArgs.includes('grep -A4 -F "ex:alice rdf:type owl:NamedIndividual"'));
+  assert.ok(posArgs.includes('grep -Fq "ex:Person"'));
   assert.match(contract, /^EXPECT_POS_EXIT=0$/m);
-  assert.match(contract, /^EXPECT_POS_REGEX='ROBOT_REASONED_OUTPUT_OK'$/m);
-  assert.match(contract, /^EXPECT_POS_LABEL=CONSISTENT$/m);
-});
-
-test("Robot NEG and ERR keep their exact native exit codes, commands, regexes and labels", () => {
+  assert.match(contract, /^EXPECT_POS_REGEX='ROBOT_INFERRED_CLASS_ASSERTION_CONFIRMED'$/m);
+  assert.match(contract, /^EXPECT_POS_LABEL=INFERRED_PERSON$/m);
+  assert.doesNotMatch(contract, /^EXPECT_POS_REGEX='PHASE_DONE/m);
+});test("Robot NEG and ERR keep their exact native exit codes, commands, regexes and labels", () => {
   assert.match(contract, /^EXPECT_NEG_ARGS='reason --reasoner ELK --input tests\/robot\/neg\.ttl'$/m);
   assert.match(contract, /^EXPECT_NEG_EXIT=1$/m);
   assert.match(contract, /^EXPECT_NEG_REGEX='The ontology is inconsistent'$/m);
