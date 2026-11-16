@@ -3,6 +3,12 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
+import { spawn } from 'node:child_process';
+import { createInterface } from 'node:readline';
+
+let mcpDependenciesAvailable = true;
+try { await import('@modelcontextprotocol/server'); await import('zod/v4'); }
+catch { mcpDependenciesAvailable = false; }
 
 const evidence = JSON.parse(await readFile(resolve('docs/tool-portfolio/r99/CBMC_CURRENT_MAIN_T4.json'), 'utf8'));
 const sha256 = value => createHash('sha256').update(value).digest('hex');
@@ -58,7 +64,7 @@ test('CLI and SDK execute the current-main CBMC gate and fail closed on wrong Ru
   assert.equal(evidence.sdk.wrong_runner_pin.status, 'NOT_RUN_FAIL_CLOSED');
 });
 
-test('MCP remains NOT_RUN because exact locked packages are absent; no mock pass is claimed', () => {
+test('MCP remains NOT_RUN locally because exact locked packages are absent; no mock pass is claimed', () => {
   assert.equal(evidence.mcp.status, 'NOT_RUN_LOCKED_DEPENDENCIES_NOT_INSTALLED');
   assert.equal(evidence.mcp.installed, false);
   assert.deepEqual(evidence.mcp.locked_dependencies, {'@modelcontextprotocol/server':'2.4.0','@modelcontextprotocol/core':'2.4.0',zod:'4.6.7'});
@@ -72,4 +78,70 @@ test('evidence does not grant T4 qualification or promote later lifecycle gates'
   assert.equal(evidence.result.t6, 'OPEN');
   assert.equal(evidence.result.product, 'NOT_GRANTED');
   assert.equal(evidence.result.release, 'NOT_GRANTED');
+});
+
+test('MCP stdio server executes real discovery and typed CBMC tool calls when lockfile dependencies are installed', { skip: !mcpDependenciesAvailable }, async () => {
+  const env = { ...process.env };
+  delete env.FORMAL_PORTABLE_ROOT;
+  delete env.FORMAL_PORTABLE_RUNNER_SHA256;
+  delete env.FORMAL_PORTABLE_META_SHA256;
+  delete env.FORMAL_PORTABLE_FIXTURE_SHA256;
+  const child = spawn(process.execPath, ['packages/runner/js/mcp.mjs'], {
+    cwd: process.cwd(), env, stdio: ['pipe', 'pipe', 'pipe']
+  });
+  const reader = createInterface({ input: child.stdout });
+  const lines = reader[Symbol.asyncIterator]();
+  let stderr = '';
+  child.stderr.setEncoding('utf8');
+  child.stderr.on('data', chunk => { stderr += chunk; });
+  const nextLine = async () => {
+    let timer;
+    try {
+      const item = await Promise.race([
+        lines.next(),
+        new Promise((_, reject) => { timer = setTimeout(() => reject(new Error('MCP stdio response timeout')), 10000); })
+      ]);
+      assert.equal(item.done, false, 'MCP server closed stdout before replying: ' + stderr);
+      return JSON.parse(item.value);
+    } finally { clearTimeout(timer); }
+  };
+  const request = async (message, id) => {
+    child.stdin.write(JSON.stringify(message) + '\n');
+    for (;;) {
+      const response = await nextLine();
+      if (response.id === id) return response;
+    }
+  };
+  try {
+    const initialized = await request({
+      jsonrpc: '2.0', id: 1, method: 'initialize',
+      params: { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 'cbmc-r99-test', version: '1.0.0' } }
+    }, 1);
+    assert.equal(initialized.error, undefined, JSON.stringify(initialized));
+    assert.ok(initialized.result?.serverInfo);
+    child.stdin.write(JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' }) + '\n');
+
+    const listed = await request({ jsonrpc: '2.0', id: 2, method: 'tools/list', params: {} }, 2);
+    const names = listed.result.tools.map(tool => tool.name);
+    assert.ok(names.includes('list_formal_tools'));
+    assert.ok(names.includes('inspect_portfolio_tool'));
+    assert.ok(names.includes('verify_portable_fixture'));
+
+    const portfolio = await request({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'list_formal_tools', arguments: {} } }, 3);
+    const portfolioResult = JSON.parse(portfolio.result.content[0].text);
+    assert.equal(portfolioResult.portfolio.length, 36);
+    assert.ok(portfolioResult.portfolio.some(tool => tool.id === 'cbmc'));
+
+    const inspected = await request({ jsonrpc: '2.0', id: 4, method: 'tools/call', params: { name: 'inspect_portfolio_tool', arguments: { tool: 'cbmc' } } }, 4);
+    const inspectResult = JSON.parse(inspected.result.content[0].text);
+    assert.equal(inspectResult.status, 'NOT_AVAILABLE_FAIL_CLOSED');
+
+    const verified = await request({ jsonrpc: '2.0', id: 5, method: 'tools/call', params: { name: 'verify_portable_fixture', arguments: { tool: 'cbmc' } } }, 5);
+    const verifyResult = JSON.parse(verified.result.content[0].text);
+    assert.equal(verifyResult.status, 'NOT_RUN_FAIL_CLOSED');
+    assert.equal(verified.result.isError, true);
+  } finally {
+    reader.close();
+    child.kill('SIGTERM');
+  }
 });
