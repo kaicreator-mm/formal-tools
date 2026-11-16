@@ -1,0 +1,125 @@
+{
+  "schema": "formal-tools/g4-source-model-scope-mapping/0.1",
+  "scope": "BOUNDED_TRUSTED_ORDINARY_DATA_ONLY_NOT_SOURCE_MODEL_EQUIVALENCE",
+  "source": {
+    "repository": "kaicreator-mm/domain-harness",
+    "commit": "b3a962c673f2e623ccd3db8ba059c4bae456b9dd",
+    "path": "examples/dis-v020-interaction/download-goal.mjs",
+    "git_blob": "f57747aa7996c88833e72288a0acd594a7ce5468",
+    "sha256": "aa7dc083fd0a7dc6f9d98e0792058d567b16c1b4883f9fe9d80fa91733afe4c2",
+    "local_snapshot": "benchmarks/llm-methods/g4/semantic/source/download-goal.mjs"
+  },
+  "model": {
+    "path": "benchmarks/llm-methods/g4/MODEL_SET.json",
+    "git_blob": "f2d38a858cc89e03d2deecc332dc2b120c632f02",
+    "sha256": "ccffedd71e77e85faea3a98aee7e8b9a0bb3242d3b5e7fbf4103a974b571c7f2"
+  },
+  "trusted_dto_preconditions": [
+    "ordinary Object.prototype data record",
+    "only permitted channel/requestId/url/declaredBytes enumerable own fields",
+    "no Proxy or accessors, symbols or hidden own fields at the DIS adapter boundary",
+    "complete HTTPS URL and positive integer declaredBytes for the READY subset",
+    "the source functions return observation objects; KDP Intent/Host Effect are not in this source API"
+  ],
+  "source_to_model": [
+    {
+      "case_id": "case_valid",
+      "smt": "01-valid-inspect-and-confirm.smt2",
+      "git_blob": "666cc63209c1aeb4fcb38ae3659f0a11db8a805d",
+      "expected_solver": "SAT",
+      "assumptions": [
+        "channel_ok",
+        "request_id_ok",
+        "url_ok",
+        "size_ok",
+        "answers_allowed",
+        "confirmed"
+      ],
+      "source_observation": "valid inspect->AWAITING_CONFIRMATION; confirmed rechecked proposal->READY_FOR_KDP",
+      "cannot_prove": [
+        "other JS branch equivalence",
+        "session history/previous inspect",
+        "Host Effect denial"
+      ]
+    },
+    {
+      "case_id": "case_unconfirmed",
+      "smt": "02-unconfirmed-cannot-be-ready.smt2",
+      "git_blob": "c7596dbf1730285ab2290d1c31517d28f9e8233d",
+      "expected_solver": "UNSAT",
+      "assumptions": [
+        "valid complete proposal",
+        "allowed answers",
+        "confirmed=false"
+      ],
+      "source_observation": "confirm->AWAITING_CONFIRMATION not READY_FOR_KDP",
+      "cannot_prove": [
+        "malformed or missing confirmed outside bounded record"
+      ]
+    },
+    {
+      "case_id": "case_invalid_input",
+      "smt": "03-invalid-input-cannot-be-ready.smt2",
+      "git_blob": "d9ef670e296cb4feefad081787eaad15ce5b63fc",
+      "expected_solver": "UNSAT",
+      "assumptions": [
+        "at least one of channel_ok/request_id_ok/url_ok/size_ok is false"
+      ],
+      "source_observation": "invalid fully supplied input->REJECTED, missing URL or declaredBytes->CLARIFICATION_REQUIRED",
+      "cannot_prove": [
+        "concrete URL parser and canonicalization",
+        "malformed vs missing distinction",
+        "untrusted accessor/Proxy behavior"
+      ]
+    },
+    {
+      "case_id": "case_undeclared_forged",
+      "smt": "04-undeclared-answer-and-forged-draft-cannot-be-ready.smt2",
+      "git_blob": "a0a6d55e46b2e87b4f86eda15ce5b6c29e26d2",
+      "expected_solver": "UNSAT",
+      "assumptions": [
+        "answers_allowed=false",
+        "confirmed=true",
+        "injected_draft_ready=true"
+      ],
+      "source_observation": "undeclared answer field->REJECTED; arbitrary draft.status alone is non-causal, source revalidates proposal",
+      "cannot_prove": [
+        "forged draft.status is itself rejected",
+        "prior inspect is required",
+        "temporal authenticity of draft"
+      ]
+    },
+    {
+      "case_id": "case_no_effect",
+      "smt": "05-effect-is-unreachable.smt2",
+      "git_blob": "6871c29c0758a8326a3aa6499bafd1a5b13d4a3f",
+      "expected_solver": "UNSAT",
+      "assumptions": [
+        "effect_dispatched=false is an axiom",
+        "permitted_effect=false is an axiom"
+      ],
+      "source_observation": "named source inspect/confirm return effectDispatched=false; READY response includes permittedEffect=false",
+      "cannot_prove": [
+        "axioms derived from all JS/runtime paths",
+        "absence of effects in other modules or Host",
+        "independent effect oracle"
+      ]
+    }
+  ],
+  "excluded": [
+    "full source/model equivalence or bisimulation",
+    "positive solution replay or professional Oracle",
+    "confirmed=true requires a prior inspect event (false for pure confirmDownloadGoal)",
+    "untrusted JS getter/Proxy side effects or thrown exceptions",
+    "cross-layer STALE and INVALIDATED are store/consumer protections, not source-level SMT semantics",
+    "trusted Host/process attestation and authority to dispatch an Effect"
+  ],
+  "qualification": {
+    "semantic_review": "PENDING_INDEPENDENT_SOURCE_FIRST",
+    "authority": "NOT_ATTESTED",
+    "g4_trust_roots": "NOT_CONFIGURED",
+    "candidate": "NOT_ADMITTED",
+    "replay_allowed": false,
+    "effect_authorized": false
+  }
+}
