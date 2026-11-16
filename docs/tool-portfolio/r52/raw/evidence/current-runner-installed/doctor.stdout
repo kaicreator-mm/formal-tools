@@ -1,0 +1,3 @@
+doctor: rdf-shacl kind=python-lib version=0.40.2
+  python: 3.13.5 OK
+  verdict: OK

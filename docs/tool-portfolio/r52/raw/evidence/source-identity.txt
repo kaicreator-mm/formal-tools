@@ -1,0 +1,8 @@
+source_head=c4739b7406452d3092cdb03081cd79fdb5329d9c
+main_sha=90b7f3206d401aa5a2634d775c6f16487f0f1b0f
+source_pr_head=77fd4b3b702bd1e320b5831b7623085b2a0c293f
+bab6b95e0a542602c30afacc99cc73bb6cd79a472af7f80c0ae5d6ad53242ae3  /home/cc/formal-tools-build/i24-rdf-shacl-r52/src/portable/builders/build-tool.sh
+61ffc14cf6f32e0cd67c8fbcec56cfc3cbb53f63e3f9bb46caf98bab8beea2f7  /home/cc/formal-tools-build/i24-rdf-shacl-r52/src/portable/builders/make_meta.py
+f85eb9bcd78f7b627e3406e008148c7460fc3aaec26c539ee4517b46b9a180b0  /home/cc/formal-tools-build/i24-rdf-shacl-r52/src/portable/builders/tools/rdf-shacl.sh
+be81473cc494caa12033fa4cd7ec5e92956c31859a424f1ca65d7ae208da1da4  /home/cc/formal-tools-build/i24-rdf-shacl-r52/src/portable/builders/tools/rdf-shacl.requirements.txt
+020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a  /home/cc/formal-tools-build/i24-rdf-shacl-r52/src/portable/packaging/bundle-template/bin/tool-runner

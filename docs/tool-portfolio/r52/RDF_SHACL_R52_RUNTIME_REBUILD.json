@@ -24,6 +24,28 @@
       "rdf-shacl.requirements.txt": "be81473cc494caa12033fa4cd7ec5e92956c31859a424f1ca65d7ae208da1da4",
       "tool-runner": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a"
     },
+    "live_main_blob_status": {
+      "as_of_main": "6991c7aae1026ea9bda9d49f43139e92437f0493",
+      "claim_boundary": "the sha256 pins above and the Git Blob IDs below are exact-snapshot claims at source_head c4739b7406452d3092cdb03081cd79fdb5329d9c, NOT a claim that live main can rebuild the R52 package; the two tool-specific pins do not match live main",
+      "match_live_main": {
+        "portable/builders/build-tool.sh": "82d945820c32ab2b952981e5678a9c7ddb2cd41d",
+        "portable/builders/make_meta.py": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+        "portable/packaging/bundle-template/bin/tool-runner": "102e971481a3e213fdb41fa45230b1dd3beaf2bd"
+      },
+      "historical_only": {
+        "portable/builders/tools/rdf-shacl.sh": {
+          "source_blob": "8d7486fda11a0a8067f73edf7d31aed341ceae86",
+          "live_main_blob": "e2cfcc05d02ccf097c26a11c1906e853c639fbab",
+          "note": "live main had already diverged before this PR; the R52 build used the historical source blob"
+        },
+        "portable/builders/tools/rdf-shacl.requirements.txt": {
+          "source_blob": "62c7ac5c816c81c9e4e8d7f5983ed175cab42a6a",
+          "live_main_path": "ABSENT_NOT_FOUND_AT_MAIN_6991C7AA",
+          "note": "the exact eight-pin file exists only at the historical source snapshot"
+        }
+      },
+      "rebuild_boundary": "rebuilding the R52 tool archive requires checking out the historical source snapshot c4739b7406452d3092cdb03081cd79fdb5329d9c; no T1 or current-main full T4 qualification is granted by this receipt"
+    },
     "shared_runner_modified": false
   },
   "environment": {
@@ -318,6 +340,16 @@
           "qualification_effect": "NONE"
         }
       ]
+    },
+    "r110_rework": {
+      "date": "2026-11-17",
+      "role": "EXISTING_SINGLE_WRITER_REPAIR_RESUMED_LANE",
+      "previous_head": "1ba05503edc0520c34e5fc18f15842a74436aa47",
+      "review": "PR #127 independent review comment 6927936000 (VERDICT=REWORK P0=0 P1=1 P2=1; reviewer claim 6927695203 released)",
+      "p1_repair": "restored docs/tool-portfolio/r52/raw/** byte-exact from accepted R53 head 566d005bbc54189f64e4c8fcd68018c546ceebe4 (91 files, Git Blob identities preserved) so raw_evidence.manifest and artifact_recovery.member_manifest.path resolve in-tree again; see raw_evidence.tree_restoration",
+      "p2_repair": "added source.live_main_blob_status: three generic pins (build-tool.sh, make_meta.py, tool-runner) match live main blobs at 6991c7aa; rdf-shacl.sh and rdf-shacl.requirements.txt are historical-source-only pins (live main diverged/absent); no T1 or current-main full T4 promotion claimed",
+      "write_scope": "docs/tool-portfolio/r52/raw/** restore + this JSON only; no shared Runner/Registry/CLI/MCP/SDK/runtime source, no #24 ledger, no main push",
+      "no_change": "original archive/source hashes, Drive artifact IDs and readback identities, member manifest content, 89 SHA256SUMS entries, historical build-source ancestry and all R54/R102 accepted evidence bytes are unchanged; no native solver/archive/verify execution was re-run"
     }
   },
   "verification": {
@@ -472,7 +504,18 @@
   "raw_evidence": {
     "manifest": "raw/SHA256SUMS",
     "manifest_sha256": "c142a04facbda2f154fe8f1f10aa6c8aa6a2e143b07df92b94552dcc9375762b",
-    "file_count_excluding_manifest": 89
+    "file_count_excluding_manifest": 89,
+    "tree_restoration": {
+      "date": "2026-11-17",
+      "role": "R110_REWORK_WRITER_REPAIR_EXISTING_SINGLE_WRITER",
+      "restored_from": "R53 accepted head 566d005bbc54189f64e4c8fcd68018c546ceebe4",
+      "restored_paths": "docs/tool-portfolio/r52/raw/**",
+      "restored_file_count": 91,
+      "git_blob_identity_check": "git diff --cached 566d005bbc54189f64e4c8fcd68018c546ceebe4 -- docs/tool-portfolio/r52/raw is empty; all 91 restored paths carry byte-identical Git Blob SHAs to the R53 accepted tree, so original blob identities, content SHA256 values and Drive identities are preserved without re-execution",
+      "sha256sums_git_blob": "14632f0d88a8a0d3b380bfdff594a082b9df2e2a",
+      "member_manifest_git_blob": "ba3fe64f7b9be28d5167c96fb7e474845169c958",
+      "note": "R104/R104b sync merges were resolved against main (which never carried the raw evidence tree) and dropped docs/tool-portfolio/r52/raw/** from the branch tree while this JSON still referenced raw/SHA256SUMS and the member manifest relatively; R110 restores the complete reviewed raw evidence tree byte-exact, so manifest and member_manifest.path resolve in-tree at the new exact head. Historical R54/R102 byte acceptance remains bound to immutable ref 566d005bbc54189f64e4c8fcd68018c546ceebe4."
+    }
   },
   "qualification": {
     "T0": "PASS_SCOPED_FROM_SOURCE_PR_124",

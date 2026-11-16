@@ -1,0 +1,16 @@
+{
+  "archive": "/task/out/packages/formal-tools-portable-core-linux-x86_64.tar.zst",
+  "destination": "/task/work/install-r2/core",
+  "members": 196,
+  "ownership_inherited": false,
+  "result": "PASS",
+  "sha256": "c891b8b990fc704a2fef5a674fad6a7a6d776d8e15acccd79beab70d8a6ee42c",
+  "size": 25941,
+  "types": {
+    "directory": 46,
+    "hardlink": 0,
+    "regular": 149,
+    "symlink": 1
+  },
+  "uid": 1000
+}

@@ -1,0 +1,16 @@
+{
+  "archive": "/task/out/packages/runtimes/python313-3.13.5-linux-x86_64.tar.zst",
+  "destination": "/task/work/install-r2/runtime",
+  "members": 41100,
+  "ownership_inherited": false,
+  "result": "PASS",
+  "sha256": "c1c6d0d93d4dc883a58948b487a129c865c43889e83fd146a7213f3d46adff52",
+  "size": 294345367,
+  "types": {
+    "directory": 3585,
+    "hardlink": 0,
+    "regular": 37507,
+    "symlink": 8
+  },
+  "uid": 1000
+}

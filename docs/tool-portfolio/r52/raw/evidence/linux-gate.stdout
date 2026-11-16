@@ -1,0 +1,513 @@
+v24.21.0
+11.19.0
+
+added 8 packages in 901ms
+✔ G3 original R1/R2/R3 semantics independently cover 6 source cases and 24 recorded dual Native observations (13.677222ms)
+✔ G3 finite verifier is logically independent of SMT: graph cycle, exact writer identity, strict interval and weakened/overstrong controls (3.768666ms)
+✔ G3 prevents BOTH native engines agreeing on same wrong classification (3.415603ms)
+✔ G3 rejects authored oracle label mutation even if a source author calls it PASS (2.584605ms)
+✔ G3 rejects input hash drift, swapped case order and dropped observations (8.24137ms)
+✔ G3 rejects tool identity/version drift, exit failures, missing stdout and bad source bytes (13.389332ms)
+✔ G3 fixture reference status cannot independently qualify Source/Oracle/Host/Replay (9.204503ms)
+✔ G3 D-ADS: frozen six cases and four models generate 24 stable native requests, never execute (10.644351ms)
+✔ G3 D-ADS: faithful writer exclusivity forbids identical-resource overlap (0.786471ms)
+✔ G3 D-ADS: independent resources may overlap unless overstrong model forbids it (1.214844ms)
+✔ G3 D-ADS: dependency cycles use solver rank constraints not a JS fabricated verdict (0.444453ms)
+✔ G3 D-ADS: invalid time windows and reversed predecessors become solver inequalities (0.437887ms)
+✔ G3 D-ADS: impossible model emits an explicit contradiction, not solver success (0.338713ms)
+✔ G3 D-ADS: source-frozen reference examples classify synthetic faithfully observed results but NOT proof (3.66251ms)
+✔ G3 D-ADS: synthetic weak spec is reported false-PASS (4.597279ms)
+✔ G3 D-ADS: synthetic overstrong spec and vacuous spec never earn acceptance (5.396428ms)
+✔ G3 D-ADS: UNKNOWN, ERROR, TIMEOUT and absent reports stay inconclusive (17.013591ms)
+✔ G3 D-ADS: malformed candidate IDs, unknown predicates and oversized edges are rejected (1.986337ms)
+✔ G3 D-ADS: forged native statuses cannot silently become business acceptance (6.43271ms)
+✔ G3 D-ADS: scoring cannot be cheated by rewriting frozen reference verdicts or solver input (4.773788ms)
+✔ G3 D-ADS: known false-PASS is not concealed by another unavailable solver outcome (4.932827ms)
+✔ G3 D-ADS: extra result keys and getter-based native statuses are refused (5.871276ms)
+✔ G3 original git bytes and all 24 native replay input hashes match frozen source generator (7.397569ms)
+✔ G3 dual-solver real output receipts still cannot certify independent business semantics (3.440885ms)
+✔ G3 native status parser refuses extra or conflicting stdout and injected stderr (5.084971ms)
+✔ G3 native replay requires exact pinned binary identity (1.817247ms)
+✔ G3 24 actual subprocess observations are NOT semantic Oracle or supply-chain proof (133.546873ms)
+✔ new and modified files become generated artifacts; unchanged inputs do not (49.303401ms)
+✔ stable SHA and sorted relative paths, no absolute source path leaks (9.463108ms)
+✔ file-byte limits skip hashing large files and mark result partial (10.544545ms)
+✔ maxFiles and maxDepth bound enumeration (21.144614ms)
+✔ directory budget stops thousands of empty-directory work and never returns COMPLETE (11.130095ms)
+✔ entry budget bounds flat directory iteration without hashing every entry (17.21255ms)
+✔ skipped-record cap emits a single summary rather than an unbounded list (19.099952ms)
+✔ normal scan reports bounded directory and entry counters without changing hashes (9.920733ms)
+✔ new scan budgets must be positive and within capped bounds (2.926548ms)
+✔ symlink to an outside file is never followed (6.783307ms)
+✔ directory symlink is not traversed (4.861867ms)
+✔ root symlinks are not accepted as workspace ownership (4.149134ms)
+✔ pure delta rejects malicious paths and incomplete baseline (1.173549ms)
+✔ artifact paths reject Windows drive, ADS and reserved-name aliases (0.923704ms)
+✔ changing only bytes does not invent proof semantics (0.394622ms)
+✔ limits reject NaN, negative and unrealistic scanning budgets (0.39842ms)
+✔ builder ELF Machine values normalize to stable architecture identifiers (57.929088ms)
+✔ builder version probe runs from tool dir with private libraries before inherited paths (12.704476ms)
+✔ builder version probe preserves caller-relative and empty LD_LIBRARY_PATH components after changing cwd (14.084911ms)
+✔ shared build driver uses normalized ELF helper and private-library probe helper (0.992931ms)
+✔ nuXmv version metadata probe uses the relocation-aware run shim (0.561546ms)
+✔ G3: matching supplied bytes are not host attestation or business truth (36.617396ms)
+✔ G3: changed source and wrong original ProblemSpec source hash fail closed (14.845967ms)
+✔ G3: changed formal model bytes cannot launder an existing SAT receipt (13.422004ms)
+✔ G3: changing G2 Method after hashing invalidates all old receipts (9.632742ms)
+✔ G3: binary, invocation and output byte tampering fail without asserting proof (11.742179ms)
+✔ G3: fake tool ID and altered native operation are rejected (6.87382ms)
+✔ G3: UNKNOWN or TIMEOUT is not a verified result (23.08816ms)
+✔ G3: external factual claim cannot be verified by formally matching bytes (3.409968ms)
+✔ G3: forged, missing or extra claim steps cannot reuse the old receipt (10.403609ms)
+✔ G3: G2 policy cannot be widened by a matching receipt bundle (10.440771ms)
+✔ G3: multi-source requirement is refused instead of collapsed to one hash (3.98189ms)
+✔ G3: one Claim with transitive upstream DAG requires both step receipts (11.688327ms)
+✔ G3: malformed and oversized artifact bytes never become evidence (11.769103ms)
+✔ G3: custom typed-array subclass cannot spoof byte length to skip size policy (4.468028ms)
+✔ G3: G3 receipts cannot widen original G2 privacy policy or downgrade step output (8.799929ms)
+✔ G3 security P1: instance-overridden G2 tool allowlist cannot forge authorization (5.519039ms)
+✔ G3 security P1: overridden G2 typed operation array cannot grant extra operations (4.407155ms)
+✔ G3 security P1: nested Proxy, getter and sparse Method arrays fail closed (7.173483ms)
+✔ G3 security P1: ordinary parsed JSON Method and ProblemSpec retain unverified byte binding (4.003071ms)
+✔ G3 independent P1: receipt Claim kind cannot differ from original G2 Claim (3.957383ms)
+✔ G3 independent P1: even unused G3 tool/operation permissions cannot widen G2 (6.956242ms)
+✔ G3 independent P1: source sensitivity cannot be erased by receipt policy or input labels (15.753582ms)
+✔ G3 independent P1: downstream input taint includes upstream Method outputs (10.596137ms)
+✔ causal-learn T3 POS/NEG/ERR fixtures pin exact exits and distinct outcomes (4.541364ms)
+✔ D11: historic real Windows tool inventory preserves exact source-SHA provenance (19.708492ms)
+✔ D11: historical unavailable engines remain stale or unreviewed rather than certified (7.697635ms)
+✔ matrix derives all tool identities and operation counts from the live catalog (8.079871ms)
+✔ old-SHA evidence is explicitly stale, never treated as runtime PASS (1.498833ms)
+✔ same-SHA source report remains unreviewed rather than verified (0.863681ms)
+✔ invalid SHA, unknown tool, duplicate observation and invalid digest fail closed (1.88ms)
+✔ multiple OS and version observations per tool are preserved without false PASS (1.039161ms)
+✔ same exact tool/version/OS/SHA observation is duplicate but alternate version is valid (0.888423ms)
+✔ host observation strings are bounded (2.790654ms)
+✔ tool-native declared status cannot smuggle business PASS (0.487555ms)
+✔ G6 real DIS example is source-pinned, unqualified candidate maps to no-authority UNKNOWN (28.76995ms)
+✔ G6 changed Source/Oracle/Model/Tool/Evidence and DIS target become STALE (3.730739ms)
+✔ G6 rejects forgery, invalid candidate and hostile input without dispatching effects (3.11175ms)
+✔ G3 prework: correctly linked SAT is NOT a verified business claim (5.061776ms)
+✔ G3 prework: solver UNSAT or PROVED is still not source semantic proof (1.74137ms)
+✔ G3 prework: mismatched claim and method/source/model/output identities fail closed (1.25084ms)
+✔ G3 prework: unknown or candidate tools and unapproved operations are rejected (2.795431ms)
+✔ G3 prework: forged assertion fields cannot make receipts authoritative (0.552233ms)
+✔ G3 prework: UNKNOWN, ERROR, TIMEOUT and NOT_RUN never become PASS (0.990975ms)
+✔ G3 prework: external real-world facts are not validated by SAT (0.972162ms)
+✔ G3 prework: duplicate, missing or unexpected step receipts are rejected (0.714641ms)
+✔ G3 prework: corrupted or excessive receipt data is safely rejected (0.696505ms)
+✔ G3 prework: privacy declassification and non-local destinations cannot pass (0.572054ms)
+✔ G3 prework: non-zero exit cannot assert SAT, and outcome enums are bounded (1.886785ms)
+✔ G3 prework: no receipts remains unresolved, not proof (0.351973ms)
+✔ G3 prework: approved tool identity never grants arbitrary typed operation (0.949128ms)
+✔ G3 prework: oversized claim step list and tool operation policy are rejected early (5.282192ms)
+✔ G3 security: inherited operation allowlists do not grant permission (0.420798ms)
+✔ G3 security: accessors, forged prototypes and throwing proxies fail closed (2.233285ms)
+✔ G3 security: all decisive reported tool outcomes remain unverified, never business PASS (2.274994ms)
+✔ G3 P1: overridden array methods cannot forge tool authorization (0.371261ms)
+✔ G3 P1: overridden claim-step and receipt arrays cannot launder unrelated evidence (0.458981ms)
+✔ G3 P1: sparse arrays, indexed accessors and Proxy arrays fail closed (0.594999ms)
+✔ G3 P1: ordinary JSON array input retains LINKED_UNVERIFIED and never promotes (0.427755ms)
+✔ Fast Downward portable fixture pins exactly one POS, NEG and malformed-PDDL ERR exit code (3.750172ms)
+✔ duplicate, wildcard and missing exit assignments are rejected even when Bash's last assignment differs (3.427594ms)
+✔ the effective values after Bash sources the contract are exactly 0/11/31 (7.517141ms)
+✔ DAG accepts explicit acyclic graph (6.525372ms)
+✔ DAG returns concrete cycle witness (2.071659ms)
+✔ DAG rejects dangling edges (0.879502ms)
+✔ DAG rejects duplicate identities (0.402936ms)
+✔ writer slots with no overlap are exclusive (0.670595ms)
+✔ writer collision is a counterexample (0.400303ms)
+✔ duplicate claim from same writer is not contention (0.675988ms)
+✔ CNF can be satisfied (1.145375ms)
+✔ CNF can be contradictory (1.279875ms)
+✔ empty clause is unsatisfiable (0.993172ms)
+✔ zero variable empty formula is satisfiable (0.558376ms)
+✔ CNF over bound is unknown rather than false pass (0.283263ms)
+✔ finite state safe for listed reachable states (0.709999ms)
+✔ finite-state invariant returns witness trace (0.308839ms)
+✔ pure entrypoint rejects arbitrary engine (0.354148ms)
+✔ CNF work budget yields UNKNOWN without false UNSAT (38.601313ms)
+✔ G6 original HEAD uses sanitized Git env, not caller-controlled GIT_DIR (108.546367ms)
+✔ G6 original HEAD refuses invalid or non-Git roots (31.715958ms)
+✔ G6 mismatched source Buffer is rejected before module evaluation (3.323238ms)
+✔ G6 path replacement after read cannot change the executed verified Buffer (12.859226ms)
+✔ G6 Tally source snapshot is byte-identical to upstream and DIS consumer pin (0.661868ms)
+✔ G6 source anchor locks complete Source, Consumer and Original Test provenance metadata (2.475962ms)
+✔ G6 valid source identity is advisory only and never admits or passes a Task (0.743622ms)
+✔ G6 missing and non-object inputs fail closed without admission (0.574631ms)
+✔ G6 invalid source identity fails closed before dependency interpretation (0.576385ms)
+✔ G6 dependenciesComplete must be exactly true and never promotes a claim (0.72202ms)
+✔ G6 bounded metamorphic variants preserve advisory-only non-promotion (1.046948ms)
+✔ Highs candidate exposes one bounded typed Python Library operation, never raw argv (8.773048ms)
+✔ SDK and CLI use the same pinned typed operation; CLI opens model with O_NOFOLLOW (750.646622ms)
+✔ typed Highs operation rejects invalid statuses, runtime drift, process failures and pin mismatches (1450.40236ms)
+✔ MCP stdio invokes the same typed Highs operation and rejects arbitrary fields (261.852818ms)
+﹣ Python Highs operation rejects value_valid=false before reading solution values (24.422921ms) # requires the canonical Python 3.13.5 runtime; 3.14.10
+✔ R21 DAG is scoped, not stale, and all original dependency edges are intact (5.125427ms)
+✔ R21 adversarial false qualification and hidden DAG rewiring fail closed (13.636697ms)
+✔ R23 equal-length duplicate IDs fail at raw uniqueness before indexing (2.33453ms)
+✔ R21 receipt and Product-root Git Blobs match actual frozen files (2.670552ms)
+✔ R21 G3 native 24x2 statuses, upstream source and UNQUALIFIED flags are bound (3.565189ms)
+✔ R21 G4 durable candidate and real trust-root absence never grant Replay (0.719254ms)
+✔ R21 G5 20x2 raw DeepSeek traces are byte-pinned to independent analysis (11.088497ms)
+✔ R21 G6 real original DIS remains engineering-only with all ten pins and absent credentials (0.832835ms)
+✔ Issue #11 real cross-gate chain binds Capability→Method→48 historical real solver results→distinct semantics→Solution store→Replay→Tally (157.119369ms)
+✔ Issue #11 integrated chain fails closed on missing or forged Source HEAD (2.695553ms)
+✔ Kani POS/NEG fixture contract pins exact exit codes and typed outcomes (4.243672ms)
+✔ Lean4 transport manifest has exact, ordered five parts and original full digest (20.131562ms)
+✔ Lean4 assembler streams in fixed order, checks SHA, and rejects any mismatch (70.370913ms)
+✔ Lean4 POS/NEG/ERR contract pins exact observed exit codes and typed outcomes (3.568777ms)
+✔ Lean4 fixtures remain distinct proof, counterexample and invalid-identifier inputs (0.700385ms)
+✔ G5 frozen A/B scorer counts wrong PASS, UNKNOWN, coverage, cost and latency (synthetic only) (9.022169ms)
+✔ G5 fake fairness, missing cases, forged evidence and unbounded inputs fail closed (5.365227ms)
+✔ G5 rejects finite-looking per-case numeric overflow and unsafe token counters (3.742571ms)
+✔ G6 real DIS target: committed receipt verifies on any checkout (34.50116ms)
+✔ G6 real DIS target: re-pinned preflight refuses the same candidate with zero Host invocation (2.42788ms)
+✔ G6 real DIS target: witness against shipped registry stays strictly BLOCKED (132.114838ms)
+✔ G6 imports the REAL original Git-blob-pinned Tally Business Function (15.508227ms)
+✔ G6 P1: byte-backed pinned loader defeats poisoned file-URL module cache and pathname replacement (7.243739ms)
+✔ G6 Tally Business invocation cannot promote a fabricated claim or dependency (2.009174ms)
+✔ G6 real persisted G4 candidate -> Tally Function over 4 adverse states (149.517323ms)
+✔ G6 fail-closed real call refuses missing or malformed source head (1.492926ms)
+✔ G6 real two-argument CLI executes the exact pinned Tally Function and refuses malformed invocation (366.436135ms)
+✔ G5 hard-r1 is a separate source-frozen 10/10, 20-case, bounded adversarial fixture (8.59623ms)
+✔ G5 finite oracle independently recomputes every pre-frozen label (3.193327ms)
+✔ G5 native tool worklist is hash-stable source-derived and explicitly NOT_RUN (4.429222ms)
+✔ G5 metamorphic R1/R2/R3 one-field boundary and identity changes (1.321313ms)
+✔ G5 20-case scorer reports source-authored synthetic metrics, never G5 qualification (5.272374ms)
+✔ G5 hard-r1 source drift/false model controls/unknown tool/precision fail closed (7.562869ms)
+✔ G5 sampling control comparison is canonical across JSON object key ordering (2.486721ms)
+✔ G5 hard-r1 native pair binding needs the EXACT frozen 20-case identity (20.326923ms)
+✔ G5 hard-r1 rejects both Z3 and cvc5 agreeing on the same WRONG source classification (27.363169ms)
+✔ G5 hard-r1 refuses forged native version/source and missing cases (16.28168ms)
+✔ G5 hard-r1 absent model credential makes zero calls and no fake PASS (7.805873ms)
+✔ G5 hard-r1 40 injected fake model calls only exercise scorer plumbing (26.721154ms)
+✔ G5 hard-r1 aborts if server serves the wrong model despite requested model match (11.164335ms)
+✔ G5 real run: one frozen template, identical SHA across arms, prompts differ only in the EVIDENCE slot (7.960175ms)
+✔ G5 real run: verdict parser takes the last exact VERDICT line, malformed output stays UNKNOWN (2.193421ms)
+✔ G5 real run: stubbed API produces arms the frozen scorer accepts unchanged (17.56712ms)
+✔ G5 real run: missing DEEPSEEK_API_KEY aborts non-zero before any call or output (73.23415ms)
+✔ G5 real run: faithful native receipts bind by input hash and forgery aborts (4.592212ms)
+✔ G5 real run: committed real v2 evidence verifies on any checkout (3.416875ms)
+✔ G2: checkable ProblemSpec is accepted; Method is only a static plan (33.307835ms)
+✔ G2: deterministic hash across object property ordering (3.781402ms)
+✔ G2: only existing native typed operation may appear in a plan (10.184199ms)
+✔ G2: candidate tool is discoverable but cannot claim executable adapter (4.298632ms)
+✔ G2: forged goal capability and missing claim coverage cannot be certified (5.559633ms)
+✔ G2: budgets, cycles and unknown dependencies fail closed (15.600069ms)
+✔ G2: no missing source lineage or silent declassification (7.14414ms)
+✔ G2: prompt containing private inputs cannot cross unknown LLM provider boundary (1.346799ms)
+✔ G2: public LLM proposal callback is isolated and executed once (7.682136ms)
+✔ G2: non-JSON, giant responses and provider failures are rejected (5.61659ms)
+✔ G2: external fact without source never becomes a symbolic proof (1.142741ms)
+✔ G2: forged semantic review, output claims and raw argv are rejected (6.09653ms)
+✔ G2: invalid ProblemSpec is rejected before plan selection, not crashed (1.45469ms)
+✔ G2: restrictive inputs cannot be exported by a downstream derived artifact (1.925316ms)
+✔ G2: a two-tool typed Method DAG is accepted only as a non-executable plan (1.602356ms)
+✔ G2: malformed capability array and unapproved tool selection fail closed (3.681746ms)
+✔ G2: cyclic untrusted Method data is rejected without throwing or certifying claims (0.954864ms)
+✔ G2: every checkable claim requires capability coverage bound to that claim (3.002728ms)
+✔ G2: forged claim binding, unbound step and empty checkable-claim capability fail closed (4.092521ms)
+✔ G2: malformed claim IDs and oversized DAG return REJECTED without traversing input (3.683112ms)
+✔ G2: a tool step cannot claim proof about a different source even with correct capability (2.919303ms)
+✔ G2 security: self-declared PUBLIC is not LLM egress authorization (4.463328ms)
+✔ G2 security: approval covers actual free-text payload, not only asserted source SHA (1.146954ms)
+✔ G2 security: callback mutations cannot change source/permission after approval (2.771328ms)
+✔ G2 security: public request and object reply size limits fail closed (5.049512ms)
+✔ G2 security: non-JSON ProblemSpec and malformed source hash do not throw (1.974765ms)
+✔ G2 security: identical source bytes cannot acquire conflicting privacy aliases (1.51648ms)
+✔ G2 security: untrusted provider errors cannot disclose exception messages (1.520556ms)
+✔ G2 security: bounded shallow preflight rejects giant direct Method arrays (2.369409ms)
+✔ G2 security: direct assessed Method cannot bypass JSON transport budget (0.991189ms)
+✔ MiniZinc POS/NEG/ERR fixture contract pins exact exits and outcomes (4.467539ms)
+✔ runtime receipt fingerprints file bytes, not just its name or version (18.689833ms)
+✔ runtime receipt identifies an actual Git checkout or explicitly abstains (4.431666ms)
+✔ source SHA and JAR fingerprints survive privacy redaction, paths do not (3.065199ms)
+✔ verbatim hash-anchored streams may echo engine paths, metadata may not (0.769344ms)
+✔ redactPath keeps the evidential tail of local absolute paths (3.25272ms)
+✔ redactString scrubs drive-letter paths embedded in prose and error text (0.738668ms)
+✔ redactReceipt removes hostname and metadata paths, keeps stdout verbatim (1.467898ms)
+✔ redactReceipt keeps hash-anchored stdout verbatim, metadata still fails closed (0.462779ms)
+✔ redactReceipt handles Linux/WSL/macOS absolute metadata without leaking home paths (0.702045ms)
+✔ receipt privacy guard refuses raw POSIX paths in metadata, keeps streams verbatim (1.079889ms)
+✔ redaction retains network URLs and rejects short absolute local paths (0.525827ms)
+✔ punctuation-prefix metadata paths are scrubbed without corrupting web URLs (1.855131ms)
+✔ punctuation-prefix private paths stay verbatim in streams, fail closed in metadata (1.04132ms)
+✔ 13 official CLI tool families registered (2.658014ms)
+✔ every named operation has a generated argv without shell (5.804521ms)
+✔ native help can discover actual version-specific CLI features (1.016238ms)
+✔ trusted raw pass-through preserves every argument and no shell (2.512222ms)
+✔ raw never accepts an executable outside declared tool entries (0.948162ms)
+✔ typed plan rejects unrelated injection and malformed settings (3.192088ms)
+✔ version-locked command vectors match official samples (0.564996ms)
+✔ named operations retain CLI-only scope (MCP does not execute native raw) (0.346009ms)
+✔ clingo probe plans the Python module unless an explicit pinned binary is configured (1.287766ms)
+✔ native tool writes only beside temporary copies, never into Git fixtures (79.193585ms)
+✔ portable runner records real nonzero exit even when stdout matches SAT (37.58158ms)
+✔ portable runner accepts correct typed stdout and zero exit (38.755407ms)
+✔ missing verification contract is SKIP and makes verify all nonzero (27.481885ms)
+✔ failed mandatory setup cannot be hidden by a passing positive case (74.27075ms)
+✔ non-executable run shim is SKIP for verify and exit 126 for run, never PASS (31.148313ms)
+✔ ProB POS/NEG/ERR contract pins actual exit codes and typed outcomes (3.509993ms)
+✔ ProB model files are copied to writable FT_TMP before model checking (2.36852ms)
+✔ ProB fixtures represent distinct property, counterexample and parser-error cases (0.53972ms)
+✔ G1 registry is machine readable, 23 capabilities, 36 tools, exact 13 native refs (9.066763ms)
+✔ all catalog entries are discovery-only; no tool or proof is claimed verified (2.704081ms)
+✔ find candidate alternatives by problem capability, not executable tool command (13.98447ms)
+✔ one tool can match multiple capabilities without a second native registry (1.173495ms)
+✔ nativeOnly request never returns candidate-only tools, reports uncovered (0.962309ms)
+✔ reject unknown capability and malformed input, no natural-language hallucinated mapping (1.356131ms)
+✔ tampered native tool list fail closed before execution (2.172148ms)
+✔ reject additional unsanctioned native reference and ghost capability (2.832441ms)
+✔ duplicate capability/tool and candidate claiming verified state are rejected (4.059328ms)
+✔ unverified external facts cannot acquire fake formal PASS (2.508642ms)
+✔ new problem capabilities and candidate tools can be added without a hardcoded 36-tool cap (0.983123ms)
+✔ fail closed for malformed null capability and null tool records (0.971449ms)
+✔ malformed result-state metadata is reported as invalid rather than crashing (1.339533ms)
+✔ reject registry status or authority spoofing before discovery (3.326678ms)
+✔ fail closed on incomplete, duplicated, or forged semantic result enums (5.760556ms)
+✔ reject scope laundering, unexpected runner fields, and missing distribution (2.539663ms)
+✔ semantic states are treated as sets, not dependent on display order (1.948336ms)
+✔ 1,200 seeded CNF formulas agree with independent exhaustive enumeration (24.82404ms)
+✔ 500 seeded DAGs agree with independent Kahn algorithm; witnesses are real arcs (34.013427ms)
+✔ G4 triad is cryptographically valid in synthetic test but NEVER authorizes Replay (41.76703ms)
+✔ G4 forged owner signature fails before any authority (4.648081ms)
+✔ G4 duplicate role, duplicate signer, and wrong key IDs all fail (13.298182ms)
+✔ G4 Subject digest binds candidate, source, model, oracle, tool and evidence (21.634391ms)
+✔ G4 expired and premature signatures are STALE, even if signatures were otherwise valid (11.165891ms)
+✔ G4 missing real Product anchors never upgrades a real persisted candidate (133.824077ms)
+✔ G4 malformed or caller-chosen trust records never enter production API (2.198615ms)
+✔ rdf-shacl builder enforces the exact pySHACL dependency closure (15.18589ms)
+✔ rdf-shacl portable verification has typed positive, violation and invalid-RDF cases (1.68433ms)
+✔ current metadata generator emits canonical rdf-shacl TOOL_ID (72.970706ms)
+✔ G4 real builder seals a CANDIDATE bound to the real z3 executable identity (24.930462ms)
+✔ G4 real builder provenance binding is schema-exact and stable across invocations (4.511815ms)
+✔ G3 faithful observations are exactly the six clean SAT/UNSAT native runs (0.90936ms)
+✔ expectPhase records a passing phase with a UTC ISO timestamp (0.840256ms)
+✔ expectPhase throws naming the phase on a missed expectation (1.252496ms)
+✔ 13 allowlisted engines (3.088676ms)
+✔ registry and all versioned fixtures present (40.657936ms)
+✔ unknown native tool rejected (1.197672ms)
+✔ Z3 returns only scoped fixture verdicts (2.744363ms)
+✔ Clingo unexpected exit fails closed (0.604056ms)
+✔ Clingo all-model enumeration exit 30 passes only with SATISFIABLE and two models (0.744501ms)
+✔ Alloy and ProB are not trusted without real output parser receipts (0.621115ms)
+✔ monorepo runner exposes experimental SDK but keeps CLI binary intact (14.253467ms)
+✔ public package SDK uses the same authoritative tool catalog (1.799373ms)
+✔ G4 candidate seals G2 plan and frozen source without promoting a claim (34.534852ms)
+✔ G4 exact candidate fingerprint does not authorize semantic replay (2.922281ms)
+✔ G4 source/model/tool/platform/evidence drift invalidates candidate (2.591218ms)
+✔ G4 tampered package and forged reusable state are rejected (3.829841ms)
+✔ G4 source/oracle/tool mismatch, fake PASS and unbounded input fail closed (3.863671ms)
+✔ G4 content-addressed candidate persists, reopens and refuses all semantic promotion (178.817347ms)
+✔ G4 stored candidate rejects modified evidence, forged gate and path traversal (55.7992ms)
+✔ G4 atomic hard-link publication: parallel writers and readers never see partial JSON (206.418055ms)
+✔ G4 orphan partial temporary record cannot be published or mistaken for committed candidate (47.208204ms)
+﹣ G4 unsupported directory fsync: persist/revoke fail closed before any write (0.297577ms) # SKIP
+✔ reference requirements are source anchored and test labels pre-frozen (4.328149ms)
+✔ faithful candidate matches the reference labels (5.810653ms)
+✔ omitted writer-exclusivity is a false-positive despite satisfying remaining formula (0.632922ms)
+✔ overstrong exclusion rejects valid independent concurrency (0.380327ms)
+✔ vacuous contradiction never becomes a proof of source requirements (0.301215ms)
+✔ all published candidate outcomes are reproducible on the same fixed cases (0.452018ms)
+✔ claim-level evidence is not the same as tool invocation success (0.233159ms)
+✔ unsupported or duplicate generated constraints are never treated as verified models (0.837998ms)
+✔ unrelated evidence cannot certify even a claimed symbolic result (0.603967ms)
+✔ staged SDK rejects nonstaged or unsafe input names before launching (18.995153ms)
+✔ unavailable native tool does not claim output collection or modify original input (22.668138ms)
+✔ fake POSIX solver writes generated artifacts only within private workspace (92.54012ms)
+✔ staged SDK refuses optional input files that were not staged (9.742845ms)
+✔ staged SDK rejects absolute and traversal paths from optional output settings (2.81205ms)
+✔ staged SDK treats Apalache positional state names as symbols, not input files (11.408358ms)
+✔ App source file IDs and duplicate-file IDs are disjoint (3.315917ms)
+✔ App preserves source hash manifests, significant alternate versions and highspy exception (2.244651ms)
+✔ tool R2: preserve R1 issue/version authority and all 36 tool identities (5.08428ms)
+✔ tool R2: route counts must remain disjoint, scoped and exhaust 36 (0.57629ms)
+✔ tool R2: normalized wheelhouses retain unchanged raw SHA and actual versions (0.787202ms)
+✔ tool R2: original native, patched-workspace and transport-block states cannot be conflated (0.570804ms)
+✔ CLI info is read-only registry introspection (110.019653ms)
+✔ CLI where reports missing binaries with explicit override (74.933109ms)
+✔ CLI doctor-all is only static inspection unless --probe used (65.941973ms)
+✔ CLI preserves existing catalog and rejects unknown tool (110.129001ms)
+✔ CLI invoke returns a technical NOT_STARTED receipt for missing upstream binary (62.658811ms)
+✔ CLI invoke clingo with pinned binary spawns exactly the pinned path (64.947612ms)
+✔ CLI where clingo plans the pinned binary with no bin-dir shadowing (51.998101ms)
+✔ D08: SDK and CLI catalog share exactly 13 tools and 53 typed operations (5.835287ms)
+✔ D08: no native shell entry can masquerade as a registered SDK tool (2.716723ms)
+✔ D08: MCP exposes 13 allowlisted tools but never unrestricted native shell (13.196212ms)
+✔ D08: process success is distinct from proof or consumer claim acceptance (1.675921ms)
+✔ one registry defines all 13 native tool IDs, probes and operations (2.995637ms)
+✔ missing jar and explicit Alloy identity fail closed (2.236851ms)
+✔ Linux PATH discovery does not execute or claim runtime proof (0.700337ms)
+✔ honors FORMAL_TOOLS_BIN_DIR and reports missing executable (0.511237ms)
+✔ Windows wrapper is reported unsupported, no automatic shell (0.828794ms)
+✔ Python modules require real probe after interpreter discovery (0.731243ms)
+✔ pinned clingo binary is explicit; FORMAL_TOOLS_BIN_DIR cannot shadow it (0.609064ms)
+✔ missing pinned clingo binary fails closed without PATH substitution (0.510011ms)
+✔ A configured but missing JAR does not yield FOUND (0.518254ms)
+✔ All-tool inspection remains static even with all paths mocked present (4.972809ms)
+✔ Unknown tool cannot turn into a generic executable (0.737024ms)
+✔ portable metadata: identity/version/doctor pass when correct (50.180782ms)
+✔ portable metadata: legacy TOOL_TOOL_ID fails closed for doctor, version, and run (43.743498ms)
+✔ portable metadata: environment TOOL_ID spoof cannot hide missing ID (13.886912ms)
+✔ portable metadata: foreign identity is rejected before version/doctor (34.767699ms)
+✔ portable metadata: missing version or kind is rejected (18.850115ms)
+✔ doctor uses bundled native library directory while still failing on truly absent dependency (29.07332ms)
+✔ R13 P1: traversal, absolute, separator and dot-segment tool IDs are rejected before any source/exec (194.324029ms)
+✔ R13 P1: symlinked meta.sh that escapes tools/<id> is refused despite matching TOOL_ID (21.449061ms)
+✔ R13 P1: symlinked run shim that escapes tools/<id> is not executed (9.703498ms)
+✔ R13 P1: symlinked expect.sh that escapes tests/<id> is never sourced by verify (10.23961ms)
+✔ R13 P2: doctor fails closed when ldd probe errors or produces no dependency listing (31.914016ms)
+✔ Tool Portfolio: 36 stable, distinct tool links and correct scoped R3 count (5.804268ms)
+✔ Tool Portfolio: gate precedence is a DAG and no tool silently passes real use (2.086278ms)
+✔ Tool Portfolio: shared runtime refs and cross-tool repair DAG are complete (0.708514ms)
+✔ T4: all 36 IDs share the capability registry, but only 13 retain the historical native adapter (5.173955ms)
+✔ T4: CLI portfolio list stays read-only, does not promote discovered tools (89.465144ms)
+✔ T4: unconfigured portable host fails closed with no invented PASS (1.402347ms)
+✔ T4: synthetic runner exercises SHA pin, doctor, 3-case receipt, and tamper fail-closed (NOT an upstream native test) (40.11329ms)
+✔ tool-native status is separate from consumer business claims (3.620807ms)
+✔ timeout, no execution and output-limit cannot claim normal tool status (0.516136ms)
+✔ failed native launch is a technical NOT_STARTED receipt (0.673553ms)
+✔ SDK retains all 13 registered tool IDs and typed plan (1.036454ms)
+✔ SDK rejects raw entry and invalid arguments before tool execution (1.230469ms)
+✔ input validation is pure, sorted, and excludes traversal/ambiguous paths (5.303249ms)
+✔ source file copied with SHA, then generated artifact delta is isolated (43.971033ms)
+✔ input source bytes, file count and depth are bounded (5.308598ms)
+✔ symlink files and directories are never trusted as source inputs (8.158629ms)
+✔ root symlink cannot be treated as a trusted source root (5.73754ms)
+✔ missing source and nonregular files fail, without changing source (5.905702ms)
+✔ Tree-sitter rebuild pins both the official release asset and canonical executable (2.459953ms)
+✔ Tree-sitter build and shim no longer require unavailable Python bindings or a bundled grammar cache (0.531817ms)
+✔ Tree-sitter fixed fixture uses native CLI setup, POS, NEG, and invalid-input ERR contracts (0.787513ms)
+✔ canonical metadata generator emits the single TOOL_ID identity key (2.021002ms)
+✔ G6 original checkout: exact clean tracked tree is engineering-ready only (42.864673ms)
+✔ G6 original checkout: changed unpinned transitive tracked source is rejected (26.67921ms)
+✔ G6 original checkout: staged executable-source change is rejected (23.154034ms)
+✔ G6 original checkout: untracked injected module is rejected (20.554356ms)
+✔ G6 original checkout: no arbitrary root or missing Git repo accepted (3.29515ms)
+✔ G6 original checkout: assume-unchanged cannot hide modified tracked source (23.575412ms)
+✔ G6 original checkout: skip-worktree cannot hide modified tracked source (43.237725ms)
+✔ G6 original checkout: .git/info/exclude cannot hide injected executable (23.78368ms)
+✔ G6 original checkout: global core.excludesfile cannot hide injected executable (26.326745ms)
+✔ G6 original checkout: explicit ignored dependency/generated trees are NOT attested (21.777677ms)
+✔ Why3 builder never deletes, creates or links host /usr directories (3.23738ms)
+✔ safe generated Why3 shim allows version but rejects compiled-in command plugins without host writes (18.057468ms)
+✔ Why3 builder source syntax is valid Bash (2.650918ms)
+ℹ tests 391
+ℹ suites 0
+ℹ pass 389
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 2
+ℹ todo 0
+ℹ duration_ms 2755.41645
+
+> formal-tools-skill@0.4.0 typecheck
+> tsc --noEmit
+
+{
+  "status": "STATIC_PASS",
+  "count": 13,
+  "issues": [],
+  "warnings": [],
+  "native_runtime": "NOT_RUN"
+}
+{
+  "tool_outcome": "ACYCLIC",
+  "test_verdict": "PASS",
+  "claim_verdict": "NOT_EVALUATED",
+  "execution": "PURE_JS",
+  "topological_order": [
+    "L1",
+    "L2",
+    "task"
+  ],
+  "node_count": 3,
+  "edge_count": 2,
+  "scope": "complete supplied finite graph"
+}
+{
+  "id": "z3",
+  "title": "Z3",
+  "entries": [
+    "z3"
+  ],
+  "operations": {
+    "solve": {
+      "entry": "z3",
+      "required": [
+        "input"
+      ],
+      "options": {
+        "timeout": {
+          "type": "integer",
+          "values": null,
+          "min": 1,
+          "max": 120000
+        },
+        "seed": {
+          "type": "integer",
+          "values": null,
+          "min": 0,
+          "max": 2147483647
+        }
+      }
+    },
+    "dimacs": {
+      "entry": "z3",
+      "required": [
+        "input"
+      ],
+      "options": {
+        "timeout": {
+          "type": "integer",
+          "values": null,
+          "min": 1,
+          "max": 120000
+        }
+      }
+    }
+  },
+  "documentation": "https://github.com/Z3Prover/z3",
+  "coverage": "typed operations plus trusted-local upstream argument pass-through; runtime depends on installed release",
+  "runtime": {
+    "kind": "binary",
+    "command": "z3",
+    "probeArgs": [
+      "-version"
+    ]
+  }
+}
+{
+  "id": "z3",
+  "title": "Z3",
+  "source": "https://github.com/Z3Prover/z3",
+  "entries": [
+    "z3"
+  ],
+  "help": {
+    "entry": "z3",
+    "args": [
+      "-h"
+    ]
+  },
+  "runtime": {
+    "kind": "binary",
+    "command": "z3",
+    "probeArgs": [
+      "-version"
+    ]
+  },
+  "operationCount": 2
+}
+{
+  "tool": "z3",
+  "operation": "solve",
+  "entry": "z3",
+  "args": [
+    "-smt2",
+    "skills/z3/examples/positive.smt2"
+  ],
+  "mode": "typed",
+  "runtime": "NOT_RUN"
+}

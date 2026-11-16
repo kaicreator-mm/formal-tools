@@ -1,0 +1,3 @@
+   rdf-shacl/pos: exit=0 dur=259ms matched=1 exit_ok=1 label=CONFORMS (log: /evidence/runner/verify-rdf-shacl.pos.log)
+   rdf-shacl/neg: exit=1 dur=263ms matched=1 exit_ok=1 label=VIOLATION (log: /evidence/runner/verify-rdf-shacl.neg.log)
+   rdf-shacl/err: exit=1 dur=257ms matched=0 exit_ok=1 label=INVALID_RDF (log: /evidence/runner/verify-rdf-shacl.err.log)

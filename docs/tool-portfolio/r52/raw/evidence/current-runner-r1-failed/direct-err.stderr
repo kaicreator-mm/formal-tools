@@ -1,0 +1,58 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/pyshacl/__main__.py", line 31, in <module>
+    validate_main(prog="python3 -m pyshacl")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/pyshacl/cli.py", line 348, in main
+    is_conform, v_graph, v_text = validate(data_graph, **validator_kwargs)
+                                  ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/pyshacl/entrypoints.py", line 193, in validate
+    loaded_dg = load_from_source(
+        data_graph, rdf_format=data_graph_format, multigraph=True, do_owl_imports=False, logger=log
+    )
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/pyshacl/rdfutil/load.py", line 498, in load_from_source
+    dest_g.parse(source=cast(IO[bytes], _source), format=rdf_format, publicID=parser_base_uri)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/rdflib/graph.py", line 1669, in parse
+    raise se
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/rdflib/graph.py", line 1660, in parse
+    parser.parse(source, self, **args)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/rdflib/plugins/parsers/notation3.py", line 2034, in parse
+    p.loadStream(stream)
+    ~~~~~~~~~~~~^^^^^^^^
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/rdflib/plugins/parsers/notation3.py", line 492, in loadStream
+    return self.loadBuf(stream.read())  # Not ideal
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/rdflib/plugins/parsers/notation3.py", line 498, in loadBuf
+    self.feed(buf)
+    ~~~~~~~~~^^^^^
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/rdflib/plugins/parsers/notation3.py", line 524, in feed
+    i = self.directiveOrStatement(s, j)
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/rdflib/plugins/parsers/notation3.py", line 543, in directiveOrStatement
+    j = self.statement(argstr, i)
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/rdflib/plugins/parsers/notation3.py", line 791, in statement
+    j = self.property_list(argstr, i, r[0])
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/rdflib/plugins/parsers/notation3.py", line 1153, in property_list
+    i = self.objectList(argstr, j, objs)
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/rdflib/plugins/parsers/notation3.py", line 1203, in objectList
+    i = self.object(argstr, i, res)
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/rdflib/plugins/parsers/notation3.py", line 1500, in object
+    j = self.subject(argstr, i, res)
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/rdflib/plugins/parsers/notation3.py", line 798, in subject
+    return self.item(argstr, i, res)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/rdflib/plugins/parsers/notation3.py", line 890, in item
+    return self.path(argstr, i, res)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/rdflib/plugins/parsers/notation3.py", line 897, in path
+    j = self.nodeOrLiteral(argstr, i, res)
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/rdflib/plugins/parsers/notation3.py", line 1571, in nodeOrLiteral
+    j, s = self.strconst(argstr, i, delim)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/bundle/runtimes/python313/lib/python3.13/site-packages/rdflib/plugins/parsers/notation3.py", line 1673, in strconst
+    raise BadSyntax(
+    ...<5 lines>...
+    )
+rdflib.plugins.parsers.notation3.BadSyntax: <no detail available>
