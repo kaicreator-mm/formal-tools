@@ -1,0 +1,88 @@
+{
+  "schema": "formal-tools/xdownload-interaction-native-pair/0.1",
+  "observed_at": "2026-11-16",
+  "scope": "BOUNDED_INTERACTION_STATE_ABSTRACTION_ONLY",
+  "source": {
+    "repository": "kaicreator-mm/domain-harness",
+    "commit": "b3a962c673f2e623ccd3db8ba059c4bae456b9dd",
+    "path": "examples/dis-v020-interaction/download-goal.mjs",
+    "git_blob": "f57747aa7996c88833e72288a0acd594a7ce5468",
+    "sha256": "aa7dc083fd0a7dc6f9d98e0792058d567b16c1b4883f9fe9d80fa91733afe4c2",
+    "source_version": "dis.v0.2.download-interaction/1"
+  },
+  "model": {
+    "path": "benchmarks/llm-methods/g4/xdownload-interaction-safety.smt2",
+    "sha256": "21f5d28b661c75d11dc8bc517f68a29243ab518f3bc7bc8d1c9ce44bf4fa714c",
+    "logic": "QF_UF",
+    "query_count": 9,
+    "abstraction": "Boolean predicates for channel, request ID, HTTPS URL, byte bound, allowed answers and explicit confirmation; status/effect invariants.",
+    "limitations": "This is a bounded abstraction, not a translation proof or universal proof of the JavaScript source."
+  },
+  "host": {
+    "os": "Debian GNU/Linux 13 (trixie)",
+    "arch": "x86_64",
+    "glibc": "2.41",
+    "execution": "ChatGPT execution container",
+    "network": "not used for solver execution",
+    "node_version": "v22.16.0 (not used by solver invocation)"
+  },
+  "solvers": [
+    {
+      "id": "z3",
+      "version": "5.4.0",
+      "archive_sha256": "039d3f8c75e92ceb196bb1291d8602340541f1b1be2f0a1acf32d3c025f8ed16",
+      "binary_sha256": "e9d7e6e6d76c81b5ea3f06d165fc4cfd8afab92b74cdf94417380b5eed10845d",
+      "command": "z3 -smt2 xdownload-interaction-safety.smt2",
+      "exit_code": 0,
+      "elapsed_ms": 39,
+      "stdout_sha256": "2d0a4c2b584877f65fb83a265250f59c53437000bac37faa97a9b88ccb557270",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_empty": true,
+      "status_sequence": ["SAT","SAT","UNSAT","UNSAT","UNSAT","UNSAT","UNSAT","UNSAT","UNSAT"],
+      "stdout": "case=valid_inspect_awaiting_confirmation\nsat\ncase=valid_confirm_ready_for_kdp\nsat\ncase=unconfirmed_cannot_be_ready\nunsat\ncase=unsafe_url_cannot_be_ready\nunsat\ncase=oversized_or_invalid_size_cannot_be_ready\nunsat\ncase=undeclared_answer_cannot_be_ready\nunsat\ncase=forged_draft_status_does_not_bypass_revalidation\nunsat\ncase=effect_dispatch_is_impossible\nunsat\ncase=effect_permission_is_impossible\nunsat\n",
+      "stderr": ""
+    },
+    {
+      "id": "cvc5",
+      "version": "1.4.2",
+      "archive_sha256": "b7a5f6d1740086347d8055dab7fd1216960e19ab7a769fa2b15c1ec76ed0c193",
+      "binary_sha256": "6aecddf466552b83bb5883756c7955e0c9d5ddcc6d7f45b48c2f6e06a741b102",
+      "command": "cvc5 --incremental --lang smt2 xdownload-interaction-safety.smt2",
+      "exit_code": 0,
+      "elapsed_ms": 8,
+      "stdout_sha256": "d655cfa1702329d05053e7186333bdfd34e9712e18955a73761d73fe8abf9bd0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_empty": true,
+      "status_sequence": ["SAT","SAT","UNSAT","UNSAT","UNSAT","UNSAT","UNSAT","UNSAT","UNSAT"],
+      "stdout": "\"case=valid_inspect_awaiting_confirmation\"\nsat\n\"case=valid_confirm_ready_for_kdp\"\nsat\n\"case=unconfirmed_cannot_be_ready\"\nunsat\n\"case=unsafe_url_cannot_be_ready\"\nunsat\n\"case=oversized_or_invalid_size_cannot_be_ready\"\nunsat\n\"case=undeclared_answer_cannot_be_ready\"\nunsat\n\"case=forged_draft_status_does_not_bypass_revalidation\"\nunsat\n\"case=effect_dispatch_is_impossible\"\nunsat\n\"case=effect_permission_is_impossible\"\nunsat\n",
+      "stderr": ""
+    }
+  ],
+  "pair_agreement": {
+    "compared_queries": 9,
+    "agree": 9,
+    "disagree": 0,
+    "sat": 2,
+    "unsat": 7,
+    "unknown": 0
+  },
+  "runner_attempts": [
+    {
+      "solver": "cvc5",
+      "command": "cvc5 --lang smt2 xdownload-interaction-safety.smt2",
+      "exit_code": 1,
+      "classification": "INVOCATION_ERROR_NOT_SOLVER_FAILURE",
+      "reason": "SMT-LIB push/pop requires cvc5 --incremental; corrected command and reran once.",
+      "stdout": "\"case=valid_inspect_awaiting_confirmation\"\n(error \"cannot push when not solving incrementally (use --incremental)\")\n"
+    }
+  ],
+  "authority": {
+    "qualification": "ENGINEERING_ONLY",
+    "independent_semantic_oracle": "NOT_ATTESTED",
+    "trusted_host_process_attestation": false,
+    "solution_promotable": false,
+    "business_claim_result": "UNVERIFIED",
+    "positive_replay": "BLOCKED_UNQUALIFIED",
+    "effect_dispatched": false
+  }
+}
