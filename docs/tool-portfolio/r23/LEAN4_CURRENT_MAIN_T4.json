@@ -1,0 +1,2219 @@
+{
+  "schema": "formal-tools/lean4-current-main-t4-local-execution/1.0",
+  "output_label": "FORMAL_TOOLS_I24_LEAN4_R23_LOCAL_EXECUTION",
+  "status": "LEAN4_R23_COMPLETE",
+  "recorded_at": "2026-11-15T12:08:26.141028+00:00",
+  "repository": "kaicreator-mm/formal-tools",
+  "portfolio_issue": 24,
+  "tool_issue": 41,
+  "role": "LOCAL_EXECUTION_ONLY",
+  "exact_head": "5f188dec4c98bb4195619b560b86a210d9c2788e",
+  "tool": "lean4",
+  "expected_version": "4.35.0",
+  "source_blobs": {
+    "portable/packaging/bundle-template/bin/tool-runner": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "packages/runner/js/cli.mjs": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
+    "packages/runner/js/sdk.mjs": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+    "packages/runner/js/mcp.mjs": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+    "packages/runner/js/native.mjs": "1af7a7db7523985f810e545860000c5d745de0b5",
+    "packages/runner/js/native-catalog.mjs": "02f628947be3e5c270d802be150ab220e14fc2b8",
+    "packages/runner/js/tool-result.mjs": "a2c61c50658fc3d7e578ffbf7ee018f707e15841",
+    "portable/verification/cases/lean4/expect.sh": "3dc8789e49f088bc8c533f00ef01d3877d1768c0",
+    "portable/verification/cases/lean4/pos.lean": "50c9e5be4159f2b2dc768312e9a2b7d33aa7a477",
+    "portable/verification/cases/lean4/neg.lean": "774778dd084d25e0404bb29debf3328353245e93",
+    "portable/verification/cases/lean4/err.lean": "04bafaf5a9e906deed6ac10200a70a349697591f",
+    "skills/lean4/examples/Positive.lean": "a6793b1eb4f586f6838b03c0ec71ab0462e4b4ce",
+    "skills/lean4/examples/Negative.lean": "45e1fcfb27f6b23cb7240697f7c2f702f67ed986",
+    "docs/tool-portfolio/r3/LEAN4_CHUNKS.json": "6a8e72e8a875ce39eca3836e28deb1766723ae88",
+    "scripts/reassemble-lean4-chunks.mjs": "0240229de2ce087f1fba770ebdb8c2f1cca41611",
+    "package-lock.json": "2ad31f01195434617ac74d2f377287a15e062b95",
+    "docs/tool-portfolio/r22/LEAN4_CURRENT_MAIN_RUNNER_RECHECK.json": "ecbfdb4b2d0c855e9bd88f4b6e537d0d383060bc",
+    "docs/tool-portfolio/r19/I24_R19_NATIVE_TOOL_EVIDENCE.json": "742244c4f5052f2c6fdeb5468c201b64c100100c"
+  },
+  "source_archive": {
+    "local_artifacts_initially_present": false,
+    "server_parts_reused_without_redownload": true,
+    "server_extraction_reused": true,
+    "parts": [
+      {
+        "part_index": 0,
+        "drive_file_id": "1zlRToYmGjCSLKkiw8wCHE823wCAEGn4y",
+        "bytes": 134217728,
+        "sha256": "68183dd94719decee26ee1178447ef0a0faa00ac808ddd89582a7ad4605333e3"
+      },
+      {
+        "part_index": 1,
+        "drive_file_id": "1ZWTKJroti6P7fvPow93cHJ_N3e_85zq3",
+        "bytes": 134217728,
+        "sha256": "d1e0ec8b175786301d65e8217d12037c5fb64028af9c12954b6aa60342c725f0"
+      },
+      {
+        "part_index": 2,
+        "drive_file_id": "1denol1UHvyNOfHWAHHQxfKs6JCsWnjr5",
+        "bytes": 134217728,
+        "sha256": "bba76f3e53c61fa8db5b45be98083fc6df69a4d42e39daa410b92951795bd234"
+      },
+      {
+        "part_index": 3,
+        "drive_file_id": "1730NHV9vjtPsLMts5pt1XrjtUlxAYHix",
+        "bytes": 134217728,
+        "sha256": "66f141b838212ba76fa02c70d23688f5058fda7c607fd81b2f868090e5d1d7f8"
+      },
+      {
+        "part_index": 4,
+        "drive_file_id": "1XSqZj4uwZH915rU5m57JECGwXakuf7E_",
+        "bytes": 30316953,
+        "sha256": "f11ab32e90d368d780393c9120db1b0bee1607565dae5657c063d6651eaefafe"
+      }
+    ],
+    "part_hashes_independently_recomputed_on_windows_and_lan_host": true,
+    "reassembly": {
+      "script": "scripts/reassemble-lean4-chunks.mjs",
+      "script_git_blob": "0240229de2ce087f1fba770ebdb8c2f1cca41611",
+      "exit": 0,
+      "elapsed_ms": 1232,
+      "stdout": {
+        "bytes": 361,
+        "sha256": "bf6a4d580cb931dc7bb626f762e5bd6bfe967487ae09e40c52ebe9f87a43e476",
+        "text": "{\n  \"status\": \"REASSEMBLED_SHA256_MATCH_ONLY\",\n  \"outputFile\": \"/home/cc/formal-tools-build/out/i24-r23-lean4/archive/lean4-4.35.0-linux-x86_64.tar.zst\",\n  \"sizeBytes\": 567187865,\n  \"sha256\": \"671b172f8dacc4a7fd405852a2286e7657ec8c4414d301a73ece6f98f39bde62\"\n}\nNEXT: zstd -t, strict tar security preflight, isolated native positive/negative/error runner tests.\n"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "text": ""
+      }
+    },
+    "archive": {
+      "name": "lean4-4.35.0-linux-x86_64.tar.zst",
+      "bytes": 567187865,
+      "sha256": "671b172f8dacc4a7fd405852a2286e7657ec8c4414d301a73ece6f98f39bde62",
+      "raw_sha256_record": {
+        "bytes": 154,
+        "sha256": "3f6825995abae4463a7a2aab558ac3e220b94db1edbe9d601f0f10bd72f31406",
+        "text": "671b172f8dacc4a7fd405852a2286e7657ec8c4414d301a73ece6f98f39bde62  /home/cc/formal-tools-build/out/i24-r23-lean4/archive/lean4-4.35.0-linux-x86_64.tar.zst\n"
+      },
+      "raw_byte_count_record": {
+        "bytes": 10,
+        "sha256": "d3f2d938b41d44fc701b1f3fbffc576c4e4e14f58875c77e97092d11f7bf774d",
+        "text": "567187865\n"
+      }
+    },
+    "zstd": {
+      "exit": 0,
+      "elapsed_ms": 4509,
+      "decoded_bytes": 3152281600,
+      "stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "text": ""
+      },
+      "stderr": {
+        "bytes": 107,
+        "sha256": "dbc0ae2ede66c32babb5ee7d528b34148e39f368c5d5fe259475702b95c0f114",
+        "text": "/home/cc/formal-tools-build/out/i24-r23-lean4/archive/lean4-4.35.0-linux-x86_64.tar.zst: 3152281600 bytes \n"
+      }
+    },
+    "tar_preflight": {
+      "exit": 0,
+      "elapsed_ms": 5595,
+      "result": {
+        "absolute_names": 0,
+        "directories": 633,
+        "errors": [],
+        "files": 17928,
+        "hardlinks": 0,
+        "members": 18574,
+        "path_traversal_errors": 0,
+        "regular_bytes": 3137938943,
+        "special_files": 0,
+        "status": "PASS",
+        "symlinks": 13,
+        "top_level": [
+          "tools"
+        ]
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "text": ""
+      }
+    }
+  },
+  "original_package": {
+    "r19_extraction_path": "/home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4",
+    "reused_without_reextract": true,
+    "mounted_read_only": true,
+    "original_meta_key": "TOOL_TOOL_ID=lean4",
+    "lean_sha256": "bf8d54e4714cc4b03d3f6bb34c83b7202b87e49c8bfcbff6895c085bb90ceb38",
+    "run_sha256": "a48472b99e7798ab7d254ba0ebd91d0e8f9c5bea3ef2d01d723b880ca4f6ca12",
+    "original_meta_sha256": "56f459f1596afee5e2589f8e1711bbe0e8ea8ce880c0e4de235341bf3b0f61fc",
+    "before_sha256": {
+      "bytes": 408,
+      "sha256": "51c04a93c9d2fb3c7782d066d521f85072c70eb14f61c2b21c2a47d5108ba6cb",
+      "text": "bf8d54e4714cc4b03d3f6bb34c83b7202b87e49c8bfcbff6895c085bb90ceb38  /home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4/bin/lean\na48472b99e7798ab7d254ba0ebd91d0e8f9c5bea3ef2d01d723b880ca4f6ca12  /home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4/run\n56f459f1596afee5e2589f8e1711bbe0e8ea8ce880c0e4de235341bf3b0f61fc  /home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4/meta.sh\n"
+    },
+    "after_sha256": {
+      "bytes": 408,
+      "sha256": "51c04a93c9d2fb3c7782d066d521f85072c70eb14f61c2b21c2a47d5108ba6cb",
+      "text": "bf8d54e4714cc4b03d3f6bb34c83b7202b87e49c8bfcbff6895c085bb90ceb38  /home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4/bin/lean\na48472b99e7798ab7d254ba0ebd91d0e8f9c5bea3ef2d01d723b880ca4f6ca12  /home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4/run\n56f459f1596afee5e2589f8e1711bbe0e8ea8ce880c0e4de235341bf3b0f61fc  /home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4/meta.sh\n"
+    },
+    "unchanged_cmp_exit": 0,
+    "metadata_overlay": {
+      "scope": "temporary staged file only; original archive and extracted meta.sh unchanged",
+      "path_on_host": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/lean4-meta-overlay.sh",
+      "sha256": "784c927e0428b29d79cf0eeb1b8f530e6d2d3ac5e7f30dd4ed2c6357a7f0f45c",
+      "content": "TOOL_ID=lean4\nTOOL_VERSION=4.35.0\nTOOL_KIND=binary\nTOOL_MAIN_BIN=tools/lean4/bin/lean\nTOOL_GLIBC_MAX=2.2\nTOOL_ELF_ARCH=Advanced\nUNAVAILABLE=0\n",
+      "check": {
+        "bytes": 77,
+        "sha256": "c9c15cf6914233de76c50f516f06db9251ad9189849ac0f7e2855b6e58acd5e7",
+        "text": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/lean4-meta-overlay.sh: OK\n"
+      }
+    }
+  },
+  "environment": {
+    "host": "cc@192.168.100.200",
+    "docker_server": "linux amd64 29.7.2",
+    "image": "formal-tools:deb13-r0",
+    "image_id": "cd0df1dab4ce",
+    "os": "Debian GNU/Linux 13 (trixie), 13.7",
+    "arch": "x86_64",
+    "node": "v24.21.0",
+    "uid_gid": "65534:65534",
+    "cpu_affinity": "0 (exactly one CPU)",
+    "cgroup_memory_max_bytes": 4294967296,
+    "network": "NONE_PROVEN_BY_DOCKER_INSPECT_FOR_EVERY_FINAL_ROUTE",
+    "package_read_only": true,
+    "source_read_only": true,
+    "limits": "outer timeout=240s; tool timeout=120s/180s; core=0; stack=1048576; no RLIMIT_AS",
+    "probe": {
+      "command_argv": [
+        "bash",
+        "-c",
+        "id; uname -a; cat /etc/os-release; node -v; taskset -pc $$; cat /sys/fs/cgroup/cpu.max; cat /sys/fs/cgroup/memory.max; cat /proc/net/dev; sha256sum /pkg/tools/lean4/bin/lean /pkg/tools/lean4/run /pkg/tools/lean4/meta.sh; find /pkg/tools/lean4 -writable -print | head -20"
+      ],
+      "container_id": "2980e0573d9be6becd892892a89fa42f444f28d842ce90deaa01fd4db1053172",
+      "create_exit": 0,
+      "route_exit": 0,
+      "container_exit": 0,
+      "elapsed_ms": 1041,
+      "stdout": {
+        "bytes": 1115,
+        "sha256": "3258947986672d1625f29788764b8ccfbd6a1540395af2bc560594b9b1754ddd",
+        "text": "uid=65534(nobody) gid=65534(nogroup) groups=65534(nogroup)\nLinux 2980e0573d9b 7.0.0-43-generic #43-Ubuntu SMP PREEMPT_DYNAMIC Fri Oct 23 13:25:25 UTC 2026 x86_64 GNU/Linux\nPRETTY_NAME=\"Debian GNU/Linux 13 (trixie)\"\nNAME=\"Debian GNU/Linux\"\nVERSION_ID=\"13\"\nVERSION=\"13 (trixie)\"\nVERSION_CODENAME=trixie\nDEBIAN_VERSION_FULL=13.7\nID=debian\nHOME_URL=\"https://www.debian.org/\"\nSUPPORT_URL=\"https://www.debian.org/support\"\nBUG_REPORT_URL=\"https://bugs.debian.org/\"\nv24.21.0\npid 1's current affinity list: 0\nmax 100000\n4294967296\nInter-|   Receive                                                |  Transmit\n face |bytes    packets errs drop fifo frame compressed multicast|bytes    packets errs drop fifo colls carrier compressed\n    lo:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0\nbf8d54e4714cc4b03d3f6bb34c83b7202b87e49c8bfcbff6895c085bb90ceb38  /pkg/tools/lean4/bin/lean\na48472b99e7798ab7d254ba0ebd91d0e8f9c5bea3ef2d01d723b880ca4f6ca12  /pkg/tools/lean4/run\n56f459f1596afee5e2589f8e1711bbe0e8ea8ce880c0e4de235341bf3b0f61fc  /pkg/tools/lean4/meta.sh\n"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "text": ""
+      },
+      "container_inspect_sha256": "058c90b3c551244834115c02ca081645f344562d29755213cb14ff64b4eed3fe",
+      "isolation": {
+        "image": "formal-tools:deb13-r0",
+        "image_id": "sha256:cd0df1dab4ce3bda042eb4145616b28996ee5937bfdb54e0613cd28db662fdfb",
+        "user": "65534:65534",
+        "network_mode": "none",
+        "readonly_rootfs": true,
+        "cpuset_cpus": "0",
+        "memory_bytes": 4294967296,
+        "memory_swap_bytes": 4294967296,
+        "pids_limit": 256,
+        "cap_drop": [
+          "ALL"
+        ],
+        "security_opt": [
+          "no-new-privileges"
+        ],
+        "mounts": [
+          {
+            "type": "bind",
+            "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/drivers",
+            "destination": "/drivers",
+            "read_write": false
+          },
+          {
+            "type": "bind",
+            "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/node-runtime/node-v24.21.0-linux-x64",
+            "destination": "/opt/node",
+            "read_write": false
+          },
+          {
+            "type": "bind",
+            "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/source",
+            "destination": "/src",
+            "read_write": false
+          },
+          {
+            "type": "bind",
+            "source": "/home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4",
+            "destination": "/pkg/tools/lean4",
+            "read_write": false
+          },
+          {
+            "type": "bind",
+            "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/fixtures",
+            "destination": "/fixtures",
+            "read_write": false
+          }
+        ]
+      }
+    }
+  },
+  "locked_mcp_dependencies": {
+    "npm_ci_exit": 0,
+    "npm_ci_elapsed_ms": 1391,
+    "npm_ci_stdout": {
+      "bytes": 87,
+      "sha256": "306a3b502010a029bc1156a5b1e4a1d737d481e404b138430de4f948c9503242",
+      "text": "\nadded 8 packages in 1s\n\n1 package is looking for funding\n  run `npm fund` for details\n"
+    },
+    "npm_ci_stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "text": ""
+    },
+    "npm_ls_exit": 0,
+    "npm_ls": {
+      "version": "0.4.0",
+      "name": "formal-tools-skill",
+      "dependencies": {
+        "@modelcontextprotocol/server": {
+          "version": "2.4.0",
+          "resolved": "https://registry.npmjs.org/@modelcontextprotocol/server/-/server-2.4.0.tgz",
+          "overridden": false,
+          "dependencies": {
+            "@modelcontextprotocol/core": {
+              "version": "2.4.0",
+              "resolved": "https://registry.npmjs.org/@modelcontextprotocol/core/-/core-2.4.0.tgz",
+              "overridden": false,
+              "dependencies": {
+                "zod": {
+                  "version": "4.6.7"
+                }
+              }
+            },
+            "zod": {
+              "version": "4.6.7"
+            }
+          }
+        },
+        "zod": {
+          "version": "4.6.7",
+          "resolved": "https://registry.npmjs.org/zod/-/zod-4.6.7.tgz",
+          "overridden": false
+        }
+      }
+    },
+    "actual_stdio_execution": true,
+    "mcp_not_run": false
+  },
+  "execution": {
+    "candidate_only_portfolio_verify_used": false,
+    "runner": {
+      "doctor": {
+        "command_argv": [
+          "bash",
+          "/bundle/bin/tool-runner",
+          "doctor",
+          "lean4"
+        ],
+        "container_id": "1c3fdfc26b3cbf0a9964d4dbcbe5f4f054559aca068eff593767f14719645453",
+        "create_exit": 0,
+        "route_exit": 0,
+        "container_exit": 0,
+        "elapsed_ms": 816,
+        "stdout": {
+          "bytes": 131,
+          "sha256": "806767e8a4803426ea649931f118b5225a9f86fdb79bc698d45aeaf28a263e29",
+          "text": "doctor: lean4 kind=binary version=4.35.0\n  binary: tools/lean4/bin/lean OK (glibc_max=2.2)\n  ldd: no missing libs OK\n  verdict: OK\n"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text": ""
+        },
+        "container_inspect_sha256": "516cc4d14a47ce7369ea9e2eb89ecea62da3afa850777e7fbe0e68362e715f73",
+        "isolation": {
+          "image": "formal-tools:deb13-r0",
+          "image_id": "sha256:cd0df1dab4ce3bda042eb4145616b28996ee5937bfdb54e0613cd28db662fdfb",
+          "user": "65534:65534",
+          "network_mode": "none",
+          "readonly_rootfs": true,
+          "cpuset_cpus": "0",
+          "memory_bytes": 4294967296,
+          "memory_swap_bytes": 4294967296,
+          "pids_limit": 256,
+          "cap_drop": [
+            "ALL"
+          ],
+          "security_opt": [
+            "no-new-privileges"
+          ],
+          "mounts": [
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/drivers",
+              "destination": "/drivers",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/fixtures",
+              "destination": "/fixtures",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/runner-bundle",
+              "destination": "/bundle",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4",
+              "destination": "/bundle/tools/lean4",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/source",
+              "destination": "/src",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4",
+              "destination": "/pkg/tools/lean4",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/lean4-meta-overlay.sh",
+              "destination": "/bundle/tools/lean4/meta.sh",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-fs",
+              "destination": "/evidence",
+              "read_write": true
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/node-runtime/node-v24.21.0-linux-x64",
+              "destination": "/opt/node",
+              "read_write": false
+            }
+          ]
+        }
+      },
+      "version": {
+        "command_argv": [
+          "bash",
+          "/bundle/bin/tool-runner",
+          "version",
+          "lean4"
+        ],
+        "container_id": "d8b56bacdd25d2d196f30bf1b7f881fd4b1d7305306f54eec682350ff8621e71",
+        "create_exit": 0,
+        "route_exit": 0,
+        "container_exit": 0,
+        "elapsed_ms": 595,
+        "stdout": {
+          "bytes": 39,
+          "sha256": "f48470253831b2f801d2100759fd9cc5023fb2b232858ff6a1af9d519a080594",
+          "text": "tool: lean4\nversion: 4.35.0\nprobe: n/a\n"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text": ""
+        },
+        "container_inspect_sha256": "4876af2a9cf0ca496e9603757a1095055458f30b3cc9e9aa146922a9ca7b9327",
+        "isolation": {
+          "image": "formal-tools:deb13-r0",
+          "image_id": "sha256:cd0df1dab4ce3bda042eb4145616b28996ee5937bfdb54e0613cd28db662fdfb",
+          "user": "65534:65534",
+          "network_mode": "none",
+          "readonly_rootfs": true,
+          "cpuset_cpus": "0",
+          "memory_bytes": 4294967296,
+          "memory_swap_bytes": 4294967296,
+          "pids_limit": 256,
+          "cap_drop": [
+            "ALL"
+          ],
+          "security_opt": [
+            "no-new-privileges"
+          ],
+          "mounts": [
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/source",
+              "destination": "/src",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/lean4-meta-overlay.sh",
+              "destination": "/bundle/tools/lean4/meta.sh",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-fs",
+              "destination": "/evidence",
+              "read_write": true
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/drivers",
+              "destination": "/drivers",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/runner-bundle",
+              "destination": "/bundle",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/node-runtime/node-v24.21.0-linux-x64",
+              "destination": "/opt/node",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4",
+              "destination": "/pkg/tools/lean4",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/fixtures",
+              "destination": "/fixtures",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4",
+              "destination": "/bundle/tools/lean4",
+              "read_write": false
+            }
+          ]
+        }
+      },
+      "verify": {
+        "command_argv": [
+          "bash",
+          "/bundle/bin/tool-runner",
+          "verify",
+          "lean4"
+        ],
+        "container_id": "330c1861a3924c6295375a479760157c547334365aa92fed94d15012edb0d382",
+        "create_exit": 0,
+        "route_exit": 0,
+        "container_exit": 0,
+        "elapsed_ms": 847,
+        "stdout": {
+          "bytes": 307,
+          "sha256": "69f3d7e8185f4327cf45db062fec92be92e237f8fcad8372a4fca9d712937947",
+          "text": "   lean4/pos: exit=0 dur=175ms matched=1 exit_ok=1 label=PROVED (log: /evidence/verify-lean4.pos.log)\n   lean4/neg: exit=1 dur=197ms matched=1 exit_ok=1 label=REJECTED (log: /evidence/verify-lean4.neg.log)\n   lean4/err: exit=1 dur=167ms matched=1 exit_ok=1 label=ERROR (log: /evidence/verify-lean4.err.log)\n"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text": ""
+        },
+        "container_inspect_sha256": "33f94ebd59f4042a8e7b21e7184f5b1cf7934a86defc70af24184ce1c5fa7bdc",
+        "isolation": {
+          "image": "formal-tools:deb13-r0",
+          "image_id": "sha256:cd0df1dab4ce3bda042eb4145616b28996ee5937bfdb54e0613cd28db662fdfb",
+          "user": "65534:65534",
+          "network_mode": "none",
+          "readonly_rootfs": true,
+          "cpuset_cpus": "0",
+          "memory_bytes": 4294967296,
+          "memory_swap_bytes": 4294967296,
+          "pids_limit": 256,
+          "cap_drop": [
+            "ALL"
+          ],
+          "security_opt": [
+            "no-new-privileges"
+          ],
+          "mounts": [
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/drivers",
+              "destination": "/drivers",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/runner-bundle",
+              "destination": "/bundle",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/lean4-meta-overlay.sh",
+              "destination": "/bundle/tools/lean4/meta.sh",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-fs",
+              "destination": "/evidence",
+              "read_write": true
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4",
+              "destination": "/bundle/tools/lean4",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/fixtures",
+              "destination": "/fixtures",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/node-runtime/node-v24.21.0-linux-x64",
+              "destination": "/opt/node",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/source",
+              "destination": "/src",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4",
+              "destination": "/pkg/tools/lean4",
+              "read_write": false
+            }
+          ]
+        }
+      },
+      "runner_schema": "formal-tools/portable-verify/0.2",
+      "verdict": "PASS",
+      "rows": [
+        {
+          "tool": "lean4",
+          "phase": "pos",
+          "exit": 0,
+          "duration_ms": 175,
+          "matched": 1,
+          "exit_ok": 1,
+          "label": "PROVED"
+        },
+        {
+          "tool": "lean4",
+          "phase": "neg",
+          "exit": 1,
+          "duration_ms": 197,
+          "matched": 1,
+          "exit_ok": 1,
+          "label": "REJECTED"
+        },
+        {
+          "tool": "lean4",
+          "phase": "err",
+          "exit": 1,
+          "duration_ms": 167,
+          "matched": 1,
+          "exit_ok": 1,
+          "label": "ERROR"
+        }
+      ],
+      "raw_tsv": {
+        "bytes": 142,
+        "sha256": "81c1237b99c39b5cbdcd0f5e70b51119491b0591ed30151f7cc124d04aba4974",
+        "text": "runner_schema\tformal-tools/portable-verify/0.2\nlean4\tpos\t0\t175\t1\t1\tPROVED\nlean4\tneg\t1\t197\t1\t1\tREJECTED\nlean4\terr\t1\t167\t1\t1\tERROR\nverdict\tPASS\n"
+      },
+      "raw_logs": {
+        "pos": {
+          "bytes": 27,
+          "sha256": "9b1196c08c82bfeae21b9d1da2a76e4981cc1407f162da5ca4f26367bdf0b531",
+          "text": "\nPHASE_DONE phase=pos rc=0\n"
+        },
+        "neg": {
+          "bytes": 307,
+          "sha256": "ecb8ea1ff9158431ee510ba68026a97d4a4e5b0e531a8afe89832a29b0ba2e0c",
+          "text": "/bundle/tests/lean4/neg.lean:2:0: error: Not a definitional equality: the left-hand side\n  1 + 1\nis not definitionally equal to the right-hand side\n  3\n/bundle/tests/lean4/neg.lean:2:29: error: Type mismatch\n  rfl\nhas type\n  ?m.16 = ?m.16\nbut is expected to have type\n  1 + 1 = 3\n\nPHASE_DONE phase=neg rc=1\n"
+        },
+        "err": {
+          "bytes": 129,
+          "sha256": "89c22c764139d153af6494b39e353e573b4ff53128cca9b06282ae75fb34a796",
+          "text": "/bundle/tests/lean4/err.lean:2:30: error(lean.unknownIdentifier): Unknown identifier `no_such_tactic`\n\nPHASE_DONE phase=err rc=1\n"
+        }
+      }
+    },
+    "cli": {
+      "route": "packages/runner/js/cli.mjs exec lean4 check --input <committed fixture>",
+      "pos": {
+        "command_argv": [
+          "node",
+          "/src/packages/runner/js/cli.mjs",
+          "exec",
+          "lean4",
+          "check",
+          "--input",
+          "/fixtures/pos.lean",
+          "--cwd",
+          "/tmp",
+          "--timeout",
+          "120"
+        ],
+        "container_id": "6cde2758f7ada3049afcc077b83e9c45b9e78d6196685d7b4d3a13bd6d929e9c",
+        "create_exit": 0,
+        "route_exit": 0,
+        "container_exit": 0,
+        "elapsed_ms": 1724,
+        "stdout": {
+          "bytes": 886,
+          "sha256": "60df2573e71517bd382e0faed7b929d1b7cdad9a902bccb489e9b70b83042ac3",
+          "text": "{\n  \"tool\": \"lean4\",\n  \"operation\": \"check\",\n  \"mode\": \"typed\",\n  \"run_status\": \"EXECUTED\",\n  \"tool_outcome\": \"UNPARSED\",\n  \"process_outcome\": \"EXIT_ZERO\",\n  \"test_verdict\": \"NOT_EVALUATED\",\n  \"claim_verdict\": \"NOT_EVALUATED\",\n  \"note\": \"Native command output only; solver result is not an acceptance verdict\",\n  \"executions\": [\n    {\n      \"argv\": [\n        \"/pkg/tools/lean4/bin/lean\",\n        \"/fixtures/pos.lean\"\n      ],\n      \"exit_code\": 0,\n      \"signal\": null,\n      \"elapsed_ms\": 1169,\n      \"timed_out\": false,\n      \"stdout\": \"\",\n      \"stderr\": \"\",\n      \"stdout_sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n      \"stderr_sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n      \"error\": null,\n      \"output_truncated\": false\n    }\n  ],\n  \"scope\": \"local native CLI; not an independently validated project claim\"\n}\n"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text": ""
+        },
+        "container_inspect_sha256": "eefb11007ca9d48bf6889186fe08d05f7c5b167ed9757fdd3c3f62896d67f199",
+        "isolation": {
+          "image": "formal-tools:deb13-r0",
+          "image_id": "sha256:cd0df1dab4ce3bda042eb4145616b28996ee5937bfdb54e0613cd28db662fdfb",
+          "user": "65534:65534",
+          "network_mode": "none",
+          "readonly_rootfs": true,
+          "cpuset_cpus": "0",
+          "memory_bytes": 4294967296,
+          "memory_swap_bytes": 4294967296,
+          "pids_limit": 256,
+          "cap_drop": [
+            "ALL"
+          ],
+          "security_opt": [
+            "no-new-privileges"
+          ],
+          "mounts": [
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4",
+              "destination": "/pkg/tools/lean4",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/fixtures",
+              "destination": "/fixtures",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/drivers",
+              "destination": "/drivers",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/node-runtime/node-v24.21.0-linux-x64",
+              "destination": "/opt/node",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/source",
+              "destination": "/src",
+              "read_write": false
+            }
+          ]
+        }
+      },
+      "neg": {
+        "command_argv": [
+          "node",
+          "/src/packages/runner/js/cli.mjs",
+          "exec",
+          "lean4",
+          "check",
+          "--input",
+          "/fixtures/neg.lean",
+          "--cwd",
+          "/tmp",
+          "--timeout",
+          "120"
+        ],
+        "container_id": "e8e635cfca62abc55f0ef0957042f27afc8accb5431ee4e97a4ad4222831e1d4",
+        "create_exit": 0,
+        "route_exit": 2,
+        "container_exit": 2,
+        "elapsed_ms": 602,
+        "stdout": {
+          "bytes": 1158,
+          "sha256": "2c1406e52cda3b1d5bb25a39520c5967a4212e69c88cf6aae3d724ac95bd4513",
+          "text": "{\n  \"tool\": \"lean4\",\n  \"operation\": \"check\",\n  \"mode\": \"typed\",\n  \"run_status\": \"EXECUTED\",\n  \"tool_outcome\": \"UNPARSED\",\n  \"process_outcome\": \"NONZERO_EXIT\",\n  \"test_verdict\": \"NOT_EVALUATED\",\n  \"claim_verdict\": \"NOT_EVALUATED\",\n  \"note\": \"Native command output only; solver result is not an acceptance verdict\",\n  \"executions\": [\n    {\n      \"argv\": [\n        \"/pkg/tools/lean4/bin/lean\",\n        \"/fixtures/neg.lean\"\n      ],\n      \"exit_code\": 1,\n      \"signal\": null,\n      \"elapsed_ms\": 265,\n      \"timed_out\": false,\n      \"stdout\": \"/fixtures/neg.lean:2:0: error: Not a definitional equality: the left-hand side\\n  1 + 1\\nis not definitionally equal to the right-hand side\\n  3\\n/fixtures/neg.lean:2:29: error: Type mismatch\\n  rfl\\nhas type\\n  ?m.16 = ?m.16\\nbut is expected to have type\\n  1 + 1 = 3\\n\",\n      \"stderr\": \"\",\n      \"stdout_sha256\": \"1dcbf5028bd7f3705568df8f47f6fed03d63a59cadc9a0652a08be5456c63035\",\n      \"stderr_sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n      \"error\": null,\n      \"output_truncated\": false\n    }\n  ],\n  \"scope\": \"local native CLI; not an independently validated project claim\"\n}\n"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text": ""
+        },
+        "container_inspect_sha256": "0922dcdfa5a4438c8bb86d571f74bf2e5450dcd6b6155129826a3604c0067aa2",
+        "isolation": {
+          "image": "formal-tools:deb13-r0",
+          "image_id": "sha256:cd0df1dab4ce3bda042eb4145616b28996ee5937bfdb54e0613cd28db662fdfb",
+          "user": "65534:65534",
+          "network_mode": "none",
+          "readonly_rootfs": true,
+          "cpuset_cpus": "0",
+          "memory_bytes": 4294967296,
+          "memory_swap_bytes": 4294967296,
+          "pids_limit": 256,
+          "cap_drop": [
+            "ALL"
+          ],
+          "security_opt": [
+            "no-new-privileges"
+          ],
+          "mounts": [
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/fixtures",
+              "destination": "/fixtures",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/drivers",
+              "destination": "/drivers",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/node-runtime/node-v24.21.0-linux-x64",
+              "destination": "/opt/node",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/source",
+              "destination": "/src",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4",
+              "destination": "/pkg/tools/lean4",
+              "read_write": false
+            }
+          ]
+        }
+      },
+      "observed": {
+        "pos_native_exit": 0,
+        "neg_native_exit": 1,
+        "neg_diagnostic": "Type mismatch",
+        "neg_outer_exit_2_meaning": "CLI maps meaningful NONZERO_EXIT observation to route exit 2; native Lean rejection is exit 1"
+      }
+    },
+    "sdk": {
+      "route": "invokeTool({tool:'lean4',operation:'check',settings:{input}})",
+      "pos": {
+        "command_argv": [
+          "node",
+          "/drivers/sdk-driver.mjs",
+          "/fixtures/pos.lean"
+        ],
+        "container_id": "e8fea06aeeb7fb2ceadb5d1f5383f0e9c2c20cb5784e6241de331f42f483e420",
+        "create_exit": 0,
+        "route_exit": 0,
+        "container_exit": 0,
+        "elapsed_ms": 412,
+        "stdout": {
+          "bytes": 1120,
+          "sha256": "a6ce0c2d4c3564c5ee18f1126fb92a68dc2e89090b67fe67c22a2e8bce785e51",
+          "text": "{\n  \"route\": \"SDK invokeTool\",\n  \"request\": {\n    \"tool\": \"lean4\",\n    \"operation\": \"check\",\n    \"settings\": {\n      \"input\": \"/fixtures/pos.lean\"\n    },\n    \"timeoutS\": 120,\n    \"cwd\": \"/tmp\"\n  },\n  \"result\": {\n    \"schema\": \"formal-tools/tool-execution/1\",\n    \"tool_id\": \"lean4\",\n    \"operation\": \"check\",\n    \"invocation\": {\n      \"entry\": \"lean\",\n      \"args\": [\n        \"/fixtures/pos.lean\"\n      ],\n      \"mode\": \"typed\"\n    },\n    \"process\": {\n      \"run_status\": \"EXECUTED\",\n      \"status\": \"EXIT_ZERO\",\n      \"exit_code\": 0,\n      \"signal\": null,\n      \"elapsed_ms\": 162,\n      \"timed_out\": false,\n      \"output_truncated\": false,\n      \"error\": null\n    },\n    \"tool_status\": \"UNPARSED\",\n    \"streams\": {\n      \"stdout\": {\n        \"text\": \"\",\n        \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n      },\n      \"stderr\": {\n        \"text\": \"\",\n        \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n      }\n    },\n    \"artifacts\": {\n      \"status\": \"NOT_COLLECTED\",\n      \"items\": []\n    },\n    \"scope\": \"UPSTREAM_TOOL_TECHNICAL_RESULT_ONLY\"\n  }\n}\n"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text": ""
+        },
+        "container_inspect_sha256": "046cd54f4dc3b7d71644dc1ad318657185e6341245dda53edba3b3ca93bb66a0",
+        "isolation": {
+          "image": "formal-tools:deb13-r0",
+          "image_id": "sha256:cd0df1dab4ce3bda042eb4145616b28996ee5937bfdb54e0613cd28db662fdfb",
+          "user": "65534:65534",
+          "network_mode": "none",
+          "readonly_rootfs": true,
+          "cpuset_cpus": "0",
+          "memory_bytes": 4294967296,
+          "memory_swap_bytes": 4294967296,
+          "pids_limit": 256,
+          "cap_drop": [
+            "ALL"
+          ],
+          "security_opt": [
+            "no-new-privileges"
+          ],
+          "mounts": [
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/source",
+              "destination": "/src",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4",
+              "destination": "/pkg/tools/lean4",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/fixtures",
+              "destination": "/fixtures",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/drivers",
+              "destination": "/drivers",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/node-runtime/node-v24.21.0-linux-x64",
+              "destination": "/opt/node",
+              "read_write": false
+            }
+          ]
+        }
+      },
+      "neg": {
+        "command_argv": [
+          "node",
+          "/drivers/sdk-driver.mjs",
+          "/fixtures/neg.lean"
+        ],
+        "container_id": "d9c43c783dab50b7e079ecdb13fbca599fb644244dc097a84278200ff9a5d6a0",
+        "create_exit": 0,
+        "route_exit": 0,
+        "container_exit": 0,
+        "elapsed_ms": 409,
+        "stdout": {
+          "bytes": 1393,
+          "sha256": "a28b987b874805673347ba0f2f2c953ea45bd68499566268b58aa6eaa699148d",
+          "text": "{\n  \"route\": \"SDK invokeTool\",\n  \"request\": {\n    \"tool\": \"lean4\",\n    \"operation\": \"check\",\n    \"settings\": {\n      \"input\": \"/fixtures/neg.lean\"\n    },\n    \"timeoutS\": 120,\n    \"cwd\": \"/tmp\"\n  },\n  \"result\": {\n    \"schema\": \"formal-tools/tool-execution/1\",\n    \"tool_id\": \"lean4\",\n    \"operation\": \"check\",\n    \"invocation\": {\n      \"entry\": \"lean\",\n      \"args\": [\n        \"/fixtures/neg.lean\"\n      ],\n      \"mode\": \"typed\"\n    },\n    \"process\": {\n      \"run_status\": \"EXECUTED\",\n      \"status\": \"NONZERO_EXIT\",\n      \"exit_code\": 1,\n      \"signal\": null,\n      \"elapsed_ms\": 166,\n      \"timed_out\": false,\n      \"output_truncated\": false,\n      \"error\": null\n    },\n    \"tool_status\": \"UNPARSED\",\n    \"streams\": {\n      \"stdout\": {\n        \"text\": \"/fixtures/neg.lean:2:0: error: Not a definitional equality: the left-hand side\\n  1 + 1\\nis not definitionally equal to the right-hand side\\n  3\\n/fixtures/neg.lean:2:29: error: Type mismatch\\n  rfl\\nhas type\\n  ?m.16 = ?m.16\\nbut is expected to have type\\n  1 + 1 = 3\\n\",\n        \"sha256\": \"1dcbf5028bd7f3705568df8f47f6fed03d63a59cadc9a0652a08be5456c63035\"\n      },\n      \"stderr\": {\n        \"text\": \"\",\n        \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n      }\n    },\n    \"artifacts\": {\n      \"status\": \"NOT_COLLECTED\",\n      \"items\": []\n    },\n    \"scope\": \"UPSTREAM_TOOL_TECHNICAL_RESULT_ONLY\"\n  }\n}\n"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text": ""
+        },
+        "container_inspect_sha256": "3a1ad8692b6b964c22532b31c46c1a5c0f85c4712a4ce8238cca27d246190a79",
+        "isolation": {
+          "image": "formal-tools:deb13-r0",
+          "image_id": "sha256:cd0df1dab4ce3bda042eb4145616b28996ee5937bfdb54e0613cd28db662fdfb",
+          "user": "65534:65534",
+          "network_mode": "none",
+          "readonly_rootfs": true,
+          "cpuset_cpus": "0",
+          "memory_bytes": 4294967296,
+          "memory_swap_bytes": 4294967296,
+          "pids_limit": 256,
+          "cap_drop": [
+            "ALL"
+          ],
+          "security_opt": [
+            "no-new-privileges"
+          ],
+          "mounts": [
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/node-runtime/node-v24.21.0-linux-x64",
+              "destination": "/opt/node",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/source",
+              "destination": "/src",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4",
+              "destination": "/pkg/tools/lean4",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/fixtures",
+              "destination": "/fixtures",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/drivers",
+              "destination": "/drivers",
+              "read_write": false
+            }
+          ]
+        }
+      },
+      "observed": {
+        "pos_native_exit": 0,
+        "neg_native_exit": 1,
+        "neg_diagnostic": "Type mismatch"
+      }
+    },
+    "mcp": {
+      "route": "actual locked-dependency stdio initialize/tools/list/tools.call run_formal_fixture",
+      "pos_neg": {
+        "command_argv": [
+          "node",
+          "/drivers/mcp-driver.mjs"
+        ],
+        "container_id": "e1eb1a959757ab35c0a194aeb4f584d0f2b3abc176dcac4129231565bc7a8541",
+        "create_exit": 0,
+        "route_exit": 0,
+        "container_exit": 0,
+        "elapsed_ms": 1087,
+        "stdout": {
+          "bytes": 35558,
+          "sha256": "ca3f3963efaf5fb37b7ee7d07fb74a2256eec3a07183e034383dbf0e7c8a2220",
+          "text": "{\n  \"route\": \"MCP stdio run_formal_fixture\",\n  \"initialize\": {\n    \"result\": {\n      \"protocolVersion\": \"2025-06-18\",\n      \"capabilities\": {\n        \"tools\": {\n          \"listChanged\": true\n        }\n      },\n      \"serverInfo\": {\n        \"name\": \"formal-tools-skill\",\n        \"version\": \"0.4.0\"\n      }\n    },\n    \"jsonrpc\": \"2.0\",\n    \"id\": 1\n  },\n  \"tools_list\": {\n    \"result\": {\n      \"tools\": [\n        {\n          \"name\": \"list_formal_tools\",\n          \"description\": \"List original 13 native adapters, 23 candidate portfolio tools, and 4 pure JS model checkers.\",\n          \"inputSchema\": {\n            \"type\": \"object\",\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n            \"properties\": {}\n          }\n        },\n        {\n          \"name\": \"validate_formal_source\",\n          \"description\": \"Validate Skill names and repository inputs; does NOT run proof engines.\",\n          \"inputSchema\": {\n            \"type\": \"object\",\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n            \"properties\": {}\n          }\n        },\n        {\n          \"name\": \"inspect_formal_tool\",\n          \"description\": \"Describe registered native tool usage and positive/negative fixture expectations.\",\n          \"inputSchema\": {\n            \"type\": \"object\",\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n            \"properties\": {\n              \"tool\": {\n                \"type\": \"string\"\n              }\n            },\n            \"required\": [\n              \"tool\"\n            ]\n          }\n        },\n        {\n          \"name\": \"probe_formal_tool\",\n          \"description\": \"Attempt a tool --version/--help via Node process, not a theorem proof.\",\n          \"inputSchema\": {\n            \"type\": \"object\",\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n            \"properties\": {\n              \"tool\": {\n                \"type\": \"string\"\n              },\n              \"timeout_s\": {\n                \"default\": 15,\n                \"type\": \"integer\",\n                \"minimum\": 1,\n                \"maximum\": 120\n              }\n            },\n            \"required\": [\n              \"tool\"\n            ]\n          }\n        },\n        {\n          \"name\": \"run_formal_fixture\",\n          \"description\": \"Execute a fixed, committed tool fixture, not arbitrary shell or user code.\",\n          \"inputSchema\": {\n            \"type\": \"object\",\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n            \"properties\": {\n              \"tool\": {\n                \"type\": \"string\"\n              },\n              \"case\": {\n                \"type\": \"string\",\n                \"enum\": [\n                  \"positive\",\n                  \"negative\"\n                ]\n              },\n              \"timeout_s\": {\n                \"default\": 30,\n                \"type\": \"integer\",\n                \"minimum\": 1,\n                \"maximum\": 120\n              }\n            },\n            \"required\": [\n              \"tool\",\n              \"case\"\n            ]\n          }\n        },\n        {\n          \"name\": \"describe_native_cli\",\n          \"description\": \"Describe a tool and its named CLI operations, without executing anything.\",\n          \"inputSchema\": {\n            \"type\": \"object\",\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n            \"properties\": {\n              \"tool\": {\n                \"type\": \"string\"\n              }\n            },\n            \"required\": [\n              \"tool\"\n            ]\n          }\n        },\n        {\n          \"name\": \"inspect_native_installation\",\n          \"description\": \"Read-only installed executable/JAR discovery and missing dependency diagnostics. Does NOT launch native tools.\",\n          \"inputSchema\": {\n            \"type\": \"object\",\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n            \"properties\": {\n              \"tool\": {\n                \"type\": \"string\"\n              }\n            },\n            \"required\": [\n              \"tool\"\n            ]\n          }\n        },\n        {\n          \"name\": \"plan_native_cli\",\n          \"description\": \"Validate native CLI option values, return planned argv; NO execution and NO raw passthrough.\",\n          \"inputSchema\": {\n            \"type\": \"object\",\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n            \"properties\": {\n              \"tool\": {\n                \"type\": \"string\"\n              },\n              \"operation\": {\n                \"type\": \"string\",\n                \"minLength\": 1\n              },\n              \"settings\": {\n                \"default\": {},\n                \"type\": \"object\",\n                \"propertyNames\": {\n                  \"type\": \"string\"\n                },\n                \"additionalProperties\": {\n                  \"type\": [\n                    \"string\",\n                    \"number\",\n                    \"boolean\"\n                  ]\n                }\n              }\n            },\n            \"required\": [\n              \"tool\",\n              \"operation\"\n            ]\n          }\n        },\n        {\n          \"name\": \"list_portfolio_tools\",\n          \"description\": \"Read-only capability and tool metadata for all 36 tools. Never implies a T3/T4/T5 PASS.\",\n          \"inputSchema\": {\n            \"type\": \"object\",\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n            \"properties\": {}\n          }\n        },\n        {\n          \"name\": \"inspect_portfolio_tool\",\n          \"description\": \"Read-only pinned portable installation metadata; no process launch.\",\n          \"inputSchema\": {\n            \"type\": \"object\",\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n            \"properties\": {\n              \"tool\": {\n                \"type\": \"string\"\n              }\n            },\n            \"required\": [\n              \"tool\"\n            ]\n          }\n        },\n        {\n          \"name\": \"verify_portable_fixture\",\n          \"description\": \"Run ONLY the candidate tool's committed portable pos/neg/err fixture through a SHA-pinned runner. No user input/raw argv/shell. Technical evidence only, not business verification.\",\n          \"inputSchema\": {\n            \"type\": \"object\",\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n            \"properties\": {\n              \"tool\": {\n                \"type\": \"string\"\n              },\n              \"timeout_s\": {\n                \"default\": 120,\n                \"type\": \"integer\",\n                \"minimum\": 1,\n                \"maximum\": 120\n              }\n            },\n            \"required\": [\n              \"tool\"\n            ]\n          }\n        },\n        {\n          \"name\": \"run_portfolio_operation\",\n          \"description\": \"Run a registered typed candidate operation through the shared portfolio Runner. Currently only Highs 1.15.1 solve-lp is admitted; accepts a bounded LP model, never raw argv, shell, script path or arbitrary file input.\",\n          \"inputSchema\": {\n            \"type\": \"object\",\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n            \"properties\": {\n              \"tool\": {\n                \"type\": \"string\",\n                \"const\": \"highs\"\n              },\n              \"operation\": {\n                \"type\": \"string\",\n                \"const\": \"solve-lp\"\n              },\n              \"model\": {\n                \"type\": \"object\",\n                \"properties\": {\n                  \"sense\": {\n                    \"type\": \"string\",\n                    \"enum\": [\n                      \"min\",\n                      \"max\"\n                    ]\n                  },\n                  \"objective\": {\n                    \"minItems\": 1,\n                    \"maxItems\": 64,\n                    \"type\": \"array\",\n                    \"items\": {\n                      \"type\": \"number\"\n                    }\n                  },\n                  \"variables\": {\n                    \"minItems\": 1,\n                    \"maxItems\": 64,\n                    \"type\": \"array\",\n                    \"items\": {\n                      \"type\": \"object\",\n                      \"properties\": {\n                        \"lower\": {\n                          \"type\": [\n                            \"number\",\n                            \"null\"\n                          ]\n                        },\n                        \"upper\": {\n                          \"type\": [\n                            \"number\",\n                            \"null\"\n                          ]\n                        }\n                      },\n                      \"required\": [\n                        \"lower\",\n                        \"upper\"\n                      ],\n                      \"additionalProperties\": false\n                    }\n                  },\n                  \"constraints\": {\n                    \"maxItems\": 128,\n                    \"type\": \"array\",\n                    \"items\": {\n                      \"type\": \"object\",\n                      \"properties\": {\n                        \"lower\": {\n                          \"type\": [\n                            \"number\",\n                            \"null\"\n                          ]\n                        },\n                        \"upper\": {\n                          \"type\": [\n                            \"number\",\n                            \"null\"\n                          ]\n                        },\n                        \"coefficients\": {\n                          \"maxItems\": 64,\n                          \"type\": \"array\",\n                          \"items\": {\n                            \"type\": \"number\"\n                          }\n                        }\n                      },\n                      \"required\": [\n                        \"lower\",\n                        \"upper\",\n                        \"coefficients\"\n                      ],\n                      \"additionalProperties\": false\n                    }\n                  }\n                },\n                \"required\": [\n                  \"sense\",\n                  \"objective\",\n                  \"variables\",\n                  \"constraints\"\n                ],\n                \"additionalProperties\": false\n              },\n              \"timeout_s\": {\n                \"default\": 30,\n                \"type\": \"integer\",\n                \"minimum\": 1,\n                \"maximum\": 30\n              }\n            },\n            \"required\": [\n              \"tool\",\n              \"operation\",\n              \"model\"\n            ],\n            \"additionalProperties\": false\n          }\n        },\n        {\n          \"name\": \"verify_formal_model\",\n          \"description\": \"Run real finite-model checks in pure JS: DAG, writer exclusivity, CNF or finite state.\",\n          \"inputSchema\": {\n            \"type\": \"object\",\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n            \"properties\": {\n              \"engine\": {\n                \"type\": \"string\",\n                \"enum\": [\n                  \"dag\",\n                  \"writers\",\n                  \"cnf\",\n                  \"states\"\n                ]\n              },\n              \"model\": {\n                \"type\": \"object\",\n                \"propertyNames\": {\n                  \"type\": \"string\"\n                },\n                \"additionalProperties\": {}\n              }\n            },\n            \"required\": [\n              \"engine\",\n              \"model\"\n            ]\n          }\n        }\n      ]\n    },\n    \"jsonrpc\": \"2.0\",\n    \"id\": 2\n  },\n  \"positive\": {\n    \"response\": {\n      \"result\": {\n        \"content\": [\n          {\n            \"type\": \"text\",\n            \"text\": \"{\\\"tool\\\":\\\"lean4\\\",\\\"case\\\":\\\"positive\\\",\\\"run_status\\\":\\\"EXECUTED\\\",\\\"tool_outcome\\\":\\\"PROVED\\\",\\\"test_verdict\\\":\\\"PASS\\\",\\\"claim_verdict\\\":\\\"NOT_EVALUATED\\\",\\\"input_sha256\\\":{\\\"Negative.lean\\\":\\\"b2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986\\\",\\\"Positive.lean\\\":\\\"42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821\\\"},\\\"executions\\\":[{\\\"argv\\\":[\\\"/pkg/tools/lean4/bin/lean\\\",\\\"/tmp/formal-js-gXTK5G/examples/Positive.lean\\\"],\\\"exit_code\\\":0,\\\"signal\\\":null,\\\"elapsed_ms\\\":185,\\\"timed_out\\\":false,\\\"stdout\\\":\\\"\\\",\\\"stderr\\\":\\\"\\\",\\\"stdout_sha256\\\":\\\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\\\",\\\"stderr_sha256\\\":\\\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\\\",\\\"error\\\":null,\\\"output_truncated\\\":false}],\\\"scope\\\":\\\"committed fixture only; not a proof of a project requirement\\\"}\"\n          }\n        ]\n      },\n      \"jsonrpc\": \"2.0\",\n      \"id\": 3\n    },\n    \"receipt\": {\n      \"tool\": \"lean4\",\n      \"case\": \"positive\",\n      \"run_status\": \"EXECUTED\",\n      \"tool_outcome\": \"PROVED\",\n      \"test_verdict\": \"PASS\",\n      \"claim_verdict\": \"NOT_EVALUATED\",\n      \"input_sha256\": {\n        \"Negative.lean\": \"b2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986\",\n        \"Positive.lean\": \"42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821\"\n      },\n      \"executions\": [\n        {\n          \"argv\": [\n            \"/pkg/tools/lean4/bin/lean\",\n            \"/tmp/formal-js-gXTK5G/examples/Positive.lean\"\n          ],\n          \"exit_code\": 0,\n          \"signal\": null,\n          \"elapsed_ms\": 185,\n          \"timed_out\": false,\n          \"stdout\": \"\",\n          \"stderr\": \"\",\n          \"stdout_sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n          \"stderr_sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n          \"error\": null,\n          \"output_truncated\": false\n        }\n      ],\n      \"scope\": \"committed fixture only; not a proof of a project requirement\"\n    }\n  },\n  \"negative\": {\n    \"response\": {\n      \"result\": {\n        \"content\": [\n          {\n            \"type\": \"text\",\n            \"text\": \"{\\\"tool\\\":\\\"lean4\\\",\\\"case\\\":\\\"negative\\\",\\\"run_status\\\":\\\"EXECUTED\\\",\\\"tool_outcome\\\":\\\"REJECTED\\\",\\\"test_verdict\\\":\\\"PASS\\\",\\\"claim_verdict\\\":\\\"NOT_EVALUATED\\\",\\\"input_sha256\\\":{\\\"Negative.lean\\\":\\\"b2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986\\\",\\\"Positive.lean\\\":\\\"42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821\\\"},\\\"executions\\\":[{\\\"argv\\\":[\\\"/pkg/tools/lean4/bin/lean\\\",\\\"/tmp/formal-js-E5ywdk/examples/Negative.lean\\\"],\\\"exit_code\\\":1,\\\"signal\\\":null,\\\"elapsed_ms\\\":187,\\\"timed_out\\\":false,\\\"stdout\\\":\\\"/tmp/formal-js-E5ywdk/examples/Negative.lean:1:47: error: unsolved goals\\\\nn : Nat\\\\n⊢ False\\\\n\\\",\\\"stderr\\\":\\\"\\\",\\\"stdout_sha256\\\":\\\"a953f8f975588fa2d89b9af5e02fe7a0e3f314848add4606cb733bc4de7f95e1\\\",\\\"stderr_sha256\\\":\\\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\\\",\\\"error\\\":null,\\\"output_truncated\\\":false}],\\\"scope\\\":\\\"committed fixture only; not a proof of a project requirement\\\"}\"\n          }\n        ]\n      },\n      \"jsonrpc\": \"2.0\",\n      \"id\": 4\n    },\n    \"receipt\": {\n      \"tool\": \"lean4\",\n      \"case\": \"negative\",\n      \"run_status\": \"EXECUTED\",\n      \"tool_outcome\": \"REJECTED\",\n      \"test_verdict\": \"PASS\",\n      \"claim_verdict\": \"NOT_EVALUATED\",\n      \"input_sha256\": {\n        \"Negative.lean\": \"b2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986\",\n        \"Positive.lean\": \"42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821\"\n      },\n      \"executions\": [\n        {\n          \"argv\": [\n            \"/pkg/tools/lean4/bin/lean\",\n            \"/tmp/formal-js-E5ywdk/examples/Negative.lean\"\n          ],\n          \"exit_code\": 1,\n          \"signal\": null,\n          \"elapsed_ms\": 187,\n          \"timed_out\": false,\n          \"stdout\": \"/tmp/formal-js-E5ywdk/examples/Negative.lean:1:47: error: unsolved goals\\nn : Nat\\n⊢ False\\n\",\n          \"stderr\": \"\",\n          \"stdout_sha256\": \"a953f8f975588fa2d89b9af5e02fe7a0e3f314848add4606cb733bc4de7f95e1\",\n          \"stderr_sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n          \"error\": null,\n          \"output_truncated\": false\n        }\n      ],\n      \"scope\": \"committed fixture only; not a proof of a project requirement\"\n    }\n  },\n  \"raw_streams\": {\n    \"client_stdout\": \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"method\\\":\\\"initialize\\\",\\\"params\\\":{\\\"protocolVersion\\\":\\\"2025-06-18\\\",\\\"capabilities\\\":{},\\\"clientInfo\\\":{\\\"name\\\":\\\"lean4-r23-local-stdio\\\",\\\"version\\\":\\\"1.0.0\\\"}}}\\n{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"method\\\":\\\"notifications/initialized\\\",\\\"params\\\":{}}\\n{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":2,\\\"method\\\":\\\"tools/list\\\",\\\"params\\\":{}}\\n{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":3,\\\"method\\\":\\\"tools/call\\\",\\\"params\\\":{\\\"name\\\":\\\"run_formal_fixture\\\",\\\"arguments\\\":{\\\"tool\\\":\\\"lean4\\\",\\\"case\\\":\\\"positive\\\",\\\"timeout_s\\\":120}}}\\n{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":4,\\\"method\\\":\\\"tools/call\\\",\\\"params\\\":{\\\"name\\\":\\\"run_formal_fixture\\\",\\\"arguments\\\":{\\\"tool\\\":\\\"lean4\\\",\\\"case\\\":\\\"negative\\\",\\\"timeout_s\\\":120}}}\\n\",\n    \"server_stdout\": \"{\\\"result\\\":{\\\"protocolVersion\\\":\\\"2025-06-18\\\",\\\"capabilities\\\":{\\\"tools\\\":{\\\"listChanged\\\":true}},\\\"serverInfo\\\":{\\\"name\\\":\\\"formal-tools-skill\\\",\\\"version\\\":\\\"0.4.0\\\"}},\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1}\\n{\\\"result\\\":{\\\"tools\\\":[{\\\"name\\\":\\\"list_formal_tools\\\",\\\"description\\\":\\\"List original 13 native adapters, 23 candidate portfolio tools, and 4 pure JS model checkers.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{}}},{\\\"name\\\":\\\"validate_formal_source\\\",\\\"description\\\":\\\"Validate Skill names and repository inputs; does NOT run proof engines.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{}}},{\\\"name\\\":\\\"inspect_formal_tool\\\",\\\"description\\\":\\\"Describe registered native tool usage and positive/negative fixture expectations.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"tool\\\":{\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"tool\\\"]}},{\\\"name\\\":\\\"probe_formal_tool\\\",\\\"description\\\":\\\"Attempt a tool --version/--help via Node process, not a theorem proof.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"tool\\\":{\\\"type\\\":\\\"string\\\"},\\\"timeout_s\\\":{\\\"default\\\":15,\\\"type\\\":\\\"integer\\\",\\\"minimum\\\":1,\\\"maximum\\\":120}},\\\"required\\\":[\\\"tool\\\"]}},{\\\"name\\\":\\\"run_formal_fixture\\\",\\\"description\\\":\\\"Execute a fixed, committed tool fixture, not arbitrary shell or user code.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"tool\\\":{\\\"type\\\":\\\"string\\\"},\\\"case\\\":{\\\"type\\\":\\\"string\\\",\\\"enum\\\":[\\\"positive\\\",\\\"negative\\\"]},\\\"timeout_s\\\":{\\\"default\\\":30,\\\"type\\\":\\\"integer\\\",\\\"minimum\\\":1,\\\"maximum\\\":120}},\\\"required\\\":[\\\"tool\\\",\\\"case\\\"]}},{\\\"name\\\":\\\"describe_native_cli\\\",\\\"description\\\":\\\"Describe a tool and its named CLI operations, without executing anything.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"tool\\\":{\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"tool\\\"]}},{\\\"name\\\":\\\"inspect_native_installation\\\",\\\"description\\\":\\\"Read-only installed executable/JAR discovery and missing dependency diagnostics. Does NOT launch native tools.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"tool\\\":{\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"tool\\\"]}},{\\\"name\\\":\\\"plan_native_cli\\\",\\\"description\\\":\\\"Validate native CLI option values, return planned argv; NO execution and NO raw passthrough.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"tool\\\":{\\\"type\\\":\\\"string\\\"},\\\"operation\\\":{\\\"type\\\":\\\"string\\\",\\\"minLength\\\":1},\\\"settings\\\":{\\\"default\\\":{},\\\"type\\\":\\\"object\\\",\\\"propertyNames\\\":{\\\"type\\\":\\\"string\\\"},\\\"additionalProperties\\\":{\\\"type\\\":[\\\"string\\\",\\\"number\\\",\\\"boolean\\\"]}}},\\\"required\\\":[\\\"tool\\\",\\\"operation\\\"]}},{\\\"name\\\":\\\"list_portfolio_tools\\\",\\\"description\\\":\\\"Read-only capability and tool metadata for all 36 tools. Never implies a T3/T4/T5 PASS.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{}}},{\\\"name\\\":\\\"inspect_portfolio_tool\\\",\\\"description\\\":\\\"Read-only pinned portable installation metadata; no process launch.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"tool\\\":{\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"tool\\\"]}},{\\\"name\\\":\\\"verify_portable_fixture\\\",\\\"description\\\":\\\"Run ONLY the candidate tool's committed portable pos/neg/err fixture through a SHA-pinned runner. No user input/raw argv/shell. Technical evidence only, not business verification.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"tool\\\":{\\\"type\\\":\\\"string\\\"},\\\"timeout_s\\\":{\\\"default\\\":120,\\\"type\\\":\\\"integer\\\",\\\"minimum\\\":1,\\\"maximum\\\":120}},\\\"required\\\":[\\\"tool\\\"]}},{\\\"name\\\":\\\"run_portfolio_operation\\\",\\\"description\\\":\\\"Run a registered typed candidate operation through the shared portfolio Runner. Currently only Highs 1.15.1 solve-lp is admitted; accepts a bounded LP model, never raw argv, shell, script path or arbitrary file input.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"tool\\\":{\\\"type\\\":\\\"string\\\",\\\"const\\\":\\\"highs\\\"},\\\"operation\\\":{\\\"type\\\":\\\"string\\\",\\\"const\\\":\\\"solve-lp\\\"},\\\"model\\\":{\\\"type\\\":\\\"object\\\",\\\"properties\\\":{\\\"sense\\\":{\\\"type\\\":\\\"string\\\",\\\"enum\\\":[\\\"min\\\",\\\"max\\\"]},\\\"objective\\\":{\\\"minItems\\\":1,\\\"maxItems\\\":64,\\\"type\\\":\\\"array\\\",\\\"items\\\":{\\\"type\\\":\\\"number\\\"}},\\\"variables\\\":{\\\"minItems\\\":1,\\\"maxItems\\\":64,\\\"type\\\":\\\"array\\\",\\\"items\\\":{\\\"type\\\":\\\"object\\\",\\\"properties\\\":{\\\"lower\\\":{\\\"type\\\":[\\\"number\\\",\\\"null\\\"]},\\\"upper\\\":{\\\"type\\\":[\\\"number\\\",\\\"null\\\"]}},\\\"required\\\":[\\\"lower\\\",\\\"upper\\\"],\\\"additionalProperties\\\":false}},\\\"constraints\\\":{\\\"maxItems\\\":128,\\\"type\\\":\\\"array\\\",\\\"items\\\":{\\\"type\\\":\\\"object\\\",\\\"properties\\\":{\\\"lower\\\":{\\\"type\\\":[\\\"number\\\",\\\"null\\\"]},\\\"upper\\\":{\\\"type\\\":[\\\"number\\\",\\\"null\\\"]},\\\"coefficients\\\":{\\\"maxItems\\\":64,\\\"type\\\":\\\"array\\\",\\\"items\\\":{\\\"type\\\":\\\"number\\\"}}},\\\"required\\\":[\\\"lower\\\",\\\"upper\\\",\\\"coefficients\\\"],\\\"additionalProperties\\\":false}}},\\\"required\\\":[\\\"sense\\\",\\\"objective\\\",\\\"variables\\\",\\\"constraints\\\"],\\\"additionalProperties\\\":false},\\\"timeout_s\\\":{\\\"default\\\":30,\\\"type\\\":\\\"integer\\\",\\\"minimum\\\":1,\\\"maximum\\\":30}},\\\"required\\\":[\\\"tool\\\",\\\"operation\\\",\\\"model\\\"],\\\"additionalProperties\\\":false}},{\\\"name\\\":\\\"verify_formal_model\\\",\\\"description\\\":\\\"Run real finite-model checks in pure JS: DAG, writer exclusivity, CNF or finite state.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"engine\\\":{\\\"type\\\":\\\"string\\\",\\\"enum\\\":[\\\"dag\\\",\\\"writers\\\",\\\"cnf\\\",\\\"states\\\"]},\\\"model\\\":{\\\"type\\\":\\\"object\\\",\\\"propertyNames\\\":{\\\"type\\\":\\\"string\\\"},\\\"additionalProperties\\\":{}}},\\\"required\\\":[\\\"engine\\\",\\\"model\\\"]}}]},\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":2}\\n{\\\"result\\\":{\\\"content\\\":[{\\\"type\\\":\\\"text\\\",\\\"text\\\":\\\"{\\\\\\\"tool\\\\\\\":\\\\\\\"lean4\\\\\\\",\\\\\\\"case\\\\\\\":\\\\\\\"positive\\\\\\\",\\\\\\\"run_status\\\\\\\":\\\\\\\"EXECUTED\\\\\\\",\\\\\\\"tool_outcome\\\\\\\":\\\\\\\"PROVED\\\\\\\",\\\\\\\"test_verdict\\\\\\\":\\\\\\\"PASS\\\\\\\",\\\\\\\"claim_verdict\\\\\\\":\\\\\\\"NOT_EVALUATED\\\\\\\",\\\\\\\"input_sha256\\\\\\\":{\\\\\\\"Negative.lean\\\\\\\":\\\\\\\"b2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986\\\\\\\",\\\\\\\"Positive.lean\\\\\\\":\\\\\\\"42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821\\\\\\\"},\\\\\\\"executions\\\\\\\":[{\\\\\\\"argv\\\\\\\":[\\\\\\\"/pkg/tools/lean4/bin/lean\\\\\\\",\\\\\\\"/tmp/formal-js-gXTK5G/examples/Positive.lean\\\\\\\"],\\\\\\\"exit_code\\\\\\\":0,\\\\\\\"signal\\\\\\\":null,\\\\\\\"elapsed_ms\\\\\\\":185,\\\\\\\"timed_out\\\\\\\":false,\\\\\\\"stdout\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"stderr\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"stdout_sha256\\\\\\\":\\\\\\\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\\\\\\\",\\\\\\\"stderr_sha256\\\\\\\":\\\\\\\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\\\\\\\",\\\\\\\"error\\\\\\\":null,\\\\\\\"output_truncated\\\\\\\":false}],\\\\\\\"scope\\\\\\\":\\\\\\\"committed fixture only; not a proof of a project requirement\\\\\\\"}\\\"}]},\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":3}\\n{\\\"result\\\":{\\\"content\\\":[{\\\"type\\\":\\\"text\\\",\\\"text\\\":\\\"{\\\\\\\"tool\\\\\\\":\\\\\\\"lean4\\\\\\\",\\\\\\\"case\\\\\\\":\\\\\\\"negative\\\\\\\",\\\\\\\"run_status\\\\\\\":\\\\\\\"EXECUTED\\\\\\\",\\\\\\\"tool_outcome\\\\\\\":\\\\\\\"REJECTED\\\\\\\",\\\\\\\"test_verdict\\\\\\\":\\\\\\\"PASS\\\\\\\",\\\\\\\"claim_verdict\\\\\\\":\\\\\\\"NOT_EVALUATED\\\\\\\",\\\\\\\"input_sha256\\\\\\\":{\\\\\\\"Negative.lean\\\\\\\":\\\\\\\"b2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986\\\\\\\",\\\\\\\"Positive.lean\\\\\\\":\\\\\\\"42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821\\\\\\\"},\\\\\\\"executions\\\\\\\":[{\\\\\\\"argv\\\\\\\":[\\\\\\\"/pkg/tools/lean4/bin/lean\\\\\\\",\\\\\\\"/tmp/formal-js-E5ywdk/examples/Negative.lean\\\\\\\"],\\\\\\\"exit_code\\\\\\\":1,\\\\\\\"signal\\\\\\\":null,\\\\\\\"elapsed_ms\\\\\\\":187,\\\\\\\"timed_out\\\\\\\":false,\\\\\\\"stdout\\\\\\\":\\\\\\\"/tmp/formal-js-E5ywdk/examples/Negative.lean:1:47: error: unsolved goals\\\\\\\\nn : Nat\\\\\\\\n⊢ False\\\\\\\\n\\\\\\\",\\\\\\\"stderr\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"stdout_sha256\\\\\\\":\\\\\\\"a953f8f975588fa2d89b9af5e02fe7a0e3f314848add4606cb733bc4de7f95e1\\\\\\\",\\\\\\\"stderr_sha256\\\\\\\":\\\\\\\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\\\\\\\",\\\\\\\"error\\\\\\\":null,\\\\\\\"output_truncated\\\\\\\":false}],\\\\\\\"scope\\\\\\\":\\\\\\\"committed fixture only; not a proof of a project requirement\\\\\\\"}\\\"}]},\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":4}\\n\",\n    \"server_stderr\": \"\",\n    \"sha256\": {\n      \"client_stdout\": \"a2ae98cbd33c10084ecd4bc7686912200cea1b39da91776176df47a5b0eb4626\",\n      \"server_stdout\": \"3374935f59d9bdeacf1e48d950494a715084d5cbdcc1cd2967b7dbeeba9dd2fb\",\n      \"server_stderr\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n    }\n  },\n  \"transcript\": [\n    {\n      \"direction\": \"client-to-server\",\n      \"raw\": \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"method\\\":\\\"initialize\\\",\\\"params\\\":{\\\"protocolVersion\\\":\\\"2025-06-18\\\",\\\"capabilities\\\":{},\\\"clientInfo\\\":{\\\"name\\\":\\\"lean4-r23-local-stdio\\\",\\\"version\\\":\\\"1.0.0\\\"}}}\"\n    },\n    {\n      \"direction\": \"server-to-client\",\n      \"raw\": \"{\\\"result\\\":{\\\"protocolVersion\\\":\\\"2025-06-18\\\",\\\"capabilities\\\":{\\\"tools\\\":{\\\"listChanged\\\":true}},\\\"serverInfo\\\":{\\\"name\\\":\\\"formal-tools-skill\\\",\\\"version\\\":\\\"0.4.0\\\"}},\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1}\"\n    },\n    {\n      \"direction\": \"client-to-server\",\n      \"raw\": \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"method\\\":\\\"notifications/initialized\\\",\\\"params\\\":{}}\"\n    },\n    {\n      \"direction\": \"client-to-server\",\n      \"raw\": \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":2,\\\"method\\\":\\\"tools/list\\\",\\\"params\\\":{}}\"\n    },\n    {\n      \"direction\": \"server-to-client\",\n      \"raw\": \"{\\\"result\\\":{\\\"tools\\\":[{\\\"name\\\":\\\"list_formal_tools\\\",\\\"description\\\":\\\"List original 13 native adapters, 23 candidate portfolio tools, and 4 pure JS model checkers.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{}}},{\\\"name\\\":\\\"validate_formal_source\\\",\\\"description\\\":\\\"Validate Skill names and repository inputs; does NOT run proof engines.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{}}},{\\\"name\\\":\\\"inspect_formal_tool\\\",\\\"description\\\":\\\"Describe registered native tool usage and positive/negative fixture expectations.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"tool\\\":{\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"tool\\\"]}},{\\\"name\\\":\\\"probe_formal_tool\\\",\\\"description\\\":\\\"Attempt a tool --version/--help via Node process, not a theorem proof.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"tool\\\":{\\\"type\\\":\\\"string\\\"},\\\"timeout_s\\\":{\\\"default\\\":15,\\\"type\\\":\\\"integer\\\",\\\"minimum\\\":1,\\\"maximum\\\":120}},\\\"required\\\":[\\\"tool\\\"]}},{\\\"name\\\":\\\"run_formal_fixture\\\",\\\"description\\\":\\\"Execute a fixed, committed tool fixture, not arbitrary shell or user code.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"tool\\\":{\\\"type\\\":\\\"string\\\"},\\\"case\\\":{\\\"type\\\":\\\"string\\\",\\\"enum\\\":[\\\"positive\\\",\\\"negative\\\"]},\\\"timeout_s\\\":{\\\"default\\\":30,\\\"type\\\":\\\"integer\\\",\\\"minimum\\\":1,\\\"maximum\\\":120}},\\\"required\\\":[\\\"tool\\\",\\\"case\\\"]}},{\\\"name\\\":\\\"describe_native_cli\\\",\\\"description\\\":\\\"Describe a tool and its named CLI operations, without executing anything.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"tool\\\":{\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"tool\\\"]}},{\\\"name\\\":\\\"inspect_native_installation\\\",\\\"description\\\":\\\"Read-only installed executable/JAR discovery and missing dependency diagnostics. Does NOT launch native tools.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"tool\\\":{\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"tool\\\"]}},{\\\"name\\\":\\\"plan_native_cli\\\",\\\"description\\\":\\\"Validate native CLI option values, return planned argv; NO execution and NO raw passthrough.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"tool\\\":{\\\"type\\\":\\\"string\\\"},\\\"operation\\\":{\\\"type\\\":\\\"string\\\",\\\"minLength\\\":1},\\\"settings\\\":{\\\"default\\\":{},\\\"type\\\":\\\"object\\\",\\\"propertyNames\\\":{\\\"type\\\":\\\"string\\\"},\\\"additionalProperties\\\":{\\\"type\\\":[\\\"string\\\",\\\"number\\\",\\\"boolean\\\"]}}},\\\"required\\\":[\\\"tool\\\",\\\"operation\\\"]}},{\\\"name\\\":\\\"list_portfolio_tools\\\",\\\"description\\\":\\\"Read-only capability and tool metadata for all 36 tools. Never implies a T3/T4/T5 PASS.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{}}},{\\\"name\\\":\\\"inspect_portfolio_tool\\\",\\\"description\\\":\\\"Read-only pinned portable installation metadata; no process launch.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"tool\\\":{\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"tool\\\"]}},{\\\"name\\\":\\\"verify_portable_fixture\\\",\\\"description\\\":\\\"Run ONLY the candidate tool's committed portable pos/neg/err fixture through a SHA-pinned runner. No user input/raw argv/shell. Technical evidence only, not business verification.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"tool\\\":{\\\"type\\\":\\\"string\\\"},\\\"timeout_s\\\":{\\\"default\\\":120,\\\"type\\\":\\\"integer\\\",\\\"minimum\\\":1,\\\"maximum\\\":120}},\\\"required\\\":[\\\"tool\\\"]}},{\\\"name\\\":\\\"run_portfolio_operation\\\",\\\"description\\\":\\\"Run a registered typed candidate operation through the shared portfolio Runner. Currently only Highs 1.15.1 solve-lp is admitted; accepts a bounded LP model, never raw argv, shell, script path or arbitrary file input.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"tool\\\":{\\\"type\\\":\\\"string\\\",\\\"const\\\":\\\"highs\\\"},\\\"operation\\\":{\\\"type\\\":\\\"string\\\",\\\"const\\\":\\\"solve-lp\\\"},\\\"model\\\":{\\\"type\\\":\\\"object\\\",\\\"properties\\\":{\\\"sense\\\":{\\\"type\\\":\\\"string\\\",\\\"enum\\\":[\\\"min\\\",\\\"max\\\"]},\\\"objective\\\":{\\\"minItems\\\":1,\\\"maxItems\\\":64,\\\"type\\\":\\\"array\\\",\\\"items\\\":{\\\"type\\\":\\\"number\\\"}},\\\"variables\\\":{\\\"minItems\\\":1,\\\"maxItems\\\":64,\\\"type\\\":\\\"array\\\",\\\"items\\\":{\\\"type\\\":\\\"object\\\",\\\"properties\\\":{\\\"lower\\\":{\\\"type\\\":[\\\"number\\\",\\\"null\\\"]},\\\"upper\\\":{\\\"type\\\":[\\\"number\\\",\\\"null\\\"]}},\\\"required\\\":[\\\"lower\\\",\\\"upper\\\"],\\\"additionalProperties\\\":false}},\\\"constraints\\\":{\\\"maxItems\\\":128,\\\"type\\\":\\\"array\\\",\\\"items\\\":{\\\"type\\\":\\\"object\\\",\\\"properties\\\":{\\\"lower\\\":{\\\"type\\\":[\\\"number\\\",\\\"null\\\"]},\\\"upper\\\":{\\\"type\\\":[\\\"number\\\",\\\"null\\\"]},\\\"coefficients\\\":{\\\"maxItems\\\":64,\\\"type\\\":\\\"array\\\",\\\"items\\\":{\\\"type\\\":\\\"number\\\"}}},\\\"required\\\":[\\\"lower\\\",\\\"upper\\\",\\\"coefficients\\\"],\\\"additionalProperties\\\":false}}},\\\"required\\\":[\\\"sense\\\",\\\"objective\\\",\\\"variables\\\",\\\"constraints\\\"],\\\"additionalProperties\\\":false},\\\"timeout_s\\\":{\\\"default\\\":30,\\\"type\\\":\\\"integer\\\",\\\"minimum\\\":1,\\\"maximum\\\":30}},\\\"required\\\":[\\\"tool\\\",\\\"operation\\\",\\\"model\\\"],\\\"additionalProperties\\\":false}},{\\\"name\\\":\\\"verify_formal_model\\\",\\\"description\\\":\\\"Run real finite-model checks in pure JS: DAG, writer exclusivity, CNF or finite state.\\\",\\\"inputSchema\\\":{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"engine\\\":{\\\"type\\\":\\\"string\\\",\\\"enum\\\":[\\\"dag\\\",\\\"writers\\\",\\\"cnf\\\",\\\"states\\\"]},\\\"model\\\":{\\\"type\\\":\\\"object\\\",\\\"propertyNames\\\":{\\\"type\\\":\\\"string\\\"},\\\"additionalProperties\\\":{}}},\\\"required\\\":[\\\"engine\\\",\\\"model\\\"]}}]},\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":2}\"\n    },\n    {\n      \"direction\": \"client-to-server\",\n      \"raw\": \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":3,\\\"method\\\":\\\"tools/call\\\",\\\"params\\\":{\\\"name\\\":\\\"run_formal_fixture\\\",\\\"arguments\\\":{\\\"tool\\\":\\\"lean4\\\",\\\"case\\\":\\\"positive\\\",\\\"timeout_s\\\":120}}}\"\n    },\n    {\n      \"direction\": \"server-to-client\",\n      \"raw\": \"{\\\"result\\\":{\\\"content\\\":[{\\\"type\\\":\\\"text\\\",\\\"text\\\":\\\"{\\\\\\\"tool\\\\\\\":\\\\\\\"lean4\\\\\\\",\\\\\\\"case\\\\\\\":\\\\\\\"positive\\\\\\\",\\\\\\\"run_status\\\\\\\":\\\\\\\"EXECUTED\\\\\\\",\\\\\\\"tool_outcome\\\\\\\":\\\\\\\"PROVED\\\\\\\",\\\\\\\"test_verdict\\\\\\\":\\\\\\\"PASS\\\\\\\",\\\\\\\"claim_verdict\\\\\\\":\\\\\\\"NOT_EVALUATED\\\\\\\",\\\\\\\"input_sha256\\\\\\\":{\\\\\\\"Negative.lean\\\\\\\":\\\\\\\"b2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986\\\\\\\",\\\\\\\"Positive.lean\\\\\\\":\\\\\\\"42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821\\\\\\\"},\\\\\\\"executions\\\\\\\":[{\\\\\\\"argv\\\\\\\":[\\\\\\\"/pkg/tools/lean4/bin/lean\\\\\\\",\\\\\\\"/tmp/formal-js-gXTK5G/examples/Positive.lean\\\\\\\"],\\\\\\\"exit_code\\\\\\\":0,\\\\\\\"signal\\\\\\\":null,\\\\\\\"elapsed_ms\\\\\\\":185,\\\\\\\"timed_out\\\\\\\":false,\\\\\\\"stdout\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"stderr\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"stdout_sha256\\\\\\\":\\\\\\\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\\\\\\\",\\\\\\\"stderr_sha256\\\\\\\":\\\\\\\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\\\\\\\",\\\\\\\"error\\\\\\\":null,\\\\\\\"output_truncated\\\\\\\":false}],\\\\\\\"scope\\\\\\\":\\\\\\\"committed fixture only; not a proof of a project requirement\\\\\\\"}\\\"}]},\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":3}\"\n    },\n    {\n      \"direction\": \"client-to-server\",\n      \"raw\": \"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":4,\\\"method\\\":\\\"tools/call\\\",\\\"params\\\":{\\\"name\\\":\\\"run_formal_fixture\\\",\\\"arguments\\\":{\\\"tool\\\":\\\"lean4\\\",\\\"case\\\":\\\"negative\\\",\\\"timeout_s\\\":120}}}\"\n    },\n    {\n      \"direction\": \"server-to-client\",\n      \"raw\": \"{\\\"result\\\":{\\\"content\\\":[{\\\"type\\\":\\\"text\\\",\\\"text\\\":\\\"{\\\\\\\"tool\\\\\\\":\\\\\\\"lean4\\\\\\\",\\\\\\\"case\\\\\\\":\\\\\\\"negative\\\\\\\",\\\\\\\"run_status\\\\\\\":\\\\\\\"EXECUTED\\\\\\\",\\\\\\\"tool_outcome\\\\\\\":\\\\\\\"REJECTED\\\\\\\",\\\\\\\"test_verdict\\\\\\\":\\\\\\\"PASS\\\\\\\",\\\\\\\"claim_verdict\\\\\\\":\\\\\\\"NOT_EVALUATED\\\\\\\",\\\\\\\"input_sha256\\\\\\\":{\\\\\\\"Negative.lean\\\\\\\":\\\\\\\"b2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986\\\\\\\",\\\\\\\"Positive.lean\\\\\\\":\\\\\\\"42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821\\\\\\\"},\\\\\\\"executions\\\\\\\":[{\\\\\\\"argv\\\\\\\":[\\\\\\\"/pkg/tools/lean4/bin/lean\\\\\\\",\\\\\\\"/tmp/formal-js-E5ywdk/examples/Negative.lean\\\\\\\"],\\\\\\\"exit_code\\\\\\\":1,\\\\\\\"signal\\\\\\\":null,\\\\\\\"elapsed_ms\\\\\\\":187,\\\\\\\"timed_out\\\\\\\":false,\\\\\\\"stdout\\\\\\\":\\\\\\\"/tmp/formal-js-E5ywdk/examples/Negative.lean:1:47: error: unsolved goals\\\\\\\\nn : Nat\\\\\\\\n⊢ False\\\\\\\\n\\\\\\\",\\\\\\\"stderr\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"stdout_sha256\\\\\\\":\\\\\\\"a953f8f975588fa2d89b9af5e02fe7a0e3f314848add4606cb733bc4de7f95e1\\\\\\\",\\\\\\\"stderr_sha256\\\\\\\":\\\\\\\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\\\\\\\",\\\\\\\"error\\\\\\\":null,\\\\\\\"output_truncated\\\\\\\":false}],\\\\\\\"scope\\\\\\\":\\\\\\\"committed fixture only; not a proof of a project requirement\\\\\\\"}\\\"}]},\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":4}\"\n    }\n  ],\n  \"failure\": null\n}\n"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "text": ""
+        },
+        "container_inspect_sha256": "c3fa8627152df5d8df544fde4e7efcc75eb9bb3c730dd54c26458008e9c8063d",
+        "isolation": {
+          "image": "formal-tools:deb13-r0",
+          "image_id": "sha256:cd0df1dab4ce3bda042eb4145616b28996ee5937bfdb54e0613cd28db662fdfb",
+          "user": "65534:65534",
+          "network_mode": "none",
+          "readonly_rootfs": true,
+          "cpuset_cpus": "0",
+          "memory_bytes": 4294967296,
+          "memory_swap_bytes": 4294967296,
+          "pids_limit": 256,
+          "cap_drop": [
+            "ALL"
+          ],
+          "security_opt": [
+            "no-new-privileges"
+          ],
+          "mounts": [
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/drivers",
+              "destination": "/drivers",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/node-runtime/node-v24.21.0-linux-x64",
+              "destination": "/opt/node",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/source",
+              "destination": "/src",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/evidence/r2/unpack/tools/lean4",
+              "destination": "/pkg/tools/lean4",
+              "read_write": false
+            },
+            {
+              "type": "bind",
+              "source": "/home/cc/formal-tools-build/out/i24-r23-lean4/work/fixtures",
+              "destination": "/fixtures",
+              "read_write": false
+            }
+          ]
+        }
+      },
+      "initialize": {
+        "result": {
+          "protocolVersion": "2025-06-18",
+          "capabilities": {
+            "tools": {
+              "listChanged": true
+            }
+          },
+          "serverInfo": {
+            "name": "formal-tools-skill",
+            "version": "0.4.0"
+          }
+        },
+        "jsonrpc": "2.0",
+        "id": 1
+      },
+      "pos": {
+        "test_verdict": "PASS",
+        "tool_outcome": "PROVED",
+        "native_exit": 0
+      },
+      "neg": {
+        "test_verdict": "PASS",
+        "tool_outcome": "REJECTED",
+        "native_exit": 1
+      },
+      "err_coverage": "NOT_APPLICABLE_TO_NATIVE_MCP_FIXTURE_API; exact Runner ERR=1 raw receipt included above"
+    }
+  },
+  "harness_attempts": {
+    "attempt_1": {
+      "result": "NO_NATIVE_PROCESS_STARTED; harness passed timeout value 240 as image name",
+      "create_exit": 1,
+      "raw_create_stderr": {
+        "bytes": 275,
+        "sha256": "01a60c06ed1cea49cdec0cc730f0560e6d43cb6765ca7fd598b8ee2c98cd39e8",
+        "text": "Unable to find image '240:latest' locally\nError response from daemon: unknown: failed to resolve reference \"docker.io/library/240:latest\": unexpected status from HEAD request to https://a4zgbzne.mirror.aliyuncs.com/v2/library/240/manifests/latest?ns=docker.io: 403 Forbidden\n"
+      }
+    },
+    "attempt_2": {
+      "result": "CLI/SDK/MCP completed; Runner direct entrypoint launch denied because exact Git blob mode is 100644",
+      "runner_verify_stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "text": ""
+      },
+      "runner_verify_stderr": {
+        "bytes": 255,
+        "sha256": "9d7be0d3bcd6b10d55e01f33f93e089005cee26b75342febb5d141e5851efe68",
+        "text": "Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: \"/bundle/bin/tool-runner\": permission denied\n"
+      },
+      "runner_verify_container_exit": 126
+    },
+    "attempt_3": {
+      "result": "Runner doctor/version passed; verify internal direct re-exec still used non-executable staged copy",
+      "runner_verify_stdout": {
+        "bytes": 307,
+        "sha256": "9b8f0e46b46a23dd9278ccd4caed608c2233934f6f26b7517a09ad146a010488",
+        "text": "   lean4/pos: exit=126 dur=1ms matched=0 exit_ok=0 label=PROVED (log: /evidence/verify-lean4.pos.log)\n   lean4/neg: exit=126 dur=2ms matched=0 exit_ok=0 label=REJECTED (log: /evidence/verify-lean4.neg.log)\n   lean4/err: exit=126 dur=2ms matched=0 exit_ok=0 label=ERROR (log: /evidence/verify-lean4.err.log)\n"
+      },
+      "runner_verify_stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "text": ""
+      },
+      "raw_tsv": {
+        "bytes": 142,
+        "sha256": "b91004f57fc7073632a036d231bc65b65194213baa876f4722628702a84154c1",
+        "text": "runner_schema\tformal-tools/portable-verify/0.2\nlean4\tpos\t126\t1\t0\t0\tPROVED\nlean4\tneg\t126\t2\t0\t0\tREJECTED\nlean4\terr\t126\t2\t0\t0\tERROR\nverdict\tFAIL\n"
+      },
+      "raw_logs": {
+        "pos": {
+          "bytes": 105,
+          "sha256": "0f7c2aee2e7055c2a2786beb829fe7b807d846123ceb01e54f95703cec8f2964",
+          "text": "timeout: failed to run command '/bundle/bin/tool-runner': Permission denied\n\nPHASE_DONE phase=pos rc=126\n"
+        },
+        "neg": {
+          "bytes": 105,
+          "sha256": "7c7b1c8a1adc80a7dfae98b20df4d96831033149e8ac4008f645ae8788206f0d",
+          "text": "timeout: failed to run command '/bundle/bin/tool-runner': Permission denied\n\nPHASE_DONE phase=neg rc=126\n"
+        },
+        "err": {
+          "bytes": 105,
+          "sha256": "37996133c2facf5c124838bbb55fbb0efa65c0a1fd19d22e9b431c5d32c1f807",
+          "text": "timeout: failed to run command '/bundle/bin/tool-runner': Permission denied\n\nPHASE_DONE phase=err rc=126\n"
+        }
+      }
+    },
+    "final_repair": "Runner-only retries used bash for outer entrypoint and chmod 755 on the temporary staged copy for internal re-exec; source content SHA unchanged; successful CLI/SDK/MCP routes were not rerun"
+  },
+  "raw_receipt_manifest": {
+    "bytes": 22950,
+    "sha256": "13a6f0b689c88842c4259055ca4516e6335ddaac7a95e89dbcc1dae79186b09d",
+    "text": "d3f2d938b41d44fc701b1f3fbffc576c4e4e14f58875c77e97092d11f7bf774d  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/archive.bytes\n3f6825995abae4463a7a2aab558ac3e220b94db1edbe9d601f0f10bd72f31406  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/archive.sha256\n53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-neg.container-exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-neg.container-exit.stderr\n537c5510cb8fec05b95cfa1eb454260173e8504784ad3802319076636996fb28  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-neg.container-id\n0922dcdfa5a4438c8bb86d571f74bf2e5450dcd6b6155129826a3604c0067aa2  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-neg.container.json\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-neg.create.exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-neg.create.stderr\nd9b20b28a0211a35ba67763dfe4a00b21713d095d8d9c7555481b9be58cdd4ee  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-neg.elapsed_ms\n53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-neg.exit\n37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-neg.preexisting.json\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-neg.rm.stderr\nc4c9a65913631fe3ff7149b3fbe5d3a9381f8466e50167b60fe9265f7def100d  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-neg.rm.stdout\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-neg.stderr\n2c1406e52cda3b1d5bb25a39520c5967a4212e69c88cf6aae3d724ac95bd4513  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-neg.stdout\nd69f9b65e459bafd47f8d69296df979994377d0207df6a38c43c3e5dac9cad3d  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-neg.streams.sha256\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-pos.container-exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-pos.container-exit.stderr\n3f84de8d74ccef570362ede74e9c6331f8637e3f14d87e460a21667b6f4f2b86  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-pos.container-id\neefb11007ca9d48bf6889186fe08d05f7c5b167ed9757fdd3c3f62896d67f199  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-pos.container.json\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-pos.create.exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-pos.create.stderr\n4412dc0cc63c66905a7c748c5588685126b477ce7f06e8ac98575dc2a39e9f0b  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-pos.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-pos.exit\n37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-pos.preexisting.json\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-pos.rm.stderr\nf74b79b91afaf8a1f55f395c19bbc3095cdf7bc424a75c9aea8d1faff4061b3c  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-pos.rm.stdout\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-pos.stderr\n60df2573e71517bd382e0faed7b929d1b7cdad9a902bccb489e9b70b83042ac3  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-pos.stdout\ne4fca1b5bf2a736752c453a65a2ece86c4876d7cc0d26ee205c2606d9aa10e99  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/cli-pos.streams.sha256\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/environment.container-exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/environment.container-exit.stderr\nfa176069e20b18961f50ad32d42042aafedceec2b345b8d0f86a8cd4378e4e93  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/environment.container-id\n058c90b3c551244834115c02ca081645f344562d29755213cb14ff64b4eed3fe  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/environment.container.json\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/environment.create.exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/environment.create.stderr\n1aa83693581f2099056913d741c22dc62aaa199cd727b0a20f91206e9a7e0421  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/environment.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/environment.exit\n37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/environment.preexisting.json\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/environment.rm.stderr\nfe385a1fa4146ee955d2df55bb3051837e692853b5d28e5118cb01c5d96b28c2  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/environment.rm.stdout\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/environment.stderr\n3258947986672d1625f29788764b8ccfbd6a1540395af2bc560594b9b1754ddd  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/environment.stdout\neebb6efc5dfc0d84b1838b32f6faa1a829a2ecb4677593d7bf77c5041e305190  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/environment.streams.sha256\n7c6e651ff7c3f20c0262845c4bfc3d243d80bee3fc6cef9cd772eeeafaa8df8e  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/execution-inputs.sha256\n769b81e8220cd1c4840c1f436107972440b28a6fb821f04dc49a4690aa2dd345  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/incoming.sha256\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/mcp-pos-neg.container-exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/mcp-pos-neg.container-exit.stderr\n148aa5955853114fe5e49f98491d6f8837c8522dc3132daa890d83496397a1c9  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/mcp-pos-neg.container-id\nc3fa8627152df5d8df544fde4e7efcc75eb9bb3c730dd54c26458008e9c8063d  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/mcp-pos-neg.container.json\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/mcp-pos-neg.create.exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/mcp-pos-neg.create.stderr\nd7f5356d457c7c85a2e547db4abd3cdd815853dee42aba0f76228810b233631d  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/mcp-pos-neg.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/mcp-pos-neg.exit\n37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/mcp-pos-neg.preexisting.json\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/mcp-pos-neg.rm.stderr\n14b68395bf6202dc7601603e7bbbc95094bc62f22f3be47d429b50c0dace2f3f  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/mcp-pos-neg.rm.stdout\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/mcp-pos-neg.stderr\nca3f3963efaf5fb37b7ee7d07fb74a2256eec3a07183e034383dbf0e7c8a2220  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/mcp-pos-neg.stdout\n5b0cfd05e994fa0cafb2b1d615ebaf11359449ec5d7f0755c606c33b9fcbcc21  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/mcp-pos-neg.streams.sha256\nf2ec568164f99546161909b0189b57bb5be3e80f8e2ccd8a51a4aed8c4055a04  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/node-version.txt\n916640f664ac4ccb4c5f470d8036fdcb31abfe7cdbd77e19a1bd0541eff4cc4c  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/npm-ci.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/npm-ci.exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/npm-ci.stderr\n306a3b502010a029bc1156a5b1e4a1d737d481e404b138430de4f948c9503242  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/npm-ci.stdout\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/npm-ls-mcp.exit\nc1b3d01e4605d6b456ef3304da787e98d5578d8f709a5d3e06aa1c83ae50c51c  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/npm-ls-mcp.json\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/npm-ls-mcp.stderr\nc9c15cf6914233de76c50f516f06db9251ad9189849ac0f7e2855b6e58acd5e7  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/overlay.check\n51c04a93c9d2fb3c7782d066d521f85072c70eb14f61c2b21c2a47d5108ba6cb  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/package.after.sha256\n51c04a93c9d2fb3c7782d066d521f85072c70eb14f61c2b21c2a47d5108ba6cb  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/package.before.sha256\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/package-unchanged.exit\na551ea2b3bc9d76ec99827360a1a233f736fc278253673a9af9e88cb58def5df  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/parts.sha256\neaff4546c7247233836bde1e67617e856543edbebfc6551782212679ad30712d  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/parts.sizes\n9d135535870b2358153499213be650a92aa06bef7bdfeef4fdf01fdf2fdc1c5e  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/reassembly.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/reassembly.exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/reassembly.stderr\nbf6a4d580cb931dc7bb626f762e5bd6bfe967487ae09e40c52ebe9f87a43e476  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/reassembly.stdout\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-doctor.container-exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-doctor.container-exit.stderr\n0a1ef16fba300cf023502bfd9b9e16d8b73284b0addb8963599620a03c430977  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-doctor.container-id\n516cc4d14a47ce7369ea9e2eb89ecea62da3afa850777e7fbe0e68362e715f73  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-doctor.container.json\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-doctor.create.exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-doctor.create.stderr\n994fecfc7c11f6a13916d0677c228e5829c12832fd126848163169611d1effd5  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-doctor.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-doctor.exit\n37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-doctor.preexisting.json\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-doctor.rm.stderr\n8f9d3b7bfadb71eb5c79593b39910c283942085b2cdcd32388cd98d37da4c942  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-doctor.rm.stdout\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-doctor.stderr\n806767e8a4803426ea649931f118b5225a9f86fdb79bc698d45aeaf28a263e29  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-doctor.stdout\n778de98c70f3c0fd00c17d648bbfbc69efe409051a9b15a3f78a86e5326eb267  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-doctor.streams.sha256\n89c22c764139d153af6494b39e353e573b4ff53128cca9b06282ae75fb34a796  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-fs/verify-lean4.err.log\necb8ea1ff9158431ee510ba68026a97d4a4e5b0e531a8afe89832a29b0ba2e0c  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-fs/verify-lean4.neg.log\n9b1196c08c82bfeae21b9d1da2a76e4981cc1407f162da5ca4f26367bdf0b531  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-fs/verify-lean4.pos.log\n81c1237b99c39b5cbdcd0f5e70b51119491b0591ed30151f7cc124d04aba4974  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-fs/verify-lean4.tsv\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-verify.container-exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-verify.container-exit.stderr\nd3d4676469ded8f4f066ea2a84a76692f4c1369aa35a87cb908e12148c077312  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-verify.container-id\n33f94ebd59f4042a8e7b21e7184f5b1cf7934a86defc70af24184ce1c5fa7bdc  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-verify.container.json\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-verify.create.exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-verify.create.stderr\n6026e5df09632311c90e3d6915e5699be3bc83964fbbeaf46411036cfc974797  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-verify.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-verify.exit\n37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-verify.preexisting.json\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-verify.rm.stderr\nabb31f1fdd8bcbd48fddcc19c5c4639533be8398604b9f42a328ddd519b5a123  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-verify.rm.stdout\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-verify.stderr\n69f3d7e8185f4327cf45db062fec92be92e237f8fcad8372a4fca9d712937947  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-verify.stdout\n9339e7f1e81f7a22b1d1264e985f799e07070afe68e7a858d7faa3344d92b162  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-verify.streams.sha256\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-version.container-exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-version.container-exit.stderr\nf076d8162e1d017f0895ed939d445518d6e121cea0b50a22096756f547b6c136  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-version.container-id\n4876af2a9cf0ca496e9603757a1095055458f30b3cc9e9aa146922a9ca7b9327  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-version.container.json\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-version.create.exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-version.create.stderr\n9aa042a9dcc1b35c12d7d5e9c7a9dfc9a6d4ef5110ce357db712d1b997e92e27  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-version.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-version.exit\n37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-version.preexisting.json\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-version.rm.stderr\n52998dd40cbf3a0f3eec11cd0ea75d361c2f44114fee4cb7c629b93376b74251  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-version.rm.stdout\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-version.stderr\nf48470253831b2f801d2100759fd9cc5023fb2b232858ff6a1af9d519a080594  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-version.stdout\n400a9e87b37dfb782c6556a5712eaa7ef3c9eed7b615fa0f31787feec5b0fd21  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/runner-version.streams.sha256\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-neg.container-exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-neg.container-exit.stderr\nb68190c67b1761f07dea400e338bcd1efb5e8cb837b800392798bdefd7c2e211  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-neg.container-id\n3a1ad8692b6b964c22532b31c46c1a5c0f85c4712a4ce8238cca27d246190a79  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-neg.container.json\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-neg.create.exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-neg.create.stderr\n4e82b8d46948a1768cd8b1d5ccd617d1912a5065c4c545b3476b75906974d959  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-neg.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-neg.exit\n37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-neg.preexisting.json\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-neg.rm.stderr\nb3490c1497e15f5e5e2e833d5f592a63c7b9298c0bc8ee0627ca869275f45b1d  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-neg.rm.stdout\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-neg.stderr\na28b987b874805673347ba0f2f2c953ea45bd68499566268b58aa6eaa699148d  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-neg.stdout\n526036b260ee86b06f3b34c7d92ad25111c12a3aa18fd02e318b20fa5731a24a  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-neg.streams.sha256\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-pos.container-exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-pos.container-exit.stderr\nbdb5f048c759ca5ac2089f73b5f41571b208b41ef39924776753d499d14bbe84  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-pos.container-id\n046cd54f4dc3b7d71644dc1ad318657185e6341245dda53edba3b3ca93bb66a0  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-pos.container.json\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-pos.create.exit\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-pos.create.stderr\ndaac118eb32e8b601372264b7267bfcb587bd62ee3d1ea2bb2fa5844dbb1ac53  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-pos.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-pos.exit\n37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-pos.preexisting.json\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-pos.rm.stderr\n78a460e6809ff20d91542fa9b4e5e1bb72b665f9b7b10875c280a2d0309b6e96  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-pos.rm.stdout\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-pos.stderr\na6ce0c2d4c3564c5ee18f1126fb92a68dc2e89090b67fe67c22a2e8bce785e51  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-pos.stdout\nb00a7852d0f7d9d1b7dfa1134d2a7ab792563482d7130434b171a97b07a101d8  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/sdk-pos.streams.sha256\n0fff84863b39e3d023bb7b3049036295507fe2cbaa3b1a98ed55499e1e1887f3  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/tar-preflight.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/tar-preflight.exit\ne79e7d76d26e3844313450838c04da18e40cae0ca5eca6297848f4673c77b2d2  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/tar-preflight.json\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/tar-preflight.stderr\n0c558f4841bf3087093006d861b9f1bc3dfde94e29ad751ec6c13106a86e80fe  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/zstd-test.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/zstd-test.exit\ndbc0ae2ede66c32babb5ee7d528b34148e39f368c5d5fe259475702b95c0f114  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/zstd-test.stderr\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/cc/formal-tools-build/out/i24-r23-lean4/evidence/zstd-test.stdout\n"
+  },
+  "ci": {
+    "exact_main": "5f188dec4c98bb4195619b560b86a210d9c2788e",
+    "woodpecker_pipeline": 1284,
+    "event": "push",
+    "status": "SUCCESS",
+    "branch": "main",
+    "ref": "refs/heads/main",
+    "steps": [
+      {
+        "workflow": "formal-static",
+        "step": "clone",
+        "exit_code": 0
+      },
+      {
+        "workflow": "formal-static",
+        "step": "formal-js-source-and-finite-model",
+        "exit_code": 0
+      }
+    ],
+    "evidence_head_ci": "NOT_RUN; LOCAL_EXECUTION_ONLY receipt is not pushed and no PR was created"
+  },
+  "review": "WAITING_INDEPENDENT_SOURCE_FIRST_REVIEW_BY_ANOTHER_CONVERSATION",
+  "qualification": {
+    "t0": "PASS_SCOPED_ARCHIVE_BYTES_AND_SHA256_MATCH; publisher signature/rights not established",
+    "t1": "NOT_QUALIFIED_REPRODUCIBLE_SOURCE_BUILD",
+    "t2": "PASS_SCOPED_NONROOT_READONLY_ORIGINAL_PACKAGE_NETWORK_NONE",
+    "t3": "PASS_SCOPED_ORIGINAL_LEAN4_EXACT_MAIN_RUNNER_CLI_SDK_MCP_WITH_TEMPORARY_METADATA_OVERLAY; independent review pending",
+    "t4": "NOT_ACCEPTED",
+    "t5": "NOT_ACCEPTED",
+    "t6": "NOT_ACCEPTED",
+    "product_or_release": "NOT_GRANTED"
+  },
+  "blockers": {
+    "execution": [],
+    "acceptance": [
+      "Independent Source-First review by another conversation is still required",
+      "Canonical rebuilt Lean4 package/source rights/reproducible build are not qualified by this original-package execution",
+      "No T4/T5/T6/Product/Release promotion is claimed or signed",
+      "Latest main 0f2141dc includes one disjoint CBMC builder/test commit after the a82b16a sync. The transitive native adapter mismatch remains (17/18 pins match); CLI/SDK/MCP are NOT_RUN on latest main and require local exact-main requalification before any current-main claim."
+    ]
+  },
+  "exclusions": [
+    "No shared Runner/Registry/CLI/MCP/SDK edits",
+    "No original tool archive, parts, extracted package, or #24 ledger edits",
+    "No candidate-only portfolio verify call",
+    "No static-source-only substitution for MCP execution",
+    "No T4/T5/T6/Product/Release signature"
+  ],
+  "concurrent_resume_evidence": {
+    "disposition": "PRESERVED_COMPLETE_CONCURRENT_RECEIPT_AFTER_MTIME_STABILIZED; primary adds missing final Runner POS/NEG/ERR raw bytes and CLI/SDK NEG routes",
+    "observed_sha256": "6d389eacfd0cac9fa8e1ccb98065201ed3ab758cae20ca52d4e43cf598891054",
+    "observed_bytes": 52088,
+    "schema": "formal-tools/lean4-current-main-t4-resume/1.0",
+    "output_label": "FORMAL_TOOLS_I24_LEAN4_R23_CURRENT_MAIN_T4_RESUME",
+    "status": "LOCAL_VALIDATION_PASS_REVIEW_REQUIRED",
+    "receipt": {
+      "schema": "formal-tools/lean4-current-main-t4-resume/1.0",
+      "output_label": "FORMAL_TOOLS_I24_LEAN4_R23_CURRENT_MAIN_T4_RESUME",
+      "status": "LOCAL_VALIDATION_PASS_REVIEW_REQUIRED",
+      "role": "LOCAL_VALIDATION_ONLY",
+      "repository": "kaicreator-mm/formal-tools",
+      "portfolio_issue": 24,
+      "tool_issue": 41,
+      "tool": "lean4",
+      "expected_version": "4.35.0",
+      "exact_main": "5f188dec4c98bb4195619b560b86a210d9c2788e",
+      "exact_source": {
+        "archive": "exact-main-5f188dec.tar.gz",
+        "archive_sha256": "ada2f1ed79ed14039c07451e49332b174b0f4113a33c978352a52b53cda6b5a5",
+        "archive_matches_fresh_git_archive": true,
+        "source_form": "git archive of exact_main; no tracked source edits",
+        "runner_blobs": {
+          "packages/runner/js/cli.mjs": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
+          "packages/runner/js/sdk.mjs": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+          "packages/runner/js/mcp.mjs": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+          "packages/runner/js/native.mjs": "1af7a7db7523985f810e545860000c5d745de0b5",
+          "packages/runner/js/native-catalog.mjs": "02f628947be3e5c270d802be150ab220e14fc2b8"
+        },
+        "runner_sha256": {
+          "packages/runner/js/cli.mjs": "a2fe91f8ddc0968c7fcbf2595839dbf5a82f7880c806342869b98b2e90b89785",
+          "packages/runner/js/sdk.mjs": "cd7c9dd7481f47223bae0ab1d3c35bbb9bf77b5bd5793fcc665ae7d215c11797",
+          "packages/runner/js/mcp.mjs": "d5fbf7a13400ae41f1dea0cde5ba3731745a874070b5895d855e4a5395ef93ea",
+          "packages/runner/js/native.mjs": "ca341cbec148aba17e878317c72e3fb76de5d290f2dbd3e678b4719ce51fde0e",
+          "packages/runner/js/native-catalog.mjs": "2cfd7e2c12cbd5a68150c76f74a6956ad369009b193f9509ccf8976e4adefe4c"
+        },
+        "locked_mcp_dependencies": {
+          "@modelcontextprotocol/server": "2.4.0",
+          "zod": "4.6.7",
+          "npm_ci_exit": 0
+        }
+      },
+      "environment": {
+        "remote_host": "cc@192.168.100.200",
+        "container_image": "formal-tools:deb13-r0",
+        "container_image_id": "sha256:cd0df1dab4ce3bda042eb4145616b28996ee5937bfdb54e0613cd28db662fdfb",
+        "os": "Debian GNU/Linux 13 (trixie) 13.7",
+        "arch": "x86_64",
+        "node": "v24.21.0",
+        "node_archive_sha256": "fd8e59d5a511510f6a298afb548f18c7d2b1be404d8b4a27d94fbe49f56cb2d6",
+        "docker_run_command": "docker run --rm --network none --user 65534:65534 --memory 4g --cpus 4 --pids-limit 512 --cap-drop ALL --security-opt no-new-privileges --read-only --tmpfs /tmp:rw,nosuid,nodev,size=512m,uid=65534,gid=65534,mode=1777 --hostname r23-lean4 -v $BASE/source:/src:ro -v $BASE/work:/work:ro -v $BASE/node-runtime/node-v24.21.0-linux-x64:/node:ro -v $BASE/evidence/current-main-docker:/evidence:rw formal-tools:deb13-r0 bash /work/container-validation.sh",
+        "uid": 65534,
+        "gid": 65534,
+        "network": "none",
+        "memory_bytes": 4294967296,
+        "cpus": 4,
+        "pids_limit": 512,
+        "read_only_rootfs": true,
+        "capabilities": "ALL dropped; no-new-privileges",
+        "tmp": "512 MiB tmpfs mounted at /tmp",
+        "raw_environment": {
+          "command": "sh -c .\\ /etc/os-release\\;\\ printf\\ \\\"os=%s\\\\narch=%s\\\\n\\\"\\ \\\"\\$PRETTY_NAME\\\"\\ \\\"\\$\\(uname\\ -m\\)\\\"\\;\\ id\\;\\ /node/bin/node\\ --version\\;\\ printf\\ \\\"FORMAL_TOOLS_BIN_DIR=%s\\\\n\\\"\\ \\\"\\$FORMAL_TOOLS_BIN_DIR\\\"",
+          "started_at": "2026-11-15T11:49:24Z",
+          "elapsed_ms": 6,
+          "process_exit": 0,
+          "stdout": "os=Debian GNU/Linux 13 (trixie)\narch=x86_64\nuid=65534(nobody) gid=65534(nogroup) groups=65534(nogroup)\nv24.21.0\nFORMAL_TOOLS_BIN_DIR=/opt/formal-tools-portable-debian13-x86_64/tools/lean4/bin\n",
+          "stderr": "",
+          "stdout_sha256": "0bb9981843098321f1117e40926a0a6255071caf7bfd6b4fe72029b25dec9170",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "source_archive": {
+        "name": "lean4-4.35.0-linux-x86_64.tar.zst",
+        "expected_bytes": 567187865,
+        "observed_bytes": 567187865,
+        "expected_sha256": "671b172f8dacc4a7fd405852a2286e7657ec8c4414d301a73ece6f98f39bde62",
+        "observed_sha256": "671b172f8dacc4a7fd405852a2286e7657ec8c4414d301a73ece6f98f39bde62",
+        "transport": "Reused previously fetched fixed-ID parts; no new Drive download was needed in this resumed round.",
+        "parts": [
+          {
+            "part": "00",
+            "drive_file_id": "1zlRToYmGjCSLKkiw8wCHE823wCAEGn4y",
+            "bytes": 134217728,
+            "sha256": "68183dd94719decee26ee1178447ef0a0faa00ac808ddd89582a7ad4605333e3"
+          },
+          {
+            "part": "01",
+            "drive_file_id": "1ZWTKJroti6P7fvPow93cHJ_N3e_85zq3",
+            "bytes": 134217728,
+            "sha256": "d1e0ec8b175786301d65e8217d12037c5fb64028af9c12954b6aa60342c725f0"
+          },
+          {
+            "part": "02",
+            "drive_file_id": "1denol1UHvyNOfHWAHHQxfKs6JCsWnjr5",
+            "bytes": 134217728,
+            "sha256": "bba76f3e53c61fa8db5b45be98083fc6df69a4d42e39daa410b92951795bd234"
+          },
+          {
+            "part": "03",
+            "drive_file_id": "1730NHV9vjtPsLMts5pt1XrjtUlxAYHix",
+            "bytes": 134217728,
+            "sha256": "66f141b838212ba76fa02c70d23688f5058fda7c607fd81b2f868090e5d1d7f8"
+          },
+          {
+            "part": "04",
+            "drive_file_id": "1XSqZj4uwZH915rU5m57JECGwXakuf7E_",
+            "bytes": 30316953,
+            "sha256": "f11ab32e90d368d780393c9120db1b0bee1607565dae5657c063d6651eaefafe"
+          }
+        ],
+        "reassembly": {
+          "exit": 0,
+          "stdout": "{\n  \"status\": \"REASSEMBLED_SHA256_MATCH_ONLY\",\n  \"outputFile\": \"C:\\\\xDev\\\\kAiCreator\\\\_tmp\\\\ft-i24-r23-local-zcode\\\\reassembled\\\\lean4-4.35.0-linux-x86_64.tar.zst\",\n  \"sizeBytes\": 567187865,\n  \"sha256\": \"671b172f8dacc4a7fd405852a2286e7657ec8c4414d301a73ece6f98f39bde62\"\n}\nNEXT: zstd -t, strict tar security preflight, isolated native positive/negative/error runner tests.\n",
+          "stderr": ""
+        },
+        "zstd_test": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": "/mnt/c/xDev/kAiCreator/_tmp/ft-i24-r23-local-zcode/reassembled/lean4-4.35.0-linux-x86_64.tar.zst: 3152281600 bytes \n"
+        },
+        "tar_preflight": {
+          "absolute_names": 0,
+          "directories": 633,
+          "errors": [],
+          "files": 17928,
+          "hardlinks": 0,
+          "members": 18574,
+          "path_traversal_errors": 0,
+          "regular_bytes": 3137938943,
+          "special_files": 0,
+          "status": "PASS",
+          "symlinks": 13,
+          "top_level": [
+            "tools"
+          ]
+        },
+        "extracted_payload": {
+          "disposition": "REUSED_EXISTING_FORMAL_TOOLS_IMAGE_PAYLOAD",
+          "path": "/opt/formal-tools-portable-debian13-x86_64/tools/lean4/bin",
+          "reason": "The requested existing Docker image already contained the exact Lean4 payload; no second extraction was needed.",
+          "lean_sha256": "bf8d54e4714cc4b03d3f6bb34c83b7202b87e49c8bfcbff6895c085bb90ceb38",
+          "lake_sha256": "8ba83c98f76562d03b8dbc33f1057151ba6cbb121679dde76b2260ccc90495e1",
+          "version_stdout": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)\n",
+          "version_execution": {
+            "command": "/opt/formal-tools-portable-debian13-x86_64/tools/lean4/bin/lean --version",
+            "started_at": "2026-11-15T11:49:24Z",
+            "elapsed_ms": 152,
+            "process_exit": 0,
+            "stdout": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)\n",
+            "stderr": "",
+            "stdout_sha256": "eb22144228dd41cd51a0c84af4f976cd0cef473102dcf99b60be756b11f2b95a",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "lake_version_stdout": "Lake version 5.0.0-src+eb6cafb (Lean version 4.35.0)\n",
+          "lake_version_execution": {
+            "command": "/opt/formal-tools-portable-debian13-x86_64/tools/lean4/bin/lake --version",
+            "started_at": "2026-11-15T11:49:24Z",
+            "elapsed_ms": 61,
+            "process_exit": 0,
+            "stdout": "Lake version 5.0.0-src+eb6cafb (Lean version 4.35.0)\n",
+            "stderr": "",
+            "stdout_sha256": "165f92ed239a8c7db772bf5ee9d58c59357b489951582a12c86dc9d8e06b23a2",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "source_binary_hash_check": {
+            "command": "sha256sum -c /work/expected.sha256",
+            "started_at": "2026-11-15T11:49:24Z",
+            "elapsed_ms": 2,
+            "process_exit": 0,
+            "stdout": "/src/packages/runner/js/cli.mjs: OK\n/src/packages/runner/js/sdk.mjs: OK\n/src/packages/runner/js/mcp.mjs: OK\n/src/packages/runner/js/native.mjs: OK\n/src/packages/runner/js/native-catalog.mjs: OK\n/src/skills/lean4/examples/Positive.lean: OK\n/src/skills/lean4/examples/Negative.lean: OK\n/opt/formal-tools-portable-debian13-x86_64/tools/lean4/bin/lean: OK\n/opt/formal-tools-portable-debian13-x86_64/tools/lean4/bin/lake: OK\n",
+            "stderr": "",
+            "stdout_sha256": "cbd50dc7ce660b05f8a477915117d9baea2d18888d7bd540e79cc6ce8bc69001",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "input_hash_check": {
+            "command": "sha256sum /src/skills/lean4/examples/Positive.lean /src/skills/lean4/examples/Negative.lean /evidence/inputs/Positive.lean /evidence/inputs/Negative.lean",
+            "started_at": "2026-11-15T11:49:24Z",
+            "elapsed_ms": 3,
+            "process_exit": 0,
+            "stdout": "42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821  /src/skills/lean4/examples/Positive.lean\nb2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986  /src/skills/lean4/examples/Negative.lean\n42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821  /evidence/inputs/Positive.lean\nb2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986  /evidence/inputs/Negative.lean\n",
+            "stderr": "",
+            "stdout_sha256": "674b510eae6936422ab8b507fe6f1acf524e02a91856eedc6c8ee2355c6756d8",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      },
+      "inputs": {
+        "positive": {
+          "path": "skills/lean4/examples/Positive.lean",
+          "git_blob": "a6793b1eb4f586f6838b03c0ec71ab0462e4b4ce",
+          "sha256": "42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821",
+          "content": "theorem add_zero_demo (n : Nat) : n + 0 = n := by simp\n"
+        },
+        "negative": {
+          "path": "skills/lean4/examples/Negative.lean",
+          "git_blob": "45e1fcfb27f6b23cb7240697f7c2f702f67ed986",
+          "sha256": "b2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986",
+          "content": "theorem add_zero_demo (n : Nat) : n + 1 = n := by simp\n"
+        }
+      },
+      "executions": {
+        "cli_positive": {
+          "command": "/node/bin/node /src/packages/runner/js/cli.mjs exec lean4 check --input /src/skills/lean4/examples/Positive.lean --cwd /tmp --timeout 120",
+          "started_at": "2026-11-15T11:49:24Z",
+          "elapsed_ms": 1058,
+          "process_exit": 0,
+          "stdout": "{\n  \"tool\": \"lean4\",\n  \"operation\": \"check\",\n  \"mode\": \"typed\",\n  \"run_status\": \"EXECUTED\",\n  \"tool_outcome\": \"UNPARSED\",\n  \"process_outcome\": \"EXIT_ZERO\",\n  \"test_verdict\": \"NOT_EVALUATED\",\n  \"claim_verdict\": \"NOT_EVALUATED\",\n  \"note\": \"Native command output only; solver result is not an acceptance verdict\",\n  \"executions\": [\n    {\n      \"argv\": [\n        \"/opt/formal-tools-portable-debian13-x86_64/tools/lean4/bin/lean\",\n        \"/src/skills/lean4/examples/Positive.lean\"\n      ],\n      \"exit_code\": 0,\n      \"signal\": null,\n      \"elapsed_ms\": 1011,\n      \"timed_out\": false,\n      \"stdout\": \"\",\n      \"stderr\": \"\",\n      \"stdout_sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n      \"stderr_sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n      \"error\": null,\n      \"output_truncated\": false\n    }\n  ],\n  \"scope\": \"local native CLI; not an independently validated project claim\"\n}\n",
+          "stderr": "",
+          "stdout_sha256": "1cc0b2062c394354b45a4d80b2b138fe68f2328dc55fde46c8cfe328e4e7b2a8",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "route": "packages/runner/js/cli.mjs exec lean4 check --input",
+          "input": {
+            "path": "skills/lean4/examples/Positive.lean",
+            "git_blob": "a6793b1eb4f586f6838b03c0ec71ab0462e4b4ce",
+            "sha256": "42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821",
+            "content": "theorem add_zero_demo (n : Nat) : n + 0 = n := by simp\n"
+          },
+          "result": {
+            "tool": "lean4",
+            "operation": "check",
+            "mode": "typed",
+            "run_status": "EXECUTED",
+            "tool_outcome": "UNPARSED",
+            "process_outcome": "EXIT_ZERO",
+            "test_verdict": "NOT_EVALUATED",
+            "claim_verdict": "NOT_EVALUATED",
+            "note": "Native command output only; solver result is not an acceptance verdict",
+            "executions": [
+              {
+                "argv": [
+                  "/opt/formal-tools-portable-debian13-x86_64/tools/lean4/bin/lean",
+                  "/src/skills/lean4/examples/Positive.lean"
+                ],
+                "exit_code": 0,
+                "signal": null,
+                "elapsed_ms": 1011,
+                "timed_out": false,
+                "stdout": "",
+                "stderr": "",
+                "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "error": null,
+                "output_truncated": false
+              }
+            ],
+            "scope": "local native CLI; not an independently validated project claim"
+          },
+          "native_exit": 0,
+          "native_stdout": "",
+          "native_stderr": "",
+          "native_stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "native_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "contract_note": "Current-main typed native adapter reports UNPARSED/NOT_EVALUATED even for this exit-zero check; this is not a semantic PROVED claim."
+        },
+        "sdk_positive": {
+          "command": "/node/bin/node /work/sdk-driver.mjs /src/skills/lean4/examples/Positive.lean /evidence",
+          "started_at": "2026-11-15T11:49:25Z",
+          "elapsed_ms": 217,
+          "process_exit": 0,
+          "stdout": "{\n  \"route\": \"SDK invokeTool\",\n  \"request\": {\n    \"tool\": \"lean4\",\n    \"operation\": \"check\",\n    \"settings\": {\n      \"input\": \"/src/skills/lean4/examples/Positive.lean\"\n    },\n    \"timeoutS\": 120,\n    \"cwd\": \"/tmp\"\n  },\n  \"result\": {\n    \"schema\": \"formal-tools/tool-execution/1\",\n    \"tool_id\": \"lean4\",\n    \"operation\": \"check\",\n    \"invocation\": {\n      \"entry\": \"lean\",\n      \"args\": [\n        \"/src/skills/lean4/examples/Positive.lean\"\n      ],\n      \"mode\": \"typed\"\n    },\n    \"process\": {\n      \"run_status\": \"EXECUTED\",\n      \"status\": \"EXIT_ZERO\",\n      \"exit_code\": 0,\n      \"signal\": null,\n      \"elapsed_ms\": 175,\n      \"timed_out\": false,\n      \"output_truncated\": false,\n      \"error\": null\n    },\n    \"tool_status\": \"UNPARSED\",\n    \"streams\": {\n      \"stdout\": {\n        \"text\": \"\",\n        \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n      },\n      \"stderr\": {\n        \"text\": \"\",\n        \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n      }\n    },\n    \"artifacts\": {\n      \"status\": \"NOT_COLLECTED\",\n      \"items\": []\n    },\n    \"scope\": \"UPSTREAM_TOOL_TECHNICAL_RESULT_ONLY\"\n  }\n}\n",
+          "stderr": "",
+          "stdout_sha256": "d6e73889dbc186a230dd0eea642b5ab28208cad40c6975c81f78fb8adfb835ed",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "route": "invokeTool({tool:'lean4',operation:'check',settings:{input}})",
+          "input": {
+            "path": "skills/lean4/examples/Positive.lean",
+            "git_blob": "a6793b1eb4f586f6838b03c0ec71ab0462e4b4ce",
+            "sha256": "42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821",
+            "content": "theorem add_zero_demo (n : Nat) : n + 0 = n := by simp\n"
+          },
+          "request": {
+            "tool": "lean4",
+            "operation": "check",
+            "settings": {
+              "input": "/src/skills/lean4/examples/Positive.lean"
+            },
+            "timeoutS": 120,
+            "cwd": "/tmp"
+          },
+          "result": {
+            "schema": "formal-tools/tool-execution/1",
+            "tool_id": "lean4",
+            "operation": "check",
+            "invocation": {
+              "entry": "lean",
+              "args": [
+                "/src/skills/lean4/examples/Positive.lean"
+              ],
+              "mode": "typed"
+            },
+            "process": {
+              "run_status": "EXECUTED",
+              "status": "EXIT_ZERO",
+              "exit_code": 0,
+              "signal": null,
+              "elapsed_ms": 175,
+              "timed_out": false,
+              "output_truncated": false,
+              "error": null
+            },
+            "tool_status": "UNPARSED",
+            "streams": {
+              "stdout": {
+                "text": "",
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              "stderr": {
+                "text": "",
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              }
+            },
+            "artifacts": {
+              "status": "NOT_COLLECTED",
+              "items": []
+            },
+            "scope": "UPSTREAM_TOOL_TECHNICAL_RESULT_ONLY"
+          },
+          "native_exit": 0,
+          "native_stdout": "",
+          "native_stderr": "",
+          "native_stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "native_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "contract_note": "Current-main SDK normalization reports UNPARSED/NOT_EVALUATED for the exit-zero Lean4 check; no semantic promotion is inferred."
+        },
+        "mcp_stdio": {
+          "command": "/node/bin/node /work/mcp-driver.mjs /evidence",
+          "started_at": "2026-11-15T11:49:25Z",
+          "elapsed_ms": 604,
+          "process_exit": 0,
+          "stdout": "{\n  \"route\": \"MCP stdio run_formal_fixture\",\n  \"positive\": {\n    \"verdict\": \"PASS\",\n    \"outcome\": \"PROVED\",\n    \"native_exit\": 0\n  },\n  \"negative\": {\n    \"verdict\": \"PASS\",\n    \"outcome\": \"REJECTED\",\n    \"native_exit\": 1\n  },\n  \"raw_stream_sha256\": {\n    \"client_stdout\": \"a2ae98cbd33c10084ecd4bc7686912200cea1b39da91776176df47a5b0eb4626\",\n    \"server_stdout\": \"187eb3139ca6364c87151bb14dc894ac870c580d2438274ba947cf8141561fe0\",\n    \"server_stderr\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n  },\n  \"server_exit\": {\n    \"code\": 0,\n    \"signal\": null\n  },\n  \"failure\": null\n}\n",
+          "stderr": "",
+          "stdout_sha256": "afbeaa3c5273642c8bed4ed7353689b394ee9f9bbf6dd20a0b3f07e2bfe13e32",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "route": "real newline-delimited JSON-RPC stdio; tools/call run_formal_fixture positive and negative only",
+          "transport": "spawned /src/packages/runner/js/mcp.mjs with stdin/stdout/stderr pipes; no SDK shortcut",
+          "server": {
+            "name": "formal-tools-skill",
+            "version": "0.4.0"
+          },
+          "protocol_version": "2025-06-18",
+          "server_exit": {
+            "code": 0,
+            "signal": null
+          },
+          "client_stdout": "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{},\"clientInfo\":{\"name\":\"lean4-r23-local-stdio\",\"version\":\"1.0.0\"}}}\n{\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\",\"params\":{}}\n{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/list\",\"params\":{}}\n{\"jsonrpc\":\"2.0\",\"id\":3,\"method\":\"tools/call\",\"params\":{\"name\":\"run_formal_fixture\",\"arguments\":{\"tool\":\"lean4\",\"case\":\"positive\",\"timeout_s\":120}}}\n{\"jsonrpc\":\"2.0\",\"id\":4,\"method\":\"tools/call\",\"params\":{\"name\":\"run_formal_fixture\",\"arguments\":{\"tool\":\"lean4\",\"case\":\"negative\",\"timeout_s\":120}}}\n",
+          "server_stdout": "{\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"tools\":{\"listChanged\":true}},\"serverInfo\":{\"name\":\"formal-tools-skill\",\"version\":\"0.4.0\"}},\"jsonrpc\":\"2.0\",\"id\":1}\n{\"result\":{\"tools\":[{\"name\":\"list_formal_tools\",\"description\":\"List original 13 native adapters, 23 candidate portfolio tools, and 4 pure JS model checkers.\",\"inputSchema\":{\"type\":\"object\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"properties\":{}}},{\"name\":\"validate_formal_source\",\"description\":\"Validate Skill names and repository inputs; does NOT run proof engines.\",\"inputSchema\":{\"type\":\"object\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"properties\":{}}},{\"name\":\"inspect_formal_tool\",\"description\":\"Describe registered native tool usage and positive/negative fixture expectations.\",\"inputSchema\":{\"type\":\"object\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"properties\":{\"tool\":{\"type\":\"string\"}},\"required\":[\"tool\"]}},{\"name\":\"probe_formal_tool\",\"description\":\"Attempt a tool --version/--help via Node process, not a theorem proof.\",\"inputSchema\":{\"type\":\"object\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"properties\":{\"tool\":{\"type\":\"string\"},\"timeout_s\":{\"default\":15,\"type\":\"integer\",\"minimum\":1,\"maximum\":120}},\"required\":[\"tool\"]}},{\"name\":\"run_formal_fixture\",\"description\":\"Execute a fixed, committed tool fixture, not arbitrary shell or user code.\",\"inputSchema\":{\"type\":\"object\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"properties\":{\"tool\":{\"type\":\"string\"},\"case\":{\"type\":\"string\",\"enum\":[\"positive\",\"negative\"]},\"timeout_s\":{\"default\":30,\"type\":\"integer\",\"minimum\":1,\"maximum\":120}},\"required\":[\"tool\",\"case\"]}},{\"name\":\"describe_native_cli\",\"description\":\"Describe a tool and its named CLI operations, without executing anything.\",\"inputSchema\":{\"type\":\"object\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"properties\":{\"tool\":{\"type\":\"string\"}},\"required\":[\"tool\"]}},{\"name\":\"inspect_native_installation\",\"description\":\"Read-only installed executable/JAR discovery and missing dependency diagnostics. Does NOT launch native tools.\",\"inputSchema\":{\"type\":\"object\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"properties\":{\"tool\":{\"type\":\"string\"}},\"required\":[\"tool\"]}},{\"name\":\"plan_native_cli\",\"description\":\"Validate native CLI option values, return planned argv; NO execution and NO raw passthrough.\",\"inputSchema\":{\"type\":\"object\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"properties\":{\"tool\":{\"type\":\"string\"},\"operation\":{\"type\":\"string\",\"minLength\":1},\"settings\":{\"default\":{},\"type\":\"object\",\"propertyNames\":{\"type\":\"string\"},\"additionalProperties\":{\"type\":[\"string\",\"number\",\"boolean\"]}}},\"required\":[\"tool\",\"operation\"]}},{\"name\":\"list_portfolio_tools\",\"description\":\"Read-only capability and tool metadata for all 36 tools. Never implies a T3/T4/T5 PASS.\",\"inputSchema\":{\"type\":\"object\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"properties\":{}}},{\"name\":\"inspect_portfolio_tool\",\"description\":\"Read-only pinned portable installation metadata; no process launch.\",\"inputSchema\":{\"type\":\"object\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"properties\":{\"tool\":{\"type\":\"string\"}},\"required\":[\"tool\"]}},{\"name\":\"verify_portable_fixture\",\"description\":\"Run ONLY the candidate tool's committed portable pos/neg/err fixture through a SHA-pinned runner. No user input/raw argv/shell. Technical evidence only, not business verification.\",\"inputSchema\":{\"type\":\"object\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"properties\":{\"tool\":{\"type\":\"string\"},\"timeout_s\":{\"default\":120,\"type\":\"integer\",\"minimum\":1,\"maximum\":120}},\"required\":[\"tool\"]}},{\"name\":\"run_portfolio_operation\",\"description\":\"Run a registered typed candidate operation through the shared portfolio Runner. Currently only Highs 1.15.1 solve-lp is admitted; accepts a bounded LP model, never raw argv, shell, script path or arbitrary file input.\",\"inputSchema\":{\"type\":\"object\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"properties\":{\"tool\":{\"type\":\"string\",\"const\":\"highs\"},\"operation\":{\"type\":\"string\",\"const\":\"solve-lp\"},\"model\":{\"type\":\"object\",\"properties\":{\"sense\":{\"type\":\"string\",\"enum\":[\"min\",\"max\"]},\"objective\":{\"minItems\":1,\"maxItems\":64,\"type\":\"array\",\"items\":{\"type\":\"number\"}},\"variables\":{\"minItems\":1,\"maxItems\":64,\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"lower\":{\"type\":[\"number\",\"null\"]},\"upper\":{\"type\":[\"number\",\"null\"]}},\"required\":[\"lower\",\"upper\"],\"additionalProperties\":false}},\"constraints\":{\"maxItems\":128,\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"lower\":{\"type\":[\"number\",\"null\"]},\"upper\":{\"type\":[\"number\",\"null\"]},\"coefficients\":{\"maxItems\":64,\"type\":\"array\",\"items\":{\"type\":\"number\"}}},\"required\":[\"lower\",\"upper\",\"coefficients\"],\"additionalProperties\":false}}},\"required\":[\"sense\",\"objective\",\"variables\",\"constraints\"],\"additionalProperties\":false},\"timeout_s\":{\"default\":30,\"type\":\"integer\",\"minimum\":1,\"maximum\":30}},\"required\":[\"tool\",\"operation\",\"model\"],\"additionalProperties\":false}},{\"name\":\"verify_formal_model\",\"description\":\"Run real finite-model checks in pure JS: DAG, writer exclusivity, CNF or finite state.\",\"inputSchema\":{\"type\":\"object\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"properties\":{\"engine\":{\"type\":\"string\",\"enum\":[\"dag\",\"writers\",\"cnf\",\"states\"]},\"model\":{\"type\":\"object\",\"propertyNames\":{\"type\":\"string\"},\"additionalProperties\":{}}},\"required\":[\"engine\",\"model\"]}}]},\"jsonrpc\":\"2.0\",\"id\":2}\n{\"result\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"tool\\\":\\\"lean4\\\",\\\"case\\\":\\\"positive\\\",\\\"run_status\\\":\\\"EXECUTED\\\",\\\"tool_outcome\\\":\\\"PROVED\\\",\\\"test_verdict\\\":\\\"PASS\\\",\\\"claim_verdict\\\":\\\"NOT_EVALUATED\\\",\\\"input_sha256\\\":{\\\"Negative.lean\\\":\\\"b2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986\\\",\\\"Positive.lean\\\":\\\"42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821\\\"},\\\"executions\\\":[{\\\"argv\\\":[\\\"/opt/formal-tools-portable-debian13-x86_64/tools/lean4/bin/lean\\\",\\\"/tmp/formal-js-qDzoyG/examples/Positive.lean\\\"],\\\"exit_code\\\":0,\\\"signal\\\":null,\\\"elapsed_ms\\\":178,\\\"timed_out\\\":false,\\\"stdout\\\":\\\"\\\",\\\"stderr\\\":\\\"\\\",\\\"stdout_sha256\\\":\\\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\\\",\\\"stderr_sha256\\\":\\\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\\\",\\\"error\\\":null,\\\"output_truncated\\\":false}],\\\"scope\\\":\\\"committed fixture only; not a proof of a project requirement\\\"}\"}]},\"jsonrpc\":\"2.0\",\"id\":3}\n{\"result\":{\"content\":[{\"type\":\"text\",\"text\":\"{\\\"tool\\\":\\\"lean4\\\",\\\"case\\\":\\\"negative\\\",\\\"run_status\\\":\\\"EXECUTED\\\",\\\"tool_outcome\\\":\\\"REJECTED\\\",\\\"test_verdict\\\":\\\"PASS\\\",\\\"claim_verdict\\\":\\\"NOT_EVALUATED\\\",\\\"input_sha256\\\":{\\\"Negative.lean\\\":\\\"b2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986\\\",\\\"Positive.lean\\\":\\\"42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821\\\"},\\\"executions\\\":[{\\\"argv\\\":[\\\"/opt/formal-tools-portable-debian13-x86_64/tools/lean4/bin/lean\\\",\\\"/tmp/formal-js-oTNyOU/examples/Negative.lean\\\"],\\\"exit_code\\\":1,\\\"signal\\\":null,\\\"elapsed_ms\\\":204,\\\"timed_out\\\":false,\\\"stdout\\\":\\\"/tmp/formal-js-oTNyOU/examples/Negative.lean:1:47: error: unsolved goals\\\\nn : Nat\\\\n⊢ False\\\\n\\\",\\\"stderr\\\":\\\"\\\",\\\"stdout_sha256\\\":\\\"fe22d866d45527df44ada8e177db81dd4ce0aadd6963b8413f210d6f34b63065\\\",\\\"stderr_sha256\\\":\\\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\\\",\\\"error\\\":null,\\\"output_truncated\\\":false}],\\\"scope\\\":\\\"committed fixture only; not a proof of a project requirement\\\"}\"}]},\"jsonrpc\":\"2.0\",\"id\":4}\n",
+          "server_stderr": "",
+          "client_stdout_sha256": "a2ae98cbd33c10084ecd4bc7686912200cea1b39da91776176df47a5b0eb4626",
+          "server_stdout_sha256": "187eb3139ca6364c87151bb14dc894ac870c580d2438274ba947cf8141561fe0",
+          "server_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "positive": {
+            "request_arguments": {
+              "tool": "lean4",
+              "case": "positive",
+              "timeout_s": 120
+            },
+            "input": {
+              "path": "skills/lean4/examples/Positive.lean",
+              "git_blob": "a6793b1eb4f586f6838b03c0ec71ab0462e4b4ce",
+              "sha256": "42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821",
+              "content": "theorem add_zero_demo (n : Nat) : n + 0 = n := by simp\n"
+            },
+            "receipt": {
+              "tool": "lean4",
+              "case": "positive",
+              "run_status": "EXECUTED",
+              "tool_outcome": "PROVED",
+              "test_verdict": "PASS",
+              "claim_verdict": "NOT_EVALUATED",
+              "input_sha256": {
+                "Negative.lean": "b2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986",
+                "Positive.lean": "42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821"
+              },
+              "executions": [
+                {
+                  "argv": [
+                    "/opt/formal-tools-portable-debian13-x86_64/tools/lean4/bin/lean",
+                    "/tmp/formal-js-qDzoyG/examples/Positive.lean"
+                  ],
+                  "exit_code": 0,
+                  "signal": null,
+                  "elapsed_ms": 178,
+                  "timed_out": false,
+                  "stdout": "",
+                  "stderr": "",
+                  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                  "error": null,
+                  "output_truncated": false
+                }
+              ],
+              "scope": "committed fixture only; not a proof of a project requirement"
+            },
+            "native_exit": 0,
+            "native_stdout": "",
+            "native_stderr": ""
+          },
+          "negative": {
+            "request_arguments": {
+              "tool": "lean4",
+              "case": "negative",
+              "timeout_s": 120
+            },
+            "input": {
+              "path": "skills/lean4/examples/Negative.lean",
+              "git_blob": "45e1fcfb27f6b23cb7240697f7c2f702f67ed986",
+              "sha256": "b2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986",
+              "content": "theorem add_zero_demo (n : Nat) : n + 1 = n := by simp\n"
+            },
+            "receipt": {
+              "tool": "lean4",
+              "case": "negative",
+              "run_status": "EXECUTED",
+              "tool_outcome": "REJECTED",
+              "test_verdict": "PASS",
+              "claim_verdict": "NOT_EVALUATED",
+              "input_sha256": {
+                "Negative.lean": "b2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986",
+                "Positive.lean": "42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821"
+              },
+              "executions": [
+                {
+                  "argv": [
+                    "/opt/formal-tools-portable-debian13-x86_64/tools/lean4/bin/lean",
+                    "/tmp/formal-js-oTNyOU/examples/Negative.lean"
+                  ],
+                  "exit_code": 1,
+                  "signal": null,
+                  "elapsed_ms": 204,
+                  "timed_out": false,
+                  "stdout": "/tmp/formal-js-oTNyOU/examples/Negative.lean:1:47: error: unsolved goals\nn : Nat\n⊢ False\n",
+                  "stderr": "",
+                  "stdout_sha256": "fe22d866d45527df44ada8e177db81dd4ce0aadd6963b8413f210d6f34b63065",
+                  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                  "error": null,
+                  "output_truncated": false
+                }
+              ],
+              "scope": "committed fixture only; not a proof of a project requirement"
+            },
+            "native_exit": 1,
+            "native_stdout": "/tmp/formal-js-oTNyOU/examples/Negative.lean:1:47: error: unsolved goals\nn : Nat\n⊢ False\n",
+            "native_stderr": ""
+          },
+          "error_case": "NOT_RUN_EXPLICITLY_EXCLUDED",
+          "candidate_only_verify_portable_fixture": "NOT_USED"
+        }
+      },
+      "reused_prior_evidence": {
+        "r19": {
+          "path": "docs/tool-portfolio/r19/I24_R19_NATIVE_TOOL_EVIDENCE.json",
+          "git_blob": "742244c4f5052f2c6fdeb5468c201b64c100100c",
+          "sha256": "5e3e2de500990d360a40d8df64888a4774994dccb6c8f23d7c7c4161d0ea72dd",
+          "qualification": "SCOPED_ORIGINAL_ARCHIVE_NATIVE_POS_NEG_ERR_PASS; not original tool-runner/portable shared runtime T4, not independent semantic T5 or Release",
+          "native_exits": {
+            "positive": 0,
+            "negative": 1,
+            "error": 1
+          },
+          "rerun_in_r23": false
+        },
+        "r22": {
+          "path": "docs/tool-portfolio/r22/LEAN4_CURRENT_MAIN_RUNNER_RECHECK.json",
+          "git_blob": "ecbfdb4b2d0c855e9bd88f4b6e537d0d383060bc",
+          "sha256": "7c9b10647c982cbd050917da1703c34447c4eab9caffefd19b7fdec68735d18b",
+          "runner_git_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+          "verify_exit": 0,
+          "verdict": "PASS",
+          "rows": [
+            {
+              "phase": "pos",
+              "exit": 0,
+              "duration_ms": 502,
+              "matched": 1,
+              "exit_ok": 1,
+              "label": "PROVED"
+            },
+            {
+              "phase": "neg",
+              "exit": 1,
+              "duration_ms": 199,
+              "matched": 1,
+              "exit_ok": 1,
+              "label": "REJECTED"
+            },
+            {
+              "phase": "err",
+              "exit": 1,
+              "duration_ms": 182,
+              "matched": 1,
+              "exit_ok": 1,
+              "label": "ERROR"
+            }
+          ],
+          "error_reuse": {
+            "phase": "err",
+            "native_exit": 1,
+            "matched": 1,
+            "exit_ok": 1,
+            "label": "ERROR",
+            "log_sha256": "720be20bd27510399142e44324669a2f26262089cef49c9a0d2f12fd09fb4041",
+            "disposition": "REUSED_R22_RUNNER_RECEIPT_ONLY; no new MCP ERR was fabricated or executed"
+          },
+          "metadata_overlay_limitation": "The original archive's legacy metadata was not modified. Current-main Runner execution used an explicit staged metadata overlay. Current-main lean4 builder uses ft::make_meta; canonical rebuilt package still needs its own exact artifact verification.",
+          "rerun_in_r23": false
+        }
+      },
+      "raw_evidence": {
+        "remote_root": "/home/cc/formal-tools-build/out/i24-r23-lean4/evidence/current-main-docker",
+        "remote_docker_run_exit": 0,
+        "remote_container_failures_count": 0,
+        "manifest_sha256": "aa777b2226e76ba9272f3ca467cc9b0cf3a65dab876d6587a6719b7013a67f46",
+        "manifest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./cli-positive-native.stderr\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./cli-positive-native.stdout\n1cc0b2062c394354b45a4d80b2b138fe68f2328dc55fde46c8cfe328e4e7b2a8  ./cli-positive-result.json\n0474bf2092ad5b9383efe0408788eb02d31b399c7c4a04ab3259daaf37160802  ./cli-positive.command\na1c5b11c00922be248f2e57db643c1148f5a3573e32cfcd44b19197085679d8c  ./cli-positive.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./cli-positive.exit\nd7f96684c12c937799fef8a1ad32c94e15d0fc57a0d9f9377e5d136582ed8e5d  ./cli-positive.started_at\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./cli-positive.stderr\n1cc0b2062c394354b45a4d80b2b138fe68f2328dc55fde46c8cfe328e4e7b2a8  ./cli-positive.stdout\nd42b7406777bc97fc7a7e2d494d74141db08f1e7cdfb0983c324dacad02e12a0  ./cli-streams.command\n68ca3fba3b7e864770cb61aeb306d4bd4354b68ab4dd38450860c5d823e42a53  ./cli-streams.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./cli-streams.exit\n9fcd6b32a7f6c027d0ea72031343878a8745a3304bf3069bd2c63a8c1c32e16a  ./cli-streams.started_at\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./cli-streams.stderr\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./cli-streams.stdout\nc44a1b5b8c2ccdd0c410af176b1b61b873d0a493b6bf219bb3bf5768779af057  ./environment.command\n06e9d52c1720fca412803e3b07c4b228ff113e303f4c7ab94665319d832bbfb7  ./environment.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./environment.exit\nd7f96684c12c937799fef8a1ad32c94e15d0fc57a0d9f9377e5d136582ed8e5d  ./environment.started_at\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./environment.stderr\n0bb9981843098321f1117e40926a0a6255071caf7bfd6b4fe72029b25dec9170  ./environment.stdout\n1e9970a4ba6daf7ebb0aa0992999741388e8c7a73fe41bcd55e613a8926b2d5c  ./input-hashes.command\n1121cfccd5913f0a63fec40a6ffd44ea64f9dc135c66634ba001d10bcf4302a2  ./input-hashes.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./input-hashes.exit\nd7f96684c12c937799fef8a1ad32c94e15d0fc57a0d9f9377e5d136582ed8e5d  ./input-hashes.started_at\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./input-hashes.stderr\n674b510eae6936422ab8b507fe6f1acf524e02a91856eedc6c8ee2355c6756d8  ./input-hashes.stdout\nb2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986  ./inputs/Negative.lean\n42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821  ./inputs/Positive.lean\n1cc563c9127785cfc1744e397208fdd392ebe322c28b665ce8b2da434667e6db  ./lake-version.command\n2a62cf402cd3396aa00f55f892f4545f308f74d01c8caa0f2837b1982f821595  ./lake-version.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./lake-version.exit\nd7f96684c12c937799fef8a1ad32c94e15d0fc57a0d9f9377e5d136582ed8e5d  ./lake-version.started_at\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./lake-version.stderr\n165f92ed239a8c7db772bf5ee9d58c59357b489951582a12c86dc9d8e06b23a2  ./lake-version.stdout\nd65c1d765e5c6012c22b8d544fb3ed4e31260f7fdfac52eed9f759d0e26a9ba8  ./lean-version.command\na6ade98870a92fc7e8bfd6eee3662e7823131fe83fdcdab6b73af38144accd49  ./lean-version.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./lean-version.exit\nd7f96684c12c937799fef8a1ad32c94e15d0fc57a0d9f9377e5d136582ed8e5d  ./lean-version.started_at\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./lean-version.stderr\neb22144228dd41cd51a0c84af4f976cd0cef473102dcf99b60be756b11f2b95a  ./lean-version.stdout\na2ae98cbd33c10084ecd4bc7686912200cea1b39da91776176df47a5b0eb4626  ./mcp-client.stdout\n01c7e4908e0a05c4d05daccf3560a4a56b3a8a99c9ff5d584f183ab47f18825a  ./mcp-driver-result.json\n977b177f21f072d8fe203fe10b674b0183f3979d1a46e309dc9b463afbb2f26d  ./mcp-events.ndjson\n38eea7c6db329c67990a1d764c8d2ffeb23f2c54cf0a35689a7cca67dba79c41  ./mcp-initialize.json\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./mcp-negative-native.stderr\nfe22d866d45527df44ada8e177db81dd4ce0aadd6963b8413f210d6f34b63065  ./mcp-negative-native.stdout\ned8c38eacbe11eccb8e15b7a1745397d3d44a26a965a1151fd5fec1f99bad620  ./mcp-negative.receipt.json\na9abddf1813f3d5fb95e11c34a5d556b41f250918b8d8d60c26da717463434aa  ./mcp-negative.response.json\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./mcp-positive-native.stderr\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./mcp-positive-native.stdout\n007355491f74793aebc673084cb0184249b05645ba1ee4edec2b3cf124456dfc  ./mcp-positive-negative.command\n532def18c4ccd45f157613121602d785a8168463bbed7ca41001d5065e4265f0  ./mcp-positive-negative.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./mcp-positive-negative.exit\n9fcd6b32a7f6c027d0ea72031343878a8745a3304bf3069bd2c63a8c1c32e16a  ./mcp-positive-negative.started_at\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./mcp-positive-negative.stderr\nafbeaa3c5273642c8bed4ed7353689b394ee9f9bbf6dd20a0b3f07e2bfe13e32  ./mcp-positive-negative.stdout\n75d77731f2cd3465f48e1d94aa1f83f33f96423e56e426c1f32993013a5161b6  ./mcp-positive.receipt.json\nf48913a46e0b449a05f2e76e945c62212f95ab69e5331c4e47d5d3629f319852  ./mcp-positive.response.json\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./mcp-server.stderr\n187eb3139ca6364c87151bb14dc894ac870c580d2438274ba947cf8141561fe0  ./mcp-server.stdout\n73375fe13c7a8f1db1ab864ada4ed72e50fdc9a1747f9147d3e14b9a493f95d9  ./mcp-tools-list.json\n9506619102a9c57af30fce79fc1a40063295331eca435e997bb1328e2d166b06  ./mcp-transcript.json\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./sdk-native.stderr\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./sdk-native.stdout\na235e7412ce1b2e8f20e5f85375febcf27bbee7fbfbdf1e5d2f9f41bbe679558  ./sdk-positive.command\n2fa7660fa51eaa80d3212ae92ef3e870b6d246404eb81efabda68d5319c7d07b  ./sdk-positive.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./sdk-positive.exit\n9fcd6b32a7f6c027d0ea72031343878a8745a3304bf3069bd2c63a8c1c32e16a  ./sdk-positive.started_at\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./sdk-positive.stderr\nd6e73889dbc186a230dd0eea642b5ab28208cad40c6975c81f78fb8adfb835ed  ./sdk-positive.stdout\n5c367cc3d8dffc2c8c4514d5ea7fc42cc224473412cf38eaa8789e80850af05c  ./sdk-request.json\n80bf607f553b255eb878d360cc7034f190f195a22a38d055359ca8e44cdd95a3  ./sdk-result.json\n5789fd6c29a6209b93d5c26ed4651e048eb7c6770a82ce2ec231b617e87bb77f  ./source-binary-hashes.command\n53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3  ./source-binary-hashes.elapsed_ms\n9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./source-binary-hashes.exit\nd7f96684c12c937799fef8a1ad32c94e15d0fc57a0d9f9377e5d136582ed8e5d  ./source-binary-hashes.started_at\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./source-binary-hashes.stderr\ncbd50dc7ce660b05f8a477915117d9baea2d18888d7bd540e79cc6ce8bc69001  ./source-binary-hashes.stdout\n",
+        "raw_file_sha256": {
+          "./cli-positive-native.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "./cli-positive-native.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "./cli-positive-result.json": "1cc0b2062c394354b45a4d80b2b138fe68f2328dc55fde46c8cfe328e4e7b2a8",
+          "./cli-positive.command": "0474bf2092ad5b9383efe0408788eb02d31b399c7c4a04ab3259daaf37160802",
+          "./cli-positive.elapsed_ms": "a1c5b11c00922be248f2e57db643c1148f5a3573e32cfcd44b19197085679d8c",
+          "./cli-positive.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "./cli-positive.started_at": "d7f96684c12c937799fef8a1ad32c94e15d0fc57a0d9f9377e5d136582ed8e5d",
+          "./cli-positive.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "./cli-positive.stdout": "1cc0b2062c394354b45a4d80b2b138fe68f2328dc55fde46c8cfe328e4e7b2a8",
+          "./cli-streams.command": "d42b7406777bc97fc7a7e2d494d74141db08f1e7cdfb0983c324dacad02e12a0",
+          "./cli-streams.elapsed_ms": "68ca3fba3b7e864770cb61aeb306d4bd4354b68ab4dd38450860c5d823e42a53",
+          "./cli-streams.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "./cli-streams.started_at": "9fcd6b32a7f6c027d0ea72031343878a8745a3304bf3069bd2c63a8c1c32e16a",
+          "./cli-streams.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "./cli-streams.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "./environment.command": "c44a1b5b8c2ccdd0c410af176b1b61b873d0a493b6bf219bb3bf5768779af057",
+          "./environment.elapsed_ms": "06e9d52c1720fca412803e3b07c4b228ff113e303f4c7ab94665319d832bbfb7",
+          "./environment.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "./environment.started_at": "d7f96684c12c937799fef8a1ad32c94e15d0fc57a0d9f9377e5d136582ed8e5d",
+          "./environment.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "./environment.stdout": "0bb9981843098321f1117e40926a0a6255071caf7bfd6b4fe72029b25dec9170",
+          "./input-hashes.command": "1e9970a4ba6daf7ebb0aa0992999741388e8c7a73fe41bcd55e613a8926b2d5c",
+          "./input-hashes.elapsed_ms": "1121cfccd5913f0a63fec40a6ffd44ea64f9dc135c66634ba001d10bcf4302a2",
+          "./input-hashes.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "./input-hashes.started_at": "d7f96684c12c937799fef8a1ad32c94e15d0fc57a0d9f9377e5d136582ed8e5d",
+          "./input-hashes.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "./input-hashes.stdout": "674b510eae6936422ab8b507fe6f1acf524e02a91856eedc6c8ee2355c6756d8",
+          "./inputs/Negative.lean": "b2acf4724b22138a99de09309d0d13f6e1e5cb47e0d55a76b030bc8bce280986",
+          "./inputs/Positive.lean": "42dc1dee0c8c5641bdaeac758371bab292bd7b665bae1b56d7acd053c90fb821",
+          "./lake-version.command": "1cc563c9127785cfc1744e397208fdd392ebe322c28b665ce8b2da434667e6db",
+          "./lake-version.elapsed_ms": "2a62cf402cd3396aa00f55f892f4545f308f74d01c8caa0f2837b1982f821595",
+          "./lake-version.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "./lake-version.started_at": "d7f96684c12c937799fef8a1ad32c94e15d0fc57a0d9f9377e5d136582ed8e5d",
+          "./lake-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "./lake-version.stdout": "165f92ed239a8c7db772bf5ee9d58c59357b489951582a12c86dc9d8e06b23a2",
+          "./lean-version.command": "d65c1d765e5c6012c22b8d544fb3ed4e31260f7fdfac52eed9f759d0e26a9ba8",
+          "./lean-version.elapsed_ms": "a6ade98870a92fc7e8bfd6eee3662e7823131fe83fdcdab6b73af38144accd49",
+          "./lean-version.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "./lean-version.started_at": "d7f96684c12c937799fef8a1ad32c94e15d0fc57a0d9f9377e5d136582ed8e5d",
+          "./lean-version.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "./lean-version.stdout": "eb22144228dd41cd51a0c84af4f976cd0cef473102dcf99b60be756b11f2b95a",
+          "./mcp-client.stdout": "a2ae98cbd33c10084ecd4bc7686912200cea1b39da91776176df47a5b0eb4626",
+          "./mcp-driver-result.json": "01c7e4908e0a05c4d05daccf3560a4a56b3a8a99c9ff5d584f183ab47f18825a",
+          "./mcp-events.ndjson": "977b177f21f072d8fe203fe10b674b0183f3979d1a46e309dc9b463afbb2f26d",
+          "./mcp-initialize.json": "38eea7c6db329c67990a1d764c8d2ffeb23f2c54cf0a35689a7cca67dba79c41",
+          "./mcp-negative-native.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "./mcp-negative-native.stdout": "fe22d866d45527df44ada8e177db81dd4ce0aadd6963b8413f210d6f34b63065",
+          "./mcp-negative.receipt.json": "ed8c38eacbe11eccb8e15b7a1745397d3d44a26a965a1151fd5fec1f99bad620",
+          "./mcp-negative.response.json": "a9abddf1813f3d5fb95e11c34a5d556b41f250918b8d8d60c26da717463434aa",
+          "./mcp-positive-native.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "./mcp-positive-native.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "./mcp-positive-negative.command": "007355491f74793aebc673084cb0184249b05645ba1ee4edec2b3cf124456dfc",
+          "./mcp-positive-negative.elapsed_ms": "532def18c4ccd45f157613121602d785a8168463bbed7ca41001d5065e4265f0",
+          "./mcp-positive-negative.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "./mcp-positive-negative.started_at": "9fcd6b32a7f6c027d0ea72031343878a8745a3304bf3069bd2c63a8c1c32e16a",
+          "./mcp-positive-negative.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "./mcp-positive-negative.stdout": "afbeaa3c5273642c8bed4ed7353689b394ee9f9bbf6dd20a0b3f07e2bfe13e32",
+          "./mcp-positive.receipt.json": "75d77731f2cd3465f48e1d94aa1f83f33f96423e56e426c1f32993013a5161b6",
+          "./mcp-positive.response.json": "f48913a46e0b449a05f2e76e945c62212f95ab69e5331c4e47d5d3629f319852",
+          "./mcp-server.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "./mcp-server.stdout": "187eb3139ca6364c87151bb14dc894ac870c580d2438274ba947cf8141561fe0",
+          "./mcp-tools-list.json": "73375fe13c7a8f1db1ab864ada4ed72e50fdc9a1747f9147d3e14b9a493f95d9",
+          "./mcp-transcript.json": "9506619102a9c57af30fce79fc1a40063295331eca435e997bb1328e2d166b06",
+          "./sdk-native.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "./sdk-native.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "./sdk-positive.command": "a235e7412ce1b2e8f20e5f85375febcf27bbee7fbfbdf1e5d2f9f41bbe679558",
+          "./sdk-positive.elapsed_ms": "2fa7660fa51eaa80d3212ae92ef3e870b6d246404eb81efabda68d5319c7d07b",
+          "./sdk-positive.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "./sdk-positive.started_at": "9fcd6b32a7f6c027d0ea72031343878a8745a3304bf3069bd2c63a8c1c32e16a",
+          "./sdk-positive.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "./sdk-positive.stdout": "d6e73889dbc186a230dd0eea642b5ab28208cad40c6975c81f78fb8adfb835ed",
+          "./sdk-request.json": "5c367cc3d8dffc2c8c4514d5ea7fc42cc224473412cf38eaa8789e80850af05c",
+          "./sdk-result.json": "80bf607f553b255eb878d360cc7034f190f195a22a38d055359ca8e44cdd95a3",
+          "./source-binary-hashes.command": "5789fd6c29a6209b93d5c26ed4651e048eb7c6770a82ce2ec231b617e87bb77f",
+          "./source-binary-hashes.elapsed_ms": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+          "./source-binary-hashes.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "./source-binary-hashes.started_at": "d7f96684c12c937799fef8a1ad32c94e15d0fc57a0d9f9377e5d136582ed8e5d",
+          "./source-binary-hashes.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "./source-binary-hashes.stdout": "cbd50dc7ce660b05f8a477915117d9baea2d18888d7bd540e79cc6ce8bc69001"
+        },
+        "integrity_check": "Every fetched raw evidence file passed sha256sum -c SHA256SUMS locally after transfer."
+      },
+      "qualification": {
+        "scoped_result": "PASS_ORIGINAL_NATIVE_ADAPTER_CLI_AND_SDK_POSITIVE_PLUS_REAL_MCP_POSITIVE_NEGATIVE",
+        "semantic_boundary": "Only the MCP fixture adapter returns PROVED/REJECTED. CLI and SDK remain UNPARSED/NOT_EVALUATED as implemented at exact_main.",
+        "t3_r22": "UNCHANGED_PASS_SCOPED_WITH_STAGED_METADATA_OVERLAY",
+        "t4": "NOT_ACCEPTED_NOT_UPGRADED",
+        "t5": "NOT_ACCEPTED_NOT_UPGRADED",
+        "t6": "NOT_ACCEPTED_NOT_UPGRADED",
+        "product": "NOT_GRANTED",
+        "release": "NOT_GRANTED",
+        "network_boundary": "The new R23 interface executions used Docker --network none. This does not retroactively change R22 network_isolation=NOT_PROVEN or qualify formal T2/T4."
+      },
+      "exclusions": [
+        "No shared Runner, Registry, CLI, SDK, MCP, runtime, package or fixture edits",
+        "No candidate-only verify_portable_fixture invocation",
+        "No new R19 native or R22 Runner executions",
+        "No MCP ERR execution or fabricated MCP ERR receipt",
+        "No #24 total ledger edit",
+        "No T4/T5/T6/Product/Release promotion"
+      ]
+    }
+  },
+  "latest_main_reconciliation": {
+    "observed_date": "2026-11-17",
+    "latest_main_head": "6991c7aae1026ea9bda9d49f43139e92437f0493",
+    "previous_delivery_base": "68e9d08e99bb3bf4fe07cde116ec403fd10bc3e7",
+    "previous_delivery_head": "fcd0f0874af1bbac2fbb39491ca451af25527149",
+    "previous_delivery_compare": {
+      "ahead": 13,
+      "behind": 0,
+      "changed_files": 1,
+      "paths": [
+        "docs/tool-portfolio/r23/LEAN4_CURRENT_MAIN_T4.json"
+      ]
+    },
+    "execution_provenance": {
+      "exact_execution_source_head": "5f188dec4c98bb4195619b560b86a210d9c2788e",
+      "historical_execution_receipt_preserved": true,
+      "source_blobs_at_previous_delivery_base": "17/18_MATCH_AT_68e9d08e99bb3bf4fe07cde116ec403fd10bc3e7",
+      "source_blobs_at_latest_main": "17/18_MATCH_AT_6991c7aae1026ea9bda9d49f43139e92437f0493; packages/runner/js/native.mjs remains the sole historical mismatch",
+      "source_blobs_at_first_delivery_base": "18/18_MATCH_AT_250d20ec782785f13d4d027f7ab79e005feacc76"
+    },
+    "mismatched_transitive_dependency": {
+      "path": "packages/runner/js/native.mjs",
+      "historical_blob": "1af7a7db7523985f810e545860000c5d745de0b5",
+      "latest_main_blob": "2e0e669e4fa66cb27654644705e76794c0727004",
+      "latest_main_change": "Introduced by PR #98 merged at 05947e0c89daa388129054dddbb56ca5446a109d; unchanged in the 68e9d08→6991c7a main delta.",
+      "imported_by": [
+        "packages/runner/js/cli.mjs",
+        "packages/runner/js/sdk.mjs",
+        "packages/runner/js/mcp.mjs"
+      ],
+      "route_impact": "Not inferred; the exact latest-main CLI/SDK/MCP routes have not been rerun."
+    },
+    "latest_main_requalification": {
+      "portable_runner_source_pin": "UNCHANGED_BLOB_102e971481a3e213fdb41fa45230b1dd3beaf2bd; no new execution claimed",
+      "cli": "NOT_RUN_AFTER_NATIVE_ADAPTER_CHANGE",
+      "sdk": "NOT_RUN_AFTER_NATIVE_ADAPTER_CHANGE",
+      "mcp": "NOT_RUN_AFTER_NATIVE_ADAPTER_CHANGE",
+      "overall": "HISTORICAL_R23_LOCAL_EXECUTION_ONLY; NOT_LATEST_MAIN_REQUALIFIED"
+    },
+    "delivery_sync": {
+      "target_base": "6991c7aae1026ea9bda9d49f43139e92437f0493",
+      "intended_write_set": [
+        "docs/tool-portfolio/r23/LEAN4_CURRENT_MAIN_T4.json"
+      ],
+      "exact_head_dual_ci": "AUTHORITATIVE_GITHUB_COMBINED_STATUS_FOR_EXACT_PR_HEAD",
+      "fresh_non_writer_review": "AUTHORITATIVE_PR_REVIEW_TIMELINE_FOR_EXACT_PR_HEAD; REQUIRED_FOR_NEW_HEAD",
+      "draft": true,
+      "merge": "NOT_AUTHORIZED",
+      "previous_sync_head": "a5b13a3efb78c706ad2c3de64a636dbbcae41a3b",
+      "sync_head": "7b49e39bc36de336f6a8601b7f2bb5db88bfb9e9",
+      "previous_pr_head": "fcd0f0874af1bbac2fbb39491ca451af25527149",
+      "previous_review_comment": 6923390373,
+      "previous_review_verdict": "ACCEPT_SCOPED",
+      "previous_review_p0": 0,
+      "previous_review_p1": 0,
+      "previous_review_p2": 2,
+      "status": "SYNCED_TO_6991C7; FINAL_HEAD_CI_AND_REVIEW_STATUS_TRACKED_IN_GITHUB"
+    },
+    "qualification_boundary": {
+      "t3": "Historical scoped execution evidence remains bound to exact_execution_source_head; no latest-main route requalification",
+      "t4": "NOT_ACCEPTED",
+      "t5": "NOT_ACCEPTED",
+      "t6": "NOT_ACCEPTED",
+      "product_or_release": "NOT_GRANTED"
+    },
+    "sync_history": [
+      {
+        "sync_head": "c8beccd4e73eca2515e4b5e6629614907fa1e93e",
+        "base": "a82b16a985aaa0154234cf491ca6aecdb2b254a9",
+        "previous_pr_head": "fedbf2d9c1be35791cd8154662f22eaa6afa4723",
+        "main_advanced_after_sync_to": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
+        "main_delta_since_sync": {
+          "ahead": 1,
+          "behind": 0,
+          "paths": [
+            "portable/builders/tools/cbmc.sh",
+            "tests/cbmc-upstream-source-pin.test.mjs"
+          ],
+          "overlap_with_lean4_source_pins": false
+        },
+        "post_advance_compare": {
+          "ahead": 6,
+          "behind": 1,
+          "changed_files": 1,
+          "paths": [
+            "docs/tool-portfolio/r23/LEAN4_CURRENT_MAIN_T4.json"
+          ]
+        },
+        "disposition": "RESYNCED_TO_LATEST_MAIN_WITH_NEXT_TWO_PARENT_COMMIT"
+      },
+      {
+        "base": "a229566c14a0d00b9b05a4a3d5e018b487cf1c73",
+        "previous_pr_head": "123289f160fbb4b2bc1e25734af38ae183787307",
+        "main_delta_since_previous_sync": {
+          "ahead": 23,
+          "behind": 0,
+          "changed_files": 30,
+          "paths": [
+            "docs/tool-portfolio/r27/CVC5_NATIVE_REPLAY.json",
+            "docs/tool-portfolio/r27/raw/cvc5/adapter/SHA256SUMS",
+            "docs/tool-portfolio/r27/raw/cvc5/adapter/negative.exit",
+            "docs/tool-portfolio/r27/raw/cvc5/adapter/negative.stderr",
+            "docs/tool-portfolio/r27/raw/cvc5/adapter/negative.stdout",
+            "docs/tool-portfolio/r27/raw/cvc5/adapter/positive.exit",
+            "docs/tool-portfolio/r27/raw/cvc5/adapter/positive.stderr",
+            "docs/tool-portfolio/r27/raw/cvc5/adapter/positive.stdout",
+            "docs/tool-portfolio/r27/raw/cvc5/portable/SHA256SUMS",
+            "docs/tool-portfolio/r27/raw/cvc5/portable/archive-members.json",
+            "docs/tool-portfolio/r27/raw/cvc5/portable/err.exit",
+            "docs/tool-portfolio/r27/raw/cvc5/portable/err.stderr",
+            "docs/tool-portfolio/r27/raw/cvc5/portable/err.stdout",
+            "docs/tool-portfolio/r27/raw/cvc5/portable/neg.exit",
+            "docs/tool-portfolio/r27/raw/cvc5/portable/neg.stderr",
+            "docs/tool-portfolio/r27/raw/cvc5/portable/neg.stdout",
+            "docs/tool-portfolio/r27/raw/cvc5/portable/pos.exit",
+            "docs/tool-portfolio/r27/raw/cvc5/portable/pos.stderr",
+            "docs/tool-portfolio/r27/raw/cvc5/portable/pos.stdout",
+            "docs/tool-portfolio/r27/raw/cvc5/portable/version.exit",
+            "docs/tool-portfolio/r27/raw/cvc5/portable/version.stderr",
+            "docs/tool-portfolio/r27/raw/cvc5/portable/version.stdout",
+            "docs/tool-portfolio/r56/ROBOT_CURRENT_MAIN_T4.json",
+            "docs/tool-portfolio/r60/CLINGO_T6_MAINTENANCE.json",
+            "portable/verification/cases/robot/expect.sh",
+            "scripts/tool-portfolio/clingo-maintenance.mjs",
+            "tests/clingo-maintenance.test.mjs",
+            "tests/cvc5-native-replay-receipt.test.mjs",
+            "tests/robot-portfolio-contract.test.mjs",
+            "tests/solution-store-cross-process-replay.test.mjs"
+          ],
+          "overlap_with_lean4_source_pins": false
+        },
+        "source_blobs_at_current_main": "17/18_MATCH_AT_a229566c",
+        "mismatched_transitive_dependency": {
+          "path": "packages/runner/js/native.mjs",
+          "expected": "1af7a7db7523985f810e545860000c5d745de0b5",
+          "observed": "2e0e669e4fa66cb27654644705e76794c0727004"
+        },
+        "disposition": "SYNCED_TO_LATEST_MAIN_WITH_TWO_PARENT_COMMIT; EXACT_SYNC_HEAD_CI_SUCCESS",
+        "sync_head": "db02f6f8942c45fae7bdfe1cd9818fc04b393c10",
+        "ci_push_pipeline": 1678,
+        "ci_pr_pipeline": 1679
+      },
+      {
+        "base": "721c1f5854e697db4534958de0bd21ee70bca108",
+        "previous_pr_head": "14b349093b428d3798f302d1ece6a275a97da80f",
+        "main_delta_since_previous_sync": {
+          "ahead": 2,
+          "behind": 0,
+          "changed_files": 3,
+          "paths": [
+            "docs/tool-portfolio/r50/PYMC_T0_SOURCE_AUDIT.json",
+            "portable/verification/cases/robot/expect.sh",
+            "tests/robot-portfolio-contract.test.mjs"
+          ],
+          "overlap_with_lean4_source_pins": false
+        },
+        "source_blobs_at_current_main": "17/18_MATCH; native.mjs remains the sole historical dependency mismatch",
+        "execution_receipt_changed": false,
+        "sync_type": "ANCESTRY_AND_DELIVERY_METADATA_ONLY",
+        "status": "ACCEPT_SCOPED; EXACT_HEAD_CI_SUCCESS",
+        "sync_head": "138899a11341b5cbfd9d4cfff9b7e3a874f5411c",
+        "final_pr_head": "8fb0e2104471a3dff14dc72bc4566d9316643e08",
+        "ci_push_pipeline": 1747,
+        "ci_pr_pipeline": 1748,
+        "review_comment": 6918399232,
+        "review_verdict": "ACCEPT_SCOPED"
+      },
+      {
+        "sync_head": "a5b13a3efb78c706ad2c3de64a636dbbcae41a3b",
+        "base": "68e9d08e99bb3bf4fe07cde116ec403fd10bc3e7",
+        "previous_pr_head": "8fb0e2104471a3dff14dc72bc4566d9316643e08",
+        "main_delta_since_previous_sync": {
+          "ahead": 53,
+          "behind": 0,
+          "changed_files": 46,
+          "paths": [
+            "benchmarks/llm-methods/g4/METHOD.json",
+            "benchmarks/llm-methods/g4/MODEL_SET.json",
+            "benchmarks/llm-methods/g4/PROBLEM.json",
+            "benchmarks/llm-methods/g4/PROVENANCE.json",
+            "benchmarks/llm-methods/g4/README.md",
+            "benchmarks/llm-methods/g4/cases/01-valid-inspect-and-confirm.smt2",
+            "benchmarks/llm-methods/g4/cases/02-unconfirmed-cannot-be-ready.smt2",
+            "benchmarks/llm-methods/g4/cases/03-invalid-input-cannot-be-ready.smt2",
+            "benchmarks/llm-methods/g4/cases/04-undeclared-answer-and-forged-draft-cannot-be-ready.smt2",
+            "benchmarks/llm-methods/g4/cases/05-effect-is-unreachable.smt2",
+            "tests/xdownload-interaction-g4-candidate.test.mjs",
+            "validation/xdownload-interaction-2026-11-16/01-valid-inspect-and-confirm.cvc5.stdout",
+            "validation/xdownload-interaction-2026-11-16/01-valid-inspect-and-confirm.z3.stdout",
+            "validation/xdownload-interaction-2026-11-16/02-unconfirmed-cannot-be-ready.cvc5.stdout",
+            "validation/xdownload-interaction-2026-11-16/02-unconfirmed-cannot-be-ready.z3.stdout",
+            "validation/xdownload-interaction-2026-11-16/03-invalid-input-cannot-be-ready.cvc5.stdout",
+            "validation/xdownload-interaction-2026-11-16/03-invalid-input-cannot-be-ready.z3.stdout",
+            "validation/xdownload-interaction-2026-11-16/04-undeclared-answer-and-forged-draft-cannot-be-ready.cvc5.stdout",
+            "validation/xdownload-interaction-2026-11-16/04-undeclared-answer-and-forged-draft-cannot-be-ready.z3.stdout",
+            "validation/xdownload-interaction-2026-11-16/05-effect-is-unreachable.cvc5.stdout",
+            "validation/xdownload-interaction-2026-11-16/05-effect-is-unreachable.z3.stdout",
+            "validation/xdownload-interaction-2026-11-16/EVIDENCE_INDEX.json",
+            "validation/xdownload-interaction-2026-11-16/PAIR-RERUN.json",
+            "validation/xdownload-interaction-2026-11-16/PAIR.json",
+            "validation/xdownload-interaction-2026-11-16/cvc5-push-pop-initial.stdout",
+            "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/01-valid-inspect-and-confirm.cvc5.stdout",
+            "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/01-valid-inspect-and-confirm.z3.stdout",
+            "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/02-unconfirmed-cannot-be-ready.cvc5.stdout",
+            "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/02-unconfirmed-cannot-be-ready.z3.stdout",
+            "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/03-invalid-input-cannot-be-ready.cvc5.stdout",
+            "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/03-invalid-input-cannot-be-ready.z3.stdout",
+            "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/04-undeclared-answer-and-forged-draft-cannot-be-ready.cvc5.stdout",
+            "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/04-undeclared-answer-and-forged-draft-cannot-be-ready.z3.stdout",
+            "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/05-effect-is-unreachable.cvc5.stdout",
+            "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/05-effect-is-unreachable.z3.stdout",
+            "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/stderr.empty",
+            "docs/tool-portfolio/r27/WHY3_R27_SCOPED_REPLAY.json",
+            "docs/tool-portfolio/r27/WHY3_R27_VERIFICATION.zip",
+            "docs/tool-portfolio/r77/ALLOY_EXIT_CONTRACT.json",
+            "packages/runner/js/solution-candidate.mjs",
+            "portable/verification/cases/alloy/expect.sh",
+            "tests/alloy-exit-contract.test.mjs",
+            "tests/dis-v020-consumer-preflight.test.mjs",
+            "tests/solution-candidate.test.mjs",
+            "tests/solution-store-cross-process-replay.test.mjs",
+            "tests/solution-store.test.mjs"
+          ],
+          "overlap_with_lean4_source_pins": false,
+          "advance_after_reported_checkpoint": {
+            "base": "387a21d70c9a411117ffd75e312e72062649b8df",
+            "ahead": 50,
+            "behind": 0,
+            "changed_files": 36,
+            "paths": [
+              "benchmarks/llm-methods/g4/METHOD.json",
+              "benchmarks/llm-methods/g4/MODEL_SET.json",
+              "benchmarks/llm-methods/g4/PROBLEM.json",
+              "benchmarks/llm-methods/g4/PROVENANCE.json",
+              "benchmarks/llm-methods/g4/README.md",
+              "benchmarks/llm-methods/g4/cases/01-valid-inspect-and-confirm.smt2",
+              "benchmarks/llm-methods/g4/cases/02-unconfirmed-cannot-be-ready.smt2",
+              "benchmarks/llm-methods/g4/cases/03-invalid-input-cannot-be-ready.smt2",
+              "benchmarks/llm-methods/g4/cases/04-undeclared-answer-and-forged-draft-cannot-be-ready.smt2",
+              "benchmarks/llm-methods/g4/cases/05-effect-is-unreachable.smt2",
+              "tests/xdownload-interaction-g4-candidate.test.mjs",
+              "validation/xdownload-interaction-2026-11-16/01-valid-inspect-and-confirm.cvc5.stdout",
+              "validation/xdownload-interaction-2026-11-16/01-valid-inspect-and-confirm.z3.stdout",
+              "validation/xdownload-interaction-2026-11-16/02-unconfirmed-cannot-be-ready.cvc5.stdout",
+              "validation/xdownload-interaction-2026-11-16/02-unconfirmed-cannot-be-ready.z3.stdout",
+              "validation/xdownload-interaction-2026-11-16/03-invalid-input-cannot-be-ready.cvc5.stdout",
+              "validation/xdownload-interaction-2026-11-16/03-invalid-input-cannot-be-ready.z3.stdout",
+              "validation/xdownload-interaction-2026-11-16/04-undeclared-answer-and-forged-draft-cannot-be-ready.cvc5.stdout",
+              "validation/xdownload-interaction-2026-11-16/04-undeclared-answer-and-forged-draft-cannot-be-ready.z3.stdout",
+              "validation/xdownload-interaction-2026-11-16/05-effect-is-unreachable.cvc5.stdout",
+              "validation/xdownload-interaction-2026-11-16/05-effect-is-unreachable.z3.stdout",
+              "validation/xdownload-interaction-2026-11-16/EVIDENCE_INDEX.json",
+              "validation/xdownload-interaction-2026-11-16/PAIR-RERUN.json",
+              "validation/xdownload-interaction-2026-11-16/PAIR.json",
+              "validation/xdownload-interaction-2026-11-16/cvc5-push-pop-initial.stdout",
+              "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/01-valid-inspect-and-confirm.cvc5.stdout",
+              "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/01-valid-inspect-and-confirm.z3.stdout",
+              "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/02-unconfirmed-cannot-be-ready.cvc5.stdout",
+              "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/02-unconfirmed-cannot-be-ready.z3.stdout",
+              "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/03-invalid-input-cannot-be-ready.cvc5.stdout",
+              "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/03-invalid-input-cannot-be-ready.z3.stdout",
+              "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/04-undeclared-answer-and-forged-draft-cannot-be-ready.cvc5.stdout",
+              "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/04-undeclared-answer-and-forged-draft-cannot-be-ready.z3.stdout",
+              "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/05-effect-is-unreachable.cvc5.stdout",
+              "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/05-effect-is-unreachable.z3.stdout",
+              "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/stderr.empty"
+            ],
+            "overlap_with_lean4_source_pins": false
+          }
+        },
+        "source_blobs_at_current_main": "17/18_MATCH; packages/runner/js/native.mjs remains the sole historical dependency mismatch",
+        "execution_receipt_changed": false,
+        "sync_type": "ANCESTRY_AND_DELIVERY_METADATA_ONLY",
+        "current_main_push_pipeline": 1893,
+        "status": "ACCEPT_SCOPED; EXACT_HEAD_CI_SUCCESS; FRESH_REVIEW_COMPLETE",
+        "final_pr_head": "fcd0f0874af1bbac2fbb39491ca451af25527149",
+        "ci_push_pipeline": 1899,
+        "ci_pr_pipeline": 1900,
+        "review_comment": 6923390373,
+        "review_verdict": "ACCEPT_SCOPED",
+        "review_p0": 0,
+        "review_p1": 0,
+        "review_p2": 2,
+        "review_findings": [
+          {
+            "id": "P2-01",
+            "disposition": "RESOLVED_IN_R104_METADATA",
+            "note": "R103 exact-head Push #1899 and PR #1900 SUCCESS and ACCEPT_SCOPED verdict are recorded. Delivery CI/review state is sourced from GitHub exact-head status and PR review timeline, not frozen as PENDING."
+          },
+          {
+            "id": "P2-02",
+            "disposition": "CARRIED_FORWARD_NONBLOCKING",
+            "note": "Full external raw artifact bundle is not independently retrievable from immutable Git/Drive archive; 160-entry manifest remains intact and independently hash-verified. No stronger qualification is claimed."
+          }
+        ]
+      },
+      {
+        "sync_head": "7b49e39bc36de336f6a8601b7f2bb5db88bfb9e9",
+        "base": "6991c7aae1026ea9bda9d49f43139e92437f0493",
+        "previous_pr_head": "fcd0f0874af1bbac2fbb39491ca451af25527149",
+        "main_delta_since_previous_sync": {
+          "ahead": 3,
+          "behind": 0,
+          "changed_files": 1,
+          "paths": [
+            "tests/solution-store-cross-process-replay.test.mjs"
+          ],
+          "overlap_with_lean4_source_pins": false
+        },
+        "source_blobs_at_current_main": "17/18_MATCH; packages/runner/js/native.mjs remains the sole historical dependency mismatch",
+        "execution_receipt_changed": false,
+        "sync_type": "ANCESTRY_AND_DELIVERY_METADATA_ONLY",
+        "previous_sync_head": "a5b13a3efb78c706ad2c3de64a636dbbcae41a3b",
+        "previous_sync_review": {
+          "exact_head": "fcd0f0874af1bbac2fbb39491ca451af25527149",
+          "verdict": "ACCEPT_SCOPED",
+          "p0": 0,
+          "p1": 0,
+          "p2": 2,
+          "review_comment": 6923390373,
+          "ci_push_pipeline": 1899,
+          "ci_pr_pipeline": 1900
+        },
+        "current_main_push_pipeline": 1903,
+        "status": "SYNCED; EXACT_HEAD_CI_AND_REVIEW_STATUS_TRACKED_IN_GITHUB"
+      }
+    ],
+    "main_delta_since_previous_sync": {
+      "ahead": 3,
+      "behind": 0,
+      "changed_files": 1,
+      "paths": [
+        "tests/solution-store-cross-process-replay.test.mjs"
+      ],
+      "overlap_with_lean4_source_pins": false
+    },
+    "main_advance_after_reported_checkpoint": {
+      "base": "387a21d70c9a411117ffd75e312e72062649b8df",
+      "head": "68e9d08e99bb3bf4fe07cde116ec403fd10bc3e7",
+      "ahead": 50,
+      "behind": 0,
+      "changed_files": 36,
+      "paths": [
+        "benchmarks/llm-methods/g4/METHOD.json",
+        "benchmarks/llm-methods/g4/MODEL_SET.json",
+        "benchmarks/llm-methods/g4/PROBLEM.json",
+        "benchmarks/llm-methods/g4/PROVENANCE.json",
+        "benchmarks/llm-methods/g4/README.md",
+        "benchmarks/llm-methods/g4/cases/01-valid-inspect-and-confirm.smt2",
+        "benchmarks/llm-methods/g4/cases/02-unconfirmed-cannot-be-ready.smt2",
+        "benchmarks/llm-methods/g4/cases/03-invalid-input-cannot-be-ready.smt2",
+        "benchmarks/llm-methods/g4/cases/04-undeclared-answer-and-forged-draft-cannot-be-ready.smt2",
+        "benchmarks/llm-methods/g4/cases/05-effect-is-unreachable.smt2",
+        "tests/xdownload-interaction-g4-candidate.test.mjs",
+        "validation/xdownload-interaction-2026-11-16/01-valid-inspect-and-confirm.cvc5.stdout",
+        "validation/xdownload-interaction-2026-11-16/01-valid-inspect-and-confirm.z3.stdout",
+        "validation/xdownload-interaction-2026-11-16/02-unconfirmed-cannot-be-ready.cvc5.stdout",
+        "validation/xdownload-interaction-2026-11-16/02-unconfirmed-cannot-be-ready.z3.stdout",
+        "validation/xdownload-interaction-2026-11-16/03-invalid-input-cannot-be-ready.cvc5.stdout",
+        "validation/xdownload-interaction-2026-11-16/03-invalid-input-cannot-be-ready.z3.stdout",
+        "validation/xdownload-interaction-2026-11-16/04-undeclared-answer-and-forged-draft-cannot-be-ready.cvc5.stdout",
+        "validation/xdownload-interaction-2026-11-16/04-undeclared-answer-and-forged-draft-cannot-be-ready.z3.stdout",
+        "validation/xdownload-interaction-2026-11-16/05-effect-is-unreachable.cvc5.stdout",
+        "validation/xdownload-interaction-2026-11-16/05-effect-is-unreachable.z3.stdout",
+        "validation/xdownload-interaction-2026-11-16/EVIDENCE_INDEX.json",
+        "validation/xdownload-interaction-2026-11-16/PAIR-RERUN.json",
+        "validation/xdownload-interaction-2026-11-16/PAIR.json",
+        "validation/xdownload-interaction-2026-11-16/cvc5-push-pop-initial.stdout",
+        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/01-valid-inspect-and-confirm.cvc5.stdout",
+        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/01-valid-inspect-and-confirm.z3.stdout",
+        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/02-unconfirmed-cannot-be-ready.cvc5.stdout",
+        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/02-unconfirmed-cannot-be-ready.z3.stdout",
+        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/03-invalid-input-cannot-be-ready.cvc5.stdout",
+        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/03-invalid-input-cannot-be-ready.z3.stdout",
+        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/04-undeclared-answer-and-forged-draft-cannot-be-ready.cvc5.stdout",
+        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/04-undeclared-answer-and-forged-draft-cannot-be-ready.z3.stdout",
+        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/05-effect-is-unreachable.cvc5.stdout",
+        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/05-effect-is-unreachable.z3.stdout",
+        "validation/xdownload-interaction-2026-11-16/rerun-20261116T123757Z/stderr.empty"
+      ],
+      "overlap_with_lean4_source_pins": false,
+      "note": "Current main is merge commit 68e9d08 with 387a21d as first parent and 8669555a as second parent."
+    },
+    "main_advance_after_r103_review": {
+      "base": "68e9d08e99bb3bf4fe07cde116ec403fd10bc3e7",
+      "head": "6991c7aae1026ea9bda9d49f43139e92437f0493",
+      "ahead": 3,
+      "behind": 0,
+      "changed_files": 1,
+      "paths": [
+        "tests/solution-store-cross-process-replay.test.mjs"
+      ],
+      "overlap_with_lean4_source_pins": false,
+      "note": "Post-R103 accepted-review main advance; only a G4 cross-process replay test changed. No Lean4 source-pin path changed."
+    }
+  },
+  "main_delta_since_previous_sync": {
+    "ahead": 2,
+    "behind": 0,
+    "changed_files": 3,
+    "paths": [
+      "docs/tool-portfolio/r50/PYMC_T0_SOURCE_AUDIT.json",
+      "portable/verification/cases/robot/expect.sh",
+      "tests/robot-portfolio-contract.test.mjs"
+    ],
+    "overlap_with_lean4_source_pins": false
+  }
+}
