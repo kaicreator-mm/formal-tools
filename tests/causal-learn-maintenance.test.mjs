@@ -151,7 +151,7 @@ test("baseline rejects unsafe source paths, malformed pins and missing qualifica
   assert.throws(() => validateBaseline(unsafe), /unsafe source path/);
 
   const malformed = makeBaseline();
-  malformed.source_files["bad.mjs"].git_blob_sha1 = "not-a-blob";
+  malformed.source_files["portable/builders/tools/causal-learn.sh"].git_blob_sha1 = "not-a-blob";
   assert.throws(() => validateBaseline(malformed), /invalid Git blob pin/);
 
   const incomplete = makeBaseline();
