@@ -1,0 +1,20 @@
+[13:12:48] [rdf-shacl] building rdf-shacl version=0.40.2 kind=python-lib
+dependency pin: pyshacl==0.40.2
+dependency pin: owlrl==7.6.2
+dependency pin: rdflib==7.6.0
+dependency pin: pyparsing==3.3.3
+dependency pin: html5rdf==1.2.1
+dependency pin: packaging==26.3
+dependency pin: prettytable==3.18.0
+dependency pin: wcwidth==0.9.4
+[13:12:48] [rdf-shacl] build OK: rdf-shacl 0.40.2 glibc_max=n/a
+[13:22:56] [rdf-shacl] building rdf-shacl version=0.40.2 kind=python-lib
+dependency pin: pyshacl==0.40.2
+dependency pin: owlrl==7.6.2
+dependency pin: rdflib==7.6.0
+dependency pin: pyparsing==3.3.3
+dependency pin: html5rdf==1.2.1
+dependency pin: packaging==26.3
+dependency pin: prettytable==3.18.0
+dependency pin: wcwidth==0.9.4
+[13:22:56] [rdf-shacl] build OK: rdf-shacl 0.40.2 glibc_max=n/a

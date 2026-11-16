@@ -1,0 +1,7 @@
+step	exit_code
+doctor	0
+version	0
+verify	1
+direct-pos	0
+direct-neg	1
+direct-err	1

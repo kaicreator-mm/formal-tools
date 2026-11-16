@@ -1,0 +1,16 @@
+{
+  "archive": "/task/out/packages/tools/rdf-shacl-0.40.2-linux-x86_64.tar.zst",
+  "destination": "/task/work/install-r2/tool",
+  "members": 6,
+  "ownership_inherited": false,
+  "result": "PASS",
+  "sha256": "a2da6dbb1c1fe5be3165fe8494efc91e40908f21244f2994f5814e1b051e7496",
+  "size": 963,
+  "types": {
+    "directory": 1,
+    "hardlink": 0,
+    "regular": 5,
+    "symlink": 0
+  },
+  "uid": 1000
+}
