@@ -304,7 +304,7 @@ test("CBMC current-main Runner/CLI/SDK/MCP T4 end-to-end", {
     summary.package.upstream_deb = UPSTREAM_DEB;
     const builderSource = await readFile(join(ROOT, "portable/builders/tools/cbmc.sh"), "utf8");
     assert.match(builderSource, /523196902/);
-    assert.match(builderSource, /ubuntu-24\\.04-cbmc-6\\.11\\.0-Linux\\.deb/);
+    assert.ok(builderSource.includes("ubuntu-24.04-cbmc-6.11.0-Linux.deb"));
     assert.match(builderSource, /b3721aa541038384d7801ea3aeabbcddc3e8845ac8f1cbff637cf8dec7481ac8/);
     const compressed = run("zstd", ["-t", archivePath]);
     assert.equal(compressed.exit_code, 0, compressed.stderr);
@@ -529,7 +529,7 @@ test("CBMC current-main Runner/CLI/SDK/MCP T4 end-to-end", {
     };
     rpc.send(initRequest);
     const initialized = await rpc.waitFor(1);
-    assert.ok(initialized.result?.serverInfo?.name === "formal-tools-skill" || initialized.result?.serverInfo?.name);
+    assert.equal(initialized.result?.serverInfo?.name, "formal-tools-skill");
     rpc.send({ jsonrpc: "2.0", method: "notifications/initialized" });
     rpc.send({ jsonrpc: "2.0", id: 2, method: "tools/list", params: {} });
     const listed = await rpc.waitFor(2);
