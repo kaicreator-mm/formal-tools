@@ -9,7 +9,8 @@ const sourceUrl=new URL('../benchmarks/llm-methods/g4/semantic/source/download-g
 const mappingUrl=new URL('../benchmarks/llm-methods/g4/semantic/MAPPING.json',import.meta.url);
 const modelSetUrl=new URL('../benchmarks/llm-methods/g4/MODEL_SET.json',import.meta.url);
 const sha256=bytes=>createHash('sha256').update(bytes).digest('hex');
-const gitBlob=bytes=>createHash('sha1').update('blob '+bytes.length+'\0').update(bytes).digest('hex');
+/** @param {Uint8Array} bytes */
+const gitBlob=bytes=>createHash('sha1').update('blob '+bytes.byteLength+'\0').update(bytes).digest('hex');
 const valid=()=>({channel:'cli',requestId:'req_01',url:'https://example.com/a',declaredBytes:12});
 const confirm=(proposal=valid(),confirmed=true,answers={},draftFields={})=>
  confirmDownloadGoal({draft:{proposal,...draftFields},answers,confirmed});
@@ -23,7 +24,7 @@ test('pins exact original source, five frozen SMT Git Blobs and explicit qualifi
  const [sourceBytes,mapBytes,modelBytes]=await Promise.all([
   readFile(sourceUrl),readFile(mappingUrl),readFile(modelSetUrl)
  ]);
- const map=JSON.parse(mapBytes),model=JSON.parse(modelBytes);
+ const map=JSON.parse(mapBytes.toString('utf8')),model=JSON.parse(modelBytes.toString('utf8'));
  assert.equal(INTERACTION_SOURCE_VERSION,'dis.v0.2.download-interaction/1');
  assert.equal(gitBlob(sourceBytes),'f57747aa7996c88833e72288a0acd594a7ce5468');
  assert.equal(sha256(sourceBytes),map.source.sha256);
@@ -67,7 +68,7 @@ test('valid source inspect and confirmed revalidation match only the bounded SAT
 
 test('unconfirmed/nonboolean confirmed stays AWAITING_CONFIRMATION, not READY',()=>{
  for(const confirmed of [false,null,'true',1]){
-  const response=confirm(valid(),confirmed);
+  const response=confirmDownloadGoal({draft:{proposal:valid()},answers:{},confirmed});
   assert.equal(response.status,'AWAITING_CONFIRMATION',String(confirmed));
   noEffects(response);
  }
