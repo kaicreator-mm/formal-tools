@@ -1,9 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const BUILDER_PATH = fileURLToPath(new URL("../portable/builders/tools/clingo.sh", import.meta.url));
@@ -15,11 +15,7 @@ const buildHarness = String.raw`
 set -uo pipefail
 FT_TOOL_DIR="$MOCK_WORK/tools/clingo"
 FT_LOG="$MOCK_WORK/build.log"
-MOCK_SOURCE_DIR="$MOCK_WORK/src/clingo-source"
-mkdir -p "$FT_TOOL_DIR/bin" "$MOCK_SOURCE_DIR/libclingo"
-if [ "${"$"}{MOCK_HEADER:-valid}" != absent ]; then
-  printf '#define CLINGO_VERSION "%s"\n' "${"$"}{MOCK_HEADER_VERSION:-5.8.3}" > "$MOCK_SOURCE_DIR/libclingo/clingo.h"
-fi
+mkdir -p "$FT_TOOL_DIR/bin"
 cat > "$FT_TOOL_DIR/bin/clingo" <<'BIN'
 #!/bin/sh
 if [ "${"$"}{MOCK_VERSION_EXIT:-0}" != 0 ]; then exit "$MOCK_VERSION_EXIT"; fi
@@ -33,10 +29,22 @@ ft::fetch() {
   printf '%s\n' "$MOCK_WORK/clingo.tar.gz"
 }
 ft::extract() {
-  if [ "${"$"}{MOCK_EXTRACT_FAIL:-0}" = 1 ]; then return 43; fi
+  local dest="$2"
+  printf '%s\n' "$dest" >> "$MOCK_WORK/staged-roots"
+  if [ "${MOCK_EXTRACT_FAIL:-0}" = 1 ]; then return 43; fi
+  if [ "${MOCK_NO_SOURCE:-0}" = 1 ]; then return 0; fi
+  local candidate="$dest/clingo-$FT_UPSTREAM_COMMIT"
+  mkdir -p "$candidate/libclingo"
+  if [ "${MOCK_HEADER:-valid}" != absent ]; then
+    printf '#define CLINGO_VERSION "%s"\n' "${MOCK_HEADER_VERSION:-5.8.3}" > "$candidate/libclingo/clingo.h"
+  fi
+  if [ "${MOCK_SECOND_SOURCE:-0}" = 1 ]; then mkdir -p "$dest/clingo-second"; fi
+  if [ "${MOCK_SYMLINK_ONLY:-0}" = 1 ]; then
+    rm -rf -- "$candidate"
+    ln -s "$MOCK_WORK/old-source" "$candidate"
+  fi
   return 0
 }
-find() { printf '%s\n' "$MOCK_SOURCE_DIR"; }
 cmake() { return 0; }
 cp() { return 0; }
 ft::copy_libs() { return 0; }
@@ -53,7 +61,13 @@ function runMockBuild(overrides = {}) {
       encoding: "utf8",
       env: { ...process.env, MOCK_WORK: work, ...overrides }
     });
+    const stageLog = join(work, "staged-roots");
+    const stagedRoots = existsSync(stageLog)
+      ? readFileSync(stageLog, "utf8").trim().split("\n").filter(Boolean)
+      : [];
     return {
+      stagedRoots,
+      cleaned: stagedRoots.length > 0 && stagedRoots.every(root => !existsSync(dirname(root))),
       status: run.status,
       stderr: run.stderr,
       stdout: run.stdout,
@@ -130,4 +144,49 @@ test("this regression is scoped to source identity, not reproducible-build accep
   assert.match(builder, /source archive SHA256 not independently pinned/);
   assert.match(builder, /ft::fetch "\$FT_UPSTREAM_URL"/);
   assert.match(builder, /FT_UPSTREAM_COMMIT=2ef91640ed3355c3211e9995edecdb20b16b0e38/);
+});
+
+test("fresh private source/build/install stages are unique and cleaned after successful builds", () => {
+  const first = runMockBuild();
+  const second = runMockBuild();
+  assert.equal(first.status, 0, first.stderr);
+  assert.equal(second.status, 0, second.stderr);
+  assert.equal(first.stagedRoots.length, 1);
+  assert.equal(second.stagedRoots.length, 1);
+  assert.match(first.stagedRoots[0], /^\/tmp\/ft-clingo\.[^\/\n]+\/source$/);
+  assert.match(second.stagedRoots[0], /^\/tmp\/ft-clingo\.[^\/\n]+\/source$/);
+  assert.notEqual(first.stagedRoots[0], second.stagedRoots[0]);
+  assert.equal(first.cleaned, true, "first successful build left temporary inputs behind");
+  assert.equal(second.cleaned, true, "second successful build left temporary inputs behind");
+  assert.match(builder, /trap 'rm -rf -- "\$work_dir"' EXIT/);
+  assert.ok(!builder.includes('ft::extract "$tgz" /tmp/clingox'));
+});
+
+test("missing, duplicate and symlinked extraction roots cannot select stale source", () => {
+  for (const [mode, error] of [
+    [{ MOCK_NO_SOURCE: "1" }, /source dir not found in fresh stage/],
+    [{ MOCK_SECOND_SOURCE: "1" }, /source dirs ambiguous in fresh stage/],
+    [{ MOCK_SYMLINK_ONLY: "1" }, /source dir not found in fresh stage/]
+  ]) {
+    const run = runMockBuild(mode);
+    assert.equal(run.status, 3, run.stderr);
+    assert.match(run.stderr, error);
+    assert.equal(run.stagedRoots.length, 1);
+    assert.equal(run.cleaned, true, "failed discovery retained temporary directory");
+    assert.equal(run.notes, "");
+  }
+});
+
+test("failed extraction, source identity, and packaged executable also clean private stages", () => {
+  for (const [mode, error] of [
+    [{ MOCK_EXTRACT_FAIL: "1" }, /source extraction failed/],
+    [{ MOCK_HEADER_VERSION: "6.0.0" }, /source version does not match/],
+    [{ MOCK_VERSION_OUTPUT: "6.0.0" }, /packaged clingo version does not match/]
+  ]) {
+    const run = runMockBuild(mode);
+    assert.equal(run.status, 3, run.stderr);
+    assert.match(run.stderr, error);
+    assert.equal(run.stagedRoots.length, 1);
+    assert.equal(run.cleaned, true, "failed build retained temporary directory");
+  }
 });
