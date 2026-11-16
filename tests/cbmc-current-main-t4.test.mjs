@@ -22,6 +22,16 @@ test('CBMC R99 evidence is bound to the requested exact main and current source 
   assert.equal(evidence.main_push.pipeline, 1867);
   assert.equal(evidence.main_push.commit, evidence.exact_main);
   assert.match(evidence.main_push.url, /pipeline\/1867\/1$/);
+  const reconciliation = evidence.current_main_reconciliation;
+  assert.equal(reconciliation.latest_main, '387a21d70c9a411117ffd75e312e72062649b8df');
+  assert.equal(reconciliation.tested_main, evidence.exact_main);
+  assert.equal(reconciliation.status, 'SOURCE_PINS_UNCHANGED');
+  assert.deepEqual(reconciliation.source_pin_overlap, []);
+  assert.equal(reconciliation.main_push.pipeline, 1875);
+  assert.equal(reconciliation.main_push.status, 'SUCCESS');
+  assert.match(reconciliation.main_push.url, /pipeline\/1875\/1$/);
+  assert.equal(reconciliation.branch_sync.first_parent, reconciliation.latest_main);
+  assert.equal(reconciliation.branch_sync.second_parent, 'd1ce09116a1b4ff0e815f6a26dbfdfa139b385fd');
   for (const [path, expected] of Object.entries(evidence.source_pins)) {
     assert.equal(gitBlobSha1(await readFile(resolve(path))), expected, 'Git blob mismatch: ' + path);
   }
