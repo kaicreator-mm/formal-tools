@@ -223,6 +223,165 @@ verify_one() {
 }
 
 # ---- doctor ----------------------------------------------------------------
+# Only an actual dependency table (or a header-proven static ELF) can certify
+# a healthy dependency probe. A successful ldd exit that prints an arbitrary
+# diagnostic must not be treated as "no missing libs".
+#
+# Static-ELF detection is deliberately narrow. Missing PT_INTERP alone is
+# insufficient: ET_DYN shared objects commonly have PT_DYNAMIC + DT_NEEDED
+# without an interpreter, and ldd must inspect them for missing libraries.
+# Only a runnable ET_EXEC with PT_LOAD, nonzero entry, and neither PT_INTERP
+# nor PT_DYNAMIC is accepted as static. ET_DYN is never promoted by absence
+# of PT_INTERP; its PT_DYNAMIC table is scanned for DT_NEEDED and then sent
+# through the ordinary fail-closed ldd path.
+ft_has_elf_magic() { # $1=file -> 0 only when the ELF magic header is present
+  local f="$1" magic
+  [ -f "$f" ] || return 1
+  magic=$(LC_ALL=C od -An -N4 -t x1 -- "$f" 2>/dev/null | tr -d ' \n')
+  [ "$magic" = "7f454c46" ]
+}
+
+ft_is_static_elf() { # $1=file -> 0 structurally eligible x86_64 static ET_EXEC, 1 known dynamic, 2 unsupported/ambiguous
+  local f="$1" class data etype machine ident_version e_version e_ehsize e_phentsize entry phoff phent phnum file_size
+  local i off ptype load_seen=0 interp_seen=0 dynamic_seen=0 exec_entry_seen=0
+  local pflags p_offset p_vaddr p_filesz p_memsz p_offset_num p_vaddr_num p_filesz_num p_memsz_num pflags_num load_end entry_num=0
+  local dyn_offset=0 dyn_filesz=0 dyn_ent dyn_count j tag needed_seen=0 null_seen=0
+  [ -f "$f" ] || return 2
+  ft_has_elf_magic "$f" || return 2
+
+  class=$(od -An -j4 -N1 -t x1 -- "$f" 2>/dev/null | tr -d ' \n')
+  data=$(od -An -j5 -N1 -t x1 -- "$f" 2>/dev/null | tr -d ' \n')
+  ident_version=$(od -An -j6 -N1 -t x1 -- "$f" 2>/dev/null | tr -d ' \n')
+  etype=$(od -An -j16 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
+  machine=$(od -An -j18 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
+  e_version=$(od -An -j20 -N4 -t x1 -- "$f" 2>/dev/null | tr -d ' \n')
+  e_ehsize=$(od -An -j52 -N2 -t x1 -- "$f" 2>/dev/null | tr -d ' \n')
+  e_phentsize=$(od -An -j54 -N2 -t x1 -- "$f" 2>/dev/null | tr -d ' \n')
+  case "$class$data$ident_version$etype$machine$e_version$e_ehsize$e_phentsize" in ''|*[!0-9a-f]*) return 2 ;; esac
+  class=$((16#$class)); data=$((16#$data)); etype=$((16#$etype)); machine=$((16#$machine))
+  [ "$data" -eq 1 ] || return 2 # little-endian only
+  [ "$ident_version" = "01" ] || return 2 # EI_VERSION == EV_CURRENT
+  [ "$e_version" = "01000000" ] || return 2 # e_version == EV_CURRENT (little-endian)
+  [ "$e_ehsize" = "4000" ] || return 2 # ELF64 header size == 64
+  [ "$e_phentsize" = "3800" ] || return 2 # ELF64 program-header entry size == 56
+  # The bundle host contract is Linux x86_64 ELF64 only. ELF32 and foreign
+  # machines are unsupported and delegated to the fail-closed ldd path.
+  [ "$class" -eq 2 ] && [ "$machine" -eq 62 ] || return 2 # ELF64 / EM_X86_64
+  case "$etype" in 2|3) ;; *) return 2 ;; esac # ET_EXEC or ET_DYN only
+
+  entry=$(od -An -j24 -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+  phoff=$(od -An -j32 -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+  phnum=$(od -An -j56 -N2 -t x2 -- "$f" 2>/dev/null | tr -d ' \n')
+  phent=56
+  dyn_ent=16
+  case "$entry$phoff$phnum" in ''|*[!0-9a-f]*) return 2 ;; esac
+  # Reject addresses that cannot be represented safely by signed shell arithmetic.
+  case "$entry" in [0-7]*) ;; *) return 2 ;; esac
+  entry_num=$((16#$entry))
+  # ET_DYN shared objects legitimately have e_entry=0; only the final
+  # ET_EXEC static verdict requires an executable file-backed load containing it.
+  phoff=$((16#$phoff)); phnum=$((16#$phnum))
+  [ "$phoff" -ge 64 ] || return 2
+  [ "$phnum" -gt 0 ] && [ "$phnum" -le 4096 ] || return 2
+
+  file_size=$(wc -c < "$f" 2>/dev/null | tr -d '[:space:]')
+  case "$file_size" in ''|*[!0-9]*) return 2 ;; esac
+  [ "$phoff" -le "$file_size" ] || return 2
+  [ $((phnum * phent)) -le $((file_size - phoff)) ] || return 2
+
+  i=0
+  while [ "$i" -lt "$phnum" ]; do
+    off=$((phoff + i * phent))
+    ptype=$(od -An -j"$off" -N4 -t x4 -- "$f" 2>/dev/null | tr -d ' \n')
+    case "$ptype" in ''|*[!0-9a-f]*) return 2 ;; esac
+    case "$ptype" in
+      00000001)
+        load_seen=1
+        # A PT_LOAD is not proof of executable code: require PF_X and prove
+        # that e_entry lies inside its file-backed virtual-address range.
+        pflags=$(od -An -j"$((off + 4))" -N4 -t x4 -- "$f" 2>/dev/null | tr -d ' \n')
+        p_offset=$(od -An -j"$((off + 8))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+        p_vaddr=$(od -An -j"$((off + 16))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+        p_filesz=$(od -An -j"$((off + 32))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+        p_memsz=$(od -An -j"$((off + 40))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+        case "$pflags$p_offset$p_vaddr$p_filesz$p_memsz" in ''|*[!0-9a-f]*) return 2 ;; esac
+        case "$p_offset" in [0-7]*) ;; *) return 2 ;; esac
+        case "$p_vaddr" in [0-7]*) ;; *) return 2 ;; esac
+        case "$p_filesz" in [0-7]*) ;; *) return 2 ;; esac
+        case "$p_memsz" in [0-7]*) ;; *) return 2 ;; esac
+        pflags_num=$((16#$pflags)); p_offset_num=$((16#$p_offset))
+        p_vaddr_num=$((16#$p_vaddr)); p_filesz_num=$((16#$p_filesz)); p_memsz_num=$((16#$p_memsz))
+        [ "$p_filesz_num" -le "$p_memsz_num" ] || return 2
+        [ "$p_offset_num" -le "$file_size" ] || return 2
+        [ "$p_filesz_num" -le $((file_size - p_offset_num)) ] || return 2
+        [ "$p_vaddr_num" -le $((9223372036854775807 - p_filesz_num)) ] || return 2
+        load_end=$((p_vaddr_num + p_filesz_num))
+        if [ $((pflags_num & 1)) -ne 0 ] && [ "$p_filesz_num" -gt 0 ] \
+          && [ "$entry_num" -ge "$p_vaddr_num" ] && [ "$entry_num" -lt "$load_end" ]; then
+          exec_entry_seen=1
+        fi
+        ;; # PT_LOAD
+      00000002)
+        [ "$dynamic_seen" -eq 0 ] || return 2 # ambiguous duplicate PT_DYNAMIC
+        dynamic_seen=1
+        dyn_offset=$(od -An -j"$((off + 8))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+        dyn_filesz=$(od -An -j"$((off + 32))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+        case "$dyn_offset$dyn_filesz" in ''|*[!0-9a-f]*) return 2 ;; esac
+        dyn_offset=$((16#$dyn_offset)); dyn_filesz=$((16#$dyn_filesz))
+        ;;
+      00000003) interp_seen=1 ;; # PT_INTERP
+    esac
+    i=$((i + 1))
+  done
+
+  [ "$load_seen" -eq 1 ] || return 2
+  [ "$interp_seen" -eq 0 ] || return 1 # a program interpreter proves dynamic linking
+
+  if [ "$dynamic_seen" -eq 1 ]; then
+    # A PT_DYNAMIC segment is not proof of static linkage. Parse its bounded
+    # entries and explicitly detect DT_NEEDED; even a table without DT_NEEDED
+    # remains ambiguous and is delegated to ldd, never called static.
+    [ "$dyn_filesz" -gt 0 ] || return 2
+    [ "$dyn_offset" -le "$file_size" ] || return 2
+    [ "$dyn_filesz" -le $((file_size - dyn_offset)) ] || return 2
+    [ $((dyn_filesz % dyn_ent)) -eq 0 ] || return 2
+    dyn_count=$((dyn_filesz / dyn_ent))
+    [ "$dyn_count" -gt 0 ] && [ "$dyn_count" -le 65536 ] || return 2
+    j=0
+    while [ "$j" -lt "$dyn_count" ]; do
+      tag=$(od -An -j"$((dyn_offset + j * dyn_ent))" -N8 -t x8 -- "$f" 2>/dev/null | tr -d ' \n')
+      case "$tag" in ''|*[!0-9a-f]*) return 2 ;; esac
+      case "$tag" in
+        0000000000000001) needed_seen=1 ;; # DT_NEEDED
+        0000000000000000) null_seen=1; break ;; # DT_NULL
+      esac
+      j=$((j + 1))
+    done
+    [ "$null_seen" -eq 1 ] || return 2 # malformed/unbounded dynamic table
+    [ "$needed_seen" -eq 0 ] || return 1 # DT_NEEDED requires the ldd dependency gate
+    return 2 # PT_DYNAMIC without DT_NEEDED is still not proof of static linkage
+  fi
+
+  # ET_DYN may be a shared object or PIE even without PT_INTERP. Never infer
+  # static linkage from that combination; only an x86_64 ET_EXEC with a real
+  # executable PT_LOAD containing its file-backed entry point can use shortcut.
+  [ "$etype" -eq 2 ] || return 2
+  [ "$entry_num" -gt 0 ] || return 2 # zero entry is not a runnable static ET_EXEC
+  [ "$exec_entry_seen" -eq 1 ] || return 2
+  return 0
+}
+ft_ldd_output_valid() { # captured ldd output -> rc 0 for recognized report
+  printf '%s\n' "$1" | awk '
+    /^[[:space:]]*$/ { next }
+    /^[[:space:]]*statically linked[[:space:]]*$/ { invalid=1; next } # Static must be proven by ELF header
+    /^[[:space:]]*linux-vdso[.]so([.][[:digit:]]+)?[[:space:]]+\(0x[[:xdigit:]]+\)[[:space:]]*$/ { next } # vDSO alone is not a dependency table
+    /^[[:space:]]*[^[:space:]]+[[:space:]]+=>[[:space:]]+(\/[^[:space:]]+|not found)([[:space:]]+\(0x[[:xdigit:]]+\))?[[:space:]]*$/ { recognized++; next }
+    /^[[:space:]]*\/[^[:space:]]+[[:space:]]+\(0x[[:xdigit:]]+\)[[:space:]]*$/ { recognized++; next }
+    { invalid=1 }
+    END { if (!recognized || invalid) exit 1 }
+  '
+}
+
 doctor_one() {
   local id="$1" fails=0
   tool_meta "$id" || return 2
@@ -234,26 +393,29 @@ doctor_one() {
       # ldd without the tool lib path falsely flags ICU/libstdc++ as missing.
       local tool_lib="$FT_ROOT/tools/$id/lib"
       local miss ldd_out ldd_rc
-      if [ -d "$tool_lib" ]; then
+      if [ -d "$tool_lib" ] && ! ft_path_under "$tool_lib" "$FT_ROOT_P/tools/$id/"; then
         # Symlink containment: a private lib dir must stay inside tools/<id>/.
-        if ! ft_path_under "$tool_lib" "$FT_ROOT_P/tools/$id/"; then
-          echo "  private lib dir escapes tools/$id FAIL"; fails=1
-        else
+        # Checked for every binary, static or dynamic.
+        echo "  private lib dir escapes tools/$id FAIL"; fails=1
+      elif ft_is_static_elf "$FT_ROOT/$TOOL_MAIN_BIN"; then
+        # Static ELF: healthy without a dependency table, and ldd is not even
+        # consulted — real ldd implementations cannot certify a static binary
+        # (GNU exits 1 "not a dynamic executable"; busybox/musl trace probes
+        # are ignored and merely execute the binary).
+        echo "  ldd: static ELF OK (no PT_INTERP; ldd not consulted)"
+      else
+        if [ -d "$tool_lib" ]; then
           ldd_out=$(LD_LIBRARY_PATH="$tool_lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" ldd "$FT_ROOT/$TOOL_MAIN_BIN" 2>&1); ldd_rc=$?
+        else
+          ldd_out=$(ldd "$FT_ROOT/$TOOL_MAIN_BIN" 2>&1); ldd_rc=$?
         fi
-      else
-        ldd_out=$(ldd "$FT_ROOT/$TOOL_MAIN_BIN" 2>&1); ldd_rc=$?
-      fi
-      if [ -z "${ldd_out+x}" ]; then
-        : # lib-dir containment already failed and marked the tool; no ldd judgment
-      else
         # Fail closed: an ldd probe that did not run (nonzero rc) or produced
         # no dependency listing is never treated as "no missing libs".
         miss=$(printf '%s\n' "${ldd_out:-}" | grep -c "not found" || true)
         if [ "${miss:-0}" != 0 ]; then
           echo "  ldd missing libs: $miss FAIL"; fails=1
-        elif [ "${ldd_rc:-1}" != 0 ] || [ -z "${ldd_out:-}" ]; then
-          echo "  ldd probe FAILED (rc=${ldd_rc:-?}, no dependency listing)"; fails=1
+        elif [ "${ldd_rc:-1}" != 0 ] || [ -z "${ldd_out:-}" ] || ! ft_ldd_output_valid "$ldd_out"; then
+          echo "  ldd probe FAILED (rc=${ldd_rc:-?}, invalid or missing dependency listing)"; fails=1
         else
           echo "  ldd: no missing libs OK"
         fi
@@ -284,7 +446,15 @@ case "$cmd" in
     done
     ;;
   doctor)
-    if [ -n "${2:-}" ] && [ "$2" != all ]; then doctor_one "$2"; else
+    # No argument intentionally means doctor-all, but an explicitly empty
+    # argument is not an alias for all: it must fail closed.
+    if [ "$#" -gt 2 ]; then
+      echo "usage: tool-runner doctor [id|all]" >&2; exit 2
+    fi
+    if [ "$#" -eq 2 ] && [ -z "$2" ]; then
+      echo "invalid tool id: empty" >&2; exit 2
+    fi
+    if [ "$#" -eq 2 ] && [ "$2" != all ]; then doctor_one "$2"; else
       rc=0; for id in $(list_ids); do doctor_one "$id" || rc=1; done; exit $rc
     fi ;;
   verify)

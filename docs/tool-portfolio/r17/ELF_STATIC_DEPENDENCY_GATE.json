@@ -1,0 +1,179 @@
+{
+  "schema": "formal-tools/i24-r17-elf-static-dependency-gate/1.0",
+  "output_label": "FORMAL_TOOLS_I24_PR86_ELF_FALSE_STATIC_REPAIR",
+  "main_issue": 24,
+  "pr": 86,
+  "scope": "Repair only the shared portable doctor static-ELF classifier and its regression tests; no registry, tool payload, MCP, SDK, CLI interface, or unrelated native solver changes.",
+  "source": {
+    "current_main_at_sync": "74b511e27ed2b2690be6c7e292400c723c6b9b88",
+    "user_expected_main_parent": "9a997e980c4f3202620f189eb9c935b941b57f1e",
+    "sync_merge_commit": "98ea23e56dedb1d7220c9c32ae3166819a6e4033",
+    "previous_reviewed_head": "a300fe3ca6a8c7e5dc628d6a876464eb10e29d44",
+    "previous_runner_blob": "d83baae8ba36fc17504033dc0eaae0ad3a148ec4",
+    "runner_path": "portable/packaging/bundle-template/bin/tool-runner",
+    "runner_blob_after_repair": "40427c1e541f294d71d803b0225984175708391e",
+    "test_path": "tests/tool-runner-ldd-report.test.mjs",
+    "test_blob_after_repair": "b964a18907a4fa4c8097aae466cfc8f464f1b0d7",
+    "r20_repair": {
+      "previous_reviewed_head": "3a789d11ee39e94287b94604fff190fe2037be8f",
+      "findings": {
+        "P1": "ft_has_elf_magic was called but not defined; add a bounded four-byte ELF magic reader and fail closed when the header is absent.",
+        "P2": "An ET_EXEC with e_entry=0 and an executable file-backed PT_LOAD beginning at zero could be treated as a static candidate; require a nonzero entry and add an explicit zero-entry fixture."
+      }
+    },
+    "runner_blob_before_r20": "0bed20a6e6fe384bf48f17b9e4dc9873fdbdc616",
+    "runner_repair_commit_r18": "1b2df30dcd26e99cd46990b586cc0a4b04976fba",
+    "test_blob_before_r20": "8c666a7ae0f43d6768a4fac2d414e8f8bcb51f74",
+    "test_repair_commit_r18": "faf64278913fa1cd0ecf951925680c2e1bcfe9a7",
+    "runner_blob_before_r21": "6ccc68a7269239a2f6ac3987e270274e54307f6e",
+    "test_blob_before_r21": "2191e65bc441652f320f7f12955948e734e900d4",
+    "evidence_blob_before_r21": "1393d4a3ebfb7aa9e0e6f18633e40182c4f291f4",
+    "runner_repair_commit_r20": "181806e1dee6e3473d406687f269c4f5dbd62a8f",
+    "test_repair_commit_r20": "181806e1dee6e3473d406687f269c4f5dbd62a8f",
+    "r21_repair": {
+      "previous_reviewed_head": "a300fe3ca6a8c7e5dc628d6a876464eb10e29d44",
+      "findings": {
+        "P2-01": "Validate EI_VERSION=1, e_version=1, e_ehsize=64 and e_phentsize=56 before interpreting the program-header table; add malformed-header regressions.",
+        "P2-02": "The host gate is explicitly ELF64 little-endian EM_X86_64 only. Remove unreachable ELF32 parsing branches and describe PT_DYNAMIC as ELF64-only."
+      }
+    },
+    "evidence_blob_before_r28": "715feb732f95283cbaa79e51e75cfca56116e41f",
+    "r28_repair": {
+      "previous_reviewed_head": "3eb6d5d5b31b0dc09d3c85f7f112e88a12d4e2ab",
+      "findings": {
+        "P2-01": "Evidence and PR body still pinned exact-head CI/review as PENDING while Woodpecker #1233/#1234 were already SUCCESS and the fresh review returned REWORK/P2; refresh the machine-readable pins.",
+        "P2-02": "The stated ELF64-only contract lacked a dedicated regression: add a valid ELF32-LE ET_EXEC fixture (EI_CLASS=1, e_ehsize=52, e_phentsize=32) proving it cannot receive the static shortcut."
+      },
+      "writer_claim": "R28 single-writer continuation on exact head 3eb6d5d5b31b0dc09d3c85f7f112e88a12d4e2ab; write scope unchanged: tool-runner, tests/tool-runner-ldd-report.test.mjs, this evidence JSON, PR body."
+    },
+    "current_main_at_sync_r28": "6991c7aae1026ea9bda9d49f43139e92437f0493",
+    "sync_merge_commit_r28": "c71d20c92c93a61dc0b8575b35f5b78af1b40191",
+    "test_repair_commit_r28": "bcbf62e8156a5fdf55f70e74266ea2741ccfe3bd",
+    "runner_blob_after_r28": "40427c1e541f294d71d803b0225984175708391e",
+    "runner_blob_r28_note": "Runner source is unchanged by R28 (mode stays 100755): the R21-verified classifier and tool_meta alias fail-closed already implement the contracted behavior; R28 locks it with regressions.",
+    "test_blob_after_r28": "752d9c42ef0c47cd7d315479641898bdb278bdf8"
+  },
+  "problem": {
+    "review_finding": "P1: absence of PT_INTERP alone is not proof of static linkage. An ET_DYN shared object may contain PT_DYNAMIC and DT_NEEDED without PT_INTERP; skipping ldd can hide missing dependencies.",
+    "false_positive": "ET_DYN + no PT_INTERP + PT_DYNAMIC + DT_NEEDED was accepted as static ELF OK.",
+    "related_guard": "ET_REL/ET_CORE and malformed/unsupported ELF must never be accepted as static."
+  },
+  "classifier": {
+    "inputs": [
+      "ELF magic",
+      "EI_CLASS",
+      "EI_DATA",
+      "e_type",
+      "e_entry",
+      "e_phoff",
+      "e_phentsize",
+      "e_phnum",
+      "PT_LOAD",
+      "PT_INTERP",
+      "PT_DYNAMIC",
+      "DT_NEEDED",
+      "DT_NULL",
+      "e_machine=EM_X86_64",
+      "PT_LOAD p_flags/PF_X",
+      "PT_LOAD p_offset/p_vaddr/p_filesz/p_memsz",
+      "EI_VERSION",
+      "e_version",
+      "e_ehsize"
+    ],
+    "static_shortcut": "Only ELF64 little-endian EM_X86_64 ET_EXEC with PT_LOAD carrying PF_X and a file-backed p_vaddr..p_vaddr+p_filesz range containing e_entry, nonzero, and neither PT_INTERP nor PT_DYNAMIC is accepted as static.",
+    "dynamic_or_ambiguous": "PT_INTERP, ET_DYN, PT_DYNAMIC, foreign machine/class, non-executable load segments, entry outside executable file-backed PT_LOAD, or unrecognized/unsupported ELF does not receive a static verdict; it uses the normal fail-closed ldd path.",
+    "dynamic_table": "For PT_DYNAMIC, parse the bounded p_offset/p_filesz region using ELF64 16-byte entries only, require DT_NULL termination, and detect DT_NEEDED. ELF32 is explicitly unsupported and delegates to the fail-closed ldd path. Any DT_NEEDED routes to ldd; malformed, unterminated, or dependency-free PT_DYNAMIC remains ambiguous and also routes to ldd.",
+    "bounds": "Validate ELF64 EI_VERSION=1, e_version=1, e_ehsize=64, e_phentsize=56, program-header and dynamic-table ranges against file size; validate PT_LOAD p_offset+p_filesz and p_vaddr+p_filesz without signed overflow; require p_filesz <= p_memsz; cap program headers at 4096 and dynamic entries at 65536; reject duplicate PT_DYNAMIC and malformed tables."
+  },
+  "regressions": {
+    "et_rel": "A crafted ET_REL image with PT_LOAD but no executable entry must not take the static shortcut.",
+    "missing_needed": "Compile a real ET_DYN shared object with -shared -fPIC and DT_NEEDED for a private library; verify readelf reports Type DYN, PT_DYNAMIC present, PT_INTERP absent, and DT_NEEDED present; remove the library; real host ldd must cause doctor FAIL.",
+    "static_positive": "Preserve the existing real gcc -static executable positive.",
+    "dynamic_positive": "Preserve the existing real GCC dynamic PIE positive.",
+    "existing_controls": "Preserve the previous GNU/musl dependency listing, missing-library, malformed diagnostic, vDSO-only, static marker, doctor argument, and private-library containment controls.",
+    "wrong_machine": "An ELF64-LE ET_EXEC with e_machine=EM_AARCH64 on the x86_64 bundle host must not take the static shortcut.",
+    "non_executable_load": "An ET_EXEC whose PT_LOAD lacks PF_X must not take the static shortcut.",
+    "entry_outside_load": "An ET_EXEC whose e_entry is outside every executable file-backed PT_LOAD must not take the static shortcut.",
+    "zero_entry": "An ELF64-LE x86_64 ET_EXEC with e_entry=0 and PF_X PT_LOAD starting at virtual address 0 (so the entry is otherwise inside the file-backed range) must not use the static shortcut and must follow fail-closed ldd.",
+    "malformed_header": "ELF64 candidates with EI_VERSION != 1, e_version != 1, e_ehsize != 64, or e_phentsize != 56 must fail closed and never take the static shortcut.",
+    "elf32_le_unsupported_r28": "A structurally valid ELF32-LE ET_EXEC (EI_CLASS=1, e_ehsize=52, e_phentsize=32, EM_386, PF_X PT_LOAD containing a nonzero entry) must never receive the ELF64 static shortcut; it is delegated to the fail-closed ldd path. Makes the ELF64-LE EM_X86_64-only contract executable, not inferred from the class guard.",
+    "vdso_plus_diagnostic_r28": "vDSO-only ldd output combined with an arbitrary nonempty diagnostic must not pass doctor: the skipped vDSO line and any unrecognized diagnostic never count as a dependency row, and rc0 alone never grants 'no missing libs'. Genuine static and valid dependency rows remain covered by the preserved real gcc static/dynamic and GNU/musl table controls.",
+    "legacy_tool_tool_id_alias_r28": "Legacy TOOL_TOOL_ID/TOOL_ID version alias regression: doctor, version and run all exit 2 on the historical packaging-bug key, and a spoofed environment TOOL_ID cannot mask the missing metadata key (PR #79 semantics preserved by the unchanged tool_meta)."
+  },
+  "local_probe": {
+    "host": "Debian 13 x86_64",
+    "runtime": "Node.js 22.16.0 for shell-level parser reproduction only",
+    "gcc_static_et_exec": "ft_is_static_elf=0",
+    "gcc_dynamic_pie_et_dyn": "ft_is_static_elf=1",
+    "et_dyn_no_interp_with_dt_needed": "ft_is_static_elf=1",
+    "et_rel": "ft_is_static_elf=2",
+    "real_missing_dependency_ldd": "libft-missing-dependency.so => not found",
+    "scope": "Local ELF parser reproduction; not a substitute for the exact-head Node24 CI.",
+    "wrong_machine_et_exec": "REWORK_COUNTEREXAMPLE_REPRODUCED on prior code; fixed path must return unsupported and delegate to fail-closed ldd.",
+    "non_executable_load": "REWORK_COUNTEREXAMPLE_REPRODUCED on prior code; fixed path must return unsupported and delegate to fail-closed ldd.",
+    "entry_outside_load": "New regression added; exact local return to be captured.",
+    "r18_static_elf_executability": {
+      "host": "Debian 13 x86_64",
+      "runtime": "Bash shell replay; GNU od 9.7 and BusyBox od; GCC and readelf installed",
+      "harness_scope": "Direct replay of the updated ft_is_static_elf classifier; not full Node24 CI or a complete package doctor run",
+      "valid_x86_64_et_exec_pf_x_entry_inside": "return 0 (static candidate)",
+      "foreign_machine_em_aarch64_et_exec": "return 2 (unsupported; fail-closed ldd path)",
+      "x86_64_et_exec_without_pf_x": "return 2 (unsupported; fail-closed ldd path)",
+      "x86_64_et_exec_entry_outside_file_backed_executable_pt_load": "return 2 (unsupported; fail-closed ldd path)",
+      "real_gcc_static_et_exec": "return 0",
+      "real_gcc_dynamic_pie": "return 1",
+      "busybox_od_replay": "same 0/2/2/2/0/1 results as GNU od"
+    },
+    "r20": {
+      "status": "NOT_RUN_EXECUTION_BACKEND_CLIENTERROR",
+      "note": "R20 helper and zero-entry regression were added from exact source review. The local execution backend returned ClientError; no shell or Node replay is claimed. Exact-head Woodpecker CI is required."
+    },
+    "r21": {
+      "status": "NOT_RUN_EXECUTION_BACKEND_CLIENTERROR",
+      "note": "R21 header-version/size checks and ELF64-only parser simplification were added from exact source review. Local shell/Node replay was unavailable; no new runtime PASS is claimed."
+    },
+    "r28": {
+      "status": "PASS_SCOPED_LINUX_REPLAY",
+      "host": "Debian 13 x86_64 via CC-LAN200 docker woodpecker-agent-local:v3.20.1 (the CI agent image, local backend)",
+      "runtime": "Node.js 24.21.0 (same major as the Woodpecker gate)",
+      "scope": "node --test tests/tool-runner-ldd-report.test.mjs tests/tool-portable-metadata.test.mjs plus bash -n on the runner; NOT the full test suite, typecheck, or any native solver verification",
+      "test_file_sha256": "d6bb3d48a129099866960b9e48d824efef3960ffb7905b1de523b57049b95669",
+      "runner_sha256": "60af447ecfbc401549a7bbaab56e4111e0ca1d66a19bdc81e9eb479bdcd26c71",
+      "results": "39 tests: 36 pass, 0 fail, 3 skipped (gcc-gated real-build controls; gcc absent in the agent image, same skip scope as prior CI runs)",
+      "elf32_le_et_exec_negative": "PASS (cannot receive the ELF64 static shortcut; ldd probe FAILED)",
+      "vdso_only_plus_arbitrary_diagnostic": "PASS (fail-closed, no 'no missing libs OK')",
+      "legacy_tool_tool_id_alias_doctor_version_run_exit2": "PASS (exit 2 with spoofed environment TOOL_ID)",
+      "note": "Supplementary scoped replay of the exact committed blobs (sha256 verified host vs server); exact-head Node24 CI remains the authoritative gate."
+    }
+  },
+  "ci": {
+    "validated_cycle": {
+      "exact_head": "3eb6d5d5b31b0dc09d3c85f7f112e88a12d4e2ab",
+      "push": "WOODPECKER_PUSH_#1233_SUCCESS",
+      "pull_request": "WOODPECKER_PR_#1234_SUCCESS",
+      "required_runtime": "Node.js 24.21.0",
+      "review": "REWORK_P0_0_P1_0_P2_2_BY_FRESH_SOURCE_FIRST_REVIEW"
+    },
+    "r28_head_cycle": {
+      "status": "PENDING_AT_EVIDENCE_COMMIT_SEE_PR86_AND_I24_RECEIPTS",
+      "note": "This evidence update creates a new exact head; fresh dual Woodpecker push+PR CI and a fresh independent non-writer Source-First review are required on the new head. Authoritative pipeline receipts are carried in the PR #86 body/comments and Issue #24 comments.",
+      "required_runtime": "Node.js 24.21.0",
+      "required_checks": [
+        "node --test tests/*.test.mjs",
+        "npm run typecheck",
+        "portable doctor/CLI static checks"
+      ]
+    }
+  },
+  "qualification": {
+    "review": "REWORK_BY_R21_REVIEW_P0_0_P1_0_P2_2_ON_3eb6d5d5_R28_REPAIRS_DELIVERED_FRESH_NON_WRITER_REVIEW_REQUESTED_ON_NEW_HEAD",
+    "formal_t4": false,
+    "t5": false,
+    "product_11_acceptance": false,
+    "release": false,
+    "tool_payload_changes": false,
+    "shared_runner_other_writer": false,
+    "issue_7_or_14_reopened": false,
+    "elf_class_scope": "ELF64_LE_EM_X86_64_ONLY"
+  }
+}
