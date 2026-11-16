@@ -49,9 +49,12 @@ export function sealSolutionCandidate({problem_json,method_json,provenance_json}
       return denied("no valid native-only G2 Method DAG");
     const source=problem.source_refs.find(s=>s.id===provenance.source_id);
     const oracle=problem.oracles.find(o=>o.id===provenance.oracle_id);
-    if(!source||source.sha256!==provenance.source_sha256||!oracle||
-       oracle.source_ref!==provenance.source_id||
-       oracle.frozen!==true||provenance.oracle_sha256!==source.sha256)
+    // The frozen Oracle is a separately pinned source dependency. It may be
+    // the same source for a deliberately self-referential fixture, but the
+    // schema must also represent a genuinely independent Oracle source.
+    const oracleSource=oracle&&problem.source_refs.find(s=>s.id===oracle.source_ref);
+    if(!source||source.sha256!==provenance.source_sha256||!oracle||!oracleSource||
+       oracle.frozen!==true||provenance.oracle_sha256!==oracleSource.sha256)
       return denied("source/oracle does not match frozen G2 authority");
     if(!method.oracle_ids.includes(provenance.oracle_id) ||
        !method.steps.some(s=>s.tool_id===provenance.tool_id))
