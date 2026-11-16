@@ -88,7 +88,7 @@
       "bash_source_regression": "Node test creates a real temporary expect.sh file, sources it with Bash and asserts 0:0:1; it rejects a readonly override mutant in the static validator and demonstrates the overridden 0:0:77 runtime value. Test execution is pending.",
       "test_file": "tests/alloy-exit-contract.test.mjs",
       "test_blob": "b33fc49457a8db4b6b186df34239a881d1173c83",
-      "status": "IMPLEMENTED_LOCAL_NODE22_16_AND_BASH_SOURCE_CHECKS_PASS_PENDING_EXACT_HEAD_CI_AND_FRESH_INDEPENDENT_REVIEW",
+      "status": "IMPLEMENTED_LOCAL_NODE22_16_AND_BASH_SOURCE_CHECKS_PASS; EXACT_HEAD_CI_PUSH_1750_PR_1751_SUCCESS; FRESH_INDEPENDENT_REVIEW_R93_ACCEPT_SCOPED; P2_01_METADATA_ONLY_FOLLOWUP_OPEN",
       "local_validation": {
         "node": "22.16.0",
         "static_negative_mutations_rejected": 17,
@@ -98,7 +98,7 @@
         "full_repository_test_suite": "NOT_RUN"
       }
     },
-    "status": "R81_REPAIR_COMMITTED; LOCAL_NODE22_16_AND_BASH_SOURCE_CHECKS_PASS; PRE_SYNC_EXACT_HEAD_CI_PUSH_1724_PR_1725_SUCCESS_AFTER_INFRA_RETRY; R92_SYNCED_HEAD_REQUIRES_NEW_EXACT_HEAD_DUAL_CI_AND_FRESH_NON_WRITER_REVIEW"
+    "status": "R81_REPAIR_COMMITTED; LOCAL_NODE22_16_AND_BASH_SOURCE_CHECKS_PASS; R92_CURRENT_MAIN_SYNC_COMPLETE; EXACT_HEAD_CI_PUSH_1750_PR_1751_SUCCESS; R93_FRESH_INDEPENDENT_REVIEW_ACCEPT_SCOPED; P2_01_METADATA_ONLY_FOLLOWUP_OPEN"
   },
   "qualification": {
     "T0": "HISTORICAL_R3_ARCHIVE_SHA_MATCH_PRODUCER_MANIFEST_ONLY",
