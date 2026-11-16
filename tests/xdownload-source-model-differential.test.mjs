@@ -66,11 +66,17 @@ test('valid source inspect and confirmed revalidation match only the bounded SAT
 });
 
 test('unconfirmed/nonboolean confirmed stays AWAITING_CONFIRMATION, not READY',()=>{
- for(const confirmed of [false,undefined,null,'true',1]){
+ for(const confirmed of [false,null,'true',1]){
   const response=confirm(valid(),confirmed);
   assert.equal(response.status,'AWAITING_CONFIRMATION',String(confirmed));
   noEffects(response);
  }
+ // The helper defaults an omitted argument to true. Test an absent confirmed
+ // property against the original source directly, rather than accidentally
+ // triggering that helper default when passing undefined.
+ const absent=confirmDownloadGoal({draft:{proposal:valid()},answers:{}});
+ assert.equal(absent.status,'AWAITING_CONFIRMATION');
+ noEffects(absent);
 });
 
 test('missing source input returns clarification, not the SMT abstract invalid=REJECTED',()=>{
