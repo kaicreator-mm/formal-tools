@@ -45,7 +45,7 @@ ft_tool_build() {
   local version_line_count
   version_line_count=$(printf '%s\n' "$v" | wc -l | tr -d '[:space:]')
   [ "$version_line_count" = "1" ] || ft::die "ProB version probe returned ambiguous output"
-  printf '%s\n' "$v" | grep -Eq '^ProB version 1[.]16[.]1-final( \\([a-f0-9]{40}\\))?$' \
+  printf '%s\n' "$v" | grep -Eq '^ProB version 1[.]16[.]1-final( \([a-f0-9]{40}\))?$' \
     || ft::die "ProB binary version is not 1.16.1-final"
   ft::note "prob_version_line" "$v"
   ft::make_shim 'export JAVA_HOME="$FT_ROOT/runtimes/java21"
