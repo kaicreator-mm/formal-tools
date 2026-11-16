@@ -1,0 +1,541 @@
+{
+  "schema": "formal-tools/tool-native-rebuild/1",
+  "output_label": "FORMAL_TOOLS_I24_RDF_SHACL_R52_RUNTIME_REBUILD",
+  "repository": "kaicreator-mm/formal-tools",
+  "main_issue": 24,
+  "tool_issue": 50,
+  "tool_id": "rdf-shacl",
+  "version": "0.40.2",
+  "source": {
+    "source_head": "c4739b7406452d3092cdb03081cd79fdb5329d9c",
+    "main_sha": "90b7f3206d401aa5a2634d775c6f16487f0f1b0f",
+    "source_pr_head": "77fd4b3b702bd1e320b5831b7623085b2a0c293f",
+    "source_pr": 124,
+    "note": "source_head is the exact committed Builder/fixture input; the later evidence commit only adds this receipt and raw logs.",
+    "builder_entry": "portable/builders/build-tool.sh",
+    "metadata_generator": "portable/builders/make_meta.py",
+    "runner": "portable/packaging/bundle-template/bin/tool-runner",
+    "current_main_runner_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "current_main_meta_generator_blob": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+    "sha256": {
+      "build-tool.sh": "bab6b95e0a542602c30afacc99cc73bb6cd79a472af7f80c0ae5d6ad53242ae3",
+      "make_meta.py": "61ffc14cf6f32e0cd67c8fbcec56cfc3cbb53f63e3f9bb46caf98bab8beea2f7",
+      "rdf-shacl.sh": "f85eb9bcd78f7b627e3406e008148c7460fc3aaec26c539ee4517b46b9a180b0",
+      "rdf-shacl.requirements.txt": "be81473cc494caa12033fa4cd7ec5e92956c31859a424f1ca65d7ae208da1da4",
+      "tool-runner": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a"
+    },
+    "live_main_blob_status": {
+      "as_of_main": "6991c7aae1026ea9bda9d49f43139e92437f0493",
+      "claim_boundary": "the sha256 pins above and the Git Blob IDs below are exact-snapshot claims at source_head c4739b7406452d3092cdb03081cd79fdb5329d9c, NOT a claim that live main can rebuild the R52 package; the two tool-specific pins do not match live main",
+      "match_live_main": {
+        "portable/builders/build-tool.sh": "82d945820c32ab2b952981e5678a9c7ddb2cd41d",
+        "portable/builders/make_meta.py": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+        "portable/packaging/bundle-template/bin/tool-runner": "102e971481a3e213fdb41fa45230b1dd3beaf2bd"
+      },
+      "historical_only": {
+        "portable/builders/tools/rdf-shacl.sh": {
+          "source_blob": "8d7486fda11a0a8067f73edf7d31aed341ceae86",
+          "live_main_blob": "e2cfcc05d02ccf097c26a11c1906e853c639fbab",
+          "note": "live main had already diverged before this PR; the R52 build used the historical source blob"
+        },
+        "portable/builders/tools/rdf-shacl.requirements.txt": {
+          "source_blob": "62c7ac5c816c81c9e4e8d7f5983ed175cab42a6a",
+          "live_main_path": "ABSENT_NOT_FOUND_AT_MAIN_6991C7AA",
+          "note": "the exact eight-pin file exists only at the historical source snapshot"
+        }
+      },
+      "rebuild_boundary": "rebuilding the R52 tool archive requires checking out the historical source snapshot c4739b7406452d3092cdb03081cd79fdb5329d9c; no T1 or current-main full T4 qualification is granted by this receipt"
+    },
+    "shared_runner_modified": false
+  },
+  "environment": {
+    "os": "debian-13",
+    "arch": "x86_64",
+    "uid": 1000,
+    "build_image": "ft-builder:deb13",
+    "verify_image": "debian:13",
+    "network_during_runner_verification": "none",
+    "workspace": "/home/cc/formal-tools-build/i24-rdf-shacl-r52"
+  },
+  "original_runtime": {
+    "drive_file_id": "1zmyt4xVpJ8eyXZlN9xWljBkyQal5rpyX",
+    "name": "python313-3.13.5-linux-x86_64.tar.zst",
+    "size": 294346075,
+    "sha256": "1dbbc431b578da5139c8f1993d5c138582dee577804fca9e85936b490606f1d5",
+    "download": "FRESH_RCLONE_DOWNLOAD_IN_DEBIAN_13_UID_1000",
+    "zstd_integrity": "PASS",
+    "r53_reverification": {
+      "date": "2026-11-16",
+      "method": "rclone copyto from Drive via authenticated local session (remote bba_gdrive on CC-LAN200 host), sha256sum recomputed from the freshly downloaded real bytes on the recovery host",
+      "recomputed_size": 294346075,
+      "recomputed_sha256": "1dbbc431b578da5139c8f1993d5c138582dee577804fca9e85936b490606f1d5",
+      "matches_original_drive_sha256sums": true,
+      "original_sha256sums_source": "Drive App/10-formal-tools/portable/SHA256SUMS records 1dbbc431b578da5139c8f1993d5c138582dee577804fca9e85936b490606f1d5 for runtimes/python313-3.13.5-linux-x86_64.tar.zst",
+      "note": "Historical 1dbbc431... was not trusted verbatim; it was recomputed from the actual downloaded bytes and independently agrees with the original Drive SHA256SUMS."
+    },
+    "safe_extract": {
+      "archive": "/incoming/python313-3.13.5-linux-x86_64.tar.zst",
+      "destination": "/work/python313",
+      "members": 41093,
+      "ownership_inherited": false,
+      "result": "PASS",
+      "sha256": "1dbbc431b578da5139c8f1993d5c138582dee577804fca9e85936b490606f1d5",
+      "size": 294346075,
+      "types": {
+        "directory": 3585,
+        "hardlink": 0,
+        "regular": 37500,
+        "symlink": 8
+      },
+      "uid": 1000
+    },
+    "raw": [
+      "raw/evidence/runtime-verify.stdout",
+      "raw/evidence/runtime-extract.stdout"
+    ]
+  },
+  "dependency_closure": {
+    "pins": "portable/builders/tools/rdf-shacl.requirements.txt",
+    "pin_validation_log": "[13:12:48] [rdf-shacl] building rdf-shacl version=0.40.2 kind=python-lib\ndependency pin: pyshacl==0.40.2\ndependency pin: owlrl==7.6.2\ndependency pin: rdflib==7.6.0\ndependency pin: pyparsing==3.3.3\ndependency pin: html5rdf==1.2.1\ndependency pin: packaging==26.3\ndependency pin: prettytable==3.18.0\ndependency pin: wcwidth==0.9.4\n[13:12:48] [rdf-shacl] build OK: rdf-shacl 0.40.2 glibc_max=n/a\n[13:22:56] [rdf-shacl] building rdf-shacl version=0.40.2 kind=python-lib\ndependency pin: pyshacl==0.40.2\ndependency pin: owlrl==7.6.2\ndependency pin: rdflib==7.6.0\ndependency pin: pyparsing==3.3.3\ndependency pin: html5rdf==1.2.1\ndependency pin: packaging==26.3\ndependency pin: prettytable==3.18.0\ndependency pin: wcwidth==0.9.4\n[13:22:56] [rdf-shacl] build OK: rdf-shacl 0.40.2 glibc_max=n/a\n",
+    "fresh_wheel_download": true,
+    "historical_wheelhouse_result_reused": false,
+    "install_mode": "UNINSTALL_ORIGINAL_CLOSURE_THEN_OFFLINE_INSTALL_FROM_FRESH_WHEELS",
+    "wheel_sha256": {
+      "html5rdf-1.2.1-py2.py3-none-any.whl": "1f519121bc366af3e485310dc8041d2e86e5173c1a320fac3dc9d2604069b83e",
+      "owlrl-7.6.2-py3-none-any.whl": "83347bf7f133979e87b2b18695d51d25510b99cec3f6919b5df05d4fbf058ae0",
+      "packaging-26.3-py3-none-any.whl": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c",
+      "prettytable-3.18.0-py3-none-any.whl": "b3346e0e6f79180833aebaac088ae926340586cf6d7d991b9eb125b65f72313a",
+      "pyparsing-3.3.3-py3-none-any.whl": "ece8c00a69cf01b45d0b1dedabb469c90d8caf996d4fda40f147627a122849a4",
+      "pyshacl-0.40.2-py3-none-any.whl": "edf0a7c15074902a1a420e8cfb89a764a9eed990b6ea15b8c30c40f2220eef61",
+      "rdflib-7.6.0-py3-none-any.whl": "30c0a3ebf4c0e09215f066be7246794b6492e054e782d7ac2a34c9f70a15e0dd",
+      "wcwidth-0.9.4-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl": "b185c8b927b23af2721be1783499d1cfa5c028b098b0858951b4ae224477f1c2"
+    },
+    "raw": [
+      "raw/evidence/pip-download.stdout",
+      "raw/evidence/pip-reinstall.stdout",
+      "raw/evidence/rdf-shacl-wheels.sha256"
+    ]
+  },
+  "build": {
+    "exit": 0,
+    "pack_exit": 0,
+    "build_timestamp": "2026-11-15T13:22:56Z",
+    "metadata": {
+      "tool_id": "rdf-shacl",
+      "version": "0.40.2",
+      "kind": "python-lib",
+      "main_bin": null,
+      "glibc_max": null,
+      "elf_arch": null,
+      "needed_libs": null,
+      "version_output": null,
+      "upstream_url": "pypi:pyshacl",
+      "upstream_note": null,
+      "build_ts": "2026-11-15T13:22:56Z",
+      "builder_image": "ft-builder:deb13",
+      "target": {
+        "os": "debian-13",
+        "arch": "x86_64",
+        "glibc_max": "2.41"
+      },
+      "unavailable": false,
+      "unavailable_reason": null
+    },
+    "canonical_tool_id": true,
+    "legacy_tool_tool_id_present": false,
+    "raw": [
+      "raw/evidence/build-tool.stdout",
+      "raw/evidence/build-tool.stderr",
+      "raw/out/logs/rdf-shacl.build.log",
+      "raw/evidence/pack.stdout"
+    ]
+  },
+  "artifacts": {
+    "core": {
+      "archive": "formal-tools-portable-core-linux-x86_64.tar.zst",
+      "size": 25941,
+      "sha256": "c891b8b990fc704a2fef5a674fad6a7a6d776d8e15acccd79beab70d8a6ee42c",
+      "safe_extract": {
+        "members": 196,
+        "types": {
+          "directory": 46,
+          "hardlink": 0,
+          "regular": 149,
+          "symlink": 1
+        },
+        "uid": 1000,
+        "ownership_inherited": false
+      }
+    },
+    "runtime": {
+      "archive": "python313-3.13.5-linux-x86_64.tar.zst",
+      "size": 294345367,
+      "sha256": "c1c6d0d93d4dc883a58948b487a129c865c43889e83fd146a7213f3d46adff52",
+      "safe_extract": {
+        "members": 41100,
+        "types": {
+          "directory": 3585,
+          "hardlink": 0,
+          "regular": 37507,
+          "symlink": 8
+        },
+        "uid": 1000,
+        "ownership_inherited": false
+      }
+    },
+    "tool": {
+      "archive": "rdf-shacl-0.40.2-linux-x86_64.tar.zst",
+      "size": 963,
+      "sha256": "a2da6dbb1c1fe5be3165fe8494efc91e40908f21244f2994f5814e1b051e7496",
+      "safe_extract": {
+        "members": 6,
+        "types": {
+          "directory": 1,
+          "hardlink": 0,
+          "regular": 5,
+          "symlink": 0
+        },
+        "uid": 1000,
+        "ownership_inherited": false
+      }
+    }
+  },
+  "artifact_recovery": {
+    "output_label": "FORMAL_TOOLS_I24_RDF_SHACL_R53_LOCAL_ARTIFACT_RECOVERY",
+    "date": "2026-11-16",
+    "role": "LOCAL_AGENT_SINGLE_WRITER_ARTIFACT_RECOVERY",
+    "recovered_from": {
+      "location": "CC-LAN200 host /home/cc/formal-tools-build/i24-rdf-shacl-r52/out/packages/",
+      "identity_proof": "all three archives pass sha256sum -c against the committed raw/out/packages/SHA256SUMS byte-for-byte; sizes and SHA256 equal the R52 receipt values exactly",
+      "note": "Exact R52 build output bytes were preserved on the pinned build host; no substitute or similar-version artifact was used, no rebuild was necessary."
+    },
+    "drive_delivery": {
+      "folder": "App/10-formal-tools/artifact-recovery/R53-I24-RDF-SHACL-20261116",
+      "folder_id": "1dYoCvJZ5v8n5YHmlKZPcljFqqvcJq1rB",
+      "immutable_policy": "dedicated recovery folder; existing members must never be overwritten or deleted; new recovery rounds use a new dated subfolder",
+      "readback": "each artifact was downloaded back from Drive into a separate readback directory and SHA256 recomputed; all sizes and SHA256 identical to the uploaded bytes",
+      "files": {
+        "formal-tools-portable-core-linux-x86_64.tar.zst": {
+          "drive_file_id": "1F_CXoNfyqO8ALRaFZ0TvMoAj_SPOdHz_",
+          "size": 25941,
+          "sha256": "c891b8b990fc704a2fef5a674fad6a7a6d776d8e15acccd79beab70d8a6ee42c",
+          "readback_sha256": "c891b8b990fc704a2fef5a674fad6a7a6d776d8e15acccd79beab70d8a6ee42c"
+        },
+        "python313-3.13.5-linux-x86_64.tar.zst": {
+          "drive_file_id": "1tsrI5W165x6HovgqP0SCZqLO79rV0CyI",
+          "size": 294345367,
+          "sha256": "c1c6d0d93d4dc883a58948b487a129c865c43889e83fd146a7213f3d46adff52",
+          "readback_sha256": "c1c6d0d93d4dc883a58948b487a129c865c43889e83fd146a7213f3d46adff52"
+        },
+        "rdf-shacl-0.40.2-linux-x86_64.tar.zst": {
+          "drive_file_id": "19xRhjf0eJZ5Yw_gbTiwi3XI-WdNC9Iof",
+          "size": 963,
+          "sha256": "a2da6dbb1c1fe5be3165fe8494efc91e40908f21244f2994f5814e1b051e7496",
+          "readback_sha256": "a2da6dbb1c1fe5be3165fe8494efc91e40908f21244f2994f5814e1b051e7496"
+        },
+        "safe-extract-member-manifest.json": {
+          "drive_file_id": "1gkRGSAB5X_qV8FSMGxQAwPWqkzWq2u1X",
+          "size": 11534784,
+          "sha256": "a7e5cae5dae95dd0bcaeb49b6c314ab1a89416ace71096a141336d89d829edfe",
+          "readback_sha256": "a7e5cae5dae95dd0bcaeb49b6c314ab1a89416ace71096a141336d89d829edfe"
+        }
+      }
+    },
+    "member_manifest": {
+      "path": "docs/tool-portfolio/r52/raw/evidence/safe-extract-member-manifest.json",
+      "sha256": "a7e5cae5dae95dd0bcaeb49b6c314ab1a89416ace71096a141336d89d829edfe",
+      "archives": {
+        "original_runtime": {
+          "members": 41093,
+          "types": {
+            "directory": 3585,
+            "regular": 37500,
+            "symlink": 8,
+            "hardlink": 0
+          },
+          "path_escape": 0,
+          "link_escape": 0,
+          "special_files": 0
+        },
+        "final_runtime": {
+          "members": 41100,
+          "types": {
+            "directory": 3585,
+            "regular": 37507,
+            "symlink": 8,
+            "hardlink": 0
+          },
+          "path_escape": 0,
+          "link_escape": 0,
+          "special_files": 0
+        },
+        "final_core": {
+          "members": 196,
+          "types": {
+            "directory": 46,
+            "regular": 149,
+            "symlink": 1,
+            "hardlink": 0
+          },
+          "path_escape": 0,
+          "link_escape": 0,
+          "special_files": 0
+        },
+        "final_tool": {
+          "members": 6,
+          "types": {
+            "directory": 1,
+            "regular": 5,
+            "symlink": 0,
+            "hardlink": 0
+          },
+          "path_escape": 0,
+          "link_escape": 0,
+          "special_files": 0
+        }
+      },
+      "member_fields": [
+        "path",
+        "type",
+        "mode",
+        "uid",
+        "gid",
+        "size",
+        "mtime",
+        "link_target"
+      ],
+      "symlink_containment": "all 17 symlink/hardlink members resolve to targets inside the archive root; the core archive symlink tests/fast-check/node_modules -> ../../tools/fast-check/node_modules normalizes to <root>/tools/fast-check/node_modules and does not escape; zero absolute member names, zero '..' member paths, zero char/block/fifo devices",
+      "provenance_original_to_final_runtime": "final_runtime members = original_runtime members + 7 added pip REQUESTED markers (html5rdf 1.2.1, owlrl 7.6.2, packaging 26.3, prettytable 3.18.0, pyparsing 3.3.3, rdflib 7.6.0, wcwidth 0.9.4 under runtimes/python313/lib/python3.13/site-packages/), zero removed; consistent with the offline wheel reinstall recorded in dependency_closure"
+    },
+    "sync": {
+      "previous_head": "dafb74e8c7a998912c015c4ad08426aba38922b4",
+      "previous_base_main": "d996d168812f51d131b3f3f9c525cc1bd161d087",
+      "latest_main": "6991c7aae1026ea9bda9d49f43139e92437f0493",
+      "latest_main_note": "R104b Integrator reconciliation: GitHub main advanced from 68e9d08e99bb3bf4fe07cde116ec403fd10bc3e7 to 6991c7aae1026ea9bda9d49f43139e92437f0493 through merged PR #152 (one G4 cross-process durable lifecycle regression test). The delta is 3 commits / 1 path: tests/solution-store-cross-process-replay.test.mjs; exact intersection with the 97-path RDF-SHACL PR branch delta is zero. The prior R104 387a→68e9 delta (PR #146, 36 G4 xDownload benchmark/validation paths) remains preserved in latest_main_delta_history and is also disjoint. Main Push #1903 is SUCCESS. Historical build_main/source_head and all 89 raw evidence bytes remain unchanged.",
+      "merge_overlap_check": "R53 historical sync (main 530a2d7 first parent, prior PR head second parent) remains unchanged. R104 delta 387a21d→68e9d08 (PR #146, 36 G4 xDownload paths) is preserved in latest_main_delta_history and has zero path overlap with RDF-SHACL. R104b delta 68e9d08→6991c7aae1026ea9bda9d49f43139e92437f0493 (PR #152, one G4 cross-process test) also has zero overlap with the 97 RDF-SHACL PR paths. No RDF-SHACL build-source, Runner, package, fixture or evidence path changed.",
+      "history_policy": "historical build-source commits and the R52 receipt/evidence ancestry are preserved unchanged; no latest-Runner execution records were backdated into the native build receipt",
+      "latest_main_push": 1903,
+      "latest_main_delta": {
+        "from": "68e9d08e99bb3bf4fe07cde116ec403fd10bc3e7",
+        "to": "6991c7aae1026ea9bda9d49f43139e92437f0493",
+        "merged_pr": 152,
+        "main_push": 1903,
+        "commits": 3,
+        "changed_paths": 1,
+        "paths": [
+          "tests/solution-store-cross-process-replay.test.mjs"
+        ],
+        "overlap_with_rdf_shacl_pr": [],
+        "qualification_effect": "NONE"
+      },
+      "latest_main_delta_history": [
+        {
+          "from": "387a21d70c9a411117ffd75e312e72062649b8df",
+          "to": "68e9d08e99bb3bf4fe07cde116ec403fd10bc3e7",
+          "merged_pr": 146,
+          "main_push": 1893,
+          "commits": 50,
+          "changed_paths": 36,
+          "overlap_with_rdf_shacl_pr": [],
+          "qualification_effect": "NONE"
+        }
+      ]
+    },
+    "r110_rework": {
+      "date": "2026-11-17",
+      "role": "EXISTING_SINGLE_WRITER_REPAIR_RESUMED_LANE",
+      "previous_head": "1ba05503edc0520c34e5fc18f15842a74436aa47",
+      "review": "PR #127 independent review comment 6927936000 (VERDICT=REWORK P0=0 P1=1 P2=1; reviewer claim 6927695203 released)",
+      "p1_repair": "restored docs/tool-portfolio/r52/raw/** byte-exact from accepted R53 head 566d005bbc54189f64e4c8fcd68018c546ceebe4 (91 files, Git Blob identities preserved) so raw_evidence.manifest and artifact_recovery.member_manifest.path resolve in-tree again; see raw_evidence.tree_restoration",
+      "p2_repair": "added source.live_main_blob_status: three generic pins (build-tool.sh, make_meta.py, tool-runner) match live main blobs at 6991c7aa; rdf-shacl.sh and rdf-shacl.requirements.txt are historical-source-only pins (live main diverged/absent); no T1 or current-main full T4 promotion claimed",
+      "write_scope": "docs/tool-portfolio/r52/raw/** restore + this JSON only; no shared Runner/Registry/CLI/MCP/SDK/runtime source, no #24 ledger, no main push",
+      "no_change": "original archive/source hashes, Drive artifact IDs and readback identities, member manifest content, 89 SHA256SUMS entries, historical build-source ancestry and all R54/R102 accepted evidence bytes are unchanged; no native solver/archive/verify execution was re-run"
+    }
+  },
+  "verification": {
+    "first_round": {
+      "source_head": "28c741cf75ce0af08835d023277261721e929329",
+      "verdict": "FAIL",
+      "receipt": {
+        "schema": "formal-tools/portable-verify/0.2",
+        "cases": [
+          {
+            "tool": "rdf-shacl",
+            "phase": "pos",
+            "exit": 0,
+            "duration_ms": 259,
+            "matched": 1,
+            "exit_ok": 1,
+            "label": "CONFORMS"
+          },
+          {
+            "tool": "rdf-shacl",
+            "phase": "neg",
+            "exit": 1,
+            "duration_ms": 263,
+            "matched": 1,
+            "exit_ok": 1,
+            "label": "VIOLATION"
+          },
+          {
+            "tool": "rdf-shacl",
+            "phase": "err",
+            "exit": 1,
+            "duration_ms": 257,
+            "matched": 0,
+            "exit_ok": 1,
+            "label": "INVALID_RDF"
+          }
+        ],
+        "verdict": "FAIL"
+      },
+      "finding": "ERR executed with exit 1 but matcher omitted rdflib.plugins.parsers.notation3.BadSyntax; repaired fixture matcher and pinned NEG/ERR exits to 1.",
+      "raw": "raw/evidence/current-runner-r1-failed"
+    },
+    "final_pack_tree": {
+      "exit_codes": {
+        "doctor": 0,
+        "version": 0,
+        "verify": 0,
+        "direct-pos": 0,
+        "direct-neg": 1,
+        "direct-err": 1
+      },
+      "receipt": {
+        "schema": "formal-tools/portable-verify/0.2",
+        "cases": [
+          {
+            "tool": "rdf-shacl",
+            "phase": "pos",
+            "exit": 0,
+            "duration_ms": 256,
+            "matched": 1,
+            "exit_ok": 1,
+            "label": "CONFORMS"
+          },
+          {
+            "tool": "rdf-shacl",
+            "phase": "neg",
+            "exit": 1,
+            "duration_ms": 259,
+            "matched": 1,
+            "exit_ok": 1,
+            "label": "VIOLATION"
+          },
+          {
+            "tool": "rdf-shacl",
+            "phase": "err",
+            "exit": 1,
+            "duration_ms": 257,
+            "matched": 1,
+            "exit_ok": 1,
+            "label": "INVALID_RDF"
+          }
+        ],
+        "verdict": "PASS"
+      },
+      "doctor_stdout": "doctor: rdf-shacl kind=python-lib version=0.40.2\n  python: 3.13.5 OK\n  verdict: OK\n",
+      "version_stdout": "tool: rdf-shacl\nversion: 0.40.2\nprobe: n/a\n",
+      "raw": "raw/evidence/current-runner"
+    },
+    "final_safely_reassembled_install": {
+      "exit_codes": {
+        "doctor": 0,
+        "version": 0,
+        "verify": 0,
+        "direct-pos": 0,
+        "direct-neg": 1,
+        "direct-err": 1
+      },
+      "receipt": {
+        "schema": "formal-tools/portable-verify/0.2",
+        "cases": [
+          {
+            "tool": "rdf-shacl",
+            "phase": "pos",
+            "exit": 0,
+            "duration_ms": 253,
+            "matched": 1,
+            "exit_ok": 1,
+            "label": "CONFORMS"
+          },
+          {
+            "tool": "rdf-shacl",
+            "phase": "neg",
+            "exit": 1,
+            "duration_ms": 258,
+            "matched": 1,
+            "exit_ok": 1,
+            "label": "VIOLATION"
+          },
+          {
+            "tool": "rdf-shacl",
+            "phase": "err",
+            "exit": 1,
+            "duration_ms": 253,
+            "matched": 1,
+            "exit_ok": 1,
+            "label": "INVALID_RDF"
+          }
+        ],
+        "verdict": "PASS"
+      },
+      "doctor_stdout": "doctor: rdf-shacl kind=python-lib version=0.40.2\n  python: 3.13.5 OK\n  verdict: OK\n",
+      "version_stdout": "tool: rdf-shacl\nversion: 0.40.2\nprobe: n/a\n",
+      "raw": "raw/evidence/current-runner-installed"
+    },
+    "stdout_stderr_policy": "Each doctor/version/direct POS/NEG/ERR invocation has separate raw .stdout and .stderr files plus an exit-codes.tsv row; Runner per-phase combined logs and TSV are also retained."
+  },
+  "linux_source_gate": {
+    "image": "woodpecker-agent-local:v3.20.1",
+    "node": "v24.21.0",
+    "exit": 0,
+    "tests": 391,
+    "pass": 389,
+    "fail": 0,
+    "skipped": 2,
+    "typecheck_validate_and_fixed_cli_steps": "PASS",
+    "raw": [
+      "raw/evidence/linux-gate.stdout",
+      "raw/evidence/linux-gate.stderr",
+      "raw/evidence/linux-gate.exit"
+    ]
+  },
+  "raw_evidence": {
+    "manifest": "raw/SHA256SUMS",
+    "manifest_sha256": "c142a04facbda2f154fe8f1f10aa6c8aa6a2e143b07df92b94552dcc9375762b",
+    "file_count_excluding_manifest": 89,
+    "tree_restoration": {
+      "date": "2026-11-17",
+      "role": "R110_REWORK_WRITER_REPAIR_EXISTING_SINGLE_WRITER",
+      "restored_from": "R53 accepted head 566d005bbc54189f64e4c8fcd68018c546ceebe4",
+      "restored_paths": "docs/tool-portfolio/r52/raw/**",
+      "restored_file_count": 91,
+      "git_blob_identity_check": "git diff --cached 566d005bbc54189f64e4c8fcd68018c546ceebe4 -- docs/tool-portfolio/r52/raw is empty; all 91 restored paths carry byte-identical Git Blob SHAs to the R53 accepted tree, so original blob identities, content SHA256 values and Drive identities are preserved without re-execution",
+      "sha256sums_git_blob": "14632f0d88a8a0d3b380bfdff594a082b9df2e2a",
+      "member_manifest_git_blob": "ba3fe64f7b9be28d5167c96fb7e474845169c958",
+      "note": "R104/R104b sync merges were resolved against main (which never carried the raw evidence tree) and dropped docs/tool-portfolio/r52/raw/** from the branch tree while this JSON still referenced raw/SHA256SUMS and the member manifest relatively; R110 restores the complete reviewed raw evidence tree byte-exact, so manifest and member_manifest.path resolve in-tree at the new exact head. Historical R54/R102 byte acceptance remains bound to immutable ref 566d005bbc54189f64e4c8fcd68018c546ceebe4."
+    }
+  },
+  "qualification": {
+    "T0": "PASS_SCOPED_FROM_SOURCE_PR_124",
+    "T1": "EXECUTED_PINNED_BUILD_INDEPENDENT_REVIEW_PENDING",
+    "T2": "PASS_SCOPED_SAFE_NONROOT_EXTRACTION_AND_OFFLINE_DOCTOR",
+    "T3": "FIXTURE_TECHNICAL_PASS_INDEPENDENT_REVIEW_PENDING",
+    "T4": "CURRENT_MAIN_RUNNER_FIXTURE_TECHNICAL_PASS_INDEPENDENT_REVIEW_PENDING; FULL_CLI_MCP_SDK_INTEGRATION_NOT_RUN",
+    "T5": "NOT_RUN_NO_INDEPENDENT_SEMANTIC_ORACLE",
+    "T6": "OPEN",
+    "product": "NOT_QUALIFIED",
+    "release": "NOT_AUTHORIZED"
+  },
+  "review": {
+    "status": "PENDING_OTHER_CONVERSATION",
+    "writer_self_promotion": false
+  },
+  "limitations": [
+    "Scoped to rdf-shacl only; no 36-tool verification or shared-runtime qualification is claimed.",
+    "Raw current-main Runner/doctor/version/POS/NEG/ERR executed; full Registry/CLI/MCP/SDK E2E and failure propagation were not executed.",
+    "The optional pyshacl_server entrypoint discrepancy from PR #124 remains open and was not exercised.",
+    "The receipt records executed evidence and does not itself grant T3/T4/T5/T6/Product/Release qualification."
+  ]
+}

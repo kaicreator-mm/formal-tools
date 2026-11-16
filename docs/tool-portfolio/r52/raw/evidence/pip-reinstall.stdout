@@ -1,0 +1,44 @@
+Found existing installation: pyshacl 0.40.2
+Uninstalling pyshacl-0.40.2:
+  Successfully uninstalled pyshacl-0.40.2
+Found existing installation: owlrl 7.6.2
+Uninstalling owlrl-7.6.2:
+  Successfully uninstalled owlrl-7.6.2
+Found existing installation: rdflib 7.6.0
+Uninstalling rdflib-7.6.0:
+  Successfully uninstalled rdflib-7.6.0
+Found existing installation: pyparsing 3.3.3
+Uninstalling pyparsing-3.3.3:
+  Successfully uninstalled pyparsing-3.3.3
+Found existing installation: html5rdf 1.2.1
+Uninstalling html5rdf-1.2.1:
+  Successfully uninstalled html5rdf-1.2.1
+Found existing installation: packaging 26.3
+Uninstalling packaging-26.3:
+  Successfully uninstalled packaging-26.3
+Found existing installation: prettytable 3.18.0
+Uninstalling prettytable-3.18.0:
+  Successfully uninstalled prettytable-3.18.0
+Found existing installation: wcwidth 0.9.4
+Uninstalling wcwidth-0.9.4:
+  Successfully uninstalled wcwidth-0.9.4
+Looking in links: /incoming/rdf-shacl-wheels
+Processing /incoming/rdf-shacl-wheels/pyshacl-0.40.2-py3-none-any.whl (from -r /src/portable/builders/tools/rdf-shacl.requirements.txt (line 3))
+Processing /incoming/rdf-shacl-wheels/owlrl-7.6.2-py3-none-any.whl (from -r /src/portable/builders/tools/rdf-shacl.requirements.txt (line 4))
+Processing /incoming/rdf-shacl-wheels/rdflib-7.6.0-py3-none-any.whl (from -r /src/portable/builders/tools/rdf-shacl.requirements.txt (line 5))
+Processing /incoming/rdf-shacl-wheels/pyparsing-3.3.3-py3-none-any.whl (from -r /src/portable/builders/tools/rdf-shacl.requirements.txt (line 6))
+Processing /incoming/rdf-shacl-wheels/html5rdf-1.2.1-py2.py3-none-any.whl (from -r /src/portable/builders/tools/rdf-shacl.requirements.txt (line 7))
+Processing /incoming/rdf-shacl-wheels/packaging-26.3-py3-none-any.whl (from -r /src/portable/builders/tools/rdf-shacl.requirements.txt (line 8))
+Processing /incoming/rdf-shacl-wheels/prettytable-3.18.0-py3-none-any.whl (from -r /src/portable/builders/tools/rdf-shacl.requirements.txt (line 9))
+Processing /incoming/rdf-shacl-wheels/wcwidth-0.9.4-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (from -r /src/portable/builders/tools/rdf-shacl.requirements.txt (line 10))
+Installing collected packages: wcwidth, pyparsing, packaging, html5rdf, rdflib, prettytable, owlrl, pyshacl
+
+Successfully installed html5rdf-1.2.1 owlrl-7.6.2 packaging-26.3 prettytable-3.18.0 pyparsing-3.3.3 pyshacl-0.40.2 rdflib-7.6.0 wcwidth-0.9.4
+pyshacl==0.40.2
+owlrl==7.6.2
+rdflib==7.6.0
+pyparsing==3.3.3
+html5rdf==1.2.1
+packaging==26.3
+prettytable==3.18.0
+wcwidth==0.9.4

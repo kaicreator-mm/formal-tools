@@ -1,0 +1,21 @@
+{
+  "tool_id": "rdf-shacl",
+  "version": "0.40.2",
+  "kind": "python-lib",
+  "main_bin": null,
+  "glibc_max": null,
+  "elf_arch": null,
+  "needed_libs": null,
+  "version_output": null,
+  "upstream_url": "pypi:pyshacl",
+  "upstream_note": null,
+  "build_ts": "2026-11-15T13:22:56Z",
+  "builder_image": "ft-builder:deb13",
+  "target": {
+    "os": "debian-13",
+    "arch": "x86_64",
+    "glibc_max": "2.41"
+  },
+  "unavailable": false,
+  "unavailable_reason": null
+}
