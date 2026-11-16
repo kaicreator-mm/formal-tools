@@ -36,7 +36,7 @@ if(!fsyncSupported&&process.env.CI){
 }
 const onSupported=fsyncSupported?test:test.skip;
 
-function fixture(){
+function fixture({independentOracle=false}={}){
   const problem={
     schema:"formal-tools/problem-spec/0.1",
     problem_id:"ads.g4.cross_process",
@@ -74,6 +74,14 @@ function fixture(){
     tool_binary_sha256:sha("c"),platform:"debian13-x86_64",
     evidence_sha256:sha("d"),evidence_gate:"BYTES_BOUND_UNATTESTED"
   };
+  if(independentOracle){
+    problem.source_refs.push({id:"independent_oracle",sha256:sha("e"),
+      classification:"PUBLIC",purpose:"separate frozen Oracle test source",
+      consumer:"formal_tools"});
+    problem.oracles[0].source_ref="independent_oracle";
+    provenance.oracle_source_id="independent_oracle";
+    provenance.oracle_sha256=sha("e");
+  }
   return {
     problem_json:encode(problem),
     method_json:encode(method),
@@ -154,6 +162,66 @@ onSupported("G4 persisted candidate survives process restart but remains blocked
     const resurrection=await persistSolutionCandidate({store_dir:directory,...f});
     assert.equal(resurrection.status,"INVALIDATED",
       "a durable revocation tombstone must dominate a later identical persist");
+  }finally{
+    rmSync(directory,{recursive:true,force:true});
+  }
+});
+
+
+onSupported("G4 independently sourced Oracle Candidate persists, reopens, detects both Oracle drifts and remains revocable",async()=>{
+  const directory=mkdtempSync(join(tmpdir(),"ft-g4-independent-oracle-process-"));
+  try{
+    const f=fixture({independentOracle:true});
+    const stored=await persistSolutionCandidate({store_dir:directory,...f});
+    assert.equal(stored.status,"CANDIDATE_PERSISTED",JSON.stringify(stored));
+    assert.equal(stored.record_write,"NEW");
+    assert.match(stored.candidate_sha256,/^[a-f0-9]{64}$/);
+
+    const request={
+      store_dir:directory,
+      candidate_sha256:stored.candidate_sha256,
+      current_provenance_json:f.provenance_json
+    };
+    const reopened=inspectInFreshProcess(request);
+    assert.equal(reopened.status,"REPLAY_BLOCKED_UNQUALIFIED");
+    assert.equal(reopened.fingerprint,stored.candidate_sha256);
+    assert.equal(reopened.claim_result,"UNVERIFIED");
+    assert.equal(reopened.replay_allowed,false);
+    assert.equal(reopened.solution_promotable,false);
+
+    const oracleIdDrift=inspectInFreshProcess({
+      ...request,
+      current_provenance_json:encode({...f.provenance,oracle_source_id:"another_oracle"})
+    });
+    assert.equal(oracleIdDrift.status,"STALE");
+    assert.deepEqual(oracleIdDrift.changed_fields,["oracle_source_id"]);
+    const oracleDigestDrift=inspectInFreshProcess({
+      ...request,
+      current_provenance_json:encode({...f.provenance,oracle_sha256:sha("f")})
+    });
+    assert.equal(oracleDigestDrift.status,"STALE");
+    assert.deepEqual(oracleDigestDrift.changed_fields,["oracle_sha256"]);
+    for(const stale of [oracleIdDrift,oracleDigestDrift]){
+      assert.equal(stale.claim_result,"UNVERIFIED");
+      assert.equal(stale.replay_allowed,false);
+      assert.equal(stale.solution_promotable,false);
+    }
+
+    const revoked=await revokeStoredCandidate({
+      store_dir:directory,
+      candidate_sha256:stored.candidate_sha256,
+      reason:"ORACLE_REVOKED"
+    });
+    assert.equal(revoked.status,"INVALIDATED");
+    const afterRestart=inspectInFreshProcess(request);
+    assert.equal(afterRestart.status,"INVALIDATED");
+    assert.equal(afterRestart.reason,"EXPLICIT_REVOCATION");
+    assert.equal(afterRestart.replay_allowed,false);
+    assert.equal(afterRestart.solution_promotable,false);
+
+    const resurrection=await persistSolutionCandidate({store_dir:directory,...f});
+    assert.equal(resurrection.status,"INVALIDATED",
+      "a distinct-source Candidate must not resurrect after its Oracle revocation tombstone");
   }finally{
     rmSync(directory,{recursive:true,force:true});
   }
