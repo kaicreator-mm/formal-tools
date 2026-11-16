@@ -1,0 +1,2 @@
+"case=valid_inspect_awaiting_confirmation"
+(error "cannot push when not solving incrementally (use --incremental)")
