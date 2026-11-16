@@ -6,7 +6,7 @@ import { resolve } from 'node:path';
 
 const evidence = JSON.parse(await readFile(resolve('docs/tool-portfolio/r99/CBMC_CURRENT_MAIN_T4.json'), 'utf8'));
 const sha256 = value => createHash('sha256').update(value).digest('hex');
-const gitBlobSha1 = bytes => createHash('sha1').update(Buffer.from(\`blob \${bytes.length}\\0\`)).update(bytes).digest('hex');
+const gitBlobSha1 = bytes => createHash('sha1').update(Buffer.from('blob ' + bytes.length + '\0')).update(bytes).digest('hex');
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/);
 
 test('CBMC R99 evidence is bound to the requested exact main and current source blobs', async () => {
@@ -14,7 +14,7 @@ test('CBMC R99 evidence is bound to the requested exact main and current source 
   assert.equal(evidence.exact_main, '530a2d7a8edf99106845be228b6451c6aa52be92');
   assert.equal(evidence.main_push.status, 'SUCCESS');
   for (const [path, expected] of Object.entries(evidence.source_pins)) {
-    assert.equal(gitBlobSha1(await readFile(resolve(path))), expected, \`Git blob mismatch: \${path}\`);
+    assert.equal(gitBlobSha1(await readFile(resolve(path))), expected, 'Git blob mismatch: ' + path);
   }
 });
 
@@ -33,9 +33,9 @@ test('exact current-main Runner executed CBMC POS/NEG/ERR with authentic exit co
   assert.equal(evidence.bundle_overlay.runner_sha256, '020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a');
   assert.equal(r.uid, 65534); assert.equal(r.gid, 65534); assert.equal(r.bundle_write_protected, true);
   assert.equal(r.doctor.exit_code, 0); assert.equal(sha256(r.doctor.stdout), r.doctor.stdout_sha256);
-  assert.equal(r.version_native.exit_code, 0); assert.match(r.version_native.stdout, /6\\.11\\.0/);
+  assert.equal(r.version_native.exit_code, 0); assert.match(r.version_native.stdout, /6\.11\.0/);
   assert.equal(r.verify.exit_code, 0); assert.equal(sha256(r.verify.receipt_tsv), r.verify.receipt_sha256);
-  assert.match(r.verify.receipt_tsv, /verdict\\tPASS/);
+  assert.match(r.verify.receipt_tsv, /verdict\tPASS/);
   assert.deepEqual(r.verify.cases.map(x => [x.phase, x.exit_code, x.pattern_matched, x.exit_contract_matched]), [
     ['pos', 0, true, true], ['neg', 10, true, true], ['err', 3, true, true]
   ]);
