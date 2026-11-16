@@ -85,15 +85,9 @@
       "duplicate_normalized_paths": 0,
       "regular_payload_bytes": 4762659,
       "evidence_status": "INDEPENDENTLY_REPLAYED",
-      "manifest_path": "docs/tool-portfolio/r50/evidence/PYMC_T2_MEMBER_MANIFEST.json.zlib.b64",
-      "manifest_encoding": "base64(zlib(UTF-8 JSON)); decode base64 then zlib decompress",
-      "manifest_uncompressed_size_bytes": 29557,
+      "manifest_encoding": "UTF-8 JSON; member of the immutable T2 receipt ZIP",
+      "manifest_uncompressed_size_bytes": 92163,
       "manifest_uncompressed_sha256": "c51c2643e1f171545c9401e905b986653977c5db873985ddb09030bc0aa22d05",
-      "manifest_compressed_size_bytes": 3327,
-      "manifest_compressed_sha256": "5d56f17047d9ce4a5b89b6503cd5ec9c261e7d474ab3ec757539119b3969c320",
-      "manifest_base64_size_bytes": 4436,
-      "manifest_base64_sha256": "582982f86e7f9113f897c62a49b5b0920cb894c2d2fdec7bc094eb83931fc9c7",
-      "manifest_git_blob": "46ac724f5ffa92c5896d221f0ed09818e03bf3ed",
       "manifest_source": {
         "receipt_archive_drive_file_id": "1u-yzMMeWUOedqgzYY0eY5yGgkpu6DhRm",
         "archive_entry": "tar-members.json",
@@ -106,7 +100,8 @@
         "archive_tar_sha256": "9488515ac9bb8eb3762d61205b3248f3c88a81d01c77d1e4bd0ad21ca9490547",
         "unsafe_or_duplicate_count": 0,
         "path_type_size_uid_gid_match_count": 315
-      }
+      },
+      "manifest_archive_member": "tar-members.json"
     },
     "extraction": {
       "result": "PASS_SCOPED_INDEPENDENT_REPLAY",
@@ -126,10 +121,8 @@
       "symlinks_after_extraction": 0,
       "special_files_after_extraction": 0,
       "extracted_tree_sha256": "6877e3aedbfc2ccf18b3e9d7c1084d885e8278060b44167291681afccfb6a72e",
-      "receipt_path": "docs/tool-portfolio/r50/evidence/PYMC_T2_EXTRACTION_RECEIPT.json",
       "receipt_blob": "4b2747b0e1dc656590522165d2fa6679979a3349",
       "receipt_sha256": "38c523827ba62a4e3c6a604ccc4887aa32ce14e60c5ce26a3bd1c04ca66878dd",
-      "replay_log_path": "docs/tool-portfolio/r50/evidence/PYMC_T2_REPLAY_LOG.txt",
       "replay_log_blob": "23216bc38ffc53f98ca1eb86504114663f88685c",
       "replay_log_sha256": "e6880cca97275e6a197997ce5ceb5d7a881f0b488caaf7d67f889d652f71e6bb",
       "execution_user": "uid=65534(nobody) gid=65534(nogroup) groups=65534(nogroup)",
@@ -153,7 +146,26 @@
         "owner_mismatches": 0,
         "regular_file_sha256_matches_receipt": 271,
         "path_type_owner_matches_receipt": 316
-      }
+      },
+      "receipt_archive_member": "receipt.json",
+      "replay_log_archive_members": [
+        "environment.txt",
+        "source-sha256.txt",
+        "manifest-entry.txt",
+        "zstd-test.stdout",
+        "zstd-test.stderr",
+        "zstd-test.exit",
+        "zstd-decompress.stderr",
+        "zstd-decompress.exit",
+        "archive-tar.sha256",
+        "tar-listing.txt",
+        "tar-listing.stderr",
+        "tar-listing.exit",
+        "extract.stdout",
+        "extract.stderr",
+        "extract.exit"
+      ],
+      "receipt_archive_drive_file_id": "1u-yzMMeWUOedqgzYY0eY5yGgkpu6DhRm"
     },
     "embedded_file_sha256": {
       "meta.sh": "086441cd0ed2c75d03818cc4d5205450985852e4961559bc035bc097d08d1855",
