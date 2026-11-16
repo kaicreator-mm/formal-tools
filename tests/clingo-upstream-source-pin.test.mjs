@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { chmodSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -17,23 +17,23 @@ FT_TOOL_DIR="$MOCK_WORK/tools/clingo"
 FT_LOG="$MOCK_WORK/build.log"
 MOCK_SOURCE_DIR="$MOCK_WORK/src/clingo-source"
 mkdir -p "$FT_TOOL_DIR/bin" "$MOCK_SOURCE_DIR/libclingo"
-if [ "${MOCK_HEADER:-valid}" != absent ]; then
-  printf '#define CLINGO_VERSION "%s"\n' "${MOCK_HEADER_VERSION:-5.8.3}" > "$MOCK_SOURCE_DIR/libclingo/clingo.h"
+if [ "${"$"}{MOCK_HEADER:-valid}" != absent ]; then
+  printf '#define CLINGO_VERSION "%s"\n' "${"$"}{MOCK_HEADER_VERSION:-5.8.3}" > "$MOCK_SOURCE_DIR/libclingo/clingo.h"
 fi
 cat > "$FT_TOOL_DIR/bin/clingo" <<'BIN'
 #!/bin/sh
-if [ "${MOCK_VERSION_EXIT:-0}" != 0 ]; then exit "$MOCK_VERSION_EXIT"; fi
-printf 'clingo version %s\n' "${MOCK_VERSION_OUTPUT:-5.8.3}"
+if [ "${"$"}{MOCK_VERSION_EXIT:-0}" != 0 ]; then exit "$MOCK_VERSION_EXIT"; fi
+printf 'clingo version %s\n' "${"$"}{MOCK_VERSION_OUTPUT:-5.8.3}"
 BIN
 chmod +x "$FT_TOOL_DIR/bin/clingo"
 ft::die() { printf '%s\n' "FATAL: $*" >&2; exit 3; }
 ft::note() { printf '%s\t%s\n' "$1" "$2" >> "$MOCK_WORK/notes"; }
 ft::fetch() {
-  if [ "${MOCK_FETCH_FAIL:-0}" = 1 ]; then return 42; fi
+  if [ "${"$"}{MOCK_FETCH_FAIL:-0}" = 1 ]; then return 42; fi
   printf '%s\n' "$MOCK_WORK/clingo.tar.gz"
 }
 ft::extract() {
-  if [ "${MOCK_EXTRACT_FAIL:-0}" = 1 ]; then return 43; fi
+  if [ "${"$"}{MOCK_EXTRACT_FAIL:-0}" = 1 ]; then return 43; fi
   return 0
 }
 find() { printf '%s\n' "$MOCK_SOURCE_DIR"; }
