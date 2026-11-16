@@ -19,6 +19,9 @@ test('CBMC R99 evidence is bound to the requested exact main and current source 
   assert.equal(evidence.schema, 'formal-tools/cbmc-current-main-t4/1');
   assert.equal(evidence.exact_main, '530a2d7a8edf99106845be228b6451c6aa52be92');
   assert.equal(evidence.main_push.status, 'SUCCESS');
+  assert.equal(evidence.main_push.pipeline, 1867);
+  assert.equal(evidence.main_push.commit, evidence.exact_main);
+  assert.match(evidence.main_push.url, /pipeline\/1867\/1$/);
   for (const [path, expected] of Object.entries(evidence.source_pins)) {
     assert.equal(gitBlobSha1(await readFile(resolve(path))), expected, 'Git blob mismatch: ' + path);
   }
