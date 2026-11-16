@@ -120,22 +120,26 @@ export const GATE_DEPENDENCIES = Object.freeze({
     "installedPackageTreeSha256"
   ]),
   T3: Object.freeze([
-    "version", "bundledJarSha256", "alloyRunnerClassSha256", "expectBlob",
-    "positiveFixtureBlob", "negativeFixtureBlob", "errorFixtureBlob",
+    "version", "canonicalArchiveSha256", "bundledJarSha256", "alloyRunnerClassSha256",
+    "expectBlob", "positiveFixtureBlob", "negativeFixtureBlob", "errorFixtureBlob",
     "exitContractTestBlob", "observedHostJavaVersion", "observedHostJavaSha256",
     "nativeAcceptanceEvidenceBlob", "nativeAcceptanceEvidenceRef"
   ]),
   T4: Object.freeze([
-    "version", "expectBlob", "positiveFixtureBlob", "negativeFixtureBlob",
-    "errorFixtureBlob", "exitContractTestBlob", "runnerBlob", "nativeAdapterBlob",
-    "nativeCatalogBlob", "toolManagerBlob", "cliDriverBlob", "sdkDriverBlob",
-    "toolResultBlob", "mcpDriverBlob", "portfolioGatewayBlob", "registryBlob",
-    "portfolioDagBlob", "runtimeImageDigest"
+    "version", "canonicalArchiveSha256", "bundledJarSha256", "alloyRunnerClassSha256",
+    "expectBlob", "positiveFixtureBlob", "negativeFixtureBlob", "errorFixtureBlob",
+    "exitContractTestBlob", "runnerBlob", "nativeAdapterBlob", "nativeCatalogBlob",
+    "toolManagerBlob", "cliDriverBlob", "sdkDriverBlob", "toolResultBlob",
+    "mcpDriverBlob", "portfolioGatewayBlob", "registryBlob", "portfolioDagBlob",
+    "observedHostJavaVersion", "observedHostJavaSha256", "portableJavaRuntimeSha256",
+    "runtimeImageDigest"
   ]),
   T5: Object.freeze([
-    "version", "installedPackageTreeSha256", "observedHostJavaVersion",
-    "runtimeImageDigest", "positiveFixtureBlob", "negativeFixtureBlob",
-    "errorFixtureBlob", "oracleId", "oracleVersion", "oracleCaseBlob"
+    "version", "canonicalArchiveSha256", "bundledJarSha256", "alloyRunnerClassSha256",
+    "installedPackageTreeSha256", "observedHostJavaVersion", "observedHostJavaSha256",
+    "portableJavaRuntimeSha256", "runtimeImageDigest", "positiveFixtureBlob",
+    "negativeFixtureBlob", "errorFixtureBlob", "oracleId", "oracleVersion",
+    "oracleCaseBlob"
   ]),
   T6: IDENTITY_FIELDS
 });
