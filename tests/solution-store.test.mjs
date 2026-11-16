@@ -52,9 +52,9 @@ function fixture(){
       provides:["logic.smt"],depends_on:[],source_refs:["requirements"],
       estimated_cost_units:2,timeout_ms:300,destination:"LOCAL",
       output_classification:"PUBLIC"}]};
-  const provenance={schema:"formal-tools/solution-provenance/0.1",
+  const provenance={schema:"formal-tools/solution-provenance/0.2",
     source_id:"requirements",source_sha256:sha("a"),
-    oracle_id:"oracle1",oracle_sha256:sha("a"),
+    oracle_id:"oracle1",oracle_source_id:"requirements",oracle_sha256:sha("a"),
     model_sha256:sha("b"),tool_id:"z3",tool_version:"5.4.0",
     tool_binary_sha256:sha("c"),platform:"debian13-x86_64",
     evidence_sha256:sha("d"),evidence_gate:"BYTES_BOUND_UNATTESTED"};
@@ -105,6 +105,7 @@ onSupported("G4 persisted candidate invalidates every source/oracle/model/tool/e
      ["source_id","requirements-v2"],
      ["source_sha256",sha("e")],
      ["oracle_id","oracle-v2"],
+     ["oracle_source_id","oracle-source-v2"],
      ["oracle_sha256",sha("e")],
      ["model_sha256",sha("e")],
      ["tool_id","cvc5"],
