@@ -9,7 +9,7 @@ import { assessMethod } from "./method-planner.mjs";
 
 const sha = /^[a-f0-9]{64}$/;
 const ident = /^[a-z][a-z0-9_.-]{0,79}$/;
-const keys = ["schema","source_id","source_sha256","oracle_id","oracle_sha256",
+const keys = ["schema","source_id","source_sha256","oracle_id","oracle_source_id","oracle_sha256",
   "model_sha256","tool_id","tool_version","tool_binary_sha256","platform",
   "evidence_sha256","evidence_gate"];
 const plain = x => x && typeof x === "object" && !Array.isArray(x) &&
@@ -28,8 +28,8 @@ function parse(text,cap=131072) {
 function provenanceValid(p) {
   return plain(p) && Object.keys(p).length===keys.length && keys.every(k=>Object.hasOwn(p,k)) &&
     keys.every(k=>typeof p[k]==="string") &&
-    p.schema==="formal-tools/solution-provenance/0.1" &&
-    [p.source_id,p.oracle_id,p.tool_id].every(x=>ident.test(x)) &&
+    p.schema==="formal-tools/solution-provenance/0.2" &&
+    [p.source_id,p.oracle_id,p.oracle_source_id,p.tool_id].every(x=>ident.test(x)) &&
     [p.source_sha256,p.oracle_sha256,p.model_sha256,p.tool_binary_sha256,p.evidence_sha256].every(x=>sha.test(x)) &&
     p.tool_version.length>0 && p.tool_version.length<=96 &&
     p.platform.length>0 && p.platform.length<=96 &&
@@ -54,6 +54,7 @@ export function sealSolutionCandidate({problem_json,method_json,provenance_json}
     // schema must also represent a genuinely independent Oracle source.
     const oracleSource=oracle&&problem.source_refs.find(s=>s.id===oracle.source_ref);
     if(!source||source.sha256!==provenance.source_sha256||!oracle||!oracleSource||
+       oracle.source_ref!==provenance.oracle_source_id||
        oracle.frozen!==true||provenance.oracle_sha256!==oracleSource.sha256)
       return denied("source/oracle does not match frozen G2 authority");
     if(!method.oracle_ids.includes(provenance.oracle_id) ||
