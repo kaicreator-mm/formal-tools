@@ -1,0 +1,166 @@
+{
+  "schema": "formal-tools/tool-exit-contract/0.1",
+  "output_label": "FORMAL_TOOLS_I24_UNIFIED_PARALLEL_DELIVERY",
+  "issue": 26,
+  "tool_id": "alloy",
+  "tool_version": "6.2.0",
+  "baseline_main": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
+  "source_files": {
+    "portable/builders/tools/alloy.sh": "0e669d34904917dee378ef4fbd42f5fe8852e2da",
+    "portable/builders/java-src/AlloyRunner.java": "ae55db78935303a09c67392d4bc0a5f357700dec",
+    "portable/verification/cases/alloy/err.als": "9b3f8e5f6eedcced1710bf2e0713dd48e5bf2a4c",
+    "portable/verification/cases/alloy/pos.als": "0e20ca39f6c1d4b8d3d310339fe4a5b56cd2923e",
+    "portable/verification/cases/alloy/neg.als": "91c8acdd5ff87a0eca137e9f3a64e2f96950042f"
+  },
+  "original_archive": {
+    "drive_file_id": "1HqJfRyy4_agn-A32x98oOwKzMRmWPXoQ",
+    "name": "alloy-6.2.0-linux-x86_64.tar.zst",
+    "size_bytes": 20293127,
+    "sha256": "639176fa9bb357015af2a62fdf6da61cacfa9a471c99a1235070c4ec7e610672",
+    "sha256sums_verified": true,
+    "zstd_test": "PASS",
+    "tar_preflight": {
+      "members": 6,
+      "directories": 1,
+      "regular_files": 5,
+      "symlinks": 0,
+      "hardlinks": 0,
+      "special_files": 0,
+      "unsafe_paths": 0,
+      "regular_payload_bytes": 21066054
+    },
+    "extraction": "PASS_SCOPED_UID_GID_65534",
+    "jar_sha256": "6b8c1cb5bc93bedfc7c61435c4e1ab6e688a242dc702a394628d9a9801edb78d",
+    "AlloyRunner_class_sha256": "7730ef57cd11f9f5b1ec86599ecfc2099c0490afbfff00bd8fc9fe19920b0bcf"
+  },
+  "historic_r3": {
+    "reference": "https://github.com/kaicreator-mm/formal-tools/issues/11#issuecomment-6824089200",
+    "execution": "ORIGINAL_TAR_RUNNER_PASS_R3",
+    "exit_codes": {
+      "POS": 0,
+      "NEG": 0,
+      "ERR": 1
+    },
+    "qualification": "HISTORICAL_SCOPED_ONLY_NOT_RERUN"
+  },
+  "native_err": {
+    "execution_identity": "UID_GID_65534_HOST_OPENJDK_21_0_12_1",
+    "host": "Debian GNU/Linux 13 x86_64",
+    "execution_class": "DIRECT_HOST_JAVA_NATIVE_FIXTURE_ONLY_NOT_PORTABLE_RUNNER",
+    "command": "java -Xmx512m -cp /mnt/data/alloy-r77-native-DJUXF3/bundle/tools/alloy/org.alloytools.alloy.dist.jar:/mnt/data/alloy-r77-native-DJUXF3/bundle/tools/alloy AlloyRunner /mnt/data/alloy-r77-native-DJUXF3/fixtures/err.als",
+    "timeout_seconds": 45,
+    "exit_code": 1,
+    "fixture_git_blob": "9b3f8e5f6eedcced1710bf2e0713dd48e5bf2a4c",
+    "stdout_utf8": "",
+    "stderr_utf8": "Exception in thread \"main\" Syntax error in /mnt/data/alloy-r77-native-DJUXF3/fixtures/err.als at line 3 column 10:\nThere are 3 possible tokens that can appear here:\n,  : = \n\tat edu.mit.csail.sdg.parser.CompParser.syntax_error(CompParser.java:2633)\n\tat edu.mit.csail.sdg.parser.CompParser.parse(CompParser.java:2482)\n\tat edu.mit.csail.sdg.parser.CompParser.alloy_parseStream(CompParser.java:2675)\n\tat edu.mit.csail.sdg.parser.CompUtil.parse(CompUtil.java:476)\n\tat edu.mit.csail.sdg.parser.CompUtil.parseRecursively(CompUtil.java:238)\n\tat edu.mit.csail.sdg.parser.CompUtil.parseEverything_fromFile(CompUtil.java:383)\n\tat AlloyRunner.main(AlloyRunner.java:21)\n",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "28068944e2a3cfbe4fa095dd2c06ca8f270d7e41186c751c283255b68849f844",
+    "diagnostic": "Syntax error in .../err.als at line 3 column 10",
+    "note": "Absolute workspace directory occurs in raw stderr; output SHA is valid for this exact run, not a claim of bit-identical reruns in another workspace. Java is host package 21.0.12.1 rather than bundled 21.0.13.9."
+  },
+  "repair": {
+    "previous": "EXPECT_ERR_EXIT=* and generic (error|Error|Exception|syntax) regex",
+    "current": "EXPECT_ERR_EXIT=1 and narrow Syntax error in ...err.als line/column diagnostic",
+    "pos_neg_unchanged": true,
+    "native_cases_rerun": [
+      "ERR"
+    ],
+    "native_cases_reused_from_r3": [
+      "POS",
+      "NEG"
+    ],
+    "review_p1_01": {
+      "finding": "Shell-valid readonly/declare/declare -g/typeset/local and other executable constructs could override EXPECT_*_EXIT while the prior narrow parser ignored them.",
+      "repair": "The contract test now fails closed for the entire sourced expect.sh: only blank lines, full-line comments, and the exact allowlisted 13 simple static EXPECT_* assignments are accepted. POS/NEG/ERR exits must be unquoted numeric literals.",
+      "negative_controls": [
+        "readonly EXPECT_ERR_EXIT=77",
+        "declare EXPECT_ERR_EXIT=77",
+        "declare -g EXPECT_ERR_EXIT=77",
+        "typeset EXPECT_ERR_EXIT=77",
+        "local EXPECT_ERR_EXIT=77",
+        "builtin readonly EXPECT_ERR_EXIT=77",
+        "printf -v EXPECT_ERR_EXIT 77",
+        "eval 'EXPECT_ERR_EXIT=77'",
+        "arbitrary executable command",
+        "command substitution",
+        "duplicate, missing, quoted, leading-space, export and chained assignments"
+      ],
+      "bash_source_regression": "Node test creates a real temporary expect.sh file, sources it with Bash and asserts 0:0:1; it rejects a readonly override mutant in the static validator and demonstrates the overridden 0:0:77 runtime value. Test execution is pending.",
+      "test_file": "tests/alloy-exit-contract.test.mjs",
+      "test_blob": "b33fc49457a8db4b6b186df34239a881d1173c83",
+      "status": "IMPLEMENTED_LOCAL_NODE22_16_AND_BASH_SOURCE_CHECKS_PASS_PENDING_EXACT_HEAD_CI_AND_FRESH_INDEPENDENT_REVIEW",
+      "local_validation": {
+        "node": "22.16.0",
+        "static_negative_mutations_rejected": 17,
+        "bash_source_baseline": "0:0:1",
+        "readonly_attack_runtime": "0:0:77",
+        "attack_rejected_by_static_validator": true,
+        "full_repository_test_suite": "NOT_RUN"
+      }
+    },
+    "status": "R81_REPAIR_COMMITTED; LOCAL_NODE22_16_AND_BASH_SOURCE_CHECKS_PASS; PRE_SYNC_EXACT_HEAD_CI_PUSH_1724_PR_1725_SUCCESS_AFTER_INFRA_RETRY; R92_SYNCED_HEAD_REQUIRES_NEW_EXACT_HEAD_DUAL_CI_AND_FRESH_NON_WRITER_REVIEW"
+  },
+  "qualification": {
+    "T0": "HISTORICAL_R3_ARCHIVE_SHA_MATCH_PRODUCER_MANIFEST_ONLY",
+    "T1": "NOT_QUALIFIED_REPRODUCIBLE_BUILD_NOT_RUN",
+    "T2": "SCOPED_CURRENT_ARCHIVE_PATH_TYPE_PREFLIGHT_AND_NONROOT_EXTRACTION",
+    "T3": "HISTORICAL_R3_FULL_FIXTURE_SCOPED; R77_DIRECT_HOST_JAVA_ERR_ONLY",
+    "T4": "NOT_QUALIFIED_CURRENT_MAIN_FULL_E2E_NOT_RUN",
+    "T5": "NOT_QUALIFIED_NO_INDEPENDENT_BUSINESS_ORACLE",
+    "T6": "OPEN_NO_MAINTENANCE_GATE",
+    "Product": "NOT_GRANTED",
+    "Release": "NOT_GRANTED"
+  },
+  "limitations": [
+    "No full portable bundle was reconstructed; current-main Runner/CLI/MCP/SDK paths were not invoked.",
+    "This fixes a fail-open ERR exit contract and adds source tests; it does not independently qualify the business model or lifecycle.",
+    "No POS/NEG native replay in R77; historical exact archive R3 receipt reused."
+  ],
+  "current_main_sync": {
+    "main_sha": "319367063177dec22a6df64233fae2a5fceef00f",
+    "main_delta_from_native_baseline": "Main advanced after the native execution snapshot to 319367063177dec22a6df64233fae2a5fceef00f (20 commits, 9 changed paths from prior sync main 069444c176bbacc804f107482f356dbc2eb95736). All 9 paths are other-tool evidence/docs or Robot/Clingo-owned files and are disjoint from all three Alloy-owned paths and the five pinned Alloy source files. No Alloy native execution was performed on this main delta.",
+    "prior_source_head": "0e96361c8a1f72b4c2b7a7082e48d7b0c95c6a17",
+    "latest_main_delta": {
+      "commit": "319367063177dec22a6df64233fae2a5fceef00f",
+      "previous_main": "069444c176bbacc804f107482f356dbc2eb95736",
+      "ahead": 20,
+      "behind": 0,
+      "changed_files": 9,
+      "changed_paths": [
+        "docs/tool-portfolio/r27/WHY3_R27_SCOPED_REPLAY.json",
+        "docs/tool-portfolio/r27/WHY3_R27_VERIFICATION.zip",
+        "docs/tool-portfolio/r50/PYMC_T0_SOURCE_AUDIT.json",
+        "docs/tool-portfolio/r56/ROBOT_CURRENT_MAIN_T4.json",
+        "docs/tool-portfolio/r60/CLINGO_T6_MAINTENANCE.json",
+        "portable/verification/cases/robot/expect.sh",
+        "scripts/tool-portfolio/clingo-maintenance.mjs",
+        "tests/clingo-maintenance.test.mjs",
+        "tests/robot-portfolio-contract.test.mjs"
+      ],
+      "scope": "OTHER_TOOL_EVIDENCE_DOCS_ROBOT_CLINGO_ONLY",
+      "alloy_disjoint": true,
+      "source_pin_matches": "5/5",
+      "source_pins": [
+        "portable/builders/tools/alloy.sh",
+        "portable/builders/java-src/AlloyRunner.java",
+        "portable/verification/cases/alloy/err.als",
+        "portable/verification/cases/alloy/pos.als",
+        "portable/verification/cases/alloy/neg.als"
+      ],
+      "alloy_native_execution": "NOT_RUN",
+      "main_push_pipeline": 1749,
+      "main_push_status": "SUCCESS"
+    },
+    "history": [
+      {
+        "commit": "069444c176bbacc804f107482f356dbc2eb95736",
+        "changed_files": [
+          "tests/g4-solution-cross-process.test.mjs"
+        ],
+        "scope": "G4_TEST_ONLY",
+        "alloy_disjoint": true,
+        "alloy_native_execution": "NOT_RUN"
+      }
+    ]
+  }
+}
