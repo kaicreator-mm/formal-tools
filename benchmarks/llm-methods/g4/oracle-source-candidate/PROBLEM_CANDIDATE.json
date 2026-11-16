@@ -67,11 +67,6 @@
       "id": "r3",
       "source_ref": "xdownload_interaction",
       "text": "READY_FOR_KDP remains an observation: authority NONE, effectDispatched false, permittedEffect false."
-    },
-    {
-      "id": "r10_policy",
-      "source_ref": "xdownload_dis_r10_policy_source",
-      "text": "LOCAL interaction inspect/confirm are observation-only; READY_FOR_KDP is not KDP Intent and needs explicit confirmation"
     }
   ],
   "claims": [
@@ -82,12 +77,10 @@
       "requirement_ids": [
         "r1",
         "r2",
-        "r3",
-        "r10_policy"
+        "r3"
       ],
       "source_refs": [
-        "xdownload_interaction",
-        "xdownload_dis_r10_policy_source"
+        "xdownload_interaction"
       ],
       "capability_ids": [
         "logic.smt"
