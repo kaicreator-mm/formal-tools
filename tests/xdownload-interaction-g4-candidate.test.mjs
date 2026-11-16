@@ -5,23 +5,34 @@ import {createHash} from 'node:crypto';
 import {sealSolutionCandidate,inspectCandidateReplay} from '../packages/runner/js/solution-candidate.mjs';
 
 const base=new URL('../benchmarks/llm-methods/g4/',import.meta.url);
-const evidenceUrl=new URL('../validation/xdownload-interaction-2026-11-16/PAIR.json',import.meta.url);
+const evidenceRoot='../validation/xdownload-interaction-2026-11-16/';
+const evidenceUrl=new URL(evidenceRoot+'PAIR.json',import.meta.url);
+const rerunUrl=new URL(evidenceRoot+'PAIR-RERUN.json',import.meta.url);
+const evidenceIndexUrl=new URL(evidenceRoot+'EVIDENCE_INDEX.json',import.meta.url);
 const readJson=async url=>JSON.parse(await readFile(url,'utf8'));
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 
 test('xDownload bounded dual-solver evidence seals only an unqualified G4 Candidate',async()=>{
- const [problem,method,provenance,pair,modelSet,modelSetBytes,pairBytes]=await Promise.all([
+ const [problem,method,provenance,pair,rerun,evidenceIndex,modelSet,modelSetBytes,pairBytes,rerunBytes,indexBytes]=await Promise.all([
   readJson(new URL('PROBLEM.json',base)),readJson(new URL('METHOD.json',base)),
-  readJson(new URL('PROVENANCE.json',base)),readJson(evidenceUrl),
-  readJson(new URL('MODEL_SET.json',base)),readFile(new URL('MODEL_SET.json',base)),
-  readFile(evidenceUrl)
+  readJson(new URL('PROVENANCE.json',base)),readJson(evidenceUrl),readJson(rerunUrl),
+  readJson(evidenceIndexUrl),readJson(new URL('MODEL_SET.json',base)),
+  readFile(new URL('MODEL_SET.json',base)),readFile(evidenceUrl),readFile(rerunUrl),
+  readFile(evidenceIndexUrl)
  ]);
  assert.equal(pair.pair_agreement.compared_queries,5);
  assert.equal(pair.pair_agreement.agree,5);
  assert.equal(pair.pair_agreement.disagree,0);
  assert.equal(method.steps.length,10);
  assert.equal(provenance.model_sha256,sha(modelSetBytes));
- assert.equal(provenance.evidence_sha256,sha(pairBytes));
+ assert.equal(provenance.evidence_sha256,sha(indexBytes));
+ assert.equal(evidenceIndex.evidence[0].sha256,sha(pairBytes));
+ assert.equal(evidenceIndex.evidence[1].sha256,sha(rerunBytes));
+ assert.equal(rerun.pair_agreement.compared_queries,5);
+ assert.equal(rerun.pair_agreement.agree,5);
+ assert.equal(rerun.pair_agreement.disagree,0);
+ assert.equal(rerun.execution_summary.native_invocations,10);
+ assert.equal(rerun.execution_summary.exit_code_zero,10);
  assert.equal(provenance.evidence_gate,'BYTES_BOUND_UNATTESTED');
  for(const entry of modelSet.cases){
   const bytes=await readFile(new URL('../'+entry.path,import.meta.url));
@@ -33,6 +44,19 @@ test('xDownload bounded dual-solver evidence seals only an unqualified G4 Candid
    const bytes=await readFile(new URL('../'+receipt.stdout_path,import.meta.url));
    assert.equal(sha(bytes),receipt.stdout_sha256,observation.id+' '+solver);
    assert.equal(bytes.toString().trim().toUpperCase(),observation.expected_status);
+   assert.equal(receipt.exit_code,0);
+   assert.equal(receipt.stderr_empty,true);
+  }
+ }
+
+ for(const observation of rerun.observations){
+  for(const solver of ['z3','cvc5']){
+   const receipt=observation.solvers[solver];
+   const bytes=await readFile(new URL('../'+receipt.stdout_path,import.meta.url));
+   const stderr=await readFile(new URL('../'+receipt.stderr_path,import.meta.url));
+   assert.equal(sha(bytes),receipt.stdout_sha256,observation.id+' '+solver+' rerun');
+   assert.equal(bytes.toString().trim().toUpperCase(),observation.expected_status);
+   assert.equal(sha(stderr),receipt.stderr_sha256,observation.id+' '+solver+' stderr');
    assert.equal(receipt.exit_code,0);
    assert.equal(receipt.stderr_empty,true);
   }
