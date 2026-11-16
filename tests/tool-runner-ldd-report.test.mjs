@@ -155,6 +155,41 @@ for (const [label,image] of [
   });
 }
 
+// Structurally valid minimal ELF32-LE image (EI_CLASS=1, e_ehsize=52,
+// e_phentsize=32): a well-formed i386 ET_EXEC whose only disqualifier is the
+// 32-bit class. ELF32 fields sit at different offsets with different widths,
+// so the ELF64 static shortcut must be withheld purely on class grounds and
+// the image delegated to the fail-closed ldd path.
+function elf32Image({type=2,entry=0x08048040,machine=3,loadFlags=5,loadVaddr=0x08048000}={}) {
+  const eh=Buffer.alloc(52), ph=Buffer.alloc(32);
+  const fileBytes=52+32;
+  eh.set([0x7f,0x45,0x4c,0x46, 1, 1, 1, 0]); // magic, ELFCLASS32, little-endian, v1
+  eh.writeUInt16LE(type, 16); // e_type (ET_EXEC=2)
+  eh.writeUInt16LE(machine, 18); // e_machine (EM_386=3)
+  eh.writeUInt8(1, 6); // EI_VERSION
+  eh.writeUInt32LE(1, 20); // e_version
+  eh.writeUInt32LE(entry, 24); // e_entry
+  eh.writeUInt32LE(52, 28); // e_phoff: program headers directly after the 52-byte header
+  eh.writeUInt16LE(52, 40); // e_ehsize
+  eh.writeUInt16LE(32, 42); // e_phentsize
+  eh.writeUInt16LE(1, 44); // e_phnum
+  ph.writeUInt32LE(1, 0); // p_type PT_LOAD
+  ph.writeUInt32LE(0, 4); // p_offset
+  ph.writeUInt32LE(loadVaddr, 8); // p_vaddr
+  ph.writeUInt32LE(fileBytes, 12); // p_filesz
+  ph.writeUInt32LE(fileBytes, 16); // p_memsz
+  ph.writeUInt32LE(loadFlags, 20); // p_flags (ELF32 places p_flags after p_memsz)
+  ph.writeUInt32LE(4, 24); // p_align
+  return Buffer.concat([eh, ph]);
+}
+const staticShapedElf32=elf32Image(); // runnable ET_EXEC shape: PF_X load containing a nonzero entry
+test('valid ELF32-LE ET_EXEC (e_ehsize=52, e_phentsize=32) cannot receive the ELF64 static shortcut',{skip:!isLinux},()=>{
+  const p=doctorWithLdd(gnuLddOnStatic,1,unhealthy,staticShapedElf32);
+  assert.match(p.stdout,/ldd probe FAILED/);
+  assert.doesNotMatch(p.stdout,/static ELF OK/);
+  assert.doesNotMatch(p.stdout,/no missing libs OK/);
+});
+
 function compileGcc(outName, flags) {
   const dir=mkdtempSync(join(tmpdir(),'ft-r15-gcc-'));
   try {
@@ -243,4 +278,40 @@ test('real ET_DYN without PT_INTERP but with DT_NEEDED missing library fails doc
 // A lone virtual DSO address never proves the presence of the real loader or libraries.
 test('vDSO-only ldd success cannot pass doctor',{skip:!isLinux},()=>{
   doctorWithLdd("echo 'linux-vdso.so.1 (0x00007fff1234)'; exit 0",1,unhealthy);
+});
+
+// vDSO-only output combined with an arbitrary nonempty diagnostic: neither the
+// skipped vDSO line nor any unrecognized diagnostic may count as a dependency
+// row, and rc0 alone must never grant "no missing libs".
+test('vDSO-only ldd output plus arbitrary diagnostic cannot pass doctor',{skip:!isLinux},()=>{
+  const p=doctorWithLdd("printf '%s\\n' 'linux-vdso.so.1 (0x00007fff1234)' 'ldd: arbitrary diagnostic text'; exit 0",1,unhealthy);
+  assert.doesNotMatch(p.stdout,/no missing libs OK/);
+  assert.doesNotMatch(p.stdout,/static ELF OK/);
+});
+
+// Legacy TOOL_TOOL_ID/TOOL_ID version alias regression: the historical
+// packaging-bug key must stay fail-closed for every identity-consuming command
+// (doctor/version/run exit 2) after the static-ELF classifier repairs, with
+// no inherited-environment TOOL_ID spoof able to resurrect the alias.
+test('legacy TOOL_TOOL_ID alias remains fail-closed for doctor, version, and run',{skip:!isLinux},()=>{
+  const root=mkdtempSync(join(tmpdir(),'ft-r28-alias-'));
+  try {
+    const bin=join(root,'bin'), tool=join(root,'tools','mock');
+    mkdirSync(bin,{recursive:true});mkdirSync(join(tool,'bin'),{recursive:true});
+    copyFileSync(source,join(bin,'tool-runner'));
+    chmodSync(join(bin,'tool-runner'),0o755);
+    writeFileSync(join(tool,'meta.sh'),'TOOL_TOOL_ID=mock\nTOOL_KIND=binary\nTOOL_VERSION=1.0\nTOOL_MAIN_BIN=tools/mock/bin/native\n');
+    writeFileSync(join(tool,'bin','native'),'#!/bin/sh\nexit 0\n');
+    chmodSync(join(tool,'bin','native'),0o755);
+    for (const cmd of ['doctor','version','run']) {
+      // Spoofed environment TOOL_ID must not mask the missing metadata key.
+      const p=spawnSync('bash',[join(bin,'tool-runner'),cmd,'mock'],{
+        encoding:'utf8',timeout:7000,
+        env:{...process.env,TOOL_ID:'mock',TOOL_VERSION:'9.9.9',FT_EVIDENCE_DIR:join(root,'receipts')}
+      });
+      assert.equal(p.status,2,`${cmd}: rc=${p.status} ${p.stderr}\n${p.stdout}`);
+      assert.match(p.stderr,/invalid tool metadata/);
+      assert.doesNotMatch(p.stdout,/verdict: OK|version: 1\.0|version: 9\.9\.9/);
+    }
+  } finally { rmSync(root,{recursive:true,force:true}); }
 });
