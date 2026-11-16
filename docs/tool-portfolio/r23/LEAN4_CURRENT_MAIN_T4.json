@@ -1858,8 +1858,8 @@
       "draft": true,
       "merge": "NOT_AUTHORIZED",
       "previous_sync_head": "123289f160fbb4b2bc1e25734af38ae183787307",
-      "sync_head": "PENDING_COMMIT",
-      "status": "SYNCED_TO_721C1F_PENDING_EXACT_HEAD_CI_AND_FRESH_NON_WRITER_REVIEW",
+      "sync_head": "138899a11341b5cbfd9d4cfff9b7e3a874f5411c",
+      "status": "SYNCED_TO_721C1F; EXACT_HEAD_CI_PENDING",
       "previous_pr_head": "14b349093b428d3798f302d1ece6a275a97da80f"
     },
     "qualification_boundary": {
