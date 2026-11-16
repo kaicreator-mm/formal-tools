@@ -174,7 +174,8 @@
     "t3": "R27 scoped fresh replay is not formal full native T3 qualification",
     "t4": "No current-main Runner CLI MCP SDK end-to-end execution for original package",
     "t5": "No independent semantic Oracle",
-    "t6": "Assessment code only; no real upstream version-change, regression and independent approval cycle"
+    "t6": "Assessment code only; no real upstream version-change, regression and independent approval cycle",
+    "assessment": "Assessor compares caller-supplied baseline/observation values only; pin/identity self-consistency is NOT independent Git provenance verification, and an independent Git-tree readback against SOURCE_MAIN is required for review. The monitored historical R27 evidence set is frozen in the assessor at exactly the 13 scopedR27EvidenceFields identities listed above; any truncated, extended or tampered baseline is rejected fail-closed and can never clear historicalR27EvidenceNeedsRecheck."
   },
   "qualificationGranted": false
 }

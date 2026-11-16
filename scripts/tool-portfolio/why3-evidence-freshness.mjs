@@ -2,6 +2,8 @@
 /**
  * Why3 T6 candidate: compare a versioned, externally supplied identity
  * observation against the scoped R27 Git/receipt baseline.
+ * Both inputs are unauthenticated caller-supplied values: pin/identity
+ * self-consistency is value comparison, never independent Git provenance proof.
  * This NEVER replays Why3, reconstructs the missing R23 bytes, or grants a gate.
  */
 import {readFile} from "node:fs/promises";
@@ -41,6 +43,30 @@ export const GATE_DEPENDENCIES = Object.freeze({
   T6: IDENTITY_FIELDS
 });
 const QUALIFIED_STATES = new Set(["PASS", "PASS_SCOPED", "ACCEPTED_SCOPED", "MERGED_SCOPED"]);
+/**
+ * Exact allowlist of baseline gate statuses pinned by the checked-in evidence
+ * snapshot. Any other string (including promotion-like tokens such as
+ * "QUALIFIED", "ACCEPTED", "PASS", "PENDING") is rejected fail-closed.
+ */
+export const BASELINE_GATE_STATUSES = Object.freeze(new Set([
+  "CANDIDATE_ONLY", "NOT_QUALIFIED", "CHROOT_OBSERVED_ONLY", "NOT_ACCEPTED", "OPEN"
+]));
+/**
+ * The complete monitored historical R27 evidence set, frozen in code
+ * independently of any caller-supplied baseline, so a truncated, extended or
+ * tampered baseline can never silence historicalR27EvidenceNeedsRecheck.
+ */
+export const REQUIRED_R27_EVIDENCE_FIELDS = Object.freeze([
+  "r27ReceiptBlob", "r27ArchiveGitBlob", "r27ArchiveSha256",
+  "why3BinarySha256", "z3BinarySha256", "z3SharedLibrarySha256",
+  "manualProverConfigSha256",
+  "posInputSha256", "negInputSha256", "errInputSha256",
+  "posStdoutSha256", "negStdoutSha256", "errStderrSha256"
+]);
+export const PROVENANCE_BOUNDARY =
+  "CALLER_SUPPLIED_UNAUTHENTICATED_VALUES: baseline and observation are value-compared only; " +
+  "pin/identity self-consistency is NOT independent Git provenance verification; " +
+  "independent Git-tree readback against SOURCE_MAIN is required for review";
 const KNOWN_NULLS = new Set([
   "canonicalPublisherArchiveSha256", "publisherSignatureVerified",
   "networkIsolationAttested", "independentBusinessOracleId"
@@ -115,6 +141,12 @@ function validateBaseline(b) {
     throw new TypeError("baseline gate schemas mismatch");
   }
   const knownFields = new Set(IDENTITY_FIELDS);
+  // Promotion-like QUALIFIED_STATES tokens are denied before the allowlist so
+  // the dedicated fail-closed promotion message keeps precedence.
+  if (Object.entries(b.gateStatus).some(([gate,status]) =>
+      QUALIFIED_STATES.has(status))) {
+    throw new TypeError("Why3 R27 technical replay must not be promoted to qualified lifecycle gate");
+  }
   for (const [gate,dependencies] of Object.entries(GATE_DEPENDENCIES)) {
     if (!dependencies.length || new Set(dependencies).size !== dependencies.length ||
         dependencies.some(field => !knownFields.has(field))) {
@@ -125,18 +157,16 @@ function validateBaseline(b) {
         new Set(raw).size !== raw.length || !equal(raw,dependencies)) {
       throw new TypeError("unknown/duplicate/mismatched baseline gate dependency for " + gate);
     }
-    if (typeof b.gateStatus[gate] !== "string" || !b.gateStatus[gate]) {
+    if (typeof b.gateStatus[gate] !== "string" || !BASELINE_GATE_STATUSES.has(b.gateStatus[gate])) {
       throw new TypeError("invalid baseline gate status " + gate);
     }
   }
-  if (Object.entries(b.gateStatus).some(([gate,status]) =>
-      QUALIFIED_STATES.has(status))) {
-    throw new TypeError("Why3 R27 technical replay must not be promoted to qualified lifecycle gate");
-  }
-  if (!Array.isArray(b.scopedR27EvidenceFields) ||
-      !b.scopedR27EvidenceFields.length ||
-      !b.scopedR27EvidenceFields.every(field => GATE_DEPENDENCIES.T3.includes(field))) {
-    throw new TypeError("invalid R27 evidence field mapping");
+  const scoped = Array.isArray(b.scopedR27EvidenceFields) ? b.scopedR27EvidenceFields : [];
+  if (scoped.length !== REQUIRED_R27_EVIDENCE_FIELDS.length ||
+      new Set(scoped).size !== scoped.length ||
+      !REQUIRED_R27_EVIDENCE_FIELDS.every(field => scoped.includes(field))) {
+    throw new TypeError(
+      "scopedR27EvidenceFields must exactly match the 13 required monitored R27 identities");
   }
   if (!object(b.evidenceLimitations) || b.qualificationGranted !== false) {
     throw new TypeError("historical Why3 limitations/qualification must remain explicit");
@@ -167,7 +197,9 @@ export function assessWhy3EvidenceFreshness(baseline,observed) {
     .filter(([,fields]) => fields.some(field=>changedSet.has(field)))
     .map(([gate])=>gate);
   const staleGates = revalidationGates.filter(gate => QUALIFIED_STATES.has(baseline.gateStatus[gate]));
-  const historicalR27EvidenceNeedsRecheck = baseline.scopedR27EvidenceFields
+  // Derived from the immutable REQUIRED_R27_EVIDENCE_FIELDS freeze, never from
+  // the caller-supplied baseline list (P1-01 fail-closed repair).
+  const historicalR27EvidenceNeedsRecheck = REQUIRED_R27_EVIDENCE_FIELDS
     .some(field => changedSet.has(field));
   const baselineUnknownFields = IDENTITY_FIELDS.filter(field => baseline.identity[field] === null);
   const status = missingFields.length || unknownFields.length ? "INCOMPLETE_OBSERVATION"
@@ -176,6 +208,7 @@ export function assessWhy3EvidenceFreshness(baseline,observed) {
     schema:ASSESSMENT_SCHEMA,toolId:"why3",sourceMain:SOURCE_MAIN,status,
     changedFields,missingFields,unknownFields,baselineUnknownFields,
     revalidationGates,staleGates,historicalR27EvidenceNeedsRecheck,
+    provenanceBoundary:PROVENANCE_BOUNDARY,
     scopedR27EvidenceNeverPromoted:true,qualificationGranted:false,
     limits:"R27 manual-driver nonroot chroot replay only; NEG was UNKNOWN(sat), not Invalid. R23 unsafe archive quarantined, historical bytes unrecovered. No publisher canonical proof, full T0–T6, network isolation, business Oracle, Product or Release admission."
   };

@@ -7,7 +7,8 @@ import {tmpdir} from "node:os";
 import {fileURLToPath} from "node:url";
 import {
   assessWhy3EvidenceFreshness, IDENTITY_FIELDS, SOURCE_PIN_FIELDS,
-  GATE_DEPENDENCIES, SOURCE_MAIN
+  GATE_DEPENDENCIES, SOURCE_MAIN,
+  REQUIRED_R27_EVIDENCE_FIELDS, BASELINE_GATE_STATUSES, PROVENANCE_BOUNDARY
 } from "../scripts/tool-portfolio/why3-evidence-freshness.mjs";
 
 const baseline = JSON.parse(readFileSync(
@@ -202,4 +203,101 @@ test("CLI returns 0 only for unqualified source freshness, 2 for drift or incomp
   const invalid=invoke("{",observe());
   assert.equal(invalid.status,1);
   assert.match(invalid.stderr,/why3-evidence-freshness:/);
+});
+
+test("truncated, extended, swapped or duplicated monitored R27 sets are rejected before any assessment",()=>{
+  // Independent-review P1-01 counterexample: a nonempty T3 member subset that
+  // used to pass validation while silencing the historical recheck flag.
+  const drift=observe();drift.identity.r27ReceiptBlob="f".repeat(40);
+  const subset=structuredClone(baseline);
+  subset.scopedR27EvidenceFields=["version"];
+  assert.throws(()=>assessWhy3EvidenceFreshness(subset,drift),
+    /exactly match the 13 required monitored R27 identities/);
+  const dropped=structuredClone(baseline);
+  dropped.scopedR27EvidenceFields=baseline.scopedR27EvidenceFields
+    .filter(field=>field!=="r27ArchiveSha256");
+  assert.throws(()=>assessWhy3EvidenceFreshness(dropped,drift),
+    /exactly match the 13 required monitored R27 identities/);
+  const emptied=structuredClone(baseline);
+  emptied.scopedR27EvidenceFields=[];
+  assert.throws(()=>assessWhy3EvidenceFreshness(emptied,drift),
+    /exactly match the 13 required monitored R27 identities/);
+  const extended=structuredClone(baseline);
+  extended.scopedR27EvidenceFields=[...baseline.scopedR27EvidenceFields,"runnerBlob"];
+  assert.throws(()=>assessWhy3EvidenceFreshness(extended,drift),
+    /exactly match the 13 required monitored R27 identities/);
+  const swapped=structuredClone(baseline);
+  swapped.scopedR27EvidenceFields=baseline.scopedR27EvidenceFields.map(
+    field=>field==="errStderrSha256"?"expectBlob":field);
+  assert.throws(()=>assessWhy3EvidenceFreshness(swapped,drift),
+    /exactly match the 13 required monitored R27 identities/);
+  const duplicated=structuredClone(baseline);
+  duplicated.scopedR27EvidenceFields=[...baseline.scopedR27EvidenceFields];
+  duplicated.scopedR27EvidenceFields[0]=duplicated.scopedR27EvidenceFields[1];
+  assert.throws(()=>assessWhy3EvidenceFreshness(duplicated,drift),
+    /exactly match the 13 required monitored R27 identities/);
+  // Deletion plus disappearing (null) or absent observed receipt never yields
+  // an accepted assessment with a falsely clear recheck flag.
+  const nulled=observe();nulled.identity.r27ReceiptBlob=null;
+  const absent=observe();delete absent.identity.r27ReceiptBlob;
+  for(const o of [drift,nulled,absent]){
+    assert.throws(()=>assessWhy3EvidenceFreshness(dropped,o),
+      /exactly match the 13 required monitored R27 identities/);
+  }
+  // The same truncated baseline is rejected through the external --baseline CLI path.
+  const viaCli=invoke(subset,drift);
+  assert.equal(viaCli.status,1,viaCli.stderr);
+  assert.equal(viaCli.stdout,"");
+  assert.match(viaCli.stderr,/exactly match the 13 required monitored R27 identities/);
+});
+
+test("the frozen 13-field monitoring set drives the historical recheck flag for every member",()=>{
+  assert.deepEqual([...REQUIRED_R27_EVIDENCE_FIELDS],baseline.scopedR27EvidenceFields);
+  const blobFields=Object.values(SOURCE_PIN_FIELDS).map(value=>String(value));
+  for(const field of REQUIRED_R27_EVIDENCE_FIELDS){
+    const o=observe();
+    o.identity[field]=blobFields.includes(field)?"f".repeat(40):"a".repeat(64);
+    const r=assessWhy3EvidenceFreshness(baseline,o);
+    assert.equal(r.status,"STALE_REVERIFY_REQUIRED",field);
+    assert.equal(r.historicalR27EvidenceNeedsRecheck,true,field);
+    assert.ok(r.revalidationGates.includes("T3"),field);
+    assert.ok(r.revalidationGates.includes("T6"),field);
+    assert.equal(r.qualificationGranted,false,field);
+  }
+});
+
+test("promotion-like or arbitrary baseline gate statuses outside the pinned enum are rejected",()=>{
+  assert.deepEqual([...BASELINE_GATE_STATUSES].sort(),
+    ["CANDIDATE_ONLY","CHROOT_OBSERVED_ONLY","NOT_ACCEPTED","NOT_QUALIFIED","OPEN"]);
+  for(const [gate,status] of [["T3","QUALIFIED"],["T6","ACCEPTED"],["T4","PENDING"]]){
+    const b=structuredClone(baseline);
+    b.gateStatus[gate]=status;
+    assert.throws(()=>assessWhy3EvidenceFreshness(b,observe()),
+      new RegExp(`invalid baseline gate status ${gate}`),`${gate}=${status}`);
+  }
+  for(const [gate,status] of [["T0","PASS"],["T5","PASS_SCOPED"],
+      ["T2","ACCEPTED_SCOPED"],["T1","MERGED_SCOPED"]]){
+    const b=structuredClone(baseline);
+    b.gateStatus[gate]=status;
+    assert.throws(()=>assessWhy3EvidenceFreshness(b,observe()),
+      /must not be promoted/,`${gate}=${status}`);
+  }
+});
+
+test("self-consistent pin/identity replacement stays value-only comparison with an explicit provenance boundary",()=>{
+  // Documented P2-01 boundary: a self-consistent spoofed pin/identity pair is
+  // not detected as Git drift by this value assessor; the result must instead
+  // carry the unauthenticated-values boundary and never claim provenance proof.
+  const spoofed=structuredClone(baseline);
+  spoofed.sourcePins["portable/packaging/bundle-template/bin/tool-runner"]="9".repeat(40);
+  spoofed.identity.runnerBlob="9".repeat(40);
+  const spoofObserved={toolId:"why3",identity:structuredClone(spoofed.identity)};
+  const r=assessWhy3EvidenceFreshness(spoofed,spoofObserved);
+  assert.equal(r.status,"FRESH_UNQUALIFIED");
+  assert.equal(r.qualificationGranted,false);
+  assert.equal(r.provenanceBoundary,PROVENANCE_BOUNDARY);
+  assert.match(r.provenanceBoundary,/UNAUTHENTICATED/);
+  assert.match(r.provenanceBoundary,/NOT independent Git provenance verification/);
+  const fresh=assessWhy3EvidenceFreshness(baseline,observe());
+  assert.equal(fresh.provenanceBoundary,PROVENANCE_BOUNDARY);
 });
