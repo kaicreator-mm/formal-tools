@@ -8,14 +8,17 @@
 //     config validation, seam-construction enforcement);
 //   - DELEGATED/HOST aspects: the delegation is DEMONSTRATED — a
 //     well-shaped seam feeding reserved/private IPs, oversized bodies or
-//     ignored deadlines sails through the loop, proving the model does
-//     NOT qualify real DNS, TLS, byte-transport or timeout invariants.
+//     deadlines already in the past sails through the loop, proving the
+//     model does NOT qualify real DNS, TLS, byte-transport or timeout
+//     invariants; and malformed seam replies are REACHABLE (recorded,
+//     unqualified) — the seam-reply shape contract is trusted input.
 // Zero network sockets are opened anywhere in this suite. Engineering-only:
 // nothing here qualifies any real-Host behavior (G4 stays NOT_ADMITTED).
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { performance } from 'node:perf_hooks';
 import * as s3 from '../benchmarks/llm-methods/g4/product-refinement/model/s3-network-guard-model.mjs';
 
 const boundaryRoot = new URL('../benchmarks/llm-methods/g4/product-refinement/s3-io-qualification-boundary/', import.meta.url);
@@ -100,17 +103,40 @@ test('W-QB-BODY-BOUNDS-DELEGATED (QB-06): an oversized body from a shape-complia
   assert.equal(result.bytes.length > SMALL_BOUNDS.maxBytes, true);
 });
 
-test('W-QB-DEADLINE-DELEGATED (QB-07): a seam that ignores the deadline still completes — no model-side interrupt', async () => {
-  const reader = s3.createPinnedPublicS3HttpsReader(ADMIT_OK, SMALL_BOUNDS, {
+test('W-QB-DEADLINE-DELEGATED (QB-07): a seam that genuinely runs PAST the received deadline still completes — no model-side interrupt', async () => {
+  // Dedicated witness bounds (review P1-01): timeoutMs = 1 so the model's own
+  // deadline expires within ~1ms. The falsifier waits until the monotonic
+  // clock ACTUALLY reports the received deadline expired (bounded guard, no
+  // real network). A short sleep against a large budget witnesses nothing —
+  // it would equally pass an implementation that checked the deadline.
+  const DEADLINE_BOUNDS = { maxBytes: 8, timeoutMs: 1, maxRedirects: 0 };
+  const seenDeadlines = [];
+  const readStartedAt = performance.now();
+  const reader = s3.createPinnedPublicS3HttpsReader(ADMIT_OK, DEADLINE_BOUNDS, {
     resolvePublic: async (hostname, deadline) => {
-      await new Promise((resolve) => setTimeout(resolve, 5)); // deliberately blow past any budget the model could impose
-      assert.equal(typeof deadline, 'number');
+      const giveUpAt = performance.now() + 1000; // bounded guard, independent of the model deadline
+      while (performance.now() < deadline) {
+        if (performance.now() > giveUpAt) {
+          throw new Error('deadline witness aborted: implausibly distant model deadline');
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1));
+      }
+      assert.ok(performance.now() >= deadline, 'witness precondition: deadline observed EXPIRED before the seam returns');
+      seenDeadlines.push({ seam: 'resolvePublic', deadline });
       return '8.8.8.8';
     },
-    hop: async () => ({ kind: 'body', bytes: '12345678', contentType: 'video/mp4' }),
+    hop: async (parsed, pinnedIp, maxBytes, deadline) => {
+      assert.ok(performance.now() >= deadline, 'hop receives the same already-expired deadline');
+      seenDeadlines.push({ seam: 'hop', deadline });
+      return { kind: 'body', bytes: '12345678', contentType: 'video/mp4' };
+    },
   });
   const result = await reader.read(MEDIA_URI);
-  assert.equal(result.ok, true, 'deadline is advisory data for the seams; enforcement is not model logic');
+  assert.equal(result.ok, true, 'a run past the model deadline still completes — enforcement is not model logic');
+  assert.equal(seenDeadlines.length, 2, 'both seams ran');
+  assert.equal(seenDeadlines[1].deadline, seenDeadlines[0].deadline, 'the SAME deadline value is passed to both seams');
+  assert.ok(seenDeadlines[0].deadline > readStartedAt, 'deadline was computed by the model during read()');
+  assert.ok(performance.now() > seenDeadlines[0].deadline, 'read() succeeded strictly after the deadline had passed');
 });
 
 test('W-QB-SEAM-FAILURE-MAPPING (QB-09): undefined seam answer -> DNS_REJECTED; hop failure passes through verbatim', async () => {
@@ -129,6 +155,43 @@ test('W-QB-SEAM-FAILURE-MAPPING (QB-09): undefined seam answer -> DNS_REJECTED; 
   });
   const failed = await hopFail.read(MEDIA_URI);
   assert.deepEqual(failed, { ok: false, reason: 'TLS_PEER_MISMATCH' }, 'failure reason passes through unmapped');
+});
+
+test('W-QB-SEAM-SHAPE-PRECONDITION-BOUNDED (QB-09): malformed seam replies are REACHABLE — bounded negative witness of observed behavior', async () => {
+  // The failure mapping is enforced model logic ONLY under trusted,
+  // well-shaped seam replies; the factory validates just that the seams are
+  // functions (review P2-01). These bounded negatives record what actually
+  // happens for malformed shapes — observed, UNQUALIFIED behavior, not an
+  // impossible state.
+  const unknownKind = s3.createPinnedPublicS3HttpsReader(ADMIT_OK, { maxBytes: 8, timeoutMs: 1000, maxRedirects: 1 }, {
+    resolvePublic: async () => '8.8.8.8',
+    hop: async () => ({ kind: 'mystery' }), // unknown kind, no location
+  });
+  assert.deepEqual(
+    await unknownKind.read(MEDIA_URI),
+    { ok: false, reason: 'SOURCE_REJECTED' },
+    'unknown-kind reply degrades into redirect handling (undefined location -> SOURCE_REJECTED), it is not an unreachable state',
+  );
+
+  const locationShaped = s3.createPinnedPublicS3HttpsReader(ADMIT_OK, SMALL_BOUNDS, {
+    resolvePublic: async () => '8.8.8.8',
+    hop: async () => ({ location: MEDIA_URI }), // shape-less reply carrying a location
+  });
+  assert.deepEqual(
+    await locationShaped.read(MEDIA_URI),
+    { ok: false, reason: 'HTTP_REJECTED' },
+    'a missing-kind reply IS treated as a redirect (HTTP_REJECTED at the last allowed index with maxRedirects=0)',
+  );
+
+  const nullReply = s3.createPinnedPublicS3HttpsReader(ADMIT_OK, SMALL_BOUNDS, {
+    resolvePublic: async () => '8.8.8.8',
+    hop: async () => null,
+  });
+  await assert.rejects(
+    nullReply.read(MEDIA_URI),
+    TypeError,
+    'a null reply throws a TypeError that escapes read() — no failure mapping applies to malformed shapes',
+  );
 });
 
 test('W-QB-BOUNDS-VALIDATION-NOT-ENFORCEMENT (QB-03): construction validates config; enforcement is elsewhere', () => {

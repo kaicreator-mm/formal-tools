@@ -18,7 +18,7 @@ every aspect is bound to at least one test.
 
 | File | Content |
 |---|---|
-| `QUALIFICATION_BOUNDARY.json` | 9 aspects: `ENFORCED` (QB-01 URL grammar, QB-02 redirect policy, QB-03 config validation, QB-08 network-free structure, QB-09 seam-failure mapping) vs `DELEGATED_TO_SEAM`/`HOST_OBLIGATION` (QB-04 DNS classification, QB-05 TLS peer identity, QB-06 byte transport/bounds, QB-07 deadline enforcement) — each with source anchors and test bindings |
+| `QUALIFICATION_BOUNDARY.json` | 9 aspects: `ENFORCED` (QB-01 URL grammar, QB-02 redirect policy, QB-03 config validation, QB-08 network-free structure, QB-09 seam-failure mapping under a trusted well-shaped seam-reply precondition) vs `DELEGATED_TO_SEAM`/`HOST_OBLIGATION` (QB-04 DNS classification, QB-05 TLS peer identity, QB-06 byte transport/bounds, QB-07 deadline enforcement) — each with source anchors and test bindings |
 | `tests/xdownload-s3-io-qualification-boundary.test.mjs` | the W-QB-* boundary suite |
 
 ## The boundary in one paragraph
@@ -26,16 +26,21 @@ every aspect is bound to at least one test.
 The pure model enforces URL grammar, redirect admission/echo/cycle/bound,
 reader-bounds CONFIG validation, seam-injection enforcement (no reader can
 be constructed without both seams — no default network path exists) and
-seam-failure mapping (`DNS_REJECTED`, verbatim failure passthrough). It does
-NOT classify the IP the seam returns (a seam answering `10.0.0.1` is hopped
-verbatim — demonstrated), never sees or checks a socket (`tlsPeerOkay` is an
-exported HOST-side spec, never invoked by the loop), returns the hop body
-verbatim without measuring it (an oversized body from a shape-compliant
-reply is accepted — demonstrated), and imposes no interrupt of its own (a
-deadline-ignoring seam completes — demonstrated). Real DNS, TLS, timeout and
-body invariants therefore require a separately authorized trusted Host lane;
-**this boundary evidence qualifies none of them** and
-`G4_QUALIFICATION` stays `NOT_ADMITTED`.
+seam-failure mapping (`DNS_REJECTED`, verbatim failure passthrough) for
+**trusted, well-shaped seam replies** — the seam-reply shape contract is
+trusted input, not construction-proven validation: malformed shapes are
+REACHABLE (redirect-degradation, escaping `TypeError`) and are recorded as
+observed, unqualified behavior. The model does NOT classify the IP the seam
+returns (a seam answering `10.0.0.1` is hopped verbatim — demonstrated),
+never sees or checks a socket (`tlsPeerOkay` is an exported HOST-side spec,
+never invoked by the loop), returns the hop body verbatim without measuring
+it (an oversized body from a shape-compliant reply is accepted —
+demonstrated), and imposes no interrupt of its own (a seam that genuinely
+runs PAST the received deadline still completes — demonstrated by a witness
+that crosses the deadline with `timeoutMs=1` and asserts expiration). Real
+DNS, TLS, timeout and body invariants therefore require a separately
+authorized trusted Host lane; **this boundary evidence qualifies none of
+them** and `G4_QUALIFICATION` stays `NOT_ADMITTED`.
 
 ## What this is NOT
 

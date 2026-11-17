@@ -80,7 +80,7 @@
    "id": "QB-07",
    "aspect": "deadline computation vs timeout enforcement",
    "modelTreatment": "DELEGATED_TO_SEAM",
-   "detail": "The loop computes one deadline (performance.now() + timeoutMs) and passes it to the seams; it imposes no interrupt of its own. A seam that ignores the deadline still completes. Actual timeout enforcement is Host/transport behavior.",
+   "detail": "The loop computes one deadline (performance.now() + timeoutMs) and passes it to the seams; it imposes no interrupt of its own. The boundary witness genuinely runs PAST the deadline: with timeoutMs=1 the seam spins until the monotonic clock reports the received deadline expired, asserts expiration before returning and at hop, and the read still completes. Actual timeout enforcement is Host/transport behavior.",
    "notQualified": "real wall-clock aborts, partial-body timeout semantics, clock behavior under load",
    "sourceAnchor": { "file": "model/s3-network-guard-model.mjs", "symbols": ["createPinnedPublicS3HttpsReader.read loop"] },
    "boundaryTests": ["W-QB-DEADLINE-DELEGATED"]
@@ -95,11 +95,13 @@
   },
   {
    "id": "QB-09",
-   "aspect": "seam failure mapping (DNS_REJECTED / hop failure passthrough)",
+   "aspect": "seam failure mapping (DNS_REJECTED / hop failure passthrough) under a trusted well-shaped seam-reply precondition",
    "modelTreatment": "ENFORCED_MAPPING",
-   "detail": "What the model DOES add around the seams: an undefined seam answer maps to DNS_REJECTED; a hop {kind:'failure'} reply maps to failure(reason) verbatim; reply shapes other than body/failure/redirect are unreachable by construction. The mapping is model logic; the underlying failure causes are seam behavior.",
+   "detail": "What the model DOES add around the seams: an undefined seam answer maps to DNS_REJECTED; a hop {kind:'failure'} reply maps to failure(reason) verbatim. The mapping is enforced model logic for TRUSTED, VALIDATED, WELL-SHAPED seam replies (exactly body/failure/redirect); it is NOT construction-proven total validation — the factory only checks that resolvePublic/hop are functions. Malformed reply shapes are reachable, not impossible: a shape-less reply with a location is treated as a redirect, an unknown kind degrades into redirect handling (undefined location -> SOURCE_REJECTED), and a null reply throws a TypeError that escapes read(). These malformed-shape behaviors are recorded as observed and UNQUALIFIED.",
+   "shapePrecondition": "hop replies must be trusted well-shaped {kind:'body'|'failure'|'redirect'} objects; reply-shape validation is a seam-caller obligation, not model logic",
+   "malformedShapeBehavior": "UNQUALIFIED_OBSERVED — bounded negative witness (W-QB-SEAM-SHAPE-PRECONDITION-BOUNDED)",
    "sourceAnchor": { "file": "model/s3-network-guard-model.mjs", "symbols": ["createPinnedPublicS3HttpsReader.read loop", "failure"] },
-   "boundaryTests": ["W-QB-SEAM-FAILURE-MAPPING"]
+   "boundaryTests": ["W-QB-SEAM-FAILURE-MAPPING", "W-QB-SEAM-SHAPE-PRECONDITION-BOUNDED"]
   }
  ],
  "summary": {
