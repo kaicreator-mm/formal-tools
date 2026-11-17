@@ -1,0 +1,67 @@
+{
+  "schema": "formal-tools/g4-smt-abstraction-gaps/0.1",
+  "status": "ENGINEERING_ONLY_NOT_QUALIFIED",
+  "title": "Five frozen SMT QF_UF abstraction gaps vs original xDownload raw business semantics",
+  "source_of_cases": "benchmarks/llm-methods/g4/cases/ (five frozen .smt2 files, read-only authority)",
+  "no_rerun": "No SMT case is re-solved, re-written or re-verified in this lane; the frozen files and their solver receipts are untouched. This document only records where each abstract case falls short of the original product semantics and which executable witness cases replace the missing coverage.",
+  "crosswalk_ref": "benchmarks/llm-methods/g4/product-policy-crosswalk/CROSSWALK.json (mapping.oracle = NO_SOURCE_MODEL_REFINEMENT_PROVEN)",
+  "witness_ref": "benchmarks/llm-methods/g4/product-refinement/REFINEMENT.json",
+  "gaps": [
+    {
+      "id": "GAP-01",
+      "smt_case": "cases/01-valid-inspect-and-confirm.smt2",
+      "demo_thesis": "A valid demo download (channel_ok ∧ request_id_ok ∧ url_ok ∧ size_ok) with declared answers and confirmation is confirm_ready_for_kdp.",
+      "abstraction_gap": "input_valid is a conjunction of four opaque booleans with no per-field grammar: no exact-key no-widening, no opaque-targetRef locator rule (the demo accepts a raw URL through url_ok), no output-root containment, no caller identity, no frozen slice vocabulary, no explicit size bound (size_ok is unbound in the case). None of the original T01 field semantics appear in the QF_UF vocabulary.",
+      "executable_replacement": {
+        "statement": "The original grammar is executable per field: canonical POS-01 accepted; demo-only concepts (effectPermit, draftStatus, confirmed) are SCOPE_WIDENING_REFUSED; raw URL/path/drive targetRefs are LOCATOR_SUBSTITUTION_REJECTED; the declaredBytes bound is the exact 1 TiB grammar maximum.",
+        "witness_ids": ["W-T01-P01", "W-T01-N04", "W-T01-N05", "W-T01-N06", "W-T01-N11", "W-T01-N12", "W-T01-N13", "W-T01-N22"]
+      },
+      "transfer_limit": "The demo theorem says nothing about the original product contract; READY_FOR_KDP is an observation, not product eligibility."
+    },
+    {
+      "id": "GAP-02",
+      "smt_case": "cases/02-unconfirmed-cannot-be-ready.smt2",
+      "demo_thesis": "Without `confirmed`, confirm_ready_for_kdp is unreachable even with all input booleans true.",
+      "abstraction_gap": "`confirmed` is a free boolean INSIDE the demo model. The original T01 contract has no confirmed field at all: confirmation is an upstream event (DOWNLOAD_CONFIRMED driving the T03 transition) outside the sealed intent, and the T01 grammar refuses any such key by no-widening. The case's hypothesis cannot even be expressed in the canonical intent.",
+      "executable_replacement": {
+        "statement": "Adding confirmed:true to a canonical intent is refused (W-T01-N06); the product refuse path is the T03 1 MiB guard decision (W-T03-N01/W-T03-N02/W-T03-N03), not a confirmed flag. No temporal or anti-replay rejection is derivable from either the axioms or this model (per H2 NEG-05).",
+        "witness_ids": ["W-T01-N06", "W-T03-N01", "W-T03-N02", "W-T03-N03"]
+      },
+      "transfer_limit": "Unconfirmed-cannot-be-ready does not transfer to any product check; forged confirmation is a key-grammar refusal, not a temporal proof."
+    },
+    {
+      "id": "GAP-03",
+      "smt_case": "cases/03-invalid-input-cannot-be-ready.smt2",
+      "demo_thesis": "If any of the four input booleans is false, confirm_ready_for_kdp is unreachable (with answers and confirmation asserted).",
+      "abstraction_gap": "All invalid input collapses into one boolean, so the case cannot distinguish the original product's five diagnostic classes (MISSING_REQUIRED_FIELD per key, MALFORMED_REQUIRED_FIELD per field, LOCATOR_SUBSTITUTION_REJECTED, SCOPE_WIDENING_REFUSED, OUTPUT_ROOT_ESCAPED) nor the check ORDER the original implements. The theorem is also weaker than the product fact: an invalid candidate never becomes a confirmed intent at all — it is refused before any K admission exists.",
+      "executable_replacement": {
+        "statement": "Each diagnostic class is exercised as an executable counterexample and the seal step throws CONFIRMED_INTENT_INVALID before admission.",
+        "witness_ids": ["W-T01-N09", "W-T01-N07", "W-T01-N11", "W-T01-N04", "W-T01-N19", "W-T03-N06", "W-T03-N07"]
+      },
+      "transfer_limit": "Single-reject abstraction loses all field-level attribution; product behavior is differential, not boolean."
+    },
+    {
+      "id": "GAP-04",
+      "smt_case": "cases/04-undeclared-answer-and-forged-draft-cannot-be-ready.smt2",
+      "demo_thesis": "Missing answers_allowed or an injected draft (draft ready without declared answers) keeps confirm_ready_for_kdp unreachable.",
+      "abstraction_gap": "answers_allowed and injected_draft_ready are demo-session concepts (inspect receipt flow, draft.status) with NO canonical product field. The original contract refuses such keys by no-widening, and per H2 NEG-05/NEG-06 the demo may legitimately return a READY observation for a valid direct draft — an observation-only path that must not be read as product eligibility. No temporal, provenance or anti-replay property is derivable from the axioms.",
+      "executable_replacement": {
+        "statement": "Forged draft status and self-declared confirmation are unknown-key refusals (W-T01-N05, W-T01-N06); the only accepted canonical path needs no draft or answer fields at all (W-T01-P01).",
+        "witness_ids": ["W-T01-N05", "W-T01-N06", "W-T01-P01"]
+      },
+      "transfer_limit": "The case proves nothing about product eligibility, temporal ordering or replay resistance; READY_FOR_KDP stays authority:NONE observation."
+    },
+    {
+      "id": "GAP-05",
+      "smt_case": "cases/05-effect-is-unreachable.smt2",
+      "demo_thesis": "With effect_dispatched=false and permitted_effect=false asserted as axioms, their disjunction is contradictory (no effect path).",
+      "abstraction_gap": "The axioms stipulate the conclusion: effect_dispatched and permitted_effect are asserted false, making the theorem vacuous (circular) for the real product, in which DOWNLOAD_CONFIRMED -> effect:acquire -> acquisition.acquire LEGITIMATELY exists under independent K/Host controls (live one-time permit, durable re-check, await terminal). A global no-Effect theorem must NOT be inferred from the five SMT cases.",
+      "executable_replacement": {
+        "statement": "The legal effect-INTENT route is shown executably at the in-profile boundary (W-T03-P01), while this lane's decision layer still executes nothing: its outputs are plain data with executed:false (W-NE-01, W-NE-02). Effect denial without a valid permit is a separate signed-Host obligation (residual_host_obligations in REFINEMENT.json), and no positive Effect operation is performed here.",
+        "witness_ids": ["W-T03-P01", "W-NE-01", "W-NE-02", "W-T03-N02"]
+      },
+      "transfer_limit": "Observation-only no-effect (decision-layer purity) and effect-denied-without-valid-permit (Host layer) must be tested separately; neither follows from case05."
+    }
+  ],
+  "coverage_rule": "Each gap must reference at least one witness id from REFINEMENT.json, and tests/xdownload-product-refinement.test.mjs must execute every referenced witness id and assert the gap-to-witness cross-reference is complete."
+}
