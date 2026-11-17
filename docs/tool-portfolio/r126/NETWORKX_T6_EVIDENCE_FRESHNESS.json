@@ -60,13 +60,15 @@
     "Obtain canonical Python313 runtime source/hash and independent clean builds",
     "Run real POS/NEG/ERR on current native Runner, CLI, MCP and SDK",
     "Establish independent business-case semantic Oracle before T5",
-    "On any changed Git source Blob/version/source identity, rerun affected gates and request distinct review"
+    "On any changed Git source Blob/version/source identity, rerun affected gates and request distinct review",
+    "Archive source bytes change MUST invalidate T1 rebuild/reproducibility as well as T0,T2,T3,T4,T5,T6; changed/new/null/missing archive digest is fail-closed"
   ],
   "limitations": "Frozen writer-supplied snapshot and observation cannot authenticate current Git tree; all sourcePins require independent external Git readback at the observed HEAD. Producer-manifest-matched archive is not upstream publisher attestation. Archive/package/build byte changes invalidate downstream native T3, current Runner/CLI/MCP/SDK T4 and case T5; no new native install/build/Oracle execution and no full T0-T6/Product/Release admission.",
   "externalGitReadback": "UNVERIFIED_EXTERNAL_GIT_READBACK",
   "assessmentDependencies": {
     "archiveSha256": [
       "T0",
+      "T1",
       "T2",
       "T3",
       "T4",
