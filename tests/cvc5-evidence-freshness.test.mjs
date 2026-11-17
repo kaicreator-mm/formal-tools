@@ -83,10 +83,10 @@ test('changed native fixture invalidates native, integration, business and maint
   assert.deepEqual(r.reverifyGates,['T3','T4','T5','T6']); allFalse(r);
 });
 test('changed Runner and MCP source pin invalidate T3/T4 or only T4, always T6', () => {
-  const cases=[
+  const cases=/** @type {[string,string[],string][]} */([
     ['portable/packaging/bundle-template/bin/tool-runner',['T3','T4','T6'],'runnerBlob'],
     ['packages/runner/js/mcp.mjs',['T4','T6'],'mcpBlob']
-  ];
+  ]);
   for(const [path,expected,field] of cases) {
     const o=observed(); o.sourcePins[path]=changeSha(o.sourcePins[path]);
     o.identity[field]=o.sourcePins[path];
