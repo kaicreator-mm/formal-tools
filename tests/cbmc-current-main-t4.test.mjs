@@ -1,19 +1,26 @@
-import test from 'node:test';
+import test, { after } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-import { resolve } from 'node:path';
+import { join, resolve } from 'node:path';
+import { tmpdir } from 'node:os';
+import { pathToFileURL } from 'node:url';
 import { spawn } from 'node:child_process';
 import { createInterface } from 'node:readline';
 
-// R102 P1-02: the MCP stdio integration test must not be able to silently skip
-// in CI. Dependency-import failure stays a tolerated local skip, but under
-// Woodpecker (CI=true) it is a hard failure of this test file.
+// R102 P1-02 + R148 P1-01: the MCP stdio integration test must not be able to
+// silently skip in CI. Dependency-import failure stays a tolerated local skip,
+// but under any accepted CI environment signal it is a hard failure of this
+// test file. Official Woodpecker pipelines set CI=woodpecker and CI_PIPELINE_*
+// (not CI=true), which the previous CI=true-only check misdetected; GitHub
+// Actions and generic CI set CI=true. All three signals are accepted.
 let mcpDependenciesAvailable = true;
 let mcpImportError = null;
 try { await import('@modelcontextprotocol/server'); await import('zod/v4'); }
 catch (e) { mcpDependenciesAvailable = false; mcpImportError = String(e); }
-const runningInCi = process.env.CI === 'true';
+const ciValue = String(process.env.CI ?? '').trim().toLowerCase();
+const runningInCi = ciValue === 'true' || ciValue === 'woodpecker' ||
+  Object.keys(process.env).some(key => key.startsWith('CI_PIPELINE_'));
 if (runningInCi && !mcpDependenciesAvailable) {
   throw new Error('MCP_LOCKED_DEPENDENCIES_UNAVAILABLE_IN_CI: ' + mcpImportError);
 }
@@ -194,8 +201,24 @@ test('MCP stays NOT_RUN locally with the raw failure captured; CI gate makes ski
   assert.equal(evidence.mcp.exit_code, await rawExit('mcp/no-deps'));
   assert.equal(evidence.mcp.stderr_sha256, await sha256File('mcp/no-deps.stderr'));
   assert.match(await rawText('mcp/no-deps.stderr'), /ERR_MODULE_NOT_FOUND/);
-  assert.equal(evidence.mcp.ci_gate.repair_round, 'R102 P1-02');
+  assert.equal(evidence.mcp.ci_gate.repair_round, 'R148 P1-01');
   assert.match(evidence.mcp.ci_gate.mechanism, /hard failure/);
+  assert.match(evidence.mcp.ci_gate.mechanism, /CI=woodpecker/);
+  assert.match(evidence.mcp.ci_gate.mechanism, /CI_PIPELINE_/);
+  assert.deepEqual(evidence.mcp.ci_gate.ci_env_signals, ['CI=true', 'CI=woodpecker', 'CI_PIPELINE_*']);
+  assert.equal(evidence.mcp.ci_gate.negative_examples.length, 4);
+  for (const example of evidence.mcp.ci_gate.negative_examples.slice(0, 3)) {
+    assert.match(example.expected, /nonzero/);
+    assert.match(example.expected, /MCP_LOCKED_DEPENDENCIES_UNAVAILABLE_IN_CI/);
+  }
+  assert.equal(evidence.mcp.ci_gate.negative_examples[0].env.CI, 'woodpecker');
+  assert.equal(evidence.mcp.ci_gate.negative_examples[1].env.CI, 'true');
+  assert.equal(evidence.mcp.ci_gate.negative_examples[2].env.CI_PIPELINE_NUMBER, 'set, CI unset');
+  assert.equal(evidence.mcp.ci_gate.negative_examples[3].env.CI, 'unset');
+  assert.match(evidence.mcp.ci_gate.negative_examples[3].expected, /exits 0/);
+  assert.match(evidence.mcp.ci_gate.negative_examples[3].expected, /local-only skip/);
+  assert.match(evidence.mcp.ci_gate.negative_example_mechanism, /REAL committed test file/);
+  assert.match(evidence.mcp.ci_gate.negative_example_mechanism, /CBMC_T4_GATE_PROBE/);
 });
 
 test('evidence does not grant T4 qualification or promote later lifecycle gates', () => {
@@ -206,7 +229,7 @@ test('evidence does not grant T4 qualification or promote later lifecycle gates'
   assert.equal(evidence.result.release, 'NOT_GRANTED');
 });
 
-test('MCP stdio server executes real discovery and typed CBMC tool calls when lockfile dependencies are installed', { skip: !mcpDependenciesAvailable }, async () => {
+test('MCP stdio server executes real discovery and typed CBMC tool calls when lockfile dependencies are installed', { skip: mcpDependenciesAvailable ? false : 'MCP dependencies not installed (local-only skip)' }, async () => {
   const env = { ...process.env };
   delete env.FORMAL_PORTABLE_ROOT;
   delete env.FORMAL_PORTABLE_RUNNER_SHA256;
@@ -270,4 +293,88 @@ test('MCP stdio server executes real discovery and typed CBMC tool calls when lo
     reader.close();
     child.kill('SIGTERM');
   }
+});
+
+// R148 P1-01 negative examples: the CI gate above must fail closed, never skip,
+// when the MCP dependencies are missing in a CI environment. Each negative
+// example re-runs the REAL committed test file in a child process with a module
+// hook that makes '@modelcontextprotocol/server' unresolvable
+// (ERR_MODULE_NOT_FOUND), reproducing the missing-dependency condition even
+// where a parent node_modules would otherwise provide the package. Probe
+// children set CBMC_T4_GATE_PROBE=1 so these negative examples do not recurse.
+const GATE_PROBE_DIR = await mkdtemp(join(tmpdir(), 'cbmc-t4-gate-probe-'));
+await writeFile(join(GATE_PROBE_DIR, 'gate-hook.mjs'), [
+  "export async function resolve(specifier, context, nextResolve) {",
+  "  if (specifier === '@modelcontextprotocol/server') {",
+  "    const error = new Error(\"Cannot find package '@modelcontextprotocol/server'\");",
+  "    error.code = 'ERR_MODULE_NOT_FOUND';",
+  "    throw error;",
+  "  }",
+  "  return nextResolve(specifier, context);",
+  "}",
+  ""
+].join('\n'));
+await writeFile(join(GATE_PROBE_DIR, 'hook-register.mjs'), [
+  "import { register } from 'node:module';",
+  "register('./gate-hook.mjs', import.meta.url);",
+  ""
+].join('\n'));
+const gateProbeChild = process.env.CBMC_T4_GATE_PROBE === '1';
+const gateProbeSkip = gateProbeChild ? 'gate-probe child run' : false;
+const runGateProbe = async envOverrides => {
+  /** @type {NodeJS.ProcessEnv} */
+  const env = { ...process.env, CBMC_T4_GATE_PROBE: '1' };
+  delete env.CI;
+  // Under `node --test` the runner marks per-file children with NODE_TEST_*,
+  // which would make the probe child emit the NDJSON child-reporter protocol
+  // instead of the standalone spec output these probes assert on. Strip it so
+  // every probe child behaves like a plain `node tests/...` run.
+  for (const key of Object.keys(env)) {
+    if (key.startsWith('CI_PIPELINE_') || key.startsWith('NODE_TEST_')) delete env[key];
+  }
+  Object.assign(env, envOverrides);
+  return new Promise((resolvePromise, rejectPromise) => {
+    const child = spawn(process.execPath,
+      ['--import', pathToFileURL(join(GATE_PROBE_DIR, 'hook-register.mjs')).href,
+       resolve('tests/cbmc-current-main-t4.test.mjs')],
+      { cwd: process.cwd(), env, stdio: ['ignore', 'pipe', 'pipe'] });
+    let output = '';
+    child.stdout.setEncoding('utf8');
+    child.stderr.setEncoding('utf8');
+    child.stdout.on('data', chunk => { output += chunk; });
+    child.stderr.on('data', chunk => { output += chunk; });
+    const timer = setTimeout(() => child.kill('SIGKILL'), 120000);
+    child.on('close', (code, signal) => { clearTimeout(timer); resolvePromise({ code, signal, output }); });
+    child.on('error', error => { clearTimeout(timer); rejectPromise(error); });
+  });
+};
+after(async () => { await rm(GATE_PROBE_DIR, { recursive: true, force: true }); });
+
+test('CI gate probe: CI=woodpecker with missing MCP deps fails nonzero, never skips (R148 P1-01)', { skip: gateProbeSkip }, async () => {
+  const probe = await runGateProbe({ CI: 'woodpecker' });
+  assert.notEqual(probe.code, 0);
+  assert.match(probe.output, /MCP_LOCKED_DEPENDENCIES_UNAVAILABLE_IN_CI/);
+  assert.doesNotMatch(probe.output, /# /);
+});
+
+test('CI gate probe: CI=true with missing MCP deps fails nonzero, never skips (R148 P1-01)', { skip: gateProbeSkip }, async () => {
+  const probe = await runGateProbe({ CI: 'true' });
+  assert.notEqual(probe.code, 0);
+  assert.match(probe.output, /MCP_LOCKED_DEPENDENCIES_UNAVAILABLE_IN_CI/);
+  assert.doesNotMatch(probe.output, /# /);
+});
+
+test('CI gate probe: CI_PIPELINE_* alone with missing MCP deps fails nonzero, never skips (R148 P1-01)', { skip: gateProbeSkip }, async () => {
+  const probe = await runGateProbe({ CI_PIPELINE_NUMBER: '1' });
+  assert.notEqual(probe.code, 0);
+  assert.match(probe.output, /MCP_LOCKED_DEPENDENCIES_UNAVAILABLE_IN_CI/);
+  assert.doesNotMatch(probe.output, /# /);
+});
+
+test('CI gate probe: missing MCP deps outside CI stays a local-only skip with exit 0 (R148 P1-01)', { skip: gateProbeSkip }, async () => {
+  const probe = await runGateProbe({});
+  assert.equal(probe.code, 0);
+  assert.match(probe.output, /MCP stdio server executes real discovery and typed CBMC tool calls when lockfile dependencies are installed[^\n]*# /);
+  assert.doesNotMatch(probe.output, /MCP_LOCKED_DEPENDENCIES_UNAVAILABLE_IN_CI/);
+  assert.match(probe.output, /fail 0/);
 });

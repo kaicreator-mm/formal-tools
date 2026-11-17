@@ -508,9 +508,37 @@
   "reason": "Fresh capture: node_modules absent in the pinned execution container and the lockfile dependency imports fail with ERR_MODULE_NOT_FOUND (raw/mcp/no-deps.*). No mock or stub result is claimed.",
   "raw_files": "mcp/no-deps.*",
   "ci_gate": {
-   "mechanism": "tests/cbmc-current-main-t4.test.mjs treats a dependency-import failure as a hard failure when Woodpecker CI environment (CI=true) is present, so the MCP stdio integration test can no longer silently skip in CI; a local optional skip remains for offline environments.",
+   "mechanism": "tests/cbmc-current-main-t4.test.mjs treats a dependency-import failure as a hard failure under any accepted CI environment signal, so the MCP stdio integration test can no longer silently skip in CI; a local optional skip remains for offline environments. Accepted signals (R148 P1-01): CI=true, CI=woodpecker, or any CI_PIPELINE_* variable — the previous CI=true-only check misdetected official Woodpecker pipelines, which set CI=woodpecker and CI_PIPELINE_* but not CI=true, so a missing-dependency skip would have stayed silent in CI.",
    "test_file": "tests/cbmc-current-main-t4.test.mjs",
-   "repair_round": "R102 P1-02"
+   "repair_round": "R148 P1-01",
+   "ci_env_signals": [
+    "CI=true",
+    "CI=woodpecker",
+    "CI_PIPELINE_*"
+   ],
+   "negative_examples": [
+    {
+     "env": {"CI": "woodpecker"},
+     "mcp_dependencies": "unresolvable via module hook (ERR_MODULE_NOT_FOUND)",
+     "expected": "process exits nonzero with MCP_LOCKED_DEPENDENCIES_UNAVAILABLE_IN_CI before any test executes; no skip occurs"
+    },
+    {
+     "env": {"CI": "true"},
+     "mcp_dependencies": "unresolvable via module hook (ERR_MODULE_NOT_FOUND)",
+     "expected": "process exits nonzero with MCP_LOCKED_DEPENDENCIES_UNAVAILABLE_IN_CI before any test executes; no skip occurs"
+    },
+    {
+     "env": {"CI_PIPELINE_NUMBER": "set, CI unset"},
+     "mcp_dependencies": "unresolvable via module hook (ERR_MODULE_NOT_FOUND)",
+     "expected": "process exits nonzero with MCP_LOCKED_DEPENDENCIES_UNAVAILABLE_IN_CI before any test executes; no skip occurs"
+    },
+    {
+     "env": {"CI": "unset", "CI_PIPELINE_*": "unset"},
+     "mcp_dependencies": "unresolvable via module hook (ERR_MODULE_NOT_FOUND)",
+     "expected": "local-only skip: process exits 0 and the MCP stdio integration test reports skipped (MCP dependencies not installed); never a CI-style hard failure"
+    }
+   ],
+   "negative_example_mechanism": "Each negative example re-runs the REAL committed test file (tests/cbmc-current-main-t4.test.mjs, unmodified bytes) in a child process with a module hook registered via node:module register() that makes '@modelcontextprotocol/server' unresolvable with ERR_MODULE_NOT_FOUND, faithfully reproducing the missing-dependency condition even where a parent node_modules provides the package. Probe children set CBMC_T4_GATE_PROBE=1 so the negative examples do not recurse, and they strip CI, CI_PIPELINE_* and NODE_TEST_* variables so the child behaves as a standalone run with the spec reporter. The three CI-signal probes assert nonzero exit, the MCP_LOCKED_DEPENDENCIES_UNAVAILABLE_IN_CI marker, and the absence of any skip directive; the local probe asserts exit 0, the skipped MCP stdio test line, and fail 0."
   },
   "local_tap": {
    "file": "mcp/local-stdio-tap.txt",
