@@ -41,6 +41,7 @@ export const FIELDS = Object.freeze([
 export const DEPENDENCIES = Object.freeze({
   T0: ['version', 'upstreamTag', 'upstreamCommit', 'license', 'archiveSha256',
     'producerManifestSha256', 'sourceArchivePublisherSha256', 'sourceAuditEvidenceBlob'],
+  // T1 rebuilds from the source archive bytes: archiveSha256 drift invalidates build reproducibility.
   T1: ['version', 'upstreamCommit', 'archiveSha256', 'builderBlob', 'pythonRuntimeSha256',
     'reproduciblePackageTreeSha256'],
   T2: ['archiveSha256', 'reproduciblePackageTreeSha256', 'pythonRuntimeSha256', 'installedPackageTreeSha256'],
