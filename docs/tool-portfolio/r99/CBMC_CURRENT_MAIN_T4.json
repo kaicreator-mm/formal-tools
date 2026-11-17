@@ -1,0 +1,584 @@
+{
+ "schema": "formal-tools/cbmc-current-main-t4/2",
+ "output_label": "FORMAL_TOOLS_I24_CBMC_CURRENT_MAIN_T4_READY",
+ "status": "TECHNICAL_EVIDENCE_READY_FOR_INDEPENDENT_REVIEW",
+ "recorded_at_utc": "2026-11-17T18:28:10.047125+00:00",
+ "executed_at_utc": "2026-11-17T18:15:19Z",
+ "repository": "kaicreator-mm/formal-tools",
+ "main_issue": 24,
+ "tool_issue": 30,
+ "pull_request": 151,
+ "worker": "CHATGPT_AUTO_CBMC_R99_SINGLE_WRITER",
+ "writer_continuity": {
+  "original_worker": "CHATGPT_AUTO_CBMC_R99_20261116",
+  "repair_round": "R104_R130_DISPATCH",
+  "note": "Same single writer continuing the R102 REWORK repair (P1=2 P2=4). Two pinned paths drifted on live main after the recorded execution (#86 changed bundle-template/bin/tool-runner; #137 changed packages/runner/js/native.mjs), so every receipt was re-executed against the b9a662f tree and the 40427c1 Runner instead of overlaying stale hashes."
+ },
+ "exact_main_historical": {
+  "sha": "530a2d7a8edf99106845be228b6451c6aa52be92",
+  "main_push": {
+   "pipeline": 1867,
+   "status": "SUCCESS",
+   "url": "https://ci.kaicreator.com/repos/39/pipeline/1867/1",
+   "commit": "530a2d7a8edf99106845be228b6451c6aa52be92"
+  }
+ },
+ "tested_main": {
+  "sha": "b9a662f48079d855aac69c886f228cce89efa8c6",
+  "message": "fix(dafny): integrate scoped fail-closed native SDK outcome contract (#137)",
+  "main_push": {
+   "pipeline": 2062,
+   "status": "SUCCESS",
+   "url": "https://ci.kaicreator.com/repos/39/pipeline/2062/1",
+   "commit": "b9a662f48079d855aac69c886f228cce89efa8c6"
+  }
+ },
+ "branch_sync": {
+  "merge_commit": "8cf679ea6cd4a05272a9293297387727c5a18fd5",
+  "first_parent": "b9a662f48079d855aac69c886f228cce89efa8c6",
+  "second_parent": "4c3fe1cc449b9b75d20a07de7a9f484fd0da74bd",
+  "note": "R104 writer sync: PR branch re-merged onto current main with the current-main commit as first parent, prior writer head as second parent."
+ },
+ "historical_reconciliation": [
+  {
+   "latest_main": "387a21d70c9a411117ffd75e312e72062649b8df",
+   "main_push": {
+    "pipeline": 1875,
+    "status": "SUCCESS",
+    "url": "https://ci.kaicreator.com/repos/39/pipeline/1875/1"
+   },
+   "note": "R100-R102 era reconciliation record (original evidence)."
+  },
+  {
+   "latest_main": "387a21d70c9a411117ffd75e312e72062649b8df",
+   "main_push": {
+    "pipeline": 1882,
+    "status": "SUCCESS",
+    "url": "https://ci.kaicreator.com/repos/39/pipeline/1882/1"
+   },
+   "note": "R102 review observed the live combined status for 387a21d pointing at pipeline 1882; the earlier 1875 record was stale (R102 P2-04). Both kept as historical."
+  },
+  {
+   "latest_main": "68e9d08e99bb3bf4fe07cde116ec403fd10bc3e7",
+   "main_push": {
+    "pipeline": 1893,
+    "status": "SUCCESS",
+    "url": "https://ci.kaicreator.com/repos/39/pipeline/1893/1"
+   },
+   "note": "R102 review observed live main advance to 68e9d08 with push #1893 SUCCESS; 22 source pins were verified identical at both 387a21d and 68e9d08."
+  }
+ ],
+ "environment": {
+  "os": "Debian GNU/Linux 13 (trixie)",
+  "node": "v22.23.5",
+  "arch": "x86_64",
+  "uid": 65534,
+  "gid": 65534,
+  "container_image": "ft-node:deb13",
+  "host_kernel": "Linux 7.0.0-43-generic #43-Ubuntu SMP PREEMPT_DYNAMIC Fri Oct 23 13:25:25 UTC 2026 x86_64 GNU/Linux",
+  "record": "session.txt"
+ },
+ "source_pins": {
+  "portable/packaging/bundle-template/bin/tool-runner": "40427c1e541f294d71d803b0225984175708391e",
+  "packages/runner/js/cli.mjs": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
+  "packages/runner/js/sdk.mjs": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+  "packages/runner/js/mcp.mjs": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+  "packages/runner/js/tool-portfolio-t4.mjs": "922a7c208beaa0e48346403a29ec2d927189319f",
+  "packages/runner/js/native.mjs": "8bb35b48a67a7220956e5605520d31c8a5a598ae",
+  "packages/runner/js/native-catalog.mjs": "02f628947be3e5c270d802be150ab220e14fc2b8",
+  "packages/runner/js/tool-manager.mjs": "a8e547718b8242c9d27f9e906b1c1ebaa2d80de6",
+  "packages/runner/js/tool-workspace.mjs": "354809f169dac5b1fef31e64eb3aa7965ea0b88f",
+  "packages/runner/js/artifact-collector.mjs": "8881dcb65f97f74036ad90e2ca01a600c2daaec8",
+  "packages/runner/js/tool-result.mjs": "a2c61c50658fc3d7e578ffbf7ee018f707e15841",
+  "packages/core/src/finite.mjs": "c717cb3b2eb4d13422fbdfb859aa3fcceee3851a",
+  "registry/PROBLEM_CAPABILITIES.json": "faa89997c3f7c8c71da0a69aa90e8ff37461cde0",
+  "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+  "portable/verification/cases/cbmc/expect.sh": "b318da8edf58c691f643608e7591c81c07b45714",
+  "portable/verification/cases/cbmc/pos.c": "1832fb133b10ffdb218be6a057f1a66213f03a63",
+  "portable/verification/cases/cbmc/neg.c": "cb597185eb47d6bfffbe17ef6d6666a2e28a4dc3",
+  "portable/verification/cases/cbmc/err.c": "7b93059ef1ba6f67e6bb923faaaa6f29407d7364",
+  "portable/builders/make_meta.py": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+  "portable/builders/tools/cbmc.sh": "da52ea3848ca4d83911ca1120756cbd8755c1106",
+  "package.json": "99cd24d1c71d2c12297730056f1b1882a770c851",
+  "package-lock.json": "2ad31f01195434617ac74d2f377287a15e062b95"
+ },
+ "source_pin_drift": {
+  "window": {
+   "from": "530a2d7a8edf99106845be228b6451c6aa52be92",
+   "to": "b9a662f48079d855aac69c886f228cce89efa8c6",
+   "commits": 83
+  },
+  "changed_pinned_paths": [
+   {
+    "path": "portable/packaging/bundle-template/bin/tool-runner",
+    "old_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "new_blob": "40427c1e541f294d71d803b0225984175708391e",
+    "commit": "1d054ae",
+    "pull_request": 86,
+    "summary": "fail-closed ELF static dependency gate: doctor-section only (+183/-13); verify/TSV/case-log logic unchanged; cbmc doctor output byte-identical (same stdout sha256 55521c85...)"
+   },
+   {
+    "path": "packages/runner/js/native.mjs",
+    "old_blob": "2e0e669e4fa66cb27654644705e76794c0727004",
+    "new_blob": "8bb35b48a67a7220956e5605520d31c8a5a598ae",
+    "commit": "b9a662f",
+    "pull_request": 137,
+    "summary": "dafny scoped fail-closed native SDK outcome contract (+12 lines); not on CBMC portfolio routes"
+   }
+  ],
+  "unchanged_pinned_paths": 20,
+  "response": "All receipts re-executed against the b9a662f tree with the 40427c1 Runner blob."
+ },
+ "archives": {
+  "cbmc": {
+   "filename": "cbmc-6.11.0-linux-x86_64.tar.zst",
+   "sha256": "eaa049099a7a515631b4c82699b264e4bea1e677d9f65e8374cf212d30306369",
+   "size_bytes": 20600381
+  },
+  "portable_core": {
+   "filename": "formal-tools-portable-core-linux-x86_64.tar.zst",
+   "sha256": "fe9699e6ba503d94826551bc8e82c70c7c267191a89a6a14941e3551e2b23990",
+   "size_bytes": 27989
+  },
+  "sha256_manifest": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64",
+  "provenance": "Google Drive originals re-downloaded 2026-11-18 and re-verified byte-identical (sizes + SHA-256 above match the SHA256SUMS manifest and the R99 records)."
+ },
+ "bundle_overlay": {
+  "description": "Temporary test-only overlay: original CBMC payload + original portable core + exact current-main Runner (b9a662f blob 40427c1) + current-main make_meta.py output (canonical TOOL_ID meta.sh); original archives and original meta.json unchanged.",
+  "runner_git_blob_sha1": "40427c1e541f294d71d803b0225984175708391e",
+  "runner_sha256": "60af447ecfbc401549a7bbaab56e4111e0ca1d66a19bdc81e9eb479bdcd26c71",
+  "original_meta_sh": {
+   "git_blob_sha1": "34994a34b9fd9ef02827b7f7b51266af4ad69dc3",
+   "sha256": "72e74b130e631518223eb00d4123859d7d7032e2bdf9f6732858cab8e9de070d",
+   "identity": "TOOL_TOOL_ID"
+  },
+  "regenerated_meta_sh": {
+   "git_blob_sha1": "189b2af6aba87010046653c49c1c702cf92b37ee",
+   "sha256": "f424b16e05f8abf91a713e0e40026431ccf71f540248cac9380f9eed48a52c5c",
+   "identity": "TOOL_ID",
+   "generator_blob": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+   "verified_again": true
+  },
+  "meta_json_unchanged_sha256": "f09b83bf3b6c1f8c4a586fa76dc7f759deedcc0dc0d50bb7e8902ed2f0748d76",
+  "fixtures_match_current_main": true,
+  "fixture_blobs": {
+   "expect.sh": "b318da8edf58c691f643608e7591c81c07b45714",
+   "pos.c": "1832fb133b10ffdb218be6a057f1a66213f03a63",
+   "neg.c": "cb597185eb47d6bfffbe17ef6d6666a2e28a4dc3",
+   "err.c": "7b93059ef1ba6f67e6bb923faaaa6f29407d7364"
+  },
+  "assembly_record": "raw/harness/assemble-bundle.sh (executed in ft-builder:deb13 against the re-downloaded Drive originals; verified runner/meta.json/meta.sh/expect.sh identities printed at assembly time)"
+ },
+ "runner": {
+  "uid": 65534,
+  "gid": 65534,
+  "bundle_write_protected": true,
+  "doctor": {
+   "exit_code": 0,
+   "stdout": "doctor: cbmc kind=binary version=6.11.0\n  binary: tools/cbmc/bin/cbmc OK (glibc_max=2.38)\n  ldd: no missing libs OK\n  verdict: OK\n",
+   "stderr": "",
+   "stdout_sha256": "55521c85b2a3fb1c8ebb7448d9d01d444e18e16fc1522fa5dc86b1403d706d61",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_files": "runner/doctor.*"
+  },
+  "version_metadata": {
+   "exit_code": 0,
+   "stdout": "tool: cbmc\nversion: 6.11.0\nprobe: n/a\n",
+   "stderr": "",
+   "stdout_sha256": "50ce8bdd4fb96514ca6a46c4024143ce729411d007d51050d81fd785b752b307",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_files": "runner/version-metadata.*"
+  },
+  "version_native": {
+   "exit_code": 0,
+   "argv": [
+    "bin/tool-runner",
+    "run",
+    "cbmc",
+    "--version"
+   ],
+   "stdout": "6.11.0 (cbmc-6.11.0)\n",
+   "stderr": "",
+   "stdout_sha256": "37b6523a14d6ce6184004a9a37223559f1627e712e108c98dd5a95d7d1994b1f",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_files": "runner/version-native.*"
+  },
+  "verify": {
+   "exit_code": 0,
+   "argv": [
+    "bin/tool-runner",
+    "verify",
+    "cbmc"
+   ],
+   "stdout": "   cbmc/pos: exit=0 dur=34ms matched=1 exit_ok=1 label=VERIFIED (log: /w/cap/runner-verify/verify-cbmc.pos.log)\n   cbmc/neg: exit=10 dur=33ms matched=1 exit_ok=1 label=VIOLATION (log: /w/cap/runner-verify/verify-cbmc.neg.log)\n   cbmc/err: exit=3 dur=23ms matched=1 exit_ok=1 label=ERROR (log: /w/cap/runner-verify/verify-cbmc.err.log)\n",
+   "stderr": "",
+   "stdout_sha256": "eb045aa604496be4aa7b0958ea7a1daee163ac23205e814bc8f61c6808d8cb31",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "receipt_tsv": "runner_schema\tformal-tools/portable-verify/0.2\ncbmc\tpos\t0\t34\t1\t1\tVERIFIED\ncbmc\tneg\t10\t33\t1\t1\tVIOLATION\ncbmc\terr\t3\t23\t1\t1\tERROR\nverdict\tPASS\n",
+   "receipt_sha256": "5557e148088083fe43df89347202f7333ce04a9ee7e3cb4e7a50156a5fd0475e",
+   "receipt_file": "runner/verify.receipt.tsv",
+   "cases": [
+    {
+     "phase": "pos",
+     "exit_code": 0,
+     "duration_ms": 34,
+     "pattern_matched": true,
+     "exit_contract_matched": true,
+     "label": "VERIFIED"
+    },
+    {
+     "phase": "neg",
+     "exit_code": 10,
+     "duration_ms": 33,
+     "pattern_matched": true,
+     "exit_contract_matched": true,
+     "label": "VIOLATION"
+    },
+    {
+     "phase": "err",
+     "exit_code": 3,
+     "duration_ms": 23,
+     "pattern_matched": true,
+     "exit_contract_matched": true,
+     "label": "ERROR"
+    }
+   ],
+   "raw_case_logs": {
+    "stream_capture": "STDOUT_AND_STDERR_MERGED",
+    "note": "The pinned Runner writes every case log with '> \"$out\" 2>&1' (run_case), so each log is the combined stdout+stderr stream of the case, not an isolated stdout. Hashes cover the combined bytes; the R102 P2-03 labelling is corrected here.",
+    "pos": {
+     "combined_output": "CBMC version 6.11.0 (cbmc-6.11.0) 64-bit x86_64 linux\nReading GOTO program from file /tmp/ft-fIf6Ua/prog.gb\nGenerating GOTO Program\nAdding CPROVER library (x86_64)\nRemoval of function pointers and virtual functions\nGeneric Property Instrumentation\nStarting Bounded Model Checking\nPassing problem to propositional reduction\nconverting SSA\nRunning propositional reduction\nSAT checker inconsistent: instance is UNSATISFIABLE\n\n** Results:\n/w/bundle/tests/cbmc/pos.c function main\n[main.assertion.1] line 6 assertion x >= 0: SUCCESS\n\n** 0 of 1 failed (1 iterations)\nVERIFICATION SUCCESSFUL\n\nPHASE_DONE phase=pos rc=0\n",
+     "sha256": "5df98e888812508272c46326bf5db2947360c2f16827a93b49b06a4107221124",
+     "file": "runner/verify-cbmc.pos.log"
+    },
+    "neg": {
+     "combined_output": "CBMC version 6.11.0 (cbmc-6.11.0) 64-bit x86_64 linux\nReading GOTO program from file /tmp/ft-GTmZti/prog.gb\nGenerating GOTO Program\nAdding CPROVER library (x86_64)\nRemoval of function pointers and virtual functions\nGeneric Property Instrumentation\nStarting Bounded Model Checking\nPassing problem to propositional reduction\nconverting SSA\nRunning propositional reduction\nSAT checker: instance is SATISFIABLE\n\n** Results:\n/w/bundle/tests/cbmc/neg.c function main\n[main.assertion.1] line 4 assertion x == 2: FAILURE\n\n** 1 of 1 failed (2 iterations)\nVERIFICATION FAILED\n\nPHASE_DONE phase=neg rc=10\n",
+     "sha256": "1c3e2c98f45f2187a634f4bcea1a5d78b479dcf03618099b5f53de73a7964df4",
+     "file": "runner/verify-cbmc.neg.log"
+    },
+    "err": {
+     "combined_output": "/w/bundle/tests/cbmc/err.c: In function 'main':\n/w/bundle/tests/cbmc/err.c:2:1: error: syntax error before '{'\n int main(void { return 0; }\nPARSING ERROR\n\nPHASE_DONE phase=err rc=3\n",
+     "sha256": "c35c536c501266aedf3020a366672fb7e920ec2a86026de1ab06138d105f1c91",
+     "file": "runner/verify-cbmc.err.log"
+    }
+   },
+   "exit_contract_semantics": {
+    "pos": {
+     "declared": "EXPECT_POS_EXIT=0",
+     "observed_exit": 0
+    },
+    "neg": {
+     "declared": "EXPECT_NEG_EXIT='*' (wildcard)",
+     "observed_exit": 10
+    },
+    "err": {
+     "declared": "EXPECT_ERR_EXIT='*' (wildcard)",
+     "observed_exit": 3
+    },
+    "note": "exit_contract_matched=true for neg/err reflects wildcard acceptance by the pinned fixture (blob b318da8e, EXPECT_NEG_EXIT='*'/EXPECT_ERR_EXIT='*'). The observed actual exits 10/3 come from the raw receipts and are asserted by the regression test. The wildcard fixture is kept unchanged to preserve the 22 source pins and the tested execution provenance; pinning EXPECT_NEG_EXIT=10/EXPECT_ERR_EXIT=3 in expect.sh would break pin-vs-executed-source identity and is therefore reported as observation, per the R102 P2-02 alternative."
+   }
+  }
+ },
+ "cli": {
+  "entry": "packages/runner/js/cli.mjs",
+  "driver_note": null,
+  "execution": {
+   "cwd": "<repo tree root>",
+   "node": "v22.23.5",
+   "uid": 65534,
+   "gid": 65534,
+   "env_pins": {
+    "FORMAL_PORTABLE_ROOT": "<overlay bundle root>",
+    "FORMAL_PORTABLE_RUNNER_SHA256": "60af447ecfbc401549a7bbaab56e4111e0ca1d66a19bdc81e9eb479bdcd26c71",
+    "FORMAL_PORTABLE_META_SHA256": "f09b83bf3b6c1f8c4a586fa76dc7f759deedcc0dc0d50bb7e8902ed2f0748d76",
+    "FORMAL_PORTABLE_FIXTURE_SHA256": "f31f8f4fa90d6645c5d0a73bf9ec019e9a9cca9f04e1681f83af09513cf6282f"
+   }
+  },
+  "inspect": {
+   "argv": [
+    "node",
+    "packages/runner/js/cli.mjs",
+    "portfolio",
+    "inspect",
+    "cbmc"
+   ],
+   "exit_code": 0,
+   "status": "FOUND_PINNED_NOT_EXECUTED",
+   "runner_sha256": "60af447ecfbc401549a7bbaab56e4111e0ca1d66a19bdc81e9eb479bdcd26c71",
+   "metadata_sha256": "f09b83bf3b6c1f8c4a586fa76dc7f759deedcc0dc0d50bb7e8902ed2f0748d76",
+   "fixture_contract_sha256": "f31f8f4fa90d6645c5d0a73bf9ec019e9a9cca9f04e1681f83af09513cf6282f",
+   "stdout": "{\n  \"id\": \"cbmc\",\n  \"origin\": \"candidate\",\n  \"expected_version\": \"6.11.0\",\n  \"capability_ids\": [\n    \"code.verify\"\n  ],\n  \"execution_adapter\": \"PORTABLE_FIXTURE_GATE_ONLY\",\n  \"t4_status\": \"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\n  \"t5_status\": \"NOT_QUALIFIED\",\n  \"official_url\": \"https://www.cprover.org/cbmc/\",\n  \"operations\": [\n    \"doctor\",\n    \"verify-fixture\"\n  ],\n  \"raw_argv_allowed\": false,\n  \"status\": \"FOUND_PINNED_NOT_EXECUTED\",\n  \"runner_sha256\": \"60af447ecfbc401549a7bbaab56e4111e0ca1d66a19bdc81e9eb479bdcd26c71\",\n  \"metadata_sha256\": \"f09b83bf3b6c1f8c4a586fa76dc7f759deedcc0dc0d50bb7e8902ed2f0748d76\",\n  \"fixture_contract_sha256\": \"f31f8f4fa90d6645c5d0a73bf9ec019e9a9cca9f04e1681f83af09513cf6282f\",\n  \"packaged_kind\": \"binary\",\n  \"packaged_version\": \"6.11.0\"\n}\n",
+   "stderr": "",
+   "stdout_sha256": "3d81a95ac883d3335b357e5b96e363c5ec40a63c56dd787cd4869364f8fc1de7",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_files": "cli/inspect.*"
+  },
+  "doctor": {
+   "argv": [
+    "node",
+    "packages/runner/js/cli.mjs",
+    "portfolio",
+    "doctor",
+    "cbmc"
+   ],
+   "exit_code": 0,
+   "status": "DOCTOR_EXECUTED_NOT_T3",
+   "runner_child_streams": "embedded in cli/doctor.stdout (streams.stdout/stderr)",
+   "stdout": "{\n  \"schema\": \"formal-tools/portfolio-t4-technical/0.1\",\n  \"tool\": \"cbmc\",\n  \"operation\": \"doctor\",\n  \"status\": \"DOCTOR_EXECUTED_NOT_T3\",\n  \"process\": {\n    \"exit_code\": 0,\n    \"signal\": null,\n    \"timed_out\": false,\n    \"output_limit\": false,\n    \"elapsed_ms\": 86,\n    \"error\": null\n  },\n  \"runner_sha256\": \"60af447ecfbc401549a7bbaab56e4111e0ca1d66a19bdc81e9eb479bdcd26c71\",\n  \"metadata_sha256\": \"f09b83bf3b6c1f8c4a586fa76dc7f759deedcc0dc0d50bb7e8902ed2f0748d76\",\n  \"fixture_contract_sha256\": \"f31f8f4fa90d6645c5d0a73bf9ec019e9a9cca9f04e1681f83af09513cf6282f\",\n  \"receipt_sha256\": null,\n  \"streams\": {\n    \"stdout\": \"doctor: cbmc kind=binary version=6.11.0\\n  binary: tools/cbmc/bin/cbmc OK (glibc_max=2.38)\\n  ldd: no missing libs OK\\n  verdict: OK\\n\",\n    \"stderr\": \"\",\n    \"stdout_sha256\": \"55521c85b2a3fb1c8ebb7448d9d01d444e18e16fc1522fa5dc86b1403d706d61\",\n    \"stderr_sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n  },\n  \"cases\": [],\n  \"scope\": \"T4_TECHNICAL_ONLY_T3_NATIVE_REVIEW_AND_T5_SEMANTICS_NOT_EVALUATED\"\n}\n",
+   "stderr": "",
+   "stdout_sha256": "3fe066c8943b5ab56fc5fc48393e1e91447bfa7436bf6c91b4ca563a87eb2938",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_files": "cli/doctor.*"
+  },
+  "verify": {
+   "argv": [
+    "node",
+    "--require",
+    "harness/hook.cjs",
+    "packages/runner/js/cli.mjs",
+    "portfolio",
+    "verify",
+    "cbmc"
+   ],
+   "exit_code": 0,
+   "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+   "receipt_sha256": "4e2d00d2b900b9522f67ba0202bc95dc8c6a0cf63e1ff2fd4d8a497b6c665dfe",
+   "receipt_file": "cli/verify.receipt.tsv",
+   "cases": [
+    {
+     "phase": "pos",
+     "exit_code": 0,
+     "duration_ms": 36,
+     "semantic_pattern_matched": true,
+     "exit_contract_matched": true,
+     "label": "VERIFIED"
+    },
+    {
+     "phase": "neg",
+     "exit_code": 10,
+     "duration_ms": 33,
+     "semantic_pattern_matched": true,
+     "exit_contract_matched": true,
+     "label": "VIOLATION"
+    },
+    {
+     "phase": "err",
+     "exit_code": 3,
+     "duration_ms": 24,
+     "semantic_pattern_matched": true,
+     "exit_contract_matched": true,
+     "label": "ERROR"
+    }
+   ],
+   "runner_child_streams": "embedded in cli/verify.stdout (streams.stdout/stderr, that invocation's own runner run)",
+   "harness_note": "hook.cjs preserves the gateway receipt TSV before the gateway deletes its temp dir; no shared source modified.",
+   "stdout": "{\n  \"schema\": \"formal-tools/portfolio-t4-technical/0.1\",\n  \"tool\": \"cbmc\",\n  \"operation\": \"verify-fixture\",\n  \"status\": \"FIXTURE_TECHNICAL_PASS_UNREVIEWED\",\n  \"process\": {\n    \"exit_code\": 0,\n    \"signal\": null,\n    \"timed_out\": false,\n    \"output_limit\": false,\n    \"elapsed_ms\": 113,\n    \"error\": null\n  },\n  \"runner_sha256\": \"60af447ecfbc401549a7bbaab56e4111e0ca1d66a19bdc81e9eb479bdcd26c71\",\n  \"metadata_sha256\": \"f09b83bf3b6c1f8c4a586fa76dc7f759deedcc0dc0d50bb7e8902ed2f0748d76\",\n  \"fixture_contract_sha256\": \"f31f8f4fa90d6645c5d0a73bf9ec019e9a9cca9f04e1681f83af09513cf6282f\",\n  \"receipt_sha256\": \"4e2d00d2b900b9522f67ba0202bc95dc8c6a0cf63e1ff2fd4d8a497b6c665dfe\",\n  \"streams\": {\n    \"stdout\": \"   cbmc/pos: exit=0 dur=36ms matched=1 exit_ok=1 label=VERIFIED (log: /tmp/formal-portfolio-t4-yhQCy5/verify-cbmc.pos.log)\\n   cbmc/neg: exit=10 dur=33ms matched=1 exit_ok=1 label=VIOLATION (log: /tmp/formal-portfolio-t4-yhQCy5/verify-cbmc.neg.log)\\n   cbmc/err: exit=3 dur=24ms matched=1 exit_ok=1 label=ERROR (log: /tmp/formal-portfolio-t4-yhQCy5/verify-cbmc.err.log)\\n\",\n    \"stderr\": \"\",\n    \"stdout_sha256\": \"49687e2e3ea4a8655dddd56b5179daf7cba4dfc92372f3ce3dfe4c211501e8aa\",\n    \"stderr_sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n  },\n  \"cases\": [\n    {\n      \"phase\": \"pos\",\n      \"exit_code\": 0,\n      \"duration_ms\": 36,\n      \"semantic_pattern_matched\": true,\n      \"exit_contract_matched\": true,\n      \"label\": \"VERIFIED\"\n    },\n    {\n      \"phase\": \"neg\",\n      \"exit_code\": 10,\n      \"duration_ms\": 33,\n      \"semantic_pattern_matched\": true,\n      \"exit_contract_matched\": true,\n      \"label\": \"VIOLATION\"\n    },\n    {\n      \"phase\": \"err\",\n      \"exit_code\": 3,\n      \"duration_ms\": 24,\n      \"semantic_pattern_matched\": true,\n      \"exit_contract_matched\": true,\n      \"label\": \"ERROR\"\n    }\n  ],\n  \"scope\": \"T4_TECHNICAL_ONLY_T3_NATIVE_REVIEW_AND_T5_SEMANTICS_NOT_EVALUATED\"\n}\n",
+   "stderr": "",
+   "stdout_sha256": "fb3dd1a87e090e4101a0c51ed03f633c7dc463db8baaf45e8f9fc36a16b38e18",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_files": "cli/verify.* + cli/verify.receipt.tsv"
+  },
+  "wrong_runner_pin": {
+   "argv": [
+    "node",
+    "packages/runner/js/cli.mjs",
+    "portfolio",
+    "verify",
+    "cbmc"
+   ],
+   "env_overrides": {
+    "FORMAL_PORTABLE_RUNNER_SHA256": "0000000000000000000000000000000000000000000000000000000000000000 (valid shape, wrong value)"
+   },
+   "exit_code": 2,
+   "status": "NOT_RUN_FAIL_CLOSED",
+   "reason": "Error: PORTABLE_RUNNER_SHA256_MISMATCH",
+   "stdout_note": "raw stdout bytes are the CLI's typed fail-closed JSON result",
+   "stdout": "{\n  \"schema\": \"formal-tools/portfolio-t4-technical/0.1\",\n  \"tool\": \"cbmc\",\n  \"operation\": \"verify-fixture\",\n  \"status\": \"NOT_RUN_FAIL_CLOSED\",\n  \"reason\": \"Error: PORTABLE_RUNNER_SHA256_MISMATCH\",\n  \"scope\": \"T3_T4_T5_NOT_QUALIFIED\"\n}\n",
+   "stderr": "",
+   "stdout_sha256": "433e6537ecfecf259ecb9ae528c13d56818ffbccd713d305da0886827341112a",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_files": "cli/wrong-runner-pin.*"
+  }
+ },
+ "sdk": {
+  "entry": "packages/runner/js/sdk.mjs",
+  "driver": "harness/sdk-driver.mjs (imports the pinned entry, calls runPortableGate once, prints the full structured result)",
+  "execution": {
+   "cwd": "<repo tree root>",
+   "node": "v22.23.5",
+   "uid": 65534,
+   "gid": 65534,
+   "env_pins": "identical to cli.execution.env_pins"
+  },
+  "doctor": {
+   "argv": [
+    "node",
+    "sdk-driver.mjs",
+    "doctor",
+    "packages/runner/js/sdk.mjs"
+   ],
+   "harness_exit_code": 0,
+   "status": "DOCTOR_EXECUTED_NOT_T3",
+   "runner_child_streams": "embedded in sdk/doctor.stdout (streams.*)",
+   "stdout": "{\n  \"schema\": \"formal-tools/portfolio-t4-technical/0.1\",\n  \"tool\": \"cbmc\",\n  \"operation\": \"doctor\",\n  \"status\": \"DOCTOR_EXECUTED_NOT_T3\",\n  \"process\": {\n    \"exit_code\": 0,\n    \"signal\": null,\n    \"timed_out\": false,\n    \"output_limit\": false,\n    \"elapsed_ms\": 83,\n    \"error\": null\n  },\n  \"runner_sha256\": \"60af447ecfbc401549a7bbaab56e4111e0ca1d66a19bdc81e9eb479bdcd26c71\",\n  \"metadata_sha256\": \"f09b83bf3b6c1f8c4a586fa76dc7f759deedcc0dc0d50bb7e8902ed2f0748d76\",\n  \"fixture_contract_sha256\": \"f31f8f4fa90d6645c5d0a73bf9ec019e9a9cca9f04e1681f83af09513cf6282f\",\n  \"receipt_sha256\": null,\n  \"streams\": {\n    \"stdout\": \"doctor: cbmc kind=binary version=6.11.0\\n  binary: tools/cbmc/bin/cbmc OK (glibc_max=2.38)\\n  ldd: no missing libs OK\\n  verdict: OK\\n\",\n    \"stderr\": \"\",\n    \"stdout_sha256\": \"55521c85b2a3fb1c8ebb7448d9d01d444e18e16fc1522fa5dc86b1403d706d61\",\n    \"stderr_sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n  },\n  \"cases\": [],\n  \"scope\": \"T4_TECHNICAL_ONLY_T3_NATIVE_REVIEW_AND_T5_SEMANTICS_NOT_EVALUATED\"\n}\n",
+   "stderr": "",
+   "stdout_sha256": "126f2f1617ebfd479f6bc17e598a5c9e08b51bc72eb1561af59a02c1525a539e",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_files": "sdk/doctor.*"
+  },
+  "verify": {
+   "argv": [
+    "node",
+    "--require",
+    "harness/hook.cjs",
+    "sdk-driver.mjs",
+    "verify",
+    "packages/runner/js/sdk.mjs"
+   ],
+   "harness_exit_code": 0,
+   "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+   "receipt_sha256": "621474fb4861c42364a58087707a566a52c3b2210a6fb58c7981201c18caa68d",
+   "receipt_file": "sdk/verify.receipt.tsv",
+   "cases": [
+    {
+     "phase": "pos",
+     "exit_code": 0,
+     "duration_ms": 37,
+     "semantic_pattern_matched": true,
+     "exit_contract_matched": true,
+     "label": "VERIFIED"
+    },
+    {
+     "phase": "neg",
+     "exit_code": 10,
+     "duration_ms": 36,
+     "semantic_pattern_matched": true,
+     "exit_contract_matched": true,
+     "label": "VIOLATION"
+    },
+    {
+     "phase": "err",
+     "exit_code": 3,
+     "duration_ms": 26,
+     "semantic_pattern_matched": true,
+     "exit_contract_matched": true,
+     "label": "ERROR"
+    }
+   ],
+   "runner_child_streams": "embedded in sdk/verify.stdout (streams.*)",
+   "stdout": "{\n  \"schema\": \"formal-tools/portfolio-t4-technical/0.1\",\n  \"tool\": \"cbmc\",\n  \"operation\": \"verify-fixture\",\n  \"status\": \"FIXTURE_TECHNICAL_PASS_UNREVIEWED\",\n  \"process\": {\n    \"exit_code\": 0,\n    \"signal\": null,\n    \"timed_out\": false,\n    \"output_limit\": false,\n    \"elapsed_ms\": 119,\n    \"error\": null\n  },\n  \"runner_sha256\": \"60af447ecfbc401549a7bbaab56e4111e0ca1d66a19bdc81e9eb479bdcd26c71\",\n  \"metadata_sha256\": \"f09b83bf3b6c1f8c4a586fa76dc7f759deedcc0dc0d50bb7e8902ed2f0748d76\",\n  \"fixture_contract_sha256\": \"f31f8f4fa90d6645c5d0a73bf9ec019e9a9cca9f04e1681f83af09513cf6282f\",\n  \"receipt_sha256\": \"621474fb4861c42364a58087707a566a52c3b2210a6fb58c7981201c18caa68d\",\n  \"streams\": {\n    \"stdout\": \"   cbmc/pos: exit=0 dur=37ms matched=1 exit_ok=1 label=VERIFIED (log: /tmp/formal-portfolio-t4-QPPOMc/verify-cbmc.pos.log)\\n   cbmc/neg: exit=10 dur=36ms matched=1 exit_ok=1 label=VIOLATION (log: /tmp/formal-portfolio-t4-QPPOMc/verify-cbmc.neg.log)\\n   cbmc/err: exit=3 dur=26ms matched=1 exit_ok=1 label=ERROR (log: /tmp/formal-portfolio-t4-QPPOMc/verify-cbmc.err.log)\\n\",\n    \"stderr\": \"\",\n    \"stdout_sha256\": \"33cc245d2a60760d5a898a26adebd5bf283e734461ee6b2f5042999668920aae\",\n    \"stderr_sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n  },\n  \"cases\": [\n    {\n      \"phase\": \"pos\",\n      \"exit_code\": 0,\n      \"duration_ms\": 37,\n      \"semantic_pattern_matched\": true,\n      \"exit_contract_matched\": true,\n      \"label\": \"VERIFIED\"\n    },\n    {\n      \"phase\": \"neg\",\n      \"exit_code\": 10,\n      \"duration_ms\": 36,\n      \"semantic_pattern_matched\": true,\n      \"exit_contract_matched\": true,\n      \"label\": \"VIOLATION\"\n    },\n    {\n      \"phase\": \"err\",\n      \"exit_code\": 3,\n      \"duration_ms\": 26,\n      \"semantic_pattern_matched\": true,\n      \"exit_contract_matched\": true,\n      \"label\": \"ERROR\"\n    }\n  ],\n  \"scope\": \"T4_TECHNICAL_ONLY_T3_NATIVE_REVIEW_AND_T5_SEMANTICS_NOT_EVALUATED\"\n}\n",
+   "stderr": "",
+   "stdout_sha256": "44128bf46adfddbc443ffe3b5b2c3a1b43f830205916164625c8a857f2cec0b2",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_files": "sdk/verify.* + sdk/verify.receipt.tsv"
+  },
+  "wrong_runner_pin": {
+   "argv": [
+    "node",
+    "sdk-driver.mjs",
+    "verify",
+    "packages/runner/js/sdk.mjs"
+   ],
+   "env_overrides": {
+    "FORMAL_PORTABLE_RUNNER_SHA256": "0000000000000000000000000000000000000000000000000000000000000000 (valid shape, wrong value)"
+   },
+   "harness_exit_code": 0,
+   "status": "NOT_RUN_FAIL_CLOSED",
+   "reason": "Error: PORTABLE_RUNNER_SHA256_MISMATCH",
+   "exit_semantics": "runPortableGate is a structured API returning typed results and defines no process exit code; harness_exit_code is this driver process exit, not a native or SDK operation exit (R102 P2-01 renamed from the ambiguous exit_code).",
+   "stdout": "{\n  \"schema\": \"formal-tools/portfolio-t4-technical/0.1\",\n  \"tool\": \"cbmc\",\n  \"operation\": \"verify-fixture\",\n  \"status\": \"NOT_RUN_FAIL_CLOSED\",\n  \"reason\": \"Error: PORTABLE_RUNNER_SHA256_MISMATCH\",\n  \"scope\": \"T3_T4_T5_NOT_QUALIFIED\"\n}\n",
+   "stderr": "",
+   "stdout_sha256": "433e6537ecfecf259ecb9ae528c13d56818ffbccd713d305da0886827341112a",
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "raw_files": "sdk/wrong-runner-pin.*"
+  }
+ },
+ "mcp": {
+  "status": "NOT_RUN_LOCKED_DEPENDENCIES_NOT_INSTALLED",
+  "exit_code": 1,
+  "error_code": "ERR_MODULE_NOT_FOUND",
+  "stderr_sha256": "10d8345345716a0149bbac1c995a4212752e365c3a711201afb6a44c922ff102",
+  "installed": false,
+  "locked_dependencies": {
+   "@modelcontextprotocol/server": "2.4.0",
+   "@modelcontextprotocol/core": "2.4.0",
+   "zod": "4.6.7"
+  },
+  "lockfile_blob_sha1": "2ad31f01195434617ac74d2f377287a15e062b95",
+  "reason": "Fresh capture: node_modules absent in the pinned execution container and the lockfile dependency imports fail with ERR_MODULE_NOT_FOUND (raw/mcp/no-deps.*). No mock or stub result is claimed.",
+  "raw_files": "mcp/no-deps.*",
+  "ci_gate": {
+   "mechanism": "tests/cbmc-current-main-t4.test.mjs treats a dependency-import failure as a hard failure under any accepted CI environment signal, so the MCP stdio integration test can no longer silently skip in CI; a local optional skip remains for offline environments. Accepted signals (R148 P1-01): CI=true, CI=woodpecker, or any CI_PIPELINE_* variable — the previous CI=true-only check misdetected official Woodpecker pipelines, which set CI=woodpecker and CI_PIPELINE_* but not CI=true, so a missing-dependency skip would have stayed silent in CI.",
+   "test_file": "tests/cbmc-current-main-t4.test.mjs",
+   "repair_round": "R148 P1-01",
+   "ci_env_signals": [
+    "CI=true",
+    "CI=woodpecker",
+    "CI_PIPELINE_*"
+   ],
+   "negative_examples": [
+    {
+     "env": {"CI": "woodpecker"},
+     "mcp_dependencies": "unresolvable via module hook (ERR_MODULE_NOT_FOUND)",
+     "expected": "process exits nonzero with MCP_LOCKED_DEPENDENCIES_UNAVAILABLE_IN_CI before any test executes; no skip occurs"
+    },
+    {
+     "env": {"CI": "true"},
+     "mcp_dependencies": "unresolvable via module hook (ERR_MODULE_NOT_FOUND)",
+     "expected": "process exits nonzero with MCP_LOCKED_DEPENDENCIES_UNAVAILABLE_IN_CI before any test executes; no skip occurs"
+    },
+    {
+     "env": {"CI_PIPELINE_NUMBER": "set, CI unset"},
+     "mcp_dependencies": "unresolvable via module hook (ERR_MODULE_NOT_FOUND)",
+     "expected": "process exits nonzero with MCP_LOCKED_DEPENDENCIES_UNAVAILABLE_IN_CI before any test executes; no skip occurs"
+    },
+    {
+     "env": {"CI": "unset", "CI_PIPELINE_*": "unset"},
+     "mcp_dependencies": "unresolvable via module hook (ERR_MODULE_NOT_FOUND)",
+     "expected": "local-only skip: process exits 0 and the MCP stdio integration test reports skipped (MCP dependencies not installed); never a CI-style hard failure"
+    }
+   ],
+   "negative_example_mechanism": "Each negative example re-runs the REAL committed test file (tests/cbmc-current-main-t4.test.mjs, unmodified bytes) in a child process with a module hook registered via node:module register() that makes '@modelcontextprotocol/server' unresolvable with ERR_MODULE_NOT_FOUND, faithfully reproducing the missing-dependency condition even where a parent node_modules provides the package. Probe children set CBMC_T4_GATE_PROBE=1 so the negative examples do not recurse, and they strip CI, CI_PIPELINE_* and NODE_TEST_* variables so the child behaves as a standalone run with the spec reporter. The three CI-signal probes assert nonzero exit, the MCP_LOCKED_DEPENDENCIES_UNAVAILABLE_IN_CI marker, and the absence of any skip directive; the local probe asserts exit 0, the skipped MCP stdio test line, and fail 0."
+  },
+  "local_tap": {
+   "file": "mcp/local-stdio-tap.txt",
+   "sha256": "52843b83a9d97000a88f393f487cd89aa7c0ff3d15b8a5a94829d20c96c33d6b",
+   "environment": "ft-mcp:deb13 (Debian 13 trixie) with the exact lockfile dependency versions installed (node_modules from npm ci --omit=dev --registry cache; @modelcontextprotocol/server 2.4.0, core 2.4.0, zod 4.6.7)",
+   "command": "node --test tests/cbmc-current-main-t4.test.mjs",
+   "provenance": "Recorded after tests/cbmc-current-main-t4.test.mjs reached its final content for this round; the evidence JSON at TAP time did not yet embed this section. The transcript proves the MCP stdio integration test executed and was not skipped, with initialize/tools/list/list_formal_tools/inspect_portfolio_tool/verify_portable_fixture and the isError fail-closed path all passing. This is protocol and fail-closed coverage, not a CBMC solve.",
+   "ci_proof_note": "Exact-head Woodpecker push/PR pipeline logs are additionally quoted on PR #151 after the final push."
+  }
+ },
+ "raw_evidence": {
+  "root": "docs/tool-portfolio/r99/cbmc-current-main-t4/raw",
+  "sha256sums_file": "SHA256SUMS",
+  "sha256sums_sha256": "c355a42cddd53553534e26f6ad64a59ca6d95d4f014b58a7417e7e7bb1c5d8be",
+  "file_count": 48,
+  "harness": [
+   "harness/hook.cjs",
+   "harness/sdk-driver.mjs",
+   "harness/capture.sh",
+   "harness/assemble-bundle.sh"
+  ],
+  "note": "Immutable raw execution bytes for every recorded claim: runner/ cli/ sdk/ mcp/ streams, exits, receipt TSVs and case logs, plus the capture harness. The regression test recomputes every recorded SHA-256 from these committed bytes (R102 P1-01)."
+ },
+ "result": {
+  "runner": "PASS_SCOPED",
+  "cli": "PASS_SCOPED",
+  "sdk": "PASS_SCOPED",
+  "mcp": "NOT_RUN",
+  "t4": "TECHNICAL_EVIDENCE_READY; NOT_GRANTED_PENDING_INDEPENDENT_REVIEW",
+  "t5": "NOT_QUALIFIED",
+  "t6": "OPEN",
+  "product": "NOT_GRANTED",
+  "release": "NOT_GRANTED"
+ },
+ "limits": [
+  "Native POS/NEG/ERR were re-executed through the exact current-main Runner (b9a662f blob 40427c1, file sha 60af447e...); no historical receipt was substituted.",
+  "Original CBMC archive, original meta.json and fixture source bytes are unchanged; only the temporary overlay replaces the Runner and regenerates canonical meta.sh.",
+  "CLI and SDK raw stdout/stderr and receipt TSV bytes are committed under raw/; every recorded SHA-256 is recomputable from those bytes (R102 P1-01 repair).",
+  "Wrong Runner SHA was rejected fail-closed before any native execution, in both CLI (process exit 2) and SDK (typed NOT_RUN_FAIL_CLOSED; harness exit only).",
+  "MCP is NOT_RUN locally (missing exact lockfile dependencies, raw capture recorded). The CI gate makes a CI dependency failure a hard test failure; CI TAP proof is provided on the PR (R102 P1-02 repair).",
+  "T1 reproducible build, T5 semantics, T6, Product and Release are not qualified; T4 remains NOT_GRANTED pending independent review."
+ ]
+}

@@ -1,0 +1,4 @@
+doctor: cbmc kind=binary version=6.11.0
+  binary: tools/cbmc/bin/cbmc OK (glibc_max=2.38)
+  ldd: no missing libs OK
+  verdict: OK
