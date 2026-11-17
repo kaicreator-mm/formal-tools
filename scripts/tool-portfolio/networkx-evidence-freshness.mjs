@@ -43,13 +43,16 @@ export const DEPENDENCIES = Object.freeze({
     'producerManifestSha256', 'sourceArchivePublisherSha256', 'sourceAuditEvidenceBlob'],
   T1: ['version', 'upstreamCommit', 'builderBlob', 'pythonRuntimeSha256',
     'reproduciblePackageTreeSha256'],
-  T2: ['archiveSha256', 'pythonRuntimeSha256', 'installedPackageTreeSha256'],
-  T3: ['version', 'expectBlob', 'posBlob', 'negBlob', 'errBlob', 'runnerBlob',
+  T2: ['archiveSha256', 'reproduciblePackageTreeSha256', 'pythonRuntimeSha256', 'installedPackageTreeSha256'],
+  T3: ['version', 'archiveSha256', 'reproduciblePackageTreeSha256',
+    'installedPackageTreeSha256', 'expectBlob', 'posBlob', 'negBlob', 'errBlob',
+    'runnerBlob', 'pythonRuntimeSha256'],
+  T4: ['version', 'archiveSha256', 'reproduciblePackageTreeSha256',
+    'installedPackageTreeSha256', 'expectBlob', 'posBlob', 'negBlob', 'errBlob',
+    'runnerBlob', 'nativeBlob', 'cliBlob', 'sdkBlob', 'mcpBlob', 'registryBlob',
     'pythonRuntimeSha256'],
-  T4: ['version', 'expectBlob', 'posBlob', 'negBlob', 'errBlob', 'runnerBlob',
-    'nativeBlob', 'cliBlob', 'sdkBlob', 'mcpBlob', 'registryBlob',
-    'pythonRuntimeSha256'],
-  T5: ['version', 'archiveSha256', 'posBlob', 'negBlob', 'errBlob',
+  T5: ['version', 'archiveSha256', 'reproduciblePackageTreeSha256',
+    'installedPackageTreeSha256', 'posBlob', 'negBlob', 'errBlob',
     'pythonRuntimeSha256', 't5OracleBlob', 't5OracleAuthority'],
   T6: FIELDS
 });
@@ -145,12 +148,13 @@ export function assess(baseline, observed) {
     : newlyObserved.length ? 'NEW_EVIDENCE_REVIEW_REQUIRED' : 'FRESH_UNQUALIFIED';
   return {
     schema: ASSESSMENT_SCHEMA, toolId: 'networkx', baselineMain: baseline.snapshotMain,
+    externalSourceVerification: 'UNVERIFIED_EXTERNAL_GIT_READBACK',
     status: state, qualificationGranted: false,
     qualification: Object.fromEntries(Object.keys(DEPENDENCIES).map(k => [k, false])),
     changedFields: changed.sort(), newEvidenceFields: newlyObserved.sort(),
     incompleteFields: [...new Set(missing)].sort(), unknownFields: unknown.sort(),
     reverifyGates, reverifyRequired: state !== 'FRESH_UNQUALIFIED',
-    limitations: 'Evidence freshness only. Original archive bytes, shared Python313, full T1/T4, T5 Oracle and formal T6 remain unqualified.'
+    limitations: 'Caller-provided observation and sourcePins are not authenticated against the current Git tree. External source readback UNVERIFIED; original archive bytes, Python313, full T1/T4, T5 Oracle and T6 remain unqualified.'
   };
 }
 
