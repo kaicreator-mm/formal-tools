@@ -52,11 +52,39 @@ test('upstream source version drift propagates to dependent gates, never grants 
   assert.equal(r.qualification.T6, false);
 });
 
-test('archive SHA drift invalidates T0, T2, T3, T4, T5 and T6', () => {
+test('archive SHA drift invalidates T0 through T6, including reproducible T1', () => {
   const o=observed(); o.identity.archiveSha256=replaceSha(o.identity.archiveSha256);
   const r=assess(baseline,o);
-  assert.deepEqual(r.reverifyGates,['T0','T2','T3','T4','T5','T6']);
+  assert.deepEqual(r.reverifyGates,['T0','T1','T2','T3','T4','T5','T6']);
   assert.equal(r.status,'STALE_REVERIFY_REQUIRED');
+});
+
+test('NEW archive SHA provenance forces source, build, install, native, integration and semantic review', () => {
+  const b=clone(baseline); b.identity.archiveSha256=null;
+  const o=observed();
+  const r=assess(b,o);
+  assert.equal(r.status,'NEW_EVIDENCE_REVIEW_REQUIRED');
+  assert.deepEqual(r.newEvidenceFields,['archiveSha256']);
+  assert.deepEqual(r.reverifyGates,['T0','T1','T2','T3','T4','T5','T6']);
+  assert.ok(Object.values(r.qualification).every(x => x === false));
+});
+
+test('null archive SHA is incomplete and triggers T1 rather than inheriting old build result', () => {
+  const o=observed(); o.identity.archiveSha256=null;
+  const r=assess(baseline,o);
+  assert.equal(r.status,'INCOMPLETE_OBSERVATION');
+  assert.ok(r.incompleteFields.includes('archiveSha256'));
+  assert.deepEqual(r.reverifyGates,['T0','T1','T2','T3','T4','T5','T6']);
+  assert.equal(r.qualification.T1,false);
+});
+
+test('missing archive SHA does not silently reuse a prior reproducible build', () => {
+  const o=observed(); delete o.identity.archiveSha256;
+  const r=assess(baseline,o);
+  assert.equal(r.status,'INCOMPLETE_OBSERVATION');
+  assert.ok(r.incompleteFields.includes('archiveSha256'));
+  assert.deepEqual(r.reverifyGates,['T0','T1','T2','T3','T4','T5','T6']);
+  assert.equal(r.qualificationGranted,false);
 });
 
 test('changed git source Blob, with identity/pin both updated, invalidates affected gates', () => {
