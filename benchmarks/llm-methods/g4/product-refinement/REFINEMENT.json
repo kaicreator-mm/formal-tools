@@ -1,0 +1,3015 @@
+{
+  "schema": "formal-tools/g4-xdownload-product-refinement/0.1",
+  "status": "ENGINEERING_ONLY_NOT_QUALIFIED",
+  "title": "H1 Source-to-Model refinement of original xDownload T01/T03/S3 raw business semantics with executable POS/NEG witness",
+  "lane": "I11_H1_SINGLE_WRITER_REFINEMENT (R93 Lane A, claim issuecomment-6954611591)",
+  "authority": {
+    "qualified_solution": "NOT_ADMITTED",
+    "positive_replay": false,
+    "effect": false,
+    "source_owner_adoption": "NOT_APPROVED",
+    "product_claim_version": "NOT_FROZEN",
+    "professional_oracle": "NOT_ATTESTED",
+    "host_signing": "NOT_ATTESTED",
+    "trust_roots": "NOT_CONFIGURED",
+    "formal_authority": "ENGINEERING_ONLY"
+  },
+  "source_pin": {
+    "repository": "kaicreator-mm/xDownload",
+    "exact_commit": "e904f08c478b15147b1c07fbe53c610d2d81851f",
+    "via": "merged #163 product-policy-crosswalk snapshots (read-only inputs; no source file modified by this lane)",
+    "blob_map": {
+      "intent": {
+        "path": "packages/download-domain-app/src/contracts/intent.ts",
+        "git_blob": "173bdb2001a54d5477a09fa00ffc271c379992b2"
+      },
+      "business": {
+        "path": "packages/download-domain-app/src/business/business-download.mjs",
+        "git_blob": "a7dba9a896de0b84fc6d54093563adca2ccbcdfc"
+      },
+      "composition": {
+        "path": "packages/download-domain-app/src/business/composition.ts",
+        "git_blob": "616c353fd7c38c6612b320e48750ac4c99fef2c0"
+      },
+      "https": {
+        "path": "packages/direct-acquisition/src/pinned-public-https.ts",
+        "git_blob": "8beebadf701883e3ae5ccf669485bc5c1ba1dde0"
+      }
+    }
+  },
+  "crosswalk_ref": "benchmarks/llm-methods/g4/product-policy-crosswalk/CROSSWALK.json",
+  "smt_gaps_ref": "benchmarks/llm-methods/g4/product-refinement/SMT_ABSTRACTION_GAPS.json",
+  "test_ref": "tests/xdownload-product-refinement.test.mjs",
+  "model_units": [
+    {
+      "id": "t01.validateConfirmedIntent",
+      "model_file": "benchmarks/llm-methods/g4/product-refinement/model/t01-intent-model.mjs",
+      "source_anchor": {
+        "file": "intent",
+        "symbol": "validateConfirmedIntent"
+      },
+      "relation": "REFINED_EXECUTABLE",
+      "notes": "1:1 port: check order, diagnostic codes/fields, exact-key no-widening, opaque targetRef locator rule, 1 TiB bound"
+    },
+    {
+      "id": "t01.validateOutputRoot",
+      "model_file": "benchmarks/llm-methods/g4/product-refinement/model/t01-intent-model.mjs",
+      "source_anchor": {
+        "file": "intent",
+        "symbol": "validateOutputRoot"
+      },
+      "relation": "REFINED_EXECUTABLE"
+    },
+    {
+      "id": "t01.validateArtifactPath",
+      "model_file": "benchmarks/llm-methods/g4/product-refinement/model/t01-intent-model.mjs",
+      "source_anchor": {
+        "file": "intent",
+        "symbol": "validateArtifactPath"
+      },
+      "relation": "REFINED_EXECUTABLE"
+    },
+    {
+      "id": "t01.patterns",
+      "model_file": "benchmarks/llm-methods/g4/product-refinement/model/t01-intent-model.mjs",
+      "source_anchor": {
+        "file": "intent",
+        "symbol": "INTENT_FIELD_PATTERN/REFERENCE_TOKEN_PATTERN/SHA256_PATTERN/MAX_DECLARED_BYTES"
+      },
+      "relation": "PINNED_EXECUTABLE"
+    },
+    {
+      "id": "t03.guard",
+      "model_file": "benchmarks/llm-methods/g4/product-refinement/model/t03-effect-gate-model.mjs",
+      "source_anchor": {
+        "file": "business",
+        "symbol": "GUARD_DECLARED_BYTES_OK + DECLARED_BYTES_PROFILE_BOUND"
+      },
+      "relation": "REFINED_EXECUTABLE",
+      "notes": "guard:declared-bytes-ok op lte on payload.declaredBytes vs 1048576; kernel lte interpreted as JS relational <=; unambiguous for T01-valid payloads (number or undefined)"
+    },
+    {
+      "id": "t03.decision",
+      "model_file": "benchmarks/llm-methods/g4/product-refinement/model/t03-effect-gate-model.mjs",
+      "source_anchor": {
+        "file": "business",
+        "symbol": "makeDefinition states/transitions + INTENT_FIELD_PROJECTION"
+      },
+      "relation": "REFINED_EXECUTABLE",
+      "notes": "requested --acquire--> acquired with declared effect INTENT (pure data, executed:false) vs unguarded refuse fallback; no Effect executes"
+    },
+    {
+      "id": "t03.decisionSchema",
+      "model_file": "benchmarks/llm-methods/g4/product-refinement/model/t03-effect-gate-model.mjs",
+      "source_anchor": {
+        "file": "business",
+        "symbol": "decisionSchema.isValid"
+      },
+      "relation": "REFINED_EXECUTABLE"
+    },
+    {
+      "id": "t03.routeFacts",
+      "model_file": "benchmarks/llm-methods/g4/product-refinement/model/t03-effect-gate-model.mjs",
+      "source_anchor": {
+        "file": "business+composition",
+        "symbol": "effectBindings effect:acquire + ACQUISITION_ROUTE + SEALED_OPERATION_DECLARATIONS"
+      },
+      "relation": "PINNED_EXECUTABLE",
+      "notes": "resource acquisition/acquisition.acquire, external permitTtlMs 60000 await terminal, non-idempotent"
+    },
+    {
+      "id": "t03.confirmDownloadRequest",
+      "model_file": "benchmarks/llm-methods/g4/product-refinement/model/t03-effect-gate-model.mjs",
+      "source_anchor": {
+        "file": "composition",
+        "symbol": "confirmDownloadRequest"
+      },
+      "relation": "REFINED_EXECUTABLE",
+      "notes": "pure seal step; CONFIRMED_INTENT_INVALID refusal before any K admission"
+    },
+    {
+      "id": "t03.sealedBuildProducer",
+      "model_file": null,
+      "source_anchor": {
+        "file": "composition",
+        "symbol": "buildDownloadDomainApp/sealModules/verifySealedModules"
+      },
+      "relation": "HOST_IO_BOUNDARY",
+      "notes": "sealed payload bytes, buildV10App static producer and post-seal hashing are build-time Host obligations; intentionally not modelled"
+    },
+    {
+      "id": "s3.publicIpv4",
+      "model_file": "benchmarks/llm-methods/g4/product-refinement/model/s3-network-guard-model.mjs",
+      "source_anchor": {
+        "file": "https",
+        "symbol": "CIDRS + publicIpv4"
+      },
+      "relation": "REFINED_EXECUTABLE"
+    },
+    {
+      "id": "s3.mediaUrl",
+      "model_file": "benchmarks/llm-methods/g4/product-refinement/model/s3-network-guard-model.mjs",
+      "source_anchor": {
+        "file": "https",
+        "symbol": "mediaUrl (MEDIA_PATH/HOST/port/URL round-trip)"
+      },
+      "relation": "REFINED_EXECUTABLE"
+    },
+    {
+      "id": "s3.classifyDnsAnswers",
+      "model_file": "benchmarks/llm-methods/g4/product-refinement/model/s3-network-guard-model.mjs",
+      "source_anchor": {
+        "file": "https",
+        "symbol": "resolvePublic post-resolution classification"
+      },
+      "relation": "REFINED_EXECUTABLE",
+      "notes": "pure part of resolvePublic: deadline, 1..16 answers, all-public, pin first"
+    },
+    {
+      "id": "s3.resolvePublicViaDns",
+      "model_file": "benchmarks/llm-methods/g4/product-refinement/model/s3-network-guard-model.mjs",
+      "source_anchor": {
+        "file": "https",
+        "symbol": "resolvePublic (dns-fused wrapper)"
+      },
+      "relation": "SHIPPED_UNTESTED_SEAM",
+      "notes": "real resolve4 wrapper shipped for completeness; never invoked by witness tests (tests inject deterministic resolvePublic)"
+    },
+    {
+      "id": "s3.tlsPeerOkay",
+      "model_file": "benchmarks/llm-methods/g4/product-refinement/model/s3-network-guard-model.mjs",
+      "source_anchor": {
+        "file": "https",
+        "symbol": "peerOkay"
+      },
+      "relation": "REFINED_EXECUTABLE",
+      "notes": "encrypted && authorized && remoteAddress === pinnedIp, checked per hop"
+    },
+    {
+      "id": "s3.readLoop",
+      "model_file": "benchmarks/llm-methods/g4/product-refinement/model/s3-network-guard-model.mjs",
+      "source_anchor": {
+        "file": "https",
+        "symbol": "createPinnedPublicS3HttpsReader read loop"
+      },
+      "relation": "REFINED_EXECUTABLE",
+      "notes": "identical control flow with REQUIRED injected resolvePublic/hop seams: parse, initial/redirect admission + echo + visited, pin IP, hop, redirect bound"
+    },
+    {
+      "id": "s3.hop",
+      "model_file": null,
+      "source_anchor": {
+        "file": "https",
+        "symbol": "hop (httpsRequest/TLS/streaming)"
+      },
+      "relation": "HOST_IO_BOUNDARY",
+      "notes": "byte transport, TLS handshake and stream accounting remain Host obligations; only the guard predicates over them are modelled"
+    },
+    {
+      "id": "s3.policyAdmission",
+      "model_file": null,
+      "source_anchor": {
+        "file": "https",
+        "symbol": "PinnedPublicMediaSourcePolicy admitInitial/admitRedirect"
+      },
+      "relation": "INJECTED_SEAM",
+      "notes": "original treats the policy as an injectable test double; witness injects scripted policies identically"
+    }
+  ],
+  "no_effect": {
+    "statement": "No Effect is executed anywhere in this lane. The T03 decision layer emits a declarative effect INTENT (plain data, executed:false); no permit is minted, no capability is called, no byte transport occurs, no Host action is taken.",
+    "executable_checks": [
+      "W-NE-01",
+      "W-NE-02"
+    ],
+    "residual_host_obligations": [
+      "live one-time permit minting and durable K->C re-check",
+      "trusted Host resolution of the opaque targetRef",
+      "actual acquisition.acquire capability run with await:'terminal'",
+      "sealed-BUILD producer and post-seal module hashing",
+      "real DNS lookup and TLS byte transport"
+    ]
+  },
+  "witness": [
+    {
+      "id": "W-T01-P01",
+      "lane": "T01",
+      "kind": "POS",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        },
+        "declaredBytes": 1048576
+      },
+      "expect": {
+        "ok": true,
+        "value_contains": {
+          "requestId": "req-1",
+          "lineageId": "lin-1",
+          "targetRef": "asset-1",
+          "outputRootScope": "/srv/downloads",
+          "allowedOperation": "acquisition.acquire",
+          "slice": "S3",
+          "declaredBytes": 1048576,
+          "caller": {
+            "actor": "requester",
+            "sessionRef": "session-1"
+          }
+        }
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "validateConfirmedIntent happy path; opaque token targetRef accepted"
+      }
+    },
+    {
+      "id": "W-T01-P02",
+      "lane": "T01",
+      "kind": "POS",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-2",
+        "lineageId": "lin-2",
+        "targetRef": "asset2",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S1",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-2"
+        }
+      },
+      "expect": {
+        "ok": true,
+        "value_contains": {
+          "slice": "S1"
+        },
+        "value_not_keys": [
+          "digestAnchor",
+          "declaredBytes"
+        ]
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "optional digestAnchor/declaredBytes stay absent when unprovided"
+      }
+    },
+    {
+      "id": "W-T01-P03",
+      "lane": "T01",
+      "kind": "POS",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-3",
+        "lineageId": "lin-3",
+        "targetRef": "asset-3",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S1",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-3"
+        },
+        "digestAnchor": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "declaredBytes": 1
+      },
+      "expect": {
+        "ok": true
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "lowercase 64-hex digestAnchor and positive declaredBytes accepted"
+      }
+    },
+    {
+      "id": "W-T01-P04",
+      "lane": "T01",
+      "kind": "POS",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-4",
+        "lineageId": "lin-4",
+        "targetRef": "asset-4",
+        "outputRootScope": "C:\\srv\\downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-4"
+        }
+      },
+      "expect": {
+        "ok": true,
+        "value_contains": {
+          "outputRootScope": "C:\\srv\\downloads"
+        }
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "Windows drive-letter absolute output root accepted"
+      }
+    },
+    {
+      "id": "W-T01-P05",
+      "lane": "T01",
+      "kind": "POS",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-5",
+        "lineageId": "lin-5",
+        "targetRef": "asset-1_2:prod@eu/west.-x",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-5"
+        }
+      },
+      "expect": {
+        "ok": true,
+        "value_contains": {
+          "targetRef": "asset-1_2:prod@eu/west.-x"
+        }
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "REFERENCE_TOKEN_PATTERN charset [A-Za-z0-9._:@/-] accepted"
+      }
+    },
+    {
+      "id": "W-T01-N01",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": 42,
+      "expect": {
+        "ok": false,
+        "code": "MALFORMED_REQUIRED_FIELD",
+        "field": "intent"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "non-object input refused"
+      }
+    },
+    {
+      "id": "W-T01-N02",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": null,
+      "expect": {
+        "ok": false,
+        "code": "MALFORMED_REQUIRED_FIELD",
+        "field": "intent"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "null input refused"
+      }
+    },
+    {
+      "id": "W-T01-N03",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": [],
+      "expect": {
+        "ok": false,
+        "code": "MALFORMED_REQUIRED_FIELD",
+        "field": "intent"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "array input refused"
+      }
+    },
+    {
+      "id": "W-T01-N04",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        },
+        "effectPermit": "forged-permit"
+      },
+      "expect": {
+        "ok": false,
+        "code": "SCOPE_WIDENING_REFUSED",
+        "field": "effectPermit"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "unknown top-level key refused by no-widening contract"
+      }
+    },
+    {
+      "id": "W-T01-N05",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        },
+        "draftStatus": "READY_FOR_KDP"
+      },
+      "expect": {
+        "ok": false,
+        "code": "SCOPE_WIDENING_REFUSED",
+        "field": "draftStatus"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "forged demo draft status has no canonical field; refused as unknown key"
+      }
+    },
+    {
+      "id": "W-T01-N06",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        },
+        "confirmed": true
+      },
+      "expect": {
+        "ok": false,
+        "code": "SCOPE_WIDENING_REFUSED",
+        "field": "confirmed"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "demo 'confirmed' boolean is not a canonical intent field"
+      }
+    },
+    {
+      "id": "W-T01-N07",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S2",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        }
+      },
+      "expect": {
+        "ok": false,
+        "code": "MALFORMED_REQUIRED_FIELD",
+        "field": "slice"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "frozen slice vocabulary S1/S3 only"
+      }
+    },
+    {
+      "id": "W-T01-N08",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3"
+      },
+      "expect": {
+        "ok": false,
+        "code": "MISSING_REQUIRED_FIELD",
+        "field": "caller"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "caller required"
+      }
+    },
+    {
+      "id": "W-T01-N09",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        }
+      },
+      "expect": {
+        "ok": false,
+        "code": "MISSING_REQUIRED_FIELD",
+        "field": "lineageId"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "lineageId required"
+      }
+    },
+    {
+      "id": "W-T01-N10",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        }
+      },
+      "expect": {
+        "ok": false,
+        "code": "MISSING_REQUIRED_FIELD",
+        "field": "targetRef"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "targetRef required"
+      }
+    },
+    {
+      "id": "W-T01-N11",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "https://example.org/a",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        }
+      },
+      "expect": {
+        "ok": false,
+        "code": "LOCATOR_SUBSTITUTION_REJECTED",
+        "field": "targetRef"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "raw HTTPS URL is not a canonical authority (NEG-01)"
+      }
+    },
+    {
+      "id": "W-T01-N12",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "/tmp/a",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        }
+      },
+      "expect": {
+        "ok": false,
+        "code": "LOCATOR_SUBSTITUTION_REJECTED",
+        "field": "targetRef"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "absolute path targetRef refused (NEG-01)"
+      }
+    },
+    {
+      "id": "W-T01-N13",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "C:\\tmp\\a",
+        "outputRootScope": "C:\\srv\\downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        }
+      },
+      "expect": {
+        "ok": false,
+        "code": "LOCATOR_SUBSTITUTION_REJECTED",
+        "field": "targetRef"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "Windows drive path targetRef refused (NEG-01)"
+      }
+    },
+    {
+      "id": "W-T01-N14",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "aA0._:@/-aA0._:@/-aA0._:@/-aA0._:@/-aA0._:@/-aA0._:@/-aA0._:@/-aA0._:@/-aA0._:@/-aA0._:@/-aA0._:@/-aA0._:@/-aA0._:@/-aA0._:@/-aA0._:@/-aA0._:@/-x",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        }
+      },
+      "expect": {
+        "ok": false,
+        "code": "LOCATOR_SUBSTITUTION_REJECTED",
+        "field": "targetRef"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "REFERENCE_TOKEN_PATTERN bounds length at 128"
+      }
+    },
+    {
+      "id": "W-T01-N15",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "Req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        }
+      },
+      "expect": {
+        "ok": false,
+        "code": "MALFORMED_REQUIRED_FIELD",
+        "field": "requestId"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "INTENT_FIELD_PATTERN lowercase/digits/hyphen only"
+      }
+    },
+    {
+      "id": "W-T01-N16",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        }
+      },
+      "expect": {
+        "ok": false,
+        "code": "MALFORMED_REQUIRED_FIELD",
+        "field": "allowedOperation"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "allowedOperation must be bounded non-empty"
+      }
+    },
+    {
+      "id": "W-T01-N17",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        }
+      },
+      "expect": {
+        "ok": false,
+        "code": "MALFORMED_REQUIRED_FIELD",
+        "field": "allowedOperation"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "allowedOperation length cap 128"
+      }
+    },
+    {
+      "id": "W-T01-N18",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        }
+      },
+      "expect": {
+        "ok": false,
+        "code": "MALFORMED_REQUIRED_FIELD",
+        "field": "outputRoot"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "relative output root refused"
+      }
+    },
+    {
+      "id": "W-T01-N19",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads/../outside",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        }
+      },
+      "expect": {
+        "ok": false,
+        "code": "OUTPUT_ROOT_ESCAPED",
+        "field": "outputRoot"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "root traversal refused (NEG-03); real containment is a separate Host proof obligation"
+      }
+    },
+    {
+      "id": "W-T01-N20",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        },
+        "declaredBytes": 0
+      },
+      "expect": {
+        "ok": false,
+        "code": "MALFORMED_REQUIRED_FIELD",
+        "field": "declaredBytes"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "declaredBytes must be > 0 (NEG-04)"
+      }
+    },
+    {
+      "id": "W-T01-N21",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        },
+        "declaredBytes": 1048577.5
+      },
+      "expect": {
+        "ok": false,
+        "code": "MALFORMED_REQUIRED_FIELD",
+        "field": "declaredBytes"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "fractional declaredBytes refused (NEG-04)"
+      }
+    },
+    {
+      "id": "W-T01-N22",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        },
+        "declaredBytes": 1099511627777
+      },
+      "expect": {
+        "ok": false,
+        "code": "MALFORMED_REQUIRED_FIELD",
+        "field": "declaredBytes"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "above the exact 1 TiB grammar maximum 1099511627776 (NEG-04)"
+      }
+    },
+    {
+      "id": "W-T01-N23",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        },
+        "digestAnchor": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      },
+      "expect": {
+        "ok": false,
+        "code": "MALFORMED_REQUIRED_FIELD",
+        "field": "digestAnchor"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "uppercase digestAnchor refused (NEG-04)"
+      }
+    },
+    {
+      "id": "W-T01-N24",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        },
+        "digestAnchor": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "expect": {
+        "ok": false,
+        "code": "MALFORMED_REQUIRED_FIELD",
+        "field": "digestAnchor"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "63-hex digestAnchor refused (NEG-04)"
+      }
+    },
+    {
+      "id": "W-T01-N25",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "",
+          "sessionRef": "session-1"
+        }
+      },
+      "expect": {
+        "ok": false,
+        "code": "MALFORMED_REQUIRED_FIELD",
+        "field": "caller.actor"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "empty caller.actor refused (NEG-02)"
+      }
+    },
+    {
+      "id": "W-T01-N26",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
+        }
+      },
+      "expect": {
+        "ok": false,
+        "code": "MALFORMED_REQUIRED_FIELD",
+        "field": "caller.sessionRef"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "sessionRef length cap 256 (NEG-02)"
+      }
+    },
+    {
+      "id": "W-T01-N27",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateConfirmedIntent",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": [
+          "requester",
+          "session-1"
+        ]
+      },
+      "expect": {
+        "ok": false,
+        "code": "MALFORMED_REQUIRED_FIELD",
+        "field": "caller"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "array caller refused (NEG-02)"
+      }
+    },
+    {
+      "id": "W-T01-N28",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateOutputRoot",
+      "input": {
+        "root": "/srv/../etc"
+      },
+      "expect": {
+        "ok": false,
+        "code": "OUTPUT_ROOT_ESCAPED",
+        "field": "outputRoot"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "validateOutputRoot traversal refusal"
+      }
+    },
+    {
+      "id": "W-T01-N29",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateArtifactPath",
+      "input": {
+        "root": "/srv/downloads",
+        "artifactPath": "/tmp/outside.bin"
+      },
+      "expect": {
+        "ok": false,
+        "code": "OUTPUT_ROOT_ESCAPED",
+        "field": "artifactPath"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "artifact outside root refused"
+      }
+    },
+    {
+      "id": "W-T01-N30",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateArtifactPath",
+      "input": {
+        "root": "/srv/downloads",
+        "artifactPath": "/srv/downloads/../escape.bin"
+      },
+      "expect": {
+        "ok": false,
+        "code": "OUTPUT_ROOT_ESCAPED",
+        "field": "artifactPath"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "artifact traversal refused"
+      }
+    },
+    {
+      "id": "W-T01-N31",
+      "lane": "T01",
+      "kind": "NEG",
+      "exec": "t01.validateArtifactPath",
+      "input": {
+        "root": "/srv/downloads",
+        "artifactPath": "/srv/downloadsmisc/file.bin"
+      },
+      "expect": {
+        "ok": false,
+        "code": "OUTPUT_ROOT_ESCAPED",
+        "field": "artifactPath"
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "prefix-not-segment escape refused (remainder must start with separator)"
+      }
+    },
+    {
+      "id": "W-T01-C01",
+      "lane": "T01",
+      "kind": "POS",
+      "exec": "t01.constants",
+      "input": {},
+      "expect": {
+        "constants": {
+          "maxDeclaredBytes": 1099511627776
+        }
+      },
+      "anchor": {
+        "file": "intent",
+        "fact": "MAX_DECLARED_BYTES exactly 1 TiB = 1099511627776"
+      }
+    },
+    {
+      "id": "W-T03-P01",
+      "lane": "T03",
+      "kind": "POS",
+      "exec": "t03.decideDownloadConfirmed",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        },
+        "declaredBytes": 1048576
+      },
+      "expect": {
+        "transition": "acquire",
+        "targetState": "acquired",
+        "effectIntentCount": 1,
+        "effect": {
+          "effectType": "effect:acquire",
+          "idempotencyKey": "acquire:download:req-1",
+          "resource": {
+            "key": "acquisition",
+            "operation": "acquisition.acquire"
+          },
+          "external": {
+            "permitTtlMs": 60000,
+            "await": "terminal"
+          },
+          "executed": false
+        },
+        "projectionKeys": [
+          "requestId",
+          "lineageId",
+          "targetRef",
+          "outputRootScope",
+          "allowedOperation",
+          "slice",
+          "digestAnchor",
+          "declaredBytes",
+          "caller"
+        ]
+      },
+      "anchor": {
+        "file": "business",
+        "fact": "guard:declared-bytes-ok passes at the exact 1 MiB profile bound; effect INTENT is pure data"
+      }
+    },
+    {
+      "id": "W-T03-P02",
+      "lane": "T03",
+      "kind": "POS",
+      "exec": "t03.decideDownloadConfirmed",
+      "input": {
+        "requestId": "req-2",
+        "lineageId": "lin-2",
+        "targetRef": "asset-2",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S1",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-2"
+        },
+        "declaredBytes": 1
+      },
+      "expect": {
+        "transition": "acquire",
+        "targetState": "acquired",
+        "effectIntentCount": 1
+      },
+      "anchor": {
+        "file": "business",
+        "fact": "smallest declaredBytes dispatches"
+      }
+    },
+    {
+      "id": "W-T03-P03",
+      "lane": "T03",
+      "kind": "POS",
+      "exec": "t03.evaluateGuard",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        },
+        "declaredBytes": 1048576
+      },
+      "expect": {
+        "passed": true,
+        "left": 1048576,
+        "right": 1048576
+      },
+      "anchor": {
+        "file": "business",
+        "fact": "lte guard exact inclusive boundary 1048576"
+      }
+    },
+    {
+      "id": "W-T03-P04",
+      "lane": "T03",
+      "kind": "POS",
+      "exec": "t03.constants",
+      "input": {},
+      "expect": {
+        "constants": {
+          "moduleId": "business-download@0.2.0-t03",
+          "packageKind": "business",
+          "abiVersion": "v08-business-abi/1",
+          "endpoints": [
+            {
+              "endpointId": "business:download",
+              "kind": "business-policy"
+            }
+          ],
+          "intentTypes": [
+            "confirmDownload"
+          ],
+          "effectTypes": [
+            "effect:acquire"
+          ],
+          "profileBound": 1048576,
+          "t01ContractMax": 1099511627776
+        }
+      },
+      "anchor": {
+        "file": "business",
+        "fact": "module identity constants and the 1 MiB profile vs 1 TiB grammar distinction"
+      }
+    },
+    {
+      "id": "W-T03-P05",
+      "lane": "T03",
+      "kind": "POS",
+      "exec": "t03.frozenRouteFacts",
+      "input": {},
+      "expect": {
+        "routeFacts": {
+          "acquisitionRoute": {
+            "intentId": "confirmDownload",
+            "operationId": "acquisition.acquire",
+            "capabilityId": "acquisition",
+            "handlerId": "acquire"
+          },
+          "sealedOperationDeclaration": {
+            "operationId": "acquisition.acquire",
+            "capabilityId": "acquisition",
+            "handlerId": "acquire",
+            "effectClass": "non-idempotent",
+            "externalEffect": true
+          },
+          "effectResource": {
+            "key": "acquisition",
+            "operation": "acquisition.acquire"
+          },
+          "effectExternal": {
+            "permitTtlMs": 60000,
+            "await": "terminal"
+          },
+          "effectSemantics": "non-idempotent",
+          "triggerEventType": "DOWNLOAD_CONFIRMED",
+          "workflowKey": "download-acquisition",
+          "initialState": "requested",
+          "states": [
+            "requested",
+            "acquired",
+            "refused"
+          ]
+        }
+      },
+      "anchor": {
+        "file": "business+composition",
+        "fact": "frozen T01 operation vocabulary and effect binding facts"
+      }
+    },
+    {
+      "id": "W-T03-P06",
+      "lane": "T03",
+      "kind": "POS",
+      "exec": "t03.confirmDownloadRequest",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        },
+        "declaredBytes": 1048576
+      },
+      "expect": {
+        "intent": {
+          "intentType": "confirmDownload",
+          "instanceKey": "download-req-1",
+          "messageId": "msg-req-1"
+        }
+      },
+      "anchor": {
+        "file": "composition",
+        "fact": "pure seal step wraps the T01-validated intent"
+      }
+    },
+    {
+      "id": "W-T03-P07",
+      "lane": "T03",
+      "kind": "POS",
+      "exec": "t03.decisionSchemaValid",
+      "input": {
+        "value": {
+          "decision": {
+            "outcome": "acquired"
+          },
+          "event": {
+            "type": "DOWNLOAD_CONFIRMED"
+          }
+        }
+      },
+      "expect": {
+        "valid": true
+      },
+      "anchor": {
+        "file": "business",
+        "fact": "decision record with string outcome + typed event validates"
+      }
+    },
+    {
+      "id": "W-T03-N01",
+      "lane": "T03",
+      "kind": "NEG",
+      "exec": "t03.decideDownloadConfirmed",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        },
+        "declaredBytes": 1048577
+      },
+      "expect": {
+        "transition": "refuse",
+        "targetState": "refused",
+        "effectIntentCount": 0
+      },
+      "anchor": {
+        "file": "business",
+        "fact": "one byte above the 1 MiB profile bound takes the unguarded refuse transition (POS-02)"
+      }
+    },
+    {
+      "id": "W-T03-N02",
+      "lane": "T03",
+      "kind": "NEG",
+      "exec": "t03.decideDownloadConfirmed",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        },
+        "declaredBytes": 1099511627776
+      },
+      "expect": {
+        "transition": "refuse",
+        "targetState": "refused",
+        "effectIntentCount": 0
+      },
+      "anchor": {
+        "file": "business",
+        "fact": "T01 grammar-maximum 1 TiB intent still refuses at the T03 1 MiB profile (DISTINCT_LIMITS)"
+      }
+    },
+    {
+      "id": "W-T03-N03",
+      "lane": "T03",
+      "kind": "NEG",
+      "exec": "t03.decideDownloadConfirmed",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        }
+      },
+      "expect": {
+        "transition": "refuse",
+        "targetState": "refused",
+        "effectIntentCount": 0
+      },
+      "anchor": {
+        "file": "business",
+        "fact": "declaredBytes absent: T01 accepts (optional) but undefined fails the lte guard, so no effect intent"
+      }
+    },
+    {
+      "id": "W-T03-N04",
+      "lane": "T03",
+      "kind": "NEG",
+      "exec": "t03.decisionSchemaValid",
+      "input": {
+        "value": {
+          "decision": {
+            "outcome": "acquired"
+          }
+        }
+      },
+      "expect": {
+        "valid": false
+      },
+      "anchor": {
+        "file": "business",
+        "fact": "missing event refuses the decision record"
+      }
+    },
+    {
+      "id": "W-T03-N05",
+      "lane": "T03",
+      "kind": "NEG",
+      "exec": "t03.decisionSchemaValid",
+      "input": {
+        "value": [
+          "decision"
+        ]
+      },
+      "expect": {
+        "valid": false
+      },
+      "anchor": {
+        "file": "business",
+        "fact": "array decision record refused"
+      }
+    },
+    {
+      "id": "W-T03-N06",
+      "lane": "T03",
+      "kind": "NEG",
+      "exec": "t03.confirmDownloadRequest",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "asset-1",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        },
+        "declaredBytes": 0
+      },
+      "expect": {
+        "throws": true,
+        "messagePrefix": "CONFIRMED_INTENT_INVALID: MALFORMED_REQUIRED_FIELD"
+      },
+      "anchor": {
+        "file": "composition",
+        "fact": "invalid intent refused before any K admission exists"
+      }
+    },
+    {
+      "id": "W-T03-N07",
+      "lane": "T03",
+      "kind": "NEG",
+      "exec": "t03.confirmDownloadRequest",
+      "input": {
+        "requestId": "req-1",
+        "lineageId": "lin-1",
+        "targetRef": "https://example.org/a",
+        "outputRootScope": "/srv/downloads",
+        "allowedOperation": "acquisition.acquire",
+        "slice": "S3",
+        "caller": {
+          "actor": "requester",
+          "sessionRef": "session-1"
+        }
+      },
+      "expect": {
+        "throws": true,
+        "messagePrefix": "CONFIRMED_INTENT_INVALID: LOCATOR_SUBSTITUTION_REJECTED"
+      },
+      "anchor": {
+        "file": "composition",
+        "fact": "raw locator never reaches a public intent"
+      }
+    },
+    {
+      "id": "W-NE-01",
+      "lane": "T03",
+      "kind": "POS",
+      "exec": "meta.plainDataOnly",
+      "input": {
+        "caseId": "W-T03-P01"
+      },
+      "expect": {
+        "plainDataOnly": true
+      },
+      "anchor": {
+        "file": "business",
+        "fact": "decision output contains only JSON-serializable plain data; effect intent is declarative, executed:false"
+      }
+    },
+    {
+      "id": "W-NE-02",
+      "lane": "T03",
+      "kind": "POS",
+      "exec": "meta.effectIntentsNeverExecute",
+      "input": {
+        "caseIds": [
+          "W-T03-P01",
+          "W-T03-P02",
+          "W-T03-N01",
+          "W-T03-N02",
+          "W-T03-N03"
+        ]
+      },
+      "expect": {
+        "neverExecuted": true
+      },
+      "anchor": {
+        "file": "business",
+        "fact": "every decided effect intent carries executed:false and no executor capability"
+      }
+    },
+    {
+      "id": "W-S3-C01",
+      "lane": "S3",
+      "kind": "POS",
+      "exec": "s3.constants",
+      "input": {},
+      "expect": {
+        "constants": {
+          "maxBytes": 67108864,
+          "maxMs": 30000,
+          "maxRedirects": 3,
+          "redirectCodes": [
+            301,
+            302,
+            303,
+            307,
+            308
+          ],
+          "reservedCidrCount": 18
+        }
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "frozen reader bounds and redirect vocabulary"
+      }
+    },
+    {
+      "id": "W-S3-P01",
+      "lane": "S3",
+      "kind": "POS",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "8.8.8.8"
+      },
+      "expect": {
+        "accepted": true
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "public unicast IPv4 accepted"
+      }
+    },
+    {
+      "id": "W-S3-P02",
+      "lane": "S3",
+      "kind": "POS",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "1.1.1.1"
+      },
+      "expect": {
+        "accepted": true
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "public unicast IPv4 accepted"
+      }
+    },
+    {
+      "id": "W-S3-P03",
+      "lane": "S3",
+      "kind": "POS",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "9.255.255.255"
+      },
+      "expect": {
+        "accepted": true
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "address just below the private 10/8 block accepted"
+      }
+    },
+    {
+      "id": "W-S3-P04",
+      "lane": "S3",
+      "kind": "POS",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "11.0.0.1"
+      },
+      "expect": {
+        "accepted": true
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "address just above the private 10/8 block accepted"
+      }
+    },
+    {
+      "id": "W-S3-P05",
+      "lane": "S3",
+      "kind": "POS",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "80.80.80.80"
+      },
+      "expect": {
+        "accepted": true
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "public unicast IPv4 accepted"
+      }
+    },
+    {
+      "id": "W-S3-N01",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "10.0.0.1"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "10/8 private rejected (NEG-08)"
+      }
+    },
+    {
+      "id": "W-S3-N02",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "127.0.0.1"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "loopback rejected (NEG-08)"
+      }
+    },
+    {
+      "id": "W-S3-N03",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "192.168.1.10"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "192.168/16 private rejected (NEG-08)"
+      }
+    },
+    {
+      "id": "W-S3-N04",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "169.254.10.5"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "link-local 169.254/16 rejected (NEG-08)"
+      }
+    },
+    {
+      "id": "W-S3-N05",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "0.0.0.0"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "this-network 0/8 rejected"
+      }
+    },
+    {
+      "id": "W-S3-N06",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "100.64.1.1"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "CGNAT 100.64/10 rejected"
+      }
+    },
+    {
+      "id": "W-S3-N07",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "172.16.0.1"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "172.16/12 private rejected (NEG-08)"
+      }
+    },
+    {
+      "id": "W-S3-N08",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "172.31.255.255"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "172.16/12 upper boundary rejected"
+      }
+    },
+    {
+      "id": "W-S3-N09",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "192.0.2.1"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "TEST-NET-1 192.0.2/24 rejected"
+      }
+    },
+    {
+      "id": "W-S3-N10",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "198.18.0.1"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "benchmark 198.18/15 rejected"
+      }
+    },
+    {
+      "id": "W-S3-N11",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "198.51.100.7"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "TEST-NET-2 198.51.100/24 rejected"
+      }
+    },
+    {
+      "id": "W-S3-N12",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "203.0.113.9"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "TEST-NET-3 203.0.113/24 rejected"
+      }
+    },
+    {
+      "id": "W-S3-N13",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "224.0.0.1"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "multicast 224/4 rejected"
+      }
+    },
+    {
+      "id": "W-S3-N14",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "240.0.0.1"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "reserved 240/4 rejected"
+      }
+    },
+    {
+      "id": "W-S3-N15",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "255.255.255.255"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "limited broadcast rejected"
+      }
+    },
+    {
+      "id": "W-S3-N16",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "256.1.1.1"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "octet above 255 rejected"
+      }
+    },
+    {
+      "id": "W-S3-N17",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": "01.2.3.4"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "leading-zero octet rejected"
+      }
+    },
+    {
+      "id": "W-S3-N18",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.publicIpv4",
+      "input": {
+        "value": 8
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "non-string rejected"
+      }
+    },
+    {
+      "id": "W-S3-P06",
+      "lane": "S3",
+      "kind": "POS",
+      "exec": "s3.mediaUrl",
+      "input": {
+        "value": "https://cdn.example.com/media/abc123.mp4"
+      },
+      "expect": {
+        "accepted": true,
+        "hostname": "cdn.example.com"
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "strict media HTTPS URL accepted"
+      }
+    },
+    {
+      "id": "W-S3-P07",
+      "lane": "S3",
+      "kind": "POS",
+      "exec": "s3.mediaUrl",
+      "input": {
+        "value": "https://media-pod9.example.co.uk:8443/media/FILE_id-9.m4a"
+      },
+      "expect": {
+        "accepted": true,
+        "hostname": "media-pod9.example.co.uk"
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "explicit port and underscore media id accepted"
+      }
+    },
+    {
+      "id": "W-S3-N19",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.mediaUrl",
+      "input": {
+        "value": "http://cdn.example.com/media/abc123.mp4"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "non-HTTPS scheme rejected"
+      }
+    },
+    {
+      "id": "W-S3-N20",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.mediaUrl",
+      "input": {
+        "value": "https://cdn.example.com/files/abc123.mp4"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "non-/media/ path rejected"
+      }
+    },
+    {
+      "id": "W-S3-N21",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.mediaUrl",
+      "input": {
+        "value": "https://cdn.example.com/media/abc123.exe"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "non-media extension rejected"
+      }
+    },
+    {
+      "id": "W-S3-N22",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.mediaUrl",
+      "input": {
+        "value": "https://cdn.example.com/media/abc123.mp4?token=1"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "query string rejected"
+      }
+    },
+    {
+      "id": "W-S3-N23",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.mediaUrl",
+      "input": {
+        "value": "https://user@cdn.example.com/media/abc123.mp4"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "userinfo rejected"
+      }
+    },
+    {
+      "id": "W-S3-N24",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.mediaUrl",
+      "input": {
+        "value": "https://localhost/media/abc123.mp4"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "dotless host rejected"
+      }
+    },
+    {
+      "id": "W-S3-N25",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.mediaUrl",
+      "input": {
+        "value": "HTTPS://cdn.example.com/media/abc123.mp4"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "uppercase scheme rejected"
+      }
+    },
+    {
+      "id": "W-S3-N27",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.mediaUrl",
+      "input": {
+        "value": "https://cdn.example.com/media/abc%20.mp4"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "percent-encoding rejected"
+      }
+    },
+    {
+      "id": "W-S3-N28",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.mediaUrl",
+      "input": {
+        "value": "https://cdn.example.com/media/abc\\123.mp4"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "backslash rejected"
+      }
+    },
+    {
+      "id": "W-S3-N29",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.mediaUrl",
+      "input": {
+        "value": "https://cdn.example.com/media/aaaabbbbccccddddeeeeffffgggghhhhiiiijjjjkkkkllllmmmmnnnnooooppppqqq.mp4"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "media id above 64 chars rejected"
+      }
+    },
+    {
+      "id": "W-S3-P08",
+      "lane": "S3",
+      "kind": "POS",
+      "exec": "s3.mediaUrl",
+      "input": {
+        "value": "https://cdn.example.com/media/abcdefghijklmnopabcdefghijklmnopabcdefghijklmnopabcdefghijklmnop.mp4"
+      },
+      "expect": {
+        "accepted": true
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "media id at the exact 64-char boundary accepted"
+      }
+    },
+    {
+      "id": "W-S3-P09",
+      "lane": "S3",
+      "kind": "POS",
+      "exec": "s3.classifyDnsAnswers",
+      "input": {
+        "answers": [
+          "93.184.216.34",
+          "8.8.8.8"
+        ],
+        "withinDeadline": true
+      },
+      "expect": {
+        "accepted": true,
+        "pinnedIp": "93.184.216.34"
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "all-public answers pin the first"
+      }
+    },
+    {
+      "id": "W-S3-N30",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.classifyDnsAnswers",
+      "input": {
+        "answers": [
+          "8.8.8.8",
+          "10.0.0.1"
+        ],
+        "withinDeadline": true
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "one private answer rejects the whole list (NEG-08)"
+      }
+    },
+    {
+      "id": "W-S3-N31",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.classifyDnsAnswers",
+      "input": {
+        "answers": [],
+        "withinDeadline": true
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "empty answer list rejected"
+      }
+    },
+    {
+      "id": "W-S3-N32",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.classifyDnsAnswers",
+      "input": {
+        "answers": [
+          "1.1.1.1",
+          "1.1.1.1",
+          "1.1.1.1",
+          "1.1.1.1",
+          "1.1.1.1",
+          "1.1.1.1",
+          "1.1.1.1",
+          "1.1.1.1",
+          "1.1.1.1",
+          "1.1.1.1",
+          "1.1.1.1",
+          "1.1.1.1",
+          "1.1.1.1",
+          "1.1.1.1",
+          "1.1.1.1",
+          "1.1.1.1",
+          "1.1.1.1"
+        ],
+        "withinDeadline": true
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "17 answers exceed the 16 cap"
+      }
+    },
+    {
+      "id": "W-S3-N33",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.classifyDnsAnswers",
+      "input": {
+        "answers": [
+          "8.8.8.8"
+        ],
+        "withinDeadline": false
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "expired deadline rejects"
+      }
+    },
+    {
+      "id": "W-S3-N34",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.classifyDnsAnswers",
+      "input": {
+        "answers": "8.8.8.8",
+        "withinDeadline": true
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "non-array answer shape rejected"
+      }
+    },
+    {
+      "id": "W-S3-P10",
+      "lane": "S3",
+      "kind": "POS",
+      "exec": "s3.tlsPeerOkay",
+      "input": {
+        "socket": {
+          "encrypted": true,
+          "authorized": true,
+          "remoteAddress": "93.184.216.34"
+        },
+        "pinnedIp": "93.184.216.34"
+      },
+      "expect": {
+        "accepted": true
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "encrypted+authorized+exact pinned IP accepted"
+      }
+    },
+    {
+      "id": "W-S3-N35",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.tlsPeerOkay",
+      "input": {
+        "socket": {
+          "encrypted": false,
+          "authorized": true,
+          "remoteAddress": "93.184.216.34"
+        },
+        "pinnedIp": "93.184.216.34"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "unencrypted peer rejected"
+      }
+    },
+    {
+      "id": "W-S3-N36",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.tlsPeerOkay",
+      "input": {
+        "socket": {
+          "encrypted": true,
+          "authorized": false,
+          "remoteAddress": "93.184.216.34"
+        },
+        "pinnedIp": "93.184.216.34"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "unauthorized certificate rejected (NEG-08)"
+      }
+    },
+    {
+      "id": "W-S3-N37",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.tlsPeerOkay",
+      "input": {
+        "socket": {
+          "encrypted": true,
+          "authorized": true,
+          "remoteAddress": "203.0.113.9"
+        },
+        "pinnedIp": "93.184.216.34"
+      },
+      "expect": {
+        "accepted": false
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "connected peer IP differing from the pinned IP rejected (NEG-08 TLS mismatch)"
+      }
+    },
+    {
+      "id": "W-S3-P11",
+      "lane": "S3",
+      "kind": "POS",
+      "exec": "s3.validateReaderBounds",
+      "input": {
+        "bounds": {
+          "maxBytes": 1048576,
+          "timeoutMs": 1000,
+          "maxRedirects": 2
+        }
+      },
+      "expect": {
+        "accepted": true
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "bounded trusted configuration accepted"
+      }
+    },
+    {
+      "id": "W-S3-N38",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.validateReaderBounds",
+      "input": {
+        "bounds": {
+          "maxBytes": 0,
+          "timeoutMs": 1000,
+          "maxRedirects": 2
+        }
+      },
+      "expect": {
+        "throws": true,
+        "message": "S3 HTTPS reader requires bounded trusted configuration"
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "maxBytes below 1 refused"
+      }
+    },
+    {
+      "id": "W-S3-N39",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.validateReaderBounds",
+      "input": {
+        "bounds": {
+          "maxBytes": 67108865,
+          "timeoutMs": 1000,
+          "maxRedirects": 2
+        }
+      },
+      "expect": {
+        "throws": true,
+        "message": "S3 HTTPS reader requires bounded trusted configuration"
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "maxBytes above 64 MiB refused"
+      }
+    },
+    {
+      "id": "W-S3-N40",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.validateReaderBounds",
+      "input": {
+        "bounds": {
+          "maxBytes": 1048576,
+          "timeoutMs": 0,
+          "maxRedirects": 2
+        }
+      },
+      "expect": {
+        "throws": true,
+        "message": "S3 HTTPS reader requires bounded trusted configuration"
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "zero timeout refused"
+      }
+    },
+    {
+      "id": "W-S3-N41",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.validateReaderBounds",
+      "input": {
+        "bounds": {
+          "maxBytes": 1048576,
+          "timeoutMs": 30001,
+          "maxRedirects": 2
+        }
+      },
+      "expect": {
+        "throws": true,
+        "message": "S3 HTTPS reader requires bounded trusted configuration"
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "timeout above 30 s refused"
+      }
+    },
+    {
+      "id": "W-S3-N42",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.validateReaderBounds",
+      "input": {
+        "bounds": {
+          "maxBytes": 1048576,
+          "timeoutMs": 1000,
+          "maxRedirects": 4
+        }
+      },
+      "expect": {
+        "throws": true,
+        "message": "S3 HTTPS reader requires bounded trusted configuration"
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "redirect bound above 3 refused"
+      }
+    },
+    {
+      "id": "W-S3-N43",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.validateReaderBounds",
+      "input": {
+        "bounds": {
+          "maxBytes": 1048576,
+          "timeoutMs": 1000,
+          "maxRedirects": -1
+        }
+      },
+      "expect": {
+        "throws": true,
+        "message": "S3 HTTPS reader requires bounded trusted configuration"
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "negative redirect bound refused"
+      }
+    },
+    {
+      "id": "W-S3-R01",
+      "lane": "S3",
+      "kind": "POS",
+      "exec": "s3.readLoop",
+      "input": {
+        "uri": "https://cdn.example.com/media/abc123.mp4",
+        "policy": {
+          "https://cdn.example.com/media/abc123.mp4": "admit"
+        },
+        "resolve": {
+          "cdn.example.com": [
+            "93.184.216.34"
+          ]
+        },
+        "hops": {
+          "https://cdn.example.com/media/abc123.mp4": {
+            "kind": "body",
+            "bytes": [
+              1,
+              2,
+              3
+            ],
+            "contentType": "video/mp4"
+          }
+        },
+        "bounds": {
+          "maxBytes": 1048576,
+          "timeoutMs": 1000,
+          "maxRedirects": 2
+        }
+      },
+      "expect": {
+        "ok": true,
+        "visited": [
+          "https://cdn.example.com/media/abc123.mp4"
+        ],
+        "byteCount": 3
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "single-hop happy path with pinned public IP and sealed visited list"
+      }
+    },
+    {
+      "id": "W-S3-R02",
+      "lane": "S3",
+      "kind": "POS",
+      "exec": "s3.readLoop",
+      "input": {
+        "uri": "https://cdn.example.com/media/abc123.mp4",
+        "policy": {
+          "https://cdn.example.com/media/abc123.mp4": "admit",
+          "https://mirror.example.net/media/abc123.mp4": "admit"
+        },
+        "resolve": {
+          "cdn.example.com": [
+            "93.184.216.34"
+          ],
+          "mirror.example.net": [
+            "8.8.8.8"
+          ]
+        },
+        "hops": {
+          "https://cdn.example.com/media/abc123.mp4": {
+            "kind": "redirect",
+            "location": "https://mirror.example.net/media/abc123.mp4"
+          },
+          "https://mirror.example.net/media/abc123.mp4": {
+            "kind": "body",
+            "bytes": [
+              9
+            ],
+            "contentType": "video/mp4"
+          }
+        },
+        "bounds": {
+          "maxBytes": 1048576,
+          "timeoutMs": 1000,
+          "maxRedirects": 2
+        }
+      },
+      "expect": {
+        "ok": true,
+        "visited": [
+          "https://cdn.example.com/media/abc123.mp4",
+          "https://mirror.example.net/media/abc123.mp4"
+        ]
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "one admitted redirect hops to the mirrored media URL"
+      }
+    },
+    {
+      "id": "W-S3-R03",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.readLoop",
+      "input": {
+        "uri": "https://cdn.example.com/media/abc123.mp4",
+        "policy": {
+          "https://cdn.example.com/media/abc123.mp4": "admit",
+          "https://intranet.example.net/media/abc123.mp4": "admit"
+        },
+        "resolve": {
+          "cdn.example.com": [
+            "93.184.216.34"
+          ],
+          "intranet.example.net": [
+            "10.0.0.5"
+          ]
+        },
+        "hops": {
+          "https://cdn.example.com/media/abc123.mp4": {
+            "kind": "redirect",
+            "location": "https://intranet.example.net/media/abc123.mp4"
+          }
+        },
+        "bounds": {
+          "maxBytes": 1048576,
+          "timeoutMs": 1000,
+          "maxRedirects": 2
+        }
+      },
+      "expect": {
+        "ok": false,
+        "reason": "DNS_REJECTED"
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "redirect to a privately-resolving host is DNS_REJECTED before any bytes (NEG-08)"
+      }
+    },
+    {
+      "id": "W-S3-R04",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.readLoop",
+      "input": {
+        "uri": "https://cdn.example.com/media/abc123.mp4",
+        "policy": {
+          "https://cdn.example.com/media/abc123.mp4": "admit"
+        },
+        "resolve": {
+          "cdn.example.com": [
+            "93.184.216.34"
+          ]
+        },
+        "hops": {
+          "https://cdn.example.com/media/abc123.mp4": {
+            "kind": "redirect",
+            "location": "http://cdn.example.com/media/abc123.mp4"
+          }
+        },
+        "bounds": {
+          "maxBytes": 1048576,
+          "timeoutMs": 1000,
+          "maxRedirects": 2
+        }
+      },
+      "expect": {
+        "ok": false,
+        "reason": "SOURCE_REJECTED"
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "redirect Location must itself pass the strict media HTTPS grammar (downgrade rejected)"
+      }
+    },
+    {
+      "id": "W-S3-R05",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.readLoop",
+      "input": {
+        "uri": "https://cdn.example.com/media/abc123.mp4",
+        "policy": {
+          "https://cdn.example.com/media/abc123.mp4": "admit"
+        },
+        "resolve": {
+          "cdn.example.com": [
+            "93.184.216.34"
+          ]
+        },
+        "hops": {
+          "https://cdn.example.com/media/abc123.mp4": {
+            "kind": "failure",
+            "reason": "TLS_REJECTED"
+          }
+        },
+        "bounds": {
+          "maxBytes": 1048576,
+          "timeoutMs": 1000,
+          "maxRedirects": 2
+        }
+      },
+      "expect": {
+        "ok": false,
+        "reason": "TLS_REJECTED"
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "per-hop TLS identity failure rejects without bytes"
+      }
+    },
+    {
+      "id": "W-S3-R06",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.readLoop",
+      "input": {
+        "uri": "https://cdn.example.com/media/abc123.mp4",
+        "policy": {
+          "https://cdn.example.com/media/abc123.mp4": "admit",
+          "https://mirror.example.net/media/abc123.mp4": "admit"
+        },
+        "resolve": {
+          "cdn.example.com": [
+            "93.184.216.34"
+          ],
+          "mirror.example.net": [
+            "8.8.8.8"
+          ]
+        },
+        "hops": {
+          "https://cdn.example.com/media/abc123.mp4": {
+            "kind": "redirect",
+            "location": "https://mirror.example.net/media/abc123.mp4"
+          },
+          "https://mirror.example.net/media/abc123.mp4": {
+            "kind": "redirect",
+            "location": "https://cdn.example.com/media/abc123.mp4"
+          }
+        },
+        "bounds": {
+          "maxBytes": 1048576,
+          "timeoutMs": 1000,
+          "maxRedirects": 3
+        }
+      },
+      "expect": {
+        "ok": false,
+        "reason": "SOURCE_REJECTED"
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "redirect cycle detected by the visited set (NEG-08 loop)"
+      }
+    },
+    {
+      "id": "W-S3-R07",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.readLoop",
+      "input": {
+        "uri": "https://cdn.example.com/media/abc123.mp4",
+        "policy": {
+          "https://cdn.example.com/media/abc123.mp4": "admit",
+          "https://mirror.example.net/media/abc123.mp4": "admit",
+          "https://third.example.org/media/abc123.mp4": "admit"
+        },
+        "resolve": {
+          "cdn.example.com": [
+            "93.184.216.34"
+          ],
+          "mirror.example.net": [
+            "8.8.8.8"
+          ],
+          "third.example.org": [
+            "1.1.1.1"
+          ]
+        },
+        "hops": {
+          "https://cdn.example.com/media/abc123.mp4": {
+            "kind": "redirect",
+            "location": "https://mirror.example.net/media/abc123.mp4"
+          },
+          "https://mirror.example.net/media/abc123.mp4": {
+            "kind": "redirect",
+            "location": "https://third.example.org/media/abc123.mp4"
+          }
+        },
+        "bounds": {
+          "maxBytes": 1048576,
+          "timeoutMs": 1000,
+          "maxRedirects": 1
+        }
+      },
+      "expect": {
+        "ok": false,
+        "reason": "HTTP_REJECTED"
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "redirect received on the last allowed index is HTTP_REJECTED"
+      }
+    },
+    {
+      "id": "W-S3-R08",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.readLoop",
+      "input": {
+        "uri": "https://cdn.example.com/media/abc123.mp4",
+        "policy": {
+          "https://cdn.example.com/media/abc123.mp4": "admit",
+          "https://mirror.example.net/media/abc123.mp4": "refuse"
+        },
+        "resolve": {
+          "cdn.example.com": [
+            "93.184.216.34"
+          ]
+        },
+        "hops": {
+          "https://cdn.example.com/media/abc123.mp4": {
+            "kind": "redirect",
+            "location": "https://mirror.example.net/media/abc123.mp4"
+          }
+        },
+        "bounds": {
+          "maxBytes": 1048576,
+          "timeoutMs": 1000,
+          "maxRedirects": 2
+        }
+      },
+      "expect": {
+        "ok": false,
+        "reason": "SOURCE_REJECTED"
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "policy refusing the redirect target rejects"
+      }
+    },
+    {
+      "id": "W-S3-R09",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.readLoop",
+      "input": {
+        "uri": "https://cdn.example.com/media/abc123.mp4",
+        "policy": {
+          "https://cdn.example.com/media/abc123.mp4": "echo-mismatch"
+        },
+        "resolve": {
+          "cdn.example.com": [
+            "93.184.216.34"
+          ]
+        },
+        "hops": {},
+        "bounds": {
+          "maxBytes": 1048576,
+          "timeoutMs": 1000,
+          "maxRedirects": 2
+        }
+      },
+      "expect": {
+        "ok": false,
+        "reason": "SOURCE_REJECTED"
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "policy echo mismatch (admitted uri differs from the requested uri) rejects"
+      }
+    },
+    {
+      "id": "W-S3-R10",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.readLoop",
+      "input": {
+        "uri": "https://cdn.example.com/media/abc123.mp4",
+        "policy": {
+          "https://cdn.example.com/media/abc123.mp4": "admit"
+        },
+        "resolve": {
+          "cdn.example.com": [
+            "93.184.216.34"
+          ]
+        },
+        "hops": {
+          "https://cdn.example.com/media/abc123.mp4": {
+            "kind": "redirect",
+            "location": "https://mirror.example.net/media/abc123.mp4"
+          }
+        },
+        "bounds": {
+          "maxBytes": 1048576,
+          "timeoutMs": 1000,
+          "maxRedirects": 0
+        }
+      },
+      "expect": {
+        "ok": false,
+        "reason": "HTTP_REJECTED"
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "zero redirect budget: first redirect response is HTTP_REJECTED"
+      }
+    },
+    {
+      "id": "W-S3-R11",
+      "lane": "S3",
+      "kind": "NEG",
+      "exec": "s3.readerSeamsRequired",
+      "input": {
+        "policy": {},
+        "bounds": {
+          "maxBytes": 1048576,
+          "timeoutMs": 1000,
+          "maxRedirects": 2
+        }
+      },
+      "expect": {
+        "throws": true,
+        "messagePrefix": "S3 HTTPS reader model requires injected resolvePublic/hop seams"
+      },
+      "anchor": {
+        "file": "https",
+        "fact": "the pure guard model never constructs a network-capable reader without explicit seams"
+      }
+    }
+  ]
+}
