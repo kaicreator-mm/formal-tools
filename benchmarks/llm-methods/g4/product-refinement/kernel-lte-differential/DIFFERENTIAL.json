@@ -1,0 +1,614 @@
+{
+ "schema": "formal-tools.i11.g4-p2.kernel-lte-differential/1",
+ "status": "ENGINEERING_ONLY_EVIDENCE",
+ "title": "Original xDownload Kernel live lte guard interpretation — differential trace vs merged #166 T03 model",
+ "lane": "FORMAL_TOOLS_I11_G4_P2",
+ "authority": {
+  "formalAuthority": "ENGINEERING_ONLY",
+  "claim": "issuecomment-6960825898",
+  "reviewAnchor": "#5945831322 P2-1 (original Kernel live lte interpretation needs differential trace)",
+  "baseMain": "401f3bb55f5095fb1f131f176b2ea157e3caa212",
+  "noEffect": "no effect ports wired in this lane; refuse-direction admissions complete with zero effects"
+ },
+ "provenance": {
+  "kernel": {
+   "sourceRepo": "kaicreator-mm/xDownload",
+   "sourceCommit": "e904f08c478b15147b1c07fbe53c610d2d81851f",
+   "sourcePath": "packages/download-domain-app/src/business/payloads/dist/kernel-mechanism-v1.mjs",
+   "gitBlobSha1": "68b77d4711a802bc6a3f6f5e73cbc58e769af32f",
+   "vendoredFile": "./original-snapshot/kernel-mechanism-v1.mjs",
+   "vendorPolicy": "byte-exact snapshot, no modifications",
+   "kernelSha256": "e1ed59556f8b447b5f559302a893738eeae1d272e3a30ac4545fedfb1da8a3e7",
+   "kernelIdentity": {
+    "moduleId": "v08-kernel-mechanism@1.0.0",
+    "packageKind": "kernel",
+    "abiVersion": "v08-kernel-abi/1",
+    "kernelGeneration": "1"
+   }
+  },
+  "policy": {
+   "sourceRepo": "kaicreator-mm/xDownload",
+   "sourceCommit": "e904f08c478b15147b1c07fbe53c610d2d81851f",
+   "importedFrom": "benchmarks/llm-methods/g4/product-policy-crosswalk/original/packages/download-domain-app/src/business/business-download.mjs (merged #163 snapshot, read-only)",
+   "guardId": "guard:declared-bytes-ok"
+  },
+  "model": {
+   "importedFrom": "benchmarks/llm-methods/g4/product-refinement/model/t03-effect-gate-model.mjs (merged #166, read-only)",
+   "functions": [
+    "evaluateGuardDeclaredBytes",
+    "decideDownloadConfirmed"
+   ]
+  }
+ },
+ "method": {
+  "kernelGuardPath": "prepareDomainWorkflowGuard + prepareDomainPredicateEvaluationInput + evaluateDomainWorkflowGuard — the exact guard-evaluation line selectAdmittedTransition executes; plus the raw evaluateDomainPredicate path to expose the enveloped violation",
+  "kernelAdmissionPath": "admitCentralDecision with real KernelGovernancePinStore/KernelBaselineStore (in-memory CAS doc port), real schema gate, real event preparation, real transition selection; no effect ports wired (acquire-direction stops typed at ADMISSION_EFFECT_BINDING_UNVALIDATED — createOccurrenceRuntime SDK wiring is out of lane scope)",
+  "verdicts": "MATCH_ACQUIRE / MATCH_REFUSE / DIVERGE_MODEL_FAIL_OPEN / DIVERGE_KERNEL_ERROR_VS_MODEL_REFUSE"
+ },
+ "cases": [
+  {
+   "id": "W-KD-G01",
+   "lane": "KD",
+   "kind": "NEG-PROFILE",
+   "exec": "kernel.lte-differential",
+   "spec": {
+    "$special": "absent"
+   },
+   "note": "field absent from payload",
+   "expect": {
+    "verdict": "MATCH_REFUSE",
+    "kernelGuardEnveloped": false,
+    "kernelGuardRaw": {
+     "threw": true,
+     "errorName": "PredicateContractViolation",
+     "message": "ordered comparison cannot use a missing operand"
+    },
+    "kernelAdmission": {
+     "kind": "admitted",
+     "transitionKey": "refuse",
+     "targetState": "refused",
+     "effectCount": 0
+    },
+    "modelGuardPassed": false,
+    "modelTransition": "refuse"
+   }
+  },
+  {
+   "id": "W-KD-G02",
+   "lane": "KD",
+   "kind": "NEG-DIVERGENT",
+   "exec": "kernel.lte-differential",
+   "spec": {
+    "$special": "undefined"
+   },
+   "note": "own key present with undefined value",
+   "finding": "F2",
+   "expect": {
+    "verdict": "DIVERGE_KERNEL_ERROR_VS_MODEL_REFUSE",
+    "kernelGuardEnveloped": "preparation-error",
+    "kernelGuardRaw": {
+     "notRun": "preparation-error",
+     "preparationError": {
+      "errorName": "PredicateContractViolation",
+      "code": "PREDICATE_CONTRACT_VIOLATION",
+      "message": "$event.payload.declaredBytes must contain JSON data only"
+     }
+    },
+    "kernelAdmission": {
+     "kind": "threw",
+     "stage": "preparation-or-selection",
+     "code": "PREDICATE_CONTRACT_VIOLATION",
+     "errorName": "PredicateContractViolation"
+    },
+    "modelGuardPassed": false,
+    "modelTransition": "refuse"
+   }
+  },
+  {
+   "id": "W-KD-G03",
+   "lane": "KD",
+   "kind": "NEG-DIVERGENT",
+   "exec": "kernel.lte-differential",
+   "spec": null,
+   "note": "null operand",
+   "finding": "F1",
+   "expect": {
+    "verdict": "DIVERGE_MODEL_FAIL_OPEN",
+    "kernelGuardEnveloped": false,
+    "kernelGuardRaw": {
+     "threw": true,
+     "errorName": "PredicateContractViolation",
+     "message": "ordered comparison requires two numbers or two strings"
+    },
+    "kernelAdmission": {
+     "kind": "admitted",
+     "transitionKey": "refuse",
+     "targetState": "refused",
+     "effectCount": 0
+    },
+    "modelGuardPassed": true,
+    "modelTransition": "acquire"
+   }
+  },
+  {
+   "id": "W-KD-G04",
+   "lane": "KD",
+   "kind": "NEG-DIVERGENT",
+   "exec": "kernel.lte-differential",
+   "spec": "500000",
+   "note": "numeric string below the 1 MiB bound",
+   "finding": "F1",
+   "expect": {
+    "verdict": "DIVERGE_MODEL_FAIL_OPEN",
+    "kernelGuardEnveloped": false,
+    "kernelGuardRaw": {
+     "threw": true,
+     "errorName": "PredicateContractViolation",
+     "message": "ordered comparison requires two numbers or two strings"
+    },
+    "kernelAdmission": {
+     "kind": "admitted",
+     "transitionKey": "refuse",
+     "targetState": "refused",
+     "effectCount": 0
+    },
+    "modelGuardPassed": true,
+    "modelTransition": "acquire"
+   }
+  },
+  {
+   "id": "W-KD-G05",
+   "lane": "KD",
+   "kind": "NEG-PROFILE",
+   "exec": "kernel.lte-differential",
+   "spec": "2000000",
+   "note": "numeric string above the 1 MiB bound",
+   "expect": {
+    "verdict": "MATCH_REFUSE",
+    "kernelGuardEnveloped": false,
+    "kernelGuardRaw": {
+     "threw": true,
+     "errorName": "PredicateContractViolation",
+     "message": "ordered comparison requires two numbers or two strings"
+    },
+    "kernelAdmission": {
+     "kind": "admitted",
+     "transitionKey": "refuse",
+     "targetState": "refused",
+     "effectCount": 0
+    },
+    "modelGuardPassed": false,
+    "modelTransition": "refuse"
+   }
+  },
+  {
+   "id": "W-KD-G06",
+   "lane": "KD",
+   "kind": "NEG-PROFILE",
+   "exec": "kernel.lte-differential",
+   "spec": "abc",
+   "note": "non-numeric string",
+   "expect": {
+    "verdict": "MATCH_REFUSE",
+    "kernelGuardEnveloped": false,
+    "kernelGuardRaw": {
+     "threw": true,
+     "errorName": "PredicateContractViolation",
+     "message": "ordered comparison requires two numbers or two strings"
+    },
+    "kernelAdmission": {
+     "kind": "admitted",
+     "transitionKey": "refuse",
+     "targetState": "refused",
+     "effectCount": 0
+    },
+    "modelGuardPassed": false,
+    "modelTransition": "refuse"
+   }
+  },
+  {
+   "id": "W-KD-G07",
+   "lane": "KD",
+   "kind": "NEG-DIVERGENT",
+   "exec": "kernel.lte-differential",
+   "spec": true,
+   "note": "boolean true operand",
+   "finding": "F1",
+   "expect": {
+    "verdict": "DIVERGE_MODEL_FAIL_OPEN",
+    "kernelGuardEnveloped": false,
+    "kernelGuardRaw": {
+     "threw": true,
+     "errorName": "PredicateContractViolation",
+     "message": "ordered comparison requires two numbers or two strings"
+    },
+    "kernelAdmission": {
+     "kind": "admitted",
+     "transitionKey": "refuse",
+     "targetState": "refused",
+     "effectCount": 0
+    },
+    "modelGuardPassed": true,
+    "modelTransition": "acquire"
+   }
+  },
+  {
+   "id": "W-KD-G08",
+   "lane": "KD",
+   "kind": "NEG-DIVERGENT",
+   "exec": "kernel.lte-differential",
+   "spec": false,
+   "note": "boolean false operand",
+   "finding": "F1",
+   "expect": {
+    "verdict": "DIVERGE_MODEL_FAIL_OPEN",
+    "kernelGuardEnveloped": false,
+    "kernelGuardRaw": {
+     "threw": true,
+     "errorName": "PredicateContractViolation",
+     "message": "ordered comparison requires two numbers or two strings"
+    },
+    "kernelAdmission": {
+     "kind": "admitted",
+     "transitionKey": "refuse",
+     "targetState": "refused",
+     "effectCount": 0
+    },
+    "modelGuardPassed": true,
+    "modelTransition": "acquire"
+   }
+  },
+  {
+   "id": "W-KD-G09",
+   "lane": "KD",
+   "kind": "NEG-DIVERGENT",
+   "exec": "kernel.lte-differential",
+   "spec": {
+    "$special": "NaN"
+   },
+   "note": "non-finite number NaN",
+   "finding": "F2",
+   "expect": {
+    "verdict": "DIVERGE_KERNEL_ERROR_VS_MODEL_REFUSE",
+    "kernelGuardEnveloped": "preparation-error",
+    "kernelGuardRaw": {
+     "notRun": "preparation-error",
+     "preparationError": {
+      "errorName": "PredicateContractViolation",
+      "code": "PREDICATE_CONTRACT_VIOLATION",
+      "message": "$event.payload.declaredBytes contains a non-finite number"
+     }
+    },
+    "kernelAdmission": {
+     "kind": "threw",
+     "stage": "preparation-or-selection",
+     "code": "PREDICATE_CONTRACT_VIOLATION",
+     "errorName": "PredicateContractViolation"
+    },
+    "modelGuardPassed": false,
+    "modelTransition": "refuse"
+   }
+  },
+  {
+   "id": "W-KD-G10",
+   "lane": "KD",
+   "kind": "NEG-DIVERGENT",
+   "exec": "kernel.lte-differential",
+   "spec": {
+    "$special": "Infinity"
+   },
+   "note": "non-finite number Infinity",
+   "finding": "F2",
+   "expect": {
+    "verdict": "DIVERGE_KERNEL_ERROR_VS_MODEL_REFUSE",
+    "kernelGuardEnveloped": "preparation-error",
+    "kernelGuardRaw": {
+     "notRun": "preparation-error",
+     "preparationError": {
+      "errorName": "PredicateContractViolation",
+      "code": "PREDICATE_CONTRACT_VIOLATION",
+      "message": "$event.payload.declaredBytes contains a non-finite number"
+     }
+    },
+    "kernelAdmission": {
+     "kind": "threw",
+     "stage": "preparation-or-selection",
+     "code": "PREDICATE_CONTRACT_VIOLATION",
+     "errorName": "PredicateContractViolation"
+    },
+    "modelGuardPassed": false,
+    "modelTransition": "refuse"
+   }
+  },
+  {
+   "id": "W-KD-G11",
+   "lane": "KD",
+   "kind": "POS-PROFILE",
+   "exec": "kernel.lte-differential",
+   "spec": 0,
+   "note": "zero — kernel guard passes (profile bound has no positivity clause)",
+   "expect": {
+    "verdict": "MATCH_ACQUIRE",
+    "kernelGuardEnveloped": true,
+    "kernelGuardRaw": {
+     "threw": false,
+     "passed": true
+    },
+    "kernelAdmission": {
+     "kind": "threw",
+     "stage": "central-admission",
+     "code": "ADMISSION_EFFECT_BINDING_UNVALIDATED",
+     "errorName": "CentralAdmissionError"
+    },
+    "modelGuardPassed": true,
+    "modelTransition": "acquire"
+   }
+  },
+  {
+   "id": "W-KD-G12",
+   "lane": "KD",
+   "kind": "POS-PROFILE",
+   "exec": "kernel.lte-differential",
+   "spec": 1048575,
+   "note": "one below the inclusive 1 MiB profile bound",
+   "expect": {
+    "verdict": "MATCH_ACQUIRE",
+    "kernelGuardEnveloped": true,
+    "kernelGuardRaw": {
+     "threw": false,
+     "passed": true
+    },
+    "kernelAdmission": {
+     "kind": "threw",
+     "stage": "central-admission",
+     "code": "ADMISSION_EFFECT_BINDING_UNVALIDATED",
+     "errorName": "CentralAdmissionError"
+    },
+    "modelGuardPassed": true,
+    "modelTransition": "acquire"
+   }
+  },
+  {
+   "id": "W-KD-G13",
+   "lane": "KD",
+   "kind": "POS-PROFILE",
+   "exec": "kernel.lte-differential",
+   "spec": 1048576,
+   "note": "exact inclusive 1 MiB profile bound",
+   "expect": {
+    "verdict": "MATCH_ACQUIRE",
+    "kernelGuardEnveloped": true,
+    "kernelGuardRaw": {
+     "threw": false,
+     "passed": true
+    },
+    "kernelAdmission": {
+     "kind": "threw",
+     "stage": "central-admission",
+     "code": "ADMISSION_EFFECT_BINDING_UNVALIDATED",
+     "errorName": "CentralAdmissionError"
+    },
+    "modelGuardPassed": true,
+    "modelTransition": "acquire"
+   }
+  },
+  {
+   "id": "W-KD-G14",
+   "lane": "KD",
+   "kind": "NEG-PROFILE",
+   "exec": "kernel.lte-differential",
+   "spec": 1048577,
+   "note": "one above the 1 MiB profile bound",
+   "expect": {
+    "verdict": "MATCH_REFUSE",
+    "kernelGuardEnveloped": false,
+    "kernelGuardRaw": {
+     "threw": false,
+     "passed": false
+    },
+    "kernelAdmission": {
+     "kind": "admitted",
+     "transitionKey": "refuse",
+     "targetState": "refused",
+     "effectCount": 0
+    },
+    "modelGuardPassed": false,
+    "modelTransition": "refuse"
+   }
+  },
+  {
+   "id": "W-KD-G15",
+   "lane": "KD",
+   "kind": "NEG-PROFILE",
+   "exec": "kernel.lte-differential",
+   "spec": 1099511627776,
+   "note": "T01 grammar max 1 TiB — above the 1 MiB profile bound",
+   "expect": {
+    "verdict": "MATCH_REFUSE",
+    "kernelGuardEnveloped": false,
+    "kernelGuardRaw": {
+     "threw": false,
+     "passed": false
+    },
+    "kernelAdmission": {
+     "kind": "admitted",
+     "transitionKey": "refuse",
+     "targetState": "refused",
+     "effectCount": 0
+    },
+    "modelGuardPassed": false,
+    "modelTransition": "refuse"
+   }
+  },
+  {
+   "id": "W-KD-G16",
+   "lane": "KD",
+   "kind": "POS-PROFILE",
+   "exec": "kernel.lte-differential",
+   "spec": -1048576,
+   "note": "negative declaredBytes — kernel guard passes (T01 owns positivity)",
+   "expect": {
+    "verdict": "MATCH_ACQUIRE",
+    "kernelGuardEnveloped": true,
+    "kernelGuardRaw": {
+     "threw": false,
+     "passed": true
+    },
+    "kernelAdmission": {
+     "kind": "threw",
+     "stage": "central-admission",
+     "code": "ADMISSION_EFFECT_BINDING_UNVALIDATED",
+     "errorName": "CentralAdmissionError"
+    },
+    "modelGuardPassed": true,
+    "modelTransition": "acquire"
+   }
+  },
+  {
+   "id": "W-KD-G17",
+   "lane": "KD",
+   "kind": "POS-PROFILE",
+   "exec": "kernel.lte-differential",
+   "spec": 0.5,
+   "note": "fractional declaredBytes — kernel guard passes (T01 owns safe-integer grammar)",
+   "expect": {
+    "verdict": "MATCH_ACQUIRE",
+    "kernelGuardEnveloped": true,
+    "kernelGuardRaw": {
+     "threw": false,
+     "passed": true
+    },
+    "kernelAdmission": {
+     "kind": "threw",
+     "stage": "central-admission",
+     "code": "ADMISSION_EFFECT_BINDING_UNVALIDATED",
+     "errorName": "CentralAdmissionError"
+    },
+    "modelGuardPassed": true,
+    "modelTransition": "acquire"
+   }
+  },
+  {
+   "id": "W-KD-G18",
+   "lane": "KD",
+   "kind": "NEG-PROFILE",
+   "exec": "kernel.lte-differential",
+   "spec": {},
+   "note": "plain object operand",
+   "expect": {
+    "verdict": "MATCH_REFUSE",
+    "kernelGuardEnveloped": false,
+    "kernelGuardRaw": {
+     "threw": true,
+     "errorName": "PredicateContractViolation",
+     "message": "ordered comparison requires two numbers or two strings"
+    },
+    "kernelAdmission": {
+     "kind": "admitted",
+     "transitionKey": "refuse",
+     "targetState": "refused",
+     "effectCount": 0
+    },
+    "modelGuardPassed": false,
+    "modelTransition": "refuse"
+   }
+  },
+  {
+   "id": "W-KD-G19",
+   "lane": "KD",
+   "kind": "NEG-DIVERGENT",
+   "exec": "kernel.lte-differential",
+   "spec": [
+    1
+   ],
+   "note": "single-element array operand (JS coercion 1 <= bound)",
+   "finding": "F1",
+   "expect": {
+    "verdict": "DIVERGE_MODEL_FAIL_OPEN",
+    "kernelGuardEnveloped": false,
+    "kernelGuardRaw": {
+     "threw": true,
+     "errorName": "PredicateContractViolation",
+     "message": "ordered comparison requires two numbers or two strings"
+    },
+    "kernelAdmission": {
+     "kind": "admitted",
+     "transitionKey": "refuse",
+     "targetState": "refused",
+     "effectCount": 0
+    },
+    "modelGuardPassed": true,
+    "modelTransition": "acquire"
+   }
+  }
+ ],
+ "findings": {
+  "F1": {
+   "id": "F1",
+   "title": "Model is fail-open where the kernel refuses (coercion family)",
+   "cases": [
+    "W-KD-G03",
+    "W-KD-G04",
+    "W-KD-G07",
+    "W-KD-G08",
+    "W-KD-G19"
+   ],
+   "detail": "For null / below-bound numeric string / boolean true / boolean false / single-element array declaredBytes, the T03 model evaluates JS loose coercion (e.g. null <= 1048576 is true) and selects the acquire transition (effect INTENT data only, never executed), while the original kernel raises a typed ordered-comparison violation that evaluateDomainWorkflowGuard envelopes into guard-false and the central admission then admits the unguarded refuse transition. Kernel direction: refuse. Model direction: acquire.",
+   "reachability": "Not reachable through the composed T01→T03 path: validateConfirmedIntent refuses every non safe-integer (0,1TiB] declaredBytes shape, and the #166 model composes decideDownloadConfirmed behind T01 confirmation. The divergence is at the exported guard/decision-layer API surface and in the docstring claim that it evaluates \"exactly as the sealed kernel interprets\".",
+   "disposition": "recorded finding; H1 model files are NOT modified in this lane — model hardening is a separate future claim"
+  },
+  "F2": {
+   "id": "F2",
+   "title": "Kernel errors at typed preparation where the model cleanly refuses",
+   "cases": [
+    "W-KD-G02",
+    "W-KD-G09",
+    "W-KD-G10"
+   ],
+   "detail": "For an own key carrying undefined, NaN or Infinity, the original kernel fails the event at typed preparation (PredicateContractViolation, non-JSON material), so the admission never produces a decision record; the T03 model returns a clean refuse-direction decision for the same payload.",
+   "reachability": "payloadFromInput projects input.declaredBytes verbatim, so an undefined-key payload is producible from a confirm input carrying the key as undefined; NaN/Infinity inputs are producible from live JS callers (JSON round-trips would drop them).",
+   "disposition": "recorded finding; same no-acquire direction, different observable (typed error vs refuse)"
+  },
+  "F3": {
+   "id": "F3",
+   "title": "The absent-field MATCH is outcome-equivalent, mechanism-different",
+   "cases": [
+    "W-KD-G01"
+   ],
+   "detail": "Kernel: readPath returns the MISSING sentinel, compareOrdered raises \"ordered comparison cannot use a missing operand\", evaluateDomainWorkflowGuard envelopes the violation into guard-false, and the unguarded refuse transition is admitted. Model: the docstring justifies refuse via JS coercion (undefined <= bound is false). Both refuse; only the kernel mechanics constitute live lte interpretation, and the trace confirms the refuse outcome itself is faithful.",
+   "disposition": "recorded; supports review P2-1 closure for the missing-field case at outcome level"
+  },
+  "F4": {
+   "id": "F4",
+   "title": "The kernel profile bound alone does not encode positivity or integrality",
+   "cases": [
+    "W-KD-G11",
+    "W-KD-G16",
+    "W-KD-G17"
+   ],
+   "detail": "0, negative and fractional declaredBytes all PASS the kernel lte guard (numeric compare against 1 MiB only) and would admit the acquire transition at selection; positivity and safe-integer integrality are T01 grammar obligations, not guard obligations. The #166 model agrees numerically, so these are MATCHes that document the guard semantics.",
+   "disposition": "recorded; no divergence"
+  },
+  "F5": {
+   "id": "F5",
+   "title": "Acquire-direction admission stops typed at the unwired dynamic-binding boundary",
+   "cases": [
+    "W-KD-G11",
+    "W-KD-G12",
+    "W-KD-G13",
+    "W-KD-G16",
+    "W-KD-G17"
+   ],
+   "detail": "After selection admits acquire, resolveAdmissionEffectIntents refuses the T03 dynamic inputFrom/idempotencyKeyFrom declarations typed (ADMISSION_EFFECT_BINDING_UNVALIDATED) because this lane never wires createOccurrenceRuntime (the trusted load boundary that also requires a Standard SDK endpoint). This is a scope boundary of the lane, not a kernel defect; the guard-level acquire agreement is the lte interpretation evidence.",
+   "disposition": "recorded boundary; no Effect executes anywhere in this lane"
+  }
+ },
+ "summary": {
+  "total": 19,
+  "matchAcquire": 5,
+  "matchRefuse": 6,
+  "divergeModelFailOpen": 5,
+  "divergeKernelErrorVsModelRefuse": 3,
+  "unclassified": 0
+ }
+}

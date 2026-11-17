@@ -1,0 +1,110 @@
+{
+ "schema": "formal-tools.i11.g4-p2.s3-io-qualification-boundary/1",
+ "status": "ENGINEERING_ONLY_EVIDENCE",
+ "title": "S3-lane pure guard model — network I/O qualification boundary (what the model does NOT qualify)",
+ "lane": "FORMAL_TOOLS_I11_G4_P2",
+ "authority": {
+  "formalAuthority": "ENGINEERING_ONLY",
+  "claim": "issuecomment-6960825898",
+  "reviewAnchor": "#5945831322 P2-2 (S3 DNS/byte transport are injected seams and do not prove real Host TLS/timeout/body invariants)",
+  "baseMain": "401f3bb55f5095fb1f131f176b2ea157e3caa212",
+  "qualificationConsequence": "G4_QUALIFICATION stays NOT_ADMITTED; no real-Host DNS, TLS, timeout or body invariant is qualified by the pure model or by this boundary evidence"
+ },
+ "modelUnderBoundary": {
+  "path": "benchmarks/llm-methods/g4/product-refinement/model/s3-network-guard-model.mjs",
+  "introducedBy": "merged #166 (9d87790f)",
+  "refinedSource": {
+   "repo": "kaicreator-mm/xDownload",
+   "commit": "e904f08c478b15147b1c07fbe53c610d2d81851f",
+   "path": "packages/direct-acquisition/src/pinned-public-https.ts",
+   "gitBlobSha1": "8beebadf701883e3ae5ccf669485bc5c1ba1dde0"
+  },
+  "usedByThisLane": "imported read-only; this lane adds NO model change"
+ },
+ "aspects": [
+  {
+   "id": "QB-01",
+   "aspect": "media HTTPS URL grammar",
+   "modelTreatment": "ENFORCED",
+   "detail": "mediaUrl() enforces strict https syntax, hostname shape, media path pattern and URL canonicalization before any admission; SOURCE_REJECTED on violation.",
+   "sourceAnchor": { "file": "model/s3-network-guard-model.mjs", "symbols": ["mediaUrl"] },
+   "existingWitness": "W-S3-P*/W-S3-C* (#166 REFINEMENT.json) — unit coverage lives there; this lane does not re-run it",
+   "boundaryTests": ["W-QB-STRUCT-SOURCE-NETWORK-FREE"]
+  },
+  {
+   "id": "QB-02",
+   "aspect": "redirect admission, echo check, visited-cycle detection, redirect bound",
+   "modelTreatment": "ENFORCED",
+   "detail": "The read loop owns redirect policy: initial-vs-redirect admission callbacks, admission echo (admission.uri must equal the exact URL), visited list cycle detection and the maxRedirects bound.",
+   "sourceAnchor": { "file": "model/s3-network-guard-model.mjs", "symbols": ["createPinnedPublicS3HttpsReader"] },
+   "existingWitness": "#166 reader-loop cases",
+   "boundaryTests": ["W-QB-STRUCT-SOURCE-NETWORK-FREE"]
+  },
+  {
+   "id": "QB-03",
+   "aspect": "trusted reader bounds configuration validation",
+   "modelTreatment": "ENFORCED_VALIDATION_ONLY",
+   "detail": "validateReaderBounds fail-closes construction on non-integer or out-of-range maxBytes/timeoutMs/maxRedirects. Validation is a CONFIG gate only; runtime ENFORCEMENT of the byte/timeout budgets is delegated (QB-06/QB-07).",
+   "sourceAnchor": { "file": "model/s3-network-guard-model.mjs", "symbols": ["validateReaderBounds", "MAX_BYTES", "MAX_MS", "MAX_REDIRECTS"] },
+   "existingWitness": "#166 s3.validateReaderBounds cases",
+   "boundaryTests": ["W-QB-BOUNDS-VALIDATION-NOT-ENFORCEMENT"]
+  },
+  {
+   "id": "QB-04",
+   "aspect": "real DNS resolution and public-IP classification",
+   "modelTreatment": "DELEGATED_TO_SEAM",
+   "detail": "The reader consumes whatever pinnedIp the injected resolvePublic seam returns and forwards it to hop without reclassification. A seam returning a reserved/private address is accepted — public classification is a SEAM obligation (the original resolvePublic/classifyDnsAnswers discipline), not a loop invariant.",
+   "notQualified": "real DNS A-answer acquisition, resolver deadlines, reserved-range classification of the actually-connected address",
+   "sourceAnchor": { "file": "model/s3-network-guard-model.mjs", "symbols": ["createPinnedPublicS3HttpsReader.read loop", "resolvePublicViaDns"] },
+   "boundaryTests": ["W-QB-DNS-CLASSIFICATION-DELEGATED", "W-QB-STRUCT-SOURCE-NETWORK-FREE"]
+  },
+  {
+   "id": "QB-05",
+   "aspect": "real TLS handshake, certificate authorization and peer identity",
+   "modelTreatment": "HOST_OBLIGATION",
+   "detail": "tlsPeerOkay() is exported as the per-hop peer-identity SPEC (encrypted + authorized + exact remoteAddress equality), but the model's read loop never opens a socket, never sees a socket, and never invokes tlsPeerOkay — the connected-socket facts are produced entirely outside the model by the hop seam / Host transport.",
+   "notQualified": "certificate chain validity, hostname authorization, protocol negotiation, revocation, TOFU behavior of any real stack",
+   "sourceAnchor": { "file": "model/s3-network-guard-model.mjs", "symbols": ["tlsPeerOkay", "createPinnedPublicS3HttpsReader.read loop"] },
+   "boundaryTests": ["W-QB-TLS-PEER-IDENTITY-DELEGATED"]
+  },
+  {
+   "id": "QB-06",
+   "aspect": "byte transport and body size/content bounds",
+   "modelTreatment": "DELEGATED_TO_SEAM",
+   "detail": "maxBytes is handed to the hop seam; the loop returns the seam's body reply verbatim (bytes identity preserved) without measuring length or content type. An oversized body from a compliant-shaped hop reply is accepted — bounds ENFORCEMENT is the transport's obligation (QB-03 only validates the configuration).",
+   "notQualified": "real byte streaming, content-length truthfulness, media-type verification, truncation behavior",
+   "sourceAnchor": { "file": "model/s3-network-guard-model.mjs", "symbols": ["createPinnedPublicS3HttpsReader.read loop"] },
+   "boundaryTests": ["W-QB-BODY-BOUNDS-DELEGATED"]
+  },
+  {
+   "id": "QB-07",
+   "aspect": "deadline computation vs timeout enforcement",
+   "modelTreatment": "DELEGATED_TO_SEAM",
+   "detail": "The loop computes one deadline (performance.now() + timeoutMs) and passes it to the seams; it imposes no interrupt of its own. A seam that ignores the deadline still completes. Actual timeout enforcement is Host/transport behavior.",
+   "notQualified": "real wall-clock aborts, partial-body timeout semantics, clock behavior under load",
+   "sourceAnchor": { "file": "model/s3-network-guard-model.mjs", "symbols": ["createPinnedPublicS3HttpsReader.read loop"] },
+   "boundaryTests": ["W-QB-DEADLINE-DELEGATED"]
+  },
+  {
+   "id": "QB-08",
+   "aspect": "network-free structural property (no real I/O path exists in the pure model)",
+   "modelTreatment": "ENFORCED",
+   "detail": "Structural, machine-checked: the model imports only node:dns/promises + node:perf_hooks; resolve4 is referenced only inside resolvePublicViaDns (shipped for parity with the original source, never invoked by any test path); the reader factory hard-fails construction unless BOTH seams are injected functions, so no default network path can be constructed.",
+   "sourceAnchor": { "file": "model/s3-network-guard-model.mjs", "symbols": ["module imports", "resolvePublicViaDns", "createPinnedPublicS3HttpsReader"] },
+   "boundaryTests": ["W-QB-STRUCT-SOURCE-NETWORK-FREE", "W-QB-SEAM-CONSTRUCTION-REQUIRED"]
+  },
+  {
+   "id": "QB-09",
+   "aspect": "seam failure mapping (DNS_REJECTED / hop failure passthrough)",
+   "modelTreatment": "ENFORCED_MAPPING",
+   "detail": "What the model DOES add around the seams: an undefined seam answer maps to DNS_REJECTED; a hop {kind:'failure'} reply maps to failure(reason) verbatim; reply shapes other than body/failure/redirect are unreachable by construction. The mapping is model logic; the underlying failure causes are seam behavior.",
+   "sourceAnchor": { "file": "model/s3-network-guard-model.mjs", "symbols": ["createPinnedPublicS3HttpsReader.read loop", "failure"] },
+   "boundaryTests": ["W-QB-SEAM-FAILURE-MAPPING"]
+  }
+ ],
+ "summary": {
+  "enforcedByModel": ["QB-01", "QB-02", "QB-03", "QB-08", "QB-09"],
+  "notQualifiedByModel": ["QB-04", "QB-05", "QB-06", "QB-07"],
+  "notQualifiedConsequence": "any claim of real-Host DNS/TLS/timeout/body qualification requires a separately authorized trusted Host lane; this boundary evidence grants none"
+ }
+}
