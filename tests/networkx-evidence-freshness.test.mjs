@@ -35,6 +35,8 @@ test('exact baseline pins and lifecycle exclusion are well-formed', () => {
 test('exact observation is FRESH_UNQUALIFIED, never a T6 PASS', () => {
   const result = assess(baseline, observed());
   assert.equal(result.status, 'FRESH_UNQUALIFIED');
+  assert.equal(result.externalSourceVerification, 'UNVERIFIED_EXTERNAL_GIT_READBACK');
+  assert.match(result.limitations, /not authenticated against the current Git tree/);
   assert.equal(result.qualificationGranted, false);
   assert.ok(Object.values(result.qualification).every(x => x === false));
   assert.ok(result.unknownFields.includes('pythonRuntimeSha256'));
@@ -50,10 +52,10 @@ test('upstream source version drift propagates to dependent gates, never grants 
   assert.equal(r.qualification.T6, false);
 });
 
-test('archive SHA drift requires T0, T2, T5, T6 re-verification', () => {
+test('archive SHA drift invalidates T0, T2, T3, T4, T5 and T6', () => {
   const o=observed(); o.identity.archiveSha256=replaceSha(o.identity.archiveSha256);
   const r=assess(baseline,o);
-  assert.deepEqual(r.reverifyGates,['T0','T2','T5','T6']);
+  assert.deepEqual(r.reverifyGates,['T0','T2','T3','T4','T5','T6']);
   assert.equal(r.status,'STALE_REVERIFY_REQUIRED');
 });
 
@@ -64,6 +66,64 @@ test('changed git source Blob, with identity/pin both updated, invalidates affec
   const r=assess(baseline,o);
   assert.deepEqual(r.changedFields,['posBlob']);
   assert.deepEqual(r.reverifyGates,['T3','T4','T5','T6']);
+});
+
+test('installed executable package drift invalidates native, integration, and semantic consumers', () => {
+  const base=clone(baseline); base.identity.installedPackageTreeSha256='a'.repeat(64);
+  const o={schema:OBSERVATION_SCHEMA, toolId:'networkx', identity:clone(base.identity), sourcePins:clone(base.sourcePins)};
+  o.identity.installedPackageTreeSha256='b'.repeat(64);
+  const r=assess(base,o);
+  assert.equal(r.status,'STALE_REVERIFY_REQUIRED');
+  assert.deepEqual(r.changedFields,['installedPackageTreeSha256']);
+  assert.deepEqual(r.reverifyGates,['T2','T3','T4','T5','T6']);
+  assert.equal(r.qualificationGranted,false);
+});
+
+test('new, null and missing installed-package SHA remain fail-closed', () => {
+  const o=observed(); o.identity.installedPackageTreeSha256='c'.repeat(64);
+  let r=assess(baseline,o);
+  assert.equal(r.status,'NEW_EVIDENCE_REVIEW_REQUIRED');
+  assert.deepEqual(r.reverifyGates,['T2','T3','T4','T5','T6']);
+  assert.equal(r.qualification.T5,false);
+
+  const base=clone(baseline); base.identity.installedPackageTreeSha256='a'.repeat(64);
+  const nul={schema:OBSERVATION_SCHEMA, toolId:'networkx', identity:clone(base.identity), sourcePins:clone(base.sourcePins)};
+  nul.identity.installedPackageTreeSha256=null;
+  r=assess(base,nul);
+  assert.equal(r.status,'INCOMPLETE_OBSERVATION');
+  assert.ok(r.incompleteFields.includes('installedPackageTreeSha256'));
+  assert.deepEqual(r.reverifyGates,['T2','T3','T4','T5','T6']);
+
+  const missing=observed(); delete missing.identity.installedPackageTreeSha256;
+  r=assess(baseline,missing);
+  assert.equal(r.status,'INCOMPLETE_OBSERVATION');
+  assert.ok(r.incompleteFields.includes('installedPackageTreeSha256'));
+  assert.deepEqual(r.reverifyGates,['T2','T3','T4','T5','T6']);
+});
+
+test('reproducible build-artifact identity changes invalidate install and all consumers', () => {
+  const base=clone(baseline); base.identity.reproduciblePackageTreeSha256='a'.repeat(64);
+  const o={schema:OBSERVATION_SCHEMA, toolId:'networkx', identity:clone(base.identity), sourcePins:clone(base.sourcePins)};
+  o.identity.reproduciblePackageTreeSha256='b'.repeat(64);
+  const stale=assess(base,o);
+  assert.equal(stale.status,'STALE_REVERIFY_REQUIRED');
+  assert.deepEqual(stale.reverifyGates,['T1','T2','T3','T4','T5','T6']);
+  const newly=observed(); newly.identity.reproduciblePackageTreeSha256='c'.repeat(64);
+  const r=assess(baseline,newly);
+  assert.equal(r.status,'NEW_EVIDENCE_REVIEW_REQUIRED');
+  assert.deepEqual(r.reverifyGates,['T1','T2','T3','T4','T5','T6']);
+  assert.ok(Object.values(r.qualification).every(v=>v===false));
+});
+
+test('co-mutating caller-supplied baseline and observation never claims external Git readback', () => {
+  const forged=clone(baseline);
+  const path='portable/builders/tools/networkx.sh', sha='b'.repeat(40);
+  forged.sourcePins[path]=sha; forged.identity.builderBlob=sha;
+  const o={schema:OBSERVATION_SCHEMA,toolId:'networkx',identity:clone(forged.identity),sourcePins:clone(forged.sourcePins)};
+  const r=assess(forged,o);
+  assert.equal(r.status,'FRESH_UNQUALIFIED');
+  assert.equal(r.externalSourceVerification,'UNVERIFIED_EXTERNAL_GIT_READBACK');
+  assert.equal(r.qualificationGranted,false);
 });
 
 test('source-audit Blob mutation makes T0 and T6 stale', () => {
