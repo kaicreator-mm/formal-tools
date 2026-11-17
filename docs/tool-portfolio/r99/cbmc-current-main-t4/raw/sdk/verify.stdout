@@ -1,0 +1,51 @@
+{
+  "schema": "formal-tools/portfolio-t4-technical/0.1",
+  "tool": "cbmc",
+  "operation": "verify-fixture",
+  "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+  "process": {
+    "exit_code": 0,
+    "signal": null,
+    "timed_out": false,
+    "output_limit": false,
+    "elapsed_ms": 119,
+    "error": null
+  },
+  "runner_sha256": "60af447ecfbc401549a7bbaab56e4111e0ca1d66a19bdc81e9eb479bdcd26c71",
+  "metadata_sha256": "f09b83bf3b6c1f8c4a586fa76dc7f759deedcc0dc0d50bb7e8902ed2f0748d76",
+  "fixture_contract_sha256": "f31f8f4fa90d6645c5d0a73bf9ec019e9a9cca9f04e1681f83af09513cf6282f",
+  "receipt_sha256": "621474fb4861c42364a58087707a566a52c3b2210a6fb58c7981201c18caa68d",
+  "streams": {
+    "stdout": "   cbmc/pos: exit=0 dur=37ms matched=1 exit_ok=1 label=VERIFIED (log: /tmp/formal-portfolio-t4-QPPOMc/verify-cbmc.pos.log)\n   cbmc/neg: exit=10 dur=36ms matched=1 exit_ok=1 label=VIOLATION (log: /tmp/formal-portfolio-t4-QPPOMc/verify-cbmc.neg.log)\n   cbmc/err: exit=3 dur=26ms matched=1 exit_ok=1 label=ERROR (log: /tmp/formal-portfolio-t4-QPPOMc/verify-cbmc.err.log)\n",
+    "stderr": "",
+    "stdout_sha256": "33cc245d2a60760d5a898a26adebd5bf283e734461ee6b2f5042999668920aae",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "cases": [
+    {
+      "phase": "pos",
+      "exit_code": 0,
+      "duration_ms": 37,
+      "semantic_pattern_matched": true,
+      "exit_contract_matched": true,
+      "label": "VERIFIED"
+    },
+    {
+      "phase": "neg",
+      "exit_code": 10,
+      "duration_ms": 36,
+      "semantic_pattern_matched": true,
+      "exit_contract_matched": true,
+      "label": "VIOLATION"
+    },
+    {
+      "phase": "err",
+      "exit_code": 3,
+      "duration_ms": 26,
+      "semantic_pattern_matched": true,
+      "exit_contract_matched": true,
+      "label": "ERROR"
+    }
+  ],
+  "scope": "T4_TECHNICAL_ONLY_T3_NATIVE_REVIEW_AND_T5_SEMANTICS_NOT_EVALUATED"
+}

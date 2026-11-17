@@ -6,83 +6,196 @@ import { resolve } from 'node:path';
 import { spawn } from 'node:child_process';
 import { createInterface } from 'node:readline';
 
+// R102 P1-02: the MCP stdio integration test must not be able to silently skip
+// in CI. Dependency-import failure stays a tolerated local skip, but under
+// Woodpecker (CI=true) it is a hard failure of this test file.
 let mcpDependenciesAvailable = true;
+let mcpImportError = null;
 try { await import('@modelcontextprotocol/server'); await import('zod/v4'); }
-catch { mcpDependenciesAvailable = false; }
+catch (e) { mcpDependenciesAvailable = false; mcpImportError = String(e); }
+const runningInCi = process.env.CI === 'true';
+if (runningInCi && !mcpDependenciesAvailable) {
+  throw new Error('MCP_LOCKED_DEPENDENCIES_UNAVAILABLE_IN_CI: ' + mcpImportError);
+}
 
+const RAW = 'docs/tool-portfolio/r99/cbmc-current-main-t4/raw';
+const RAW_ROOT = resolve(RAW);
 const evidence = JSON.parse(await readFile(resolve('docs/tool-portfolio/r99/CBMC_CURRENT_MAIN_T4.json'), 'utf8'));
 const sha256 = value => createHash('sha256').update(value).digest('hex');
+const sha256File = async rel => sha256(await readFile(resolve(RAW_ROOT, ...rel.split('/'))));
+const rawText = async rel => (await readFile(resolve(RAW_ROOT, ...rel.split('/')))).toString('utf8');
+const rawExit = async rel => Number((await rawText(rel + '.exit')).trim());
 const gitBlobSha1 = bytes => createHash('sha1').update(Buffer.from('blob ' + bytes.length + '\0')).update(bytes).digest('hex');
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/);
+const EMPTY_SHA = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
 
-test('CBMC R99 evidence is bound to the requested exact main and current source blobs', async () => {
-  assert.equal(evidence.schema, 'formal-tools/cbmc-current-main-t4/1');
-  assert.equal(evidence.exact_main, '530a2d7a8edf99106845be228b6451c6aa52be92');
-  assert.equal(evidence.main_push.status, 'SUCCESS');
-  assert.equal(evidence.main_push.pipeline, 1867);
-  assert.equal(evidence.main_push.commit, evidence.exact_main);
-  assert.match(evidence.main_push.url, /pipeline\/1867\/1$/);
-  const reconciliation = evidence.current_main_reconciliation;
-  assert.equal(reconciliation.latest_main, '387a21d70c9a411117ffd75e312e72062649b8df');
-  assert.equal(reconciliation.tested_main, evidence.exact_main);
-  assert.equal(reconciliation.status, 'SOURCE_PINS_UNCHANGED');
-  assert.deepEqual(reconciliation.source_pin_overlap, []);
-  assert.equal(reconciliation.main_push.pipeline, 1875);
-  assert.equal(reconciliation.main_push.status, 'SUCCESS');
-  assert.match(reconciliation.main_push.url, /pipeline\/1875\/1$/);
-  assert.equal(reconciliation.branch_sync.first_parent, reconciliation.latest_main);
-  assert.equal(reconciliation.branch_sync.second_parent, 'd1ce09116a1b4ff0e815f6a26dbfdfa139b385fd');
+test('CBMC T4 evidence is bound to the tested current main and 22 source blobs', async () => {
+  assert.equal(evidence.schema, 'formal-tools/cbmc-current-main-t4/2');
+  assert.equal(evidence.tested_main.sha, 'b9a662f48079d855aac69c886f228cce89efa8c6');
+  assert.equal(evidence.tested_main.main_push.status, 'SUCCESS');
+  assert.equal(evidence.tested_main.main_push.pipeline, 2062);
+  assert.equal(evidence.tested_main.main_push.commit, evidence.tested_main.sha);
+  assert.match(evidence.tested_main.main_push.url, /pipeline\/2062\/1$/);
+  assert.equal(evidence.exact_main_historical.sha, '530a2d7a8edf99106845be228b6451c6aa52be92');
+  assert.equal(evidence.exact_main_historical.main_push.pipeline, 1867);
+  assert.equal(evidence.exact_main_historical.main_push.status, 'SUCCESS');
+  const drift = evidence.source_pin_drift;
+  assert.equal(drift.window.commits, 83);
+  assert.deepEqual(drift.changed_pinned_paths.map(p => p.path),
+    ['portable/packaging/bundle-template/bin/tool-runner', 'packages/runner/js/native.mjs']);
+  assert.equal(drift.unchanged_pinned_paths, 20);
   for (const [path, expected] of Object.entries(evidence.source_pins)) {
     assert.equal(gitBlobSha1(await readFile(resolve(path))), expected, 'Git blob mismatch: ' + path);
+  }
+});
+
+test('raw evidence inventory is internally consistent (SHA256SUMS recomputed)', async () => {
+  const inv = evidence.raw_evidence;
+  assert.equal(inv.sha256sums_file, 'SHA256SUMS');
+  const sums = await rawText('SHA256SUMS');
+  assert.equal(await sha256File('SHA256SUMS'), inv.sha256sums_sha256);
+  const lines = sums.trimEnd().split('\n');
+  assert.equal(lines.length, inv.file_count);
+  for (const line of lines) {
+    const [hash, ...rest] = line.split('  ');
+    assert.equal(await sha256File(rest.join('  ')), hash, 'raw file hash mismatch: ' + rest.join('  '));
   }
 });
 
 test('original CBMC archive, fixtures and metadata overlay are accurately distinguished', () => {
   assert.equal(evidence.archives.cbmc.sha256, 'eaa049099a7a515631b4c82699b264e4bea1e677d9f65e8374cf212d30306369');
   assert.equal(evidence.archives.cbmc.size_bytes, 20600381);
+  assert.equal(evidence.archives.portable_core.sha256, 'fe9699e6ba503d94826551bc8e82c70c7c267191a89a6a14941e3551e2b23990');
+  assert.equal(evidence.archives.portable_core.size_bytes, 27989);
   assert.equal(evidence.bundle_overlay.original_meta_sh.identity, 'TOOL_TOOL_ID');
   assert.equal(evidence.bundle_overlay.regenerated_meta_sh.identity, 'TOOL_ID');
   assert.equal(evidence.bundle_overlay.meta_json_unchanged_sha256, 'f09b83bf3b6c1f8c4a586fa76dc7f759deedcc0dc0d50bb7e8902ed2f0748d76');
   assert.equal(evidence.bundle_overlay.fixtures_match_current_main, true);
+  assert.equal(evidence.bundle_overlay.runner_git_blob_sha1, evidence.source_pins['portable/packaging/bundle-template/bin/tool-runner']);
+  assert.equal(evidence.bundle_overlay.runner_sha256, '60af447ecfbc401549a7bbaab56e4111e0ca1d66a19bdc81e9eb479bdcd26c71');
 });
 
-test('exact current-main Runner executed CBMC POS/NEG/ERR with authentic exit contracts', () => {
+test('exact current-main Runner executed CBMC POS/NEG/ERR; raw bytes recompute every hash', async () => {
   const r = evidence.runner;
-  assert.equal(evidence.bundle_overlay.runner_git_blob_sha1, evidence.source_pins['portable/packaging/bundle-template/bin/tool-runner']);
-  assert.equal(evidence.bundle_overlay.runner_sha256, '020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a');
   assert.equal(r.uid, 65534); assert.equal(r.gid, 65534); assert.equal(r.bundle_write_protected, true);
-  assert.equal(r.doctor.exit_code, 0); assert.equal(sha256(r.doctor.stdout), r.doctor.stdout_sha256);
-  assert.equal(r.version_native.exit_code, 0); assert.match(r.version_native.stdout, /6\.11\.0/);
-  assert.equal(r.verify.exit_code, 0); assert.equal(sha256(r.verify.receipt_tsv), r.verify.receipt_sha256);
+  assert.equal(r.doctor.exit_code, await rawExit('runner/doctor'));
+  assert.equal(r.doctor.stdout, await rawText('runner/doctor.stdout'));
+  assert.equal(r.doctor.stdout_sha256, await sha256File('runner/doctor.stdout'));
+  assert.equal(r.doctor.stderr_sha256, EMPTY_SHA);
+  assert.equal(r.version_metadata.exit_code, 0); assert.match(r.version_metadata.stdout, /version: 6\.11\.0/);
+  assert.equal(r.version_metadata.stdout_sha256, await sha256File('runner/version-metadata.stdout'));
+  assert.equal(r.version_native.exit_code, await rawExit('runner/version-native'));
+  assert.equal(r.version_native.stdout, await rawText('runner/version-native.stdout'));
+  assert.match(r.version_native.stdout, /6\.11\.0/);
+  assert.equal(r.verify.exit_code, await rawExit('runner/verify'));
+  assert.equal(r.verify.stdout, await rawText('runner/verify.stdout'));
+  assert.equal(r.verify.stderr_sha256, EMPTY_SHA);
+  assert.equal(sha256(r.verify.receipt_tsv), r.verify.receipt_sha256);
+  assert.equal(r.verify.receipt_sha256, await sha256File('runner/verify.receipt.tsv'));
+  assert.equal(r.verify.receipt_tsv, await rawText('runner/verify.receipt.tsv'));
   assert.match(r.verify.receipt_tsv, /verdict\tPASS/);
   assert.deepEqual(r.verify.cases.map(x => [x.phase, x.exit_code, x.pattern_matched, x.exit_contract_matched]), [
     ['pos', 0, true, true], ['neg', 10, true, true], ['err', 3, true, true]
   ]);
-  for (const phase of ['pos', 'neg', 'err']) assert.equal(sha256(r.verify.raw_case_logs[phase].stdout), r.verify.raw_case_logs[phase].sha256);
+  for (const phase of ['pos', 'neg', 'err']) {
+    const log = r.verify.raw_case_logs[phase];
+    assert.equal(log.combined_output, await rawText('runner/verify-cbmc.' + phase + '.log'));
+    assert.equal(log.sha256, await sha256File('runner/verify-cbmc.' + phase + '.log'));
+    assert.match(log.combined_output, new RegExp('PHASE_DONE phase=' + phase + ' rc=' + { pos: 0, neg: 10, err: 3 }[phase]));
+  }
+  assert.equal(r.verify.raw_case_logs.stream_capture, 'STDOUT_AND_STDERR_MERGED');
 });
 
-test('CLI and SDK execute the current-main CBMC gate and fail closed on wrong Runner pins', () => {
-  assert.equal(evidence.cli.inspect_status, 'FOUND_PINNED_NOT_EXECUTED');
-  assert.equal(evidence.cli.doctor.status, 'DOCTOR_EXECUTED_NOT_T3');
-  assert.equal(evidence.cli.doctor.exit_code, 0); digest(evidence.cli.doctor.stdout_sha256);
-  assert.equal(evidence.cli.verify.status, 'FIXTURE_TECHNICAL_PASS_UNREVIEWED');
-  assert.equal(evidence.cli.verify.exit_code, 0); digest(evidence.cli.verify.stdout_sha256);
-  assert.deepEqual(evidence.cli.verify.cases.map(x => [x.phase, x.exit_code]), [['pos', 0], ['neg', 10], ['err', 3]]);
-  assert.equal(evidence.cli.wrong_runner_pin.status, 'NOT_RUN_FAIL_CLOSED');
-  assert.equal(evidence.cli.wrong_runner_pin.exit_code, 2);
-  assert.equal(evidence.sdk.doctor_status, 'DOCTOR_EXECUTED_NOT_T3');
-  assert.equal(evidence.sdk.verify_status, 'FIXTURE_TECHNICAL_PASS_UNREVIEWED');
-  digest(evidence.sdk.stdout_sha256);
-  assert.deepEqual(evidence.sdk.cases.map(x => [x.phase, x.exit_code]), [['pos', 0], ['neg', 10], ['err', 3]]);
-  assert.equal(evidence.sdk.wrong_runner_pin.status, 'NOT_RUN_FAIL_CLOSED');
+test('NEG/ERR exit observations are explicit and the wildcard fixture contract is disclosed (R102 P2-02)', async () => {
+  const semantics = evidence.runner.verify.exit_contract_semantics;
+  assert.equal(semantics.pos.declared, 'EXPECT_POS_EXIT=0');
+  assert.equal(semantics.neg.declared, "EXPECT_NEG_EXIT='*' (wildcard)");
+  assert.equal(semantics.err.declared, "EXPECT_ERR_EXIT='*' (wildcard)");
+  assert.equal(semantics.pos.observed_exit, 0);
+  assert.equal(semantics.neg.observed_exit, 10);
+  assert.equal(semantics.err.observed_exit, 3);
+  assert.match(semantics.note, /wildcard/);
+  assert.match(semantics.note, /preserve the 22 source pins/);
 });
 
-test('MCP remains NOT_RUN locally because exact locked packages are absent; no mock pass is claimed', () => {
+test('CLI raw receipts recompute from committed bytes, including wrong-pin fail-closed (R102 P1-01)', async () => {
+  const cli = evidence.cli;
+  assert.equal(cli.inspect.exit_code, await rawExit('cli/inspect'));
+  assert.equal(cli.inspect.status, 'FOUND_PINNED_NOT_EXECUTED');
+  assert.equal(cli.inspect.stdout_sha256, await sha256File('cli/inspect.stdout'));
+  assert.equal(cli.inspect.stderr_sha256, EMPTY_SHA);
+  assert.equal(cli.inspect.runner_sha256, evidence.bundle_overlay.runner_sha256);
+  assert.equal(cli.inspect.metadata_sha256, evidence.bundle_overlay.meta_json_unchanged_sha256);
+
+  assert.equal(cli.doctor.exit_code, await rawExit('cli/doctor'));
+  assert.equal(cli.doctor.status, 'DOCTOR_EXECUTED_NOT_T3');
+  assert.equal(cli.doctor.stdout_sha256, await sha256File('cli/doctor.stdout'));
+  assert.equal(cli.doctor.stderr_sha256, await sha256File('cli/doctor.stderr'));
+  const doctorDoc = JSON.parse(await rawText('cli/doctor.stdout'));
+  assert.equal(doctorDoc.streams.stdout, await rawText('runner/doctor.stdout'));
+
+  assert.equal(cli.verify.exit_code, await rawExit('cli/verify'));
+  assert.equal(cli.verify.status, 'FIXTURE_TECHNICAL_PASS_UNREVIEWED');
+  assert.equal(cli.verify.stdout_sha256, await sha256File('cli/verify.stdout'));
+  assert.equal(cli.verify.stderr_sha256, await sha256File('cli/verify.stderr'));
+  assert.equal(cli.verify.receipt_sha256, await sha256File('cli/verify.receipt.tsv'));
+  assert.deepEqual(cli.verify.cases.map(x => [x.phase, x.exit_code]), [['pos', 0], ['neg', 10], ['err', 3]]);
+  const verifyDoc = JSON.parse(await rawText('cli/verify.stdout'));
+  assert.equal(verifyDoc.receipt_sha256, cli.verify.receipt_sha256);
+  assert.deepEqual(verifyDoc.cases, cli.verify.cases);
+  const tsvRows = (await rawText('cli/verify.receipt.tsv')).trimEnd().split('\n').map(l => l.split('\t'));
+  assert.equal(tsvRows.at(-1).join('\t'), 'verdict\tPASS');
+  assert.deepEqual(tsvRows.slice(1, -1).map(r => [r[1], Number(r[2]), r[6]]),
+    cli.verify.cases.map(c => [c.phase, c.exit_code, c.label]));
+
+  assert.equal(cli.wrong_runner_pin.exit_code, await rawExit('cli/wrong-runner-pin'));
+  assert.equal(cli.wrong_runner_pin.exit_code, 2);
+  assert.equal(cli.wrong_runner_pin.status, 'NOT_RUN_FAIL_CLOSED');
+  assert.match(cli.wrong_runner_pin.reason, /PORTABLE_RUNNER_SHA256_MISMATCH/);
+  assert.equal(cli.wrong_runner_pin.stdout_sha256, await sha256File('cli/wrong-runner-pin.stdout'));
+  assert.equal(cli.wrong_runner_pin.stderr_sha256, await sha256File('cli/wrong-runner-pin.stderr'));
+  assert.ok(cli.wrong_runner_pin.argv.includes('portfolio'));
+});
+
+test('SDK typed results recompute from committed bytes; harness exit is not an operation exit (R102 P2-01)', async () => {
+  const sdk = evidence.sdk;
+  assert.equal(sdk.doctor.harness_exit_code, await rawExit('sdk/doctor'));
+  assert.equal(sdk.doctor.status, 'DOCTOR_EXECUTED_NOT_T3');
+  assert.equal(sdk.doctor.stdout_sha256, await sha256File('sdk/doctor.stdout'));
+  const doctorDoc = JSON.parse(await rawText('sdk/doctor.stdout'));
+  assert.equal(doctorDoc.status, 'DOCTOR_EXECUTED_NOT_T3');
+  assert.equal(doctorDoc.streams.stdout, await rawText('runner/doctor.stdout'));
+
+  assert.equal(sdk.verify.harness_exit_code, await rawExit('sdk/verify'));
+  assert.equal(sdk.verify.harness_exit_code, 0);
+  assert.equal(sdk.verify.status, 'FIXTURE_TECHNICAL_PASS_UNREVIEWED');
+  assert.equal(sdk.verify.stdout_sha256, await sha256File('sdk/verify.stdout'));
+  assert.equal(sdk.verify.stderr_sha256, await sha256File('sdk/verify.stderr'));
+  assert.equal(sdk.verify.receipt_sha256, await sha256File('sdk/verify.receipt.tsv'));
+  assert.deepEqual(sdk.verify.cases.map(x => [x.phase, x.exit_code]), [['pos', 0], ['neg', 10], ['err', 3]]);
+  const verifyDoc = JSON.parse(await rawText('sdk/verify.stdout'));
+  assert.equal(verifyDoc.receipt_sha256, sdk.verify.receipt_sha256);
+  assert.deepEqual(verifyDoc.cases, sdk.verify.cases);
+
+  assert.equal(sdk.wrong_runner_pin.harness_exit_code, await rawExit('sdk/wrong-runner-pin'));
+  assert.equal(sdk.wrong_runner_pin.status, 'NOT_RUN_FAIL_CLOSED');
+  assert.match(sdk.wrong_runner_pin.reason, /PORTABLE_RUNNER_SHA256_MISMATCH/);
+  assert.equal(sdk.wrong_runner_pin.stdout_sha256, await sha256File('sdk/wrong-runner-pin.stdout'));
+  assert.equal(sdk.wrong_runner_pin.stderr_sha256, await sha256File('sdk/wrong-runner-pin.stderr'));
+  assert.match(sdk.wrong_runner_pin.exit_semantics, /harness_exit_code/);
+  assert.ok(!('exit_code' in sdk.wrong_runner_pin), 'ambiguous exit_code must not be reintroduced');
+});
+
+test('MCP stays NOT_RUN locally with the raw failure captured; CI gate makes skips impossible', async () => {
   assert.equal(evidence.mcp.status, 'NOT_RUN_LOCKED_DEPENDENCIES_NOT_INSTALLED');
   assert.equal(evidence.mcp.installed, false);
   assert.deepEqual(evidence.mcp.locked_dependencies, {'@modelcontextprotocol/server':'2.4.0','@modelcontextprotocol/core':'2.4.0',zod:'4.6.7'});
   assert.equal(evidence.mcp.error_code, 'ERR_MODULE_NOT_FOUND');
-  digest(evidence.mcp.stderr_sha256);
+  assert.equal(evidence.mcp.exit_code, await rawExit('mcp/no-deps'));
+  assert.equal(evidence.mcp.stderr_sha256, await sha256File('mcp/no-deps.stderr'));
+  assert.match(await rawText('mcp/no-deps.stderr'), /ERR_MODULE_NOT_FOUND/);
+  assert.equal(evidence.mcp.ci_gate.repair_round, 'R102 P1-02');
+  assert.match(evidence.mcp.ci_gate.mechanism, /hard failure/);
 });
 
 test('evidence does not grant T4 qualification or promote later lifecycle gates', () => {
