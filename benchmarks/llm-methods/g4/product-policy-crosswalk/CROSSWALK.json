@@ -1,0 +1,100 @@
+{
+  "schema": "formal-tools/g4-original-xdownload-product-crosswalk/0.1",
+  "status": "UNADOPTED_SOURCE_OWNER_HANDOFF",
+  "product": {
+    "repository": "kaicreator-mm/xDownload",
+    "exact_commit": "e904f08c478b15147b1c07fbe53c610d2d81851f",
+    "sources": [
+      {
+        "role": "business",
+        "path": "packages/download-domain-app/src/business/business-download.mjs",
+        "git_blob": "a7dba9a896de0b84fc6d54093563adca2ccbcdfc",
+        "snapshot": "benchmarks/llm-methods/g4/product-policy-crosswalk/original/packages/download-domain-app/src/business/business-download.mjs"
+      },
+      {
+        "role": "intent",
+        "path": "packages/download-domain-app/src/contracts/intent.ts",
+        "git_blob": "173bdb2001a54d5477a09fa00ffc271c379992b2",
+        "snapshot": "benchmarks/llm-methods/g4/product-policy-crosswalk/original/packages/download-domain-app/src/contracts/intent.ts"
+      },
+      {
+        "role": "composition",
+        "path": "packages/download-domain-app/src/business/composition.ts",
+        "git_blob": "616c353fd7c38c6612b320e48750ac4c99fef2c0",
+        "snapshot": "benchmarks/llm-methods/g4/product-policy-crosswalk/original/packages/download-domain-app/src/business/composition.ts"
+      },
+      {
+        "role": "https",
+        "path": "packages/direct-acquisition/src/pinned-public-https.ts",
+        "git_blob": "8beebadf701883e3ae5ccf669485bc5c1ba1dde0",
+        "snapshot": "benchmarks/llm-methods/g4/product-policy-crosswalk/original/packages/direct-acquisition/src/pinned-public-https.ts"
+      }
+    ]
+  },
+  "demonstration": {
+    "repository": "kaicreator-mm/domain-harness",
+    "commit": "b3a962c673f2e623ccd3db8ba059c4bae456b9dd",
+    "path": "examples/dis-v020-interaction/download-goal.mjs",
+    "git_blob": "f57747aa7996c88833e72288a0acd594a7ce5468",
+    "local_snapshot": "benchmarks/llm-methods/g4/semantic/source/download-goal.mjs",
+    "authority": "OBSERVATION_ONLY"
+  },
+  "policy_document": {
+    "repository": "kaicreator-mm/domain-harness",
+    "commit": "c553b5e0c717cdbc981f874ce0f60454cffcb9ab",
+    "path": "docs/standards/domain-intelligence/DIS-0.2.0/INTERACTION_NATIVE_R10.zh-CN.md",
+    "git_blob": "db6de58693614c6f653cce60f35c00d34be4829b",
+    "local_snapshot": "benchmarks/llm-methods/g4/oracle-source-candidate/DIS_R10_POLICY_SOURCE.md",
+    "status": "CANDIDATE_ONLY_NO_L2_FREEZE"
+  },
+  "mapping": [
+    {
+      "id": "canonical_intent",
+      "demo": "url;requestId;declaredBytes;channel",
+      "product": "opaque targetRef,requestId,lineageId,outputRootScope,allowedOperation,slice=S1|S3,caller.actor/sessionRef",
+      "relation": "NOT_EQUIVALENT"
+    },
+    {
+      "id": "size_policy",
+      "demo": "1MiB input bound",
+      "product": "T01 canonical 1TiB contract vs T03 business 1MiB profile",
+      "relation": "DISTINCT_LIMITS"
+    },
+    {
+      "id": "host_effect",
+      "demo": "READY_FOR_KDP observation, authority NONE, effectDispatched false",
+      "product": "DOWNLOAD_CONFIRMED -> selected K effect:acquire -> acquisition.acquire, live one-time permit, durable recheck",
+      "relation": "SEPARATE_GOVERNED_EFFECT"
+    },
+    {
+      "id": "network",
+      "demo": "URL HTTPS parse/token rejection",
+      "product": "public DNS + pin IP + TLS remote identity per hop",
+      "relation": "NOT_EQUIVALENT"
+    },
+    {
+      "id": "oracle",
+      "demo": "five manually written bounded SMT booleans",
+      "product": "original xDownload semantic rules and real KDP/Host checks",
+      "relation": "NO_SOURCE_MODEL_REFINEMENT_PROVEN"
+    }
+  ],
+  "adoption": {
+    "source_owner": "NOT_APPROVED",
+    "product_claim_version": "NOT_FROZEN",
+    "rights_scope": "NOT_APPROVED",
+    "professional_oracle": "NOT_ATTESTED",
+    "host_signing": "NOT_ATTESTED",
+    "g4_trust_roots": "NOT_CONFIGURED",
+    "qualified_solution": "NOT_ADMITTED",
+    "positive_replay": false,
+    "effect": false
+  },
+  "evidence_limits": [
+    "Git Blob source pin is not Product Source Owner policy adoption",
+    "Source document difference is not independent professional Oracle",
+    "Original five SMT Z3/cvc5 solves were never run against real product canonical Intent",
+    "No true xDownload ConfirmedDownloadIntent or KDP Effect was executed",
+    "Only bounded engineering handoff, no arbitrary JS semantics or replay"
+  ]
+}
