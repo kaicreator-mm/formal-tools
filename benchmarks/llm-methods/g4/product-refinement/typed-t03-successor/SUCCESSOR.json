@@ -1,0 +1,132 @@
+{
+  "schema": "formal-tools/t03-typed-successor/2",
+  "status": "ENGINEERING_ONLY_CANDIDATE",
+  "historical": {
+    "commit": "af2a2df4004fbffbe8a9a35829c2050e197291ce",
+    "receiptGitBlob": "730a6cf4de1383d89cbd5682d98f63bb6b762157",
+    "driverGitBlob": "8d08cc42f1ba6077b930711993ec7837e7847a87",
+    "oldModelGitBlob": "3aae9f9cff9bd4a8126f8d9d5255aeb32955ecd1",
+    "kernelGitBlob": "68b77d4711a802bc6a3f6f5e73cbc58e769af32f"
+  },
+  "cases": [
+    {
+      "id": "W-KD-G01",
+      "expected": "GUARD_FALSE",
+      "historicalFalseAcquire": false
+    },
+    {
+      "id": "W-KD-G02",
+      "expected": "PREPARATION_ERROR",
+      "historicalFalseAcquire": false
+    },
+    {
+      "id": "W-KD-G03",
+      "expected": "GUARD_FALSE",
+      "historicalFalseAcquire": true
+    },
+    {
+      "id": "W-KD-G04",
+      "expected": "GUARD_FALSE",
+      "historicalFalseAcquire": true
+    },
+    {
+      "id": "W-KD-G05",
+      "expected": "GUARD_FALSE",
+      "historicalFalseAcquire": false
+    },
+    {
+      "id": "W-KD-G06",
+      "expected": "GUARD_FALSE",
+      "historicalFalseAcquire": false
+    },
+    {
+      "id": "W-KD-G07",
+      "expected": "GUARD_FALSE",
+      "historicalFalseAcquire": true
+    },
+    {
+      "id": "W-KD-G08",
+      "expected": "GUARD_FALSE",
+      "historicalFalseAcquire": true
+    },
+    {
+      "id": "W-KD-G09",
+      "expected": "PREPARATION_ERROR",
+      "historicalFalseAcquire": false
+    },
+    {
+      "id": "W-KD-G10",
+      "expected": "PREPARATION_ERROR",
+      "historicalFalseAcquire": false
+    },
+    {
+      "id": "W-KD-G11",
+      "expected": "GUARD_TRUE",
+      "historicalFalseAcquire": false
+    },
+    {
+      "id": "W-KD-G12",
+      "expected": "GUARD_TRUE",
+      "historicalFalseAcquire": false
+    },
+    {
+      "id": "W-KD-G13",
+      "expected": "GUARD_TRUE",
+      "historicalFalseAcquire": false
+    },
+    {
+      "id": "W-KD-G14",
+      "expected": "GUARD_FALSE",
+      "historicalFalseAcquire": false
+    },
+    {
+      "id": "W-KD-G15",
+      "expected": "GUARD_FALSE",
+      "historicalFalseAcquire": false
+    },
+    {
+      "id": "W-KD-G16",
+      "expected": "GUARD_TRUE",
+      "historicalFalseAcquire": false
+    },
+    {
+      "id": "W-KD-G17",
+      "expected": "GUARD_TRUE",
+      "historicalFalseAcquire": false
+    },
+    {
+      "id": "W-KD-G18",
+      "expected": "GUARD_FALSE",
+      "historicalFalseAcquire": false
+    },
+    {
+      "id": "W-KD-G19",
+      "expected": "GUARD_FALSE",
+      "historicalFalseAcquire": true
+    }
+  ],
+  "expectedSummary": {
+    "total": 19,
+    "guardTrue": 5,
+    "guardFalse": 11,
+    "preparationError": 3,
+    "oldFalseAcquire": 5,
+    "newFalseAcquire": 0
+  },
+  "scope": {
+    "raw": "finite numeric ordered comparison; zero, negative and fractional true where <= bound; no effect intent",
+    "composed": "T01 grammar and typed guard; pure intent only",
+    "excluded": [
+      "full central acquire admission",
+      "complete kernel JSON domain equivalence",
+      "deployed Host",
+      "professional Oracle",
+      "qualified Solution",
+      "positive Replay",
+      "Effect",
+      "Release"
+    ],
+    "authority": "NONE",
+    "qualified": false
+  }
+}
