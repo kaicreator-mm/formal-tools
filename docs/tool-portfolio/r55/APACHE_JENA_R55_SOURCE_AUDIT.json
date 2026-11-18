@@ -142,9 +142,9 @@
   "proposed_fixes": {
     "builder_blob": "02afc9c66a74f4d11fa46f92c6e0165dd598d954",
     "expect_blob": "efc961e667e8272bf2bcf5d61ddd5add35900502",
-    "source_test_blob": "46a3b459fcd9dae0bc8aea4e8e13b8d396a68347",
+    "source_test_blob": "690eb793117075918c7f3c71b2b6849893f28223",
     "fixture_test_blob": "5ad621457c24791b193119d0cd69c139e1beb86d",
-    "local_tests": "8/8 PASS (Node v22.16.0)",
+    "local_tests": "15/15 PASS focused apache-jena pair (source-pin 11/11 + fixture-contract 4/4, Node v24.21.0); full suite and typecheck are CI-authoritative",
     "shell_syntax": "bash -n PASS",
     "shim_replay": "PASS_SCOPED writer-side reconstructed generated-shim replay; bundled Java21 selected with host java shadowed",
     "neg_fixture_blob": "0f90187e40638af0f504b77ee5aad6ead04740e8",
@@ -162,12 +162,13 @@
     }
   },
   "current_main": {
-    "runner_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "runner_blob": "40427c1e541f294d71d803b0225984175708391e",
     "meta_generator_blob": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
     "current_package_meta": "TOOL_TOOL_ID=apache-jena",
     "runner_requires": "TOOL_ID",
-    "snapshot_commit": "721c1f5854e697db4534958de0bd21ee70bca108",
-    "builder_blob": "c19e50c54f0b7922fd8b152a13d11118efa0e6d3"
+    "snapshot_commit": "c2a2f1ccfd61ccb621daa483ac4ef21398d7a26c",
+    "builder_blob": "c19e50c54f0b7922fd8b152a13d11118efa0e6d3",
+    "runner_blob_drift_note": "Runner Blob changed 102e971481a3e213fdb41fa45230b1dd3beaf2bd -> 40427c1e541f294d71d803b0225984175708391e (+183/-13, fail-closed ELF static dependency gate, #86). The drift is on shared Runner paths, not on any Jena-owned path; the semantic boundary is that current-main Runner is stricter on ELF dependency probing. T4 remains NOT_ACCEPTED and no Runner execution is claimed for Jena."
   },
   "qualification": {
     "T0": "PASS_SCOPED_CURRENT_DRIVE_ARCHIVE_HASH_MATCHES_PRODUCER_MANIFEST; official SHA512 sidecar pinned; full T0 pending complete license inventory and publisher-byte rebuild/signature",
@@ -182,13 +183,37 @@
   },
   "findings": {
     "P0": 0,
-    "P1": 1,
-    "P2": 1,
-    "status": "R59_REWORK_P1_01_P2_01_REPAIRED_BY_R80_PENDING_EXACT_HEAD_CI_AND_FRESH_REVIEW",
-    "previous_review": "R59 REWORK P0=0 P1=1 P2=1",
-    "detail": "P1-01 shell-valid readonly/declare/declare -g/typeset/local overrides could alter sourced EXPECT_* and FT_UPSTREAM_* values while static parsers passed. R80 uses fail-closed literal assignment grammars and Bash sourcing regressions. P2-01 current-main snapshot and PR metadata were stale; R80 refreshes them to 3ea64a6 / Push #1577 SUCCESS.",
+    "P1": 0,
+    "P2": 0,
+    "status": "R96_REWORK_P1_CLOSED_BY_R97_EXECUTION_LAYER_PENDING_NEW_EXACT_HEAD_CI_AND_FRESH_OTHER_CONVERSATION_REVIEW",
+    "previous_review": "R96 REWORK P0=0 P1=1 P2=0 (comment 5920861252, exact head 29010fc4); earlier R59 REWORK P0=0 P1=1 P2=1 repaired by R80",
+    "detail": "R96 P1: tests only statically sourced the upstream pins; the deferred ft_tool_build body could use a split prefix/suffix name with printf -v to mutate FT_UPSTREAM_URL and FT_UPSTREAM_SHA512 after the static guard and source-time probe, then reach ft::fetch/ft::extract. R97 closes it with a deferred-function execution layer that invokes the real ft_tool_build under offline ft::fetch/sha512sum/ft::die/ft::extract stubs (zero network, zero install), asserts the exact official fetch->guard->mocked-extract trace, and rejects three split-name printf -v mutants; the nine R95 non-assignment mutants and all prior gates are retained byte-identically. Historical R59 detail: P1-01 shell-valid readonly/declare overrides repaired by R80 fail-closed grammars; P2-01 snapshot refreshed to 3ea64a6 / Push #1577 SUCCESS.",
+    "r96_p1_reference": "https://github.com/kaicreator-mm/formal-tools/pull/131#issuecomment-5920861252",
+    "r97_offline_proof_reference": "https://github.com/kaicreator-mm/formal-tools/issues/131#issuecomment-6991118059",
     "source_repair_commit": "cb855bdec485438628bf44431b990391894eab52",
-    "review_status": "FRESH_NON_WRITER_REVIEW_REQUIRED_ON_R80_EXACT_HEAD"
+    "review_status": "FRESH_OTHER_CONVERSATION_NON_WRITER_REVIEW_REQUIRED_ON_R97_EXACT_HEAD; prior #1824/#1825 SUCCESS cover only the old 29010fc4 SHA"
+  },
+  "r97_repair": {
+    "role": "ORIGINAL_R97_SINGLE_WRITER (claim comment 6920810680); no second Writer claim taken",
+    "p1_summary": "Deferred ft_tool_build body can mutate pins at call time via split prefix/suffix printf -v; static contract and source-time Bash probe are structurally blind to this class.",
+    "fix_scope": "tests/apache-jena-upstream-source-pin.test.mjs ONLY; builder, expect.sh, NEG fixture, fixture-contract test and native evidence bytes unchanged",
+    "fix_contract": "Real builder source is written to a temp file and sourced in child Bash; ft::fetch, sha512sum, ft::die and ft::extract are replaced before invocation; ft::fetch rejects any URL that is not the official 5.5.0 URL before network access; sha512sum records the live pin expectation and emits an independent official digest so the real builder guard compares them; ft::die exits 73; ft::extract records the archive path and exits 74 without installing anything. Positive: the genuine ft_tool_build call reaches exactly FETCH:<official URL>, GUARD_EXPECT:<official SHA512>, EXTRACT:/mock/jena-offline.tgz with exit 74. Negatives: split-name prefix=FT_UPSTREAM_ printf -v mutants for URL, SHA512 and both simultaneously are injected only after ft_tool_build() { and each aborts with exit 73 before unauthorized fetch/extract with exact safe-abort traces; the static contract and source-time probe are asserted to stay blind to these mutants, which is why the execution layer is required.",
+    "retained_mutants": "All nine R95 non-assignment mutants (printf -v, read -r, eval x2, indirect printf -v, indirect eval, declare -n, plus the 12 assignment-shaped controls and readonly Bash regression) retained unchanged",
+    "unchanged_blobs": {
+      "builder_blob": "02afc9c66a74f4d11fa46f92c6e0165dd598d954",
+      "expect_blob": "efc961e667e8272bf2bcf5d61ddd5add35900502",
+      "neg_fixture_blob": "0f90187e40638af0f504b77ee5aad6ead04740e8",
+      "fixture_test_blob": "f059025e0e7ed23d2646852bb29e52ed85025909"
+    },
+    "new_source_test_blob": "690eb793117075918c7f3c71b2b6849893f28223",
+    "local_evidence": {
+      "node": "v24.21.0",
+      "focused_tests": "15/15 PASS (source-pin 11/11, fixture-contract 4/4)",
+      "bash_n": "builder and expect.sh PASS",
+      "typecheck": "npm run typecheck (tsc --noEmit) clean"
+    },
+    "ci_note": "New exact-head Woodpecker Push+PR required; old #1824/#1825 SUCCESS are scoped to 29010fc4 only",
+    "status": "SOURCE_DELIVERED_PENDING_NEW_EXACT_HEAD_CI_AND_FRESH_OTHER_CONVERSATION_REVIEW"
   },
   "limitations": [
     "Official .tar.gz bytes not fetched; the Apache SHA512 sidecar is not a PGP signature verification.",
@@ -258,26 +283,25 @@
   },
   "pr_base_at_review": "8fa74a38e0af0a4fe8db83bd4598c4ea767550c2",
   "current_main_snapshot": {
-    "commit": "319367063177dec22a6df64233fae2a5fceef00f",
-    "push_pipeline": 1749,
+    "commit": "c2a2f1ccfd61ccb621daa483ac4ef21398d7a26c",
+    "push_pipeline": 2112,
     "push_status": "SUCCESS",
     "sync_merge_status": "PR_BRANCH_SYNCED_TO_CURRENT_MAIN_BY_TWO_PARENT_COMMIT; NOT_MERGED; FRESH_REVIEW_REQUIRED",
-    "note": "Current main snapshot refreshed to exact commit 319367063177dec22a6df64233fae2a5fceef00f; main Push #1749 SUCCESS. Since the previous snapshot 721c1f5854e697db4534958de0bd21ee70bca108, main advanced by one commit and two Why3 R27 evidence paths only. Those paths are disjoint from all six Jena-owned paths and all three current-main source pins; no Jena source, build, fixture or native execution was changed or rerun by this delta.",
-    "same_sha_followup_push_pipeline": 1468,
-    "same_sha_followup_push_status": "SUCCESS",
-    "root_cause_1450": "INFRASTRUCTURE; authenticated first-failure triage #6897435249 recorded clone git-fetch TLS unexpected EOF, exit 128.",
+    "note": "Current main snapshot refreshed to exact commit c2a2f1ccfd61ccb621daa483ac4ef21398d7a26c; main Push #2112 SUCCESS (2026-11-19, Souffle #118 guarded integration). Relative to the previous snapshot 319367063177dec22a6df64233fae2a5fceef00f (which is exactly the merge-base of this sync), main advanced by 96 commits over 270 changed paths; none is one of the six Jena-owned paths. The three-way pin equality no longer holds: the current-main Runner Blob changed to 40427c1e541f294d71d803b0225984175708391e (+183/-13, fail-closed ELF static dependency gate, #86) while make_meta.py and the Jena builder are unchanged; the audit records the semantic boundary instead of asserting stale equality. Historical #1450 root cause remains infrastructure TLS clone EOF with same-SHA #1468 SUCCESS.",
     "main_delta_from_previous_snapshot": {
-      "previous_commit": "3ea64a631c2bf0e44b5e286ca96d45b10e742db5",
-      "ahead": 23,
+      "previous_commit": "319367063177dec22a6df64233fae2a5fceef00f",
+      "ahead": 96,
       "behind": 0,
-      "changed_files": 10,
+      "changed_files": 270,
       "overlap_with_jena_paths": false
     },
     "source_pin_verification": {
       "runner_blob": {
         "path": "portable/packaging/bundle-template/bin/tool-runner",
-        "sha256": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
-        "current_main_match": true
+        "sha256": "40427c1e541f294d71d803b0225984175708391e",
+        "changed_from_previous_snapshot": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+        "current_main_match": true,
+        "semantic_note": "Runner doctor/ELF dependency-check implementation changed materially (fail-closed ELF static dependency gate); reviewed as a semantic boundary, not asserted as unchanged"
       },
       "meta_generator_blob": {
         "path": "portable/builders/make_meta.py",
@@ -289,33 +313,7 @@
         "sha256": "c19e50c54f0b7922fd8b152a13d11118efa0e6d3",
         "current_main_match": true
       }
-    },
-    "latest_main_advance": {
-      "previous_commit": "721c1f5854e697db4534958de0bd21ee70bca108",
-      "ahead": 1,
-      "behind": 0,
-      "changed_files": 2,
-      "paths": [
-        "docs/tool-portfolio/r27/WHY3_R27_SCOPED_REPLAY.json",
-        "docs/tool-portfolio/r27/WHY3_R27_VERIFICATION.zip"
-      ],
-      "overlap_with_jena_paths": false,
-      "source_pin_impact": "NONE; Runner/meta-generator/Jena-builder pins remain 3/3 exact"
-    },
-    "history": [
-      {
-        "previous_commit": "591d3914e0e99ec8e1bd3e12887f110d096208ce",
-        "ahead": 1,
-        "behind": 0,
-        "changed_files": 2,
-        "paths": [
-          "portable/verification/cases/robot/expect.sh",
-          "tests/robot-portfolio-contract.test.mjs"
-        ],
-        "overlap_with_jena_paths": false,
-        "source_pin_impact": "NONE; runner/meta-generator/Jena-builder pins unchanged"
-      }
-    ]
+    }
   },
   "environment": {
     "collector_snapshot": {
@@ -378,13 +376,48 @@
     "stderr_sha256_note": "Raw stderr includes a wall-clock timestamp; hash is for the exact captured stderr bytes in this replay."
   },
   "writer_status": {
-    "writer_claim": "R80_REPAIR_COMMITTED_PENDING_EXACT_HEAD_CI_AND_FRESH_REVIEW",
+    "writer_claim": "R97_REPAIR_COMMITTED_PENDING_NEW_EXACT_HEAD_CI_AND_FRESH_OTHER_CONVERSATION_REVIEW",
     "previous_source_repair_commit": "cb855bdec485438628bf44431b990391894eab52",
     "evidence_json_last_updated": true,
-    "exact_head_and_ci": "Exact R80 head and dual CI are tracked in PR #131 metadata; this JSON does not self-reference its own commit or pipeline."
+    "exact_head_and_ci": "Exact R97 head and dual CI are tracked in PR #131 metadata; this JSON does not self-reference its own commit or pipeline."
   },
   "current_pr_base_after_r80_sync": "721c1f5854e697db4534958de0bd21ee70bca108",
+  "current_pr_base_after_r97_sync": "c2a2f1ccfd61ccb621daa483ac4ef21398d7a26c",
   "previous_current_main_snapshots": [
+    {
+      "commit": "319367063177dec22a6df64233fae2a5fceef00f",
+      "push_pipeline": 1749,
+      "push_status": "SUCCESS",
+      "sync_merge_status": "PR_BRANCH_SYNCED_TO_CURRENT_MAIN_BY_TWO_PARENT_COMMIT; NOT_MERGED; FRESH_REVIEW_REQUIRED",
+      "note": "Historical R93 snapshot. Main Push #1749 SUCCESS. Since the previous snapshot 721c1f5854e697db4534958de0bd21ee70bca108, main advanced by one commit and two Why3 R27 evidence paths only. Those paths are disjoint from all six Jena-owned paths and all three current-main source pins; no Jena source, build, fixture or native execution was changed or rerun by this delta. Superseded by the R97 snapshot c2a2f1ccfd61ccb621daa483ac4ef21398d7a26c.",
+      "same_sha_followup_push_pipeline": 1468,
+      "same_sha_followup_push_status": "SUCCESS",
+      "root_cause_1450": "INFRASTRUCTURE; authenticated first-failure triage #6897435249 recorded clone git-fetch TLS unexpected EOF, exit 128.",
+      "main_delta_from_previous_snapshot": {
+        "previous_commit": "3ea64a631c2bf0e44b5e286ca96d45b10e742db5",
+        "ahead": 23,
+        "behind": 0,
+        "changed_files": 10,
+        "overlap_with_jena_paths": false
+      },
+      "source_pin_verification": {
+        "runner_blob": {
+          "path": "portable/packaging/bundle-template/bin/tool-runner",
+          "sha256": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+          "current_main_match": true
+        },
+        "meta_generator_blob": {
+          "path": "portable/builders/make_meta.py",
+          "sha256": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+          "current_main_match": true
+        },
+        "builder_blob": {
+          "path": "portable/builders/tools/apache-jena.sh",
+          "sha256": "c19e50c54f0b7922fd8b152a13d11118efa0e6d3",
+          "current_main_match": true
+        }
+      }
+    },
     {
       "commit": "721c1f5854e697db4534958de0bd21ee70bca108",
       "push_pipeline": 1736,

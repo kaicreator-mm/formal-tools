@@ -84,6 +84,74 @@ function bashSourcePins(source) {
 
 const bashUnavailable = (shell) => Boolean(shell.error && shell.error.code === "ENOENT");
 
+// Deferred-function execution layer: the R96 P1 showed that a mutation whose
+// target name is assembled at runtime (split prefix/suffix + printf -v) hidden
+// inside the deferred ft_tool_build() body evades both the static contract and
+// the source-time Bash probe, because the pins are still official when sourcing
+// completes. The only faithful gate is to source the real builder file and then
+// actually invoke ft_tool_build() in a child Bash. Every upstream capability is
+// replaced with an offline stub before invocation:
+//   ft::fetch   records the URL it is called with and rejects any URL that is
+//               not the official one before any network access (return 72, the
+//               builder then routes to ft::die).
+//   sha512sum   records the live $FT_UPSTREAM_SHA512 expectation and emits an
+//               independent official digest; the real builder guard compares
+//               them, so a mutated pin fails the guard before extraction.
+//   ft::die     records DIE and exits 73.
+//   ft::extract records the archive path and exits 74 without installing
+//               anything, so no find/cp ever reaches host paths even for the
+//               valid builder.
+const MOCK_ARCHIVE = "/mock/jena-offline.tgz";
+const FT_TOOL_BUILD_MARKER = "ft_tool_build() {\n";
+
+const REAL_TOOL_BUILD_HARNESS = `
+trace="$1"; source_file="$2"; official_url="$3"; official_sha512="$4"
+: > "$trace"
+ft::fetch() {
+  printf 'FETCH:%s\\n' "$1" >> "$trace"
+  if [ "$1" != "$official_url" ]; then
+    printf 'FETCH_REJECTED\\n' >> "$trace"
+    return 72
+  fi
+  printf '%s\\n' '${MOCK_ARCHIVE}'
+}
+sha512sum() {
+  printf 'GUARD_EXPECT:%s\\n' "$FT_UPSTREAM_SHA512" >> "$trace"
+  printf '%s\\n' "$official_sha512"
+}
+ft::die() {
+  printf 'DIE\\n' >> "$trace"
+  exit 73
+}
+ft::extract() {
+  printf 'EXTRACT:%s\\n' "$1" >> "$trace"
+  exit 74
+}
+source "$source_file"
+ft_tool_build
+`;
+
+function runRealToolBuild(source) {
+  const directory = mkdtempSync(join(tmpdir(), "apache-jena-tool-build-"));
+  const sourcePath = join(directory, "apache-jena.sh").replaceAll("\\", "/");
+  const tracePath = join(directory, "trace.log").replaceAll("\\", "/");
+  writeFileSync(sourcePath, source, "utf8");
+  writeFileSync(tracePath, "", "utf8");
+  try {
+    const shell = spawnSync(
+      "bash",
+      ["-c", REAL_TOOL_BUILD_HARNESS, "bash", tracePath, sourcePath, OFFICIAL_URL, OFFICIAL_SHA512],
+      { encoding: "utf8" }
+    );
+    const trace = readFileSync(tracePath, "utf8")
+      .split(/\r?\n/)
+      .filter(line => line.length > 0);
+    return { shell, trace };
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+}
+
 const livePins = (shell) => {
   const [url, sha512] = shell.stdout.split(/\r?\n/);
   return { url, sha512 };
@@ -267,4 +335,93 @@ test("Bash source regression: readonly upstream digest override is executable bu
     "readonly override must change the live sourced digest"
   );
   assert.throws(() => assertPinContract(injected, "FT_UPSTREAM_SHA512"));
+});
+
+// The R96 P1 bypass: mutation materialised inside the deferred ft_tool_build()
+// body from a split prefix/suffix variable name. No line of the injected text
+// contains the bare pin name, so the static contract cannot see it, and the
+// pins are still official when sourcing completes, so the source-time Bash
+// probe cannot see it either. Only executing the real deferred function under
+// offline stubs exposes it.
+const SPLIT_NAME_MUTANTS = [
+  {
+    label: "split-name printf -v URL rewrite",
+    body: `local prefix=FT_UPSTREAM_ suffix=URL
+  printf -v "\${prefix}\${suffix}" '%s' '${EVIL_URL}'`,
+    status: 73,
+    trace: [`FETCH:${EVIL_URL}`, "FETCH_REJECTED", "DIE"]
+  },
+  {
+    label: "split-name printf -v SHA512 rewrite",
+    body: `local prefix=FT_UPSTREAM_ suffix=SHA512
+  printf -v "\${prefix}\${suffix}" '%s' '${EVIL_SHA512}'`,
+    status: 73,
+    trace: [`FETCH:${OFFICIAL_URL}`, `GUARD_EXPECT:${EVIL_SHA512}`, "DIE"]
+  },
+  {
+    label: "simultaneous split-name printf -v URL and SHA512 rewrite",
+    body: `local prefix=FT_UPSTREAM_
+  printf -v "\${prefix}URL" '%s' '${EVIL_URL}'
+  printf -v "\${prefix}SHA512" '%s' '${EVIL_SHA512}'`,
+    status: 73,
+    trace: [`FETCH:${EVIL_URL}`, "FETCH_REJECTED", "DIE"]
+  }
+];
+
+const injectIntoToolBuild = (body) =>
+  builder.replace(FT_TOOL_BUILD_MARKER, `${FT_TOOL_BUILD_MARKER}  ${body}\n`);
+
+test("Real ft_tool_build under offline stubs reaches only the official fetch, guard and mocked extract", (t) => {
+  const run = runRealToolBuild(builder);
+  if (bashUnavailable(run.shell)) {
+    t.skip("Bash is unavailable on this host; Debian CI executes this check");
+    return;
+  }
+  assert.equal(run.shell.error, undefined, run.shell.stderr);
+  assert.equal(run.shell.status, 74, `trace: ${run.trace.join(" | ")}`);
+  assert.deepEqual(
+    run.trace,
+    [`FETCH:${OFFICIAL_URL}`, `GUARD_EXPECT:${OFFICIAL_SHA512}`, `EXTRACT:${MOCK_ARCHIVE}`],
+    "the real builder must fetch the official URL, guard with the official digest and stop at the mocked extract"
+  );
+});
+
+test("Real ft_tool_build rejects split-name printf -v pin mutations before unauthorized fetch or extract", (t) => {
+  for (const mutant of SPLIT_NAME_MUTANTS) {
+    const injected = injectIntoToolBuild(mutant.body);
+
+    // Blindness proof: the static contract passes because no bare pin name
+    // occurs, and the source-time probe passes because the pins are still
+    // official at source time. Exactly these two layers passed in R96 while
+    // the deferred body was corrupted.
+    assert.doesNotThrow(
+      () => assertPinContract(injected, "FT_UPSTREAM_URL"),
+      "static contract must stay blind to the split-name mutant (this is why the execution layer exists)"
+    );
+    assert.doesNotThrow(
+      () => assertPinContract(injected, "FT_UPSTREAM_SHA512"),
+      "static contract must stay blind to the split-name mutant (this is why the execution layer exists)"
+    );
+
+    const run = runRealToolBuild(injected);
+    if (bashUnavailable(run.shell)) {
+      t.skip("Bash is unavailable on this host; Debian CI executes this check");
+      return;
+    }
+    assert.equal(run.shell.error, undefined, run.shell.stderr);
+    assert.equal(
+      run.shell.status,
+      mutant.status,
+      `${mutant.label} must abort via ft::die before extraction; trace: ${run.trace.join(" | ")}`
+    );
+    assert.deepEqual(
+      run.trace,
+      mutant.trace,
+      `${mutant.label} trace must show the safe abort with no EXTRACT`
+    );
+    assert.ok(
+      !run.trace.some(line => line.startsWith("EXTRACT:")),
+      `${mutant.label} must never reach extraction`
+    );
+  }
 });
