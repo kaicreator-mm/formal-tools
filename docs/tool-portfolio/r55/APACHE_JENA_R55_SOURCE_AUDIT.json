@@ -1,0 +1,435 @@
+{
+  "schema": "formal-tools/i24-apache-jena-r55-source-native-replay/1.1",
+  "output_label": "FORMAL_TOOLS_I24_APACHE_JENA_R55_SOURCE_NATIVE_REPLAY",
+  "repository": "kaicreator-mm/formal-tools",
+  "main_issue": 24,
+  "tool_issue": 27,
+  "source_archive": {
+    "drive_file_id": "1YSoQtIQmRExE5x-QjB8Ifno9Xmrk28NZ",
+    "size_bytes": 22751175,
+    "sha256": "6cf2dff4e97a946534428c679af7da4c80e832a0e496f3f6306114118a432855",
+    "manifest_sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64",
+    "manifest_match": true,
+    "modified_time": "2026-11-12T07:48:13.358Z"
+  },
+  "upstream_release": {
+    "url": "https://archive.apache.org/dist/jena/binaries/apache-jena-5.5.0.tar.gz",
+    "sha512": "f9ae68a748e642c6a8175ee25afdfa37ce057ed37e7caf279a8a46ad93284bea808cf14d96bf30b6e4e6a4ddaf30cf5ee9d441f48a9a3d3c9e647a9b71645e0c",
+    "sidecar": "https://archive.apache.org/dist/jena/binaries/apache-jena-5.5.0.tar.gz.sha512",
+    "signature_verified": false,
+    "asset_bytes_fetched": false
+  },
+  "historical_build_receipt": {
+    "blob": "8dd68b337f5f898c5188c7833fad2ec2998b0720",
+    "build_ts": "2026-11-10T22:26:52Z",
+    "package_sha256": "12e882fb3892b83421501b503970daf43fad9a2c2011fa5cb9afeb649695c690",
+    "upstream": null,
+    "disposition": "stale/historical; predates current Drive archive modification"
+  },
+  "evidence_bundle": {
+    "drive_file_id": "1HZkOHWoa_z5Tu-nRPOQFjcljeNtgA-2u",
+    "url": "https://drive.google.com/file/d/1HZkOHWoa_z5Tu-nRPOQFjcljeNtgA-2u/view?usp=drivesdk",
+    "size_bytes": 1589011,
+    "sha256": "6b6a49937874efc19651883d681f965ef6bedcc3c0fdbc761c24b0b9c8fd1ec2",
+    "zip_entries": 45,
+    "sha256sum_entries": 43,
+    "drive_readback_verified": true,
+    "legacy_native_sha256_manifest": {
+      "path": "native/SHA256SUMS",
+      "portability": "NON_PORTABLE_ABSOLUTE_WORKSPACE_PATHS",
+      "disposition": "Preserved byte-for-byte as historical receipt evidence; do not use as a relocatable sha256sum -c manifest."
+    },
+    "portable_native_sha256_manifest": {
+      "schema": "formal-tools/portable-sha256-manifest/1.0",
+      "entries": [
+        {
+          "path": "native/err.stdout",
+          "size_bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "native/neg.stdout",
+          "size_bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "native/pos.stdout",
+          "size_bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "native/err.stderr",
+          "size_bytes": 738,
+          "sha256": "753bd342a4d5b84299945e85691bd1e60cae7ed26ef04d0521ed3ad294d49500"
+        },
+        {
+          "path": "native/neg.stderr",
+          "size_bytes": 76,
+          "sha256": "864c1be44b64d8413d7d294252684106aff07f8750a5f44f631675e97b0884f6"
+        },
+        {
+          "path": "native/pos.stderr",
+          "size_bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "native/err.exit",
+          "size_bytes": 2,
+          "sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+        },
+        {
+          "path": "native/neg.exit",
+          "size_bytes": 2,
+          "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+        },
+        {
+          "path": "native/pos.exit",
+          "size_bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        }
+      ],
+      "canonical_entries_sha256": "a51e2bf89560b7edfb5d2fa745715a5a8e138692343da710b9807acf09c78a3c",
+      "path_semantics": "Paths are relative to the root of the evidence ZIP and can be verified after extraction at any location.",
+      "source": "Recomputed from the 9 native payload files in the exact immutable evidence ZIP; each digest matches the outer root SHA256SUMS."
+    }
+  },
+  "archive_safety": {
+    "zstd_test": 0,
+    "decompress": 0,
+    "tar_listing": 0,
+    "member_count": 304,
+    "regular_files": 254,
+    "directories": 50,
+    "symlinks": 0,
+    "hardlinks": 0,
+    "special_files": 0,
+    "unsafe_paths": 0,
+    "extracted_entries": 305,
+    "writer_reported_nonroot_extract_exit": 0,
+    "writer_reported_all_entries_owned_by_65534": true,
+    "independent_reviewer_replay": {
+      "uid_gid": "65534:65534",
+      "extracted_entries": 305,
+      "all_entries_owned_by_65534": true,
+      "result": "PASS_SCOPED",
+      "reference": "PR #131 review comment 5911529316"
+    }
+  },
+  "native": {
+    "route": "Direct original Apache Jena 5.5.0 RIOT CLI; POS/ERR from immutable R55 receipt and NEG from supplemental R58 replay; not current-main Runner/CLI/MCP/SDK",
+    "uid_gid": "65534:65534",
+    "version": "5.5.0",
+    "cases": {
+      "pos": {
+        "exit": 0,
+        "stderr": "",
+        "provenance": "immutable R55 evidence ZIP; independently reproduced by R58 reviewer"
+      },
+      "neg": {
+        "exit": 1,
+        "diagnostic": "Triples not terminated properly in []-list",
+        "stderr_sha256": "723f247a502b22c5d290e7c175554b0c3f3bbfc186f7209af88d2d75ec7fd3ed",
+        "fixture_blob": "0f90187e40638af0f504b77ee5aad6ead04740e8",
+        "provenance": "R58 post-review direct native replay as UID/GID 65534:65534"
+      },
+      "err": {
+        "exit": 2,
+        "stderr": "Not found: does-not-exist.ttl",
+        "provenance": "immutable R55 evidence ZIP; independently reproduced by R58 reviewer"
+      }
+    }
+  },
+  "proposed_fixes": {
+    "builder_blob": "02afc9c66a74f4d11fa46f92c6e0165dd598d954",
+    "expect_blob": "efc961e667e8272bf2bcf5d61ddd5add35900502",
+    "source_test_blob": "46a3b459fcd9dae0bc8aea4e8e13b8d396a68347",
+    "fixture_test_blob": "5ad621457c24791b193119d0cd69c139e1beb86d",
+    "local_tests": "8/8 PASS (Node v22.16.0)",
+    "shell_syntax": "bash -n PASS",
+    "shim_replay": "PASS_SCOPED writer-side reconstructed generated-shim replay; bundled Java21 selected with host java shadowed",
+    "neg_fixture_blob": "0f90187e40638af0f504b77ee5aad6ead04740e8",
+    "review_findings": {
+      "P2-01": "FIXED: uniqueness parser trims leading whitespace and normalizes optional export before counting assignments; tests reject duplicate, leading-space, tab-indented and export overrides.",
+      "P2-02": "FIXED: environment.txt is explicitly labelled collector UID/GID 0:0 only; writer-reported operation identity is separated from independently reviewer-replayed UID/GID 65534:65534.",
+      "P2-03": "FIXED: original absolute-path nested manifest is preserved and labelled non-portable; a 9-entry relative-path SHA256 manifest is embedded and its canonical hash is pinned.",
+      "P2-04": "FIXED: ambiguous exact_main removed; historical evidence baseline, PR base and latest main snapshot/#1450 status are separate fields.",
+      "P2-05": "FIXED: NEG fixture now declares rdfs prefix and reaches the intended malformed []-list syntax error; direct native replay as UID/GID 65534 returned exit 1 with exact diagnostic."
+    },
+    "status": "ALL_FIVE_R58_REVIEW_FINDINGS_REPAIRED; EXACT_HEAD_CI_RESULTS_TRACKED_IN_PR_BODY; FRESH_NON_WRITER_REVIEW_REQUIRED",
+    "r59_review_findings": {
+      "P1_01": "Both prior parsers trimmed lines and stripped optional export, but ignored shell-valid readonly, declare, declare -g, typeset and local assignment builtins. Bash sourcing proved readonly EXPECT_NEG_EXIT=77 changes the live value. R80 now accepts only one plain static assignment per allowlisted key and rejects all other executable forms.",
+      "P2_01": "current_main_snapshot/PR body referred to 250d20/a82b16 and an unclassified #1450 failure. R80 refreshes the snapshot to current main 3ea64a6 / Push #1577 SUCCESS, records #1450 as authenticated infrastructure TLS EOF with same-SHA retry #1468 SUCCESS, and synchronizes the PR branch."
+    }
+  },
+  "current_main": {
+    "runner_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "meta_generator_blob": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+    "current_package_meta": "TOOL_TOOL_ID=apache-jena",
+    "runner_requires": "TOOL_ID",
+    "snapshot_commit": "721c1f5854e697db4534958de0bd21ee70bca108",
+    "builder_blob": "c19e50c54f0b7922fd8b152a13d11118efa0e6d3"
+  },
+  "qualification": {
+    "T0": "PASS_SCOPED_CURRENT_DRIVE_ARCHIVE_HASH_MATCHES_PRODUCER_MANIFEST; official SHA512 sidecar pinned; full T0 pending complete license inventory and publisher-byte rebuild/signature",
+    "T1": "NOT_QUALIFIED; no upstream asset bytes/build",
+    "T2": "PASS_SCOPED_ZSTD_TAR_PREFLIGHT_AND_NONROOT_EXTRACTION; independent reviewer verified UID/GID 65534:65534 extraction",
+    "T3": "PASS_SCOPED_DIRECT_NATIVE_POS_NEG_ERR; original evidence retained, corrected malformed-syntax NEG independently replayed as UID/GID 65534:65534; not current Runner/CLI/MCP/SDK",
+    "T4": "NOT_ACCEPTED; current package meta.sh uses TOOL_TOOL_ID and current Runner requires TOOL_ID; no current Runner/CLI/MCP/SDK run",
+    "T5": "NOT_QUALIFIED",
+    "T6": "OPEN",
+    "Product": "NOT_QUALIFIED",
+    "Release": "NOT_AUTHORIZED"
+  },
+  "findings": {
+    "P0": 0,
+    "P1": 1,
+    "P2": 1,
+    "status": "R59_REWORK_P1_01_P2_01_REPAIRED_BY_R80_PENDING_EXACT_HEAD_CI_AND_FRESH_REVIEW",
+    "previous_review": "R59 REWORK P0=0 P1=1 P2=1",
+    "detail": "P1-01 shell-valid readonly/declare/declare -g/typeset/local overrides could alter sourced EXPECT_* and FT_UPSTREAM_* values while static parsers passed. R80 uses fail-closed literal assignment grammars and Bash sourcing regressions. P2-01 current-main snapshot and PR metadata were stale; R80 refreshes them to 3ea64a6 / Push #1577 SUCCESS.",
+    "source_repair_commit": "cb855bdec485438628bf44431b990391894eab52",
+    "review_status": "FRESH_NON_WRITER_REVIEW_REQUIRED_ON_R80_EXACT_HEAD"
+  },
+  "limitations": [
+    "Official .tar.gz bytes not fetched; the Apache SHA512 sidecar is not a PGP signature verification.",
+    "No T1 source build or current Runner/CLI/MCP/SDK route.",
+    "The evidence ZIP environment.txt is a root collector-context snapshot, not an execution identity; non-root operation identity is independently replayed and separately recorded.",
+    "The nested native/SHA256SUMS retains absolute workspace paths; the supplemental portable relative-path manifest is the relocatable verification source.",
+    "Historical R80 snapshot only: main 3ea64a631c2bf0e44b5e286ca96d45b10e742db5 had Push #1577 SUCCESS; it is not current main. The active main snapshot and later disjoint deltas are recorded under current_main_snapshot. Historical #1450 remains classified as infrastructure TLS clone EOF (exit 128) and same-SHA #1468 succeeded.",
+    "Full third-party license inventory and T5/T6/Product/Release remain open."
+  ],
+  "bundled_java_shim_replay": {
+    "status": "PASS_SCOPED_WRITER_SIDE_REPLAY",
+    "route": "Reconstructed generated tools/apache-jena/run shim executed directly; not tool-runner run and not full T4",
+    "execution_uid_gid": "65534:65534",
+    "host": "Debian GNU/Linux 13 x86_64; Linux 6.18; Node 22.16.0",
+    "bundled_java_runtime": {
+      "filename": "java21-21.0.13.9-linux-x86_64.tar.zst",
+      "size_bytes": 32262489,
+      "sha256": "7e9b1bfdc120d17a4af2eb2baaf4b3772b2c7a2114248ed1a5967af89c5387ca",
+      "shared_manifest_file_id": "1wdSCQAJ6eW_J7szGNeYTnkmRHxtWusI1",
+      "shared_manifest_sha256": "671bd9891a35d1e572f024f7587a50ce171f7cab5dbd2cb9a3acf00bc4da9f64",
+      "manifest_match": true
+    },
+    "system_java_shadowed": true,
+    "incoming_path": "/tmp/jena-nojava-bin:/usr/bin:/bin (fake java stub precedes system java)",
+    "initial_java_home": "UNSET",
+    "shim_exports": [
+      "JAVA_HOME=$FT_ROOT/runtimes/java21",
+      "PATH=$JAVA_HOME/bin:$TOOL_DIR/bin:$PATH",
+      "JENA_HOME=$TOOL_DIR"
+    ],
+    "cases": {
+      "version": {
+        "exit": 0,
+        "stdout": "Apache Jena RIOT version 5.5.0\n",
+        "stderr": "",
+        "stdout_sha256": "09a3f7ac4842cf5be527ca5b315b82bdc896444f570c92bbdab7d8a6b1e333fc",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "pos": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "neg": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "15:07:55 ERROR riot            :: [line: 3, col: 5 ] Undefined prefix: rdfs\n",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "4bbc94b41d0c93af0c5349c20e88b974c52f4ba54540e76a3441482a6322f72e"
+      },
+      "err": {
+        "exit": 2,
+        "stdout": "",
+        "stderr": "15:07:56 ERROR riot            :: Not found: file:///mnt/data/jena-r57-bundle/tests/apache-jena/does-not-exist.ttl\norg.apache.jena.riot.RiotException: Not found: file:///mnt/data/jena-r57-bundle/tests/apache-jena/does-not-exist.ttl\n\tat riotcmd.ErrorHandlerCLI.error(ErrorHandlerCLI.java:65)\n\tat riotcmd.CmdLangParse.parseRIOT(CmdLangParse.java:399)\n\tat riotcmd.CmdLangParse.parseFile(CmdLangParse.java:337)\n\tat riotcmd.CmdLangParse.exec$(CmdLangParse.java:234)\n\tat riotcmd.CmdLangParse.exec(CmdLangParse.java:174)\n\tat org.apache.jena.cmd.CmdMain.mainMethod(CmdMain.java:86)\n\tat org.apache.jena.cmd.CmdMain.mainRun(CmdMain.java:55)\n\tat org.apache.jena.cmd.CmdMain.mainRun(CmdMain.java:43)\n\tat riotcmd.riot.main(riot.java:29)\n",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "2cd02db5150c2a90668f49e425f6fa355fd0239df51d6731e461cd788855d6bb"
+      }
+    },
+    "interpretation": "The shim-selected bundled Java 21 runtime is usable when host java is shadowed by a failing stub; version and native POS/NEG/ERR outcomes are correct. This validates the Java environment setup in the generated shim only. Current tool-runner run, metadata, CLI/MCP/SDK integration remain untested and T4 is not granted."
+  },
+  "historical_evidence_baseline": {
+    "commit": "d996d168812f51d131b3f3f9c525cc1bd161d087",
+    "role": "ORIGINAL_R55_EVIDENCE_SOURCE_SNAPSHOT",
+    "note": "Historical source snapshot used by original R55 evidence; not the PR base and not the latest main."
+  },
+  "pr_base_at_review": "8fa74a38e0af0a4fe8db83bd4598c4ea767550c2",
+  "current_main_snapshot": {
+    "commit": "319367063177dec22a6df64233fae2a5fceef00f",
+    "push_pipeline": 1749,
+    "push_status": "SUCCESS",
+    "sync_merge_status": "PR_BRANCH_SYNCED_TO_CURRENT_MAIN_BY_TWO_PARENT_COMMIT; NOT_MERGED; FRESH_REVIEW_REQUIRED",
+    "note": "Current main snapshot refreshed to exact commit 319367063177dec22a6df64233fae2a5fceef00f; main Push #1749 SUCCESS. Since the previous snapshot 721c1f5854e697db4534958de0bd21ee70bca108, main advanced by one commit and two Why3 R27 evidence paths only. Those paths are disjoint from all six Jena-owned paths and all three current-main source pins; no Jena source, build, fixture or native execution was changed or rerun by this delta.",
+    "same_sha_followup_push_pipeline": 1468,
+    "same_sha_followup_push_status": "SUCCESS",
+    "root_cause_1450": "INFRASTRUCTURE; authenticated first-failure triage #6897435249 recorded clone git-fetch TLS unexpected EOF, exit 128.",
+    "main_delta_from_previous_snapshot": {
+      "previous_commit": "3ea64a631c2bf0e44b5e286ca96d45b10e742db5",
+      "ahead": 23,
+      "behind": 0,
+      "changed_files": 10,
+      "overlap_with_jena_paths": false
+    },
+    "source_pin_verification": {
+      "runner_blob": {
+        "path": "portable/packaging/bundle-template/bin/tool-runner",
+        "sha256": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+        "current_main_match": true
+      },
+      "meta_generator_blob": {
+        "path": "portable/builders/make_meta.py",
+        "sha256": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+        "current_main_match": true
+      },
+      "builder_blob": {
+        "path": "portable/builders/tools/apache-jena.sh",
+        "sha256": "c19e50c54f0b7922fd8b152a13d11118efa0e6d3",
+        "current_main_match": true
+      }
+    },
+    "latest_main_advance": {
+      "previous_commit": "721c1f5854e697db4534958de0bd21ee70bca108",
+      "ahead": 1,
+      "behind": 0,
+      "changed_files": 2,
+      "paths": [
+        "docs/tool-portfolio/r27/WHY3_R27_SCOPED_REPLAY.json",
+        "docs/tool-portfolio/r27/WHY3_R27_VERIFICATION.zip"
+      ],
+      "overlap_with_jena_paths": false,
+      "source_pin_impact": "NONE; Runner/meta-generator/Jena-builder pins remain 3/3 exact"
+    },
+    "history": [
+      {
+        "previous_commit": "591d3914e0e99ec8e1bd3e12887f110d096208ce",
+        "ahead": 1,
+        "behind": 0,
+        "changed_files": 2,
+        "paths": [
+          "portable/verification/cases/robot/expect.sh",
+          "tests/robot-portfolio-contract.test.mjs"
+        ],
+        "overlap_with_jena_paths": false,
+        "source_pin_impact": "NONE; runner/meta-generator/Jena-builder pins unchanged"
+      }
+    ]
+  },
+  "environment": {
+    "collector_snapshot": {
+      "file": "environment.txt",
+      "uid_gid": "0:0",
+      "role": "COLLECTOR_CONTEXT_ONLY",
+      "execution_identity": false,
+      "note": "The ZIP environment.txt records the process that collected the evidence bundle; it does not prove the UID/GID used for extraction or native execution."
+    },
+    "original_writer_reported_operations": {
+      "extraction_uid_gid": "65534:65534",
+      "execution_uid_gid": "65534:65534",
+      "provenance": "Writer receipt claim; not derivable from environment.txt alone."
+    },
+    "independent_reviewer_replay": {
+      "uid_gid": "65534:65534",
+      "extraction_uid_gid": "65534:65534",
+      "native_execution_uid_gid": "65534:65534",
+      "result": "PASS_SCOPED",
+      "reference": "PR #131 review comment 5911529316"
+    }
+  },
+  "historical_native_execution": {
+    "riot_version": "5.5.0",
+    "uid_gid": "65534:65534",
+    "pos": {
+      "exit": 0,
+      "stderr": ""
+    },
+    "neg": {
+      "exit": 1,
+      "stderr": "Undefined prefix: rdfs"
+    },
+    "err": {
+      "exit": 2,
+      "stderr": "Not found: does-not-exist.ttl"
+    },
+    "disposition": "Original immutable ZIP receipt retained unchanged. Its NEG parse error was caused by the missing rdfs prefix and is superseded as the intended malformed-syntax control by post_review_negative_replay."
+  },
+  "fixtures": {
+    "neg_blob": "0f90187e40638af0f504b77ee5aad6ead04740e8",
+    "neg_expected_diagnostic": "Triples not terminated properly in []-list",
+    "neg_expected_diagnostic_status": "REPRODUCED_AFTER_DECLARING_RDFS_PREFIX",
+    "neg_historical_diagnostic": "Undefined prefix: rdfs",
+    "neg_historical_disposition": "Original ZIP replay is retained unchanged; corrected fixture replay supersedes its generic parse failure as the intended malformed-syntax control."
+  },
+  "post_review_negative_replay": {
+    "status": "PASS_SCOPED",
+    "route": "Direct original Apache Jena 5.5.0 RIOT CLI; not current Runner/CLI/MCP/SDK",
+    "source_archive_sha256": "6cf2dff4e97a946534428c679af7da4c80e832a0e496f3f6306114118a432855",
+    "fixture_blob": "0f90187e40638af0f504b77ee5aad6ead04740e8",
+    "uid_gid": "65534:65534",
+    "uid_probe_stdout": "65534\n65534\n",
+    "uid_probe_stdout_sha256": "00c30f68d8a92fb7b770ac1f22074f731bf70ba0b6b9cb4679e3225c362f727f",
+    "java": "OpenJDK 21.0.12.1 host runtime",
+    "command": "riot --validate tests/apache-jena/neg.ttl",
+    "exit": 1,
+    "stderr_excerpt": "[line: 4, col: 18] Triples not terminated properly in []-list",
+    "stderr_sha256": "723f247a502b22c5d290e7c175554b0c3f3bbfc186f7209af88d2d75ec7fd3ed",
+    "stderr_sha256_note": "Raw stderr includes a wall-clock timestamp; hash is for the exact captured stderr bytes in this replay."
+  },
+  "writer_status": {
+    "writer_claim": "R80_REPAIR_COMMITTED_PENDING_EXACT_HEAD_CI_AND_FRESH_REVIEW",
+    "previous_source_repair_commit": "cb855bdec485438628bf44431b990391894eab52",
+    "evidence_json_last_updated": true,
+    "exact_head_and_ci": "Exact R80 head and dual CI are tracked in PR #131 metadata; this JSON does not self-reference its own commit or pipeline."
+  },
+  "current_pr_base_after_r80_sync": "721c1f5854e697db4534958de0bd21ee70bca108",
+  "previous_current_main_snapshots": [
+    {
+      "commit": "721c1f5854e697db4534958de0bd21ee70bca108",
+      "push_pipeline": 1736,
+      "push_status": "SUCCESS",
+      "sync_merge_status": "PR_BRANCH_SYNCED_TO_CURRENT_MAIN_BY_TWO_PARENT_COMMIT; NOT_MERGED; FRESH_REVIEW_REQUIRED",
+      "note": "Current main snapshot refreshed to exact commit 721c1f5854e697db4534958de0bd21ee70bca108; main Push #1736 SUCCESS. The one-commit/two-file delta from previous snapshot 591d3914... modifies only Robot fixture/test paths and is disjoint from all six Jena-owned paths. Runner, meta-generator and Jena builder source pins were independently re-fetched at 591d391 and remain 3/3 exact because the later delta is path-disjoint. Historical R55/R58 native evidence and execution identities remain immutable; the PR remains unmerged pending new exact-head CI and fresh independent review.",
+      "same_sha_followup_push_pipeline": 1468,
+      "same_sha_followup_push_status": "SUCCESS",
+      "root_cause_1450": "INFRASTRUCTURE; authenticated first-failure triage #6897435249 recorded clone git-fetch TLS unexpected EOF, exit 128.",
+      "main_delta_from_previous_snapshot": {
+        "previous_commit": "3ea64a631c2bf0e44b5e286ca96d45b10e742db5",
+        "ahead": 21,
+        "behind": 0,
+        "changed_files": 8,
+        "overlap_with_jena_paths": false
+      },
+      "source_pin_verification": {
+        "runner_blob": {
+          "path": "portable/packaging/bundle-template/bin/tool-runner",
+          "sha256": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+          "current_main_match": true
+        },
+        "meta_generator_blob": {
+          "path": "portable/builders/make_meta.py",
+          "sha256": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+          "current_main_match": true
+        },
+        "builder_blob": {
+          "path": "portable/builders/tools/apache-jena.sh",
+          "sha256": "c19e50c54f0b7922fd8b152a13d11118efa0e6d3",
+          "current_main_match": true
+        }
+      },
+      "latest_main_advance": {
+        "previous_commit": "591d3914e0e99ec8e1bd3e12887f110d096208ce",
+        "ahead": 1,
+        "behind": 0,
+        "changed_files": 2,
+        "paths": [
+          "portable/verification/cases/robot/expect.sh",
+          "tests/robot-portfolio-contract.test.mjs"
+        ],
+        "overlap_with_jena_paths": false,
+        "source_pin_impact": "NONE; runner/meta-generator/Jena-builder pins unchanged"
+      }
+    }
+  ]
+}
