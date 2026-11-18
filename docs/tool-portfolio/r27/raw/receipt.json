@@ -1,0 +1,72 @@
+{
+  "schema": "formal-tools/souffle-r27-native-replay/0.1",
+  "tool": "souffle",
+  "version": "2.5",
+  "source_archive": {
+    "drive_file_id": "1f2doUFxpGxHALhoZ2vrm5O6WLr6bjPOj",
+    "size_bytes": 4755814,
+    "sha256": "e3b04c0491998c51c69172d2f2fec6c1896c74a1aaab3750e56e831935648e71",
+    "zstd_integrity": "PASS",
+    "tar_members": 17,
+    "regular_files": 14,
+    "directories": 3,
+    "symlinks": 0,
+    "special_entries": 0,
+    "unsafe_paths": 0
+  },
+  "environment": {
+    "os": "Debian GNU/Linux 13 (trixie)",
+    "architecture": "x86_64",
+    "execution_uid": 65534,
+    "execution_gid": 65534,
+    "node": "v22.16.0",
+    "python": "3.13.5",
+    "network_isolation": "NOT_CLAIMED"
+  },
+  "fixture_git_blobs": {
+    "pos_dl": "cca8867dac602f5b567cccf7e28b3218f51d4704",
+    "badtypes_dl": "57b2891fce98786a3e3e9677730896de7275ee7a",
+    "alternate_neg_dl": "a905fd35fe4aff2a681f62b764a16d1047c81ea8"
+  },
+  "commands": {
+    "version": "tools/souffle/run --version",
+    "pos": "tools/souffle/run tests/souffle/pos.dl",
+    "neg": "tools/souffle/run tests/souffle/badtypes.dl",
+    "err": "tools/souffle/run tests/souffle/does-not-exist.dl"
+  },
+  "cases": {
+    "version": {
+      "exit": 0,
+      "stdout": "version.stdout",
+      "stderr": "version.stderr",
+      "stdout_sha256": "189a327e08c521cd3d22fee1ab6c908eca5953a78b210ee541c15465cb2522b2"
+    },
+    "pos": {
+      "exit": 0,
+      "stdout": "pos.stdout",
+      "stderr": "pos.stderr",
+      "stdout_sha256": "dfbb05a2e730e655e68047a485e44af98f297193d86bc1dff4a705a93b46cc28",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "verdict": "DERIVED",
+      "assertion": "CSV row 1,3 is present"
+    },
+    "neg": {
+      "exit": 1,
+      "stdout": "neg.stdout",
+      "stderr": "neg.stderr",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ae31f698870f7e794c80747b32ec1f98c3254311902dc83ebbb1491ebcaab124",
+      "verdict": "INVALID_REJECTED",
+      "assertion": "undefined relation path in badtypes.dl at line 4"
+    },
+    "err": {
+      "exit": 1,
+      "stdout": "err.stdout",
+      "stderr": "err.stderr",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "39995500186e59d4e2a707d96200d5ec14c24c62d710aba956943f5cb16185f9",
+      "verdict": "MISSING_INPUT_REJECTED"
+    }
+  },
+  "scope": "direct original package run-shim replay only; no portable Runner verify TSV, native CLI/SDK, or MCP runtime execution; no T3/T4/T5/T6/Product/Release promotion"
+}
