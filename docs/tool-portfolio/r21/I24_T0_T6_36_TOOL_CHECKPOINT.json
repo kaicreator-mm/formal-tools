@@ -1,0 +1,1992 @@
+{
+  "schema": "formal-tools/i24-t0-t6-36-tool-checkpoint/1.0",
+  "output_label": "FORMAL_TOOLS_I24_TOOL_INTEGRATION_CONTINUE",
+  "date": "2026-11-19",
+  "authority": {
+    "portfolio_issue": 24,
+    "product_issue": 11,
+    "legacy_runtime_issue": 4,
+    "issue_numbers": "25-60",
+    "do_not_reopen": [
+      7,
+      14
+    ]
+  },
+  "base_main_sha": "f46f2545a3ae10dbefe93edd1f2a2efa3ab275dc",
+  "historical": {
+    "source_pr22": {
+      "pr": 22,
+      "merged": true,
+      "exact_head": "8aa994718895bcf49988981b41d391f624075602",
+      "merged_commit": "eff58e166de2b9ae71470f0ea35da92ce493c19d",
+      "user_expected_head": "15aad39c23a6218c4adc0e07e5891e893f9b1d03",
+      "disposition": "HISTORICAL_EXPECTED_HEAD_NOT_CURRENT"
+    },
+    "t4_gateway_pr69": {
+      "pr": 69,
+      "merged": true,
+      "merge_commit": "12032f1d5a759dca5a1b24eedbefae2dfe01d3e0"
+    },
+    "t0_t2_snapshot": {
+      "source": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+      "snapshot_date": "2026-11-12",
+      "t0": {
+        "archive_sha_matches_publisher_manifest_only": 20,
+        "not_qualified": 16,
+        "qualification_limit": "SHA match is not publisher attestation, rights clearance or independent source acceptance"
+      },
+      "t1": {
+        "independently_reproducible_build_qualified": 0,
+        "not_qualified_independent_build": 36
+      },
+      "t2": {
+        "pass_scoped_r3": 16,
+        "not_qualified": 20
+      },
+      "r21_delta": "No new independent T1 build or T2 install qualification is claimed in this R21 increment."
+    }
+  },
+  "this_increment": {
+    "why3_host_safety": {
+      "pr": 92,
+      "exact_head": "62e4a70d4078fd8a237a433a328cbdbc26a5344a",
+      "merge_commit": "d6a031f808e8c5297ada36e69a7f707b0ee7bea2",
+      "post_merge_woodpecker_push": 855,
+      "scope": "BUILDER_SCRIPT_P0_HOST_WRITE_REMOVED_ONLY_NO_CANONICAL_SAFE_PACKAGE",
+      "tool_issue": 59
+    },
+    "tree_sitter_native_cli": {
+      "pr": 87,
+      "exact_head": "90aa3e34484b60c2a158f3a9eeb9d959e0afe812",
+      "merge_commit": "d18dd29f4141f4a50f5e21d87e7dc0474cd5bb0a",
+      "post_merge_woodpecker_push": 856,
+      "scope": "PINNED_FIXED_NATIVE_CLI_FIXTURE_SOURCE_ONLY_NOT_COMPLETE_T4",
+      "tool_issue": 57
+    },
+    "doctor_static_elf": {
+      "pr": 86,
+      "tool_issue": 45,
+      "runner_blob": "40427c1e541f294d71d803b0225984175708391e",
+      "test_blob": "b964a18907a4fa4c8097aae466cfc8f464f1b0d7",
+      "evidence_blob": "715feb732f95283cbaa79e51e75cfca56116e41f",
+      "ci_push": 1941,
+      "ci_pr": 1940,
+      "ci": "SUCCESS_SUCCESS",
+      "review": "REWORK_P0_0_P1_0_P2_2",
+      "findings": {
+        "P2_01": "R17 evidence ci.exact_head/push/pull_request and qualification.review still say PENDING; update to exact R21 head/Runner/Test/Evidence Blobs, #1233/#1234 SUCCESS and REWORK/P2 disposition.",
+        "P2_02": "Add a valid ELF32 header negative fixture (EI_CLASS=1, e_ehsize=52, e_phentsize=32) proving ELF32 cannot take the static shortcut; preserve explicit ELF64-LE EM_X86_64-only scope."
+      },
+      "writer": "CHATGPT_AUTO_WRITER_PR86_ELF_CLASSIFIER_R20_20261115 (R28C continuation delivered 2026-11-16)",
+      "status": "MERGED_REVIEWED_GREEN_GUARDED",
+      "merge": true,
+      "qualification": "Shared Runner static-ELF classifier fixes merged as scoped source only (tool-runner, tests/tool-runner-ldd-report.test.mjs, docs/tool-portfolio/r17/ELF_STATIC_DEPENDENCY_GATE.json); no shared-Runner T4/T5, Product #11 or Release qualification; local R20/R21 execution NOT_RUN history preserved.",
+      "local_execution": "NOT_RUN_EXECUTION_BACKEND_CLIENTERROR",
+      "historical_reviews": [
+        {
+          "head": "b9e4e419e1a144c7cb1e3b8e6ccee74d50d66871",
+          "review": "REWORK_P1",
+          "finding": "PT_INTERP absence false-static for ET_REL and ET_DYN with missing DT_NEEDED"
+        },
+        {
+          "head": "797ef57d34319c45244faf140b90916ff91f4a31",
+          "review": "REWORK_P2",
+          "finding": "Missing e_machine/PF_X/executable entry-range checks"
+        },
+        {
+          "head": "57a7f8de70c4cb37ed704c71ac910c16eb101a0a",
+          "review": "REWORK_P1_P2",
+          "finding": "Missing ft_has_elf_magic definition and zero-entry static false-positive"
+        },
+        {
+          "head": "3eb6d5d5b31b0dc09d3c85f7f112e88a12d4e2ab",
+          "review": "REWORK_P0_0_P1_0_P2_2",
+          "findings": {
+            "P2_01": "Versioned evidence still says exact-head CI/review pending despite #1233/#1234 SUCCESS and completed review.",
+            "P2_02": "ELF32 explicit rejection has no dedicated valid ELF32 negative regression."
+          }
+        }
+      ],
+      "merge_commit": "1d054ae432549a9bff6276b82b561f3ecf12632d",
+      "merged_via": "REVIEWED_GREEN_GUARDED_SQUASH_INTEGRATION_20261116 (Integrator closeout comment 6931131970)",
+      "final_delivery_head": "194cf8f153c9ca679e664384aefb95fa99e5f99e",
+      "current_main_first_sync_merge": "c71d20c92c93a61dc0b8575b35f5b78af1b40191",
+      "r28c_repairs": [
+        "P2-02 closed: valid ELF32-LE ET_EXEC negative fixture (EI_CLASS=1, e_ehsize=52, e_phentsize=32) can never take the ELF64 static shortcut; delegation to fail-closed ldd asserted",
+        "vDSO-only ldd output plus arbitrary nonempty diagnostics locked fail-closed; genuine static and valid dependency rows preserved",
+        "Legacy TOOL_TOOL_ID/TOOL_ID version alias regression locked: doctor/version/run exit 2, environment spoof cannot resurrect the alias (PR #79 semantics preserved)",
+        "P2-01 closed: R17 evidence JSON refreshed with validated cycle 3eb6d5d5 (Woodpecker #1233/#1234 SUCCESS, REWORK P2 disposition) and R20/R21 NOT_RUN history preserved"
+      ],
+      "ci_summary": "463 tests / 458 pass / 0 fail / 5 skipped (gcc/readelf-gated skips); typecheck pass; supplementary scoped Linux replay on CI agent image Node 24.21.0: 39 tests / 36 pass / 0 fail / 3 skipped"
+    },
+    "fast_downward_pr94": {
+      "pr": 94,
+      "tool_issue": 37,
+      "reviewed_head": "302ab518642d1053835c60d6db5342d8ceda6830",
+      "merge_commit": "4a733d0c7e33da5ed77ff7e3a8e628b3c8bb369b",
+      "ci_push": 1011,
+      "ci_pr": 1012,
+      "review": "PASS_SCOPED_P0_0_P1_0_P2_0",
+      "scope": "FIXTURE_NEG_ERR_EXACT_EXIT_AND_MALFORMED_PDDL_CONTRACT_MERGED",
+      "remaining": "ORIGINAL_ARCHIVE_DECLARED_24.06_ACTUAL_26.6_PLUS_SOURCE_COMMIT_UNKNOWN_P1",
+      "t3": "NO_PROMOTION"
+    },
+    "highs_typed_operation_pr96": {
+      "pr": 96,
+      "tool_issue": 38,
+      "reviewed_head": "8ab68e166fda3c9b4fc8e55df1a292b992ed580c",
+      "integrated_head": "6553afb98b62f86698d4cb1d6b20a89baf0c11df",
+      "merge_commit": "2e8f066c93f66d12d9a8037b9af76af06e32d1e2",
+      "ci_push": 1072,
+      "ci_pr": 1073,
+      "review": "ACCEPTED_SCOPED_P0_0_P1_0_P2_1_NONBLOCKING",
+      "implementation": "ONE_TYPED_SOLVE_LP_OPERATION_IN_SHARED_RUNNER_CLI_MCP_SDK",
+      "canonical_portable_execution": "EXISTING_SCOPED_CANONICAL_PYTHON313_NUMPY254_HIGHSPY1151_POS_NEG_ERR_RECEIPT",
+      "remaining": "PYTHON313_FAKE_HIGHSPY_INVALID_SOLUTION_REGRESSION_CONDITIONALLY_SKIPS_OUTSIDE_PINNED_PYTHON313; FULL_T4_NOT_ACCEPTED",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false
+    },
+    "prob_fixture_pr99": {
+      "pr": 99,
+      "tool_issue": 48,
+      "reviewed_head": "29d20f7caab1e07a4dd2fc488a67d28c43707830",
+      "current_head": "6ddcf0800e7ee81bcccdb96203a668e77bd7abdc",
+      "ci_push": 1091,
+      "ci_pr": 1092,
+      "review": "ACCEPTED_SCOPED_P0_0_P1_0_P2_1_NONBLOCKING_METADATA",
+      "scope": "FIXTURE_COPY_CONTRACT_AND_EXACT_EXIT_EVIDENCE_ONLY",
+      "remaining": "HISTORICAL_DRIVE_CORE_RUNNER_AND_LEGACY_TOOL_TOOL_ID_PACKAGE_META; NETWORK_ISOLATION_NOT_PROVEN; CURRENT_MAIN_T3_T4_T5_NOT_QUALIFIED",
+      "merge": true,
+      "merge_commit": "56ca5ebb180433a7c391f640b607be8c2977cffd",
+      "ci": "SUCCESS_SUCCESS"
+    },
+    "ledger_review_repairs": {
+      "pr": 100,
+      "repaired_findings": [
+        "P2-01 preserve per-tool historical R1 T0/T2 source snapshot states",
+        "P2-02 update PR99 review state from PENDING to ACCEPTED_SCOPED and refresh current PR/head/CI"
+      ],
+      "source_ledger_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+      "regression_test": "tests/i24-t0-t2-checkpoint.test.mjs",
+      "regression_scope": "all 36 Issue #25-#60 rows map to R1 by issue ID, preserve exact T0/T2 values and verify 20/16 and 16/20 aggregate counts",
+      "current_main_after_integrations": "0f07c2719115b9dfdd7c0cff005b33ffb775173a",
+      "review_r23_p2": [
+        "PR86 current status updated from stale b9e4 review to exact current HEAD 3a789d11; records undefined ft_has_elf_magic P1, zero-entry P2, and exact CI #1131/#1132 failure.",
+        "PR100 primary PR body header/current R23 CI metadata corrected to current main and exact head."
+      ],
+      "pr105_networkx": {
+        "merge_commit": "b1cecc5937c9f3a6b6a5cd70f480d32ce61019d9",
+        "review": "ACCEPTED_SCOPED",
+        "ci": "SUCCESS_SUCCESS",
+        "scope": "T0_SOURCE_VERSION_LICENSE_ARCHIVE_PROVENANCE_ONLY",
+        "current_main_ancestor": true
+      },
+      "pr107_tree_sitter": {
+        "github_state": "MERGED_AND_PRESENT_IN_CURRENT_MAIN",
+        "merge_commit": "74b511e27ed2b2690be6c7e292400c723c6b9b88",
+        "current_main_builder_blob": "5adc9de0d11ed2c60c45d2683ad27d7e80791854",
+        "current_main_test_blob": "e3493b52d4dcccbcf8fb4e963a01ad5b3cfac0ad",
+        "review": "ACCEPTED_SCOPED_P0_0_P1_0_P2_1_NONBLOCKING_SCOPE",
+        "qualification": "BUILDER_SOURCE_ONLY; NO_T1/T3/T4/T5/T6_PROMOTION"
+      },
+      "fast_downward_pr116": {
+        "merge_commit": "0f07c2719115b9dfdd7c0cff005b33ffb775173a",
+        "review": "ACCEPTED_SCOPED",
+        "scope": "TEST_ONLY_EXIT_ASSIGNMENT_UNIQUENESS"
+      }
+    },
+    "lean4_pr101": {
+      "pr": 101,
+      "tool_issue": 41,
+      "reviewed_head": "e6618722f93058ae78797b1630b75ad33e496e60",
+      "integrated_head": "f7f77bdc7134e605214ea19172c2e77833c16f03",
+      "merge_commit": "cbd7f173b05c4f329bf9e37c2f9a06006526ba08",
+      "ci_push": 1104,
+      "ci_pr": 1105,
+      "ci": "SUCCESS_SUCCESS",
+      "review": "ACCEPTED_SCOPED_P0_0_P1_0_P2_1_NONBLOCKING",
+      "scope": "LEAN4_FIXTURE_EXIT_CONTRACT_AND_CURRENT_MAIN_RUNNER_EVIDENCE_WITH_STAGED_METADATA_OVERLAY",
+      "qualification": "T3_WRITER_REPORTED_PASS_SCOPED_RAW_RECEIPT_LOG_BYTES_NOT_LINKED; NETWORK_ISOLATION_NOT_PROVEN; T1_NOT_QUALIFIED; T4_T5_T6_NOT_ACCEPTED",
+      "merge": true
+    },
+    "networkx_t0_pr105": {
+      "pr": 105,
+      "tool_issue": 44,
+      "reviewed_head": "055ecdf3b296986cddc3769810a063598cda5856",
+      "merge_commit": "b1cecc5937c9f3a6b6a5cd70f480d32ce61019d9",
+      "ci_push": 1133,
+      "ci_pr": 1134,
+      "ci": "SUCCESS_SUCCESS",
+      "review": "ACCEPTED_SCOPED_P0_0_P1_0_P2_0",
+      "scope": "UPSTREAM_SIGNED_TAG_VERSION_LICENSE_AND_DRIVE_ARCHIVE_TO_LOCAL_PRODUCER_MANIFEST_HASH_ONLY",
+      "qualification": "FULL_T0_NOT_ACCEPTED; T1/T2/T3/T4/T5/T6_NOT_ACCEPTED",
+      "current_main_ancestor": true
+    },
+    "tree_sitter_pr107": {
+      "pr": 107,
+      "tool_issue": 57,
+      "reviewed_head": "013c44ea1ad18b31bea9857a2e3f3867179b61de",
+      "github_state": "MERGED",
+      "merge_commit": "74b511e27ed2b2690be6c7e292400c723c6b9b88",
+      "ci_push": 1155,
+      "ci_pr": 1156,
+      "ci": "SUCCESS_SUCCESS",
+      "review": "ACCEPTED_SCOPED_P0_0_P1_0_P2_1_NONBLOCKING_SCOPE",
+      "merge_commit_in_current_main": true,
+      "current_main_tree_sitter_builder_blob": "5adc9de0d11ed2c60c45d2683ad27d7e80791854",
+      "reviewed_tree_sitter_builder_blob": "5adc9de0d11ed2c60c45d2683ad27d7e80791854",
+      "current_main_tree_sitter_test": "PRESENT",
+      "status": "MERGED_MAIN_BUILDER_SOURCE_ONLY",
+      "qualification": "MERGED_BUILDER_AND_TEST_SOURCE_ONLY; NO_T1/T3/T4/T5/T6_PROMOTION",
+      "current_main_tree_sitter_test_blob": "e3493b52d4dcccbcf8fb4e963a01ad5b3cfac0ad",
+      "p2_followup": "Issue #57 dependency/next-action wording must distinguish native CLI-only fixture from Python binding availability."
+    },
+    "fast_downward_pr116": {
+      "pr": 116,
+      "tool_issue": 37,
+      "exact_head": "0128ff15d8dcb45e1fb567061a5bd6f93b051c4e",
+      "merge_commit": "0f07c2719115b9dfdd7c0cff005b33ffb775173a",
+      "ci_push": 1201,
+      "ci_pr": 1202,
+      "ci": "SUCCESS_SUCCESS",
+      "review": "ACCEPTED_SCOPED_P0_0_P1_0_P2_0",
+      "scope": "TEST_ONLY_DUPLICATE_WILDCARD_AND_MISSING_EXIT_ASSIGNMENT_HARDENING",
+      "qualification": "NO_SOURCE_VERSION_IDENTITY_OR_T0_T1_T2_T3_T4_T5_T6_PROMOTION"
+    },
+    "post_r26_merged_tool_deltas": [
+      {
+        "pr": 86,
+        "tool_issue": 45,
+        "title": "fix(i24): reject ET_DYN DT_NEEDED false-static ELF",
+        "merge_commit": "1d054ae432549a9bff6276b82b561f3ecf12632d",
+        "review": "REVIEWED_GREEN_GUARDED_INTEGRATION (final delivery CI #1940/#1941 SUCCESS)",
+        "scope": "SHARED_RUNNER_STATIC_ELF_CLASSIFIER_REPAIRS_THREE_RUNNER_OWNED_FILES",
+        "qualification": "SCOPED_RUNNER_SOURCE_ONLY; no T4/T5/Product/Release promotion"
+      },
+      {
+        "pr": 103,
+        "tool_issue": 29,
+        "title": "fix(causal-learn): split valid NEG from invalid-input ERR",
+        "merge_commit": "90b7f3206d401aa5a2634d775c6f16487f0f1b0f",
+        "review": "ACCEPT_SCOPED (recorded by R50 review at exact head 9605bcac)",
+        "scope": "FIXTURE_NEG_ERR_CONTRACT_SPLIT",
+        "qualification": "FIXTURE_CONTRACT_ONLY; canonical Python3.13/current-main Runner NOT_RUN; no T4/T5/T6 promotion"
+      },
+      {
+        "pr": 104,
+        "tool_issue": 59,
+        "title": "docs(i24): record Why3 R22 relocation probe",
+        "merge_commit": "19e349fcf96f8883be6a46c654046f1b0e6c66bd",
+        "scope": "WHY3_R22_RELOCATION_PROBE_EVIDENCE_RECORD",
+        "qualification": "SCOPED_EVIDENCE_RECORD_ONLY"
+      },
+      {
+        "pr": 109,
+        "tool_issue": 40,
+        "title": "test(kani): pin counterexample exit contract",
+        "merge_commit": "cd436ed40e4a319c75ba83c247af9ba77bf98a0e",
+        "scope": "COUNTEREXAMPLE_EXIT_CONTRACT_TEST",
+        "qualification": "TEST_ONLY_SCOPED"
+      },
+      {
+        "pr": 117,
+        "tool_issue": 43,
+        "title": "test(minizinc): pin error fixture exit contract",
+        "merge_commit": "97e0d0bf6a0b197ee9e7008703646a98db907de6",
+        "scope": "ERROR_FIXTURE_EXIT_CONTRACT_TEST",
+        "qualification": "TEST_ONLY_SCOPED"
+      },
+      {
+        "pr": 124,
+        "tool_issue": 50,
+        "title": "docs(i24): record rdf-shacl source and archive audit",
+        "merge_commit": "d996d168812f51d131b3f3f9c525cc1bd161d087",
+        "scope": "RDF_SHACL_SOURCE_AND_ARCHIVE_AUDIT_RECORD",
+        "qualification": "T0_SOURCE_AUDIT_SCOPED_ONLY"
+      },
+      {
+        "pr": 108,
+        "tool_issue": 56,
+        "title": "fix(i24): pin TLA+ TLC 1.8.0 asset and negative exit",
+        "merge_commit": "b9889b7183ebd8b94f9face54425d529e79ca834",
+        "scope": "ASSET_IDENTITY_AND_NEGATIVE_EXIT_PIN",
+        "qualification": "SCOPED_ASSET_IDENTITY_ONLY"
+      },
+      {
+        "pr": 128,
+        "tool_issue": 48,
+        "title": "docs(i24): add ProB R55 original-tar replay evidence",
+        "merge_commit": "8fa74a38e0af0a4fe8db83bd4598c4ea767550c2",
+        "scope": "PROB_R55_ORIGINAL_TAR_REPLAY_EVIDENCE_RECORD",
+        "qualification": "SCOPED_EVIDENCE_RECORD_ONLY; historical Runner limits preserved"
+      },
+      {
+        "pr": 130,
+        "tool_issue": 43,
+        "title": "fix(minizinc): pin upstream release asset identity",
+        "merge_commit": "211c7a83282a25c0387bce2dd4e8f632313b51b8",
+        "scope": "UPSTREAM_RELEASE_ASSET_IDENTITY_PIN",
+        "qualification": "SOURCE_IDENTITY_PIN_ONLY"
+      },
+      {
+        "pr": 133,
+        "tool_issue": 30,
+        "title": "fix(cbmc): pin official 6.11.0 Ubuntu release asset",
+        "merge_commit": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
+        "scope": "OFFICIAL_UBUNTU_RELEASE_ASSET_PIN",
+        "qualification": "SOURCE_IDENTITY_PIN_ONLY"
+      },
+      {
+        "pr": 135,
+        "tool_issue": 32,
+        "title": "docs(cvc5): add R27 exact non-root native replay receipt",
+        "merge_commit": "3ea64a631c2bf0e44b5e286ca96d45b10e742db5",
+        "scope": "R27_EXACT_NON_ROOT_NATIVE_REPLAY_RECEIPT",
+        "qualification": "SCOPED_RECEIPT_ONLY"
+      },
+      {
+        "pr": 129,
+        "tool_issue": 51,
+        "title": "fix(robot): pin current-main native fixture outcomes",
+        "merge_commit": "8c0811a7baa5f79953a85a190595995f2463f7d0",
+        "scope": "CURRENT_MAIN_NATIVE_FIXTURE_OUTCOME_PIN",
+        "qualification": "FIXTURE_SCOPED_ONLY"
+      },
+      {
+        "pr": 134,
+        "tool_issue": 31,
+        "title": "feat(clingo): add executable lifecycle freshness contract",
+        "merge_commit": "a229566c14a0d00b9b05a4a3d5e018b487cf1c73",
+        "scope": "EXECUTABLE_LIFECYCLE_FRESHNESS_CONTRACT",
+        "qualification": "MAINTENANCE_CONTRACT_ONLY"
+      },
+      {
+        "pr": 125,
+        "tool_issue": 49,
+        "title": "docs(i24): record pymc source and archive audit",
+        "merge_commit": "591d3914e0e99ec8e1bd3e12887f110d096208ce",
+        "scope": "PYMC_SOURCE_AND_ARCHIVE_AUDIT_RECORD",
+        "qualification": "T0_SOURCE_AUDIT_SCOPED_ONLY"
+      },
+      {
+        "pr": 145,
+        "tool_issue": 51,
+        "title": "test(robot): assert inferred class membership in positive case",
+        "merge_commit": "721c1f5854e697db4534958de0bd21ee70bca108",
+        "scope": "POSITIVE_CASE_CLASS_MEMBERSHIP_ASSERTION",
+        "qualification": "TEST_ONLY_SCOPED"
+      },
+      {
+        "pr": 126,
+        "tool_issue": 59,
+        "title": "docs(i24): add reproducible Why3 R27 chroot evidence",
+        "merge_commit": "319367063177dec22a6df64233fae2a5fceef00f",
+        "review": "ACCEPT_SCOPED_SYNC_DELTA_ONLY P0=0/P1=0/P2=2 metadata-only (R72); exact reviewed head 4bae694d6d69be10d0ef0e9eabe8fe7a295aba7d; PR CI #1739/#1740 SUCCESS",
+        "scope": "REPRODUCIBLE_R27_CHROOT_EVIDENCE_TWO_FILES",
+        "qualification": "SCOPED_CHROOT_EVIDENCE_ONLY; canonical safe package and relocatable proof runtime still required"
+      },
+      {
+        "pr": 139,
+        "tool_issue": 26,
+        "title": "fix(alloy): require observed syntax-error exit and narrow diagnostic",
+        "merge_commit": "530a2d7a8edf99106845be228b6451c6aa52be92",
+        "scope": "SYNTAX_ERROR_EXIT_AND_DIAGNOSTIC_CONTRACT",
+        "qualification": "SCOPED_EXIT_CONTRACT_ONLY"
+      },
+      {
+        "pr": 154,
+        "tool_issue": 31,
+        "title": "fix(clingo): pin v5.8.3 source commit and reject version drift",
+        "merge_commit": "4fa5d138c45039e37b9e04f8621c1116c16886e8",
+        "review": "REVIEWED_GREEN_GUARDED_INTEGRATION (Integrator closeout comment 6931131970)",
+        "scope": "V5_8_3_SOURCE_COMMIT_PIN_AND_VERSION_DRIFT_REJECTION",
+        "qualification": "SOURCE_IDENTITY_PIN_ONLY"
+      },
+      {
+        "pr": 127,
+        "tool_issue": 50,
+        "title": "fix(portable/rdf-shacl): rebuild with pinned Python 3.13 runtime",
+        "merge_commit": "c2728c9e1c8b2777bc5db467cd551033e12ebe64",
+        "review": "R54/R102 ACCEPT_SCOPED P0=0/P1=0/P2=1; final sync head 1ba05503edc0520c34e5fc18f15842a74436aa47 with PR CI #1905 SUCCESS",
+        "scope": "PORTABLE_REBUILD_WITH_PINNED_PYTHON_3_13_RUNTIME",
+        "qualification": "SCOPED_REBUILD_AND_EVIDENCE_ONLY; no T0-T6 promotion"
+      },
+      {
+        "pr": 150,
+        "tool_issue": 43,
+        "title": "docs(minizinc): record current-main T4 metadata gate",
+        "merge_commit": "668ac784fe6c7e78c1e8d468638cbebecdbe6539",
+        "review": "R104 head cf25af20 with CI #1906/#1907 SUCCESS; REVIEWED_GREEN_GUARDED_INTEGRATION",
+        "scope": "CURRENT_MAIN_T4_METADATA_GATE_RECORD",
+        "qualification": "SCOPED_METADATA_RECORD_ONLY; full T4 remains 0/23"
+      },
+      {
+        "pr": 158,
+        "tool_issue": 32,
+        "title": "cvc5 negative multi-query regression",
+        "merge_commit": "6a8e874131da385430159099afb71cf5929de8a7",
+        "scope": "CVC5_TEST_ONLY",
+        "qualification": "NO_NATIVE_RERUN_OR_T4_T5_T6",
+        "post_main_ci": 2010
+      },
+      {
+        "pr": 155,
+        "tool_issue": 48,
+        "title": "ProB private staging and version rejection",
+        "merge_commit": "3c42e0bddbd3dc5c73491b3dc8d2bbbb7a5352d9",
+        "scope": "PROB_BUILDER_AND_TEST_TWO_PATHS",
+        "qualification": "PUBLISHER_TARBALL_SHA_UNVERIFIED; NO_T1_T4_T5_T6",
+        "review_id": 5928841763,
+        "post_main_ci": 2015
+      },
+      {
+        "pr": 160,
+        "tool_issue": 31,
+        "title": "Clingo private staging and stale source guard",
+        "merge_commit": "870bef6edf8930bb39ec54b014f5c860dcc63dc8",
+        "scope": "CLINGO_BUILDER_AND_TEST_TWO_PATHS",
+        "qualification": "SOURCE_ONLY_NO_T1_T4_T5_T6",
+        "review_ids": [
+          5929632597,
+          5929747041
+        ],
+        "post_main_ci": 2020
+      },
+      {
+        "pr": 153,
+        "tool_issue": 26,
+        "title": "Alloy scoped T6 freshness assessor",
+        "merge_commit": "256766fa4dc92ea6d43fe59ca8cad59b799a0ba6",
+        "scope": "ALLOY_T6_ASSESSOR_THREE_PATHS_ONLY",
+        "qualification": "T6_UNQUALIFIED_RUNNER_PIN_STALE; NO_NATIVE_REPLAY",
+        "review_ids": [
+          5929266893,
+          5929918695
+        ],
+        "post_main_ci": "2034_PENDING"
+      }
+    ],
+    "post_r26_merged_shared_build_deltas": [
+      {
+        "pr": 113,
+        "title": "fix(build): normalize ELF metadata and private-library probes",
+        "merge_commit": "5f188dec4c98bb4195619b560b86a210d9c2788e",
+        "scope": "PORTABLE_BUILD_ELF_METADATA_AND_PRIVATE_LIBRARY_PROBE_NORMALIZATION",
+        "qualification": "SHARED_BUILD_SCRIPT_SCOPE_ONLY; no per-tool qualification change"
+      }
+    ],
+    "post_r26_merged_g3_g4_deltas": [
+      {
+        "pr": 98,
+        "track": "G3",
+        "merge_commit": "05947e0c89daa388129054dddbb56ca5446a109d",
+        "scope": "ISOLATE_NATIVE_TOOL_ENVIRONMENT_PER_EXECUTION"
+      },
+      {
+        "pr": 121,
+        "track": "G3",
+        "merge_commit": "a82b16a985aaa0154234cf491ca6aecdb2b254a9",
+        "scope": "DRIVE_PACKAGE_AND_NATIVE_RECEIPT_BYTE_PROVENANCE"
+      },
+      {
+        "pr": 120,
+        "track": "G4",
+        "merge_commit": "250d20ec782785f13d4d027f7ab79e005feacc76",
+        "scope": "PERSISTED_CANDIDATE_PROVENANCE_DRIFT_COVERAGE"
+      },
+      {
+        "pr": 132,
+        "track": "G4",
+        "merge_commit": "069444c176bbacc804f107482f356dbc2eb95736",
+        "scope": "PERSISTED_CANDIDATE_CROSS_PROCESS_RESTART_VERIFICATION"
+      },
+      {
+        "pr": 148,
+        "track": "G4",
+        "merge_commit": "387a21d70c9a411117ffd75e312e72062649b8df",
+        "scope": "INDEPENDENTLY_SOURCED_ORACLE_PROVENANCE_SUPPORT"
+      },
+      {
+        "pr": 146,
+        "track": "G4",
+        "merge_commit": "68e9d08e99bb3bf4fe07cde116ec403fd10bc3e7",
+        "scope": "XDOWNLOAD_INTERACTION_DUAL_SOLVER_CANDIDATE_EVIDENCE"
+      },
+      {
+        "pr": 152,
+        "track": "G4",
+        "merge_commit": "6991c7aae1026ea9bda9d49f43139e92437f0493",
+        "scope": "ORACLE_DURABLE_LIFECYCLE_REGRESSION_TEST_ONLY"
+      },
+      {
+        "pr": 156,
+        "track": "G4",
+        "merge_commit": "e1081c7960622f3e6664ae4cb18851377912c636",
+        "scope": "XDOWNLOAD_SOURCE_TO_MODEL_MAPPING_AND_FALSIFICATION_CASES"
+      },
+      {
+        "pr": 159,
+        "track": "G4",
+        "merge_commit": "1db6556aca34d06d946f1dbd512e6e3c30d87fdc",
+        "scope": "FINITE_128_CASE_SOURCE_SMT_BOOLEAN_RELATION_CHECK"
+      },
+      {
+        "track": "G4",
+        "pr": 161,
+        "merge_commit": "5ec586a2bc3d60d66128f6e6f7ee967e151b4469",
+        "scope": "DIS_R10_DISTINCT_POLICY_ORACLE_SOURCE_CANDIDATE_ONLY",
+        "qualification": "CANDIDATE_NOT_ADOPTED; PROFESSIONAL_ORACLE_NOT_ATTESTED; NO_QUALIFIED_SOLUTION_REPLAY",
+        "ci_post_main": 2017
+      },
+      {
+        "track": "G4",
+        "pr": 162,
+        "merge_commit": "c4b34747a1ef6ae9dc8ac199db529e12142b96d7",
+        "scope": "FINITE_128_MANIFEST_VERIFIER_AND_8_MUTATION_NEGATIVE_CASES",
+        "qualification": "ENGINEERING_128_ONLY; NO_GENERAL_JS_EQUIVALENCE_OR_ORACLE; REPLAY_BLOCKED",
+        "ci_post_main": 2018
+      }
+    ],
+    "current_main_reconciliation_20261119": {
+      "reconciled_main": "f46f2545a3ae10dbefe93edd1f2a2efa3ab275dc",
+      "reconciliation_date": "2026-11-19",
+      "r1_source_blob_refetched": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+      "r1_blob_verified_on_current_main": true,
+      "issue_rows_refetched": 36,
+      "all_36_issue_rows_map_to_r1_by_issue_id": true,
+      "merged_prs_since_r26_freeze": {
+        "total": 45,
+        "tool_owned": 29,
+        "shared_build": 1,
+        "g3_g4": 15
+      },
+      "all_merge_commits_verified_ancestors_of_current_main": true,
+      "r136_p2_resolution": "P2-01/P2-02 (metadata freshness as of reviewed main 256766fa4dc92ea6d43fe59ca8cad59b799a0ba6) addressed by this increment: main refreshed to f46f2545a3ae10dbefe93edd1f2a2efa3ab275dc with post-merge Woodpecker Push #2093 SUCCESS verified, merge inventory extended 36->45 with nine post-R28 verified merges (each bound to its merge commit, independent reviews and post-main push CI), and tool-row pending metadata refreshed against live GitHub state for Issues #30/#32/#33/#43/#44/#50/#59 at readback 2026-11-19.",
+      "writer": "ZCODE_LEDGER_PR100_EXISTING_WRITER_CONTINUATION_20261119 (claim comment 6931802229)",
+      "r158_incremental_reconciliation": {
+        "reviewed_head": "d8bdf45cb8ed858a569fbbbc57093f8b1afc14c5",
+        "review_id": 5939859345,
+        "review_verdict": "ACCEPT_SCOPED_AS_OF_REVIEWED_MAIN P0=0 P1=0 P2=2_METADATA_FRESHNESS",
+        "reviewed_main": "256766fa4dc92ea6d43fe59ca8cad59b799a0ba6",
+        "actual_current_main_first_parent": "f46f2545a3ae10dbefe93edd1f2a2efa3ab275dc",
+        "previous_36_merge_ancestry": "REUSED_R136_ACCEPT_SCOPED",
+        "new_merges": [
+          137,
+          149,
+          157,
+          163,
+          164,
+          165,
+          166,
+          167,
+          169
+        ],
+        "new_merge_commits": {
+          "137": "b9a662f48079d855aac69c886f228cce89efa8c6",
+          "149": "24a1985164fb26ae60e4ed4d41f7d12edecf9fcf",
+          "157": "971253f6f41744560f784ab4e195ddaee0fe7b15",
+          "163": "8f077c2afcda35501915ac51aa681dacbae6374c",
+          "164": "604df01d26274079a5fffd0dd0a1b26ac84d91f0",
+          "165": "9aad5d928fe58ef39c2acd850070538c46f06789",
+          "166": "401f3bb55f5095fb1f131f176b2ea157e3caa212",
+          "167": "65829cbbe993d63e86451be0d15a3026ad092e49",
+          "169": "f46f2545a3ae10dbefe93edd1f2a2efa3ab275dc"
+        },
+        "new_merge_boundaries": {
+          "137": "SCOPED_DAFNY_SDK_OUTCOME_CONTRACT_AND_NATIVE_FIXTURE_EXITS_ONLY",
+          "149": "SCOPED_MINIZINC_R96_CURRENT_MAIN_REBUILD_EVIDENCE_PLUS_RDF_SHACL_R52_RAW_EVIDENCE_SYNC",
+          "157": "HISTORICAL_WHY3_T6_EVIDENCE_FRESHNESS_ASSESSOR_SOURCE_ONLY",
+          "163": "G4_ENGINEERING_ONLY_POLICY_CROSSWALK_EVIDENCE",
+          "164": "SCOPED_NETWORKX_T6_FRESHNESS_ASSESSOR_SOURCE_ONLY",
+          "165": "SCOPED_CVC5_OFFLINE_T6_FRESHNESS_ASSESSOR_SOURCE_ONLY",
+          "166": "G4_ENGINEERING_ONLY_T01_T03_S3_EXECUTABLE_REFINEMENT",
+          "167": "G4_ENGINEERING_ONLY_KERNEL_LTE_DIFFERENTIAL_AND_S3_QUALIFICATION_BOUNDARY",
+          "169": "G4_ENGINEERING_ONLY_VERSIONED_TYPED_T03_SUCCESSOR"
+        },
+        "source_r1": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "original_36_row_snapshot": "REUSED_AND_IDENTITY_UNCHANGED",
+        "new_scope_checks": [
+          30,
+          32,
+          33,
+          43,
+          44,
+          50,
+          59
+        ],
+        "cbmc_pr151": "OPEN_NOT_MERGED_AT_READBACK: current-main-first sync delivered at head 06b9815f6f78bd32eb46f50267522a402b6ce6c2 (parents f46f2545 then 177a94bc) with dual formal-static Woodpecker #2094/#2095 SUCCESS and 51/51 reviewed CBMC blobs preserved; R158 currentness review 5960412743 ACCEPT_SCOPED_SYNC_DELTA binds to prior head 177a94bc so a distinct-conversation incremental review at 06b9815f is still required before any guarded merge; not counted in the merged inventory.",
+        "no_full_t1_t4_t5_t6_product_release": true,
+        "main_ci_after_newest_merge": "WOODPECKER_PUSH_2093_SUCCESS"
+      }
+    }
+  },
+  "counts": {
+    "tool_issues": 36,
+    "source_registered": 36,
+    "original_tar_t3_scoped_receipts_reference": 19,
+    "callable_scoped_including_alternates_reference": 34,
+    "original_13_runtime_scoped": 13,
+    "original_typed_operations": 53,
+    "added_candidate_discovery_routes": 23,
+    "candidate_portable_gate_source_routes": 23,
+    "added_mcp_portfolio_methods": 3,
+    "added_sdk_portfolio_exports": 5,
+    "independently_reviewed_scoped_three_phase_technical_tools_from_r9": 5,
+    "formal_new_candidate_t4_accepted": 0,
+    "independently_qualified_t5_business": 0,
+    "complete_36_tool_t6_acceptance": 0,
+    "main_shared_mcp_portfolio_methods": 3,
+    "main_shared_sdk_portfolio_exports": 5,
+    "r21_prob_original_archive_scoped_native_pos_neg_err_observations": 1,
+    "t0_archive_sha_match_publisher_manifest_only_reference": 20,
+    "t0_not_qualified_reference": 16,
+    "t1_independent_build_qualified_reference": 0,
+    "t1_not_qualified_independent_build_reference": 36,
+    "t2_pass_scoped_r3_reference": 16,
+    "t2_not_qualified_reference": 20,
+    "t3_original_tar_scoped_receipts_reference": 19,
+    "t3_callable_scoped_including_alternates_reference": 34,
+    "t4_original_13_scoped_runtime_interfaces": 13,
+    "t4_candidate_fixed_cli_routes": 23,
+    "t4_full_candidate_acceptance": 0,
+    "t5_business_semantic_qualified": 0,
+    "t6_final_accepted": 0,
+    "merged_main_candidate_typed_operations_implemented": 1,
+    "merged_main_candidate_typed_operations_real_portable_e2e_scoped": 1,
+    "merged_main_candidate_typed_operations_independently_reviewed_scoped": 1,
+    "merged_main_candidate_typed_operations_full_t4_accepted": 0,
+    "post_r26_freeze_merged_prs_total": 45,
+    "post_r26_freeze_merged_tool_owned_prs": 29,
+    "post_r26_freeze_merged_shared_build_prs": 1,
+    "post_r26_freeze_merged_g3_g4_prs": 15
+  },
+  "truth_rules": [
+    "T0 registration is not source publication, rights, or publisher attestation",
+    "T3 original tar and T3 host alternative are distinct scopes and must not be added as formal successes",
+    "A source-integrated CLI/MCP/SDK gateway or synthetic fixture pass never promotes T4",
+    "R9 five tool technical three-phase reviewed cases are not full native CLI/MCP/SDK E2E",
+    "Why3 original archive still contains host-unsafe run script, never run privileged",
+    "A changed SHA never inherits previous reviewer approval or CI",
+    "T5 requires separate source/model/oracle/host and downstream real consumption",
+    "As of the 2026-11-19 reconciliation, rows without a pending entry had no new exact-source delta; every merged PR delta is recorded per row as scoped evidence or source identity only, without qualification promotion.",
+    "A candidate typed operation in an open PR is not counted as merged CLI/MCP/SDK integration or T4 acceptance.",
+    "Portable execution against a Drive core archive is not current-main Runner evidence unless its runner Git Blob matches the exact current main source.",
+    "Known tool-specific exit codes must be pinned; EXPECT_*_EXIT=* accepts timeouts and launch failures and is not a safe semantic gate.",
+    "Host-substitute and historical portable-core executions remain scoped technical observations; they do not increment original-tar T3 or full T4 counts without the required exact current artifacts and independent review."
+  ],
+  "sources": [
+    "docs/tool-portfolio/r4/T4_INTEGRATION.json",
+    "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+    "registry/PROBLEM_CAPABILITIES.json",
+    "https://github.com/kaicreator-mm/formal-tools/issues/24",
+    "https://github.com/kaicreator-mm/formal-tools/pull/22",
+    "https://github.com/kaicreator-mm/formal-tools/pull/69",
+    "https://github.com/kaicreator-mm/formal-tools/pull/87",
+    "https://github.com/kaicreator-mm/formal-tools/pull/92",
+    "https://github.com/kaicreator-mm/formal-tools/pull/86",
+    "docs/tool-portfolio/r20/HIGHS_TYPED_OPERATION.json (PR #96 exact HEAD 45e4344; open)",
+    "docs/tool-portfolio/r21/PROB_R21_NATIVE_FIXTURE.json (PR #99 exact HEAD 951ad63; open)",
+    "https://github.com/kaicreator-mm/formal-tools/pull/94",
+    "https://github.com/kaicreator-mm/formal-tools/pull/96",
+    "https://github.com/kaicreator-mm/formal-tools/pull/99",
+    "https://github.com/kaicreator-mm/formal-tools/issues/37",
+    "https://github.com/kaicreator-mm/formal-tools/issues/38",
+    "https://github.com/kaicreator-mm/formal-tools/issues/48",
+    "PR #94 merged commit 4a733d0c7e33da5ed77ff7e3a8e628b3c8bb369b",
+    "PR #96 merged commit 2e8f066c93f66d12d9a8037b9af76af06e32d1e2",
+    "PR #99 merged commit 56ca5ebb180433a7c391f640b607be8c2977cffd",
+    "PR #101 merged commit cbd7f173b05c4f329bf9e37c2f9a06006526ba08",
+    "PR #105 NetworkX T0 scoped source audit merge commit b1cecc5937c9f3a6b6a5cd70f480d32ce61019d9; ancestor of current main 74b511e27ed2b2690be6c7e292400c723c6b9b88",
+    "PR #107 Tree-sitter builder source merge commit 74b511e27ed2b2690be6c7e292400c723c6b9b88; present in current main 74b511e27ed2b2690be6c7e292400c723c6b9b88",
+    "PR #116 Fast Downward duplicate/wildcard exit-contract test merge commit 0f07c2719115b9dfdd7c0cff005b33ffb775173a; scoped test-only follow-up, no version qualification",
+    "PR #103 causal-learn NEG/ERR split merge commit 90b7f3206d401aa5a2634d775c6f16487f0f1b0f; ancestor of current main 1db6556aca34d06d946f1dbd512e6e3c30d87fdc",
+    "PR #104 Why3 R22 relocation probe merge commit 19e349fcf96f8883be6a46c654046f1b0e6c66bd",
+    "PR #109 Kani counterexample exit contract merge commit cd436ed40e4a319c75ba83c247af9ba77bf98a0e",
+    "PR #117 MiniZinc error fixture exit contract merge commit 97e0d0bf6a0b197ee9e7008703646a98db907de6",
+    "PR #113 shared build ELF metadata normalization merge commit 5f188dec4c98bb4195619b560b86a210d9c2788e",
+    "PR #124 RDF-Shacl source/archive audit merge commit d996d168812f51d131b3f3f9c525cc1bd161d087",
+    "PR #108 TLA+ TLC asset/negative-exit pin merge commit b9889b7183ebd8b94f9face54425d529e79ca834",
+    "PR #128 ProB R55 original-tar replay evidence merge commit 8fa74a38e0af0a4fe8db83bd4598c4ea767550c2",
+    "PR #130 MiniZinc upstream release asset identity merge commit 211c7a83282a25c0387bce2dd4e8f632313b51b8",
+    "PR #133 CBMC official Ubuntu release asset pin merge commit 0f2141dc4dcecacd5a6db72b22c28af447b50b23",
+    "PR #135 cvc5 R27 non-root native replay receipt merge commit 3ea64a631c2bf0e44b5e286ca96d45b10e742db5",
+    "PR #129 Robot current-main native fixture outcomes merge commit 8c0811a7baa5f79953a85a190595995f2463f7d0",
+    "PR #134 Clingo executable lifecycle freshness contract merge commit a229566c14a0d00b9b05a4a3d5e018b487cf1c73",
+    "PR #125 PyMC source/archive audit merge commit 591d3914e0e99ec8e1bd3e12887f110d096208ce",
+    "PR #145 Robot class-membership assertion merge commit 721c1f5854e697db4534958de0bd21ee70bca108",
+    "PR #126 Why3 reproducible R27 chroot evidence merge commit 319367063177dec22a6df64233fae2a5fceef00f; R72 ACCEPT_SCOPED_SYNC_DELTA_ONLY",
+    "PR #139 Alloy syntax-error exit contract merge commit 530a2d7a8edf99106845be228b6451c6aa52be92",
+    "PR #86 shared Runner static-ELF classifier merge commit 1d054ae432549a9bff6276b82b561f3ecf12632d; final delivery head 194cf8f153c9ca679e664384aefb95fa99e5f99e; CI #1940/#1941 SUCCESS",
+    "PR #154 Clingo v5.8.3 source commit pin merge commit 4fa5d138c45039e37b9e04f8621c1116c16886e8; reviewed-green guarded integration",
+    "PR #127 RDF-Shacl portable rebuild merge commit c2728c9e1c8b2777bc5db467cd551033e12ebe64; R54/R102 ACCEPT_SCOPED P2=1; sync CI #1905 SUCCESS",
+    "PR #150 MiniZinc current-main T4 metadata gate merge commit 668ac784fe6c7e78c1e8d468638cbebecdbe6539; reviewed-green guarded integration",
+    "G4 track merges 250d20ec/069444c1/387a21d7/68e9d08e/6991c7aa/e1081c79/1db6556a and G3 track merges 05947e0c/a82b16a9; all disjoint from the two ledger write paths",
+    "All 30 merged commits since the R26 freeze verified as ancestors of current main 1db6556aca34d06d946f1dbd512e6e3c30d87fdc",
+    "R28 current-main scoped merge PR #158 (ancestry verified and keyed in post_r26_merged_* list, no formal T1/T4/T5/T6 promotion)",
+    "R28 current-main scoped merge PR #155 (ancestry verified and keyed in post_r26_merged_* list, no formal T1/T4/T5/T6 promotion)",
+    "R28 current-main scoped merge PR #161 (ancestry verified and keyed in post_r26_merged_* list, no formal T1/T4/T5/T6 promotion)",
+    "R28 current-main scoped merge PR #162 (ancestry verified and keyed in post_r26_merged_* list, no formal T1/T4/T5/T6 promotion)",
+    "R28 current-main scoped merge PR #160 (ancestry verified and keyed in post_r26_merged_* list, no formal T1/T4/T5/T6 promotion)",
+    "R28 current-main scoped merge PR #153 (ancestry verified and keyed in post_r26_merged_* list, no formal T1/T4/T5/T6 promotion)",
+    "R158 current-main scoped merge PR #137 (ancestry verified and keyed in post_r26_merged_* list, no formal T1/T4/T5/T6/Product/Release promotion)",
+    "R158 current-main scoped merge PR #149 (ancestry verified and keyed in post_r26_merged_* list, no formal T1/T4/T5/T6/Product/Release promotion)",
+    "R158 current-main scoped merge PR #157 (ancestry verified and keyed in post_r26_merged_* list, no formal T1/T4/T5/T6/Product/Release promotion)",
+    "R158 current-main scoped merge PR #163 (ancestry verified and keyed in post_r26_merged_* list, no formal T1/T4/T5/T6/Product/Release promotion)",
+    "R158 current-main scoped merge PR #164 (ancestry verified and keyed in post_r26_merged_* list, no formal T1/T4/T5/T6/Product/Release promotion)",
+    "R158 current-main scoped merge PR #165 (ancestry verified and keyed in post_r26_merged_* list, no formal T1/T4/T5/T6/Product/Release promotion)",
+    "R158 current-main scoped merge PR #166 (ancestry verified and keyed in post_r26_merged_* list, no formal T1/T4/T5/T6/Product/Release promotion)",
+    "R158 current-main scoped merge PR #167 (ancestry verified and keyed in post_r26_merged_* list, no formal T1/T4/T5/T6/Product/Release promotion)",
+    "R158 current-main scoped merge PR #169 (ancestry verified and keyed in post_r26_merged_* list, no formal T1/T4/T5/T6/Product/Release promotion)"
+  ],
+  "tools": [
+    {
+      "id": "aflpp",
+      "issue": 25,
+      "expected_version": "5.03c",
+      "origin": "candidate",
+      "capabilities": [
+        "test.fuzz"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "TECHNICAL_PASS_INDEPENDENT_REVIEWED_R9",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #136 T6 stale-evidence maintenance assessor is open DRAFT at head 77200e71; no merged delta and no qualification change.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "alloy",
+      "issue": 26,
+      "expected_version": "6.2.0",
+      "origin": "native-ref",
+      "capabilities": [
+        "model.relational",
+        "model.state"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #139 merged scoped exit contract (530a2d7...). PR #153 Alloy T6 freshness assessor MERGED at 256766fa4dc92ea6d43fe59ca8cad59b799a0ba6 after R121 Source-First ACCEPT_SCOPED P0/P1=0 (#5929266893), R127 sync-delta ACCEPT_SCOPED P0/P1=0 P2=1 (#5929918695), exact-head #2023/#2024 SUCCESS. Original three assessor source Blobs scoped ONLY; Runner source pin from baseline main 6991 is stale (102e971...->40427c...), require T4/T6 current-main revalidation. No native Alloy replay, full T1/T4/T5/T6, professional Oracle, Product or Release qualification. The previous open-PR/head/CI-pending P2 metadata is superseded.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      },
+      "reconciliation_20261117_delta": {
+        "as_of": "2026-11-17",
+        "merges": [
+          {
+            "pr": 139,
+            "merge_commit": "530a2d7a8edf99106845be228b6451c6aa52be92",
+            "scope": "SYNTAX_ERROR_EXIT_AND_DIAGNOSTIC_CONTRACT",
+            "qualification": "SCOPED_EXIT_CONTRACT_ONLY"
+          },
+          {
+            "pr": 153,
+            "merge_commit": "256766fa4dc92ea6d43fe59ca8cad59b799a0ba6",
+            "scope": "ALLOY_T6_ASSESSOR_THREE_PATHS_ONLY",
+            "qualification": "T6_UNQUALIFIED_RUNNER_PIN_STALE; NO_NATIVE_REPLAY",
+            "review_ids": [
+              5929266893,
+              5929918695
+            ],
+            "post_main_ci": "2034_PENDING"
+          }
+        ],
+        "pending_source_review": {
+          "pr": 153,
+          "status": "MERGED_SCOPED_T6_ASSESSOR_ONLY",
+          "head": "78977fff5cd723e51bfb65eceefee48cffd9db38",
+          "merge_commit": "256766fa4dc92ea6d43fe59ca8cad59b799a0ba6",
+          "review_ids": [
+            5929266893,
+            5929918695
+          ],
+          "ci_push": 2023,
+          "ci_pr": 2024,
+          "runner_pin": "HISTORICAL_23_OF_24_AT_870bef; T4_T6_STALE"
+        }
+      }
+    },
+    {
+      "id": "apache-jena",
+      "issue": 27,
+      "expected_version": "5.5.0",
+      "origin": "native-ref",
+      "capabilities": [
+        "knowledge.rdf"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #131 5.5.0 source pin and exact fixture exits is open READY at head 29010fc4; R96 review returned REWORK P1=1 (deferred-function dynamic pin mutation bypass) and the writer repair heartbeat is posted; no merge until repair, current-main sync and fresh review.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "apalache",
+      "issue": 28,
+      "expected_version": "0.63.0",
+      "origin": "native-ref",
+      "capabilities": [
+        "model.state",
+        "logic.smt"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "causal-learn",
+      "issue": 29,
+      "expected_version": "0.1.4.8",
+      "origin": "candidate",
+      "capabilities": [
+        "causal.discovery"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #103 valid-NEG/invalid-input-ERR split is merged (90b7f3206d401aa5a2634d775c6f16487f0f1b0f; R50-recorded ACCEPT_SCOPED at exact head 9605bcac). Canonical Python3.13/current-main Runner remains NOT_RUN; PR #143 T6 evidence freshness assessor is open DRAFT. No T4/T5/T6 promotion.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      },
+      "reconciliation_20261117_delta": {
+        "as_of": "2026-11-17",
+        "merges": [
+          {
+            "pr": 103,
+            "merge_commit": "90b7f3206d401aa5a2634d775c6f16487f0f1b0f",
+            "scope": "VALID_NEG_VS_INVALID_INPUT_ERR_SPLIT",
+            "qualification": "FIXTURE_CONTRACT_ONLY; canonical current-main Runner NOT_RUN"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cbmc",
+      "issue": 30,
+      "expected_version": "6.11.0",
+      "origin": "candidate",
+      "capabilities": [
+        "code.verify"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #133 official 6.11.0 Ubuntu release asset pin is merged (0f2141dc4dcecacd5a6db72b22c28af447b50b23). PR #151 current-main Runner CLI/SDK T4 evidence is OPEN/UNMERGED at readback head 06b9815f6f78bd32eb46f50267522a402b6ce6c2 (current-main-first sync: parents f46f2545 then 177a94bc; 51/51 reviewed CBMC blobs preserved) with dual formal-static Woodpecker Push #2094 and PR #2095 SUCCESS; prior independent reviews 5947059682 ACCEPT_SCOPED_CI_GATE_DELTA P0=0/P1=0/P2=1, 5948282144 ACCEPT_SCOPED_SYNC_DELTA P0=0/P1=0/P2=1 and 5960412743 ACCEPT_SCOPED_SYNC_DELTA P0=0/P1=0/P2=2 bind to earlier head 177a94bc87c920cbb5b022ab257eb4cf59baaf4f (CI #2091/#2092 SUCCESS), so a distinct-conversation incremental review at 06b9815f is still required before any guarded merge. Not merged and not counted in the merged inventory; engineering evidence only, no native CBMC MCP solve, no qualification promotion.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      },
+      "reconciliation_20261117_delta": {
+        "as_of": "2026-11-17",
+        "merges": [
+          {
+            "pr": 133,
+            "merge_commit": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
+            "scope": "OFFICIAL_UBUNTU_RELEASE_ASSET_PIN",
+            "qualification": "SOURCE_IDENTITY_PIN_ONLY"
+          }
+        ]
+      }
+    },
+    {
+      "id": "clingo",
+      "issue": 31,
+      "expected_version": "5.8.3",
+      "origin": "native-ref",
+      "capabilities": [
+        "logic.rules",
+        "opt.combinatorial"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #134/#154 previously merged. PR #160 Clingo private staging and stale-source/version test guard MERGED at 870bef6edf8930bb39ec54b014f5c860dcc63dc8; independent reviews #5929632597/#5929747041 ACCEPT_SCOPED P0/P1=0, current-main Push #2020 SUCCESS; source/build-only and original publisher tarball SHA UNVERIFIED, no full T1/T4/T5/T6 qualification.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      },
+      "reconciliation_20261117_delta": {
+        "as_of": "2026-11-17",
+        "merges": [
+          {
+            "pr": 134,
+            "merge_commit": "a229566c14a0d00b9b05a4a3d5e018b487cf1c73",
+            "scope": "EXECUTABLE_LIFECYCLE_FRESHNESS_CONTRACT",
+            "qualification": "MAINTENANCE_CONTRACT_ONLY"
+          },
+          {
+            "pr": 154,
+            "merge_commit": "4fa5d138c45039e37b9e04f8621c1116c16886e8",
+            "scope": "V5_8_3_SOURCE_COMMIT_PIN_AND_VERSION_DRIFT_REJECTION",
+            "qualification": "SOURCE_IDENTITY_PIN_ONLY"
+          },
+          {
+            "pr": 160,
+            "merge_commit": "870bef6edf8930bb39ec54b014f5c860dcc63dc8",
+            "scope": "CLINGO_BUILDER_AND_TEST_TWO_PATHS",
+            "qualification": "SOURCE_ONLY_NO_T1_T4_T5_T6",
+            "review_ids": [
+              5929632597,
+              5929747041
+            ],
+            "post_main_ci": 2020
+          }
+        ]
+      }
+    },
+    {
+      "id": "cvc5",
+      "issue": 32,
+      "expected_version": "1.4.2",
+      "origin": "native-ref",
+      "capabilities": [
+        "logic.smt",
+        "proof.deductive"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #135 native replay evidence previously MERGED. PR #158 cvc5 non-incremental multi-query fail-closed negative test MERGED at 6a8e874131da385430159099afb71cf5929de8a7; post-main #2010 SUCCESS. PR #165 cvc5 offline T6 evidence freshness assessor MERGED at 9aad5d928fe58ef39c2acd850070538c46f06789; review 5943639945 ACCEPT_SCOPED_SOURCE_ONLY P0=0/P1=0/P2=1; exact-head CI #2065/#2066 SUCCESS; post-main push #2072 SUCCESS. Assessor and test-only source; no native re-solve, full T4/T5/T6 or Product/Release qualification.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      },
+      "reconciliation_20261117_delta": {
+        "as_of": "2026-11-17",
+        "merges": [
+          {
+            "pr": 135,
+            "merge_commit": "3ea64a631c2bf0e44b5e286ca96d45b10e742db5",
+            "scope": "R27_EXACT_NON_ROOT_NATIVE_REPLAY_RECEIPT",
+            "qualification": "SCOPED_RECEIPT_ONLY"
+          },
+          {
+            "pr": 158,
+            "merge_commit": "6a8e874131da385430159099afb71cf5929de8a7",
+            "scope": "CVC5_TEST_ONLY",
+            "qualification": "NO_NATIVE_RERUN_OR_T4_T5_T6",
+            "post_main_ci": 2010
+          }
+        ]
+      }
+    },
+    {
+      "id": "dafny",
+      "issue": 33,
+      "expected_version": "4.11.0",
+      "origin": "native-ref",
+      "capabilities": [
+        "proof.deductive",
+        "code.verify"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #137 SDK outcome classification and native fixture exits MERGED at b9a662f48079d855aac69c886f228cce89efa8c6 as the current-main sync of the R103-accepted scoped delta; final sync review 5942165842 ACCEPT_SCOPED_SYNC_DELTA P0=0/P1=0/P2=2; exact-head CI #2056/#2057 SUCCESS; post-main push #2062 SUCCESS. No T1, no full T4, no T5/T6/Product/Release promotion.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "dowhy",
+      "issue": 34,
+      "expected_version": "0.14",
+      "origin": "candidate",
+      "capabilities": [
+        "causal.inference"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #138 T6 freshness assessor and baseline is open READY at head 70a24ad0; independent review pending; no qualification change.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "elk",
+      "issue": 35,
+      "expected_version": "0.6.0",
+      "origin": "candidate",
+      "capabilities": [
+        "ontology.inference"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "TECHNICAL_PASS_INDEPENDENT_REVIEWED_R9",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #140 T6 evidence freshness assessor is open READY at head d4df872e; independent review pending; no qualification change.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "fast-check",
+      "issue": 36,
+      "expected_version": "4.10.2",
+      "origin": "candidate",
+      "capabilities": [
+        "test.property"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "TECHNICAL_PASS_INDEPENDENT_REVIEWED_R9",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "fast-downward",
+      "issue": 37,
+      "expected_version": "24.06",
+      "origin": "candidate",
+      "capabilities": [
+        "planning.classical"
+      ],
+      "reference_t3_route_r4": "HOST_PYTHON313_RUNNER_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #94 fixture exit contract and PR #116 test-only exit-assignment hardening remain merged. PR #102 official 24.06.0 source pin is open READY at head e6eabb0e with exact-head dual Woodpecker CI SUCCESS and fresh independent review pending. The original archive still reports 26.6+ while the declared version is 24.06, so source identity and T0/T1/T3/T4/T5/T6 remain unqualified.",
+      "t3_r19_delta": "ORIGINAL_ARCHIVE_POS_NEG_ERR_SCOPED_OBSERVATION; NEG=11 ERR=31 FIXTURE_CONTRACT_MERGED; VERSION_IDENTITY_REWORK_P1",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      },
+      "r23_exit_contract_regression": {
+        "pr": 116,
+        "merge_commit": "0f07c2719115b9dfdd7c0cff005b33ffb775173a",
+        "review": "ACCEPTED_SCOPED",
+        "ci": "SUCCESS_SUCCESS",
+        "scope": "TEST_ONLY_EXACT_UNIQUE_POS_NEG_ERR_EXIT_ASSIGNMENTS",
+        "qualification": "ARCHIVE_VERSION_IDENTITY_STILL_UNRESOLVED; NO_T0_T1_T2_T3_T4_T5_T6_PROMOTION"
+      }
+    },
+    {
+      "id": "highs",
+      "issue": 38,
+      "expected_version": "1.15.1",
+      "origin": "candidate",
+      "capabilities": [
+        "opt.numerical"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "TYPED_SOLVE_LP_OPERATION_MERGED_MAIN_CANDIDATE; FULL_T4_ACCEPTANCE_PENDING_EXACT_MAIN_PORTABLE_REPLAY_AND_REVIEW",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "Typed Highs LP operation merged to main; independent review ACCEPTED_SCOPED with nonblocking P2 because fake-highspy invalid-solution regression skips outside Python 3.13.5. Full T4/T5/T6 remain unaccepted. PR #110 requires the canonical Python 3.13 fake-highspy regression to run in CI and is open DRAFT at head 27740f90.",
+      "t3_r20_delta": "CANONICAL_PYTHON313_NUMPY254_HIGHSPY1151_TYPED_POS_NEG_ERR_EXECUTED",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "hypothesis",
+      "issue": 39,
+      "expected_version": "6.170.15",
+      "origin": "candidate",
+      "capabilities": [
+        "test.property"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "TECHNICAL_PASS_INDEPENDENT_REVIEWED_R9",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "kani",
+      "issue": 40,
+      "expected_version": "0.68.0",
+      "origin": "candidate",
+      "capabilities": [
+        "code.verify"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #109 counterexample exit contract is merged (cd436ed40e4a319c75ba83c247af9ba77bf98a0e); test-only scoped; no qualification promotion.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      },
+      "reconciliation_20261117_delta": {
+        "as_of": "2026-11-17",
+        "merges": [
+          {
+            "pr": 109,
+            "merge_commit": "cd436ed40e4a319c75ba83c247af9ba77bf98a0e",
+            "scope": "COUNTEREXAMPLE_EXIT_CONTRACT_TEST",
+            "qualification": "TEST_ONLY_SCOPED"
+          }
+        ]
+      }
+    },
+    {
+      "id": "lean4",
+      "issue": 41,
+      "expected_version": "4.35.0",
+      "origin": "native-ref",
+      "capabilities": [
+        "proof.deductive"
+      ],
+      "reference_t3_route_r4": "BLOCKED_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR101 fixture/evidence delta merged; current-main Runner T3 is writer-reported PASS_SCOPED with staged metadata overlay, but raw receipt/log bytes are not linked and network isolation is NOT_PROVEN; T1/T4/T5/T6 not accepted. PR #122 R23 current-main native interface evidence is open DRAFT at head 968cbf9a with R103 review ACCEPT_SCOPED P0=0/P1=0/P2=2 (nonblocking metadata) at main 68e9 and CI #1899/#1900 SUCCESS; the reviewer is assessing 68e9→6991 and all 18 historical pins; keep DRAFT.",
+      "t3_r19_delta": "ORIGINAL_LEAN4_ARCHIVE_POS_NEG_ERR_NATIVE_SCOPED_PASS",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      },
+      "t3_r22_delta": "CURRENT_MAIN_RUNNER_LEAN4_POS_NEG_ERR_WRITER_REPORTED_PASS_SCOPED_METADATA_OVERLAY"
+    },
+    {
+      "id": "mesa",
+      "issue": 42,
+      "expected_version": "3.5.2",
+      "origin": "candidate",
+      "capabilities": [
+        "sim.agent"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "TECHNICAL_PASS_INDEPENDENT_REVIEWED_R9",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "minizinc",
+      "issue": 43,
+      "expected_version": "2.10.1",
+      "origin": "candidate",
+      "capabilities": [
+        "opt.combinatorial"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PRs #117 error fixture exit contract (97e0d0bf6a0b197ee9e7008703646a98db907de6), #130 upstream release asset identity (211c7a83282a25c0387bce2dd4e8f632313b51b8) and #150 current-main T4 metadata gate (668ac784fe6c7e78c1e8d468638cbebecdbe6539; reviewed-green guarded integration) are merged. PR #149 R96 current-main rebuild evidence MERGED at 24a1985164fb26ae60e4ed4d41f7d12edecf9fcf (with prior direct sync commits 0f88d4f8e14d2f636f81dd9d9910f7f3ad4ff115 and 0b70de21f866a0182c60b93a8dca580b311467f2 and final sync commit 82804ab4fc172aed27b5acdfcda31f166564f928); reviews 5946421413 ACCEPT_SCOPED_ENGINEERING_ONLY_R131_RECEIPT_REPAIR P0=0/P1=0/P2=2 and 5948253372 ACCEPT_SCOPED_SYNC_DELTA P0=0/P1=0; exact-head CI #2078/#2079 SUCCESS; post-main push #2082 SUCCESS; the R102 evidence-bundle repair items were resolved by binding UID65534 raw receipts. Scoped source identity, fixture, metadata and rebuild-evidence merges only; no formal T4/T5/T6 promotion.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      },
+      "reconciliation_20261117_delta": {
+        "as_of": "2026-11-17",
+        "merges": [
+          {
+            "pr": 117,
+            "merge_commit": "97e0d0bf6a0b197ee9e7008703646a98db907de6",
+            "scope": "ERROR_FIXTURE_EXIT_CONTRACT_TEST",
+            "qualification": "TEST_ONLY_SCOPED"
+          },
+          {
+            "pr": 130,
+            "merge_commit": "211c7a83282a25c0387bce2dd4e8f632313b51b8",
+            "scope": "UPSTREAM_RELEASE_ASSET_IDENTITY_PIN",
+            "qualification": "SOURCE_IDENTITY_PIN_ONLY"
+          },
+          {
+            "pr": 150,
+            "merge_commit": "668ac784fe6c7e78c1e8d468638cbebecdbe6539",
+            "scope": "CURRENT_MAIN_T4_METADATA_GATE_RECORD",
+            "qualification": "SCOPED_METADATA_RECORD_ONLY"
+          }
+        ]
+      }
+    },
+    {
+      "id": "networkx",
+      "issue": 44,
+      "expected_version": "3.7",
+      "origin": "candidate",
+      "capabilities": [
+        "graph.algorithms"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #164 NetworkX scoped fail-closed T6 evidence freshness assessor MERGED at 604df01d26274079a5fffd0dd0a1b26ac84d91f0; final sync review 5942159882 ACCEPT_SCOPED_SYNC_DELTA P0=0/P1=0/P2=1 retained external-git-readback boundary; exact-head CI #2054/#2055 SUCCESS; post-main push #2061 SUCCESS. Assessor source only; historical T0/T2 snapshot unchanged; no full T6/T4/T5/Product/Release promotion.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      },
+      "r22_t0_source_audit": {
+        "pr": 105,
+        "exact_head": "055ecdf3b296986cddc3769810a063598cda5856",
+        "merge_commit": "74b511e27ed2b2690be6c7e292400c723c6b9b88",
+        "review": "ACCEPTED_SCOPED",
+        "scope": "SOURCE_VERSION_LICENSE_AND_ARCHIVE_PRODUCER_MANIFEST_MATCH_ONLY",
+        "full_t0": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "id": "nuxmv",
+      "issue": 45,
+      "expected_version": "2.2.0",
+      "origin": "candidate",
+      "capabilities": [
+        "model.state"
+      ],
+      "reference_t3_route_r4": "LOCAL_PATCHED_FIXTURE_RUNNER_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #86 shared Runner static-ELF classifier is MERGED (merge commit 1d054ae432549a9bff6276b82b561f3ecf12632d) via reviewed-green guarded integration after the R28C delivery (final head 194cf8f153c9ca679e664384aefb95fa99e5f99e, current-main-first sync merge c71d20c92c93a61dc0b8575b35f5b78af1b40191, exact-head CI #1940/#1941 SUCCESS, 463 tests / 458 pass / 0 fail / 5 skipped; ELF32-LE negative fixture, vDSO-only ldd fail-closed and TOOL_TOOL_ID alias regressions locked; Runner Blob 40427c1e unchanged). PR #111 nuXmv current-main Runner CLI/SDK receipts is open READY at head 69574acd. Current-main portable bundle requalification still requires scoped current-main Runner evidence and independent review; no T4/T5/Product/Release promotion.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "NOT_QUALIFIED"
+      },
+      "reconciliation_20261117_delta": {
+        "as_of": "2026-11-17",
+        "merges": [
+          {
+            "pr": 86,
+            "merge_commit": "1d054ae432549a9bff6276b82b561f3ecf12632d",
+            "scope": "SHARED_RUNNER_STATIC_ELF_CLASSIFIER_REPAIRS",
+            "qualification": "SCOPED_RUNNER_SOURCE_ONLY; see this_increment.doctor_static_elf"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ortools",
+      "issue": 46,
+      "expected_version": "9.15.6755",
+      "origin": "candidate",
+      "capabilities": [
+        "opt.combinatorial",
+        "opt.numerical"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "prism",
+      "issue": 47,
+      "expected_version": "4.11",
+      "origin": "candidate",
+      "capabilities": [
+        "model.probabilistic"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "prob",
+      "issue": 48,
+      "expected_version": "1.16.1",
+      "origin": "native-ref",
+      "capabilities": [
+        "model.state"
+      ],
+      "reference_t3_route_r4": "LOCAL_PATCHED_FIXTURE_RUNNER_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #128 historical ProB original-tar replay evidence MERGED. PR #155 ProB private staging and incorrect native version guard MERGED at 3c42e0bddbd3dc5c73491b3dc8d2bbbb7a5352d9, distinct review #5928841763 ACCEPT_SCOPED P0/P1=0, post-main #2015 SUCCESS. Publisher original tar.gz SHA UNVERIFIED and historical Drive/Runner/TOOL_TOOL_ID limitations unchanged; no full independent T1/current-main T4/T5/T6.",
+      "t3_r21_delta": "ORIGINAL_PROB1161_POS_NEG_ERR_SCOPED_PASS_HISTORICAL_RUNNER; FIXTURE_COPY_CONTRACT_MERGED; NO_CURRENT_MAIN_RUNNER_REQUALIFICATION",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "NOT_QUALIFIED"
+      },
+      "reconciliation_20261117_delta": {
+        "as_of": "2026-11-17",
+        "merges": [
+          {
+            "pr": 128,
+            "merge_commit": "8fa74a38e0af0a4fe8db83bd4598c4ea767550c2",
+            "scope": "R55_ORIGINAL_TAR_REPLAY_EVIDENCE_RECORD",
+            "qualification": "SCOPED_EVIDENCE_RECORD_ONLY"
+          },
+          {
+            "pr": 155,
+            "merge_commit": "3c42e0bddbd3dc5c73491b3dc8d2bbbb7a5352d9",
+            "scope": "PROB_BUILDER_AND_TEST_TWO_PATHS",
+            "qualification": "PUBLISHER_TARBALL_SHA_UNVERIFIED; NO_T1_T4_T5_T6",
+            "review_id": 5928841763,
+            "post_main_ci": 2015
+          }
+        ]
+      }
+    },
+    {
+      "id": "pymc",
+      "issue": 49,
+      "expected_version": "6.4.0",
+      "origin": "candidate",
+      "capabilities": [
+        "stats.bayesian"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #125 source and archive audit is merged (591d3914e0e99ec8e1bd3e12887f110d096208ce) as T0-source-audit scoped evidence; PR #144 T2 receipt archive-member reference correction is open DRAFT at head be430cc4. No qualification promotion.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      },
+      "reconciliation_20261117_delta": {
+        "as_of": "2026-11-17",
+        "merges": [
+          {
+            "pr": 125,
+            "merge_commit": "591d3914e0e99ec8e1bd3e12887f110d096208ce",
+            "scope": "SOURCE_AND_ARCHIVE_AUDIT_RECORD",
+            "qualification": "T0_SOURCE_AUDIT_SCOPED_ONLY"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rdf-shacl",
+      "issue": 50,
+      "expected_version": "0.40.2",
+      "origin": "native-ref",
+      "capabilities": [
+        "knowledge.rdf"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #124 source and archive audit is merged (d996d168812f51d131b3f3f9c525cc1bd161d087) and PR #127 portable rebuild with pinned Python 3.13 runtime is merged (c2728c9e1c8b2777bc5db467cd551033e12ebe64; R54/R102 ACCEPT_SCOPED P0=0/P1=0/P2=1; final sync head 1ba05503edc0520c34e5fc18f15842a74436aa47 with PR CI #1905 SUCCESS). PR #149 additionally landed the docs/tool-portfolio/r52/raw/** RDF-Shacl current-runner rebuild raw evidence (installer/runner/direct POS NEG ERR raw receipts) inside the R131/R153-reviewed MiniZinc merge; scoped raw-evidence landing only; no T0-T6 promotion.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      },
+      "reconciliation_20261117_delta": {
+        "as_of": "2026-11-17",
+        "merges": [
+          {
+            "pr": 124,
+            "merge_commit": "d996d168812f51d131b3f3f9c525cc1bd161d087",
+            "scope": "SOURCE_AND_ARCHIVE_AUDIT_RECORD",
+            "qualification": "T0_SOURCE_AUDIT_SCOPED_ONLY"
+          },
+          {
+            "pr": 127,
+            "merge_commit": "c2728c9e1c8b2777bc5db467cd551033e12ebe64",
+            "scope": "PORTABLE_REBUILD_WITH_PINNED_PYTHON_3_13_RUNTIME",
+            "qualification": "SCOPED_REBUILD_AND_EVIDENCE_ONLY"
+          }
+        ]
+      }
+    },
+    {
+      "id": "robot",
+      "issue": 51,
+      "expected_version": "1.9.11",
+      "origin": "candidate",
+      "capabilities": [
+        "ontology.processing"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PRs #129 current-main native fixture outcomes (8c0811a7baa5f79953a85a190595995f2463f7d0) and #145 inferred class-membership positive assertion (721c1f5854e697db4534958de0bd21ee70bca108) are merged; PR #142 current-main Runner replay evidence is open DRAFT at head 8ebf205d. Scoped fixture merges only; no T4/T5/T6 promotion.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      },
+      "reconciliation_20261117_delta": {
+        "as_of": "2026-11-17",
+        "merges": [
+          {
+            "pr": 129,
+            "merge_commit": "8c0811a7baa5f79953a85a190595995f2463f7d0",
+            "scope": "CURRENT_MAIN_NATIVE_FIXTURE_OUTCOME_PIN",
+            "qualification": "FIXTURE_SCOPED_ONLY"
+          },
+          {
+            "pr": 145,
+            "merge_commit": "721c1f5854e697db4534958de0bd21ee70bca108",
+            "scope": "POSITIVE_CASE_CLASS_MEMBERSHIP_ASSERTION",
+            "qualification": "TEST_ONLY_SCOPED"
+          }
+        ]
+      }
+    },
+    {
+      "id": "simpy",
+      "issue": 52,
+      "expected_version": "4.1.2",
+      "origin": "candidate",
+      "capabilities": [
+        "sim.discrete"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #114 current-main T4 host-scoped replay is open READY at head 2d9ba325; R95 ACCEPT_SCOPED P0/P1=0 P2=1 was bound to main 530a and the writer still owes current-main sync and fresh review before Integrator merge.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "souffle",
+      "issue": 53,
+      "expected_version": "2.5",
+      "origin": "native-ref",
+      "capabilities": [
+        "logic.rules"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #118 current-main POS NEG ERR execution contracts is open READY at head e52e1cec; R93 review REWORK P1=1/P2=1 requires the exact 14-entry SHA256SUMS repair and publisher-provenance wording; writer repair heartbeat posted; no merge until repaired and freshly reviewed.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "storm",
+      "issue": 54,
+      "expected_version": "1.8.0",
+      "origin": "candidate",
+      "capabilities": [
+        "model.probabilistic"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #115 current-main CLI and SDK fixture route qualification is open READY at head 70d821d9; independent review pending; no qualification change.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "sympy",
+      "issue": 55,
+      "expected_version": "1.14.0",
+      "origin": "candidate",
+      "capabilities": [
+        "math.symbolic"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_WHEELHOUSE_SCOPED_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #119 exact-main SymPy Runner, CLI and SDK replay record is open READY at head 9c923e94; source pins must be refreshed against live main and independent review is pending.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "NOT_QUALIFIED",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "tla-tlc",
+      "issue": 56,
+      "expected_version": "1.8.0",
+      "origin": "native-ref",
+      "capabilities": [
+        "model.state"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #108 1.8.0 asset and negative exit pin is merged (b9889b7183ebd8b94f9face54425d529e79ca834); PR #141 T6 evidence freshness assessor is open DRAFT at head 8ef3ad1c. Scoped asset identity only; no qualification promotion.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      },
+      "reconciliation_20261117_delta": {
+        "as_of": "2026-11-17",
+        "merges": [
+          {
+            "pr": 108,
+            "merge_commit": "b9889b7183ebd8b94f9face54425d529e79ca834",
+            "scope": "ASSET_IDENTITY_AND_NEGATIVE_EXIT_PIN",
+            "qualification": "SCOPED_ASSET_IDENTITY_ONLY"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tree-sitter",
+      "issue": 57,
+      "expected_version": "0.27.2",
+      "origin": "candidate",
+      "capabilities": [
+        "code.syntax"
+      ],
+      "reference_t3_route_r4": "ALTERNATE_CLI_SMOKE_PASS_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NATIVE_CLI_POS_NEG_ERR_SCOPED_SOURCE_REVIEWED_NOT_ORIGINAL_PACKAGE_REBUILT",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #107 builder/test source is present in current main (merge commit 74b511e27ed2b2690be6c7e292400c723c6b9b88; builder Blob 5adc9de0d11ed2c60c45d2683ad27d7e80791854; test Blob e3493b52d4dcccbcf8fb4e963a01ad5b3cfac0ad). Remaining: canonical package rebuild from current main, current-main Runner + CLI/MCP/SDK E2E and independent T3/T4 acceptance. Reviewer P2: update Issue #57 dependency/next-action wording to distinguish CLI-only fixture from Python binding availability. No T1/T3/T4/T5/T6 promotion.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "NOT_QUALIFIED"
+      }
+    },
+    {
+      "id": "vampire",
+      "issue": 58,
+      "expected_version": "5.1.0",
+      "origin": "native-ref",
+      "capabilities": [
+        "proof.deductive"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #106 5.1.0 asset and fixture exit pin is open DRAFT at head 4c011955; no merged delta and no qualification change.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    },
+    {
+      "id": "why3",
+      "issue": 59,
+      "expected_version": "1.8.0",
+      "origin": "candidate",
+      "capabilities": [
+        "proof.deductive"
+      ],
+      "reference_t3_route_r4": "BLOCKED_R4",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "UNSAFE_ORIGINAL_STILL_BLOCKED_PRIVATE_CHROOT_RESEARCH_ONLY",
+      "t4_interface": "CANDIDATE_FIXED_PORTABLE_GATE_ROUTE_SOURCE_ONLY",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": "PR #92/#104/#126 scoped Why3 historical evidence MERGED. PR #157 historical T6 evidence freshness assessor MERGED at 971253f6f41744560f784ab4e195ddaee0fe7b15; R128 sync-delta review 5929954782 ACCEPT_SCOPED_SYNC_DELTA_HISTORICAL_T6_ASSESSOR_ONLY P0=0/P1=0/P2=1 current Runner pin drift; exact-head CI #2027/#2028 SUCCESS; post-main push #2045 SUCCESS. Historical source pins 7/8 current-main match, tool-runner 102e971->40427c drift requires T4/T6 revalidation. Original unsafe Why3 Drive archive quarantined; canonical safe/relocatable package, independent build and network isolation NOT_QUALIFIED. No T1/T3/T4/T5/T6/Product/Release promotion.",
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "NOT_QUALIFIED"
+      },
+      "reconciliation_20261117_delta": {
+        "as_of": "2026-11-17",
+        "merges": [
+          {
+            "pr": 104,
+            "merge_commit": "19e349fcf96f8883be6a46c654046f1b0e6c66bd",
+            "scope": "R22_RELOCATION_PROBE_EVIDENCE_RECORD",
+            "qualification": "SCOPED_EVIDENCE_RECORD_ONLY"
+          },
+          {
+            "pr": 126,
+            "merge_commit": "319367063177dec22a6df64233fae2a5fceef00f",
+            "scope": "REPRODUCIBLE_R27_CHROOT_EVIDENCE",
+            "qualification": "SCOPED_CHROOT_EVIDENCE_ONLY; canonical safe package still required"
+          }
+        ],
+        "pending_source_review": {
+          "pr": 157,
+          "status": "OPEN_DRAFT_REVIEWED_ASSESSOR_ONLY",
+          "head": "2b749a2f9366fa8dbd8069740d1f7896692e7260",
+          "review_id": 5929954782,
+          "ci_push": 2027,
+          "ci_pr": 2028,
+          "runner_pin": "HISTORICAL_7_OF_8_AT_870bef; T4_T6_STALE"
+        }
+      }
+    },
+    {
+      "id": "z3",
+      "issue": 60,
+      "expected_version": "5.4.0",
+      "origin": "native-ref",
+      "capabilities": [
+        "logic.smt"
+      ],
+      "reference_t3_route_r4": "ORIGINAL_TAR_RUNNER_PASS_R3",
+      "t0": "REGISTERED_SOURCE_RIGHTS_REQUIRE_INDIVIDUAL_SCOPE",
+      "t1": "NO_NEW_REPRODUCIBLE_BUILD_CLAIM",
+      "t2": "REUSE_EXISTING_PINNED_HOST_SCOPE",
+      "t3_reviewed_technical_fixture": "NO_NEW_REVIEW_CLAIM",
+      "t3_r18_delta": "NO_T3_DELTA",
+      "t4_interface": "ORIGINAL_13_SCOPED_NATIVE_RUNTIME_INTERFACE",
+      "t4_full_accepted": false,
+      "t5_business_accepted": false,
+      "t6_final_accepted": false,
+      "pending": null,
+      "source_snapshot_status": {
+        "ledger": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json",
+        "snapshot_date": "2026-11-12",
+        "source_blob": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+        "T0": "ARCHIVE_SHA_MATCH_PUBLISHER_MANIFEST_ONLY",
+        "T2": "PASS_SCOPED_R3"
+      }
+    }
+  ]
+}
