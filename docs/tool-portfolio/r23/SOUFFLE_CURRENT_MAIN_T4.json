@@ -1,0 +1,319 @@
+{
+  "schema": "formal-tools/souffle-current-main-t4/0.1",
+  "tool": {
+    "issue": 53,
+    "id": "souffle",
+    "expected_version": "2.5",
+    "capability": "logic.rules",
+    "origin": "native-ref",
+    "capability_ids": [
+      "logic.rules"
+    ]
+  },
+  "result": {
+    "status": "PARTIAL_DIRECT_NATIVE_REPLAY_CLI_SDK_WRITER_REPORTED_ONLY_MCP_NOT_RUN",
+    "overall_t4_qualification": "NOT_QUALIFIED",
+    "t3": "PRIOR_R3_RECEIPT_REUSED_NOT_REQUALIFIED",
+    "t5": "NOT_QUALIFIED",
+    "t6": "OPEN",
+    "product": "NOT_SIGNED",
+    "release": "NOT_SIGNED",
+    "independent_source_first_review": "PENDING_R27_REPAIR"
+  },
+  "current_main": {
+    "commit": "f46f2545a3ae10dbefe93edd1f2a2efa3ab275dc",
+    "blobs": {
+      "portable_runner": "40427c1e541f294d71d803b0225984175708391e",
+      "native_adapter": "8bb35b48a67a7220956e5605520d31c8a5a598ae",
+      "cli": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
+      "sdk": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+      "mcp": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+      "native_catalog": "02f628947be3e5c270d802be150ab220e14fc2b8",
+      "validation_manifest": "b52076bc6d129f6f6b416e040863e71aa9108234",
+      "skill_positive": "d2c1f5b4a359fac8cf536f41f6fd32f8cf347725",
+      "skill_negative": "44aef3679ea0e895815a0ef2624ebf787fb9e73a",
+      "package_json": "99cd24d1c71d2c12297730056f1b1882a770c851",
+      "make_meta_py": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+      "registry": "faa89997c3f7c8c71da0a69aa90e8ff37461cde0",
+      "lifecycle_dag": "250b84ae0638d98115d748a32ae2f2c9357942b0"
+    },
+    "runner_sha256": "60af447ecfbc401549a7bbaab56e4111e0ca1d66a19bdc81e9eb479bdcd26c71",
+    "source_pins_verified_at_current_main": true,
+    "source_pin_count": 13,
+    "branch_sync_status": "CURRENT_MAIN_F46F254_SYNCED_PENDING_EXACT_HEAD_CI",
+    "previous_sync_head": "e52e1cec297f832ab164f7f48569ac3d2bb75f99",
+    "latest_main_delta_since_previous_sync": {
+      "from": "a82b16a985aaa0154234cf491ca6aecdb2b254a9",
+      "to": "f46f2545a3ae10dbefe93edd1f2a2efa3ab275dc",
+      "path_count_total": 233,
+      "paths_listed_are_pin_component_subset_only": true,
+      "paths": [
+        "packages/runner/js/native.mjs",
+        "packages/runner/js/solution-candidate.mjs",
+        "portable/packaging/bundle-template/bin/tool-runner"
+      ],
+      "pin_blob_changes": {
+        "packages/runner/js/native.mjs": {
+          "from": "2e0e669e4fa66cb27654644705e76794c0727004",
+          "to": "8bb35b48a67a7220956e5605520d31c8a5a598ae",
+          "commit": "b9a662f fix(dafny): integrate scoped fail-closed native SDK outcome contract (#137)"
+        },
+        "portable/packaging/bundle-template/bin/tool-runner": {
+          "from": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+          "to": "40427c1e541f294d71d803b0225984175708391e",
+          "commit": "1d054ae fix(portable): fail-closed ELF static dependency gate (#86)"
+        }
+      },
+      "other_component_paths_no_pin_effect": [
+        "portable/builders/tools/cbmc.sh",
+        "portable/builders/tools/clingo.sh",
+        "portable/builders/tools/prob.sh",
+        "portable/verification/cases/alloy/expect.sh",
+        "portable/verification/cases/dafny/expect.sh",
+        "portable/verification/cases/robot/expect.sh"
+      ],
+      "overlap_with_souffle_pr": false
+    }
+  },
+  "package": {
+    "drive_file_id": "1f2doUFxpGxHALhoZ2vrm5O6WLr6bjPOj",
+    "archive": "souffle-2.5-linux-x86_64.tar.zst",
+    "size_bytes": 4755814,
+    "sha256": "e3b04c0491998c51c69172d2f2fec6c1896c74a1aaab3750e56e831935648e71",
+    "zstd_integrity": "PASS",
+    "tar_entries": 17,
+    "regular_files": 14,
+    "directories": 3,
+    "symlinks": 0,
+    "special_entries": 0,
+    "unsafe_paths": 0,
+    "extraction_uid": 1000,
+    "package_root_read_only": true,
+    "souffle_binary_sha256": "28b6284150aae6c77fd5294aabe146058624f5b70a981ade7d8b843581995da0",
+    "mcpp_binary_sha256": "918f25da39869bfe5e1d0f8d6fbe595badc5c8ee4c268fab259210cb44edbd39",
+    "original_meta_json_sha256": "742c8af3de504aacb23eb90855ccbd4a16a3dbdb408914a064961cfd0edcf22d",
+    "original_meta_json_byte_identical_after_regeneration": true,
+    "original_meta_sh_sha256": "878093f3e5442cf56d2bda62a47bd29d867c509be4d4550dde29b1f01c6e2036",
+    "original_meta_sh_identity": "TOOL_TOOL_ID=souffle",
+    "original_meta_sh_rejected_by_current_runner": true,
+    "canonical_meta_sh_regenerated_with_current_main_make_meta": true,
+    "canonical_meta_sh_sha256": "8ab72a6a1abc8b4fedb52e18a404d4432dfe8ff318a2ad0c324b7ad6661b76dc",
+    "version": "2.5",
+    "doctor": {
+      "status": "OK",
+      "missing_shared_libraries": 0,
+      "glibc_max": "2.38"
+    },
+    "version_probe": {
+      "stdout_contains": "Version: 2.5 (2.5)",
+      "exit_code": 0
+    },
+    "publisher_checksum_verified": false,
+    "source_signature_verified": false,
+    "archive_digest_provenance": "computed-from-the-Google-Drive-copy-in-this-run"
+  },
+  "portable_fixture": {
+    "expect_path": "portable/verification/cases/souffle/expect.sh",
+    "expect_blob": "c6a378daec67f4c62568af6d29d920b5ef844859",
+    "expect_sha256": "f53a7df48add8a7c030629fa9e57b92de6ffc6820948651c2db6e15d16097d74",
+    "pos_blob": "cca8867dac602f5b567cccf7e28b3218f51d4704",
+    "neg_blob": "57b2891fce98786a3e3e9677730896de7275ee7a",
+    "badtypes_blob": "57b2891fce98786a3e3e9677730896de7275ee7a",
+    "test_path": "tests/souffle-current-main-t4.test.mjs",
+    "test_blob": "9480571a1ee95ff9c33eb9d037a43f00ed2b018e",
+    "test_result": "6/6 PASS (Node v24.21.0; source fixture path is mapped through pack.sh; SHA256SUMS 14/14 verified over committed bytes)",
+    "direct_runner": {
+      "status": "WRITER_REPORTED_ONLY",
+      "tsv_sha256": "c9682b69d1143a7dba7929b4eea895cb2c2c098388014e4019d8d14e01587d9d",
+      "phases": {
+        "pos": {
+          "exit_code": 0,
+          "matched": true,
+          "label": "DERIVED",
+          "evidence_level": "WRITER_REPORTED_ONLY"
+        },
+        "neg": {
+          "exit_code": 1,
+          "matched": true,
+          "label": "INVALID_REJECTED",
+          "evidence_level": "WRITER_REPORTED_ONLY"
+        },
+        "err": {
+          "exit_code": 1,
+          "matched": true,
+          "label": "MISSING_INPUT_REJECTED",
+          "evidence_level": "WRITER_REPORTED_ONLY"
+        }
+      },
+      "evidence_level": "WRITER_REPORTED_ONLY",
+      "independently_reproduced_in_r27": false,
+      "reason": "R27 replay captures direct package run-shim stdout/stderr/exit, not a new portable Runner verify TSV receipt."
+    },
+    "alternate_neg_blob": "a905fd35fe4aff2a681f62b764a16d1047c81ea8",
+    "test_sha256": "cdbab5c1e1340e9f53befd2a96eb2b3e315dac69b89ce7d27926ba3bfacfb31e",
+    "negative_fixture_binding": "EXPECT_NEG_ARGS=tests/souffle/badtypes.dl is the packed-bundle path; the source test reads portable/verification/cases/souffle/badtypes.dl and asserts portable/packaging/pack.sh copies verification/cases/. into bundle/tests/; duplicate-declaration neg.dl is a separate alternate.",
+    "test_source_fixture_path": "portable/verification/cases/souffle/badtypes.dl",
+    "test_path_fix": {
+      "status": "FIXED_AND_LOCALLY_REPRODUCED",
+      "before": "4/5 PASS; one ENOENT because root-level source test tried to read bundle-only tests/souffle/badtypes.dl before pack.sh ran",
+      "after": "5/5 PASS",
+      "node": "v22.16.0",
+      "pack_script_blob": "4b3cae235643f8554f1e62001268816ba205bcac",
+      "pack_copy_rule": "cp -a \"$HERE/../verification/cases/.\" \"$B/tests/\"",
+      "source_fixture_path": "portable/verification/cases/souffle/badtypes.dl",
+      "bundle_runtime_path": "tests/souffle/badtypes.dl"
+    }
+  },
+  "native_cli": {
+    "fixture_positive": {
+      "exit_code": 0,
+      "test_verdict": "PASS",
+      "tool_outcome": "ACYCLIC",
+      "stdout_sha256": "ce5b2cc8a1748d7b49e1fdeaae6808c8a8274419c9fc17f15287d191b4c1c5a4"
+    },
+    "fixture_negative": {
+      "exit_code": 0,
+      "test_verdict": "PASS",
+      "tool_outcome": "CYCLIC",
+      "stdout_sha256": "cd286f49112aaa3f7d63f211cb421a511ed49178ecb12f4fbc4ab0fc297a318d"
+    },
+    "typed_exec": {
+      "exit_code": 0,
+      "process_outcome": "EXIT_ZERO",
+      "tool_outcome": "UNPARSED",
+      "test_verdict": "NOT_EVALUATED",
+      "stdout_sha256": "14b3afa14adaaa2e6add77b5144e276830707238383eec17357324d4ba97c019"
+    },
+    "catalog": {
+      "status": "PASS",
+      "operations": [
+        "run",
+        "compile",
+        "generate",
+        "parse"
+      ]
+    },
+    "doctor": {
+      "run_status": "EXECUTED",
+      "version_verdict": "UNVERIFIED",
+      "version": "2.5"
+    },
+    "evidence_level": "WRITER_REPORTED_ONLY",
+    "independently_replayed": false,
+    "raw_stdout_stderr_available": false,
+    "qualification": "NOT_GRANTED"
+  },
+  "sdk": {
+    "typed_invoke": {
+      "exit_code": 0,
+      "process_status": "EXIT_ZERO",
+      "tool_status": "UNPARSED",
+      "artifacts_status": "NOT_COLLECTED",
+      "stdout_sha256": "bf17d5816119fd179c7d4e6e2ba0bc23b532c3d1d15f95ec47b84b9e0ad47670"
+    },
+    "observed_output": {
+      "reach_csv": "A\\tB\\nA\\tC\\nB\\tC\\n",
+      "cycle_csv": ""
+    },
+    "evidence_level": "WRITER_REPORTED_ONLY",
+    "independently_replayed": false,
+    "raw_stdout_stderr_available": false,
+    "qualification": "NOT_GRANTED"
+  },
+  "environment": {
+    "os": "Debian GNU/Linux 13 (trixie), Debian 13.3",
+    "kernel": "Linux 6.18.57-x86_64-with-glibc2.41",
+    "architecture": "x86_64",
+    "uid": 1000,
+    "node": "v22.16.0",
+    "python": "3.13.5",
+    "native_adapter_env": {
+      "FORMAL_TOOLS_BIN_DIR": "bundle/tools/souffle/bin",
+      "PATH": "must include bundle/tools/souffle/bin for mcpp",
+      "LD_LIBRARY_PATH": "must include bundle/tools/souffle/lib for mcpp private libmcpp.so.0"
+    },
+    "without_ld_library_path": "native CLI fixture aborts when mcpp cannot load libmcpp.so.0",
+    "with_ld_library_path": "native CLI fixture and SDK typed invocation execute successfully",
+    "network_isolation": "UNKNOWN_NOT_PROVEN"
+  },
+  "mcp": {
+    "syntax_check_exit": 0,
+    "runtime_command": "node packages/runner/js/mcp.mjs",
+    "runtime_exit": 1,
+    "status": "NOT_RUN_DEPENDENCIES_UNAVAILABLE",
+    "error_code": "ERR_MODULE_NOT_FOUND",
+    "missing_package": "@modelcontextprotocol/server",
+    "package_json_dependencies": {
+      "@modelcontextprotocol/server": "^2.0.0",
+      "zod": "^4.0.0"
+    },
+    "node_modules_present": false,
+    "npm_cache_contains_required_packages": false
+  },
+  "qualification_boundaries": [
+    "The R27 replay is the original Souffle 2.5 package run shim directly as UID/GID 65534 and captures native stdout/stderr/exit bytes with a relative-path SHA256 manifest.",
+    "POS matches the exact derived CSV row 1<TAB>3; NEG matches the exact undefined-relation diagnostic from the selected badtypes.dl fixture; ERR matches the exact missing-file diagnostic.",
+    "The selected negative fixture is badtypes.dl; duplicate-declaration neg.dl is an alternate fixture and is not the selected EXPECT_NEG_ARGS input.",
+    "The current-main portable Runner TSV, native CLI and SDK execution fields remain WRITER_REPORTED_ONLY; they are not independently reproduced by R27.",
+    "MCP runtime remains NOT_RUN because @modelcontextprotocol/server and zod dependencies are absent.",
+    "Prior R3 T3 evidence is reused, not requalified. No T3/T4/T5/T6/Product/Release promotion."
+  ],
+  "direct_runner": {
+    "status": "WRITER_REPORTED_ONLY_NOT_REPLAYED_IN_R27",
+    "tsv_sha256": "c9682b69d1143a7dba7929b4eea895cb2c2c098388014e4019d8d14e01587d9d",
+    "phases": {
+      "pos": {
+        "exit_code": 0,
+        "matched": true,
+        "label": "DERIVED"
+      },
+      "neg": {
+        "exit_code": 1,
+        "matched": true,
+        "label": "INVALID_REJECTED"
+      },
+      "err": {
+        "exit_code": 1,
+        "matched": true,
+        "label": "MISSING_INPUT_REJECTED"
+      }
+    },
+    "evidence_level": "WRITER_REPORTED_ONLY",
+    "reason": "R27 raw evidence below is direct package run-shim output, not a new portable Runner verify TSV receipt."
+  },
+  "native_shim_replay": {
+    "status": "INDEPENDENT_NONROOT_REPLAY_PASS",
+    "evidence_directory": "docs/tool-portfolio/r27/raw/",
+    "receipt": "docs/tool-portfolio/r27/raw/receipt.json",
+    "archive_member_manifest": "docs/tool-portfolio/r27/raw/archive-members.json",
+    "checksum_manifest": "docs/tool-portfolio/r27/raw/SHA256SUMS",
+    "execution_uid_gid": "65534:65534",
+    "version": {
+      "exit_code": 0,
+      "stdout_sha256": "189a327e08c521cd3d22fee1ab6c908eca5953a78b210ee541c15465cb2522b2"
+    },
+    "cases": {
+      "pos": {
+        "exit_code": 0,
+        "stdout_sha256": "dfbb05a2e730e655e68047a485e44af98f297193d86bc1dff4a705a93b46cc28",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "marker": "CSV row 1,3"
+      },
+      "neg": {
+        "exit_code": 1,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "ae31f698870f7e794c80747b32ec1f98c3254311902dc83ebbb1491ebcaab124",
+        "marker": "Undefined relation path in badtypes.dl line 4"
+      },
+      "err": {
+        "exit_code": 1,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "39995500186e59d4e2a707d96200d5ec14c24c62d710aba956943f5cb16185f9",
+        "marker": "cannot open file tests/souffle/does-not-exist.dl"
+      }
+    },
+    "raw_file_count": 14,
+    "raw_checksum_manifest_entries": 14,
+    "checksum_manifest_reconciliation": "R93 P1-01 repair: the SHA256SUMS entries for receipt.json and archive-members.json now record the committed serializations (9f098608699d24c5eef94dc9238f16aa6c459bfbbb6192f92145409c76e36829 and a80560f3a89ea1703e67f974d932a1014ca8c65627d2bd30a60011305bd62202); the capture-time serializations behind the old expectations (78ace092ec71e4b5b2dce19cd558358e782b3dd65de09cbabfdb6520125d8d46 and fffd11464dee825923546660d8e40d82c64a46324c548c7b2b9074f604088b71) are not retained in any reviewed artifact, so those two manifest lines were updated to the committed bytes. version.stdout was restored to the original 437-byte capture bytes (189a327e08c521cd3d22fee1ab6c908eca5953a78b210ee541c15465cb2522b2), which equals the manifest entry, the receipt.json stdout_sha256 record, and the byte output reproduced by three independent Debian 13 offline replays (R93, R146-A, R151). All 14 entries now verify over committed bytes; raw_checksum_manifest_entries corrected 13 -> 14."
+  }
+}
