@@ -21,10 +21,10 @@
     "independent_source_first_review": "PENDING_R27_REPAIR"
   },
   "current_main": {
-    "commit": "a82b16a985aaa0154234cf491ca6aecdb2b254a9",
+    "commit": "f46f2545a3ae10dbefe93edd1f2a2efa3ab275dc",
     "blobs": {
-      "portable_runner": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
-      "native_adapter": "2e0e669e4fa66cb27654644705e76794c0727004",
+      "portable_runner": "40427c1e541f294d71d803b0225984175708391e",
+      "native_adapter": "8bb35b48a67a7220956e5605520d31c8a5a598ae",
       "cli": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
       "sdk": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
       "mcp": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
@@ -37,17 +37,40 @@
       "registry": "faa89997c3f7c8c71da0a69aa90e8ff37461cde0",
       "lifecycle_dag": "250b84ae0638d98115d748a32ae2f2c9357942b0"
     },
-    "runner_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a",
+    "runner_sha256": "60af447ecfbc401549a7bbaab56e4111e0ca1d66a19bdc81e9eb479bdcd26c71",
     "source_pins_verified_at_current_main": true,
     "source_pin_count": 13,
-    "branch_sync_status": "CURRENT_MAIN_A82B16_SYNC_PENDING_EXACT_HEAD_CI",
-    "previous_sync_head": "3cca2b47e9bf76d69bcd30fdddb3cecfc231bff9",
+    "branch_sync_status": "CURRENT_MAIN_F46F254_SYNCED_PENDING_EXACT_HEAD_CI",
+    "previous_sync_head": "e52e1cec297f832ab164f7f48569ac3d2bb75f99",
     "latest_main_delta_since_previous_sync": {
-      "from": "05947e0c89daa388129054dddbb56ca5446a109d",
-      "to": "a82b16a985aaa0154234cf491ca6aecdb2b254a9",
+      "from": "a82b16a985aaa0154234cf491ca6aecdb2b254a9",
+      "to": "f46f2545a3ae10dbefe93edd1f2a2efa3ab275dc",
+      "path_count_total": 233,
+      "paths_listed_are_pin_component_subset_only": true,
       "paths": [
-        "validation/g3-drive-package-provenance-2026-11-15/README.md",
-        "validation/g3-drive-package-provenance-2026-11-15/RECONCILIATION.json"
+        "packages/runner/js/native.mjs",
+        "packages/runner/js/solution-candidate.mjs",
+        "portable/packaging/bundle-template/bin/tool-runner"
+      ],
+      "pin_blob_changes": {
+        "packages/runner/js/native.mjs": {
+          "from": "2e0e669e4fa66cb27654644705e76794c0727004",
+          "to": "8bb35b48a67a7220956e5605520d31c8a5a598ae",
+          "commit": "b9a662f fix(dafny): integrate scoped fail-closed native SDK outcome contract (#137)"
+        },
+        "portable/packaging/bundle-template/bin/tool-runner": {
+          "from": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+          "to": "40427c1e541f294d71d803b0225984175708391e",
+          "commit": "1d054ae fix(portable): fail-closed ELF static dependency gate (#86)"
+        }
+      },
+      "other_component_paths_no_pin_effect": [
+        "portable/builders/tools/cbmc.sh",
+        "portable/builders/tools/clingo.sh",
+        "portable/builders/tools/prob.sh",
+        "portable/verification/cases/alloy/expect.sh",
+        "portable/verification/cases/dafny/expect.sh",
+        "portable/verification/cases/robot/expect.sh"
       ],
       "overlap_with_souffle_pr": false
     }
