@@ -1,0 +1,46 @@
+{
+ "schema": "formal-tools.i11.g4-p2.kernel-lte-differential.provenance/1",
+ "status": "ENGINEERING_ONLY_EVIDENCE",
+ "vendoredKernel": {
+  "sourceRepo": "kaicreator-mm/xDownload",
+  "sourceCommit": "e904f08c478b15147b1c07fbe53c610d2d81851f",
+  "sourcePath": "packages/download-domain-app/src/business/payloads/dist/kernel-mechanism-v1.mjs",
+  "gitBlobSha1": "68b77d4711a802bc6a3f6f5e73cbc58e769af32f",
+  "kernelSha256": "e1ed59556f8b447b5f559302a893738eeae1d272e3a30ac4545fedfb1da8a3e7",
+  "vendoredPath": "benchmarks/llm-methods/g4/product-refinement/kernel-lte-differential/original-snapshot/kernel-mechanism-v1.mjs",
+  "vendoredPathNote": "the original intra-package path segment payloads/dist/ is excluded by the repo .gitignore (dist/); the snapshot keeps bytes and records the exact source path here",
+  "vendorPolicy": "byte-exact snapshot via git show from the workspace bare mirror; no modifications; re-verified in tests by sha256 and by recomputing the git blob sha1 from disk",
+  "kernelIdentity": {
+   "moduleId": "v08-kernel-mechanism@1.0.0",
+   "packageKind": "kernel",
+   "abiVersion": "v08-kernel-abi/1",
+   "kernelGeneration": "1"
+  },
+  "selfContained": "zero imports; the module is the sealed executable kernel payload bytes of xDownload v0.8 (Issue #1002 lineage per its own header)"
+ },
+ "borrowedReadOnlyInputs": {
+  "originalPolicy": {
+   "path": "benchmarks/llm-methods/g4/product-policy-crosswalk/original/packages/download-domain-app/src/business/business-download.mjs",
+   "introducedBy": "merged #163 (8f077c2a)",
+   "gitBlobSha1": "a7dba9a896de0b84fc6d54093563adca2ccbcdfc",
+   "usedFor": "getPolicy(): the ORIGINAL workflow definition (guards + transitions) the kernel interprets; imported read-only"
+  },
+  "t03Model": {
+   "path": "benchmarks/llm-methods/g4/product-refinement/model/t03-effect-gate-model.mjs",
+   "introducedBy": "merged #166 (401f3bb5 merge of 9d87790f)",
+   "usedFor": "evaluateGuardDeclaredBytes / decideDownloadConfirmed: the model side of the differential; imported read-only"
+  }
+ },
+ "reviewAnchor": {
+  "reviewId": 5945831322,
+  "verdict": "ACCEPT_SCOPED_ENGINEERING_ONLY P0=0/P1=0/P2=2",
+  "thisLaneAddresses": "P2-1: original Kernel live lte interpretation still needs differential trace"
+ },
+ "claim": {
+  "issue": "kaicreator-mm/formal-tools#11",
+  "comment": "issuecomment-6960825898",
+  "branch": "task/i11-g4-p2-lte-s3-io-bound-20261118",
+  "baseMain": "401f3bb55f5095fb1f131f176b2ea157e3caa212",
+  "lane": "FORMAL_TOOLS_I11_G4_P2"
+ }
+}
