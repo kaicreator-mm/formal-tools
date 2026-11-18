@@ -1,0 +1,8 @@
+{
+  "schema": "formal-tools/portfolio-t4-technical/0.1",
+  "tool": "cbmc",
+  "operation": "verify-fixture",
+  "status": "NOT_RUN_FAIL_CLOSED",
+  "reason": "Error: PORTABLE_RUNNER_SHA256_MISMATCH",
+  "scope": "T3_T4_T5_NOT_QUALIFIED"
+}

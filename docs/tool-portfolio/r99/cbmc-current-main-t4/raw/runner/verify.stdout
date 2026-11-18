@@ -1,0 +1,3 @@
+   cbmc/pos: exit=0 dur=34ms matched=1 exit_ok=1 label=VERIFIED (log: /w/cap/runner-verify/verify-cbmc.pos.log)
+   cbmc/neg: exit=10 dur=33ms matched=1 exit_ok=1 label=VIOLATION (log: /w/cap/runner-verify/verify-cbmc.neg.log)
+   cbmc/err: exit=3 dur=23ms matched=1 exit_ok=1 label=ERROR (log: /w/cap/runner-verify/verify-cbmc.err.log)
