@@ -1,3 +1,4 @@
 @prefix ex: <http://example.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 ex:broken a ex:Thing ;   # missing closing dot + stray bracket
     rdfs:label [ "unclosed"
