@@ -24,7 +24,13 @@ export async function main(argv=process.argv.slice(2)){
       effect_dispatched:false};
   }
   process.stdout.write(JSON.stringify(result)+"\n");
-  return ["QUALIFIED_WITH_SCOPE","CONSUMED_READ_ONLY","INVALIDATED"].includes(result.status)?0:2;
+  // Per-command single success status: a consume that does not yield
+  // CONSUMED_READ_ONLY (e.g. INVALIDATED after durable revocation) is a
+  // rejected operation and exits non-zero; INVALIDATED is only the success
+  // status of the revoke command itself.
+  const success={admit:"QUALIFIED_WITH_SCOPE",consume:"CONSUMED_READ_ONLY",
+    revoke:"INVALIDATED"}[command];
+  return result.status===success?0:2;
 }
 if(process.argv[1] && import.meta.url===pathToFileURL(resolve(process.argv[1])).href)
   process.exitCode=await main();

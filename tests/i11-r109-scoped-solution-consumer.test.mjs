@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {mkdtempSync,readFileSync,writeFileSync,rmSync} from "node:fs";
+import {mkdtempSync,readFileSync,writeFileSync,rmSync,readdirSync} from "node:fs";
 import {tmpdir} from "node:os";
 import {join,resolve} from "node:path";
 import {spawnSync} from "node:child_process";
@@ -11,7 +11,7 @@ import {enumerateSimplePaths} from "../benchmarks/llm-methods/i11/r109/c/indepen
 import {inspectCandidateReplay} from "../packages/runner/js/solution-candidate.mjs";
 
 const CLI=resolve(fileURLToPath(new URL("../packages/runner/js/i11-scoped-solution-cli.mjs",import.meta.url)));
-const GRAPH=JSON.parse(readFileSync(new URL("../benchmarks/llm-methods/i11/r109/c/graph-source.json",import.meta.url)));
+const GRAPH=JSON.parse(readFileSync(new URL("../benchmarks/llm-methods/i11/r109/c/graph-source.json",import.meta.url),"utf8"));
 const idRe=/^[0-9a-f]{64}$/;
 const SCOPE="LOCAL_FINITE_GRAPH_READ_ONLY";
 const REQ=()=>{
@@ -28,6 +28,8 @@ async function withStore(fn){
   const dir=mkdtempSync(join(tmpdir(),"formal-i11-r109-c-"));
   try{return await fn(dir);}finally{rmSync(dir,{recursive:true,force:true});}
 }
+const spentMarkers=(dir,id)=>readdirSync(dir).filter(name=>
+  name.startsWith(`local-qualified-${id}.nonce-`)&&name.endsWith(".spent.json"));
 async function fixture(dir){
   const a=await admitScopedSolution({store_dir:dir});
   assert.equal(a.status,"QUALIFIED_WITH_SCOPE",JSON.stringify(a));
@@ -203,6 +205,73 @@ test("C2 concurrent same nonce: exactly one read-only consumption, no double use
   });
 });
 
+test("C2 positive elapsed budget: pre-commit delayed storage -> TIMEOUT, nonce not spent",async()=>{
+  await withStore(async dir=>{
+    const req={...(await fixture(dir)),budget_ms:200};
+    // Deterministic delayed storage (fail-closed instrumentation, not ambient
+    // fsync latency): 800ms of injected latency before the durable commit
+    // against a 200ms elapsed budget must exhaust the deadline BEFORE the
+    // nonce marker publication.
+    const slow=await consumeScopedSolution({store_dir:dir,request:req,
+      storage_instrumentation:{before_commit_ms:800,after_commit_ms:0}});
+    assert.equal(slow.status,"TIMEOUT",JSON.stringify(slow));
+    assert.equal(slow.reason,"BUDGET_EXHAUSTED");
+    blocked(slow);
+    assert.equal(spentMarkers(dir,req.solution_id).length,0,
+      "pre-publication exhaustion must not consume the nonce");
+    const same=await consumeScopedSolution({store_dir:dir,request:{
+      ...req,budget_ms:1000}});
+    assert.equal(same.status,"CONSUMED_READ_ONLY",
+      "an unspent nonce remains usable under a sufficient budget");
+    readOnly(same);
+  });
+});
+
+test("C2 positive elapsed budget: post-commit delayed storage -> TIMEOUT, spent marker preserved and replay denied",async()=>{
+  await withStore(async dir=>{
+    const req={...(await fixture(dir)),budget_ms:200};
+    // Durable publication happens first; the injected post-commit latency
+    // then exhausts the budget. The spent marker must be preserved (no
+    // unlink/retry/reset) and the same nonce must stay unusable.
+    const slow=await consumeScopedSolution({store_dir:dir,request:req,
+      storage_instrumentation:{before_commit_ms:0,after_commit_ms:800}});
+    assert.equal(slow.status,"TIMEOUT",JSON.stringify(slow));
+    assert.equal(slow.reason,"BUDGET_EXHAUSTED");
+    blocked(slow);
+    assert.equal(spentMarkers(dir,req.solution_id).length,1,
+      "post-publication exhaustion preserves the durable spent marker");
+    const replay=await consumeScopedSolution({store_dir:dir,request:{
+      ...req,budget_ms:1000}});
+    assert.equal(replay.status,"REPLAY_REJECTED");blocked(replay);
+    const second=await consumeScopedSolution({store_dir:dir,request:{
+      ...req,nonce:"scoped-nonce-delay-0002",budget_ms:1000}});
+    assert.equal(second.status,"CONSUMED_READ_ONLY",
+      "a distinct nonce under a sufficient budget is unaffected");
+    readOnly(second);
+  });
+});
+
+test("C2 delayed budget exhaustion: concurrent duplicate nonce has zero authorized success",async()=>{
+  await withStore(async dir=>{
+    const req={...(await fixture(dir)),budget_ms:50};
+    const all=await Promise.all(Array.from({length:4},()=>
+      consumeScopedSolution({store_dir:dir,request:req,
+        storage_instrumentation:{before_commit_ms:150,after_commit_ms:0}})));
+    for(const x of all){
+      assert.equal(x.status,"TIMEOUT",JSON.stringify(x));
+      blocked(x);
+    }
+    assert.equal(all.filter(x=>x.status==="CONSUMED_READ_ONLY").length,0,
+      "TIMEOUT is never counted as an authorized success");
+    assert.equal(spentMarkers(dir,req.solution_id).length,0,
+      "no concurrent attempt may publish the nonce marker after exhaustion");
+    const ok=await consumeScopedSolution({store_dir:dir,request:{
+      ...req,budget_ms:1000}});
+    assert.equal(ok.status,"CONSUMED_READ_ONLY");
+    readOnly(ok);
+  });
+});
+
 test("C2 CLI consumes admitted scoped Solution and rejects replay, wrong scope, revoked solution",async()=>{
   await withStore(async dir=>{
     const run=(...args)=>{
@@ -229,7 +298,7 @@ test("C2 CLI consumes admitted scoped Solution and rejects replay, wrong scope, 
 
 test("existing G4 Candidate remains deny-only and production trust-root policy not modified",async()=>{
   const anchors=JSON.parse(readFileSync(new URL("../registry/G4_QUALIFICATION_ANCHORS.json",
-    import.meta.url)));
+    import.meta.url),"utf8"));
   assert.equal(anchors.status,"NOT_CONFIGURED");
   assert.deepEqual(anchors.anchors,[]);
   const prior=inspectCandidateReplay('{"schema":"formal-tools/solution-candidate/0.1","status":"QUALIFIED_WITH_SCOPE"}',"{}");

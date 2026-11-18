@@ -39,11 +39,39 @@ records are content-addressed, bounded, atomically linked without replacement
 and file/directory fsync'ed. A revocation tombstone is durable and cannot be
 cleared through these APIs. Consumption is a local **read-only observation**,
 with a fixed consumer label, fixed scope, current Source/Oracle/model/tool and
-evidence digests, fixed version and expiry, bounded budget, and persistent
-per-solution/per-nonce replay markers. Multiple distinct nonces may reuse the
-same local answer; replay of a used nonce is rejected. Concurrent use of an
-identical nonce admits **at most one** observation. UNKNOWN/ERROR/TIMEOUT and
-all non-PROVEN outcomes are non-authorizing. There is **zero external Effect**.
+evidence digests, fixed version and expiry, an **enforced elapsed budget**, and
+persistent per-solution/per-nonce replay markers. Multiple distinct nonces may
+reuse the same local answer; replay of a used nonce is rejected. Concurrent use
+of an identical nonce admits **at most one** observation. UNKNOWN/ERROR/TIMEOUT
+and all non-PROVEN outcomes are non-authorizing. There is **zero external
+Effect**.
+
+Enforced elapsed budget: \`consumeScopedSolution\` takes one **monotonic
+deadline from entry** (\`node:perf_hooks\` \`performance.now()\`; the
+caller-supplied \`now_ms\` stays wall-time expiry evidence and is never an
+elapsed clock) and re-checks it after every potentially delayed await and
+immediately before the successful return. A positive budget that expires
+during storage I/O returns \`TIMEOUT\`/\`BUDGET_EXHAUSTED\` and fails closed.
+If exhaustion happens **before** the nonce marker publication, no marker is
+written and the nonce stays usable; if it happens **after** durable
+publication, the spent marker is preserved (never unlinked, retried or reset)
+so the nonce can never be reused, and the timeout is **never** counted as an
+authorized success. A deterministic delayed-storage regression (injected
+latency before and after the durable commit, plus a concurrent duplicate-nonce
+exhaustion case) pins this behavior in the test boundary; it does not depend
+on ambient fsync speed.
+
+Optional \`storage_instrumentation\` (\`{before_commit_ms,after_commit_ms}\`)
+is a fail-closed test/ops hook owned by the local process — the same trust
+domain as \`store_dir\`, not part of the client request schema and never set
+by the CLI. It can only **insert latency** at the durable-storage boundary;
+it cannot skip validation, substitute data or grant authority.
+
+CLI exit codes are per-command, single-success: \`admit\` exits 0 only for
+\`QUALIFIED_WITH_SCOPE\`, \`consume\` exits 0 only for
+\`CONSUMED_READ_ONLY\`, \`revoke\` exits 0 only for \`INVALIDATED\`; every
+other status (including a consume answered \`INVALIDATED\` after durable
+revocation) exits 2.
 
 Trust boundary: the local owner/process and repository files are assumed
 trusted; the CLI consumer label is **not remote identity authentication**.
@@ -53,18 +81,28 @@ A party who controls the Node process/repository source or the store owner can
 modify its own local truth; this is not a signature-based professional
 attestation. Fail-closed checks defend caller-input drift, corrupt record,
 version mismatch, revoke and nonce replay within the defined local boundary.
+Loaded-ESM scope limit: \`oracle_sha256\`/\`tool_sha256\` pin the **on-disk
+bytes at validation time**; they are **not** cryptographic proof of the
+already-loaded ESM runtime bytes if a file is replaced mid-process. Within
+this trusted-local-process scope that gap is accepted and stated; these
+digests must not be presented as attestation of executed runtime bytes unless
+a real source-to-loaded falsifier repair is separately scoped.
 
 ## Gates
 
 \`tests/i11-r109-scoped-solution-consumer.test.mjs\` covers a real local
 positive path, independent semantic Oracle agreement, JS SDK and CLI consumer
 acceptance, source/Oracle/model/tool/version/evidence drift, scope and extra
-authorization fields, expired solution, UNKNOWN/ERROR/TIMEOUT, exhausted
-budget, durable tamper/revocation/no-resurrection, concurrent duplicate nonce
-and untouched old Candidate fail-closed. Must pass on Node >=24 at exact
-new PR HEAD in Woodpecker Push and PR, followed by **other-conversation,
-non-Writer** P0/P1/P2 Source-First review. This document is an engineering
-claim and test contract, not that review or CI success.
+authorization fields, expired solution, UNKNOWN/ERROR/TIMEOUT, zero and
+positive **elapsed-budget exhaustion with deterministic delayed storage**
+(pre-commit exhaustion leaving the nonce unspent, post-commit exhaustion
+preserving the spent marker and denying replay, concurrent duplicate-nonce
+exhaustion with zero authorized success), durable
+tamper/revocation/no-resurrection, concurrent duplicate nonce and untouched
+old Candidate fail-closed. Must pass on Node >=24 at exact new PR HEAD in
+Woodpecker Push and PR, followed by **other-conversation, non-Writer**
+P0/P1/P2 Source-First review. This document is an engineering claim and test
+contract, not that review or CI success.
 
 Only this new first-party self-contained C scope can become
 \`QUALIFIED_WITH_SCOPE\`; all other previous Candidates remain

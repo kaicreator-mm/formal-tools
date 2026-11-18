@@ -11,6 +11,7 @@ import {open, link, unlink, lstat, readFile, realpath} from "node:fs/promises";
 import {createHash, randomUUID} from "node:crypto";
 import {isAbsolute, join} from "node:path";
 import {fileURLToPath} from "node:url";
+import {performance} from "node:perf_hooks";
 import {enumerateSimplePaths} from "../../../benchmarks/llm-methods/i11/r109/c/independent-oracle.mjs";
 
 const SOURCE = new URL("../../../benchmarks/llm-methods/i11/r109/c/graph-source.json", import.meta.url);
@@ -175,6 +176,8 @@ async function readCurrent(root,id){
 /**
  * Deterministic local-only admission, NOT a production trust-root promotion.
  * Caller cannot submit source bytes, Oracle, tool, expiry or authority.
+ * @param {{store_dir?:string}} [params]
+ * @returns {Promise<any>}
  */
 export async function admitScopedSolution({store_dir}={}){
   try{
@@ -196,9 +199,40 @@ export async function admitScopedSolution({store_dir}={}){
 /**
  * Trusted-local JS SDK consumer: a fixed-scope read-only observation.
  * observed pins only RESTRICT; client-supplied fields never grant authority.
+ *
+ * The positive `budget_ms` is an enforced elapsed budget: one monotonic
+ * deadline is taken from entry (`performance.now`, NOT the wall-time
+ * `now_ms` expiry evidence), re-checked after every potentially delayed
+ * await and immediately before the successful return. Exhaustion always
+ * fails closed as `TIMEOUT`/`BUDGET_EXHAUSTED` with zero Effect. Before the
+ * nonce publication no marker is written; after publication the spent marker
+ * is preserved (never unlinked, retried or reset) so the nonce can never be
+ * reused, and a timeout is never counted as an authorized success.
+ *
+ * `storage_instrumentation` is an optional fail-closed test/ops hook owned by
+ * the local process (same trust domain as `store_dir`; not part of the client
+ * request and never exposed by the CLI): it can only INSERT latency at the
+ * durable-storage boundary so deadline exhaustion is exercised
+ * deterministically. It cannot skip validation, substitute data or grant
+ * authority.
+ * @param {{store_dir?:string,request?:any,
+ *     storage_instrumentation?:{before_commit_ms?:number,after_commit_ms?:number}}} [params]
+ * @returns {Promise<any>}
  */
-export async function consumeScopedSolution({store_dir,request}={}){
+export async function consumeScopedSolution({store_dir,request,
+    storage_instrumentation}={}){
+  const entryMs=performance.now();
   try{
+    if(storage_instrumentation!==undefined &&
+       !(isPlain(storage_instrumentation) &&
+         exact(storage_instrumentation,["before_commit_ms","after_commit_ms"]) &&
+         Number.isSafeInteger(storage_instrumentation.before_commit_ms) &&
+         storage_instrumentation.before_commit_ms>=0 &&
+         storage_instrumentation.before_commit_ms<=60000 &&
+         Number.isSafeInteger(storage_instrumentation.after_commit_ms) &&
+         storage_instrumentation.after_commit_ms>=0 &&
+         storage_instrumentation.after_commit_ms<=60000))
+      return deny("BLOCKED","INSTRUMENTATION_INVALID");
     if(!exact(request,["schema","solution_id","consumer_id","scope","nonce",
         "now_ms","observed","tool_outcome","budget_ms"]) ||
        request.schema!=="formal-tools/i11-scoped-consumption/1" ||
@@ -208,17 +242,24 @@ export async function consumeScopedSolution({store_dir,request}={}){
        !Number.isSafeInteger(request.budget_ms) || request.budget_ms<0 ||
        request.budget_ms>10000)
       return deny("BLOCKED","SCOPE_IDENTITY_OR_REQUEST_INVALID");
-    if(request.budget_ms===0 || request.tool_outcome==="TIMEOUT")
+    if(request.tool_outcome==="TIMEOUT")
       return deny("TIMEOUT","BUDGET_EXHAUSTED");
     if(request.tool_outcome==="UNKNOWN")return deny("UNKNOWN","TOOL_RESULT_NOT_PROVEN");
     if(request.tool_outcome==="ERROR")return deny("ERROR","TOOL_RESULT_FAILED");
     if(request.tool_outcome!=="PROVEN")return deny("BLOCKED","UNRECOGNIZED_TOOL_RESULT");
+    const deadline=entryMs+request.budget_ms;
+    const exhausted=()=>performance.now()>=deadline;
+    const timeout=()=>deny("TIMEOUT","BUDGET_EXHAUSTED");
+    const pause=ms=>ms>0?new Promise(resolve=>setTimeout(resolve,ms)):null;
+    if(exhausted())return timeout();
     const observed=request.observed, live=observeLocalScopedEvidence();
     if(!live || !exact(observed,Object.keys(live)) ||
        Object.keys(live).some(k=>observed[k]!==live[k]))
       return deny("STALE","ORIGIN_OR_VERSION_DRIFT");
     const root=await ownerRoot(store_dir);
+    if(exhausted())return timeout();
     const state=await readCurrent(root,request.solution_id);
+    if(exhausted())return timeout();
     if(state.status!=="CURRENT")return deny(state.status,"DURABLE_SOLUTION_NOT_CURRENT");
     const effectiveNow=Math.max(Date.now(),request.now_ms);
     if(effectiveNow<state.record.valid_from_ms ||
@@ -226,12 +267,17 @@ export async function consumeScopedSolution({store_dir,request}={}){
       return deny("STALE","SOLUTION_EXPIRED");
     const noncePath=join(root,"local-qualified-"+request.solution_id+
       ".nonce-"+sha256(request.nonce)+".spent.json");
+    await pause(storage_instrumentation?.before_commit_ms??0);
+    if(exhausted())return timeout();
     const publication=await publish(root,noncePath,JSON.stringify({
       schema:"formal-tools/i11-consumption-marker/1",solution_id:request.solution_id,
       nonce_sha256:sha256(request.nonce)})+"\n");
+    if(publication==="NEW")await pause(storage_instrumentation?.after_commit_ms??0);
+    if(exhausted())return timeout();
     if(publication!=="NEW")return deny("REPLAY_REJECTED","NONCE_ALREADY_CONSUMED");
     // A concurrently committed durable tombstone dominates completion.
     if(await existsStrict(state.paths.revoked))return deny("INVALIDATED","REVOKED_DURING_CONSUMPTION");
+    if(exhausted())return timeout();
     return Object.freeze({schema:"formal-tools/i11-scoped-consumer-result/1",
       status:"CONSUMED_READ_ONLY",qualification:"QUALIFIED_WITH_SCOPE",
       distance:state.record.distance,path:[...state.record.path],
@@ -240,6 +286,7 @@ export async function consumeScopedSolution({store_dir,request}={}){
       scope:SCOPE,effect_dispatched:false,external_host_executed:false});
   }catch{return deny("BLOCKED","DURABLE_CONSUMER_VALIDATION_FAILED");}
 }
+/** @param {{store_dir?:string,solution_id?:string}} [params] @returns {Promise<any>} */
 export async function revokeScopedSolution({store_dir,solution_id}={}){
   try{
     const root=await ownerRoot(store_dir);
