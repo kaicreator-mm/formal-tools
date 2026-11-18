@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: CBMC T4 evidence is bound to the tested current main and 22 source blobs
+ok 1 - CBMC T4 evidence is bound to the tested current main and 22 source blobs
+  ---
+  duration_ms: 12.892774
+  type: 'test'
+  ...
+# Subtest: raw evidence inventory is internally consistent (SHA256SUMS recomputed)
+ok 2 - raw evidence inventory is internally consistent (SHA256SUMS recomputed)
+  ---
+  duration_ms: 17.275054
+  type: 'test'
+  ...
+# Subtest: original CBMC archive, fixtures and metadata overlay are accurately distinguished
+ok 3 - original CBMC archive, fixtures and metadata overlay are accurately distinguished
+  ---
+  duration_ms: 0.282197
+  type: 'test'
+  ...
+# Subtest: exact current-main Runner executed CBMC POS/NEG/ERR; raw bytes recompute every hash
+ok 4 - exact current-main Runner executed CBMC POS/NEG/ERR; raw bytes recompute every hash
+  ---
+  duration_ms: 4.344024
+  type: 'test'
+  ...
+# Subtest: NEG/ERR exit observations are explicit and the wildcard fixture contract is disclosed (R102 P2-02)
+ok 5 - NEG/ERR exit observations are explicit and the wildcard fixture contract is disclosed (R102 P2-02)
+  ---
+  duration_ms: 0.359245
+  type: 'test'
+  ...
+# Subtest: CLI raw receipts recompute from committed bytes, including wrong-pin fail-closed (R102 P1-01)
+ok 6 - CLI raw receipts recompute from committed bytes, including wrong-pin fail-closed (R102 P1-01)
+  ---
+  duration_ms: 4.487424
+  type: 'test'
+  ...
+# Subtest: SDK typed results recompute from committed bytes; harness exit is not an operation exit (R102 P2-01)
+ok 7 - SDK typed results recompute from committed bytes; harness exit is not an operation exit (R102 P2-01)
+  ---
+  duration_ms: 2.839331
+  type: 'test'
+  ...
+# Subtest: MCP stays NOT_RUN locally with the raw failure captured; CI gate makes skips impossible
+ok 8 - MCP stays NOT_RUN locally with the raw failure captured; CI gate makes skips impossible
+  ---
+  duration_ms: 1.144791
+  type: 'test'
+  ...
+# Subtest: evidence does not grant T4 qualification or promote later lifecycle gates
+ok 9 - evidence does not grant T4 qualification or promote later lifecycle gates
+  ---
+  duration_ms: 0.345115
+  type: 'test'
+  ...
+# Subtest: MCP stdio server executes real discovery and typed CBMC tool calls when lockfile dependencies are installed
+ok 10 - MCP stdio server executes real discovery and typed CBMC tool calls when lockfile dependencies are installed
+  ---
+  duration_ms: 220.990489
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 420.903299
