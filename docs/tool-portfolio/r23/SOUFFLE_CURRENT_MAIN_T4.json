@@ -97,8 +97,8 @@
     "neg_blob": "57b2891fce98786a3e3e9677730896de7275ee7a",
     "badtypes_blob": "57b2891fce98786a3e3e9677730896de7275ee7a",
     "test_path": "tests/souffle-current-main-t4.test.mjs",
-    "test_blob": "8061a180189871043ea335521860fdca3f21e21a",
-    "test_result": "5/5 PASS (Node v22.16.0; source fixture path is mapped through pack.sh)",
+    "test_blob": "9480571a1ee95ff9c33eb9d037a43f00ed2b018e",
+    "test_result": "6/6 PASS (Node v24.21.0; source fixture path is mapped through pack.sh; SHA256SUMS 14/14 verified over committed bytes)",
     "direct_runner": {
       "status": "WRITER_REPORTED_ONLY",
       "tsv_sha256": "c9682b69d1143a7dba7929b4eea895cb2c2c098388014e4019d8d14e01587d9d",
@@ -127,7 +127,7 @@
       "reason": "R27 replay captures direct package run-shim stdout/stderr/exit, not a new portable Runner verify TSV receipt."
     },
     "alternate_neg_blob": "a905fd35fe4aff2a681f62b764a16d1047c81ea8",
-    "test_sha256": "4a53f58c88a8fa21cfa159d837fe3fd3ad469050eda9f40762d94f38bcecae51",
+    "test_sha256": "cdbab5c1e1340e9f53befd2a96eb2b3e315dac69b89ce7d27926ba3bfacfb31e",
     "negative_fixture_binding": "EXPECT_NEG_ARGS=tests/souffle/badtypes.dl is the packed-bundle path; the source test reads portable/verification/cases/souffle/badtypes.dl and asserts portable/packaging/pack.sh copies verification/cases/. into bundle/tests/; duplicate-declaration neg.dl is a separate alternate.",
     "test_source_fixture_path": "portable/verification/cases/souffle/badtypes.dl",
     "test_path_fix": {
@@ -290,6 +290,7 @@
       }
     },
     "raw_file_count": 14,
-    "raw_checksum_manifest_entries": 13
+    "raw_checksum_manifest_entries": 14,
+    "checksum_manifest_reconciliation": "R93 P1-01 repair: the SHA256SUMS entries for receipt.json and archive-members.json now record the committed serializations (9f098608699d24c5eef94dc9238f16aa6c459bfbbb6192f92145409c76e36829 and a80560f3a89ea1703e67f974d932a1014ca8c65627d2bd30a60011305bd62202); the capture-time serializations behind the old expectations (78ace092ec71e4b5b2dce19cd558358e782b3dd65de09cbabfdb6520125d8d46 and fffd11464dee825923546660d8e40d82c64a46324c548c7b2b9074f604088b71) are not retained in any reviewed artifact, so those two manifest lines were updated to the committed bytes. version.stdout was restored to the original 437-byte capture bytes (189a327e08c521cd3d22fee1ab6c908eca5953a78b210ee541c15465cb2522b2), which equals the manifest entry, the receipt.json stdout_sha256 record, and the byte output reproduced by three independent Debian 13 offline replays (R93, R146-A, R151). All 14 entries now verify over committed bytes; raw_checksum_manifest_entries corrected 13 -> 14."
   }
 }

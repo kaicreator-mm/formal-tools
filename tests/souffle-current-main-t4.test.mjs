@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 const expectPath = fileURLToPath(new URL("../portable/verification/cases/souffle/expect.sh", import.meta.url));
@@ -69,4 +70,32 @@ test("Bash-sourced effective exit values are exactly POS=0 NEG=1 ERR=1", () => {
   const result = spawnSync("bash", ["-c", script, "bash", expectPath], { encoding: "utf8" });
   assert.equal(result.status, 0, result.stderr || result.stdout);
   assert.deepEqual(result.stdout.trim().split(/\r?\n/), ["0", "1", "1"]);
+});
+
+test("the raw SHA256SUMS manifest has exactly 14 entries and every entry matches the committed raw bytes", () => {
+  const rawDir = new URL("../docs/tool-portfolio/r27/raw/", import.meta.url);
+  const manifestText = readFileSync(new URL("SHA256SUMS", rawDir), "utf8");
+  const lines = manifestText.split("\n").filter(line => line.length > 0);
+  assert.equal(lines.length, 14, "SHA256SUMS must list exactly 14 entries");
+  const expectedNames = [
+    "pos.stdout", "pos.stderr", "pos.exit",
+    "neg.stdout", "neg.stderr", "neg.exit",
+    "err.stdout", "err.stderr", "err.exit",
+    "version.stdout", "version.stderr", "version.exit",
+    "receipt.json", "archive-members.json",
+  ];
+  const entries = lines.map(line => {
+    const match = /^([0-9a-f]{64}) {2}(.+)$/.exec(line);
+    assert.ok(match, `manifest line must match '<sha256>  <name>': ${line}`);
+    return { sha256: match[1], name: match[2] };
+  });
+  assert.deepEqual(entries.map(entry => entry.name).sort(), expectedNames.slice().sort());
+  const sha256Of = bytes => createHash("sha256").update(bytes).digest("hex");
+  for (const entry of entries) {
+    const actual = sha256Of(readFileSync(new URL(entry.name, rawDir)));
+    assert.equal(actual, entry.sha256, `SHA256SUMS entry for ${entry.name} must match the committed raw bytes`);
+  }
+  const receipt = JSON.parse(readFileSync(new URL("../docs/tool-portfolio/r23/SOUFFLE_CURRENT_MAIN_T4.json", import.meta.url), "utf8"));
+  assert.equal(receipt.native_shim_replay.raw_file_count, 14);
+  assert.equal(receipt.native_shim_replay.raw_checksum_manifest_entries, 14);
 });
