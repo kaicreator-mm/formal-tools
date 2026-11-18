@@ -1,0 +1,26 @@
+{
+  "schema": "formal-tools/portfolio-t4-technical/0.1",
+  "tool": "cbmc",
+  "operation": "doctor",
+  "status": "DOCTOR_EXECUTED_NOT_T3",
+  "process": {
+    "exit_code": 0,
+    "signal": null,
+    "timed_out": false,
+    "output_limit": false,
+    "elapsed_ms": 86,
+    "error": null
+  },
+  "runner_sha256": "60af447ecfbc401549a7bbaab56e4111e0ca1d66a19bdc81e9eb479bdcd26c71",
+  "metadata_sha256": "f09b83bf3b6c1f8c4a586fa76dc7f759deedcc0dc0d50bb7e8902ed2f0748d76",
+  "fixture_contract_sha256": "f31f8f4fa90d6645c5d0a73bf9ec019e9a9cca9f04e1681f83af09513cf6282f",
+  "receipt_sha256": null,
+  "streams": {
+    "stdout": "doctor: cbmc kind=binary version=6.11.0\n  binary: tools/cbmc/bin/cbmc OK (glibc_max=2.38)\n  ldd: no missing libs OK\n  verdict: OK\n",
+    "stderr": "",
+    "stdout_sha256": "55521c85b2a3fb1c8ebb7448d9d01d444e18e16fc1522fa5dc86b1403d706d61",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "cases": [],
+  "scope": "T4_TECHNICAL_ONLY_T3_NATIVE_REVIEW_AND_T5_SEMANTICS_NOT_EVALUATED"
+}
