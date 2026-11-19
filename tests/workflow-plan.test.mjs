@@ -399,17 +399,28 @@ test("V2: launcher is inert text: plan data only inside the JSON.parse literal",
   const tainted = lines.filter(l => l.includes("child_process") || l.includes("spawn(") || l.includes("bash -c"));
   assert.ok(tainted.length >= 1);
   assert.ok(tainted.every(l => l.startsWith("const PLAN = Object.freeze(JSON.parse(")), tainted.join(" | "));
-  // trusted surface: only the two fixed static imports and one constant dynamic import
+  // trusted surface: four fixed node:* static imports and one dynamic import
+  // whose specifier comes only from the fixed runtime locator (FORMAL_TOOLS_
+  // RUNNER_ROOT env var or the launcher's own URL), never from plan/LLM data.
   const imports = lines.filter(l => /^import |await import\(/.test(l));
   assert.deepEqual(imports.sort(), [
+    "import { existsSync } from \"node:fs\";",
     "import { pathToFileURL } from \"node:url\";",
+    "import { resolve } from \"node:path\";",
     "import { writeFile } from \"node:fs/promises\";",
-    "  ({ executeWorkflowPlan } = await import(EXECUTOR_SPECIFIER));"
+    "  ({ executeWorkflowPlan } = await import(resolveExecutorUrl()));"
   ].sort());
   assert.ok(launcher.includes("NOT_COMPILED_FOR_EXECUTION"));
   assert.ok(launcher.includes(JSON.stringify(EXECUTOR_SPECIFIER).slice(1, -1)));
   assert.ok(launcher.includes("// plan_id: " + plan.plan_id));
-  for (const banned of ["require(", "process.env", "spawnSy", "execSync"]) {
+  // R2 locator: the ONLY environment access in the launcher is this single
+  // read-only lookup of the fixed FORMAL_TOOLS_RUNNER_ROOT name (no env
+  // mutation, no other reads, no absolute path baked into the text).
+  const envLines = lines.filter(l => l.includes("process.env"));
+  assert.deepEqual(envLines, [
+    "  const root = process.env[FORMAL_TOOLS_RUNNER_ENV];"
+  ]);
+  for (const banned of ["require(", "spawnSy", "execSync"]) {
     assert.ok(!lines.some(l => !l.startsWith("const PLAN") && l.includes(banned)), "banned: " + banned);
   }
 });
@@ -427,18 +438,26 @@ test("V2: launcher fails closed with NOT_COMPILED_FOR_EXECUTION before V3 exists
     const launcherPath = join(dir, "launcher.mjs");
     writeFileSync(launcherPath, launcher);
     const receiptPath = join(root, "receipt.json");
-    const run = spawnSync(process.execPath, [launcherPath, receiptPath], { encoding: "utf8" });
+    const childEnv = { ...process.env };
+    delete childEnv.FORMAL_TOOLS_RUNNER_ROOT; // R2: exercise the relative fallback deterministically
+    const run = spawnSync(process.execPath, [launcherPath, receiptPath], { encoding: "utf8", env: childEnv });
     assert.equal(run.status, 2, "stderr=" + run.stderr + " stdout=" + run.stdout);
     assert.match(run.stderr, /NOT_COMPILED_FOR_EXECUTION/);
     assert.ok(!existsSync(receiptPath), "no receipt may be written without the V3 executor");
     // usage error
-    const usage = spawnSync(process.execPath, [launcherPath], { encoding: "utf8" });
+    const usage = spawnSync(process.execPath, [launcherPath], { encoding: "utf8", env: childEnv });
     assert.equal(usage.status, 1);
     assert.match(usage.stderr, /LAUNCHER_USAGE/);
     // main() is importable and refuses execution without a receipt path too
+    const savedRoot = process.env.FORMAL_TOOLS_RUNNER_ROOT;
+    delete process.env.FORMAL_TOOLS_RUNNER_ROOT;
+    try {
     const mod = await import("file:///" + launcherPath.replace(/\\/g, "/"));
     await assert.rejects(() => mod.main(["node", "launcher.mjs", ""]), /LAUNCHER_USAGE/);
     await assert.rejects(() => mod.main(["node", "launcher.mjs", join(root, "unused.json")]), /NOT_COMPILED_FOR_EXECUTION/);
+    } finally {
+      if (savedRoot !== undefined) process.env.FORMAL_TOOLS_RUNNER_ROOT = savedRoot;
+    }
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -548,8 +567,10 @@ test("V2/V3: generated launcher writes unwrapped receipt and propagates non-PASS
       const launcherPath = join(artifactDir, "launcher.mjs");
       const receiptPath = join(artifactDir, "receipt.json");
       writeFileSync(launcherPath, launcher);
+      const childEnv = { ...process.env };
+      delete childEnv.FORMAL_TOOLS_RUNNER_ROOT; // stub is located via the relative fallback
       const run = spawnSync(process.execPath, [launcherPath, receiptPath], {
-        cwd: root, encoding: "utf8", timeout: 15000
+        cwd: root, encoding: "utf8", timeout: 15000, env: childEnv
       });
       assert.equal(run.status, scenario.expectedExit,
         scenario.verdict + ": stderr=" + run.stderr + " stdout=" + run.stdout);
