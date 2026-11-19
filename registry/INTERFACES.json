@@ -1,6 +1,6 @@
 {
   "schema": "formal-tools-interfaces/3",
-  "version": "0.5.0-r6",
+  "version": "0.5.0-r7",
   "status": "JS_PLANNING_TESTED_NODE_NATIVE_MCP_NOT_RUN",
   "core": "packages/core/src/finite.mjs",
   "cli": "node packages/runner/js/cli.mjs",
@@ -171,11 +171,11 @@
       "validateCapabilityValidation",
       "matchValidatedTools"
     ],
-    "evidence": "docs/tool-portfolio/r176/",
-    "evidence_lane": "deployed portable bundle container probe (formal-tools:deb13-r0) + merged portable-lane receipts for nuxmv/prob",
+    "evidence": "docs/tool-portfolio/r176/ + docs/tool-portfolio/r181/",
+    "evidence_lane": "deployed portable bundle container probe (formal-tools:deb13-r0) + r181 refreshed-image sweep (formal-tools:deb13-r1, network=none) rebinding nuxmv/prob to container-native receipts",
     "receipts": {
-      "native_probe_pass_scoped": 34,
-      "portable_lane_pass_scoped": 2,
+      "native_probe_pass_scoped": 36,
+      "portable_lane_pass_scoped": 0,
       "not_verified": 0
     },
     "discovery_registry_unchanged": "registry/PROBLEM_CAPABILITIES.json stays schema 0.1 DISCOVERY_ONLY",

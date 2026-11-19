@@ -1,0 +1,69 @@
+{
+ "schema": "formal-tools/capability-probe-receipt/0.1",
+ "tool_id": "prob",
+ "meta_version": "1.16.1",
+ "kind": "java-bundle",
+ "unavailable_flag": "0",
+ "verify": {
+  "rows": [
+   [
+    "runner_schema",
+    "formal-tools/portable-verify/0.2"
+   ],
+   [
+    "prob",
+    "setup",
+    "0",
+    "5",
+    "1",
+    "1",
+    "SETUP"
+   ],
+   [
+    "prob",
+    "pos",
+    "0",
+    "1597",
+    "1",
+    "1",
+    "PROPERTY_HOLDS"
+   ],
+   [
+    "prob",
+    "neg",
+    "0",
+    "1713",
+    "1",
+    "1",
+    "COUNTEREXAMPLE"
+   ],
+   [
+    "prob",
+    "err",
+    "0",
+    "1361",
+    "1",
+    "1",
+    "ERROR"
+   ]
+  ],
+  "verdict": "PASS"
+ },
+ "version_probe": {
+  "status": "PROBED",
+  "probed_first_line": "ProB Command Line Interface",
+  "raw": "cmd=run prob --version\nProB Command Line Interface\n  VERSION 1.16.1-final (716929f528b333dd3901a0521fc0d3460a488af7)\n  Thu Aug 27 12:46:31 2026 +0200\n  Prolog (sicstus): SICStus 4.9.0 (x86_64-linux-glibc2.28): Fri Dec 15 10:08:12 UTC 2023\n  COMPILE TIME FLAGS: [prob_release]\nrc=0\n"
+ },
+ "logs": {
+  "pos": "\nALL OPERATIONS COVERED\n% Model checking finished, all open states visited\nModel checking time: 31 ms (32 ms walltime)\nStates analysed: 1\nTransitions fired: 2\n\u001b[32mNo counter example found. ALL states visited.\u001b[0m\n\n\n\nPHASE_DONE phase=pos rc=0\n",
+  "neg": "\nFound \"invariant_violation\" error in state id 0\nModel checking time: 28 ms (42 ms walltime)\nStates analysed: 0\nTransitions fired: 1\n\u001b[31m*** COUNTER EXAMPLE FOUND ***\u001b[0m\n\ninvariant_violation\n*** TRACE (length=1):\n 1: INITIALISATION(x=-1)\n*** Invariant 1 (Line:3 Col:10) is false (in state with id 0):\n x : NAT\n\n\n! *** error occurred ***\n! invariant_violation\n! Total Errors: 1, Warnings:0\n\nPHASE_DONE phase=neg rc=0\n",
+  "err": "\n\n! An error occurred (source: parse_error) !\n! expecting: 'ABSTRACT_CONSTANTS', 'ABSTRACT_VARIABLES', 'ASSERTIONS', 'CONCRETE_CONSTANTS', 'CONCRETE_VARIABLES', 'CONSTANTS', 'CONSTRAINTS', 'DEFINITIONS', 'EXPRESSIONS', 'PREDICATES', 'END', 'EXTENDS', 'IMPORTS', 'INCLUDES', initialisation, 'INVARIANT', 'LOCAL_OPERATIONS', operations, 'PROMOTES', 'PROPERTIES', 'SEES', 'SETS', 'USES', 'VALUES', 'VARIABLES', 'FREETYPES', 'REFERENCES'\n! Line: 2 Column: 12 until Line: 2 Column: 13 in file: /tmp/ft-FhKBZh/err.mch\n! Loading Specification Failed\n! *** error occurred ***\n! load_main_file\n! *** error occurred ***\n! parse_error\n! Total Errors: 2, Warnings:0\n\nPHASE_DONE phase=err rc=0\n"
+ },
+ "environment": {
+  "bundle_manifest_sha256": "fc2897bd03782d8eacd39381dcfd8466416d075cbabe80fdcd14efc3fa3e04dc",
+  "tool_runner_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a",
+  "uname": "Linux 7.0.0-43-generic",
+  "deployment": "docker formal-tools:deb13-r1 (ephemeral verify container on cc@192.168.100.200, network=none, image built 2026-11-19)",
+  "executed_at_utc": "2026-11-19T08:28:05Z"
+ }
+}

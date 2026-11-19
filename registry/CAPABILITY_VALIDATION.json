@@ -13,7 +13,19 @@
   "sweep_summary": "docs/tool-portfolio/r176/SWEEP_SUMMARY.json",
   "sweep_summary_sha256": "8c68a769aa36d63a7e734d8dc4d7110b99c8d55826d00457fad6fe0c34295e6c",
   "probe_harness": "portable/scripts/i24-capability-probe-sweep.sh",
-  "output_label": "FORMAL_TOOLS_I24_I11_36_TOOL_INCREMENTAL_REUSE"
+  "output_label": "FORMAL_TOOLS_I24_I11_36_TOOL_INCREMENTAL_REUSE",
+  "r181_refresh": {
+   "sweep_summary": "docs/tool-portfolio/r181/SWEEP_SUMMARY.json",
+   "sweep_summary_sha256": "42a9b0a0f5593200518879ae36c01b618e2f872d7d0247db4c82bd1408041164",
+   "deployment": "docker formal-tools:deb13-r1 (ephemeral verify container on cc@192.168.100.200, network=none, image built 2026-11-19)",
+   "bundle_manifest_sha256": "fc2897bd03782d8eacd39381dcfd8466416d075cbabe80fdcd14efc3fa3e04dc",
+   "tool_runner_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a",
+   "rebound_tools": [
+    "nuxmv",
+    "prob"
+   ],
+   "executed_at_utc": "2026-11-19T08:28:05Z"
+  }
  },
  "semantics": {
   "status_enum": [
@@ -38,12 +50,12 @@
  "counts": {
   "tools": 36,
   "capabilities": 23,
-  "native_probe_pass_scoped": 34,
-  "portable_lane_pass_scoped": 2,
+  "native_probe_pass_scoped": 36,
+  "portable_lane_pass_scoped": 0,
   "not_verified": 0,
-  "probe_quality_effective": 28,
-  "probe_quality_ineffective": 6,
-  "probe_not_probed_unavailable": 2
+  "probe_quality_effective": 29,
+  "probe_quality_ineffective": 7,
+  "probe_not_probed_unavailable": 0
  },
  "tools": [
   {
@@ -821,9 +833,9 @@
    "capability_ids": [
     "model.state"
    ],
-   "status": "PORTABLE_LANE_PASS_SCOPED",
-   "evidence_ref": "portable/status/receipts/verify-nuxmv.json",
-   "evidence_sha256": null,
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r181/receipts/nuxmv/receipt.json",
+   "evidence_sha256": "fefd60f7995b98bd16b4f732d12119760ac69899a5b52c6e600165a310edf484",
    "verify_verdict": "PASS",
    "verify_phases": [
     "pos",
@@ -832,14 +844,10 @@
    ],
    "declared_version": "2.2.0",
    "probed_version": null,
-   "probe_status": "NOT_PROBED_UNAVAILABLE",
-   "probe_quality": "NOT_PROBED",
-   "probe_note": "deployed formal-tools:deb13-r0 image (built 2026-11-12) predates the portable-lane restore; tool marked UNAVAILABLE in that deployment; capability evidence is the merged portable-lane verify receipt on main",
-   "container_probe_receipt": {
-    "path": "docs/tool-portfolio/r176/receipts/nuxmv/receipt.json",
-    "sha256": "ba251daa2843193b55493b6cb9d47e6bf7c49601091ffe957a6c0795862f4748",
-    "records": "honest SKIP (UNAVAILABLE=1) — retained for deployment-state audit"
-   },
+   "probe_status": "PROBED",
+   "probe_quality": "INEFFECTIVE_OUTPUT",
+   "probe_note": "r181: rebound to a container-native receipt from the refreshed formal-tools:deb13-r1 ephemeral verify sweep (verify PASS pos/neg/err); the live --version probe is rejected by the binary (rc=255, unknown-option banner) so probe quality is INEFFECTIVE_OUTPUT and the version stays meta-declared 2.2.0; the prior r0-era honest container-skip receipt is preserved under docs/tool-portfolio/r176/receipts/nuxmv/",
+   "container_probe_receipt": null,
    "version_drift": null,
    "applicable_problems": [
     "SMV模型的不变式与LTL性质验证",
@@ -940,26 +948,27 @@
    "capability_ids": [
     "model.state"
    ],
-   "status": "PORTABLE_LANE_PASS_SCOPED",
-   "evidence_ref": "portable/status/receipts/verify-prob.json",
-   "evidence_sha256": null,
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r181/receipts/prob/receipt.json",
+   "evidence_sha256": "fac0aab61445c4d035fd802ec4c3eb9a94324afcd486152dbb1b5759095104ea",
    "verify_verdict": "PASS",
    "verify_phases": [
+    "setup",
     "pos",
     "neg",
     "err"
    ],
    "declared_version": "1.16.1",
-   "probed_version": null,
-   "probe_status": "NOT_PROBED_UNAVAILABLE",
-   "probe_quality": "NOT_PROBED",
-   "probe_note": "deployed formal-tools:deb13-r0 image (built 2026-11-12) predates the portable-lane restore; tool marked UNAVAILABLE in that deployment; capability evidence is the merged portable-lane verify receipt on main",
-   "container_probe_receipt": {
-    "path": "docs/tool-portfolio/r176/receipts/prob/receipt.json",
-    "sha256": "710aff8551770d82bd0d24e82488131e3894a994cb1f64426470961586b69861",
-    "records": "honest SKIP (UNAVAILABLE=1) — retained for deployment-state audit"
+   "probed_version": "1.16.1-final",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": "r181: rebound to a container-native receipt from the refreshed formal-tools:deb13-r1 ephemeral verify sweep (verify PASS setup/pos/neg/err); the live banner self-reports VERSION 1.16.1-final (git 716929f5) which is the final build of the declared 1.16.1 release; the prior r0-era honest container-skip receipt is preserved under docs/tool-portfolio/r176/receipts/prob/",
+   "container_probe_receipt": null,
+   "version_drift": {
+    "declared": "1.16.1",
+    "probed": "1.16.1-final",
+    "note": "build-suffix only: the deployed binary self-reports 1.16.1-final, the final build of the declared 1.16.1 release (banner VERSION 1.16.1-final, git 716929f5); recorded for exactness, not a lifecycle drift"
    },
-   "version_drift": null,
    "applicable_problems": [
     "B/Event-B规约的动画与状态检查",
     "不变式违反与死锁探测"
