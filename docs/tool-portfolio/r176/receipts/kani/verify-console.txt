@@ -1,0 +1,3 @@
+   kani/pos: exit=0 dur=525ms matched=1 exit_ok=1 label=VERIFIED (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-kani.pos.log)
+   kani/neg: exit=0 dur=272ms matched=1 exit_ok=1 label=VIOLATION (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-kani.neg.log)
+verify_rc=0

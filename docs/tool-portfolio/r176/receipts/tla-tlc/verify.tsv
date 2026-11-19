@@ -1,0 +1,4 @@
+tla-tlc	setup	0	5	1	1	SETUP
+tla-tlc	pos	0	555	1	1	PROPERTY_HOLDS
+tla-tlc	neg	0	519	1	1	COUNTEREXAMPLE
+verdict	PASS

@@ -1,0 +1,4 @@
+apalache	pos	0	1874	1	1	PROPERTY_HOLDS
+apalache	neg	0	1805	1	1	COUNTEREXAMPLE
+apalache	err	0	810	1	1	ERROR
+verdict	PASS

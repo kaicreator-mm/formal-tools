@@ -1,0 +1,4 @@
+   tla-tlc/setup: exit=0 dur=5ms matched=1 exit_ok=1 label=SETUP (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-tla-tlc.setup.log)
+   tla-tlc/pos: exit=0 dur=555ms matched=1 exit_ok=1 label=PROPERTY_HOLDS (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-tla-tlc.pos.log)
+   tla-tlc/neg: exit=0 dur=519ms matched=1 exit_ok=1 label=COUNTEREXAMPLE (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-tla-tlc.neg.log)
+verify_rc=0

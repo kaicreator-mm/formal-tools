@@ -1,0 +1,5 @@
+Only 10 samples per chain. Reliable r-hat and ESS diagnostics require longer chains for accurate estimate.
+Initializing NUTS using jitter+adapt_diag...
+PYVERIFY: OK REFUTED SamplingError
+
+PHASE_DONE phase=neg rc=0

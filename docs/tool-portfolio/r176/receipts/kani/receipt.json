@@ -1,0 +1,47 @@
+{
+ "schema": "formal-tools/capability-probe-receipt/0.1",
+ "tool_id": "kani",
+ "meta_version": "0.68.0",
+ "kind": "rust-bundle",
+ "unavailable_flag": "0",
+ "verify": {
+  "rows": [
+   [
+    "kani",
+    "pos",
+    "0",
+    "525",
+    "1",
+    "1",
+    "VERIFIED"
+   ],
+   [
+    "kani",
+    "neg",
+    "0",
+    "272",
+    "1",
+    "1",
+    "VIOLATION"
+   ]
+  ],
+  "verdict": "PASS"
+ },
+ "version_probe": {
+  "status": "PROBED",
+  "probed_first_line": "Kani Rust Verifier 0.68.0 (cargo plugin)",
+  "raw": "cmd=run kani --version\nKani Rust Verifier 0.68.0 (cargo plugin)\nCBMC 6.11.0\nrc=0\n"
+ },
+ "logs": {
+  "pos": "Kani Rust Verifier 0.68.0 (cargo plugin)\nCBMC 6.11.0\n   Compiling kani_pos v0.1.0 (/tmp/ft-ZR2pav/crate)\nwarning: use of an unstable feature\n --> <crate attribute>:1:12\n  |\n1 | #![feature(register_tool)]\n  |            ^^^^^^^^^^^^^\n  |\n  = note: requested on the command line with `--force-warn unstable-features`\n\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.21s\nChecking harness check_bound...\n\nVERIFICATION RESULT:\n ** 0 of 1 failed\n\nVERIFICATION:- SUCCESSFUL\nVerification Time: 0.026607452s\n\nManual Harness Summary:\nComplete - 1 successfully verified harnesses, 0 failures, 1 total.\n\nPHASE_DONE phase=pos rc=0\n",
+  "neg": "Kani Rust Verifier 0.68.0 (cargo plugin)\nCBMC 6.11.0\n   Compiling kani_neg v0.1.0 (/tmp/ft-Nzg3OW/crate)\nwarning: use of an unstable feature\n --> <crate attribute>:1:12\n  |\n1 | #![feature(register_tool)]\n  |            ^^^^^^^^^^^^^\n  |\n  = note: requested on the command line with `--force-warn unstable-features`\n\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.09s\nChecking harness check_bad_bound...\n\nVERIFICATION RESULT:\n ** 1 of 1 failed\nFailed Checks: assertion failed: x <= 127\n File: \"src/main.rs\", line 4, in check_bad_bound\n\nVERIFICATION:- FAILED\nVerification Time: 0.012689769s\n\nManual Harness Summary:\nVerification failed for - check_bad_bound\nComplete - 0 successfully verified harnesses, 1 failures, 1 total.\n\nPHASE_DONE phase=neg rc=0\n",
+  "err": null
+ },
+ "environment": {
+  "bundle_manifest_sha256": "6aa3f58583597f3685f9b4f5f554a9c138214d17f7eaae4f6d38a1f13a0d7552",
+  "tool_runner_sha256": "0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17",
+  "uname": "Linux 7.0.0-43-generic",
+  "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh, cc@192.168.100.200:2222)",
+  "executed_at_utc": "2026-11-19T02:08:02Z"
+ }
+}

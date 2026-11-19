@@ -1,0 +1,47 @@
+{
+ "schema": "formal-tools/capability-probe-receipt/0.1",
+ "tool_id": "prism",
+ "meta_version": "4.11",
+ "kind": "bundle",
+ "unavailable_flag": "0",
+ "verify": {
+  "rows": [
+   [
+    "prism",
+    "pos",
+    "0",
+    "586",
+    "1",
+    "1",
+    "PROPERTY_HOLDS"
+   ],
+   [
+    "prism",
+    "neg",
+    "0",
+    "553",
+    "1",
+    "1",
+    "PROPERTY_FAILS"
+   ]
+  ],
+  "verdict": "PASS"
+ },
+ "version_probe": {
+  "status": "PROBED",
+  "probed_first_line": "PRISM version 4.11",
+  "raw": "cmd=run prism --version\nPRISM version 4.11\nrc=0\n"
+ },
+ "logs": {
+  "pos": "PRISM\n=====\n\nVersion: 4.11\nDate: Thu Nov 19 02:08:38 UTC 2026\nHostname: 4441ce0dd265\nMemory limits: cudd=1g, java(heap)=15.4g\nCommand line: prism /opt/formal-tools-portable-debian13-x86_64/tests/prism/pos.pm -pf 'P>=0.1 [ F s=7 ]'\n\nParsing PRISM model file \"/opt/formal-tools-portable-debian13-x86_64/tests/prism/pos.pm\"...\n\nType:        DTMC\nModules:     die\nActions:     []\nVariables:   s\nLabels:      \"done\"\n\n1 property:\n(1) P>=0.1 [ F s=7 ]\n\n---------------------------------------------------------------------\n\nModel checking: P>=0.1 [ F s=7 ]\n\nBuilding model (engine:symbolic)...\n\nComputing reachable states...\n\nReachability (BFS): 4 iterations in 0.00 seconds (average 0.000000, setup 0.00)\n\nTime for model construction: 0.03 seconds.\n\nWarning: Deadlocks detected and fixed in 1 states\n\nType:        DTMC\nStates:      8 (1 initial)\nTransitions: 11\n\nTransition matrix: 19 nodes (3 terminal), 11 minterms, vars: 3r/3c\n\nProb0: 4 iterations in 0.00 seconds (average 0.000000, setup 0.00)\n\nProb1: 1 iterations in 0.00 seconds (average 0.000000, setup 0.00)\n\nyes = 8, no = 0, maybe = 0\n\nProperty satisfied in 1 of 1 initial states.\n\nTime for model checking: 0.004 seconds.\n\nResult: true\n\n---------------------------------------------------------------------\n\nNote: There was 1 warning during computation.\n\n\nPHASE_DONE phase=pos rc=0\n",
+  "neg": "PRISM\n=====\n\nVersion: 4.11\nDate: Thu Nov 19 02:08:39 UTC 2026\nHostname: 4441ce0dd265\nMemory limits: cudd=1g, java(heap)=15.4g\nCommand line: prism /opt/formal-tools-portable-debian13-x86_64/tests/prism/pos.pm -pf 'P<=0.5 [ F s=7 ]'\n\nParsing PRISM model file \"/opt/formal-tools-portable-debian13-x86_64/tests/prism/pos.pm\"...\n\nType:        DTMC\nModules:     die\nActions:     []\nVariables:   s\nLabels:      \"done\"\n\n1 property:\n(1) P<=0.5 [ F s=7 ]\n\n---------------------------------------------------------------------\n\nModel checking: P<=0.5 [ F s=7 ]\n\nBuilding model (engine:symbolic)...\n\nComputing reachable states...\n\nReachability (BFS): 4 iterations in 0.00 seconds (average 0.000000, setup 0.00)\n\nTime for model construction: 0.025 seconds.\n\nWarning: Deadlocks detected and fixed in 1 states\n\nType:        DTMC\nStates:      8 (1 initial)\nTransitions: 11\n\nTransition matrix: 19 nodes (3 terminal), 11 minterms, vars: 3r/3c\n\nProb0: 4 iterations in 0.00 seconds (average 0.000000, setup 0.00)\n\nProb1: 1 iterations in 0.00 seconds (average 0.000000, setup 0.00)\n\nyes = 8, no = 0, maybe = 0\n\nProperty satisfied in 0 of 1 initial states.\n\nTime for model checking: 0.004 seconds.\n\nResult: false\n\n---------------------------------------------------------------------\n\nNote: There was 1 warning during computation.\n\n\nPHASE_DONE phase=neg rc=0\n",
+  "err": null
+ },
+ "environment": {
+  "bundle_manifest_sha256": "6aa3f58583597f3685f9b4f5f554a9c138214d17f7eaae4f6d38a1f13a0d7552",
+  "tool_runner_sha256": "0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17",
+  "uname": "Linux 7.0.0-43-generic",
+  "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh, cc@192.168.100.200:2222)",
+  "executed_at_utc": "2026-11-19T02:08:02Z"
+ }
+}

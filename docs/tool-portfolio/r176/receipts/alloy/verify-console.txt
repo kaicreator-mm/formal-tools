@@ -1,0 +1,4 @@
+   alloy/pos: exit=0 dur=335ms matched=1 exit_ok=1 label=SATISFIABLE (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-alloy.pos.log)
+   alloy/neg: exit=0 dur=279ms matched=1 exit_ok=1 label=NO_COUNTEREXAMPLE (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-alloy.neg.log)
+   alloy/err: exit=0 dur=120ms matched=1 exit_ok=1 label=ERROR (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-alloy.err.log)
+verify_rc=0

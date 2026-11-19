@@ -1,0 +1,4 @@
+   robot/pos: exit=0 dur=1200ms matched=1 exit_ok=1 label=CONSISTENT (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-robot.pos.log)
+   robot/neg: exit=0 dur=969ms matched=1 exit_ok=1 label=INCONSISTENT (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-robot.neg.log)
+   robot/err: exit=0 dur=821ms matched=1 exit_ok=1 label=ERROR (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-robot.err.log)
+verify_rc=0

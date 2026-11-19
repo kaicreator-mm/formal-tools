@@ -1,0 +1,28 @@
+Storm 1.8.0
+
+Date: Thu Nov 19 02:08:52 2026
+Command line arguments: --prism /opt/formal-tools-portable-debian13-x86_64/tests/storm/pos.pm --prop 'P>=0.1 [F s=7]'
+Current working directory: /tmp/ft-C0BmAk
+
+Time for model input parsing: 0.009s.
+
+Time for model construction: 0.035s.
+
+-------------------------------------------------------------- 
+Model type: 	DTMC (sparse)
+States: 	8
+Transitions: 	11
+Reward Models:  none
+State Labels: 	3 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * (s = 7) -> 1 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "1": P>=1/10 [F (s = 7)] ...
+Result (for initial states): true
+
+Time for model checking: 0.000s.
+
+PHASE_DONE phase=pos rc=0

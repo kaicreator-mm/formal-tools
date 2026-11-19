@@ -1,0 +1,3 @@
+   causal-learn/pos: exit=0 dur=2341ms matched=1 exit_ok=1 label=PC_CHAIN (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-causal-learn.pos.log)
+   causal-learn/neg: exit=0 dur=1818ms matched=1 exit_ok=1 label=REFUTED (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-causal-learn.neg.log)
+verify_rc=0

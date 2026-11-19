@@ -1,0 +1,13 @@
+02:08:05 ERROR riot            :: Not found: file:///opt/formal-tools-portable-debian13-x86_64/tests/apache-jena/does-not-exist.ttl
+org.apache.jena.riot.RiotException: Not found: file:///opt/formal-tools-portable-debian13-x86_64/tests/apache-jena/does-not-exist.ttl
+	at riotcmd.ErrorHandlerCLI.error(ErrorHandlerCLI.java:65)
+	at riotcmd.CmdLangParse.parseRIOT(CmdLangParse.java:399)
+	at riotcmd.CmdLangParse.parseFile(CmdLangParse.java:337)
+	at riotcmd.CmdLangParse.exec$(CmdLangParse.java:234)
+	at riotcmd.CmdLangParse.exec(CmdLangParse.java:174)
+	at org.apache.jena.cmd.CmdMain.mainMethod(CmdMain.java:86)
+	at org.apache.jena.cmd.CmdMain.mainRun(CmdMain.java:55)
+	at org.apache.jena.cmd.CmdMain.mainRun(CmdMain.java:43)
+	at riotcmd.riot.main(riot.java:29)
+
+PHASE_DONE phase=err rc=0

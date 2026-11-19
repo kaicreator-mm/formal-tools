@@ -1,0 +1,4 @@
+clingo	pos	0	22	1	1	SAT
+clingo	neg	0	10	1	1	UNSAT
+clingo	err	0	9	1	1	ERROR
+verdict	PASS

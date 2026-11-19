@@ -1,0 +1,3 @@
+cmd=run cbmc --version
+6.11.0 (cbmc-6.11.0)
+rc=0

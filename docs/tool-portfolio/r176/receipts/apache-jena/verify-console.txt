@@ -1,0 +1,4 @@
+   apache-jena/pos: exit=0 dur=810ms matched=1 exit_ok=1 label=RDF_VALID (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-apache-jena.pos.log)
+   apache-jena/neg: exit=0 dur=671ms matched=1 exit_ok=1 label=RDF_INVALID (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-apache-jena.neg.log)
+   apache-jena/err: exit=0 dur=639ms matched=1 exit_ok=1 label=ERROR (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-apache-jena.err.log)
+verify_rc=0

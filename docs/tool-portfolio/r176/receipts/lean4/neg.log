@@ -1,0 +1,12 @@
+/opt/formal-tools-portable-debian13-x86_64/tests/lean4/neg.lean:2:0: error: Not a definitional equality: the left-hand side
+  1 + 1
+is not definitionally equal to the right-hand side
+  3
+/opt/formal-tools-portable-debian13-x86_64/tests/lean4/neg.lean:2:29: error: Type mismatch
+  rfl
+has type
+  ?m.16 = ?m.16
+but is expected to have type
+  1 + 1 = 3
+
+PHASE_DONE phase=neg rc=0

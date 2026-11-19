@@ -1,0 +1,3 @@
+networkx	pos	0	173	1	1	SHORTEST_PATH
+networkx	neg	0	185	1	1	NO_PATH
+verdict	PASS

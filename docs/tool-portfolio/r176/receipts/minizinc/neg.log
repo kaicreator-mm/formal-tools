@@ -1,0 +1,7 @@
+Warning: model inconsistency detected
+/opt/formal-tools-portable-debian13-x86_64/tests/minizinc/neg.mzn:4.12-17
+  in binary '<=' operator expression
+
+=====UNSATISFIABLE=====
+
+PHASE_DONE phase=neg rc=0

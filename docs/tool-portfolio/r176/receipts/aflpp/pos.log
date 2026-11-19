@@ -1,0 +1,3 @@
+AFL_RESULT: EXECS_DONE=0 fuzzer_exit=127
+
+PHASE_DONE phase=pos rc=0

@@ -1,0 +1,56 @@
+{
+ "schema": "formal-tools/capability-probe-receipt/0.1",
+ "tool_id": "clingo",
+ "meta_version": "5.8.3",
+ "kind": "binary",
+ "unavailable_flag": "0",
+ "verify": {
+  "rows": [
+   [
+    "clingo",
+    "pos",
+    "0",
+    "22",
+    "1",
+    "1",
+    "SAT"
+   ],
+   [
+    "clingo",
+    "neg",
+    "0",
+    "10",
+    "1",
+    "1",
+    "UNSAT"
+   ],
+   [
+    "clingo",
+    "err",
+    "0",
+    "9",
+    "1",
+    "1",
+    "ERROR"
+   ]
+  ],
+  "verdict": "PASS"
+ },
+ "version_probe": {
+  "status": "PROBED",
+  "probed_first_line": "clingo version 5.8.3",
+  "raw": "cmd=run clingo --version\nclingo version 5.8.3\nAddress model: 64-bit\n\nlibclingo version 5.8.3\nConfiguration: with Python 3.13.5, without Lua\n\nlibclasp version 3.4.2 (libpotassco version 1.2.0)\nConfiguration: WITH_THREADS=1\nCopyright (C) Benjamin Kaufmann\n\nLicense: The MIT License <https://opensource.org/licenses/MIT>\nrc=0\n"
+ },
+ "logs": {
+  "pos": "clingo version 5.8.3\nReading from ...le-debian13-x86_64/tests/clingo/pos.lp\nSolving...\nAnswer: 1 (Time: 0.004s)\ncolor(a,red) color(b,blue) color(c,red)\nSATISFIABLE\n\nModels       : 1+\nCalls        : 1\nTime         : 0.004s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)\nCPU Time     : 0.001s\n\nPHASE_DONE phase=pos rc=0\n",
+  "neg": "clingo version 5.8.3\nReading from ...le-debian13-x86_64/tests/clingo/neg.lp\nSolving...\nUNSATISFIABLE\n\nModels       : 0\nCalls        : 1\nTime         : 0.001s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)\nCPU Time     : 0.000s\n\nPHASE_DONE phase=neg rc=0\n",
+  "err": "clingo version 5.8.3\nReading from ...le-debian13-x86_64/tests/clingo/err.lp\n/opt/formal-tools-portable-debian13-x86_64/tests/clingo/err.lp:3:1-2: error: syntax error, unexpected EOF, expecting ) or ;\n\n*** ERROR: (clingo): parsing failed\nUNKNOWN\n\nModels       : 0+\nCalls        : 1\nTime         : 0.001s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)\nCPU Time     : 0.000s\n\nPHASE_DONE phase=err rc=0\n"
+ },
+ "environment": {
+  "bundle_manifest_sha256": "6aa3f58583597f3685f9b4f5f554a9c138214d17f7eaae4f6d38a1f13a0d7552",
+  "tool_runner_sha256": "0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17",
+  "uname": "Linux 7.0.0-43-generic",
+  "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh, cc@192.168.100.200:2222)",
+  "executed_at_utc": "2026-11-19T02:08:02Z"
+ }
+}

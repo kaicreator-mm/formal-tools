@@ -1,0 +1,4 @@
+   clingo/pos: exit=0 dur=22ms matched=1 exit_ok=1 label=SAT (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-clingo.pos.log)
+   clingo/neg: exit=0 dur=10ms matched=1 exit_ok=1 label=UNSAT (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-clingo.neg.log)
+   clingo/err: exit=0 dur=9ms matched=1 exit_ok=1 label=ERROR (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-clingo.err.log)
+verify_rc=0

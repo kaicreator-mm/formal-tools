@@ -1,0 +1,4 @@
+   why3/setup: exit=0 dur=45ms matched=1 exit_ok=1 label=SETUP (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-why3.setup.log)
+   why3/pos: exit=0 dur=323ms matched=1 exit_ok=1 label=PROVED (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-why3.pos.log)
+   why3/neg: exit=0 dur=269ms matched=1 exit_ok=1 label=NOT_PROVED (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-why3.neg.log)
+verify_rc=0

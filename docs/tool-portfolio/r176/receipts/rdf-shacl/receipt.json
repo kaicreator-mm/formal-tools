@@ -1,0 +1,47 @@
+{
+ "schema": "formal-tools/capability-probe-receipt/0.1",
+ "tool_id": "rdf-shacl",
+ "meta_version": "unknown",
+ "kind": "python-lib",
+ "unavailable_flag": "0",
+ "verify": {
+  "rows": [
+   [
+    "rdf-shacl",
+    "pos",
+    "0",
+    "289",
+    "1",
+    "1",
+    "CONFORMS"
+   ],
+   [
+    "rdf-shacl",
+    "neg",
+    "0",
+    "263",
+    "1",
+    "1",
+    "VIOLATION"
+   ]
+  ],
+  "verdict": "PASS"
+ },
+ "version_probe": {
+  "status": "PROBED",
+  "probed_first_line": "0.40.2",
+  "raw": "cmd=py import pyshacl\n0.40.2\nrc=0\n"
+ },
+ "logs": {
+  "pos": "Validation Report\nConforms: True\n\nPHASE_DONE phase=pos rc=0\n",
+  "neg": "Validation Report\nConforms: False\nResults (1):\nConstraint Violation in DatatypeConstraintComponent (http://www.w3.org/ns/shacl#DatatypeConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:integer ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:path ex:age ]\n\tFocus Node: ex:bob\n\tValue Node: Literal(\"not-a-number\")\n\tResult Path: ex:age\n\tMessage: Value is not Literal with datatype xsd:integer\n\nPHASE_DONE phase=neg rc=0\n",
+  "err": null
+ },
+ "environment": {
+  "bundle_manifest_sha256": "6aa3f58583597f3685f9b4f5f554a9c138214d17f7eaae4f6d38a1f13a0d7552",
+  "tool_runner_sha256": "0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17",
+  "uname": "Linux 7.0.0-43-generic",
+  "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh, cc@192.168.100.200:2222)",
+  "executed_at_utc": "2026-11-19T02:08:02Z"
+ }
+}

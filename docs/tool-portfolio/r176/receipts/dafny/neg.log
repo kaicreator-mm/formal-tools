@@ -1,0 +1,14 @@
+/opt/formal-tools-portable-debian13-x86_64/tests/dafny/neg.dfy(3,0): Error: a postcondition could not be proved on this return path
+  |
+3 | {
+  | ^
+
+/opt/formal-tools-portable-debian13-x86_64/tests/dafny/neg.dfy(2,12): Related location: this is the postcondition that could not be proved
+  |
+2 |   ensures s == a + 1
+  |             ^^
+
+
+Dafny program verifier finished with 0 verified, 1 error
+
+PHASE_DONE phase=neg rc=0

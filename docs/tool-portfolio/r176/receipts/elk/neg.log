@@ -1,0 +1,23 @@
+Exception in thread "main" org.semanticweb.elk.loading.ElkLoadingException: Cannot load the ontology!
+	at org.semanticweb.elk.loading.Owl2ParserLoader$Parser.run(Owl2ParserLoader.java:181)
+	at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: org.semanticweb.elk.owl.parsing.Owl2ParseException: Cannot parse the ontology!
+	at org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.accept(AbstractOwl2FunctionalStyleParser.java:130)
+	at org.semanticweb.elk.loading.Owl2ParserLoader$Parser.run(Owl2ParserLoader.java:179)
+	... 1 more
+Caused by: org.semanticweb.elk.owl.parsing.javacc.ParseException: Encountered "<EOF>" at line 2, column 50.
+Was expecting:
+    ")" ...
+    
+	at org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.generateParseException(AbstractOwl2FunctionalStyleParser.java:2842)
+	at org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.jj_consume_token(AbstractOwl2FunctionalStyleParser.java:2699)
+	at org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.entity(AbstractOwl2FunctionalStyleParser.java:599)
+	at org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.declaration(AbstractOwl2FunctionalStyleParser.java:586)
+	at org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.axiom(AbstractOwl2FunctionalStyleParser.java:1354)
+	at org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.axioms(AbstractOwl2FunctionalStyleParser.java:386)
+	at org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.ontology(AbstractOwl2FunctionalStyleParser.java:302)
+	at org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.ontologyDocument(AbstractOwl2FunctionalStyleParser.java:257)
+	at org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.accept(AbstractOwl2FunctionalStyleParser.java:128)
+	... 2 more
+
+PHASE_DONE phase=neg rc=0

@@ -1,0 +1,47 @@
+{
+ "schema": "formal-tools/capability-probe-receipt/0.1",
+ "tool_id": "elk",
+ "meta_version": "0.6.0",
+ "kind": "java-bundle",
+ "unavailable_flag": "0",
+ "verify": {
+  "rows": [
+   [
+    "elk",
+    "pos",
+    "0",
+    "449",
+    "1",
+    "1",
+    "CLASSIFIED"
+   ],
+   [
+    "elk",
+    "neg",
+    "0",
+    "388",
+    "1",
+    "1",
+    "PARSE_REJECTED"
+   ]
+  ],
+  "verdict": "PASS"
+ },
+ "version_probe": {
+  "status": "PROBED",
+  "probed_first_line": "ELK Distribution Package for Command Line 0.6.0",
+  "raw": "cmd=run elk --version\nELK Distribution Package for Command Line 0.6.0\nrc=0\n"
+ },
+ "logs": {
+  "pos": "\nPHASE_DONE phase=pos rc=0\n",
+  "neg": "Exception in thread \"main\" org.semanticweb.elk.loading.ElkLoadingException: Cannot load the ontology!\n\tat org.semanticweb.elk.loading.Owl2ParserLoader$Parser.run(Owl2ParserLoader.java:181)\n\tat java.base/java.lang.Thread.run(Unknown Source)\nCaused by: org.semanticweb.elk.owl.parsing.Owl2ParseException: Cannot parse the ontology!\n\tat org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.accept(AbstractOwl2FunctionalStyleParser.java:130)\n\tat org.semanticweb.elk.loading.Owl2ParserLoader$Parser.run(Owl2ParserLoader.java:179)\n\t... 1 more\nCaused by: org.semanticweb.elk.owl.parsing.javacc.ParseException: Encountered \"<EOF>\" at line 2, column 50.\nWas expecting:\n    \")\" ...\n    \n\tat org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.generateParseException(AbstractOwl2FunctionalStyleParser.java:2842)\n\tat org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.jj_consume_token(AbstractOwl2FunctionalStyleParser.java:2699)\n\tat org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.entity(AbstractOwl2FunctionalStyleParser.java:599)\n\tat org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.declaration(AbstractOwl2FunctionalStyleParser.java:586)\n\tat org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.axiom(AbstractOwl2FunctionalStyleParser.java:1354)\n\tat org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.axioms(AbstractOwl2FunctionalStyleParser.java:386)\n\tat org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.ontology(AbstractOwl2FunctionalStyleParser.java:302)\n\tat org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.ontologyDocument(AbstractOwl2FunctionalStyleParser.java:257)\n\tat org.semanticweb.elk.owl.parsing.javacc.AbstractOwl2FunctionalStyleParser.accept(AbstractOwl2FunctionalStyleParser.java:128)\n\t... 2 more\n\nPHASE_DONE phase=neg rc=0\n",
+  "err": null
+ },
+ "environment": {
+  "bundle_manifest_sha256": "6aa3f58583597f3685f9b4f5f554a9c138214d17f7eaae4f6d38a1f13a0d7552",
+  "tool_runner_sha256": "0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17",
+  "uname": "Linux 7.0.0-43-generic",
+  "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh, cc@192.168.100.200:2222)",
+  "executed_at_utc": "2026-11-19T02:08:02Z"
+ }
+}

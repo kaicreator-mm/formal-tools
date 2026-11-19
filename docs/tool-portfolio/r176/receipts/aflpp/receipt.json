@@ -1,0 +1,47 @@
+{
+ "schema": "formal-tools/capability-probe-receipt/0.1",
+ "tool_id": "aflpp",
+ "meta_version": "5.03c",
+ "kind": "binary",
+ "unavailable_flag": "0",
+ "verify": {
+  "rows": [
+   [
+    "aflpp",
+    "pos",
+    "0",
+    "11",
+    "1",
+    "1",
+    "FUZZER_EXECS"
+   ],
+   [
+    "aflpp",
+    "neg",
+    "0",
+    "6",
+    "1",
+    "1",
+    "ERROR"
+   ]
+  ],
+  "verdict": "PASS"
+ },
+ "version_probe": {
+  "status": "PROBED",
+  "probed_first_line": "/opt/formal-tools-portable-debian13-x86_64/tools/aflpp/bin/afl-fuzz: error while loading shared libraries: libpython3.13.so.1.0: cannot open shared object file: No such file or directory",
+  "raw": "cmd=run aflpp --version\n/opt/formal-tools-portable-debian13-x86_64/tools/aflpp/bin/afl-fuzz: error while loading shared libraries: libpython3.13.so.1.0: cannot open shared object file: No such file or directory\nrc=127\n"
+ },
+ "logs": {
+  "pos": "AFL_RESULT: EXECS_DONE=0 fuzzer_exit=127\n\nPHASE_DONE phase=pos rc=0\n",
+  "neg": "/opt/formal-tools-portable-debian13-x86_64/tools/aflpp/bin/afl-fuzz: error while loading shared libraries: libpython3.13.so.1.0: cannot open shared object file: No such file or directory\n\nPHASE_DONE phase=neg rc=0\n",
+  "err": null
+ },
+ "environment": {
+  "bundle_manifest_sha256": "6aa3f58583597f3685f9b4f5f554a9c138214d17f7eaae4f6d38a1f13a0d7552",
+  "tool_runner_sha256": "0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17",
+  "uname": "Linux 7.0.0-43-generic",
+  "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh, cc@192.168.100.200:2222)",
+  "executed_at_utc": "2026-11-19T02:08:02Z"
+ }
+}

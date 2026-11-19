@@ -1,0 +1,4 @@
+   z3/pos: exit=0 dur=22ms matched=1 exit_ok=1 label=SAT (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-z3.pos.log)
+   z3/neg: exit=0 dur=18ms matched=1 exit_ok=1 label=UNSAT (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-z3.neg.log)
+   z3/err: exit=0 dur=15ms matched=1 exit_ok=1 label=ERROR (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-z3.err.log)
+verify_rc=0

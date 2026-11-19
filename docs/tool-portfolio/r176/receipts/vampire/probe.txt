@@ -1,0 +1,5 @@
+cmd=run vampire --version
+Vampire 5.1.0 (Release build, commit 7b2f410 on 2026-08-13 10:17:34 +0200)
+CaDiCaL: cadical-2.1.3
+Linked to Z3 4.14.0.0 3c47fd96cf5645d0c42b2c819d9e9a84380aa721 NOTFOUND
+rc=0

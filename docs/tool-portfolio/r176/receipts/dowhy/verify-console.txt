@@ -1,0 +1,3 @@
+   dowhy/pos: exit=0 dur=3150ms matched=1 exit_ok=1 label=ATE_ESTIMATED (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-dowhy.pos.log)
+   dowhy/neg: exit=0 dur=2758ms matched=1 exit_ok=1 label=REFUTED (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-dowhy.neg.log)
+verify_rc=0

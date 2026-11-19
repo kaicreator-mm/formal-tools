@@ -1,0 +1,4 @@
+   minizinc/pos: exit=0 dur=128ms matched=1 exit_ok=1 label=SATISFIED (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-minizinc.pos.log)
+   minizinc/neg: exit=0 dur=80ms matched=1 exit_ok=1 label=UNSATISFIABLE (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-minizinc.neg.log)
+   minizinc/err: exit=0 dur=51ms matched=1 exit_ok=1 label=ERROR (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-minizinc.err.log)
+verify_rc=0

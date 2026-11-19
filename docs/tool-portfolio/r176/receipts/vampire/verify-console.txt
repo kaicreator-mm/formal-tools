@@ -1,0 +1,4 @@
+   vampire/pos: exit=0 dur=32ms matched=1 exit_ok=1 label=PROVED (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-vampire.pos.log)
+   vampire/neg: exit=0 dur=10ms matched=1 exit_ok=1 label=NOT_PROVED (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-vampire.neg.log)
+   vampire/err: exit=0 dur=33ms matched=1 exit_ok=1 label=ERROR (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-vampire.err.log)
+verify_rc=0

@@ -1,0 +1,56 @@
+{
+ "schema": "formal-tools/capability-probe-receipt/0.1",
+ "tool_id": "robot",
+ "meta_version": "1.9.11",
+ "kind": "jar",
+ "unavailable_flag": "0",
+ "verify": {
+  "rows": [
+   [
+    "robot",
+    "pos",
+    "0",
+    "1200",
+    "1",
+    "1",
+    "CONSISTENT"
+   ],
+   [
+    "robot",
+    "neg",
+    "0",
+    "969",
+    "1",
+    "1",
+    "INCONSISTENT"
+   ],
+   [
+    "robot",
+    "err",
+    "0",
+    "821",
+    "1",
+    "1",
+    "ERROR"
+   ]
+  ],
+  "verdict": "PASS"
+ },
+ "version_probe": {
+  "status": "PROBED",
+  "probed_first_line": "ROBOT version 1.9.11",
+  "raw": "cmd=run robot --version\nROBOT version 1.9.11\nrc=0\n"
+ },
+ "logs": {
+  "pos": "\nPHASE_DONE phase=pos rc=0\n",
+  "neg": "2026-11-19 02:08:50,295 ERROR org.obolibrary.robot.ReasonerHelper - The ontology is inconsistent. TIP: use a tool like Protege to find explanations\n\nPHASE_DONE phase=neg rc=0\n",
+  "err": "INVALID ONTOLOGY FILE ERROR Could not load a valid ontology from file: err.ttl\nFor details see: http://robot.obolibrary.org/errors#invalid-ontology-file-error\nUse the -vvv option to show the stack trace.\nUse the --help option to see usage information.\n\nPHASE_DONE phase=err rc=0\n"
+ },
+ "environment": {
+  "bundle_manifest_sha256": "6aa3f58583597f3685f9b4f5f554a9c138214d17f7eaae4f6d38a1f13a0d7552",
+  "tool_runner_sha256": "0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17",
+  "uname": "Linux 7.0.0-43-generic",
+  "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh, cc@192.168.100.200:2222)",
+  "executed_at_utc": "2026-11-19T02:08:02Z"
+ }
+}

@@ -1,0 +1,3 @@
+cmd=py import pyshacl
+0.40.2
+rc=0

@@ -1,0 +1,4 @@
+cmd=run fast-downward --version
+Fast Downward 26.6+
+git revision [release]: unknown
+rc=0

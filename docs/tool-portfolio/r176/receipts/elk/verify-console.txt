@@ -1,0 +1,3 @@
+   elk/pos: exit=0 dur=449ms matched=1 exit_ok=1 label=CLASSIFIED (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-elk.pos.log)
+   elk/neg: exit=0 dur=388ms matched=1 exit_ok=1 label=PARSE_REJECTED (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-elk.neg.log)
+verify_rc=0

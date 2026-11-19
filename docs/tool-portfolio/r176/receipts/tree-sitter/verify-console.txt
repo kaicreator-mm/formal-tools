@@ -1,0 +1,3 @@
+   tree-sitter/pos: exit=0 dur=51ms matched=1 exit_ok=1 label=PARSED (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-tree-sitter.pos.log)
+   tree-sitter/neg: exit=0 dur=46ms matched=1 exit_ok=1 label=PARSE_ERROR_DETECTED (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-tree-sitter.neg.log)
+verify_rc=0

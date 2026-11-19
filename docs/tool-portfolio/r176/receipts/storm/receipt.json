@@ -1,0 +1,47 @@
+{
+ "schema": "formal-tools/capability-probe-receipt/0.1",
+ "tool_id": "storm",
+ "meta_version": "2.0.0",
+ "kind": "bundle",
+ "unavailable_flag": "0",
+ "verify": {
+  "rows": [
+   [
+    "storm",
+    "pos",
+    "0",
+    "103",
+    "1",
+    "1",
+    "PROPERTY_HOLDS"
+   ],
+   [
+    "storm",
+    "neg",
+    "0",
+    "37",
+    "1",
+    "1",
+    "PROPERTY_FAILS"
+   ]
+  ],
+  "verdict": "PASS"
+ },
+ "version_probe": {
+  "status": "PROBED",
+  "probed_first_line": "Storm 1.8.0",
+  "raw": "cmd=run storm --version\nStorm 1.8.0\n\nDate: Thu Nov 19 02:08:52 2026\nCommand line arguments: --version\nCurrent working directory: /home/cc\n\nVersion 1.8.0 (derived statically) build from revision GITDIR-NOTFOUND (potentially dirty)\nCompiled on Linux 5.15.49-linuxkit using gcc 12.2.0 with flags ' -O3 -DNDEBUG -fprefetch-loop-arrays -flto -flto-partition=none -fomit-frame-pointer'\nLinked with GNU Linear Programming Kit v5.0.\nLinked with Microsoft Z3 Optimizer v4.8 Build 12 Rev 0.\nLinked with CArL.\nrc=255\n"
+ },
+ "logs": {
+  "pos": "Storm 1.8.0\n\nDate: Thu Nov 19 02:08:52 2026\nCommand line arguments: --prism /opt/formal-tools-portable-debian13-x86_64/tests/storm/pos.pm --prop 'P>=0.1 [F s=7]'\nCurrent working directory: /tmp/ft-C0BmAk\n\nTime for model input parsing: 0.009s.\n\nTime for model construction: 0.035s.\n\n-------------------------------------------------------------- \nModel type: \tDTMC (sparse)\nStates: \t8\nTransitions: \t11\nReward Models:  none\nState Labels: \t3 labels\n   * deadlock -> 0 item(s)\n   * init -> 1 item(s)\n   * (s = 7) -> 1 item(s)\nChoice Labels: \tnone\n-------------------------------------------------------------- \n\nModel checking property \"1\": P>=1/10 [F (s = 7)] ...\nResult (for initial states): true\n\nTime for model checking: 0.000s.\n\nPHASE_DONE phase=pos rc=0\n",
+  "neg": "Storm 1.8.0\n\nDate: Thu Nov 19 02:08:52 2026\nCommand line arguments: --prism /opt/formal-tools-portable-debian13-x86_64/tests/storm/pos.pm --prop 'P<=0.5 [F s=7]'\nCurrent working directory: /tmp/ft-C0BmAk\n\nTime for model input parsing: 0.000s.\n\nTime for model construction: 0.014s.\n\n-------------------------------------------------------------- \nModel type: \tDTMC (sparse)\nStates: \t8\nTransitions: \t11\nReward Models:  none\nState Labels: \t3 labels\n   * deadlock -> 0 item(s)\n   * init -> 1 item(s)\n   * (s = 7) -> 1 item(s)\nChoice Labels: \tnone\n-------------------------------------------------------------- \n\nModel checking property \"1\": P<=1/2 [F (s = 7)] ...\nResult (for initial states): false\n\nTime for model checking: 0.000s.\n\nPHASE_DONE phase=neg rc=0\n",
+  "err": null
+ },
+ "environment": {
+  "bundle_manifest_sha256": "6aa3f58583597f3685f9b4f5f554a9c138214d17f7eaae4f6d38a1f13a0d7552",
+  "tool_runner_sha256": "0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17",
+  "uname": "Linux 7.0.0-43-generic",
+  "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh, cc@192.168.100.200:2222)",
+  "executed_at_utc": "2026-11-19T02:08:02Z"
+ }
+}

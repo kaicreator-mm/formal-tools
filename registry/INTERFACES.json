@@ -1,6 +1,6 @@
 {
   "schema": "formal-tools-interfaces/3",
-  "version": "0.4.0-r4",
+  "version": "0.5.0-r5",
   "status": "JS_PLANNING_TESTED_NODE_NATIVE_MCP_NOT_RUN",
   "core": "packages/core/src/finite.mjs",
   "cli": "node packages/runner/js/cli.mjs",
@@ -24,7 +24,11 @@
     "verify_formal_model",
     "describe_native_cli",
     "plan_native_cli",
-    "inspect_native_installation"
+    "inspect_native_installation",
+    "list_portfolio_tools",
+    "inspect_portfolio_tool",
+    "verify_portable_fixture",
+    "run_portfolio_operation"
   ],
   "pure_engines": [
     "dag",
@@ -75,7 +79,8 @@
     "info",
     "where",
     "doctor-all",
-    "invoke"
+    "invoke",
+    "portfolio"
   ],
   "native_cli": {
     "catalog": "packages/runner/js/native-catalog.mjs",
@@ -155,5 +160,26 @@
     "schema": "registry/GENERATED_ARTIFACTS.schema.json",
     "compatibility_schema": "registry/TOOL_COMPATIBILITY_MATRIX.schema.json",
     "native_runtime_status": "NOT_VERIFIED_ON_PR10"
+  },
+  "capability_validation": {
+    "schema": "formal-tools/capability-validation/0.1",
+    "registry": "registry/CAPABILITY_VALIDATION.json",
+    "module": "packages/runner/js/capability-validation.mjs",
+    "sdk_exports": [
+      "loadCapabilityValidation",
+      "validateCapabilityValidation",
+      "matchValidatedTools"
+    ],
+    "capabilities_cli": "node packages/runner/js/capabilities-cli.mjs [summary|match --cap <id> ... [--include-not-verified]|tool <id>]",
+    "mcp_follow_up": "match_formal_capabilities registration is deferred: packages/runner/js/mcp.mjs and its 13-tool contract are blob-pinned by docs/tool-portfolio/r99/CBMC_CURRENT_MAIN_T4.json; adding the MCP tool requires the pin-owning lane's evidence reconciliation",
+    "evidence": "docs/tool-portfolio/r176/",
+    "evidence_lane": "deployed portable bundle container probe (formal-tools:deb13-r0) + merged portable-lane receipts for nuxmv/prob",
+    "receipts": {
+      "native_probe_pass_scoped": 34,
+      "portable_lane_pass_scoped": 2,
+      "not_verified": 0
+    },
+    "discovery_registry_unchanged": "registry/PROBLEM_CAPABILITIES.json stays schema 0.1 DISCOVERY_ONLY",
+    "status": "JS_TESTED_RECEIPT_SHA256_BOUND_CAPABILITY_PROBE_ONLY_NOT_FORMAL_T3_T4_T5_T6"
   }
 }

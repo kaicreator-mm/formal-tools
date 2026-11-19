@@ -1,0 +1,47 @@
+{
+ "schema": "formal-tools/capability-probe-receipt/0.1",
+ "tool_id": "pymc",
+ "meta_version": "unknown",
+ "kind": "python-lib",
+ "unavailable_flag": "0",
+ "verify": {
+  "rows": [
+   [
+    "pymc",
+    "pos",
+    "0",
+    "3910",
+    "1",
+    "1",
+    "POSTERIOR_MEAN"
+   ],
+   [
+    "pymc",
+    "neg",
+    "0",
+    "2470",
+    "1",
+    "1",
+    "REFUTED"
+   ]
+  ],
+  "verdict": "PASS"
+ },
+ "version_probe": {
+  "status": "PROBED",
+  "probed_first_line": "6.4.0",
+  "raw": "cmd=py import pymc\n6.4.0\nrc=0\n"
+ },
+ "logs": {
+  "pos": "Initializing NUTS using jitter+adapt_diag...\nSequential sampling (1 chains in 1 job)\nNUTS: [p]\nSampling 1 chain for 200 tune and 200 draw iterations (200 + 200 draws total) took 0 seconds.\nPYVERIFY: OK POSTERIOR_MEAN=0.749\n\nPHASE_DONE phase=pos rc=0\n",
+  "neg": "Only 10 samples per chain. Reliable r-hat and ESS diagnostics require longer chains for accurate estimate.\nInitializing NUTS using jitter+adapt_diag...\nPYVERIFY: OK REFUTED SamplingError\n\nPHASE_DONE phase=neg rc=0\n",
+  "err": null
+ },
+ "environment": {
+  "bundle_manifest_sha256": "6aa3f58583597f3685f9b4f5f554a9c138214d17f7eaae4f6d38a1f13a0d7552",
+  "tool_runner_sha256": "0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17",
+  "uname": "Linux 7.0.0-43-generic",
+  "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh, cc@192.168.100.200:2222)",
+  "executed_at_utc": "2026-11-19T02:08:02Z"
+ }
+}

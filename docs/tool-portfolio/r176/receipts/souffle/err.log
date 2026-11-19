@@ -1,0 +1,9 @@
+Error: Redefinition of relation edge in file neg.dl at line 3
+.decl edge(a:number, b:number)
+------^------------------------
+Previous definition in file neg.dl at line 2
+.decl edge(a:number, b:number)
+------^------------------------
+1 errors generated, evaluation aborted
+
+PHASE_DONE phase=err rc=0

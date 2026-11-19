@@ -1,0 +1,4 @@
+   lean4/pos: exit=0 dur=1133ms matched=1 exit_ok=1 label=PROVED (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-lean4.pos.log)
+   lean4/neg: exit=0 dur=202ms matched=1 exit_ok=1 label=REJECTED (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-lean4.neg.log)
+   lean4/err: exit=0 dur=183ms matched=1 exit_ok=1 label=ERROR (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-lean4.err.log)
+verify_rc=0

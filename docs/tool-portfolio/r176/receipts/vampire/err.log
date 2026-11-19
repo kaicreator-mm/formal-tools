@@ -1,0 +1,7 @@
+% Running in auto input_syntax mode. Trying TPTP
+% Failed with
+% parse error in "/opt/formal-tools-portable-debian13-x86_64/tests/vampire/err.p", line 3: term or formula expected (text: <eof>)
+% Trying SMTLIB2
+Parser exception: unmatched left parenthesis in line 2 at 
+
+PHASE_DONE phase=err rc=0
