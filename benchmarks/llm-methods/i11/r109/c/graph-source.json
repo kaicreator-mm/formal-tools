@@ -1,0 +1,10 @@
+{
+  "schema": "formal-tools/i11-r109-fixed-graph/1",
+  "source_id": "local.finite.graph.v1",
+  "source_version": "1",
+  "scope": "LOCAL_FINITE_GRAPH_READ_ONLY",
+  "nodes": ["a", "b", "c", "d"],
+  "start": "a",
+  "goal": "d",
+  "edges": [["a", "b", 2], ["a", "c", 9], ["b", "c", 3], ["b", "d", 7], ["c", "d", 2]]
+}
