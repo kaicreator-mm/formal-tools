@@ -1,0 +1,48 @@
+{
+  "schema": "formal-tools/nl-model-driver-run/1.0",
+  "label": "FORMAL_TOOLS_I180_R2_NL_TO_MODEL",
+  "source_sha": "f84d3b9789138481d96cf6d9a382fa0a2d09fbde",
+  "provider": {
+    "name": "deepseek",
+    "model": "deepseek-chat"
+  },
+  "portable_root_present": true,
+  "key_present": true,
+  "journeys": [
+    {
+      "journey": "j3-vague-clarification",
+      "matched": true,
+      "status": "NEEDS_CLARIFICATION",
+      "verdict": null,
+      "blocked": null,
+      "surprise": null
+    },
+    {
+      "journey": "nl-j1-sat",
+      "matched": true,
+      "status": "MODEL_PROPOSED",
+      "verdict": "AGREE_SAT",
+      "blocked": null,
+      "surprise": null
+    },
+    {
+      "journey": "nl-j2-unsat",
+      "matched": true,
+      "status": "MODEL_PROPOSED",
+      "verdict": "AGREE_UNSAT",
+      "blocked": null,
+      "surprise": null
+    },
+    {
+      "journey": "nl-j4-lp-optimize",
+      "matched": true,
+      "status": "MODEL_PROPOSED",
+      "verdict": "kOptimal",
+      "blocked": null,
+      "surprise": null
+    }
+  ],
+  "all_matched": true,
+  "honesty_note": "All verdicts answer the RENDERED models. The DeepSeek output is a translation proposal; the approval gate in these journeys was exercised by a driver surrogate, not a human. Render validity and witness consistency never imply translation fidelity.",
+  "exit_code": 0
+}

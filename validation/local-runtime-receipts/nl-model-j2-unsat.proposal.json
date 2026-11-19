@@ -1,0 +1,77 @@
+{
+  "journey": "nl-j2-unsat",
+  "approval_note": {
+    "status": "USER_APPROVED",
+    "reviewer": "driver-surrogate (NOT a human; demonstrates the approval gate; a human must review the recorded model before any production use)"
+  },
+  "proposal": {
+    "schema": "formal-tools/nl-model-proposal/0.1",
+    "status": "MODEL_PROPOSED",
+    "original_text": "x 是一个整数,它至少是 5,同时又不超过 3。请问:满足这两个条件的 x 存在吗?",
+    "provider": {
+      "name": "deepseek",
+      "model": "deepseek-chat"
+    },
+    "prompt_sha256": "15bbdd4d7ec7ac6b5edf0260e49dddc9da8cd7e408bb7fa40ed51d02fba7cd95",
+    "response_sha256": "1723b698aa3b760bcb2d31f108ee6245b64ba22c97eed1cddef2a2d3e607a487",
+    "model": {
+      "variables": [
+        {
+          "name": "x",
+          "integer": true,
+          "lower": -1000000,
+          "upper": 1000000
+        }
+      ],
+      "constraints": [
+        {
+          "coefficients": {
+            "x": 1
+          },
+          "op": ">=",
+          "rhs": 5
+        },
+        {
+          "coefficients": {
+            "x": 1
+          },
+          "op": "<=",
+          "rhs": 3
+        }
+      ],
+      "question": "sat",
+      "assumptions": [
+        "The two stated conditions x >= 5 and x <= 3 contradict each other, so x is given wide neutral bounds and each condition is encoded as a separate constraint to allow an honest unsat result.",
+        "The question asks whether such an integer x exists, so question is 'sat'."
+      ]
+    },
+    "rendering": {
+      "kind": "smt-lib2",
+      "logic": "QF_LIA",
+      "mode": "plan",
+      "text": "(set-logic QF_LIA)\n(declare-fun x () Int)\n(assert (>= x -1000000))\n(assert (<= x 1000000))\n(assert (>= x 5))\n(assert (<= x 3))\n(check-sat)\n(exit)\n",
+      "sha256": "216851b834c2ba20dd55afdcf3fb10c16c9e953a60b54088aa990010238a9255",
+      "commands_allowlist": [
+        "set-logic",
+        "declare-fun",
+        "assert",
+        "check-sat",
+        "get-model",
+        "exit"
+      ],
+      "semantic_status": "TRANSLATION_PROPOSAL_NOT_VERIFIED_AGAINST_TEXT"
+    },
+    "original_text_sha256": "05a83948db2692bc01d1d868349162533a491cedc7d18d3093b2d954418319fa",
+    "clarification_needed": null,
+    "assumptions": [
+      "The two stated conditions x >= 5 and x <= 3 contradict each other, so x is given wide neutral bounds and each condition is encoded as a separate constraint to allow an honest unsat result.",
+      "The question asks whether such an integer x exists, so question is 'sat'."
+    ],
+    "issues": null,
+    "review": {
+      "approved": false
+    },
+    "honesty_note": "TRANSLATION PROPOSAL: the structured model is unverified against the text; a human must review it. Render validity does not imply translation fidelity.",
+    "proposal_sha256": "e3eb11f5cd8c1bfe3313d70c76d627efb93ef781f2760ab596e76c7438871d9a"
+  }
+}

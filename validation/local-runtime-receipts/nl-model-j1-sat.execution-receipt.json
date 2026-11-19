@@ -1,0 +1,210 @@
+{
+  "journey": "nl-j1-sat",
+  "plan": {
+    "schema": "formal-tools/execution-plan/1.0",
+    "plan_id": "wf-e3dbbfc68a09c717591adc992e2933df",
+    "source": {
+      "problem_sha256": "e584b2f9b2a394e43273cadf8303b81eaa3d9c27953c509c5f78557c7ce35ceb",
+      "problem_kind": "nl_model"
+    },
+    "assumptions": [
+      "x >= 3 and x <= 50 are encoded directly as bounds on x.",
+      "y >= 1 and y <= 50 are encoded directly as bounds on y.",
+      "'x+y is exactly a multiple of 7' is encoded with auxiliary integer k: x + y = 7k.",
+      "k bounds derived from x+y range [4,100]: k must satisfy 7k in [4,100], so k in [1,14]; widened to [-100,100] for neutrality.",
+      "'y does not exceed x' is encoded as y - x <= 0."
+    ],
+    "method_dag": [
+      {
+        "id": "step-z3",
+        "kind": "solve",
+        "depends_on": []
+      },
+      {
+        "id": "step-cvc5",
+        "kind": "solve",
+        "depends_on": [
+          "step-z3"
+        ]
+      },
+      {
+        "id": "step-agree",
+        "kind": "cross_check",
+        "depends_on": [
+          "step-z3",
+          "step-cvc5"
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "id": "step-z3",
+        "tool": "z3",
+        "operation": "solve-smt",
+        "depends_on": [],
+        "input": {
+          "smt_lib": "(set-logic QF_LIA)\n(declare-fun x () Int)\n(declare-fun y () Int)\n(declare-fun k () Int)\n(assert (>= x 3))\n(assert (<= x 50))\n(assert (>= y 1))\n(assert (<= y 50))\n(assert (>= k -100))\n(assert (<= k 100))\n(assert (= (+ (* -7 k) x y) 0))\n(assert (<= (+ (- x) y) 0))\n(check-sat)\n(exit)\n"
+        },
+        "input_sha256": "d5507ec7d9f9f37277d32d73e33eccc9a3b7b9553cb5b932d14afbc92780aaa9",
+        "timeout_s": 30,
+        "expected_output_kind": "smt-answer"
+      },
+      {
+        "id": "step-cvc5",
+        "tool": "cvc5",
+        "operation": "solve-smt",
+        "depends_on": [
+          "step-z3"
+        ],
+        "input": {
+          "smt_lib": "(set-logic QF_LIA)\n(declare-fun x () Int)\n(declare-fun y () Int)\n(declare-fun k () Int)\n(assert (>= x 3))\n(assert (<= x 50))\n(assert (>= y 1))\n(assert (<= y 50))\n(assert (>= k -100))\n(assert (<= k 100))\n(assert (= (+ (* -7 k) x y) 0))\n(assert (<= (+ (- x) y) 0))\n(check-sat)\n(exit)\n"
+        },
+        "input_sha256": "d5507ec7d9f9f37277d32d73e33eccc9a3b7b9553cb5b932d14afbc92780aaa9",
+        "timeout_s": 30,
+        "expected_output_kind": "smt-answer"
+      },
+      {
+        "id": "step-agree",
+        "tool": "compare",
+        "operation": "cross-check",
+        "depends_on": [
+          "step-z3",
+          "step-cvc5"
+        ],
+        "input": {
+          "left_step": "step-z3",
+          "right_step": "step-cvc5",
+          "agree_on": [
+            "sat",
+            "unsat"
+          ]
+        },
+        "timeout_s": 5,
+        "expected_output_kind": "cross-tool-verdict",
+        "input_sha256": "7a913f16cf6ae5824b30e5d9069c90934b05d35cbf1099c2da4ba501bbcb9f62"
+      }
+    ],
+    "budgets": {
+      "max_steps": 8,
+      "max_total_timeout_s": 120
+    },
+    "compiled": {
+      "launcher_sha256": null,
+      "manifest_sha256": null
+    }
+  },
+  "receipt": {
+    "schema": "formal-tools/execution-receipt/1.0",
+    "run_id": "run-mwnnix02-5cc6507e",
+    "plan_id": "wf-e3dbbfc68a09c717591adc992e2933df",
+    "plan_sha256": "03f41219ae4a2c5d23cabe785213595a1c8da007f4dfdb2f999ea9d516a3d347",
+    "source_sha": "f84d3b9789138481d96cf6d9a382fa0a2d09fbde",
+    "created_at": "2026-11-19T14:34:40.658Z",
+    "tool_versions": {
+      "z3": {
+        "version": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f",
+        "probe_sha256": "9af7c6f186418585f022fd2d18eb2d278e14ad21731bf3339f3cbd1f78500e7a",
+        "probe_bounded": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f\n"
+      },
+      "cvc5": {
+        "version": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]",
+        "probe_sha256": "b6c312e4bb0062a7683ca82eb08f0b25beb4e6c67f22a62a6841a8f4192fde4a",
+        "probe_bounded": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]\ncompiled as a unrestricted build with GCC version 11.4.0 on Oct  8 2026 01:24:07\n\nCopyright (c) 2009-2026 by the authors and their institutional\naffiliations listed at https://cvc5.github.io/people.html\n\ncvc5 is open"
+      }
+    },
+    "steps": [
+      {
+        "step_id": "step-z3",
+        "tool": "z3",
+        "operation": "solve-smt",
+        "status": "EXECUTED",
+        "exit_code": 0,
+        "elapsed_ms": 21,
+        "stdout_sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_bounded": "sat\n",
+        "stderr_bounded": "",
+        "result": {
+          "answer": "sat"
+        },
+        "artifacts": [
+          {
+            "name": "steps/step-z3/input.smt2",
+            "sha256": "75c95fa5d9c5b71b742a35f3257c72a8d953fe22445eca2f0310d2434292f685",
+            "bytes": 282
+          }
+        ]
+      },
+      {
+        "step_id": "step-cvc5",
+        "tool": "cvc5",
+        "operation": "solve-smt",
+        "status": "EXECUTED",
+        "exit_code": 0,
+        "elapsed_ms": 7,
+        "stdout_sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_bounded": "sat\n",
+        "stderr_bounded": "",
+        "result": {
+          "answer": "sat"
+        },
+        "artifacts": [
+          {
+            "name": "steps/step-cvc5/input.smt2",
+            "sha256": "75c95fa5d9c5b71b742a35f3257c72a8d953fe22445eca2f0310d2434292f685",
+            "bytes": 282
+          }
+        ]
+      },
+      {
+        "step_id": "step-agree",
+        "tool": "compare",
+        "operation": "cross-check",
+        "status": "EXECUTED",
+        "exit_code": null,
+        "elapsed_ms": 0,
+        "stdout_sha256": null,
+        "stderr_sha256": null,
+        "stdout_bounded": null,
+        "stderr_bounded": null,
+        "result": {
+          "verdict": "AGREE_SAT",
+          "left_step": "step-z3",
+          "right_step": "step-cvc5",
+          "left_answer": "sat",
+          "right_answer": "sat"
+        },
+        "artifacts": []
+      }
+    ],
+    "overall": {
+      "process_outcome": "OK",
+      "solver_answer": {
+        "kind": "solve-smt",
+        "value": "sat",
+        "by_step": [
+          {
+            "step_id": "step-z3",
+            "tool": "z3",
+            "operation": "solve-smt",
+            "answer": "sat"
+          },
+          {
+            "step_id": "step-cvc5",
+            "tool": "cvc5",
+            "operation": "solve-smt",
+            "answer": "sat"
+          }
+        ]
+      },
+      "cross_tool_verdict": "AGREE_SAT",
+      "claim_verdict": "PASS"
+    },
+    "environment": {
+      "host": "cc@192.168.100.200 (trusted Debian 13 host, portable bundle)",
+      "node": "v22.16.0",
+      "formal_portable_root_sha": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a"
+    }
+  }
+}

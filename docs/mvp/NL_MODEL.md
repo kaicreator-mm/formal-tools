@@ -149,9 +149,10 @@ tampering is detected (`NL_TAMPERED`) before anything downstream happens.
 ## 3. Worked examples (REAL runs, live receipts)
 
 All receipts committed under `validation/local-runtime-receipts/nl-model-*`,
-recorded at the commit SHA in `nl-model-run.json.source_sha`, provider
-`deepseek-chat` (real API), solvers z3 5.4.0 / cvc5 1.4.2 / HiGHS 1.15.1 from
-the portable bundle on the trusted Debian 13 host.
+recorded at the commit SHA in `nl-model-run.json.source_sha`
+(f84d3b9789138481d96cf6d9a382fa0a2d09fbde), provider `deepseek-chat`
+(real API), solvers z3 5.4.0 / cvc5 1.4.2 / HiGHS 1.15.1 from the portable
+bundle on the trusted Debian 13 host. Driver exit 0, `all_matched: true`.
 
 ### 3.1 成立例 — sat with witness (J1)
 
@@ -159,35 +160,40 @@ Text (Chinese): 「找出整数 x 和 y:x 至少是 3,y 至少是 1,两个都不
 50,x+y 恰好是 7 的倍数,并且 y 不超过 x。这样的整数对存在吗?」
 
 Real DeepSeek → `MODEL_PROPOSED`: variables `x∈[3,50]`, `y∈[1,50]`, auxiliary
-`k∈[1,14]` (recorded in `assumptions`), constraints `x+y-7k = 0` and `y-x ≤ 0`
-→ rendered QF_LIA → surrogate approval → plan `wf-…` (z3+cvc5+compare) →
-**AGREE_SAT** → z3 witness probe: the retrieved integers satisfy every
-rendered constraint (receipt `nl-model-j1-sat.witness.json`). Per honesty
-rule 6 this proves the model's answer, not the translation.
+`k∈[-100,100]` ("bounds widened safely", recorded in `assumptions`),
+constraints `x+y-7k = 0` and `y-x ≤ 0` → rendered QF_LIA → surrogate approval
+(hash-covered `reviewer`/`note`) → plan `wf-e3dbbfc68a09c717591adc992e2933df`
+(z3+cvc5+compare) → **AGREE_SAT** (z3 5.4.0 + cvc5 1.4.2 both `sat`) → z3
+witness probe retrieved **(x,y,k) = (6,1,1)**: 6+1 = 7 = 7·1 and y ≤ x —
+every rendered bound and constraint holds (receipt
+`nl-model-j1-sat.witness.json`). Per honesty rule 6 this proves the model's
+answer, not the translation.
 
 ### 3.2 反例 — false claim disproved (J2)
 
 Text: 「x 是一个整数,它至少是 5,同时又不超过 3。请问:满足这两个条件的 x
-存在吗?」 → `MODEL_PROPOSED` (x∈[5,3] is rejected by validation if the model
-proposes crossed bounds; the honest encoding is x with contradictory
-asserts) → **AGREE_UNSAT** — the claim is disproved *under the rendered
-model*.
+存在吗?」 → `MODEL_PROPOSED`: DeepSeek gave x wide neutral bounds
+`[-1000000, 1000000]` and encoded the contradiction as two constraints
+`x ≥ 5` and `x ≤ 3` (exactly the prompt's anti-crossed-bounds rule) → plan
+`wf-acce01a7c0e983f3c701a4de8e6a30f4` → **AGREE_UNSAT** — the claim is
+disproved *under the rendered model*.
 
 ### 3.3 无法安全形式化负例 — NEEDS_CLARIFICATION (J3)
 
-Text: 「证明我们的系统总体上是安全的」 → real DeepSeek returns
-`clarification_needed` questions (what component, what does "safe" mean
-measurably, which quantities bound the problem) → status
-`NEEDS_CLARIFICATION`, `rendering: null`, approval attempt throws
-`NL_NOT_APPROVABLE`. Nothing rendered, nothing executed. Receipt:
-`nl-model-j3-clarification.proposal.json`.
+Text: 「证明我们的系统总体上是安全的」 → real DeepSeek returned two specific
+questions (which concrete quantities/variables/numeric bounds define "safe";
+which linear thresholds such as failure-rate ≤ X or redundancy ≥ Y with their
+numeric values) → status `NEEDS_CLARIFICATION`, `rendering: null`, approval
+attempt throws `NL_NOT_APPROVABLE`. Nothing rendered, nothing executed.
+Receipt: `nl-model-j3-clarification.proposal.json`.
 
 ### 3.4 LP arm (J4, bonus)
 
 Text: 「最大化 3x+2y,其中 x 和 y 都是非负整数,x+y 不超过 4,并且 x 不超过
-3」 → `MODEL_PROPOSED` with `question:"optimize"` → LP plan with the recorded
-integrality drop → HiGHS **kOptimal, objective 11** — the hand-provable LP
-relaxation optimum at vertex (3,1) (same instance as the V6 fixture).
+3」 → `MODEL_PROPOSED` with `question:"optimize"` → LP plan (4 assumptions,
+integrality-drop note recorded) → HiGHS **kOptimal, objective 11** at the
+vertex **(x,y) = (3,1)** — the hand-provable LP relaxation optimum (same
+instance as the V6 fixture).
 
 Driver: `node tests/nl-model.driver.mjs --source-sha <sha>` on the trusted
 host (env `DEEPSEEK_API_KEY`, `FORMAL_PORTABLE_ROOT`,

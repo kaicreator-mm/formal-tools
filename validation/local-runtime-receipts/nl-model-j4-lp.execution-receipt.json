@@ -1,0 +1,145 @@
+{
+  "journey": "nl-j4-lp-optimize",
+  "plan": {
+    "schema": "formal-tools/execution-plan/1.0",
+    "plan_id": "wf-78d090b32de8ec131dd750ad17f6448e",
+    "source": {
+      "problem_sha256": "c06a14a181b65ea38de708970a8daab4fdb49ea2ee01ebd27b4960453b2c4642",
+      "problem_kind": "nl_model"
+    },
+    "assumptions": [
+      "Non-negativity is stated explicitly, so lower bounds are 0.",
+      "Upper bounds of 4 for both x and y are derived from x+y<=4 combined with non-negativity (each variable alone cannot exceed 4).",
+      "The constraint x<=3 is kept as a separate constraint rather than folded into x's upper bound, to preserve the stated structure.",
+      "LP relaxation: integrality constraints are dropped by the nl-model compiler (the HiGHS typed operation has no integrality field); the executed answer characterizes the continuous relaxation only, not the integer problem."
+    ],
+    "method_dag": [
+      {
+        "id": "step-highs",
+        "kind": "solve",
+        "depends_on": []
+      }
+    ],
+    "steps": [
+      {
+        "id": "step-highs",
+        "tool": "highs",
+        "operation": "solve-lp",
+        "depends_on": [],
+        "input": {
+          "sense": "max",
+          "objective": [
+            3,
+            2
+          ],
+          "variables": [
+            {
+              "lower": 0,
+              "upper": 4
+            },
+            {
+              "lower": 0,
+              "upper": 4
+            }
+          ],
+          "constraints": [
+            {
+              "lower": null,
+              "upper": 4,
+              "coefficients": [
+                1,
+                1
+              ]
+            },
+            {
+              "lower": null,
+              "upper": 3,
+              "coefficients": [
+                1,
+                0
+              ]
+            }
+          ]
+        },
+        "input_sha256": "111ba353a119f384044af522aac45ff68da5c756afdab36a4a94f77db55ebaae",
+        "timeout_s": 30,
+        "expected_output_kind": "lp-status"
+      }
+    ],
+    "budgets": {
+      "max_steps": 8,
+      "max_total_timeout_s": 120
+    },
+    "compiled": {
+      "launcher_sha256": null,
+      "manifest_sha256": null
+    }
+  },
+  "receipt": {
+    "schema": "formal-tools/execution-receipt/1.0",
+    "run_id": "run-mwnniz4j-14bccc8c",
+    "plan_id": "wf-78d090b32de8ec131dd750ad17f6448e",
+    "plan_sha256": "ef72b80f6ddb35503a2fb4428786227f3e6906a8dc0825e5f43eebcbdde6e277",
+    "source_sha": "f84d3b9789138481d96cf6d9a382fa0a2d09fbde",
+    "created_at": "2026-11-19T14:34:43.411Z",
+    "tool_versions": {
+      "highs": {
+        "version": "highspy 1.15.1",
+        "probe_sha256": null,
+        "probe_bounded": null
+      }
+    },
+    "steps": [
+      {
+        "step_id": "step-highs",
+        "tool": "highs",
+        "operation": "solve-lp",
+        "status": "EXECUTED",
+        "exit_code": 0,
+        "elapsed_ms": 215,
+        "stdout_sha256": "ef235f940edee4a586130051cf4a090f00b9e32a271b6bba0f7328eebfbcb3d9",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_bounded": "{\"highspy_version\":\"1.15.1\",\"input_sha256\":\"09f95eeb4089ae7970c7ec83f370fb8391c6c7c332eedcb33b66d66ab33d035f\",\"model_status\":\"kOptimal\",\"numpy_version\":\"2.5.4\",\"objective\":11.0,\"python_version\":\"3.13.5\",\"schema\":\"formal-tools/highs-solve-lp/1.0\",\"solver_api_status\":\"kOk\",\"tool\":\"highs\",\"variables\":[3.0,1.0]}\n",
+        "stderr_bounded": "",
+        "result": {
+          "highspy_version": "1.15.1",
+          "input_sha256": "09f95eeb4089ae7970c7ec83f370fb8391c6c7c332eedcb33b66d66ab33d035f",
+          "model_status": "kOptimal",
+          "numpy_version": "2.5.4",
+          "objective": 11,
+          "python_version": "3.13.5",
+          "schema": "formal-tools/highs-solve-lp/1.0",
+          "solver_api_status": "kOk",
+          "tool": "highs",
+          "variables": [
+            3,
+            1
+          ]
+        },
+        "artifacts": []
+      }
+    ],
+    "overall": {
+      "process_outcome": "OK",
+      "solver_answer": {
+        "kind": "solve-lp",
+        "value": "sat",
+        "by_step": [
+          {
+            "step_id": "step-highs",
+            "tool": "highs",
+            "operation": "solve-lp",
+            "answer": "kOptimal"
+          }
+        ]
+      },
+      "cross_tool_verdict": "NOT_APPLICABLE",
+      "claim_verdict": "NOT_APPLICABLE"
+    },
+    "environment": {
+      "host": "cc@192.168.100.200 (trusted Debian 13 host, portable bundle)",
+      "node": "v22.16.0",
+      "formal_portable_root_sha": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a"
+    }
+  }
+}
