@@ -52,6 +52,20 @@ test("D08: MCP exposes 14 allowlisted tools but never unrestricted native shell"
   assert.match(source,/operation:z\.literal\("solve-lp"\)/);
   assert.match(source,/inputSchema:z\.object\([\s\S]*?\)\.strict\(\)/);
 });
+test("D08: sdk.d.mts type declarations cover every sdk.mjs named export",async()=>{
+  const src=await readFile(new URL("../packages/runner/js/sdk.mjs",import.meta.url),"utf8");
+  const dts=await readFile(new URL("../packages/runner/js/sdk.d.mts",import.meta.url),"utf8");
+  const names=new Set();
+  for(const m of src.matchAll(/export(?:\s+async)?\s+function\s+([A-Za-z_$][\w$]*)/g)) names.add(m[1]);
+  for(const m of src.matchAll(/export\s*\{([^}]*)\}/g))
+    for(const part of m[1].split(",").map(s=>s.trim()).filter(Boolean))
+      names.add(part.includes(" as ")?part.split(/\s+as\s+/).pop():part);
+  // 7 tool-management + 7 portfolio T4 + 3 capability-validation exports.
+  assert.equal(names.size,17,"sdk.mjs export face changed; update sdk.d.mts and this pin");
+  for(const name of names)
+    assert.match(dts,new RegExp(`export\\s+(?:async\\s+)?function\\s+${name}\\b`),
+      "sdk.d.mts must declare "+name);
+});
 test("D08: process success is distinct from proof or consumer claim acceptance",()=>{
   const plan=planNative("z3","solve",{input:"input.smt2"});
   const receipt=normalizeToolResult(plan,{
