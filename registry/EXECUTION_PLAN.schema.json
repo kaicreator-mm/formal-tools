@@ -1,0 +1,299 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kaicreator-mm/formal-tools-skill/blob/main/registry/EXECUTION_PLAN.schema.json",
+  "title": "Typed ExecutionPlan (i180/V2, V0 cross-lane contract)",
+  "type": "object",
+  "required": [
+    "schema",
+    "plan_id",
+    "source",
+    "assumptions",
+    "method_dag",
+    "steps",
+    "budgets",
+    "compiled"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "formal-tools/execution-plan/1.0"
+    },
+    "plan_id": {
+      "type": "string",
+      "pattern": "^wf-[a-f0-9]{32}$"
+    },
+    "source": {
+      "type": "object",
+      "required": ["problem_sha256", "problem_kind"],
+      "additionalProperties": false,
+      "properties": {
+        "problem_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "sha256 over canonical JSON of the bounded ProblemSpec (see docs/mvp/EXECUTION_PLAN_CONTRACT.md)."
+        },
+        "problem_kind": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "maxLength": 512
+      }
+    },
+    "method_dag": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "depends_on"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_.-]{0,79}$"
+          },
+          "kind": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "description": "Free-form method tag; the compiler emits solve or cross_check."
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_.-]{0,79}$"
+            }
+          }
+        }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "$ref": "#/$defs/step"
+      }
+    },
+    "budgets": {
+      "type": "object",
+      "required": ["max_steps", "max_total_timeout_s"],
+      "additionalProperties": false,
+      "properties": {
+        "max_steps": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "max_total_timeout_s": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 120
+        }
+      }
+    },
+    "compiled": {
+      "type": "object",
+      "required": ["launcher_sha256", "manifest_sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "launcher_sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "manifest_sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "stepId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_.-]{0,79}$"
+    },
+    "smtInput": {
+      "type": "object",
+      "required": ["smt_lib"],
+      "additionalProperties": false,
+      "properties": {
+        "smt_lib": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 65536,
+          "description": "SMT-LIB2 text; content is solver data, never executed as code."
+        }
+      }
+    },
+    "lpInput": {
+      "type": "object",
+      "required": ["sense", "objective", "variables", "constraints"],
+      "additionalProperties": false,
+      "description": "The LP model object accepted by planPortfolioOperation('highs','solve-lp',model) in tool-portfolio-t4.mjs: sense min|max; objective dense 1..64 finite numbers; variables dense array of length objective.length with {lower,upper} bounds (null or finite, lower<=upper); constraints 0..128 items of {lower,upper,coefficients} with coefficients dense of length objective.length; normalized JSON <= 65536 bytes.",
+      "properties": {
+        "sense": {
+          "enum": ["min", "max"]
+        },
+        "objective": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "type": "number"
+          }
+        },
+        "variables": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "required": ["lower", "upper"],
+            "additionalProperties": false,
+            "properties": {
+              "lower": {
+                "type": ["number", "null"]
+              },
+              "upper": {
+                "type": ["number", "null"]
+              }
+            }
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 128,
+          "items": {
+            "type": "object",
+            "required": ["lower", "upper", "coefficients"],
+            "additionalProperties": false,
+            "properties": {
+              "lower": {
+                "type": ["number", "null"]
+              },
+              "upper": {
+                "type": ["number", "null"]
+              },
+              "coefficients": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 64,
+                "items": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "compareInput": {
+      "type": "object",
+      "required": ["left_step", "right_step", "agree_on"],
+      "additionalProperties": false,
+      "properties": {
+        "left_step": {
+          "$ref": "#/$defs/stepId"
+        },
+        "right_step": {
+          "$ref": "#/$defs/stepId"
+        },
+        "agree_on": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["sat", "unsat", "optimal-status"]
+          }
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "required": [
+        "id",
+        "tool",
+        "operation",
+        "depends_on",
+        "input",
+        "input_sha256",
+        "timeout_s",
+        "expected_output_kind"
+      ],
+      "additionalProperties": false,
+      "if": {
+        "properties": {
+          "tool": {
+            "const": "highs"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "timeout_s": {
+            "maximum": 30,
+            "description": "Mirrors planPortfolioOperation budget.max_timeout_s for the highs candidate tool."
+          }
+        }
+      },
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stepId"
+        },
+        "tool": {
+          "enum": ["z3", "cvc5", "highs", "compare"]
+        },
+        "operation": {
+          "enum": ["solve-smt", "solve-lp", "cross-check"]
+        },
+        "depends_on": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/stepId"
+          }
+        },
+        "input": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/smtInput"
+            },
+            {
+              "$ref": "#/$defs/lpInput"
+            },
+            {
+              "$ref": "#/$defs/compareInput"
+            }
+          ]
+        },
+        "input_sha256": {
+          "$ref": "#/$defs/sha256",
+          "description": "sha256 over canonical JSON of input: object keys sorted by UTF-16 code unit order, arrays in order, JSON.stringify output."
+        },
+        "timeout_s": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 120
+        },
+        "expected_output_kind": {
+          "enum": ["smt-answer", "lp-status", "cross-tool-verdict"]
+        }
+      }
+    }
+  }
+}
