@@ -19,6 +19,9 @@ import assert from "node:assert/strict";
 import {
   NL_MODEL_PROPOSAL_SCHEMA, NL_MODEL_APPROVED_SCHEMA, NL_CAPS,
   NL_LP_RELAXATION_ASSUMPTION, NL_SYSTEM_PROMPT, NL_PROBLEM_KIND,
+  NL_LP_RELAXATION_ONLY, NL_UNSUPPORTED_EXACT_INTEGER,
+  NL_INTEGER_OPTIMIZATION_UNSUPPORTED_NOTE,
+  nlLpRelaxationAckRecord, nlLpRelaxationPlanAssumption,
   proposeConstraintModel, approveModel, buildPlanFromApprovedModel,
   validateStructuredModel, renderSmtLib, renderLpModel, verifyRenderedSmt,
   makeNlModelProvider
@@ -392,11 +395,24 @@ test("nl-model: approveModel gate semantics (reject/edit/tamper/types)", async (
   assert.equal(a.provenance.prompt_sha256, p.prompt_sha256);
   assert.equal(a.provenance.response_sha256, p.response_sha256);
 
-  // edit path: re-validated, re-rendered, flagged
-  const edited = approveModel(p, { approved: true, edited: stubOptimizeModel() });
-  assert.deepEqual(edited.review, { approved: true, edited: true });
-  assert.equal(edited.model.question, "optimize");
-  assert.notEqual(edited.approved_sha256, a.approved_sha256);
+  // edit path: re-validated, re-rendered, flagged. R3: editing a sat proposal
+  // into an optimize model is the FAIL-CLOSED LP gate — without the explicit
+  // acknowledgement the approval returns the restricted unsupported record,
+  // never a plan-eligible approval.
+  const editedNoAck = approveModel(p, { approved: true, edited: stubOptimizeModel() });
+  assert.equal(editedNoAck.status, NL_UNSUPPORTED_EXACT_INTEGER);
+  assert.equal(editedNoAck.edited, true);
+  assert.equal(editedNoAck.plan, null);
+  assert.equal(editedNoAck.unsupported.reason, "LP_RELAXATION_NOT_ACKNOWLEDGED");
+  assert.equal(editedNoAck.approved_sha256, undefined, "unsupported records are never plan-eligible");
+  const editedAck = approveModel(p, {
+    approved: true, edited: stubOptimizeModel(), lpRelaxationAcknowledged: true
+  });
+  assert.equal(editedAck.status, "USER_APPROVED");
+  assert.equal(editedAck.review.edited, true);
+  assert.deepEqual(editedAck.review.lp_relaxation_ack, nlLpRelaxationAckRecord());
+  assert.equal(editedAck.model.question, "optimize");
+  assert.notEqual(editedAck.approved_sha256, a.approved_sha256);
   // original proposal untouched
   assert.equal(p.review.approved, false);
 
@@ -489,15 +505,55 @@ test("nl-model: SMT plan mirrors the frozen fixture shapes and binds the provena
 });
 
 // ---------------------------------------------------------------------------
-// 10. buildPlanFromApprovedModel: LP target
+// 10. buildPlanFromApprovedModel: LP target — R3 fail-closed semantics
 // ---------------------------------------------------------------------------
-test("nl-model: LP plan for optimize questions records the integrality drop", async () => {
+test("nl-model: LP optimize without acknowledgement is fail-closed UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION", async () => {
   const p = await proposeConstraintModel({ text: OPT_TEXT, provider: stubProvider(stubOptimizeModel()) });
   assert.equal(p.status, "MODEL_PROPOSED");
-  const a = approveModel(p, { approved: true });
+  // R3 (intentional tightening; previously this produced an LP plan silently):
+  // every non-true acknowledgement value fails closed.
+  for (const ack of [undefined, false, "yes", 1]) {
+    const a = approveModel(p, ack === undefined
+      ? { approved: true }
+      // hostile non-true values exercise the strict `!== true` runtime gate
+      : { approved: true, lpRelaxationAcknowledged: /** @type {any} */ (ack) });
+    assert.equal(a.status, NL_UNSUPPORTED_EXACT_INTEGER, "ack=" + String(ack));
+    assert.equal(a.schema, NL_MODEL_APPROVED_SCHEMA);
+    assert.equal(a.question, "optimize");
+    assert.equal(a.plan, null, "no plan may be produced without the acknowledgement");
+    assert.equal(a.unsupported.reason, "LP_RELAXATION_NOT_ACKNOWLEDGED");
+    assert.deepEqual(a.unsupported.dropped, ["integrality"]);
+    assert.equal(a.unsupported.required_decision_field, "lpRelaxationAcknowledged");
+    assert.match(a.unsupported.available_operation, /continuous LP relaxation only/);
+    assert.ok(Array.isArray(a.unsupported.remedies) && a.unsupported.remedies.length === 2);
+    assert.equal(a.detail, NL_INTEGER_OPTIMIZATION_UNSUPPORTED_NOTE);
+    assert.deepEqual(a.review, { approved: false, edited: false, rejected: false, unsupported: true });
+    assert.match(a.honesty_note, /fail-closed/);
+    // the restricted record is NOT plan-eligible (and never throws silently through)
+    assert.equal(codeOf(() => buildPlanFromApprovedModel(a)), "NL_NOT_APPROVED");
+  }
+});
+
+test("nl-model: LP plan with explicit acknowledgement carries LP_RELAXATION_ONLY metadata", async () => {
+  const p = await proposeConstraintModel({ text: OPT_TEXT, provider: stubProvider(stubOptimizeModel()) });
+  const a = approveModel(p, { approved: true, lpRelaxationAcknowledged: true });
+  assert.equal(a.status, "USER_APPROVED");
+  assert.deepEqual(a.review.lp_relaxation_ack, {
+    acknowledged: true, kind: NL_LP_RELAXATION_ONLY, dropped: ["integrality"],
+    decision_field: "lpRelaxationAcknowledged"
+  });
   const built = buildPlanFromApprovedModel(a);
   assert.equal(built.target, "lp");
   assert.equal(built.question, "optimize");
+  // wrapper-level machine-readable relaxation metadata
+  assert.deepEqual(built.relaxation, {
+    kind: NL_LP_RELAXATION_ONLY,
+    dropped: ["integrality"],
+    meaning: NL_LP_RELAXATION_ASSUMPTION,
+    effect: "plan results characterize the continuous LP relaxation only; " +
+      "the optimal value is a bound for the integer problem, not its exact optimum",
+    ack: nlLpRelaxationAckRecord()
+  });
   const plan = built.plan;
   validateExecutionPlan(plan);
   assert.deepEqual(plan.steps.map(s => s.tool + "/" + s.operation), ["highs/solve-lp"]);
@@ -505,10 +561,73 @@ test("nl-model: LP plan for optimize questions records the integrality drop", as
   assert.equal(step.expected_output_kind, "lp-status");
   assert.ok(step.timeout_s >= 1 && step.timeout_s <= 30);
   assert.deepEqual(Object.keys(step.input).sort(), ["constraints", "objective", "sense", "variables"]);
+  // the plan envelope itself carries the machine-readable marker (the frozen
+  // schema has no metadata slot, so it rides as a canonical JSON assumption)
+  const marker = plan.assumptions.find(a => a.startsWith("{\"ack\":"));
+  assert.ok(marker, "canonical JSON relaxation assumption must be present");
+  assert.deepEqual(JSON.parse(marker), JSON.parse(nlLpRelaxationPlanAssumption()));
+  assert.deepEqual(JSON.parse(marker), {
+    kind: NL_LP_RELAXATION_ONLY, dropped: ["integrality"],
+    relaxed_from: "QF_LIA integer model",
+    ack: { field: "lpRelaxationAcknowledged", acknowledged: true }
+  });
+  // the prose assumption coexists (never replaced by the JSON)
   assert.ok(plan.assumptions.includes(NL_LP_RELAXATION_ASSUMPTION));
   assert.ok(plan.assumptions.includes(stubOptimizeModel().assumptions[0]));
   assert.equal(plan.source.problem_kind, NL_PROBLEM_KIND);
   assert.ok(plan.assumptions.length <= 32, "plan assumptions stay within the frozen cap");
+  // determinism of the machine-readable marker
+  assert.equal(nlLpRelaxationPlanAssumption(), nlLpRelaxationPlanAssumption());
+  assert.equal(nlLpRelaxationPlanAssumption(), JSON.stringify(JSON.parse(nlLpRelaxationPlanAssumption())));
+});
+
+test("nl-model: lp_relaxation_ack is hash-covered and required on hand-carried records", async () => {
+  const p = await proposeConstraintModel({ text: OPT_TEXT, provider: stubProvider(stubOptimizeModel()) });
+  const a = approveModel(p, { approved: true, lpRelaxationAcknowledged: true });
+  const built = buildPlanFromApprovedModel(a);
+  assert.equal(built.plan.plan_id.length > 0, true);
+  // sat wrappers carry NO relaxation metadata and sat approvals carry no ack
+  const psat = await proposeConstraintModel({ text: SAT_TEXT, provider: stubProvider(stubModel()) });
+  const asat = approveModel(psat, { approved: true });
+  assert.equal(asat.review.lp_relaxation_ack, undefined);
+  const builtSat = buildPlanFromApprovedModel(asat);
+  assert.equal(builtSat.relaxation, null);
+  assert.ok(!builtSat.plan.assumptions.some(x => x.includes(NL_LP_RELAXATION_ONLY)));
+  // post-hoc mutation of the ack is detected by the integrity recheck
+  const mutated = structuredClone(a);
+  mutated.review.lp_relaxation_ack.acknowledged = false;
+  assert.equal(codeOf(() => buildPlanFromApprovedModel(mutated)), "NL_TAMPERED");
+  const stripped = structuredClone(a);
+  delete stripped.review.lp_relaxation_ack;
+  assert.equal(codeOf(() => buildPlanFromApprovedModel(stripped)), "NL_TAMPERED");
+  // defense in depth: a hand-carried record with a SELF-CONSISTENT hash but no
+  // canonical ack is rejected fail-closed with the R3 verdict token
+  const handCarried = structuredClone(stripped);
+  handCarried.approved_sha256 = sha256Canonical({
+    schema: handCarried.schema, status: handCarried.status,
+    original_text: handCarried.original_text, original_text_sha256: handCarried.original_text_sha256,
+    provider: handCarried.provider, proposal_sha256: handCarried.proposal_sha256,
+    provenance: handCarried.provenance, model: handCarried.model, rendering: handCarried.rendering,
+    review: handCarried.review
+  });
+  const err = /** @type {any} */ (() => {
+    try { buildPlanFromApprovedModel(handCarried); return null; }
+    catch (e) { return e; }
+  })();
+  assert.ok(err instanceof WorkflowError);
+  assert.equal(err.code, NL_UNSUPPORTED_EXACT_INTEGER);
+  assert.match(err.message, /LP-relaxation acknowledgement/);
+  // a drift-tampered ack shape (right keys, wrong values) must also fail closed
+  const wrongAck = structuredClone(a);
+  wrongAck.review.lp_relaxation_ack = { acknowledged: true, kind: NL_LP_RELAXATION_ONLY };
+  wrongAck.approved_sha256 = sha256Canonical({
+    schema: wrongAck.schema, status: wrongAck.status,
+    original_text: wrongAck.original_text, original_text_sha256: wrongAck.original_text_sha256,
+    provider: wrongAck.provider, proposal_sha256: wrongAck.proposal_sha256,
+    provenance: wrongAck.provenance, model: wrongAck.model, rendering: wrongAck.rendering,
+    review: wrongAck.review
+  });
+  assert.equal(codeOf(() => buildPlanFromApprovedModel(wrongAck)), NL_UNSUPPORTED_EXACT_INTEGER);
 });
 
 // ---------------------------------------------------------------------------
