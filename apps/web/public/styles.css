@@ -97,7 +97,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   background: var(--c-surface);
 }
 .badge--mode { border-color: var(--c-info-border); background: var(--c-info-bg); color: var(--c-info-ink); }
-.badge--mock { border-color: var(--c-warn-border); background: var(--c-warn-bg); color: var(--c-warn-ink); }
+.badge--engine { border-color: var(--c-ok-border); background: var(--c-ok-bg); color: var(--c-ok-ink); }
+.badge--source { border-color: var(--c-info-border); background: var(--c-info-bg); color: var(--c-info-ink); font-weight: 600; }
 
 /* ------------------------------- stepper ------------------------------- */
 .stepper { max-width: 1080px; margin: var(--sp-4) auto 0; padding: 0 var(--sp-4); }
@@ -132,6 +133,12 @@ textarea {
   padding: var(--sp-2) var(--sp-3);
 }
 textarea:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); border-color: var(--c-accent); }
+select {
+  font: inherit; font-size: var(--fs-2); color: var(--c-ink);
+  background: var(--c-surface); border: 1px solid var(--c-border-strong);
+  border-radius: var(--r-1); padding: var(--sp-2) var(--sp-3); max-width: 520px;
+}
+select:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); border-color: var(--c-accent); }
 .label-row { display: block; }
 .sample-row { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
 
@@ -162,6 +169,12 @@ textarea:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus
 .banner--warn { background: var(--c-warn-bg); color: var(--c-warn-ink); border-color: var(--c-warn-border); }
 .banner--danger { background: var(--c-danger-bg); color: var(--c-danger-ink); border-color: var(--c-danger-border); }
 .banner--unknown { background: var(--c-unknown-bg); color: var(--c-unknown-ink); border-color: var(--c-unknown-border); }
+/* blocked = honest refusal to run (no trusted tool bundle): warn tones with a
+   dashed border + left accent bar so it never reads as FAILED/ERROR */
+.banner--blocked {
+  background: var(--c-warn-bg); color: var(--c-warn-ink);
+  border: 1px dashed var(--c-warn-border); border-left: 4px solid var(--c-warn-ink);
+}
 .banner__title { font-weight: 700; display: block; margin-bottom: var(--sp-1); }
 
 /* ------------------------------- plan screen ------------------------------- */
@@ -220,6 +233,7 @@ textarea:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus
 .chip--TIMEOUT { color: var(--c-warn-ink); border-color: var(--c-warn-border); background: var(--c-warn-bg); }
 .chip--ERROR { color: var(--c-danger-ink); border-color: var(--c-danger-border); background: var(--c-danger-bg); }
 .chip--SKIPPED_DOWNSTREAM { color: var(--c-ink-muted); border-style: dashed; }
+.chip--BLOCKED { color: var(--c-warn-ink); border-color: var(--c-warn-border); background: var(--c-warn-bg); border-style: dashed; }
 .chip--UNKNOWN { color: var(--c-unknown-ink); border-color: var(--c-unknown-border); background: var(--c-unknown-bg); }
 .chip--OK { color: var(--c-ok-ink); border-color: var(--c-ok-border); background: var(--c-ok-bg); }
 .chip--PARTIAL { color: var(--c-warn-ink); border-color: var(--c-warn-border); background: var(--c-warn-bg); }
