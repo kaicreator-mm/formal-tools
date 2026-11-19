@@ -1,0 +1,122 @@
+{
+  "schema": "formal-tools/mcp-cli-execute-parity/1",
+  "recorded_at": "2026-11-19T14:31:32.571Z",
+  "source_sha": "75abd816e8360f3d34ae9a7d823d5bf96382186c",
+  "plan_id": "wf-8bb1bf45a6d0fbd5dbdff9fceae08cd5",
+  "lanes": {
+    "transport_mcp": "stdio JSON-RPC tools/call execute_workflow",
+    "transport_cli": "cli.mjs workflow execute --plan-file --source-sha"
+  },
+  "plan_sha256": {
+    "mcp": "59c61e1d89f2e4604e68418b3164aee835be24771242d318c611d9a3b1b0b07e",
+    "cli": "59c61e1d89f2e4604e68418b3164aee835be24771242d318c611d9a3b1b0b07e",
+    "identical": true
+  },
+  "overall": {
+    "mcp": {
+      "process_outcome": "OK",
+      "solver_answer": {
+        "kind": "solve-smt",
+        "value": "unsat",
+        "by_step": [
+          {
+            "step_id": "step-z3",
+            "tool": "z3",
+            "operation": "solve-smt",
+            "answer": "unsat"
+          },
+          {
+            "step_id": "step-cvc5",
+            "tool": "cvc5",
+            "operation": "solve-smt",
+            "answer": "unsat"
+          }
+        ]
+      },
+      "cross_tool_verdict": "AGREE_UNSAT",
+      "claim_verdict": "PASS"
+    },
+    "cli": {
+      "process_outcome": "OK",
+      "solver_answer": {
+        "kind": "solve-smt",
+        "value": "unsat",
+        "by_step": [
+          {
+            "step_id": "step-z3",
+            "tool": "z3",
+            "operation": "solve-smt",
+            "answer": "unsat"
+          },
+          {
+            "step_id": "step-cvc5",
+            "tool": "cvc5",
+            "operation": "solve-smt",
+            "answer": "unsat"
+          }
+        ]
+      },
+      "cross_tool_verdict": "AGREE_UNSAT",
+      "claim_verdict": "PASS"
+    },
+    "identical": true
+  },
+  "environment": {
+    "mcp": {
+      "host": "cc",
+      "node": "v22.16.0",
+      "formal_portable_root_sha": null
+    },
+    "cli": {
+      "host": "cc",
+      "node": "v22.16.0",
+      "formal_portable_root_sha": null
+    },
+    "host_identical": true
+  },
+  "tool_versions": {
+    "mcp": {
+      "z3": {
+        "version": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f",
+        "probe_sha256": "9af7c6f186418585f022fd2d18eb2d278e14ad21731bf3339f3cbd1f78500e7a",
+        "probe_bounded": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f\n"
+      },
+      "cvc5": {
+        "version": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]",
+        "probe_sha256": "b6c312e4bb0062a7683ca82eb08f0b25beb4e6c67f22a62a6841a8f4192fde4a",
+        "probe_bounded": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]\ncompiled as a unrestricted build with GCC version 11.4.0 on Oct  8 2026 01:24:07\n\nCopyright (c) 2009-2026 by the authors and their institutional\naffiliations listed at https://cvc5.github.io/people.html\n\ncvc5 is open"
+      }
+    },
+    "cli": {
+      "z3": {
+        "version": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f",
+        "probe_sha256": "9af7c6f186418585f022fd2d18eb2d278e14ad21731bf3339f3cbd1f78500e7a",
+        "probe_bounded": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f\n"
+      },
+      "cvc5": {
+        "version": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]",
+        "probe_sha256": "b6c312e4bb0062a7683ca82eb08f0b25beb4e6c67f22a62a6841a8f4192fde4a",
+        "probe_bounded": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]\ncompiled as a unrestricted build with GCC version 11.4.0 on Oct  8 2026 01:24:07\n\nCopyright (c) 2009-2026 by the authors and their institutional\naffiliations listed at https://cvc5.github.io/people.html\n\ncvc5 is open"
+      }
+    }
+  },
+  "run_ids": {
+    "mcp": "run-mwnnej4o-725df6fc",
+    "cli": "run-mwnnej79-413362b8",
+    "differ": true
+  },
+  "cli_exit_code": 0,
+  "cli_stdout_verdict": "PASS",
+  "receipt_artifacts": {
+    "mcp_receipt_sha256": "b9b9784b5a6164fb7d0b79f6e1706da3f2925e1bbf677ff72e4db34e1544091c"
+  },
+  "negative_malformed_plan": {
+    "isError": true,
+    "error": {
+      "status": "ERROR",
+      "executed": false,
+      "code": "PLAN_HASH_MISMATCH",
+      "message": "input_sha256 mismatch on step step-z3"
+    }
+  }
+}
