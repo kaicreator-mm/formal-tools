@@ -63,7 +63,7 @@ Visit `http://127.0.0.1:8788/`. Loopback is the default; a non-loopback bind req
 | JS SDK | `packages/runner/js/sdk.mjs` | ESM on a trusted Node host; see guide |
 | Web | `apps/web/server.mjs` | Local browser, bounded JSON API, explicit NL approval |
 
-`formal-tools/execution-plan/1.0` and `formal-tools/execution-receipt/1.0` are **schema identifiers**, not the product SemVer. All package metadata is aligned to product `0.0.1` for this first release, while the historical package name `formal-tools-skill` and existing JS import paths remain intact for compatibility. The workspace packages are `private`; no claim of an npm registry artifact is made.
+`formal-tools/execution-plan/1.0` and `formal-tools/execution-receipt/1.0` are **schema identifiers**, not the product SemVer. All package metadata is aligned to product `0.0.1` for this first release, while the historical package name `formal-tools-skill` and existing JS import paths remain intact for compatibility. The workspace packages are `private`; no claim of an npm registry artifact is made. This repository currently has **no top-level LICENSE file**; do not infer a blanket third-party redistribution grant. The owner must choose an explicit license before advertising general external redistribution.
 
 ## Evidence, scope and support
 
