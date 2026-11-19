@@ -752,6 +752,16 @@ function planSourceText(source) {
 function setPlan(plan, planSource) {
   state.plan = plan;
   state.planSource = planSource || null;
+  // NL assumptions are part of the approved, hash-bound model. Reusing the
+  // direct-model Regenerate button here would call /api/plan (not /api/nl/*)
+  // with a stale/undefined state.problemText and silently change provenance.
+  const nlPlan = state.planSource?.kind === 'nl-model';
+  $('#addAssumptionBtn').hidden = nlPlan;
+  $('#regenBtn').hidden = nlPlan;
+  $('#regenBtn').disabled = nlPlan;
+  $('#planAssumptionsHelp').textContent = nlPlan
+    ? 'Assumptions are fixed by your approved NL model. To change them, start a new NL proposal and review/approve it again.'
+    : 'Edit inline; Regenerate plan rebuilds the plan (and hashes) with your edits.';
   // NL model review yields to the execution-plan review once approved.
   $('#nlModelReview').hidden = true;
   $('#planReview').hidden = false;
@@ -840,6 +850,7 @@ function renderAssumptions(assumptions) {
     input.type = 'text';
     input.value = typeof text === 'string' ? text : '';
     input.maxLength = 256;
+    input.readOnly = state.planSource?.kind === 'nl-model';
     const labelId = `assumption-${index + 1}`;
     input.id = labelId;
     input.dataset.assumptionId = `a${index + 1}`;
@@ -853,6 +864,7 @@ function renderAssumptions(assumptions) {
     removeBtn.className = 'assumption-remove';
     removeBtn.textContent = '✕';
     removeBtn.setAttribute('aria-label', `Remove assumption a${index + 1}`);
+    removeBtn.hidden = state.planSource?.kind === 'nl-model';
     removeBtn.addEventListener('click', () => li.remove());
     li.append(label, input, removeBtn);
     list.append(li);
@@ -873,6 +885,12 @@ $('#addAssumptionBtn').addEventListener('click', () => {
 
 $('#regenBtn').addEventListener('click', async () => {
   const statusEl = $('#planStatus');
+  if (state.planSource?.kind === 'nl-model') {
+    setStatus(statusEl,
+      'This plan is bound to an approved NL model. Start a new NL proposal to change assumptions; direct-model regeneration is not valid here.',
+      'error');
+    return;
+  }
   setStatus(statusEl, 'Regenerating plan with edited assumptions…');
   try {
     const payload = { problem_text: state.problemText, assumptions: collectAssumptions() };
