@@ -1,0 +1,5 @@
+cmd=run tla-tlc --version
+TLC2 Version 2026.11.06.222357 (rev: d8fb231)
+Error: Error: unrecognized option: --version
+Usage: java tlc2.TLC [-help] [-option] inputfile
+rc=1

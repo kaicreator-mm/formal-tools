@@ -1,0 +1,12 @@
+Validation Report
+Conforms: False
+Results (1):
+Constraint Violation in DatatypeConstraintComponent (http://www.w3.org/ns/shacl#DatatypeConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: [ sh:datatype xsd:integer ; sh:maxCount Literal("1", datatype=xsd:integer) ; sh:minCount Literal("1", datatype=xsd:integer) ; sh:path ex:age ]
+	Focus Node: ex:bob
+	Value Node: Literal("not-a-number")
+	Result Path: ex:age
+	Message: Value is not Literal with datatype xsd:integer
+
+PHASE_DONE phase=neg rc=0

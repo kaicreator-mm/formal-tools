@@ -1,0 +1,6 @@
+INVALID ONTOLOGY FILE ERROR Could not load a valid ontology from file: err.ttl
+For details see: http://robot.obolibrary.org/errors#invalid-ontology-file-error
+Use the -vvv option to show the stack trace.
+Use the --help option to see usage information.
+
+PHASE_DONE phase=err rc=0

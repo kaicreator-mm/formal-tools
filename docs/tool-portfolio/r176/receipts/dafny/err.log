@@ -1,0 +1,13 @@
+/opt/formal-tools-portable-debian13-x86_64/tests/dafny/err.dfy(1,15): Error: closeparen expected
+  |
+1 | method Broken( {
+  |                ^
+
+/opt/formal-tools-portable-debian13-x86_64/tests/dafny/err.dfy(2,7): Error: invalid Suffix
+  |
+2 |   this is not valid Dafny
+  |        ^
+
+2 parse errors detected in err.dfy
+
+PHASE_DONE phase=err rc=0

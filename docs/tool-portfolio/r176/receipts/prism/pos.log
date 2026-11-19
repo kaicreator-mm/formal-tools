@@ -1,0 +1,58 @@
+PRISM
+=====
+
+Version: 4.11
+Date: Thu Nov 19 02:08:38 UTC 2026
+Hostname: 4441ce0dd265
+Memory limits: cudd=1g, java(heap)=15.4g
+Command line: prism /opt/formal-tools-portable-debian13-x86_64/tests/prism/pos.pm -pf 'P>=0.1 [ F s=7 ]'
+
+Parsing PRISM model file "/opt/formal-tools-portable-debian13-x86_64/tests/prism/pos.pm"...
+
+Type:        DTMC
+Modules:     die
+Actions:     []
+Variables:   s
+Labels:      "done"
+
+1 property:
+(1) P>=0.1 [ F s=7 ]
+
+---------------------------------------------------------------------
+
+Model checking: P>=0.1 [ F s=7 ]
+
+Building model (engine:symbolic)...
+
+Computing reachable states...
+
+Reachability (BFS): 4 iterations in 0.00 seconds (average 0.000000, setup 0.00)
+
+Time for model construction: 0.03 seconds.
+
+Warning: Deadlocks detected and fixed in 1 states
+
+Type:        DTMC
+States:      8 (1 initial)
+Transitions: 11
+
+Transition matrix: 19 nodes (3 terminal), 11 minterms, vars: 3r/3c
+
+Prob0: 4 iterations in 0.00 seconds (average 0.000000, setup 0.00)
+
+Prob1: 1 iterations in 0.00 seconds (average 0.000000, setup 0.00)
+
+yes = 8, no = 0, maybe = 0
+
+Property satisfied in 1 of 1 initial states.
+
+Time for model checking: 0.004 seconds.
+
+Result: true
+
+---------------------------------------------------------------------
+
+Note: There was 1 warning during computation.
+
+
+PHASE_DONE phase=pos rc=0

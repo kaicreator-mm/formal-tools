@@ -1,0 +1,56 @@
+{
+ "schema": "formal-tools/capability-probe-receipt/0.1",
+ "tool_id": "cvc5",
+ "meta_version": "1.4.2",
+ "kind": "binary",
+ "unavailable_flag": "0",
+ "verify": {
+  "rows": [
+   [
+    "cvc5",
+    "pos",
+    "0",
+    "44",
+    "1",
+    "1",
+    "SAT"
+   ],
+   [
+    "cvc5",
+    "neg",
+    "0",
+    "11",
+    "1",
+    "1",
+    "UNSAT"
+   ],
+   [
+    "cvc5",
+    "err",
+    "0",
+    "21",
+    "1",
+    "1",
+    "ERROR"
+   ]
+  ],
+  "verdict": "PASS"
+ },
+ "version_probe": {
+  "status": "PROBED",
+  "probed_first_line": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]",
+  "raw": "cmd=run cvc5 --version\ncvc5 1.4.2 [git 282d5e0 on branch HEAD]\ncompiled as a unrestricted build with GCC version 11.4.0 on Oct  8 2026 01:24:07\n\nCopyright (c) 2009-2026 by the authors and their institutional\naffiliations listed at https://cvc5.github.io/people.html\n\ncvc5 is open-source and is covered by the BSD license (modified).\n\nTHIS SOFTWARE IS PROVIDED AS-IS, WITHOUT ANY WARRANTIES.\nUSE AT YOUR OWN RISK.\n\nThis version of cvc5 is linked against the following non-(L)GPL'ed\nthird party libraries.\n\n  CaDiCaL - Simplified Satisfiability Solver\n  See https://github.com/arminbiere/cadical for copyright information.\n\n  Editline Library\n  See https://thrysoee.dk/editline\n  for copyright information.\n\n  SymFPU - The Symbolic Floating Point Unit\n  See https://github.com/martin-cs/symfpu/tree/main for copyright information.\n\nThis version of cvc5 is linked against the following third party\nlibraries covered by the LGPLv3 license.\nSee licenses/lgpl-3.0.txt for more information.\n\n  GMP - Gnu Multi Precision Arithmetic Library\n  See http://gmplib.org for copyright information.\n\n  LibPoly polynomial library\n  See https://github.com/SRI-CSL/libpoly for copyright and\n  licensing information.\n\ncvc5 is statically linked against these libraries. To recompile\nthis version of cvc5 with different versions of these libraries\nfollow the instructions on https://github.com/cvc5/cvc5/blob/main/INSTALL.md\n\nSee the file COPYING (distributed with the source code, and with\nall binaries) for the full cvc5 copyright, licensing, and (lack of)\nwarranty information.\n\nrc=0\n"
+ },
+ "logs": {
+  "pos": "/opt/formal-tools-portable-debian13-x86_64/tests/cvc5/pos.smt2:1.2: No set-logic command was given before this point.\n/opt/formal-tools-portable-debian13-x86_64/tests/cvc5/pos.smt2:1.2: cvc5 will make all theories available.\n/opt/formal-tools-portable-debian13-x86_64/tests/cvc5/pos.smt2:1.2: Consider setting a stricter logic for (likely) better performance.\n/opt/formal-tools-portable-debian13-x86_64/tests/cvc5/pos.smt2:1.2: To suppress this warning in the future use (set-logic ALL).\nsat\n\nPHASE_DONE phase=pos rc=0\n",
+  "neg": "/opt/formal-tools-portable-debian13-x86_64/tests/cvc5/neg.smt2:1.2: No set-logic command was given before this point.\n/opt/formal-tools-portable-debian13-x86_64/tests/cvc5/neg.smt2:1.2: cvc5 will make all theories available.\n/opt/formal-tools-portable-debian13-x86_64/tests/cvc5/neg.smt2:1.2: Consider setting a stricter logic for (likely) better performance.\n/opt/formal-tools-portable-debian13-x86_64/tests/cvc5/neg.smt2:1.2: To suppress this warning in the future use (set-logic ALL).\nunsat\n\nPHASE_DONE phase=neg rc=0\n",
+  "err": "/opt/formal-tools-portable-debian13-x86_64/tests/cvc5/err.smt2:1.2: No set-logic command was given before this point.\n/opt/formal-tools-portable-debian13-x86_64/tests/cvc5/err.smt2:1.2: cvc5 will make all theories available.\n/opt/formal-tools-portable-debian13-x86_64/tests/cvc5/err.smt2:1.2: Consider setting a stricter logic for (likely) better performance.\n/opt/formal-tools-portable-debian13-x86_64/tests/cvc5/err.smt2:1.2: To suppress this warning in the future use (set-logic ALL).\n(error \"Parse Error: /opt/formal-tools-portable-debian13-x86_64/tests/cvc5/err.smt2:2.11: Symbol 'check-sat' not declared as a variable\")\n\nPHASE_DONE phase=err rc=0\n"
+ },
+ "environment": {
+  "bundle_manifest_sha256": "6aa3f58583597f3685f9b4f5f554a9c138214d17f7eaae4f6d38a1f13a0d7552",
+  "tool_runner_sha256": "0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17",
+  "uname": "Linux 7.0.0-43-generic",
+  "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh, cc@192.168.100.200:2222)",
+  "executed_at_utc": "2026-11-19T02:08:02Z"
+ }
+}

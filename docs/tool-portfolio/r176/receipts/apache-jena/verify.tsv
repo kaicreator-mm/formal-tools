@@ -1,0 +1,4 @@
+apache-jena	pos	0	810	1	1	RDF_VALID
+apache-jena	neg	0	671	1	1	RDF_INVALID
+apache-jena	err	0	639	1	1	ERROR
+verdict	PASS

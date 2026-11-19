@@ -1,0 +1,4 @@
+cmd=run kani --version
+Kani Rust Verifier 0.68.0 (cargo plugin)
+CBMC 6.11.0
+rc=0

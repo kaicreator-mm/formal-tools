@@ -1,0 +1,4 @@
+alloy	pos	0	335	1	1	SATISFIABLE
+alloy	neg	0	279	1	1	NO_COUNTEREXAMPLE
+alloy	err	0	120	1	1	ERROR
+verdict	PASS

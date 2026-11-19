@@ -1,0 +1,56 @@
+{
+ "schema": "formal-tools/capability-probe-receipt/0.1",
+ "tool_id": "z3",
+ "meta_version": "5.4.0",
+ "kind": "binary",
+ "unavailable_flag": "0",
+ "verify": {
+  "rows": [
+   [
+    "z3",
+    "pos",
+    "0",
+    "22",
+    "1",
+    "1",
+    "SAT"
+   ],
+   [
+    "z3",
+    "neg",
+    "0",
+    "18",
+    "1",
+    "1",
+    "UNSAT"
+   ],
+   [
+    "z3",
+    "err",
+    "0",
+    "15",
+    "1",
+    "1",
+    "ERROR"
+   ]
+  ],
+  "verdict": "PASS"
+ },
+ "version_probe": {
+  "status": "PROBED",
+  "probed_first_line": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f",
+  "raw": "cmd=run z3 --version\nZ3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f\nrc=0\n"
+ },
+ "logs": {
+  "pos": "sat\n\nPHASE_DONE phase=pos rc=0\n",
+  "neg": "unsat\n\nPHASE_DONE phase=neg rc=0\n",
+  "err": "(error \"line 3 column 10: invalid function application, arguments missing\")\n\nPHASE_DONE phase=err rc=0\n"
+ },
+ "environment": {
+  "bundle_manifest_sha256": "6aa3f58583597f3685f9b4f5f554a9c138214d17f7eaae4f6d38a1f13a0d7552",
+  "tool_runner_sha256": "0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17",
+  "uname": "Linux 7.0.0-43-generic",
+  "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh, cc@192.168.100.200:2222)",
+  "executed_at_utc": "2026-11-19T02:08:02Z"
+ }
+}

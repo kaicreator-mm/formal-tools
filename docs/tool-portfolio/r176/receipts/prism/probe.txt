@@ -1,0 +1,3 @@
+cmd=run prism --version
+PRISM version 4.11
+rc=0

@@ -1,0 +1,18 @@
+cmd=run alloy --version
+Exception in thread "main" Syntax error:
+File cannot be found.
+/home/cc/--version (No such file or directory)
+	at edu.mit.csail.sdg.parser.CompUtil.parseEverything_fromFile(CompUtil.java:387)
+	at AlloyRunner.main(AlloyRunner.java:21)
+Caused by: java.io.FileNotFoundException: /home/cc/--version (No such file or directory)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(Unknown Source)
+	at java.base/java.io.FileInputStream.<init>(Unknown Source)
+	at java.base/java.io.FileInputStream.<init>(Unknown Source)
+	at edu.mit.csail.sdg.alloy4.Util.readAll(Util.java:287)
+	at edu.mit.csail.sdg.parser.CompParser.alloy_parseStream(CompParser.java:2667)
+	at edu.mit.csail.sdg.parser.CompUtil.parse(CompUtil.java:476)
+	at edu.mit.csail.sdg.parser.CompUtil.parseRecursively(CompUtil.java:238)
+	at edu.mit.csail.sdg.parser.CompUtil.parseEverything_fromFile(CompUtil.java:383)
+	... 1 more
+rc=1

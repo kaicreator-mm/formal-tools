@@ -1,0 +1,13 @@
+clingo version 5.8.3
+Reading from ...le-debian13-x86_64/tests/clingo/err.lp
+/opt/formal-tools-portable-debian13-x86_64/tests/clingo/err.lp:3:1-2: error: syntax error, unexpected EOF, expecting ) or ;
+
+*** ERROR: (clingo): parsing failed
+UNKNOWN
+
+Models       : 0+
+Calls        : 1
+Time         : 0.001s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
+CPU Time     : 0.000s
+
+PHASE_DONE phase=err rc=0

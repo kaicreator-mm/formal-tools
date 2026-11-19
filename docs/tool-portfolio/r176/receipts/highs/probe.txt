@@ -1,0 +1,3 @@
+cmd=py import highspy
+?
+rc=0

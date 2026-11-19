@@ -1,0 +1,7 @@
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (1 chains in 1 job)
+NUTS: [p]
+Sampling 1 chain for 200 tune and 200 draw iterations (200 + 200 draws total) took 0 seconds.
+PYVERIFY: OK POSTERIOR_MEAN=0.749
+
+PHASE_DONE phase=pos rc=0

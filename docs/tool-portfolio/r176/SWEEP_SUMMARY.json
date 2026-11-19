@@ -1,0 +1,261 @@
+{
+ "schema": "formal-tools/capability-probe-sweep/0.1",
+ "executed_at_utc": "2026-11-19T02:08:02Z",
+ "bundle_manifest_sha256": "6aa3f58583597f3685f9b4f5f554a9c138214d17f7eaae4f6d38a1f13a0d7552",
+ "tool_runner_sha256": "0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17",
+ "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh)",
+ "tools": {
+  "aflpp": {
+   "verdict": "PASS",
+   "meta_version": "5.03c",
+   "kind": "binary",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "/opt/formal-tools-portable-debian13-x86_64/tools/aflpp/bin/afl-fuzz: error while loading shared libraries: libpython3.13.so.1.0: cannot open shared object file: No such file or directory"
+  },
+  "alloy": {
+   "verdict": "PASS",
+   "meta_version": "6.2.0",
+   "kind": "java-bundle",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "Exception in thread \"main\" Syntax error:"
+  },
+  "apache-jena": {
+   "verdict": "PASS",
+   "meta_version": "5.5.0",
+   "kind": "java-bundle",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "Apache Jena RIOT version 5.5.0"
+  },
+  "apalache": {
+   "verdict": "PASS",
+   "meta_version": "0.63.0",
+   "kind": "java-bundle",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "\u001b[4mUsage\u001b[24m"
+  },
+  "causal-learn": {
+   "verdict": "PASS",
+   "meta_version": "unknown",
+   "kind": "python-lib",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "?"
+  },
+  "cbmc": {
+   "verdict": "PASS",
+   "meta_version": "6.11.0",
+   "kind": "binary",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "6.11.0 (cbmc-6.11.0)"
+  },
+  "clingo": {
+   "verdict": "PASS",
+   "meta_version": "5.8.3",
+   "kind": "binary",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "clingo version 5.8.3"
+  },
+  "cvc5": {
+   "verdict": "PASS",
+   "meta_version": "1.4.2",
+   "kind": "binary",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]"
+  },
+  "dafny": {
+   "verdict": "PASS",
+   "meta_version": "4.11.0",
+   "kind": "bundle",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2"
+  },
+  "dowhy": {
+   "verdict": "PASS",
+   "meta_version": "unknown",
+   "kind": "python-lib",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "0.14"
+  },
+  "elk": {
+   "verdict": "PASS",
+   "meta_version": "0.6.0",
+   "kind": "java-bundle",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "ELK Distribution Package for Command Line 0.6.0"
+  },
+  "fast-check": {
+   "verdict": "PASS",
+   "meta_version": "4.3.0",
+   "kind": "node-lib",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "v22.16.0"
+  },
+  "fast-downward": {
+   "verdict": "PASS",
+   "meta_version": "24.06",
+   "kind": "bundle",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "Fast Downward 26.6+"
+  },
+  "highs": {
+   "verdict": "PASS",
+   "meta_version": "unknown",
+   "kind": "python-lib",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "?"
+  },
+  "hypothesis": {
+   "verdict": "PASS",
+   "meta_version": "unknown",
+   "kind": "python-lib",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "6.170.15"
+  },
+  "kani": {
+   "verdict": "PASS",
+   "meta_version": "0.68.0",
+   "kind": "rust-bundle",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "Kani Rust Verifier 0.68.0 (cargo plugin)"
+  },
+  "lean4": {
+   "verdict": "PASS",
+   "meta_version": "4.35.0",
+   "kind": "binary",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)"
+  },
+  "mesa": {
+   "verdict": "PASS",
+   "meta_version": "unknown",
+   "kind": "python-lib",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "3.5.2"
+  },
+  "minizinc": {
+   "verdict": "PASS",
+   "meta_version": "2.10.1",
+   "kind": "bundle",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "MiniZinc to FlatZinc converter, version 2.10.1, build 33348285743"
+  },
+  "networkx": {
+   "verdict": "PASS",
+   "meta_version": "unknown",
+   "kind": "python-lib",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "3.7"
+  },
+  "nuxmv": {
+   "verdict": null,
+   "meta_version": "2.1.0",
+   "kind": "binary",
+   "version_probe_status": "NOT_PROBED_UNAVAILABLE",
+   "probed_first_line": null
+  },
+  "ortools": {
+   "verdict": "PASS",
+   "meta_version": "unknown",
+   "kind": "python-lib",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "9.15.6755"
+  },
+  "prism": {
+   "verdict": "PASS",
+   "meta_version": "4.11",
+   "kind": "bundle",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "PRISM version 4.11"
+  },
+  "prob": {
+   "verdict": null,
+   "meta_version": "1.16.1",
+   "kind": "java-bundle",
+   "version_probe_status": "NOT_PROBED_UNAVAILABLE",
+   "probed_first_line": null
+  },
+  "pymc": {
+   "verdict": "PASS",
+   "meta_version": "unknown",
+   "kind": "python-lib",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "6.4.0"
+  },
+  "rdf-shacl": {
+   "verdict": "PASS",
+   "meta_version": "unknown",
+   "kind": "python-lib",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "0.40.2"
+  },
+  "robot": {
+   "verdict": "PASS",
+   "meta_version": "1.9.11",
+   "kind": "jar",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "ROBOT version 1.9.11"
+  },
+  "simpy": {
+   "verdict": "PASS",
+   "meta_version": "unknown",
+   "kind": "python-lib",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "4.1.2"
+  },
+  "souffle": {
+   "verdict": "PASS",
+   "meta_version": "2.5",
+   "kind": "binary",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "----------------------------------------------------------------------------"
+  },
+  "storm": {
+   "verdict": "PASS",
+   "meta_version": "2.0.0",
+   "kind": "bundle",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "Storm 1.8.0"
+  },
+  "sympy": {
+   "verdict": "PASS",
+   "meta_version": "unknown",
+   "kind": "python-lib",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "1.14.0"
+  },
+  "tla-tlc": {
+   "verdict": "PASS",
+   "meta_version": "1.8.0",
+   "kind": "jar",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "TLC2 Version 2026.11.06.222357 (rev: d8fb231)"
+  },
+  "tree-sitter": {
+   "verdict": "PASS",
+   "meta_version": "0.27.2",
+   "kind": "binary",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "tree-sitter 0.27.2"
+  },
+  "vampire": {
+   "verdict": "PASS",
+   "meta_version": "5.1.0",
+   "kind": "binary",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "Vampire 5.1.0 (Release build, commit 7b2f410 on 2026-08-13 10:17:34 +0200)"
+  },
+  "why3": {
+   "verdict": "PASS",
+   "meta_version": "1.8.0",
+   "kind": "binary",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "Why3 platform, version 1.8.0"
+  },
+  "z3": {
+   "verdict": "PASS",
+   "meta_version": "5.4.0",
+   "kind": "binary",
+   "version_probe_status": "PROBED",
+   "probed_first_line": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f"
+  }
+ }
+}

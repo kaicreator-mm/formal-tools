@@ -1,0 +1,13 @@
+cmd=run clingo --version
+clingo version 5.8.3
+Address model: 64-bit
+
+libclingo version 5.8.3
+Configuration: with Python 3.13.5, without Lua
+
+libclasp version 3.4.2 (libpotassco version 1.2.0)
+Configuration: WITH_THREADS=1
+Copyright (C) Benjamin Kaufmann
+
+License: The MIT License <https://opensource.org/licenses/MIT>
+rc=0

@@ -1,0 +1,3 @@
+   aflpp/pos: exit=0 dur=11ms matched=1 exit_ok=1 label=FUZZER_EXECS (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-aflpp.pos.log)
+   aflpp/neg: exit=0 dur=6ms matched=1 exit_ok=1 label=ERROR (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-aflpp.neg.log)
+verify_rc=0

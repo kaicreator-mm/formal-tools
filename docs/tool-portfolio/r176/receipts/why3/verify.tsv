@@ -1,0 +1,4 @@
+why3	setup	0	45	1	1	SETUP
+why3	pos	0	323	1	1	PROVED
+why3	neg	0	269	1	1	NOT_PROVED
+verdict	PASS

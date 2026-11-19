@@ -1,0 +1,4 @@
+cmd=run minizinc --version
+MiniZinc to FlatZinc converter, version 2.10.1, build 33348285743
+Copyright (C) 2014-2026 Monash University, NICTA, Data61
+rc=0

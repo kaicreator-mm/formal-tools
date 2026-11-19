@@ -1,0 +1,4 @@
+   cvc5/pos: exit=0 dur=44ms matched=1 exit_ok=1 label=SAT (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-cvc5.pos.log)
+   cvc5/neg: exit=0 dur=11ms matched=1 exit_ok=1 label=UNSAT (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-cvc5.neg.log)
+   cvc5/err: exit=0 dur=21ms matched=1 exit_ok=1 label=ERROR (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-cvc5.err.log)
+verify_rc=0

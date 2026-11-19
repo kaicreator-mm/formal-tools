@@ -1,0 +1,56 @@
+{
+ "schema": "formal-tools/capability-probe-receipt/0.1",
+ "tool_id": "tla-tlc",
+ "meta_version": "1.8.0",
+ "kind": "jar",
+ "unavailable_flag": "0",
+ "verify": {
+  "rows": [
+   [
+    "tla-tlc",
+    "setup",
+    "0",
+    "5",
+    "1",
+    "1",
+    "SETUP"
+   ],
+   [
+    "tla-tlc",
+    "pos",
+    "0",
+    "555",
+    "1",
+    "1",
+    "PROPERTY_HOLDS"
+   ],
+   [
+    "tla-tlc",
+    "neg",
+    "0",
+    "519",
+    "1",
+    "1",
+    "COUNTEREXAMPLE"
+   ]
+  ],
+  "verdict": "PASS"
+ },
+ "version_probe": {
+  "status": "PROBED",
+  "probed_first_line": "TLC2 Version 2026.11.06.222357 (rev: d8fb231)",
+  "raw": "cmd=run tla-tlc --version\nTLC2 Version 2026.11.06.222357 (rev: d8fb231)\nError: Error: unrecognized option: --version\nUsage: java tlc2.TLC [-help] [-option] inputfile\nrc=1\n"
+ },
+ "logs": {
+  "pos": "TLC2 Version 2026.11.06.222357 (rev: d8fb231)\nRunning breadth-first search Model-Checking with fp 94 and seed -133820011940412695 with 1 worker on 16 cores with 14018MB heap and 64MB offheap memory [pid: 3821] (Linux 7.0.0-43-generic amd64, Eclipse Adoptium 21.0.13 64bit, MSBDiskFPSet, DiskStateQueue).\nParsing file /tmp/ft-D203Tn/pos.tla\nParsing file /tmp/tlc-12332829473031460328/Integers.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)\nParsing file /tmp/tlc-12332829473031460328/_TLCTrace.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)\nParsing file /tmp/tlc-12332829473031460328/Naturals.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)\nParsing file /tmp/tlc-12332829473031460328/TLC.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)\nParsing file /tmp/tlc-12332829473031460328/TLCExt.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)\nParsing file /tmp/tlc-12332829473031460328/Sequences.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)\nParsing file /tmp/tlc-12332829473031460328/FiniteSets.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)\nSemantic processing of module Naturals\nSemantic processing of module Integers\nSemantic processing of module Sequences\nSemantic processing of module FiniteSets\nSemantic processing of module TLC\nSemantic processing of module TLCExt\nSemantic processing of module _TLCTrace\nSemantic processing of module pos\nLinting of module TLCExt\nLinting of module _TLCTrace\nLinting of module pos\nStarting... (2026-11-19 02:08:53)\nComputing initial states...\nFinished computing initial states: 1 distinct state generated at 2026-11-19 02:08:53.\nModel checking completed. No error has been found.\n  Estimates of the probability that TLC did not check all reachable states\n  because two distinct states had the same fingerprint:\n  calculated (optimistic):  val = 3.3E-19\n7 states generated, 6 distinct states found, 0 states left on queue.\nThe depth of the complete state graph search is 6.\nThe average outdegree of the complete state graph is 1 (minimum is 0, the maximum 1 and the 95th percentile is 1).\nFinished in 00s at (2026-11-19 02:08:53)\n\nPHASE_DONE phase=pos rc=0\n",
+  "neg": "TLC2 Version 2026.11.06.222357 (rev: d8fb231)\nRunning breadth-first search Model-Checking with fp 37 and seed -4177716298989381949 with 1 worker on 16 cores with 14018MB heap and 64MB offheap memory [pid: 3862] (Linux 7.0.0-43-generic amd64, Eclipse Adoptium 21.0.13 64bit, MSBDiskFPSet, DiskStateQueue).\nParsing file /tmp/ft-D203Tn/neg.tla\nParsing file /tmp/tlc-12241276846857542380/Integers.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)\nParsing file /tmp/tlc-12241276846857542380/_TLCTrace.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)\nParsing file /tmp/tlc-12241276846857542380/Naturals.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)\nParsing file /tmp/tlc-12241276846857542380/TLC.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)\nParsing file /tmp/tlc-12241276846857542380/TLCExt.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)\nParsing file /tmp/tlc-12241276846857542380/Sequences.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)\nParsing file /tmp/tlc-12241276846857542380/FiniteSets.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)\nSemantic processing of module Naturals\nSemantic processing of module Integers\nSemantic processing of module Sequences\nSemantic processing of module FiniteSets\nSemantic processing of module TLC\nSemantic processing of module TLCExt\nSemantic processing of module _TLCTrace\nSemantic processing of module neg\nLinting of module TLCExt\nLinting of module _TLCTrace\nLinting of module neg\nStarting... (2026-11-19 02:08:54)\nComputing initial states...\nError: Invariant BadInv is violated by the initial state:\nx = 0\n\nFinished in 00s at (2026-11-19 02:08:54)\n\nPHASE_DONE phase=neg rc=0\n",
+  "err": null
+ },
+ "environment": {
+  "bundle_manifest_sha256": "6aa3f58583597f3685f9b4f5f554a9c138214d17f7eaae4f6d38a1f13a0d7552",
+  "tool_runner_sha256": "0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17",
+  "uname": "Linux 7.0.0-43-generic",
+  "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh, cc@192.168.100.200:2222)",
+  "executed_at_utc": "2026-11-19T02:08:02Z"
+ }
+}

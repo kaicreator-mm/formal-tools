@@ -1,0 +1,5 @@
+/opt/formal-tools-portable-debian13-x86_64/runtimes/python313/lib/python3.13/site-packages/mesa/mesa_logging.py:112: FutureWarning: The use of the `seed` keyword argument is deprecated, use `rng` instead. No functional changes.
+  res = func(*args, **kwargs)
+PYVERIFY: OK STEPS=3
+
+PHASE_DONE phase=pos rc=0

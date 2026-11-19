@@ -1,0 +1,3 @@
+ortools	pos	0	580	1	1	OPTIMAL
+ortools	neg	0	485	1	1	INFEASIBLE
+verdict	PASS

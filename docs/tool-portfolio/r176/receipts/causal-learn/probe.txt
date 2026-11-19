@@ -1,0 +1,3 @@
+cmd=py import causallearn
+?
+rc=0

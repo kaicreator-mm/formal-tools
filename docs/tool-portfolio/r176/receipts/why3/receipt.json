@@ -1,0 +1,56 @@
+{
+ "schema": "formal-tools/capability-probe-receipt/0.1",
+ "tool_id": "why3",
+ "meta_version": "1.8.0",
+ "kind": "binary",
+ "unavailable_flag": "0",
+ "verify": {
+  "rows": [
+   [
+    "why3",
+    "setup",
+    "0",
+    "45",
+    "1",
+    "1",
+    "SETUP"
+   ],
+   [
+    "why3",
+    "pos",
+    "0",
+    "323",
+    "1",
+    "1",
+    "PROVED"
+   ],
+   [
+    "why3",
+    "neg",
+    "0",
+    "269",
+    "1",
+    "1",
+    "NOT_PROVED"
+   ]
+  ],
+  "verdict": "PASS"
+ },
+ "version_probe": {
+  "status": "PROBED",
+  "probed_first_line": "Why3 platform, version 1.8.0",
+  "raw": "cmd=run why3 --version\nWhy3 platform, version 1.8.0\nrc=0\n"
+ },
+ "logs": {
+  "pos": "File \"/opt/formal-tools-portable-debian13-x86_64/tests/why3/pos.mlw\", line 3, characters 10-19:\nGoal g.\nProver result is: Valid (0.00s, 14 steps).\n\n\nPHASE_DONE phase=pos rc=0\n",
+  "neg": "File \"/opt/formal-tools-portable-debian13-x86_64/tests/why3/neg.mlw\", line 3, characters 10-19:\nGoal g.\nProver result is: Unknown (sat) (0.00s, 15 steps).\n\n\nPHASE_DONE phase=neg rc=0\n",
+  "err": null
+ },
+ "environment": {
+  "bundle_manifest_sha256": "6aa3f58583597f3685f9b4f5f554a9c138214d17f7eaae4f6d38a1f13a0d7552",
+  "tool_runner_sha256": "0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17",
+  "uname": "Linux 7.0.0-43-generic",
+  "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh, cc@192.168.100.200:2222)",
+  "executed_at_utc": "2026-11-19T02:08:02Z"
+ }
+}

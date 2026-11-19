@@ -1,0 +1,4 @@
+Error: type error: undefined identifier `y', did you mean `x'?
+/opt/formal-tools-portable-debian13-x86_64/tests/minizinc/err.mzn:3.12
+
+PHASE_DONE phase=err rc=0

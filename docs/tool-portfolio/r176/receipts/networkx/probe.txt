@@ -1,0 +1,3 @@
+cmd=py import networkx
+3.7
+rc=0

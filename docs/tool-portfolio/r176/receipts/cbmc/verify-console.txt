@@ -1,0 +1,4 @@
+   cbmc/pos: exit=0 dur=75ms matched=1 exit_ok=1 label=VERIFIED (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-cbmc.pos.log)
+   cbmc/neg: exit=0 dur=33ms matched=1 exit_ok=1 label=VIOLATION (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-cbmc.neg.log)
+   cbmc/err: exit=0 dur=22ms matched=1 exit_ok=1 label=ERROR (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-cbmc.err.log)
+verify_rc=0

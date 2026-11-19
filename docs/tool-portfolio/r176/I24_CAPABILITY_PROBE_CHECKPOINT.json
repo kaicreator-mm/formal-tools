@@ -1,0 +1,52 @@
+{
+ "schema": "formal-tools/i24-capability-probe-checkpoint/1.0",
+ "output_label": "FORMAL_TOOLS_I24_I11_36_TOOL_INCREMENTAL_REUSE",
+ "date": "2026-11-19",
+ "authority": {
+  "portfolio_issue": 24,
+  "closed_product_issue": 11,
+  "base_main_sha": "0a07213a87576adab152a5820e317e4c6d377a21",
+  "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh, cc@192.168.100.200:2222)",
+  "probe_harness": "portable/scripts/i24-capability-probe-sweep.sh",
+  "discovery_registry_unchanged": true
+ },
+ "this_increment": {
+  "delivers": [
+   "36/36 capability-probe receipts from the deployed bundle (34 native verify PASS + 2 honest SKIP for nuxmv/prob)",
+   "registry/CAPABILITY_VALIDATION.json — sha256-receipt-bound per-tool validation ledger (34 NATIVE_PROBE_PASS_SCOPED + 2 PORTABLE_LANE_PASS_SCOPED)",
+   "9 python-lib actual versions recovered (meta was 'unknown'); 3 version-drift observations recorded (storm, fast-downward, tla-tlc)",
+   "per-tool applicable_problems / io contract / limitations metadata (36 rows)",
+   "packages/runner/js/capability-validation.mjs + capabilities-cli.mjs deterministic match surface with fail-closed validator",
+   "registry/INTERFACES.json accuracy updates (capability_validation block; 13-tool MCP list corrected; portfolio subcommand recorded)"
+  ],
+  "interface_pin_constraints_respected": [
+   "packages/runner/js/cli.mjs, sdk.mjs, mcp.mjs byte-unchanged (blob-pinned by docs/tool-portfolio/r99/CBMC_CURRENT_MAIN_T4.json)",
+   "registry/PROBLEM_CAPABILITIES.json byte-unchanged (frozen G1 discovery index, DISCOVERY_ONLY)",
+   "package.json / package-lock.json unchanged"
+  ],
+  "qualification_boundary": "capability probe receipts are technical evidence only; NO formal T3/T4/T5/T6 acceptance, NO Product/Release grant, #11 remains closed with frozen acceptance"
+ },
+ "counts": {
+  "tools": 36,
+  "capabilities": 23,
+  "native_probe_pass_scoped": 34,
+  "portable_lane_pass_scoped": 2,
+  "not_verified": 0,
+  "probe_quality_effective": 28,
+  "probe_quality_ineffective": 6
+ },
+ "version_drift_observations": {
+  "storm": "meta 2.0.0 vs probed 1.8.0 (matches issue #54)",
+  "fast-downward": "meta 24.06 vs probed 26.6+ (R19-known identity issue)",
+  "tla-tlc": "meta 1.8.0 vs probed TLC2 2026.11.06 rolling (rev d8fb231)"
+ },
+ "unavailable_in_deployed_image": {
+  "nuxmv": "UNAVAILABLE in r0 image (2026-11-12); portable-lane restore (2.2.0) merged later; evidence = portable/status/receipts/verify-nuxmv.json",
+  "prob": "UNAVAILABLE in r0 image; portable-lane restore (1.16.1) merged later; evidence = portable/status/receipts/verify-prob.json"
+ },
+ "next_actions": [
+  "MCP match_formal_capabilities registration deferred to the r99 pin-owning lane reconciliation",
+  "12 open tool PRs (#110,#111,#114,#115,#136,#138,#140,#141,#142,#143,#144,#106) keep their existing single Writers; no contention from this lane",
+  "deployed-image refresh (rebuild formal-tools image from current out/packages) would move nuxmv/prob into the native-probe lane"
+ ]
+}

@@ -1,0 +1,12 @@
+Exception in thread "main" Syntax error in /opt/formal-tools-portable-debian13-x86_64/tests/alloy/err.als at line 3 column 10:
+There are 3 possible tokens that can appear here:
+,  : = 
+	at edu.mit.csail.sdg.parser.CompParser.syntax_error(CompParser.java:2633)
+	at edu.mit.csail.sdg.parser.CompParser.parse(CompParser.java:2482)
+	at edu.mit.csail.sdg.parser.CompParser.alloy_parseStream(CompParser.java:2675)
+	at edu.mit.csail.sdg.parser.CompUtil.parse(CompUtil.java:476)
+	at edu.mit.csail.sdg.parser.CompUtil.parseRecursively(CompUtil.java:238)
+	at edu.mit.csail.sdg.parser.CompUtil.parseEverything_fromFile(CompUtil.java:383)
+	at AlloyRunner.main(AlloyRunner.java:21)
+
+PHASE_DONE phase=err rc=0

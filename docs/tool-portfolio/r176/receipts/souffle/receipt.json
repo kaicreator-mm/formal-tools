@@ -1,0 +1,47 @@
+{
+ "schema": "formal-tools/capability-probe-receipt/0.1",
+ "tool_id": "souffle",
+ "meta_version": "2.5",
+ "kind": "binary",
+ "unavailable_flag": "0",
+ "verify": {
+  "rows": [
+   [
+    "souffle",
+    "pos",
+    "0",
+    "30",
+    "1",
+    "1",
+    "DERIVED"
+   ],
+   [
+    "souffle",
+    "err",
+    "0",
+    "11",
+    "1",
+    "1",
+    "ERROR"
+   ]
+  ],
+  "verdict": "PASS"
+ },
+ "version_probe": {
+  "status": "PROBED",
+  "probed_first_line": "----------------------------------------------------------------------------",
+  "raw": "cmd=run souffle --version\n----------------------------------------------------------------------------\nVersion: 2.5 (2.5)\nWord size: 64 bits\nOptions enabled: ffi openmp ncurses sqlite zlib\n----------------------------------------------------------------------------\nCopyright (c) 2016-25 The Souffle Developers.\nCopyright (c) 2013-16 Oracle and/or its affiliates.\nAll rights reserved.\n============================================================================\n\nrc=0\n"
+ },
+ "logs": {
+  "pos": "---------------\npath\na\tb\n===============\n1\t2\n1\t3\n2\t3\n===============\n\nPHASE_DONE phase=pos rc=0\n",
+  "neg": null,
+  "err": "Error: Redefinition of relation edge in file neg.dl at line 3\n.decl edge(a:number, b:number)\n------^------------------------\nPrevious definition in file neg.dl at line 2\n.decl edge(a:number, b:number)\n------^------------------------\n1 errors generated, evaluation aborted\n\nPHASE_DONE phase=err rc=0\n"
+ },
+ "environment": {
+  "bundle_manifest_sha256": "6aa3f58583597f3685f9b4f5f554a9c138214d17f7eaae4f6d38a1f13a0d7552",
+  "tool_runner_sha256": "0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17",
+  "uname": "Linux 7.0.0-43-generic",
+  "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh, cc@192.168.100.200:2222)",
+  "executed_at_utc": "2026-11-19T02:08:02Z"
+ }
+}

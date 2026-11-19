@@ -1,0 +1,27 @@
+% Running in auto input_syntax mode. Trying TPTP
+% Refutation found. Thanks to Tanya!
+% SZS status Theorem for pos
+% SZS output start Proof for pos
+1. p(a) [input(axiom) ax1 "/opt/formal-tools-portable-debian13-x86_64/tests/vampire/pos.p"]
+2. ! [X0] : (p(X0) => p(f(X0))) [input(axiom) ax2 "/opt/formal-tools-portable-debian13-x86_64/tests/vampire/pos.p"]
+3. p(f(a)) [input(conjecture) goal "/opt/formal-tools-portable-debian13-x86_64/tests/vampire/pos.p"]
+4. ~ p(f(a)) [negated conjecture 3]
+5. ~p(f(a)) [flattening 4]
+6. ! [X0] : (p(f(X0)) | ~p(X0)) [ennf transformation 2]
+7. p(a) [cnf transformation 1]
+8. p(f(X0)) | ~p(X0) [cnf transformation 6]
+9. ~p(f(a)) [cnf transformation 5]
+10. ~p(a) [resolution 8,9]
+11. $false [forward subsumption resolution 10,7]
+% SZS output end Proof for pos
+% ------------------------------
+% Version: Vampire 5.1.0 (Release build, commit 7b2f410 on 2026-08-13 10:17:34 +0200)
+% Linked with Z3 4.14.0.0 3c47fd96cf5645d0c42b2c819d9e9a84380aa721 NOTFOUND
+% CaDiCaL version: 2.1.3
+% Termination reason: Refutation
+% Time elapsed: 0.011 s
+% Peak memory usage: 11 MB
+% ------------------------------
+% ------------------------------
+
+PHASE_DONE phase=pos rc=0

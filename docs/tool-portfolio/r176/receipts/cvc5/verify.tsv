@@ -1,0 +1,4 @@
+cvc5	pos	0	44	1	1	SAT
+cvc5	neg	0	11	1	1	UNSAT
+cvc5	err	0	21	1	1	ERROR
+verdict	PASS

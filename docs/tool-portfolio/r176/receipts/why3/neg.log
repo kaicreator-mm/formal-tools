@@ -1,0 +1,6 @@
+File "/opt/formal-tools-portable-debian13-x86_64/tests/why3/neg.mlw", line 3, characters 10-19:
+Goal g.
+Prover result is: Unknown (sat) (0.00s, 15 steps).
+
+
+PHASE_DONE phase=neg rc=0

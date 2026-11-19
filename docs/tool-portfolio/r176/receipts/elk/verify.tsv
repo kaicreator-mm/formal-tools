@@ -1,0 +1,3 @@
+elk	pos	0	449	1	1	CLASSIFIED
+elk	neg	0	388	1	1	PARSE_REJECTED
+verdict	PASS

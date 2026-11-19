@@ -1,0 +1,4 @@
+robot	pos	0	1200	1	1	CONSISTENT
+robot	neg	0	969	1	1	INCONSISTENT
+robot	err	0	821	1	1	ERROR
+verdict	PASS

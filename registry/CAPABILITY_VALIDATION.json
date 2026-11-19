@@ -1,0 +1,1442 @@
+{
+ "schema": "formal-tools/capability-validation/0.1",
+ "status": "PROBE_VALIDATED_SCOPED_NOT_FORMAL_ACCEPTANCE",
+ "authority": {
+  "discovery_registry": "registry/PROBLEM_CAPABILITIES.json",
+  "discovery_registry_schema": "formal-tools/problem-capabilities/0.1",
+  "portfolio_issue": 24,
+  "closed_product_issue": 11,
+  "base_main_sha": "0a07213a87576adab152a5820e317e4c6d377a21",
+  "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh, cc@192.168.100.200:2222)",
+  "bundle_manifest_sha256": "6aa3f58583597f3685f9b4f5f554a9c138214d17f7eaae4f6d38a1f13a0d7552",
+  "tool_runner_sha256": "0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17",
+  "sweep_summary": "docs/tool-portfolio/r176/SWEEP_SUMMARY.json",
+  "sweep_summary_sha256": "8c68a769aa36d63a7e734d8dc4d7110b99c8d55826d00457fad6fe0c34295e6c",
+  "probe_harness": "portable/scripts/i24-capability-probe-sweep.sh",
+  "output_label": "FORMAL_TOOLS_I24_I11_36_TOOL_INCREMENTAL_REUSE"
+ },
+ "semantics": {
+  "status_enum": [
+   "NATIVE_PROBE_PASS_SCOPED",
+   "PORTABLE_LANE_PASS_SCOPED",
+   "NOT_VERIFIED"
+  ],
+  "probe_quality_enum": [
+   "EFFECTIVE",
+   "INEFFECTIVE_OUTPUT",
+   "NOT_PROBED"
+  ],
+  "warning": "Capability-probe receipts demonstrate the registered capability on the exact deployed bundle; they are NOT formal T3 acceptance, T4 integration, T5 business qualification, T6 maintenance, Product or Release grant."
+ },
+ "scope_rules": [
+  "Every capability mapping is inherited verbatim from registry/PROBLEM_CAPABILITIES.json (schema 0.1, frozen G1 discovery index); no capability is invented or re-assigned here.",
+  "NATIVE_PROBE_PASS_SCOPED requires verify_verdict PASS on the deployed bundle's own pos/neg/err fixtures plus a retained probe receipt with matching sha256.",
+  "PORTABLE_LANE_PASS_SCOPED cites merged portable-lane verify receipts for tools the r0 image predates (nuxmv, prob); their deployed-container state is recorded honestly as UNAVAILABLE.",
+  "Version drift rows are recorded observations about the r0 bundle; they do not upgrade or downgrade any portfolio lifecycle gate by themselves.",
+  "Unverified capability dimensions remain NOT_VERIFIED; probe ineffectiveness never masquerades as version identity."
+ ],
+ "counts": {
+  "tools": 36,
+  "capabilities": 23,
+  "native_probe_pass_scoped": 34,
+  "portable_lane_pass_scoped": 2,
+  "not_verified": 0,
+  "probe_quality_effective": 28,
+  "probe_quality_ineffective": 6,
+  "probe_not_probed_unavailable": 2
+ },
+ "tools": [
+  {
+   "id": "aflpp",
+   "origin": "candidate",
+   "capability_ids": [
+    "test.fuzz"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/aflpp/receipt.json",
+   "evidence_sha256": "f779ef34772362837ed8fdf17ec22c274d66e00b395e5daf6c72059cde1f57ef",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "5.03c",
+   "probed_version": "3.13",
+   "probe_status": "PROBED",
+   "probe_quality": "INEFFECTIVE_OUTPUT",
+   "probe_note": "run-shim --version exec failed: libpython3.13.so.1.0 not on probe path (rc=127); verify pos/neg/err cases remain the capability evidence",
+   "container_probe_receipt": null,
+   "version_drift": {
+    "declared": "5.03c",
+    "probed": "3.13",
+    "note": "declared meta version differs from probed binary self-report"
+   },
+   "applicable_problems": [
+    "二进制与源码程序的覆盖率引导模糊测试",
+    "崩溃与内存安全漏洞用例发现"
+   ],
+   "io": {
+    "inputs": [
+     "instrumented target program (source or binary)",
+     "seed input corpus"
+    ],
+    "outputs": [
+     "crashing test inputs with coverage statistics"
+    ]
+   },
+   "limitations": "Coverage-guided fuzzing tool that finds crashes and hangs at runtime; it does not produce proofs or exhaustive guarantees about program behavior."
+  },
+  {
+   "id": "alloy",
+   "origin": "native-ref",
+   "capability_ids": [
+    "model.relational",
+    "model.state"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/alloy/receipt.json",
+   "evidence_sha256": "a14299cc4c3e78e85a098d197a031d0e4aa3c0dff6b7fa7f801a38afa20f748c",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg",
+    "err"
+   ],
+   "declared_version": "6.2.0",
+   "probed_version": null,
+   "probe_status": "PROBED",
+   "probe_quality": "INEFFECTIVE_OUTPUT",
+   "probe_note": "AlloyRunner treated --version as a .als file input and raised syntax error",
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "Alloy关系模型的有界结构分析",
+    "关系断言的反例实例查找"
+   ],
+   "io": {
+    "inputs": [
+     ".als Alloy module"
+    ],
+    "outputs": [
+     "counterexample instance (dot/XML)",
+     "scope-bounded assertion verdict"
+    ]
+   },
+   "limitations": "Bounded relational SAT-based analysis within a user-declared scope; results hold only for that scope and unbounded verification is not supported."
+  },
+  {
+   "id": "apache-jena",
+   "origin": "native-ref",
+   "capability_ids": [
+    "knowledge.rdf"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/apache-jena/receipt.json",
+   "evidence_sha256": "53761593dd97ab576d522fb4875901df13a830043e146844e181f59c52a32065",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg",
+    "err"
+   ],
+   "declared_version": "5.5.0",
+   "probed_version": "5.5.0",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "RDF 图存储与 SPARQL 查询",
+    "RDFS/OWL 规则推理与本体管理",
+    "RDF 多格式解析与转换"
+   ],
+   "io": {
+    "inputs": [
+     "RDF documents (Turtle/RDF/XML/N-Triples/JSON-LD)",
+     "SPARQL queries and rules files"
+    ],
+    "outputs": [
+     "SPARQL query results (JSON/CSV/XML)",
+     "materialized or transformed RDF graphs"
+    ]
+   },
+   "limitations": "Built-in reasoners cover RDFS and only an OWL subset; full OWL DL reasoning needs an external reasoner, and its SPARQL performance trails dedicated triple stores."
+  },
+  {
+   "id": "apalache",
+   "origin": "native-ref",
+   "capability_ids": [
+    "model.state",
+    "logic.smt"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/apalache/receipt.json",
+   "evidence_sha256": "74a892bbf1b90e75f4b659a3f88656d739177129827ba520b1a7b047a6de453e",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg",
+    "err"
+   ],
+   "declared_version": "0.63.0",
+   "probed_version": "0.29.0",
+   "probe_status": "PROBED",
+   "probe_quality": "INEFFECTIVE_OUTPUT",
+   "probe_note": "printed usage banner; no version line in probe output",
+   "container_probe_receipt": null,
+   "version_drift": {
+    "declared": "0.63.0",
+    "probed": "0.29.0",
+    "note": "declared meta version differs from probed binary self-report"
+   },
+   "applicable_problems": [
+    "TLA+规约的符号化有界模型检查",
+    "基于SMT求解的不变式验证"
+   ],
+   "io": {
+    "inputs": [
+     ".tla TLA+ spec (Apalache-supported subset)"
+    ],
+    "outputs": [
+     "counterexample trace",
+     "bounded model checking statistics report"
+    ]
+   },
+   "limitations": "Symbolic SMT-based bounded model checking of a TLA+ subset; requires explicit bounds and does not prove unbounded properties or full liveness."
+  },
+  {
+   "id": "causal-learn",
+   "origin": "candidate",
+   "capability_ids": [
+    "causal.discovery"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/causal-learn/receipt.json",
+   "evidence_sha256": "aa5b4e5c75d474ec6934d2cf2e628e9c8b6e59e25fb3cc8af0b97b62fdb0de30",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "unknown",
+   "probed_version": null,
+   "probe_status": "PROBED",
+   "probe_quality": "INEFFECTIVE_OUTPUT",
+   "probe_note": "causallearn module exposes no top-level __version__",
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "从观测数据学习因果图结构",
+    "PC/GES等约束与评分型结构搜索",
+    "存在潜在混杂的因果结构发现"
+   ],
+   "io": {
+    "inputs": [
+     "observational data matrix (NumPy/pandas)"
+    ],
+    "outputs": [
+     "causal graph (GeneralGraph/DOT)",
+     "edge dependence/p-value scores"
+    ]
+   },
+   "limitations": "Recovers only Markov equivalence classes from observational data under faithfulness and acyclicity assumptions; edge orientations and latent confounders may remain undetermined."
+  },
+  {
+   "id": "cbmc",
+   "origin": "candidate",
+   "capability_ids": [
+    "code.verify"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/cbmc/receipt.json",
+   "evidence_sha256": "6d52d4914c3c8d52cc58fd6b01dcfbf409fdbc8c2a484b272c48f3d045c98e88",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg",
+    "err"
+   ],
+   "declared_version": "6.11.0",
+   "probed_version": "6.11.0",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "C 程序断言与内存安全验证",
+    "数组越界与整数溢出缺陷检查",
+    "带反例路径的有界模型检查"
+   ],
+   "io": {
+    "inputs": [
+     "C/C++ source files with assertions",
+     "goto-binary program files produced by goto-cc",
+     "unwind bounds and solver configuration options"
+    ],
+    "outputs": [
+     "per-property verification verdict (SUCCESS/FAILURE)",
+     "counterexample execution trace on failure"
+    ]
+   },
+   "limitations": "Performs bounded model checking: loops and recursion must be unwound within limits, so guarantees cover only executions within those bounds."
+  },
+  {
+   "id": "clingo",
+   "origin": "native-ref",
+   "capability_ids": [
+    "logic.rules",
+    "opt.combinatorial"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/clingo/receipt.json",
+   "evidence_sha256": "44c7752c7ce3c49d1f86ef6b767520edc171931a0887b1161171b0466c07db1a",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg",
+    "err"
+   ],
+   "declared_version": "5.8.3",
+   "probed_version": "5.8.3",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "ASP 规则建模与稳定模型求解",
+    "组合优化问题求最优解",
+    "约束满足与规划调度类问题"
+   ],
+   "io": {
+    "inputs": [
+     ".lp ASP encoding plus facts"
+    ],
+    "outputs": [
+     "stable models (answer sets)",
+     "optimal solutions with optimization values"
+    ]
+   },
+   "limitations": "NP-hard solving with exponential worst case; grounding of huge instances can exhaust memory, and it computes stable models rather than classical logical entailment."
+  },
+  {
+   "id": "cvc5",
+   "origin": "native-ref",
+   "capability_ids": [
+    "logic.smt",
+    "proof.deductive"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/cvc5/receipt.json",
+   "evidence_sha256": "d8eb27d927496a2c3bab8d5e37afab3978bac0f8b9d23096841d5dfb0e5e67bb",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg",
+    "err"
+   ],
+   "declared_version": "1.4.2",
+   "probed_version": "1.4.2",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "SMT约束可满足性判定与模型生成",
+    "可产出证明与不可满足核心的判定",
+    "量词与非线性算术公式的尝试求解"
+   ],
+   "io": {
+    "inputs": [
+     ".smt2 SMT-LIB2 script"
+    ],
+    "outputs": [
+     "sat/unsat/unknown verdict",
+     "satisfying model",
+     "proof certificate or unsat core (on request)"
+    ]
+   },
+   "limitations": "cvc5 decides formulas over supported SMT theories; quantified and nonlinear goals may return unknown, and results concern the encoding, not user intent."
+  },
+  {
+   "id": "dafny",
+   "origin": "native-ref",
+   "capability_ids": [
+    "proof.deductive",
+    "code.verify"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/dafny/receipt.json",
+   "evidence_sha256": "aa66d29bda4bc1f32919aedd2921f2881c881e555dd120c9a077c5932c30af42",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg",
+    "err"
+   ],
+   "declared_version": "4.11.0",
+   "probed_version": "4.11.0",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "带前后置规约的程序正确性验证",
+    "规约驱动代码的证明与验证"
+   ],
+   "io": {
+    "inputs": [
+     ".dfy source with pre/postconditions and loop invariants"
+    ],
+    "outputs": [
+     "verification report with counterexample-bearing errors",
+     "compiled executable or translated target code (on request)"
+    ]
+   },
+   "limitations": "Dafny verifies code only against its written annotations via an SMT backend; incomplete for quantified or nonlinear reasoning, it proves nothing beyond stated specifications."
+  },
+  {
+   "id": "dowhy",
+   "origin": "candidate",
+   "capability_ids": [
+    "causal.inference"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/dowhy/receipt.json",
+   "evidence_sha256": "887fa148ae55b61a641984311c78e70f9eabe9b5756dcce5b94f5a375c2af27e",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "unknown",
+   "probed_version": "0.14",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "基于因果图的处理效应分析",
+    "观测数据的因果效应识别与估计",
+    "因果估计的稳健性反驳检验"
+   ],
+   "io": {
+    "inputs": [
+     "pandas DataFrame dataset",
+     "causal graph (DOT/NetworkX) with treatment and outcome variables"
+    ],
+    "outputs": [
+     "causal effect estimate (ATE/ATT)",
+     "refutation test report"
+    ]
+   },
+   "limitations": "Requires user-supplied causal graph and identification assumptions (e.g., ignorability, instrument validity) that cannot be verified from observational data alone."
+  },
+  {
+   "id": "elk",
+   "origin": "candidate",
+   "capability_ids": [
+    "ontology.inference"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/elk/receipt.json",
+   "evidence_sha256": "129ce5637dda4c620b2100b706063fc7d7ac3bc647ee3318ab38f020b2b93b0f",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "0.6.0",
+   "probed_version": "0.6.0",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "OWL EL 本体分类推理",
+    "大型生物医学本体一致性检查"
+   ],
+   "io": {
+    "inputs": [
+     "OWL 2 ontology (OWL/XML, RDF/XML, functional syntax)"
+    ],
+    "outputs": [
+     "inferred class hierarchy (subsumption axioms)",
+     "consistency status"
+    ]
+   },
+   "limitations": "Incomplete reasoner restricted to the OWL 2 EL profile; no disjunction, universal restriction, or number constraints, so arbitrary OWL DL ontologies are unsupported."
+  },
+  {
+   "id": "fast-check",
+   "origin": "candidate",
+   "capability_ids": [
+    "test.property"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/fast-check/receipt.json",
+   "evidence_sha256": "c498e39d809d58a5095d6e160c9595230420d1cb919a7f0502a32628a294d459",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "4.3.0",
+   "probed_version": "22.16.0",
+   "probe_status": "PROBED",
+   "probe_quality": "INEFFECTIVE_OUTPUT",
+   "probe_note": "probe returned the Node.js banner (v22.16.0), not the library version",
+   "container_probe_receipt": null,
+   "version_drift": {
+    "declared": "4.3.0",
+    "probed": "22.16.0",
+    "note": "declared meta version differs from probed binary self-report"
+   },
+   "applicable_problems": [
+    "JS/TS 代码的属性测试与随机用例生成",
+    "状态机与异步逻辑的随机测试"
+   ],
+   "io": {
+    "inputs": [
+     "property function in JS/TS test file",
+     "arbitrary generators for input domains"
+    ],
+    "outputs": [
+     "falsifying counterexample case on property failure"
+    ]
+   },
+   "limitations": "Property-based testing framework that samples random inputs; it finds counterexamples but provides no formal proof of correctness."
+  },
+  {
+   "id": "fast-downward",
+   "origin": "candidate",
+   "capability_ids": [
+    "planning.classical"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/fast-downward/receipt.json",
+   "evidence_sha256": "c589c3c561017c6d5a49c7b2d5ea5c365e2a869fb262df10e4e401a856798634",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "24.06",
+   "probed_version": "26.6",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": {
+    "declared": "24.06",
+    "probed": "26.6",
+    "note": "meta 24.06 vs probed 26.6+ — known version-identity issue first recorded in R19"
+   },
+   "applicable_problems": [
+    "经典确定性规划问题求解",
+    "PDDL 任务的行动序列生成",
+    "启发式搜索下的最优/满意规划"
+   ],
+   "io": {
+    "inputs": [
+     "PDDL domain and problem files",
+     "SAS+ planning task files"
+    ],
+    "outputs": [
+     "plan as an ordered action sequence",
+     "search statistics and exit status"
+    ]
+   },
+   "limitations": "Restricted to classical deterministic planning; no durative actions, stochastic or temporal PDDL, and numeric-fluent support is limited."
+  },
+  {
+   "id": "highs",
+   "origin": "candidate",
+   "capability_ids": [
+    "opt.numerical"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/highs/receipt.json",
+   "evidence_sha256": "3c906c5aade602605acfcc388e3e6c08c41cb215c7944974a64ff2dfd273231a",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "unknown",
+   "probed_version": null,
+   "probe_status": "PROBED",
+   "probe_quality": "INEFFECTIVE_OUTPUT",
+   "probe_note": "highspy module exposes no top-level __version__",
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "线性规划与混合整数规划数值求解",
+    "二次规划与大规模稀疏连续优化"
+   ],
+   "io": {
+    "inputs": [
+     ".mps/.lp LP/MIP model files",
+     "highspy/PyHiGHS Python API model objects"
+    ],
+    "outputs": [
+     "optimal objective value with primal and dual solutions",
+     "solver status, bounds, and run log"
+    ]
+   },
+   "limitations": "Solves only continuous LP/QP and mixed-integer problems; no constraint programming, nonlinear, or stochastic optimization support."
+  },
+  {
+   "id": "hypothesis",
+   "origin": "candidate",
+   "capability_ids": [
+    "test.property"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/hypothesis/receipt.json",
+   "evidence_sha256": "0b82dc3ad0de3a36bdc81d43da10648a24da7b104b285f3833f8588904ed0f1e",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "unknown",
+   "probed_version": "6.170.15",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "Python 代码的属性测试与随机用例生成",
+    "基于策略的复杂数据自动生成"
+   ],
+   "io": {
+    "inputs": [
+     "property function in Python test file",
+     "strategy definitions for input domains"
+    ],
+    "outputs": [
+     "shrunk falsifying counterexample on property failure"
+    ]
+   },
+   "limitations": "Property-based testing library for Python; it discovers failing inputs via generation and shrinking but is not a formal verifier or proof tool."
+  },
+  {
+   "id": "kani",
+   "origin": "candidate",
+   "capability_ids": [
+    "code.verify"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/kani/receipt.json",
+   "evidence_sha256": "71537259301ea82e3d1e61290247977596a9fd3acf74fff3b3f9478bfffa5cbd",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "0.68.0",
+   "probed_version": "0.68.0",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "Rust 程序断言与不变式证明",
+    "整数溢出与 panic 路径检查",
+    "基于 proof harness 的属性验证"
+   ],
+   "io": {
+    "inputs": [
+     "Rust crate sources with #[kani::proof] harnesses",
+     "cargo kani command-line options and stub declarations"
+    ],
+    "outputs": [
+     "per-harness verification verdict (SUCCESS/FAILURE)",
+     "counterexample trace with the failing assertion"
+    ]
+   },
+   "limitations": "Bounded symbolic execution built on CBMC: checks are subject to unwind bounds, and some Rust features or unsafe patterns may be unsupported."
+  },
+  {
+   "id": "lean4",
+   "origin": "native-ref",
+   "capability_ids": [
+    "proof.deductive"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/lean4/receipt.json",
+   "evidence_sha256": "c27007d6d16e469581030c3774d85ac9f0db7c2883c600770fb4c29088f5f9a0",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg",
+    "err"
+   ],
+   "declared_version": "4.35.0",
+   "probed_version": "4.35.0",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "数学定理的交互式形式化证明",
+    "带依赖类型规约的程序证明构造"
+   ],
+   "io": {
+    "inputs": [
+     ".lean source file with definitions and tactic proofs"
+    ],
+    "outputs": [
+     "checked module (.olean) / theorem objects",
+     "error and unsolved-goal diagnostics"
+    ]
+   },
+   "limitations": "Lean 4 checks user-written proofs against explicit definitions and axioms in a trusted kernel; it does not automatically discover proofs, and 'sorry' yields only warnings."
+  },
+  {
+   "id": "mesa",
+   "origin": "candidate",
+   "capability_ids": [
+    "sim.agent"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/mesa/receipt.json",
+   "evidence_sha256": "44bf6b6eea7d1675339b670eb5f501adc79fbdabfc2c41e7447abee4697abb64",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "unknown",
+   "probed_version": "3.5.2",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "多智能体交互与涌现行为仿真",
+    "社会传播等复杂系统的ABM建模"
+   ],
+   "io": {
+    "inputs": [
+     "Mesa agent-based model (Python Model/Agent classes)",
+     "model parameter configuration"
+    ],
+    "outputs": [
+     "per-step agent/grid state data",
+     "aggregate time-series results"
+    ]
+   },
+   "limitations": "An agent-based modeling framework, not a formal verification tool: emergent results are stochastic simulation observations requiring calibration and sensitivity analysis."
+  },
+  {
+   "id": "minizinc",
+   "origin": "candidate",
+   "capability_ids": [
+    "opt.combinatorial"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/minizinc/receipt.json",
+   "evidence_sha256": "fec3896971339d13b9a1ebd3bff36f57e55e26e89430a702457ba051c52046e0",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg",
+    "err"
+   ],
+   "declared_version": "2.10.1",
+   "probed_version": "2.10.1",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "约束满足与组合优化问题建模求解",
+    "调度排班与资源分配类约束问题",
+    "面向多后端求解器的统一建模"
+   ],
+   "io": {
+    "inputs": [
+     ".mzn MiniZinc model files",
+     ".dzn/.json parameter data files"
+    ],
+    "outputs": [
+     "solutions with variable assignments and objective value",
+     "FlatZinc flat model sent to the backend solver"
+    ]
+   },
+   "limitations": "Covers finite-domain constraint models; supported variable types and performance vary with the selected FlatZinc backend solver."
+  },
+  {
+   "id": "networkx",
+   "origin": "candidate",
+   "capability_ids": [
+    "graph.algorithms"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/networkx/receipt.json",
+   "evidence_sha256": "65dfc2a5a7e19e192dfaff9ae1a0ceb455baa2a5da5d952ec7b91b8d178d4530",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "unknown",
+   "probed_version": "3.7",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "图论算法建模与复杂网络分析",
+    "最短路径连通性与图结构度量"
+   ],
+   "io": {
+    "inputs": [
+     "graph object built from nodes and edges in Python",
+     "graph data file (GraphML/GML/JSON)"
+    ],
+    "outputs": [
+     "computed graph metrics, paths, or subgraphs"
+    ]
+   },
+   "limitations": "In-memory Python library for graph algorithms and analysis; unsuited to very large graphs and performs no formal verification of model correctness."
+  },
+  {
+   "id": "nuxmv",
+   "origin": "candidate",
+   "capability_ids": [
+    "model.state"
+   ],
+   "status": "PORTABLE_LANE_PASS_SCOPED",
+   "evidence_ref": "portable/status/receipts/verify-nuxmv.json",
+   "evidence_sha256": null,
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg",
+    "err"
+   ],
+   "declared_version": "2.2.0",
+   "probed_version": null,
+   "probe_status": "NOT_PROBED_UNAVAILABLE",
+   "probe_quality": "NOT_PROBED",
+   "probe_note": "deployed formal-tools:deb13-r0 image (built 2026-11-12) predates the portable-lane restore; tool marked UNAVAILABLE in that deployment; capability evidence is the merged portable-lane verify receipt on main",
+   "container_probe_receipt": {
+    "path": "docs/tool-portfolio/r176/receipts/nuxmv/receipt.json",
+    "sha256": "ba251daa2843193b55493b6cb9d47e6bf7c49601091ffe957a6c0795862f4748",
+    "records": "honest SKIP (UNAVAILABLE=1) — retained for deployment-state audit"
+   },
+   "version_drift": null,
+   "applicable_problems": [
+    "SMV模型的不变式与LTL性质验证",
+    "有界模型检查与IC3归纳证明"
+   ],
+   "io": {
+    "inputs": [
+     ".smv SMV model",
+     "property command file"
+    ],
+    "outputs": [
+     "counterexample or witness trace",
+     "property proof verdict"
+    ]
+   },
+   "limitations": "Symbolic SAT/SMT-based checking; nonlinear integer/real arithmetic unsupported and infinite-state verification limited to linear constraint systems."
+  },
+  {
+   "id": "ortools",
+   "origin": "candidate",
+   "capability_ids": [
+    "opt.combinatorial",
+    "opt.numerical"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/ortools/receipt.json",
+   "evidence_sha256": "9a58e9f62c58bf7d63664a0364c3e6c1b0025a1657c24440adda3e4d18411099",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "unknown",
+   "probed_version": "9.15.6755",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "组合优化的约束规划建模与求解",
+    "线性/整数规划与混合整数规划求解",
+    "车辆路径与图流类组合问题求解"
+   ],
+   "io": {
+    "inputs": [
+     "Python/C++/Java models built via CP-SAT or MPSolver APIs",
+     ".mps/.lp linear and MIP model files"
+    ],
+    "outputs": [
+     "solver status with objective value and variable assignment",
+     "search runtime statistics"
+    ]
+   },
+   "limitations": "CP-SAT only handles finite-domain boolean and integer constraints, not continuous variables; LP and MIP capability depends on the chosen bundled backend solver."
+  },
+  {
+   "id": "prism",
+   "origin": "candidate",
+   "capability_ids": [
+    "model.probabilistic"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/prism/receipt.json",
+   "evidence_sha256": "a25238da78a01cae2713bee4dacc5ae2b5f9a050ece2c955995bf0e9d07f2d9a",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "4.11",
+   "probed_version": "4.11",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "马尔可夫链与MDP的概率模型检查",
+    "PCTL/CSL概率与奖励性质定量验证",
+    "概率系统反例与见证路径生成"
+   ],
+   "io": {
+    "inputs": [
+     ".pm/.smg PRISM model file",
+     "PCTL/CSL property specification"
+    ],
+    "outputs": [
+     "probability/expected reward value or Boolean result",
+     "counterexample witness path"
+    ]
+   },
+   "limitations": "Restricted to Markovian probabilistic models (DTMC/CTMC/MDP/SMG) with state-space explosion limits; exact guarantees hold only for the finite model, not automatically for the real system."
+  },
+  {
+   "id": "prob",
+   "origin": "native-ref",
+   "capability_ids": [
+    "model.state"
+   ],
+   "status": "PORTABLE_LANE_PASS_SCOPED",
+   "evidence_ref": "portable/status/receipts/verify-prob.json",
+   "evidence_sha256": null,
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg",
+    "err"
+   ],
+   "declared_version": "1.16.1",
+   "probed_version": null,
+   "probe_status": "NOT_PROBED_UNAVAILABLE",
+   "probe_quality": "NOT_PROBED",
+   "probe_note": "deployed formal-tools:deb13-r0 image (built 2026-11-12) predates the portable-lane restore; tool marked UNAVAILABLE in that deployment; capability evidence is the merged portable-lane verify receipt on main",
+   "container_probe_receipt": {
+    "path": "docs/tool-portfolio/r176/receipts/prob/receipt.json",
+    "sha256": "710aff8551770d82bd0d24e82488131e3894a994cb1f64426470961586b69861",
+    "records": "honest SKIP (UNAVAILABLE=1) — retained for deployment-state audit"
+   },
+   "version_drift": null,
+   "applicable_problems": [
+    "B/Event-B规约的动画与状态检查",
+    "不变式违反与死锁探测"
+   ],
+   "io": {
+    "inputs": [
+     ".mch/.ref/.imp B machine",
+     "Event-B model"
+    ],
+    "outputs": [
+     "counterexample trace",
+     "invariant violation / state space report"
+    ]
+   },
+   "limitations": "Explicit-state animation and checking driven by constraint solving; limited by state explosion and solver restrictions on large or unbounded data domains."
+  },
+  {
+   "id": "pymc",
+   "origin": "candidate",
+   "capability_ids": [
+    "stats.bayesian"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/pymc/receipt.json",
+   "evidence_sha256": "84e470ae1040920e1f60d1d6407dfe87e6bfe47810d9dd67cf9002f5fa208227",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "unknown",
+   "probed_version": "6.4.0",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "贝叶斯参数估计与后验分布推断",
+    "分层贝叶斯回归与混合效应建模",
+    "基于先验的不确定性量化"
+   ],
+   "io": {
+    "inputs": [
+     "PyMC probabilistic model (Python API)",
+     "observed data (NumPy/pandas)"
+    ],
+    "outputs": [
+     "posterior samples (InferenceData/NetCDF)",
+     "posterior summary statistics and predictive checks"
+    ]
+   },
+   "limitations": "Performs statistical inference with sampling uncertainty, not formal proof; accuracy depends on prior choice, model identifiability, and MCMC convergence diagnostics."
+  },
+  {
+   "id": "rdf-shacl",
+   "origin": "native-ref",
+   "capability_ids": [
+    "knowledge.rdf"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/rdf-shacl/receipt.json",
+   "evidence_sha256": "edb2fa008fad81e5965ca745e579cda4c2fe2f4146874385b16b0edd95f548a0",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "unknown",
+   "probed_version": "0.40.2",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "RDF 数据质量与合规校验",
+    "SHACL 形状约束验证",
+    "知识图谱入库前一致性检查"
+   ],
+   "io": {
+    "inputs": [
+     "RDF data graph (Turtle/N-Triples)",
+     "SHACL shapes graph"
+    ],
+    "outputs": [
+     "SHACL validation report (conforms flag + violation list)"
+    ]
+   },
+   "limitations": "Performs SHACL constraint validation only; it runs no OWL/RDFS inference, so graphs must be materialized beforehand for entailment-based checks."
+  },
+  {
+   "id": "robot",
+   "origin": "candidate",
+   "capability_ids": [
+    "ontology.processing"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/robot/receipt.json",
+   "evidence_sha256": "4e04c17d6873055c685262ae4c3824c4afe9428e7fc23af8004f82477e5eb329",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg",
+    "err"
+   ],
+   "declared_version": "1.9.11",
+   "probed_version": "1.9.11",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "本体合并、模块抽取与格式转换",
+    "本体批量校验与发布流水线",
+    "基于 CSV 模板的本体构建"
+   ],
+   "io": {
+    "inputs": [
+     "OWL/OBO ontology files",
+     "CSV/TSV templates"
+    ],
+    "outputs": [
+     "merged or extracted OWL modules",
+     "converted ontologies (OBO/OWL/JSON) and validation reports"
+    ]
+   },
+   "limitations": "Command-line ontology processor; it edits and converts ontologies but delegates inference to external reasoner plugins and offers no interactive browsing or editing."
+  },
+  {
+   "id": "simpy",
+   "origin": "candidate",
+   "capability_ids": [
+    "sim.discrete"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/simpy/receipt.json",
+   "evidence_sha256": "a90fd43235de93696bba4a7094b77d8629561bf8c2db9df94c49d2a8fcfaf8e2",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "unknown",
+   "probed_version": "4.1.2",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "排队与资源竞争的离散事件仿真",
+    "生产与服务流程的容量性能分析"
+   ],
+   "io": {
+    "inputs": [
+     "SimPy process-based Python model",
+     "run parameters (arrival/service distributions, duration)"
+    ],
+    "outputs": [
+     "event log/trace",
+     "aggregate statistics (utilization, wait time)"
+    ]
+   },
+   "limitations": "A discrete-event simulation framework, not a verification tool: outputs are statistical estimates from sampled runs that depend on model correctness and sufficient replications."
+  },
+  {
+   "id": "souffle",
+   "origin": "native-ref",
+   "capability_ids": [
+    "logic.rules"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/souffle/receipt.json",
+   "evidence_sha256": "10e96ab27bb2f7a89e72447f132a6b6b751e2c093df8e25f157a2d593674d6e6",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "err"
+   ],
+   "declared_version": "2.5",
+   "probed_version": "2.5",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "Datalog 规则求值与事实衍生计算",
+    "程序静态分析建模（指针/数据流分析）",
+    "大规模关系数据的批量推导"
+   ],
+   "io": {
+    "inputs": [
+     ".dl Datalog program",
+     ".facts relation facts (CSV)"
+    ],
+    "outputs": [
+     "derived relation tuples (CSV/SQLite)",
+     "compiled C++ analyzer (optional)"
+    ]
+   },
+   "limitations": "Datalog engine with stratified negation only; it supports no disjunctive or ASP-style search, and recursion over large fact sets can be expensive."
+  },
+  {
+   "id": "storm",
+   "origin": "candidate",
+   "capability_ids": [
+    "model.probabilistic"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/storm/receipt.json",
+   "evidence_sha256": "f1a38ea2edda54604212370214b48d6d2ef5b2e99ba3cb62a13ee7d8602d923c",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "2.0.0",
+   "probed_version": "1.8.0",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": {
+    "declared": "2.0.0",
+    "probed": "1.8.0",
+    "note": "r0 bundle meta declares 2.0.0; probed binary self-reports 1.8.0 (matches portfolio issue #54)"
+   },
+   "applicable_problems": [
+    "概率模型(DTMC/CTMC/MDP)性质验证",
+    "PCTL/CSL概率可达性计算",
+    "最优策略(调度器)合成"
+   ],
+   "io": {
+    "inputs": [
+     ".prism PRISM model",
+     ".jani JANI model with properties"
+    ],
+    "outputs": [
+     "probability/reward results",
+     "counterexample or scheduler policy"
+    ]
+   },
+   "limitations": "Handles only probabilistic models (DTMC, CTMC, MDP, MA, partial POMDP) with PCTL/CSL-style and reward properties; large state spaces limit feasibility."
+  },
+  {
+   "id": "sympy",
+   "origin": "candidate",
+   "capability_ids": [
+    "math.symbolic"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/sympy/receipt.json",
+   "evidence_sha256": "e84eab3a5b436395a18cc4fd9c5bdb56bfb3ef71cd32ed8eab7f277bc1e83b80",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "unknown",
+   "probed_version": "1.14.0",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "符号代数化简与方程精确求解",
+    "微积分与多项式的符号运算"
+   ],
+   "io": {
+    "inputs": [
+     "symbolic expression or equation in Python"
+    ],
+    "outputs": [
+     "simplified symbolic expression",
+     "exact symbolic solution"
+    ]
+   },
+   "limitations": "Symbolic computer algebra library for exact manipulation of mathematical expressions; it is not a numerical prover and does not verify theorems."
+  },
+  {
+   "id": "tla-tlc",
+   "origin": "native-ref",
+   "capability_ids": [
+    "model.state"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/tla-tlc/receipt.json",
+   "evidence_sha256": "d1697a465bc0c6715dde5a0c23717e75ca5b15a111bfedae13aa5a3e8b184ab2",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "setup",
+    "pos",
+    "neg"
+   ],
+   "declared_version": "1.8.0",
+   "probed_version": "2026.11.06.222357",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": {
+    "declared": "1.8.0",
+    "probed": "2026.11.06.222357",
+    "note": "meta 1.8.0 vs probed TLC2 2026.11.06 rolling build (rev d8fb231) — known non-official rolling jar caveat"
+   },
+   "applicable_problems": [
+    "TLA+规约的状态空间不变式检查",
+    "TLA+行动性质与活性验证",
+    "违反不变式的反例轨迹生成"
+   ],
+   "io": {
+    "inputs": [
+     ".tla TLA+ spec",
+     ".cfg TLC config"
+    ],
+    "outputs": [
+     "counterexample trace",
+     "invariant violation report"
+    ]
+   },
+   "limitations": "Explicit-state enumeration only; exhaustive checking is bounded by state-space explosion and finite (or bounded) models; liveness checking costs extra."
+  },
+  {
+   "id": "tree-sitter",
+   "origin": "candidate",
+   "capability_ids": [
+    "code.syntax"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/tree-sitter/receipt.json",
+   "evidence_sha256": "b6e1890469cc0cb769203f4bd27551ca5644679f28ce2a6f296b0764cee73c15",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg"
+   ],
+   "declared_version": "0.27.2",
+   "probed_version": "0.27.2",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "多语言源代码的语法解析与 AST 构建",
+    "基于查询的代码结构模式提取"
+   ],
+   "io": {
+    "inputs": [
+     "source code file",
+     "grammar definition or S-expression query"
+    ],
+    "outputs": [
+     "concrete syntax tree (AST)",
+     "query match nodes"
+    ]
+   },
+   "limitations": "Incremental parser generator producing concrete syntax trees; it captures only syntactic structure and performs no semantic analysis or type checking."
+  },
+  {
+   "id": "vampire",
+   "origin": "native-ref",
+   "capability_ids": [
+    "proof.deductive"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/vampire/receipt.json",
+   "evidence_sha256": "ce4b2eeafd17a04aa3f2ef7bd2bb268e7e15fe5d3b2a16f675b2427f2a13146d",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg",
+    "err"
+   ],
+   "declared_version": "5.1.0",
+   "probed_version": "5.1.0",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "一阶逻辑定理自动证明与反驳",
+    "TPTP问题求解（FOF/TFF/THF）",
+    "等式推理与符号验证辅助"
+   ],
+   "io": {
+    "inputs": [
+     ".p TPTP problem file (FOF/TFF/THF)"
+    ],
+    "outputs": [
+     "SZS status (e.g. Theorem/Satisfiable)",
+     "TSTP proof derivation (on request)"
+    ]
+   },
+   "limitations": "Vampire proves first-order theorems by refutation; axioms must be given explicitly and it may not terminate on undecidable fragments, with only partial higher-order support."
+  },
+  {
+   "id": "why3",
+   "origin": "candidate",
+   "capability_ids": [
+    "proof.deductive"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/why3/receipt.json",
+   "evidence_sha256": "9a197eca4d25f3468adce3dfe921480ebe5cb325f8c532ee8a0981fdf146f307",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "setup",
+    "pos",
+    "neg"
+   ],
+   "declared_version": "1.8.0",
+   "probed_version": "1.8.0",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "程序验证条件生成与证明器调度",
+    "多定理证明器统一接入与比较"
+   ],
+   "io": {
+    "inputs": [
+     ".mlw WhyML module",
+     ".why pure logic module"
+    ],
+    "outputs": [
+     "verification conditions per goal",
+     "prover results summary with unproved goals flagged"
+    ]
+   },
+   "limitations": "Why3 itself proves nothing; it generates verification conditions and relies on external provers, so soundness depends on those backends and the trusted Why3 kernel."
+  },
+  {
+   "id": "z3",
+   "origin": "native-ref",
+   "capability_ids": [
+    "logic.smt"
+   ],
+   "status": "NATIVE_PROBE_PASS_SCOPED",
+   "evidence_ref": "docs/tool-portfolio/r176/receipts/z3/receipt.json",
+   "evidence_sha256": "96952e8189b49fe19c9b62550981308bd184c95c8a8c8bd0fd222126420201b4",
+   "verify_verdict": "PASS",
+   "verify_phases": [
+    "pos",
+    "neg",
+    "err"
+   ],
+   "declared_version": "5.4.0",
+   "probed_version": "5.4.0",
+   "probe_status": "PROBED",
+   "probe_quality": "EFFECTIVE",
+   "probe_note": null,
+   "container_probe_receipt": null,
+   "version_drift": null,
+   "applicable_problems": [
+    "SMT公式可满足性判定与模型生成",
+    "位向量/数组/线性算术约束求解",
+    "程序验证中的证明义务判定后端"
+   ],
+   "io": {
+    "inputs": [
+     ".smt2 SMT-LIB2 script",
+     ".dimacs CNF formula"
+    ],
+    "outputs": [
+     "sat/unsat/unknown verdict",
+     "satisfying model, unsat core, or proof (on request)"
+    ]
+   },
+   "limitations": "Z3 decides satisfiability of the encoded formula only; it does not check that the encoding faithfully captures the intended mathematical statement."
+  }
+ ]
+}

@@ -1,0 +1,3 @@
+   fast-check/pos: exit=0 dur=109ms matched=1 exit_ok=1 label=PASS (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-fast-check.pos.log)
+   fast-check/neg: exit=0 dur=42ms matched=1 exit_ok=1 label=COUNTEREXAMPLE (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-fast-check.neg.log)
+verify_rc=0

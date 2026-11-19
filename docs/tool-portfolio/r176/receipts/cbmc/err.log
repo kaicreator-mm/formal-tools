@@ -1,0 +1,6 @@
+/opt/formal-tools-portable-debian13-x86_64/tests/cbmc/err.c: In function 'main':
+/opt/formal-tools-portable-debian13-x86_64/tests/cbmc/err.c:2:1: error: syntax error before '{'
+ int main(void { return 0; }
+PARSING ERROR
+
+PHASE_DONE phase=err rc=0

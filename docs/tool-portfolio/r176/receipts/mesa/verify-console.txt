@@ -1,0 +1,3 @@
+   mesa/pos: exit=0 dur=822ms matched=1 exit_ok=1 label=STEPS (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-mesa.pos.log)
+   mesa/neg: exit=0 dur=920ms matched=1 exit_ok=1 label=REFUTED (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-mesa.neg.log)
+verify_rc=0

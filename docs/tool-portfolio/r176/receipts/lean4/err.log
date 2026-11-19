@@ -1,0 +1,3 @@
+/opt/formal-tools-portable-debian13-x86_64/tests/lean4/err.lean:2:30: error(lean.unknownIdentifier): Unknown identifier `no_such_tactic`
+
+PHASE_DONE phase=err rc=0

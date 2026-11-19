@@ -1,0 +1,29 @@
+TLC2 Version 2026.11.06.222357 (rev: d8fb231)
+Running breadth-first search Model-Checking with fp 37 and seed -4177716298989381949 with 1 worker on 16 cores with 14018MB heap and 64MB offheap memory [pid: 3862] (Linux 7.0.0-43-generic amd64, Eclipse Adoptium 21.0.13 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /tmp/ft-D203Tn/neg.tla
+Parsing file /tmp/tlc-12241276846857542380/Integers.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Parsing file /tmp/tlc-12241276846857542380/_TLCTrace.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-12241276846857542380/Naturals.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-12241276846857542380/TLC.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-12241276846857542380/TLCExt.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-12241276846857542380/Sequences.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-12241276846857542380/FiniteSets.tla (jar:file:/opt/formal-tools-portable-debian13-x86_64/tools/tla-tlc/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module neg
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module neg
+Starting... (2026-11-19 02:08:54)
+Computing initial states...
+Error: Invariant BadInv is violated by the initial state:
+x = 0
+
+Finished in 00s at (2026-11-19 02:08:54)
+
+PHASE_DONE phase=neg rc=0

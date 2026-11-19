@@ -1,0 +1,7 @@
+/opt/formal-tools-portable-debian13-x86_64/tests/cvc5/neg.smt2:1.2: No set-logic command was given before this point.
+/opt/formal-tools-portable-debian13-x86_64/tests/cvc5/neg.smt2:1.2: cvc5 will make all theories available.
+/opt/formal-tools-portable-debian13-x86_64/tests/cvc5/neg.smt2:1.2: Consider setting a stricter logic for (likely) better performance.
+/opt/formal-tools-portable-debian13-x86_64/tests/cvc5/neg.smt2:1.2: To suppress this warning in the future use (set-logic ALL).
+unsat
+
+PHASE_DONE phase=neg rc=0

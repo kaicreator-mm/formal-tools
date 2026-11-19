@@ -1,0 +1,3 @@
+   storm/pos: exit=0 dur=103ms matched=1 exit_ok=1 label=PROPERTY_HOLDS (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-storm.pos.log)
+   storm/neg: exit=0 dur=37ms matched=1 exit_ok=1 label=PROPERTY_FAILS (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-storm.neg.log)
+verify_rc=0

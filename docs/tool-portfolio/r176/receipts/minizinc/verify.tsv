@@ -1,0 +1,4 @@
+minizinc	pos	0	128	1	1	SATISFIED
+minizinc	neg	0	80	1	1	UNSATISFIABLE
+minizinc	err	0	51	1	1	ERROR
+verdict	PASS

@@ -1,0 +1,20 @@
+# Usage statistics is OFF. We care about your privacy.
+# If you want to help our project, consider enabling statistics with config --enable-stats=true.
+
+Output directory: /tmp/ft-ZiwcCp/_apalache-out/err.tla/2026-11-19T02-08-10_14002199467720595374
+# APALACHE version: 0.63.0 | build: 67b8ec6                       I@02:08:10.514
+Tuning:                                                           I@02:08:10.521
+PASS #0: SanyParser                                               I@02:08:10.721
+Parsing error: Syntax errors:
+
+*** Errors: 1
+
+In module err
+
+Could not parse module err from file /opt/formal-tools-portable-debian13-x86_64/tests/apalache/err.tla E@02:08:10.780
+Checker has found an error                                        I@02:08:10.808
+It took me 0 days  0 hours  0 min  0 sec                          I@02:08:10.809
+Total time: 0.292 sec                                             I@02:08:10.809
+EXITCODE: ERROR (255)
+
+PHASE_DONE phase=err rc=0

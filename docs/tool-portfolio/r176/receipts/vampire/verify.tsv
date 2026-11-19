@@ -1,0 +1,4 @@
+vampire	pos	0	32	1	1	PROVED
+vampire	neg	0	10	1	1	NOT_PROVED
+vampire	err	0	33	1	1	ERROR
+verdict	PASS

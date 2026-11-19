@@ -1,0 +1,3 @@
+rdf-shacl	pos	0	289	1	1	CONFORMS
+rdf-shacl	neg	0	263	1	1	VIOLATION
+verdict	PASS

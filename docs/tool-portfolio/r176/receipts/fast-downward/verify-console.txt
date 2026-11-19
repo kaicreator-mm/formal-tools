@@ -1,0 +1,3 @@
+   fast-downward/pos: exit=0 dur=187ms matched=1 exit_ok=1 label=PLAN_FOUND (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-fast-downward.pos.log)
+   fast-downward/neg: exit=0 dur=179ms matched=1 exit_ok=1 label=UNSOLVABLE (log: /opt/formal-tools-portable-debian13-x86_64/evidence/verify-fast-downward.neg.log)
+verify_rc=0
