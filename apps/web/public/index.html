@@ -156,7 +156,7 @@
       <p id="environmentLine" class="hint" data-testid="environment-line"></p>
 
       <h2>Evidence</h2>
-      <p class="hint">Raw receipt (JSON, with the exact bounded streams hashed inside) plus per-step stdout/stderr excerpts.</p>
+      <p class="hint">Raw receipt (JSON; its stdout/stderr SHA-256 hashes cover the FULL captured streams) plus per-step log downloads, labeled bounded (≤4 KiB display copy) or verified full stream.</p>
       <div id="evidenceActions" class="evidence-actions" data-testid="evidence-actions"></div>
 
       <div class="actions">

@@ -18,7 +18,9 @@
 //     BLOCKED_PROVIDER. The key travels only in the Authorization header.
 //
 // Security posture:
-//   * binds 127.0.0.1 by default; optional bearer token via FORMAL_WEB_TOKEN
+//   * binds 127.0.0.1 by default; optional bearer token via FORMAL_WEB_TOKEN;
+//     a NON-loopback bind REQUIRES FORMAL_WEB_TOKEN (fail-closed at startup —
+//     anonymous execution beyond loopback is impossible)
 //   * request bodies are capped (413 over the limit); plans are re-validated by the
 //     executor's own validator plus bridge hard caps (422 fail-closed)
 //   * max 2 concurrent runs, per-run wall clock <= 120s (budgets), plan steps <= 8
@@ -28,6 +30,17 @@
 //     (per-run receipts/artifacts) and the executor's own temp workspace is removed
 //     after each run
 //   * no CORS headers at all (same-origin only)
+//
+// Evidence honesty (i180/R2-D): receipt.steps[].stdout_sha256 / stderr_sha256
+// hash the FULL captured streams. The executor's display copies are capped at
+// BOUNDED_BYTES (4096) and the V3 workspace does NOT retain full stream bytes,
+// so persisted log artifacts are always NAMED bounded (logs/<step>.stdout.bounded.txt)
+// with their OWN sha256 in the manifest. A plain-named logs/<step>.stdout.txt
+// ("full-stream") artifact exists only when its bytes verify against the
+// receipt's full-stream hash: either full bytes were retained via the
+// executorCaptureImpl test seam, or the bounded copy is provably the whole
+// stream (< BOUNDED_BYTES). bounded_matches_full_stream is null (never claimed)
+// whenever the two cannot be verified against each other.
 
 import http from 'node:http';
 import crypto from 'node:crypto';
@@ -51,7 +64,12 @@ import {
   WorkflowBlockedError,
   WorkflowPlanError,
 } from '../../packages/runner/js/workflow-executor.mjs';
-import { writeExecutionReceiptArtifacts } from '../../packages/runner/js/workflow-evidence.mjs';
+import {
+  writeExecutionReceiptArtifacts,
+  ARTIFACT_MANIFEST_SCHEMA,
+  BOUNDED_BYTES,
+  sha256Hex,
+} from '../../packages/runner/js/workflow-evidence.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
@@ -76,6 +94,142 @@ const BRIDGE_MAX_ASSUMPTION_CHARS = 256; // executor re-validates at 256
 
 function defaultRunsDir() {
   return path.join(REPO_ROOT, 'apps', 'web-tests', '.runs');
+}
+
+// ---------------------------------------------------------------------------
+// Evidence persistence: bounded copies are labeled, full-stream artifacts are
+// verified against the receipt hashes before they may carry a plain name.
+// ---------------------------------------------------------------------------
+
+const EVIDENCE_LABELING_NOTE =
+  'receipt steps[].stdout_sha256 / stderr_sha256 hash the FULL captured streams. ' +
+  'logs/<step>.<part>.bounded.txt are display copies capped at ' + BOUNDED_BYTES + ' bytes and carry their OWN sha256. ' +
+  'A plain-named logs/<step>.<part>.txt exists only when its bytes were verified against the receipt full-stream hash. ' +
+  'bounded_matches_full_stream=null means the two were NOT verifiable against each other on this host — never claim byte identity across them.';
+
+/**
+ * Persist receipt.json + hash-bound log artifacts + manifest.json under `dir`.
+ *
+ * Splits full vs bounded honestly (i180/R2-D):
+ *   * bounded display copies (<= BOUNDED_BYTES) are ALWAYS persisted and named
+ *     `logs/<step>.<part>.bounded.txt` with their own sha256 + scope
+ *     "bounded-copy" in the manifest;
+ *   * a plain-named `logs/<step>.<part>.txt` (scope "full-stream") is written
+ *     ONLY when its bytes verify against the receipt's full-stream hash —
+ *     from retained full bytes (`fullStreams`, keyed "<step_id>:<part>") or,
+ *     provably, from the bounded copy itself when it is shorter than the cap
+ *     (boundText is the identity below the cap);
+ *   * the manifest maps every stream to its authoritative full-stream hash and
+ *     states `bounded_matches_full_stream: true|false|null` — null when the
+ *     identity cannot be verified (never guessed).
+ *
+ * Re-uses writeExecutionReceiptArtifacts for the canonical receipt.json bytes
+ * and its verified-hash log writing, then relabels its unqualified log names
+ * (its contract only knows bounded copies). Returns the rewritten manifest.
+ */
+export async function persistRunEvidence(dir, receipt, fullStreams = null) {
+  if (receipt === null || typeof receipt !== 'object' || receipt.schema !== 'formal-tools/execution-receipt/1.0') {
+    throw new TypeError('persistRunEvidence requires a built execution receipt');
+  }
+  if (fullStreams !== null && typeof fullStreams !== 'object') {
+    throw new TypeError('fullStreams must be null or a Map keyed "<step_id>:<part>"');
+  }
+  const getFull = (stepId, part) => {
+    if (!fullStreams || typeof fullStreams.get !== 'function') return null;
+    const raw = fullStreams.get(`${stepId}:${part}`);
+    return typeof raw === 'string' ? raw : null;
+  };
+
+  // 1. Bounded raw streams exactly as captured for display (<= BOUNDED_BYTES,
+  //    the writeExecutionReceiptArtifacts contract).
+  const rawStreams = [];
+  const boundedByStream = new Map(); // "<step_id>:<part>" -> bounded string
+  for (const s of receipt.steps) {
+    const stdout = typeof s.stdout_bounded === 'string' ? s.stdout_bounded : '';
+    const stderr = typeof s.stderr_bounded === 'string' ? s.stderr_bounded : '';
+    if (stdout) boundedByStream.set(`${s.step_id}:stdout`, stdout);
+    if (stderr) boundedByStream.set(`${s.step_id}:stderr`, stderr);
+    if (stdout || stderr) rawStreams.push({ step_id: s.step_id, stdout, stderr });
+  }
+  // 2. receipt.json + unqualified bounded logs + base manifest (verified hashes).
+  const base = await writeExecutionReceiptArtifacts(dir, receipt, rawStreams);
+
+  // 3. Relabel: bounded copies get ".bounded.txt"; plain names are reserved for
+  //    verified full-stream bytes. Compute the final artifact list ourselves.
+  const streamEntries = [];
+  const artifacts = [{ name: 'receipt.json', sha256: base.manifest.receipt_sha256, bytes: null }];
+  for (const [key, boundedText] of boundedByStream) {
+    const [stepId, part] = key.split(':');
+    const boundedName = `logs/${stepId}.${part}.bounded.txt`;
+    const fullName = `logs/${stepId}.${part}.txt`;
+    const boundedBuf = Buffer.from(boundedText, 'utf8');
+    const boundedSha = sha256Hex(boundedBuf);
+    const step = receipt.steps.find((st) => st.step_id === stepId);
+    const fullSha = step ? (part === 'stdout' ? step.stdout_sha256 : step.stderr_sha256) : null;
+    if (fullSha === null || fullSha === undefined) {
+      throw new Error(`persistRunEvidence: receipt has a bounded ${part} copy for step "${stepId}" but no ${part}_sha256`);
+    }
+
+    // Rename the module's unqualified bounded log to the honest bounded name.
+    await fsp.rename(path.join(dir, 'logs', `${stepId}.${part}.txt`), path.join(dir, boundedName));
+
+    // Full-stream artifact: only from bytes that VERIFY against the receipt hash.
+    let fullBuf = null;
+    let identity = null;
+    const teed = getFull(stepId, part);
+    if (teed !== null && teed.length > 0) {
+      const buf = Buffer.from(teed, 'utf8');
+      if (sha256Hex(buf) === fullSha) {
+        fullBuf = buf;
+        identity = boundedSha === fullSha;
+      }
+      // else: retained bytes do not match the receipt hash — refuse to publish
+      // them as the full stream (honest degrade to bounded-only, identity null).
+    }
+    if (fullBuf === null && boundedBuf.length < BOUNDED_BYTES && boundedSha === fullSha) {
+      // Provable identity: a display copy shorter than the cap IS the full stream.
+      fullBuf = boundedBuf;
+      identity = true;
+    }
+    if (fullBuf !== null) await fsp.writeFile(path.join(dir, fullName), fullBuf);
+
+    artifacts.push({ name: boundedName, sha256: boundedSha, bytes: boundedBuf.length, scope: 'bounded-copy' });
+    if (fullBuf !== null) {
+      artifacts.push({ name: fullName, sha256: sha256Hex(fullBuf), bytes: fullBuf.length, scope: 'full-stream' });
+    }
+    streamEntries.push({
+      step_id: stepId,
+      stream: part,
+      full_stream_sha256: fullSha,
+      full_stream_bytes_retained: fullBuf !== null,
+      full_artifact: fullBuf !== null ? fullName : null,
+      full_artifact_sha256: fullBuf !== null ? sha256Hex(fullBuf) : null,
+      bounded_artifact: boundedName,
+      bounded_sha256: boundedSha,
+      bounded_bytes: boundedBuf.length,
+      bounded_matches_full_stream: identity,
+    });
+  }
+
+  // 4. Receipt.json byte length for the manifest entry.
+  const receiptBytes = Buffer.from(JSON.stringify(receipt, null, 2) + '\n', 'utf8');
+  artifacts[0].bytes = receiptBytes.length;
+  artifacts.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+
+  // 5. Rewrite the manifest with scope labels + the full-vs-bounded stream map.
+  const manifest = {
+    schema: ARTIFACT_MANIFEST_SCHEMA,
+    run_id: receipt.run_id,
+    plan_id: receipt.plan_id,
+    receipt_sha256: base.manifest.receipt_sha256,
+    stream_cap_bytes: BOUNDED_BYTES,
+    artifacts,
+    streams: streamEntries.sort((a, b) => (a.step_id + a.stream < b.step_id + b.stream ? -1 : 1)),
+    labeling_note: EVIDENCE_LABELING_NOTE,
+  };
+  const manifestBytes = Buffer.from(JSON.stringify(manifest, null, 2) + '\n', 'utf8');
+  await fsp.writeFile(path.join(dir, 'manifest.json'), manifestBytes);
+  return { manifest, receipt_sha256: base.manifest.receipt_sha256 };
 }
 
 // ---------------------------------------------------------------------------
@@ -296,10 +450,27 @@ export function startServer(options = {}) {
     // Environment handed to the executor (preflight + child env). Tests force
     // FORMAL_PORTABLE_ROOT:'' so the fail-closed path is deterministic everywhere.
     executorEnv: options.executorEnv !== undefined ? options.executorEnv : process.env,
+    // Test-only capture seam: (argv, {cwd, timeoutMs, env}) => capture result,
+    // passed straight through to executeWorkflowPlan (the executor's own
+    // injection point). When set, the bridge tees FULL step streams so the
+    // evidence can carry verified full-stream artifacts alongside the bounded
+    // copies. Never set in production: the default executor capture retains
+    // only the bounded copies, and the artifacts stay honestly bounded-only.
+    executorCaptureImpl: typeof options.executorCaptureImpl === 'function' ? options.executorCaptureImpl : null,
     // Test-only: awaited before a run starts executing (stretches wall time for
     // concurrency-cap coverage; receipts are unaffected and fully real).
     testRunGate: options.testRunGate || null,
   };
+
+  // Fail-closed hardening: anonymous execution must be impossible off-loopback.
+  const LOOPBACK_HOSTS = new Set(['127.0.0.1', 'localhost', '::1']);
+  const bindHost = String(opts.host);
+  if (!LOOPBACK_HOSTS.has(bindHost) && !opts.token) {
+    throw new Error(
+      `fail-closed: non-loopback bind (host=${bindHost}) requires FORMAL_WEB_TOKEN. ` +
+      'Anonymous execution beyond 127.0.0.1/localhost/::1 is disabled: set FORMAL_WEB_TOKEN (bearer auth) or bind the loopback interface.',
+    );
+  }
   let ensureRunsDirDone = false;
   const ensureRunsDir = async () => {
     if (!ensureRunsDirDone) {
@@ -394,19 +565,25 @@ export function startServer(options = {}) {
     return streams;
   }
 
-  /** Persist the real receipt + hash-bound artifacts under the runs dir. */
-  async function persistRunArtifacts(runId, receipt) {
-    await ensureRunsDir();
-    const dir = path.join(opts.runsDir, runId);
-    const rawStreams = [];
-    for (const s of receipt.steps) {
-      const stdout = typeof s.stdout_bounded === 'string' ? s.stdout_bounded : '';
-      const stderr = typeof s.stderr_bounded === 'string' ? s.stderr_bounded : '';
-      if (stdout || stderr) rawStreams.push({ step_id: s.step_id, stdout, stderr });
-    }
-    // Re-derives receipt.json + manifest.json + logs/* with verified hashes
-    // (identical bytes to the executor's own workspace artifacts).
-    return writeExecutionReceiptArtifacts(dir, receipt, rawStreams);
+  /**
+   * Test-seam capture wrapper: mirrors the executor's exact stream semantics
+   * (String(p?.stdout ?? '')) and tees the FULL solve-step streams, keyed
+   * "<step_id>:<part>". Step runs are identifiable by argv[1] === 'input.smt2'
+   * with cwd === <workspace>/steps/<step_id>; version probes ('--version') are
+   * not streams of record and are not teed.
+   */
+  function makeTeeingCapture(impl, teed) {
+    return async (argv, runOpts) => {
+      const result = await impl(argv, runOpts);
+      if (Array.isArray(argv) && argv[1] === 'input.smt2' && runOpts && typeof runOpts.cwd === 'string') {
+        const stepId = path.basename(runOpts.cwd);
+        if (/^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$/.test(stepId)) {
+          teed.set(`${stepId}:stdout`, String(result?.stdout ?? ''));
+          teed.set(`${stepId}:stderr`, String(result?.stderr ?? ''));
+        }
+      }
+      return result;
+    };
   }
 
   function startRun(plan) {
@@ -425,6 +602,9 @@ export function startServer(options = {}) {
 
     (async () => {
       if (opts.testRunGate) await opts.testRunGate();
+      // Per-run tee for retained full streams (empty unless the test seam is set).
+      const teedFullStreams = new Map();
+      const captureImpl = opts.executorCaptureImpl ? makeTeeingCapture(opts.executorCaptureImpl, teedFullStreams) : null;
       let outcome;
       try {
         const { receipt, workspaceDir } = await executeWorkflowPlan(plan, {
@@ -432,6 +612,7 @@ export function startServer(options = {}) {
           sourceSha: plan.source.problem_sha256,
           host: '127.0.0.1',
           env: opts.executorEnv,
+          ...(captureImpl ? { captureImpl } : {}),
         });
         outcome = { receipt, workspaceDir };
       } catch (err) {
@@ -449,7 +630,8 @@ export function startServer(options = {}) {
       state.streams = streamsFromReceipt(outcome.receipt);
       state.workspaceDir = outcome.workspaceDir;
       try {
-        await persistRunArtifacts(runId, outcome.receipt);
+        await ensureRunsDir();
+        await persistRunEvidence(path.join(opts.runsDir, runId), outcome.receipt, teedFullStreams);
       } catch (err) {
         console.error(`[formal-web] failed to persist run ${runId}: ${err.message}`);
       }
@@ -509,13 +691,19 @@ export function startServer(options = {}) {
         provider: {
           deepseek: { configured: typeof opts.deepseekApiKey === 'string' && opts.deepseekApiKey.length > 0, model: 'deepseek-chat' },
         },
-        versions: { bridge: '0.6.0', engine: 'workflow-v2+v3', plan_schema: PLAN_SCHEMA, receipt_schema: RECEIPT_SCHEMA },
+        versions: { bridge: '0.7.0', engine: 'workflow-v2+v3', plan_schema: PLAN_SCHEMA, receipt_schema: RECEIPT_SCHEMA },
         caps: {
           body_limit_bytes: opts.bodyLimitBytes,
           max_concurrent_runs: opts.maxConcurrentRuns,
           run_wall_clock_s: BRIDGE_MAX_TOTAL_TIMEOUT_S,
           max_plan_steps: BRIDGE_MAX_STEPS,
           max_step_timeout_s: 120,
+        },
+        evidence: {
+          stream_cap_bytes: BOUNDED_BYTES,
+          full_stream_hashes: 'receipt steps[].stdout_sha256/stderr_sha256 hash the FULL captured streams',
+          artifacts: 'manifest labels each artifact scope "full-stream" (verified against the receipt hash) or "bounded-copy" (display excerpt with its own sha256)',
+          identity_claim: 'bounded_matches_full_stream is true only when verified or provable (< cap); null means never claimed',
         },
         allowlist: Object.fromEntries(Object.entries(TOOL_ALLOWLIST).map(([t, o]) => [t, [o]])),
       });
@@ -636,22 +824,54 @@ export function startServer(options = {}) {
 
       if (part || stepId) {
         if (!part || !['stdout', 'stderr'].includes(part) || !stepId) {
-          return sendError(res, 422, 'EVIDENCE_PART_INVALID', 'fail-closed: per-stream evidence needs ?part=stdout|stderr&step=<step_id> (or ?part=manifest).');
+          return sendError(res, 422, 'EVIDENCE_PART_INVALID', 'fail-closed: per-stream evidence needs ?part=stdout|stderr&step=<step_id>[&scope=full|bounded] (or ?part=manifest).');
         }
-        const bytes = await fsp.readFile(path.join(runDir, 'logs', `${stepId}.${part}.txt`), 'utf8').catch(() => null);
-        if (bytes === null) {
-          const step = state.receipt.steps.find((s) => s.step_id === stepId);
+        const scope = query.get('scope');
+        if (scope !== null && scope !== 'full' && scope !== 'bounded') {
+          return sendError(res, 422, 'EVIDENCE_SCOPE_INVALID', 'fail-closed: scope, when present, must be "full" (verified full-stream bytes) or "bounded" (the <=4096-byte display copy).');
+        }
+        const step = state.receipt.steps.find((s) => s.step_id === stepId);
+        const fullStreamSha = step ? (part === 'stdout' ? step.stdout_sha256 : step.stderr_sha256) : null;
+        const wantFull = scope === null || scope === 'full'; // default prefers full when verified bytes exist
+        const wantBounded = scope === null || scope === 'bounded';
+        const readArtifact = async (rel) => fsp.readFile(path.join(runDir, rel)).catch(() => null);
+
+        let served = null; // { bytes, rel, scopeLabel, filename }
+        if (wantFull) {
+          const bytes = await readArtifact(path.join('logs', `${stepId}.${part}.txt`));
+          if (bytes !== null) {
+            served = { bytes, rel: `logs/${stepId}.${part}.txt`, scopeLabel: 'full-stream', filename: `${part}-${runId}-${stepId}.txt` };
+          }
+        }
+        if (served === null && wantBounded) {
+          const bytes = await readArtifact(path.join('logs', `${stepId}.${part}.bounded.txt`));
+          if (bytes !== null) {
+            served = { bytes, rel: `logs/${stepId}.${part}.bounded.txt`, scopeLabel: 'bounded-copy', filename: `${part}-${runId}-${stepId}.bounded.txt` };
+          }
+        }
+        if (served === null) {
           if (!step) return sendError(res, 404, 'STEP_NOT_FOUND', `fail-closed: no step "${stepId}" in run.`);
+          if (scope === 'full' &&
+              (await readArtifact(path.join('logs', `${stepId}.${part}.bounded.txt`))) !== null) {
+            return sendError(res, 404, 'ARTIFACT_NOT_FOUND',
+              `fail-closed: full ${part} bytes were not retained for step "${stepId}" on this host; ` +
+              `only the bounded <=${BOUNDED_BYTES}-byte display copy exists (scope=bounded). ` +
+              `The receipt's ${part}_sha256 (${fullStreamSha || 'unavailable'}) hashes the full stream.`);
+          }
           return sendError(res, 404, 'ARTIFACT_NOT_FOUND', `fail-closed: step "${stepId}" never produced a ${part} stream on this host (status ${step.status}); no log artifact exists.`);
         }
         res.writeHead(200, {
           'Content-Type': 'text/plain; charset=utf-8',
-          'Content-Length': Buffer.byteLength(bytes),
-          'Content-Disposition': `attachment; filename="${part}-${runId}-${stepId}.txt"`,
+          'Content-Length': served.bytes.length,
+          'Content-Disposition': `attachment; filename="${served.filename}"`,
           'X-Content-Type-Options': 'nosniff',
           'Cache-Control': 'no-store',
+          'X-Formal-Evidence-Scope': served.scopeLabel,
+          // The receipt's hash over the FULL captured stream — authoritative and
+          // distinct from the served artifact's own bytes when scope is bounded-copy.
+          'X-Formal-Full-Stream-Sha256': fullStreamSha || 'unavailable',
         });
-        return res.end(bytes);
+        return res.end(served.bytes);
       }
 
       // full receipt: the real persisted receipt.json bytes
@@ -714,7 +934,8 @@ export function startServer(options = {}) {
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
   const port = Number(process.env.PORT || 8788);
-  startServer({ port }).then(({ port: actual }) => {
+  const host = process.env.HOST || '127.0.0.1'; // non-loopback HOST requires FORMAL_WEB_TOKEN (fail-closed in startServer)
+  startServer({ host, port }).then(({ port: actual }) => {
     console.log(`[formal-web] UI: http://127.0.0.1:${actual}/  (engine=workflow-v2+v3, mocked_contracts=false)`);
   });
 }

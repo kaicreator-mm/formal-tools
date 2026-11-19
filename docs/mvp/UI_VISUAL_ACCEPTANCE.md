@@ -99,3 +99,66 @@ of the live running app; DOM snapshots were verified around every interaction.
 The mocked-engine round (V5-a, PR #191) evidence lives in git history
 (`docs/mvp/UI_VISUAL_ACCEPTANCE.md` @ `5a9085e`); its `[SIMULATED]` walkthroughs are
 obsolete now that the real engine is wired and the mock artifacts were removed.
+
+## R2-D addendum (2026-11-19, branch `i180/r2-web-evidence`) — full-stream vs bounded evidence hashes, honestly separated
+
+OUTPUT_LABEL=FORMAL_TOOLS_I180_R2_WEB_EVIDENCE · base `80a0a07` · review item: P2
+"output evidence clarity" (independent review, #185 comment 7010610614 item 5).
+
+**Diagnosis (reproduced deterministically before the fix).** The receipt's
+`steps[].stdout_sha256`/`stderr_sha256` hash the **FULL** captured streams, while the
+persisted log artifacts were built from `stdout_bounded`/`stderr_bounded`
+(`BOUNDED_BYTES = 4096` display copies). For a synthetic 8197-byte stdout the old
+persistence wrote `logs/<step>.stdout.txt` containing 4096 bytes whose manifest sha256
+(`9ce9834d…`) silently mismatched the receipt's full-stream hash (`50cdfe43…`) — with
+nothing in the file name or manifest labeling the truncation, so a verifier comparing
+artifact against receipt hash saw an unexplained mismatch and a downloader got an
+unlabeled excerpt. The V3 executor's own workspace artifacts are equally bounded and
+the workspace does NOT retain full stream bytes anywhere, so after a run the full bytes
+were unrecoverable. Existing short-output (≤4 KiB) proofs were and remain valid:
+below the cap the bounded copy IS the full stream.
+
+**Fix (evidence honesty, no engine changes).**
+1. Bounded copies are now persisted as `logs/<step>.<part>.bounded.txt` with their OWN
+   sha256 and `scope:"bounded-copy"` in the manifest.
+2. A plain-named `logs/<step>.<part>.txt` (`scope:"full-stream"`) is written ONLY when
+   its bytes verify against the receipt's full-stream hash — from retained full bytes
+   (test-only `executorCaptureImpl` tee) or provably from a bounded copy shorter than
+   the cap. The manifest carries a `streams[]` map binding each stream to its
+   authoritative full-stream hash plus `bounded_matches_full_stream: true|false|null`
+   (null = not verifiable on this host, never claimed) and an explicit
+   `labeling_note` ("never claim byte identity across them").
+3. The evidence endpoint serves the full bytes when retained (default) and otherwise
+   the labeled bounded copy; `&scope=full|bounded` selects explicitly; response headers
+   `X-Formal-Evidence-Scope` + `X-Formal-Full-Stream-Sha256` keep the two hashes
+   distinct; `scope=full` without retained bytes 404s with an honest explanation.
+4. UI evidence list shows both hashes labeled ("full-stream SHA-256 … (over the FULL
+   captured stream)" vs "bounded copy SHA-256 … (verified identical / TRUNCATED
+   prefix / not verified on this host)") with distinct download links; no identity is
+   claimed that does not hold. Screenshot:
+   `apps/web-tests/artifacts/r2-full-vs-bounded-evidence.png` (results screen of a real
+   >4 KiB-output run through the capture seam).
+5. Non-loopback hardening (same review, item 6): a bind host other than
+   `127.0.0.1`/`localhost`/`::1` now REQUIRES `FORMAL_WEB_TOKEN` — `startServer` throws
+   at startup otherwise; `HOST` env added to the main entry (default unchanged
+   `127.0.0.1`). Tests: non-loopback without token refuses to start; with token,
+   unauthenticated request → 401.
+
+**Proof (deterministic, any machine, no solver binaries needed).** A REAL
+`executeWorkflowPlan` run through the HTTP bridge whose process capture is stubbed via
+the executor's own `captureImpl` injection (bridge test seam `executorCaptureImpl`;
+plan/preflight/receipt/bounded-copy/persistence all fully real) produces a 9005-byte
+stdout: the plain-named artifact's sha256 equals `receipt.steps[].stdout_sha256`, the
+bounded artifact differs and is labeled, the endpoint serves the full 9005 bytes by
+default and the 4096-byte labeled copy under `scope=bounded`, and deleting the full
+artifact (simulating the default-capture production state) yields the honest bounded
+fallback + 404 with explanation. All asserted in `apps/web-tests/api.test.mjs`
+(describes "full-vs-bounded evidence hashes" and "persistRunEvidence"). 41/41 green.
+
+**Honest gaps:** the >4 KiB bounded-only HTTP path is exercised by removing the full
+artifact in the test (the default capture never retains full bytes, so that state has
+no other deterministic producer on a binary-less machine); the teed capture seam covers
+solve-smt steps only (the solve-lp portfolio path does not route through `captureImpl`,
+so LP streams stay bounded-only with `bounded_matches_full_stream: null` — correct, just
+not verifiable); browser download materialization still verified over HTTP headers +
+API tests (IAB sandbox limitation unchanged from V5-b).

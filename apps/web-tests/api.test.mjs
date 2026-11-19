@@ -7,7 +7,23 @@
 // the receipt is ABORTED with fail_closed_reason=BLOCKED_TOOL_MISSING. That is
 // the real fail-closed behavior of a binary-less machine — asserted here as
 // such, never simulated. The real-solver happy path is exercised on the
-// trusted tool host (V6).
+// trusted tool host (V6) — and, deterministically on any machine, through the
+// executorCaptureImpl test seam below (a REAL executeWorkflowPlan run whose
+// process capture is stubbed; the receipt/artifacts are fully real).
+//
+// i180/R2-D diagnosis (verified by the full-vs-bounded describe below): the
+// receipt's steps[].stdout_sha256/stderr_sha256 hash the FULL captured
+// streams, while persisted log artifacts come from stdout_bounded/stderr_bounded
+// (BOUNDED_BYTES=4096 display copies). For an 8197-byte stdout the old
+// persistence wrote logs/<step>.stdout.txt with 4096 bytes whose sha256
+// (9ce9834d…) silently mismatched the receipt's full-stream hash (50cdfe43…)
+// with nothing in the name or manifest labeling the truncation. The fix:
+// bounded copies are named *.bounded.txt with their own manifest sha256 and
+// scope "bounded-copy"; a plain-named logs/<step>.<part>.txt (scope
+// "full-stream") is written only when its bytes verify against the receipt's
+// full-stream hash (retained full bytes via the test seam, or a provably
+// complete bounded copy < BOUNDED_BYTES). bounded_matches_full_stream is
+// null — never claimed — when the two cannot be verified against each other.
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { promises as fsp } from 'node:fs';
@@ -15,13 +31,14 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import os from 'node:os';
 
-import { startServer } from '../web/server.mjs';
+import { startServer, persistRunEvidence } from '../web/server.mjs';
 import {
   validateExecutionPlan,
   sha256Canonical,
   normalizeUserProblem,
 } from '../../packages/runner/js/workflow-plan.mjs';
 import { compilePlan } from '../../packages/runner/js/workflow-compiler.mjs';
+import { buildExecutionReceipt, sha256Hex, BOUNDED_BYTES } from '../../packages/runner/js/workflow-evidence.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PLAN_SCHEMA = 'formal-tools/execution-plan/1.0';
@@ -530,6 +547,294 @@ describe('GET /api/runs/:id/evidence (real artifact downloads)', () => {
     assert.equal((await unknownStep.json()).error.code, 'STEP_NOT_FOUND');
     const none = await fetch(`${base.origin}/api/runs/run-does-not-exist/evidence`);
     assert.equal(none.status, 404);
+  });
+});
+
+// --- full-stream vs bounded evidence (>4KiB, i180/R2-D) -----------------------
+// Deterministic proof on any machine: a REAL executeWorkflowPlan run through
+// the HTTP bridge whose process capture is stubbed via the executor's own
+// captureImpl injection (exposed by the bridge as the executorCaptureImpl test
+// seam). The plan, preflight, receipt builder, bounded copies and artifact
+// persistence are all fully real; only the solver process bytes are stubbed,
+// deterministically >4KiB. The bridge tees those full bytes so the evidence
+// can carry VERIFIED full-stream artifacts next to the bounded copies.
+describe('full-vs-bounded evidence hashes (>4KiB real engine run via capture seam)', () => {
+  const BIG_STDOUT = 'sat\n' + 'x'.repeat(9000) + '\n'; // 9005 bytes > BOUNDED_BYTES
+  const SHORT_STDERR = 'stub wrote a short warning\n';
+  const VERSION_STDOUT = 'z3 4.12.1 teed-stub\n';
+  let teed; // server with the capture seam + a fake portable bundle layout
+  let teedRunsDir;
+  let bundleRoot;
+
+  const stubCapture = async (argv) => ({
+    exit_code: 0,
+    signal: null,
+    timed_out: false,
+    output_limit: false,
+    error: null,
+    elapsed_ms: 1,
+    stdout: argv[1] === '--version' ? VERSION_STDOUT : BIG_STDOUT,
+    stderr: argv[1] === '--version' ? '' : SHORT_STDERR,
+  });
+
+  before(async () => {
+    bundleRoot = await fsp.mkdtemp(path.join(os.tmpdir(), 'formal-fake-bundle-'));
+    // Only existence is checked in preflight; the stub capture means nothing
+    // is ever executed from these files.
+    for (const tool of ['z3', 'cvc5']) {
+      await fsp.mkdir(path.join(bundleRoot, 'tools', tool, 'bin'), { recursive: true });
+      await fsp.writeFile(path.join(bundleRoot, 'tools', tool, 'bin', tool), 'not-executed-capture-is-stubbed\n');
+    }
+    teedRunsDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'formal-web-test-teed-runs-'));
+    teed = await start({
+      runsDir: teedRunsDir,
+      executorEnv: { ...process.env, FORMAL_PORTABLE_ROOT: bundleRoot },
+      executorCaptureImpl: stubCapture,
+    });
+  });
+
+  after(async () => {
+    if (teed) await new Promise((r) => teed.server.close(r));
+    await fsp.rm(teedRunsDir, { recursive: true, force: true }).catch(() => {});
+    await fsp.rm(bundleRoot, { recursive: true, force: true }).catch(() => {});
+  });
+
+  async function completedTeedRun() {
+    const { plan } = await makePlan(teed.origin, SMT_SAT);
+    const { body: started } = await postJson(teed.origin, '/api/runs', { plan });
+    const view = await waitForRun(teed.origin, started.run_id);
+    return { runId: started.run_id, view, plan };
+  }
+
+  test('real engine run with >4KiB stdout completes honestly (no truncation lies in the receipt)', async () => {
+    const { runId, view } = await completedTeedRun();
+    teed.bigRunId = runId;
+    assert.equal(view.status, 'complete');
+    const r = view.receipt;
+    // REAL receipts: hashes over the FULL stubbed streams
+    assert.equal(r.steps[0].stdout_sha256, sha256Hex(BIG_STDOUT), 'stdout_sha256 is the FULL-stream hash');
+    assert.equal(r.steps[0].stderr_sha256, sha256Hex(SHORT_STDERR));
+    assert.ok(Buffer.byteLength(r.steps[0].stdout_bounded, 'utf8') === BOUNDED_BYTES, 'display copy is capped at 4096 bytes');
+    // the run is genuinely EXECUTED by the engine: z3 + cvc5 both "sat" -> real
+    // verdict layering (AGREE_SAT / PASS), not a fail-closed stub receipt
+    assert.equal(r.overall.process_outcome, 'OK');
+    assert.equal(r.overall.cross_tool_verdict, 'AGREE_SAT');
+    assert.equal(r.overall.claim_verdict, 'PASS');
+    assert.equal(r.tool_versions.z3.version, 'z3 4.12.1 teed-stub');
+  });
+
+  test('runs dir: full artifact hash == receipt stdout_sha256; bounded artifact differs and is labeled', async () => {
+    const { createHash } = await import('node:crypto');
+    const runDir = path.join(teedRunsDir, teed.bigRunId);
+    const view = await (await fetch(`${teed.origin}/api/runs/${teed.bigRunId}`)).json();
+    const fullSha = view.receipt.steps[0].stdout_sha256;
+
+    const fullBytes = await fsp.readFile(path.join(runDir, 'logs', 'step-z3.stdout.txt'));
+    assert.equal(fullBytes.toString('utf8'), BIG_STDOUT, 'plain-named artifact holds the FULL stream bytes');
+    assert.equal(createHash('sha256').update(fullBytes).digest('hex'), fullSha, 'full artifact hash == receipt full-stream hash');
+
+    const boundedBytes = await fsp.readFile(path.join(runDir, 'logs', 'step-z3.stdout.bounded.txt'));
+    assert.equal(boundedBytes.length, BOUNDED_BYTES, 'bounded copy is exactly the 4096-byte cap');
+    assert.notEqual(createHash('sha256').update(boundedBytes).digest('hex'), fullSha, 'bounded hash differs from full-stream hash for >4KiB output');
+
+    const manifest = JSON.parse(await fsp.readFile(path.join(runDir, 'manifest.json'), 'utf8'));
+    assert.equal(manifest.schema, ARTIFACT_MANIFEST_SCHEMA);
+    assert.equal(manifest.stream_cap_bytes, BOUNDED_BYTES);
+    const fullEntry = manifest.artifacts.find((a) => a.name === 'logs/step-z3.stdout.txt');
+    const boundedEntry = manifest.artifacts.find((a) => a.name === 'logs/step-z3.stdout.bounded.txt');
+    assert.equal(fullEntry.scope, 'full-stream');
+    assert.equal(fullEntry.sha256, fullSha);
+    assert.equal(boundedEntry.scope, 'bounded-copy');
+    assert.notEqual(boundedEntry.sha256, fullEntry.sha256);
+
+    const sOut = manifest.streams.find((s) => s.step_id === 'step-z3' && s.stream === 'stdout');
+    assert.equal(sOut.full_stream_sha256, fullSha);
+    assert.equal(sOut.full_artifact, 'logs/step-z3.stdout.txt');
+    assert.equal(sOut.full_artifact_sha256, fullSha);
+    assert.equal(sOut.bounded_artifact, 'logs/step-z3.stdout.bounded.txt');
+    assert.equal(sOut.bounded_matches_full_stream, false, 'truncation is stated, never hidden');
+    const sErr = manifest.streams.find((s) => s.step_id === 'step-z3' && s.stream === 'stderr');
+    assert.equal(sErr.bounded_matches_full_stream, true, 'short stream: bounded copy verified identical');
+    assert.ok(!manifest.streams.some((s) => s.step_id === 'step-agree'), 'no streams invented for the compare step');
+    assert.match(manifest.labeling_note, /never claim byte identity/);
+  });
+
+  test('evidence endpoint: default serves the FULL bytes; scope=bounded serves the labeled copy', async () => {
+    const runId = teed.bigRunId;
+    const view = await (await fetch(`${teed.origin}/api/runs/${runId}`)).json();
+    const fullSha = view.receipt.steps[0].stdout_sha256;
+
+    const fullRes = await fetch(`${teed.origin}/api/runs/${runId}/evidence?part=stdout&step=step-z3`);
+    assert.equal(fullRes.status, 200);
+    assert.equal(fullRes.headers.get('x-formal-evidence-scope'), 'full-stream');
+    assert.equal(fullRes.headers.get('x-formal-full-stream-sha256'), fullSha);
+    assert.match(fullRes.headers.get('content-disposition'), /stdout-.*-step-z3\.txt/);
+    const fullText = await fullRes.text();
+    assert.ok(fullText.length > BOUNDED_BYTES, 'default download is NOT the truncated copy');
+    assert.equal(fullText, BIG_STDOUT);
+
+    const boundedRes = await fetch(`${teed.origin}/api/runs/${runId}/evidence?part=stdout&step=step-z3&scope=bounded`);
+    assert.equal(boundedRes.status, 200);
+    assert.equal(boundedRes.headers.get('x-formal-evidence-scope'), 'bounded-copy');
+    assert.equal(boundedRes.headers.get('x-formal-full-stream-sha256'), fullSha, 'receipt full-stream SHA disclosed alongside the bounded copy');
+    assert.match(boundedRes.headers.get('content-disposition'), /stdout-.*-step-z3\.bounded\.txt/);
+    const boundedText = await boundedRes.text();
+    assert.equal(Buffer.byteLength(boundedText, 'utf8'), BOUNDED_BYTES);
+    assert.equal(boundedText, view.receipt.steps[0].stdout_bounded);
+    assert.notEqual(boundedText, fullText);
+
+    const badScope = await fetch(`${teed.origin}/api/runs/${runId}/evidence?part=stdout&step=step-z3&scope=nope`);
+    assert.equal(badScope.status, 422);
+    assert.equal((await badScope.json()).error.code, 'EVIDENCE_SCOPE_INVALID');
+  });
+
+  test('bounded-only production path: without retained full bytes the endpoint is honestly scoped (no false identity)', async () => {
+    const runId = teed.bigRunId;
+    const runDir = path.join(teedRunsDir, runId);
+    const view = await (await fetch(`${teed.origin}/api/runs/${runId}`)).json();
+    const fullSha = view.receipt.steps[0].stdout_sha256;
+    // Simulate the default-capture production state (full bytes never retained):
+    // remove the verified full artifact, keep the bounded copy.
+    await fsp.unlink(path.join(runDir, 'logs', 'step-cvc5.stdout.txt'));
+
+    const defRes = await fetch(`${teed.origin}/api/runs/${runId}/evidence?part=stdout&step=step-cvc5`);
+    assert.equal(defRes.status, 200);
+    assert.equal(defRes.headers.get('x-formal-evidence-scope'), 'bounded-copy', 'falls back to the bounded copy, labeled as such');
+    assert.equal(defRes.headers.get('x-formal-full-stream-sha256'), fullSha);
+    assert.match(defRes.headers.get('content-disposition'), /step-cvc5\.bounded\.txt/);
+    assert.equal(Buffer.byteLength(await defRes.text(), 'utf8'), BOUNDED_BYTES);
+
+    const fullRes = await fetch(`${teed.origin}/api/runs/${runId}/evidence?part=stdout&step=step-cvc5&scope=full`);
+    assert.equal(fullRes.status, 404);
+    const body = await fullRes.json();
+    assert.equal(body.error.code, 'ARTIFACT_NOT_FOUND');
+    assert.match(body.error.message, /full stdout bytes were not retained/);
+    assert.match(body.error.message, /hashes the full stream/);
+  });
+});
+
+// --- persistence unit proof: synthetic receipts through persistRunEvidence ----
+describe('persistRunEvidence (synthetic receipts, deterministic file-level proof)', () => {
+  function syntheticReceipt({ boundedStdout, fullStdoutSha, stepId = 'step-s' }) {
+    const plan = {
+      schema: 'formal-tools/execution-plan/1.0',
+      plan_id: 'wf-' + 'a'.repeat(32),
+      source: { problem_sha256: 'b'.repeat(64), problem_kind: 'smt2' },
+      assumptions: ['a'],
+      method_dag: [],
+      budgets: { max_steps: 8, max_total_timeout_s: 120 },
+      compiled: { launcher_sha256: null, manifest_sha256: null },
+      steps: [{
+        id: stepId, tool: 'z3', operation: 'solve-smt', depends_on: [],
+        input: { smt_lib: '(check-sat)' }, input_sha256: 'c'.repeat(64),
+        timeout_s: 30, expected_output_kind: 'smt-answer',
+      }],
+    };
+    return buildExecutionReceipt({
+      plan,
+      plan_sha256: 'd'.repeat(64),
+      steps: [{
+        step_id: stepId, tool: 'z3', operation: 'solve-smt', status: 'EXECUTED',
+        exit_code: 0, elapsed_ms: 5,
+        stdout_sha256: fullStdoutSha, stderr_sha256: null,
+        stdout_bounded: boundedStdout, stderr_bounded: null,
+        result: { answer: 'sat' }, artifacts: [],
+      }],
+      tool_versions: {},
+      fail_closed_reason: null,
+      aborted: false,
+      run_id: 'run-synth-' + stepId,
+      source_sha: null,
+      created_at: '2026-01-01T00:00:00Z',
+      environment: { host: '127.0.0.1', node: process.version, formal_portable_root_sha: null },
+    });
+  }
+
+  test('>4096 bounded-only receipt: only the labeled bounded artifact exists; identity NOT claimed', async () => {
+    const fullSha = sha256Hex(Buffer.from('sat\n' + 'x'.repeat(9000) + '\n', 'utf8'));
+    const receipt = syntheticReceipt({ boundedStdout: 'y'.repeat(BOUNDED_BYTES), fullStdoutSha: fullSha });
+    const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'formal-synth-'));
+    try {
+      const { manifest } = await persistRunEvidence(dir, receipt, null);
+      await assert.rejects(fsp.readFile(path.join(dir, 'logs', 'step-s.stdout.txt')), /ENOENT/,
+        'no plain-named artifact may exist without verified full bytes');
+      const boundedBytes = await fsp.readFile(path.join(dir, 'logs', 'step-s.stdout.bounded.txt'));
+      assert.equal(boundedBytes.length, BOUNDED_BYTES);
+      const entry = manifest.artifacts.find((a) => a.name === 'logs/step-s.stdout.bounded.txt');
+      assert.equal(entry.scope, 'bounded-copy');
+      assert.equal(entry.sha256, sha256Hex(boundedBytes), 'bounded artifact carries its OWN hash');
+      assert.ok(!manifest.artifacts.some((a) => a.name === 'logs/step-s.stdout.txt'));
+      const s = manifest.streams[0];
+      assert.equal(s.full_stream_sha256, fullSha, 'authoritative full-stream hash still disclosed');
+      assert.equal(s.full_stream_bytes_retained, false);
+      assert.equal(s.full_artifact, null);
+      assert.equal(s.bounded_matches_full_stream, null, 'identity is not claimable and is not claimed');
+      assert.ok(manifest.artifacts.every((a) => a.name === 'receipt.json' || a.scope));
+    } finally {
+      await fsp.rm(dir, { recursive: true, force: true }).catch(() => {});
+    }
+  });
+
+  test('short output: bounded copy is provably the full stream — full artifact written and verified against the receipt hash', async () => {
+    const receipt = syntheticReceipt({ boundedStdout: 'sat\n', fullStdoutSha: sha256Hex('sat\n') });
+    const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'formal-synth-'));
+    try {
+      const { manifest } = await persistRunEvidence(dir, receipt, null);
+      const fullBytes = await fsp.readFile(path.join(dir, 'logs', 'step-s.stdout.txt'));
+      assert.equal(fullBytes.toString('utf8'), 'sat\n');
+      const fullEntry = manifest.artifacts.find((a) => a.name === 'logs/step-s.stdout.txt');
+      assert.equal(fullEntry.scope, 'full-stream');
+      assert.equal(fullEntry.sha256, receipt.steps[0].stdout_sha256, 'manifest full-artifact hash == receipt.stdout_sha256');
+      assert.equal(manifest.streams[0].bounded_matches_full_stream, true, 'verified identity below the cap');
+    } finally {
+      await fsp.rm(dir, { recursive: true, force: true }).catch(() => {});
+    }
+  });
+
+  test('retained-but-mismatched full bytes are refused; provable bounded identity still wins', async () => {
+    const receipt = syntheticReceipt({ boundedStdout: 'sat\n', fullStdoutSha: sha256Hex('sat\n') });
+    const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'formal-synth-'));
+    try {
+      const badTee = new Map([['step-s:stdout', 'TAMPERED-BYTES']]);
+      const { manifest } = await persistRunEvidence(dir, receipt, badTee);
+      const fullBytes = await fsp.readFile(path.join(dir, 'logs', 'step-s.stdout.txt'));
+      assert.equal(fullBytes.toString('utf8'), 'sat\n', 'unverifiable tee bytes are never published as the full stream');
+      assert.equal(manifest.streams[0].bounded_matches_full_stream, true);
+    } finally {
+      await fsp.rm(dir, { recursive: true, force: true }).catch(() => {});
+    }
+  });
+});
+
+// --- non-loopback hardening (fail-closed bind) --------------------------------
+describe('non-loopback bind requires FORMAL_WEB_TOKEN (fail closed at startup)', () => {
+  test('0.0.0.0 without token refuses to start', () => {
+    assert.throws(
+      () => startServer({ host: '0.0.0.0', port: 0, runsDir, executorEnv: BLOCKED_ENV }),
+      /non-loopback bind \(host=0\.0\.0\.0\) requires FORMAL_WEB_TOKEN/,
+    );
+  });
+
+  test('non-loopback with token starts; unauthenticated request -> 401', async () => {
+    const handle = await startServer({ host: '0.0.0.0', port: 0, token: 'nl-token', runsDir, executorEnv: BLOCKED_ENV });
+    try {
+      const origin = `http://127.0.0.1:${handle.port}`;
+      const denied = await fetch(`${origin}/api/runs/some-run`);
+      assert.equal(denied.status, 401);
+      assert.equal((await denied.json()).error.code, 'UNAUTHORIZED');
+      const ok = await fetch(`${origin}/api/runs/some-run`, { headers: { Authorization: 'Bearer nl-token' } });
+      assert.equal(ok.status, 404, 'auth passes; the run itself is unknown');
+      const meta = await jget(origin, '/api/meta');
+      assert.equal(meta.res.status, 200, 'meta stays public');
+      assert.equal(meta.body.mode, 'token-auth');
+    } finally {
+      await new Promise((r) => handle.server.close(r));
+    }
+  });
+
+  test('loopback hosts stay allowed without a token (default posture unchanged)', async () => {
+    const handle = await startServer({ host: 'localhost', port: 0, runsDir, executorEnv: BLOCKED_ENV });
+    await new Promise((r) => handle.server.close(r));
   });
 });
 

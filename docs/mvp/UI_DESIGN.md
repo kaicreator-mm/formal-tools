@@ -185,18 +185,21 @@ Error states = inline `role="status"` text with error tone + fail-closed banner.
 
 ## 6. API surface (bounded trusted bridge, `apps/web/server.mjs`)
 
-Transport: same-origin HTTP on `127.0.0.1` (default port 8788, env `PORT`). Auth: optional
-`FORMAL_WEB_TOKEN` — when set, every `/api/*` route except `/api/meta` requires
-`Authorization: Bearer <token>` (401 missing / 403 wrong). No CORS headers are emitted
-(same-origin only). Bodies capped at 1 MB (413). Static files served from a whitelist only.
+Transport: same-origin HTTP on `127.0.0.1` (default port 8788, env `PORT`; env `HOST`
+rebinds, but any non-loopback bind **requires** `FORMAL_WEB_TOKEN` — `startServer`
+throws at startup otherwise, so anonymous execution beyond loopback is impossible).
+Auth: optional `FORMAL_WEB_TOKEN` — when set, every `/api/*` route except `/api/meta`
+requires `Authorization: Bearer <token>` (401 missing / 403 wrong). No CORS headers are
+emitted (same-origin only). Bodies capped at 1 MB (413). Static files served from a
+whitelist only.
 
 | Method+Path | Auth | Request | Response |
 |---|---|---|---|
-| `GET /api/meta` | none | — | `{mode:"local-only"|"token-auth", mocked_contracts:false, engine:{kind:"workflow-engine-v2-v3", real:true, planner, executor, note}, provider:{deepseek:{configured,model}}, versions:{bridge,engine,plan_schema,receipt_schema}, caps:{body_limit_bytes,max_concurrent_runs,run_wall_clock_s,max_plan_steps,max_step_timeout_s}, allowlist}` |
+| `GET /api/meta` | none | — | `{mode:"local-only"|"token-auth", mocked_contracts:false, engine:{kind:"workflow-engine-v2-v3", real:true, planner, executor, note}, provider:{deepseek:{configured,model}}, versions:{bridge,engine,plan_schema,receipt_schema}, caps:{body_limit_bytes,max_concurrent_runs,run_wall_clock_s,max_plan_steps,max_step_timeout_s}, evidence:{stream_cap_bytes,full_stream_hashes,artifacts,identity_claim}, allowlist}` |
 | `POST /api/plan` | bearer (if set) | `{problem_text:string, assumptions?:string[], provider?:"deepseek"}` | `{plan:<ExecutionPlan 1.0 with real compiled hashes>, plan_source:{kind:"deterministic-template",template} \| {kind:"deepseek",provider,model,method_sha256}}` · 422 fail-closed codes: `EMPTY_PROBLEM`, `UNSUPPORTED_PROBLEM`, `MALFORMED_LP_JSON`, `UNSUPPORTED_LP_MODEL`, `INVALID_ASSUMPTIONS`, `MISSING_PROBLEM`, `INVALID_PROVIDER`, `BLOCKED_PROVIDER` (no key), `PLAN_OVERSIZED`, `PLAN_INPUT_INVALID`, `PLAN_METHOD_INVALID` · 502 `PROVIDER_FAILED` (provider transport, details carry only status/reason — never the key) |
 | `POST /api/runs` | bearer (if set) | `{plan:<ExecutionPlan>}` | `{run_id, status:"running", poll}` · bridge hard caps then the **executor's own re-validation** (identical codes): `PLAN_BUDGET_EXCEEDED`, `PLAN_TOOL_NOT_ALLOWED`, `PLAN_OPERATION_MISMATCH`, `PLAN_HASH_MISMATCH`, `PLAN_SCHEMA_INVALID`, `PLAN_CYCLE`, `PLAN_TIMEOUT_INVALID`, `PLAN_EXPECTED_KIND_INVALID`, `PLAN_INPUT_INVALID`, … · 429 `CONCURRENCY_LIMIT` when 2 runs active |
 | `GET /api/runs/:id` | bearer (if set) | — | `{run_id, plan_id, status, created_at, engine:"workflow-v2+v3", plan_summary, step_states, receipt:<ExecutionReceipt 1.0, null while running>, streams:{step:{stdout,stderr}}}` · 404 `RUN_NOT_FOUND` |
-| `GET /api/runs/:id/evidence` | bearer (if set) | optional `?part=manifest` or `?part=stdout\|stderr&step=<id>` | full: **the persisted real `receipt.json` bytes** as `attachment; filename="receipt-<run_id>.json"` · `?part=manifest`: hash-bound artifact manifest `attachment; filename="manifest-<run_id>.json"` · per-stream log artifact: `attachment; filename="<part>-<run_id>-<step>.txt"` (404 `ARTIFACT_NOT_FOUND` when the step never produced a stream) · 404/409/422 codes as applicable |
+| `GET /api/runs/:id/evidence` | bearer (if set) | optional `?part=manifest` or `?part=stdout\|stderr&step=<id>[&scope=full\|bounded]` | full: **the persisted real `receipt.json` bytes** as `attachment; filename="receipt-<run_id>.json"` · `?part=manifest`: hash-bound artifact manifest `attachment; filename="manifest-<run_id>.json"` — artifacts carry `scope:"full-stream"\|"bounded-copy"` and a `streams[]` map binding each step/stream to the receipt's authoritative **full-stream** sha256 plus the bounded copy's own sha256 and `bounded_matches_full_stream: true\|false\|null` (null = not verifiable, never claimed) · per-stream log download: defaults to the verified full-stream bytes when retained, else the bounded copy; `scope=bounded` forces the ≤4 KiB display copy, `scope=full` 404s honestly when full bytes were not retained · headers `X-Formal-Evidence-Scope: full-stream\|bounded-copy` + `X-Formal-Full-Stream-Sha256` (receipt hash over the FULL captured stream, distinct from the served artifact's own hash) · filenames `"<part>-<run_id>-<step>.txt"` (full) / `"<part>-<run_id>-<step>.bounded.txt"` (bounded) · 404 `ARTIFACT_NOT_FOUND` / 422 `EVIDENCE_PART_INVALID`+`EVIDENCE_SCOPE_INVALID` / 409 while running |
 
 Hard caps (enforced server-side, mirrored by the engine): body ≤ 1,000,000 bytes (413);
 ≤ 2 concurrent runs (429); run wall clock ≤ 120s (plan budgets); plan steps ≤ 8;
@@ -204,9 +207,10 @@ per-step `timeout_s` ≤ 120; tools allowlist `z3/cvc5 → solve-smt`, `highs �
 `compare → cross-check`; `input_sha256` = `sha256Canonical(input)`; the bridge file
 imports no `child_process` — the only process launch lives inside the V3 executor
 (`spawn` argv, `shell:false`) and is unreachable without the trusted bundle; fs writes
-go to the runs directory (per-run `receipt.json` + `manifest.json` + `logs/`) and the
-executor's temp workspace is removed after each run; run ids validated `[A-Za-z0-9-]+`
-before any path use.
+go to the runs directory (per-run `receipt.json` + `manifest.json` + `logs/` — bounded
+copies named `logs/<step>.<part>.bounded.txt`, plain names reserved for verified
+full-stream bytes) and the executor's temp workspace is removed after each run; run ids
+validated `[A-Za-z0-9-]+` before any path use.
 
 Receipt verdict semantics (REAL engine): verdict layering is receipt-owned — `overall`
 carries `process_outcome` (`OK|PARTIAL|FAILED|ABORTED`), `solver_answer`
