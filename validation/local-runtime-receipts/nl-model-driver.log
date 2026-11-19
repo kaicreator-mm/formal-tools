@@ -1,0 +1,22 @@
+[2026-11-19T14:34:37.056Z] nl-model driver start: source=f84d3b9789138481d96cf6d9a382fa0a2d09fbde out=/home/cc/formal-tools-build/wt-i180-r2c/validation/local-runtime-receipts key=set portable_root=set
+[2026-11-19T14:34:37.057Z] J3 vague-text journey (NEEDS_CLARIFICATION expected)
+[2026-11-19T14:34:39.120Z] saved nl-model-j3-clarification.proposal.json
+[2026-11-19T14:34:39.120Z] J3 status=NEEDS_CLARIFICATION matched=true
+[2026-11-19T14:34:39.121Z] j1-sat journey (AGREE_SAT expected)
+[2026-11-19T14:34:40.713Z] saved nl-model-j1-sat.proposal.json
+[2026-11-19T14:34:40.714Z] saved nl-model-j1-sat.execution-receipt.json
+[2026-11-19T14:34:40.714Z] saved nl-model-j1-sat.witness.json
+[2026-11-19T14:34:40.714Z] saved nl-model-j1-sat.report.json
+[2026-11-19T14:34:40.714Z] j1-sat verdict=AGREE_SAT witness=true matched=true
+[2026-11-19T14:34:40.715Z] j2-unsat journey (AGREE_UNSAT expected)
+[2026-11-19T14:34:41.800Z] saved nl-model-j2-unsat.proposal.json
+[2026-11-19T14:34:41.800Z] saved nl-model-j2-unsat.execution-receipt.json
+[2026-11-19T14:34:41.800Z] saved nl-model-j2-unsat.report.json
+[2026-11-19T14:34:41.800Z] j2-unsat verdict=AGREE_UNSAT witness=n/a matched=true
+[2026-11-19T14:34:41.801Z] j4-lp journey (kOptimal objective 11 expected)
+[2026-11-19T14:34:43.628Z] saved nl-model-j4-lp.proposal.json
+[2026-11-19T14:34:43.628Z] saved nl-model-j4-lp.execution-receipt.json
+[2026-11-19T14:34:43.628Z] saved nl-model-j4-lp.report.json
+[2026-11-19T14:34:43.629Z] j4 model_status=kOptimal objective=11 matched=true
+[2026-11-19T14:34:43.629Z] saved nl-model-run.json
+[2026-11-19T14:34:43.629Z] driver done exit=0

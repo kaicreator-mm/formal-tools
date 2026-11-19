@@ -1,0 +1,120 @@
+{
+  "journey": "nl-j4-lp-optimize",
+  "expectation": "HiGHS kOptimal with objective 11 on the LP relaxation (integrality dropped, recorded)",
+  "text": "最大化 3x+2y,其中 x 和 y 都是非负整数,x+y 不超过 4,并且 x 不超过 3",
+  "provider": {
+    "name": "deepseek",
+    "model": "deepseek-chat"
+  },
+  "attempts": [
+    {
+      "attempt_status": "MODEL_PROPOSED",
+      "reason": null,
+      "issues": null
+    }
+  ],
+  "proposal_status": "MODEL_PROPOSED",
+  "model": {
+    "variables": [
+      {
+        "name": "x",
+        "integer": true,
+        "lower": 0,
+        "upper": 4
+      },
+      {
+        "name": "y",
+        "integer": true,
+        "lower": 0,
+        "upper": 4
+      }
+    ],
+    "constraints": [
+      {
+        "coefficients": {
+          "x": 1,
+          "y": 1
+        },
+        "op": "<=",
+        "rhs": 4
+      },
+      {
+        "coefficients": {
+          "x": 1
+        },
+        "op": "<=",
+        "rhs": 3
+      }
+    ],
+    "question": "optimize",
+    "assumptions": [
+      "Non-negativity is stated explicitly, so lower bounds are 0.",
+      "Upper bounds of 4 for both x and y are derived from x+y<=4 combined with non-negativity (each variable alone cannot exceed 4).",
+      "The constraint x<=3 is kept as a separate constraint rather than folded into x's upper bound, to preserve the stated structure."
+    ],
+    "objective": {
+      "direction": "maximize",
+      "coefficients": {
+        "x": 3,
+        "y": 2
+      }
+    }
+  },
+  "matched": true,
+  "source_sha": "f84d3b9789138481d96cf6d9a382fa0a2d09fbde",
+  "approval": {
+    "status": "USER_APPROVED",
+    "reviewer": "driver-surrogate (NOT a human; demonstrates the approval gate; a human must review the recorded model before any production use)"
+  },
+  "plan": {
+    "plan_id": "wf-78d090b32de8ec131dd750ad17f6448e",
+    "plan_sha256": "ef72b80f6ddb35503a2fb4428786227f3e6906a8dc0825e5f43eebcbdde6e277",
+    "provenance_sha256": "a780fbca4196387a98b367c9e8b90c03c9ad85dbf279eff85d900b73c75e0294",
+    "target": "lp",
+    "assumptions": [
+      "Non-negativity is stated explicitly, so lower bounds are 0.",
+      "Upper bounds of 4 for both x and y are derived from x+y<=4 combined with non-negativity (each variable alone cannot exceed 4).",
+      "The constraint x<=3 is kept as a separate constraint rather than folded into x's upper bound, to preserve the stated structure.",
+      "LP relaxation: integrality constraints are dropped by the nl-model compiler (the HiGHS typed operation has no integrality field); the executed answer characterizes the continuous relaxation only, not the integer problem."
+    ]
+  },
+  "execution": {
+    "run_id": "run-mwnniz4j-14bccc8c",
+    "overall": {
+      "process_outcome": "OK",
+      "solver_answer": {
+        "kind": "solve-lp",
+        "value": "sat",
+        "by_step": [
+          {
+            "step_id": "step-highs",
+            "tool": "highs",
+            "operation": "solve-lp",
+            "answer": "kOptimal"
+          }
+        ]
+      },
+      "cross_tool_verdict": "NOT_APPLICABLE",
+      "claim_verdict": "NOT_APPLICABLE"
+    },
+    "fail_closed_reason": null,
+    "workspace_dir": "/tmp/formal-workflow-Ss3jrB"
+  },
+  "solver": {
+    "highspy_version": "1.15.1",
+    "input_sha256": "09f95eeb4089ae7970c7ec83f370fb8391c6c7c332eedcb33b66d66ab33d035f",
+    "model_status": "kOptimal",
+    "numpy_version": "2.5.4",
+    "objective": 11,
+    "python_version": "3.13.5",
+    "schema": "formal-tools/highs-solve-lp/1.0",
+    "solver_api_status": "kOk",
+    "tool": "highs",
+    "variables": [
+      3,
+      1
+    ]
+  },
+  "objective": 11,
+  "model_status": "kOptimal"
+}

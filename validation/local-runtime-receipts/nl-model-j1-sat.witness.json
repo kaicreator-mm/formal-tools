@@ -1,0 +1,38 @@
+{
+  "journey": "nl-j1-sat",
+  "witness": {
+    "ok": true,
+    "stage": "checked",
+    "script_sha256": "25676b3fbf56b174ba9f20ff3864caf6b16ed7252c476e297083be0294d7422c",
+    "rendering_sha256": "75c95fa5d9c5b71b742a35f3257c72a8d953fe22445eca2f0310d2434292f685",
+    "values": {
+      "x": 6,
+      "y": 1,
+      "k": 1
+    },
+    "checks": [
+      {
+        "desc": "bound 3 <= x <= 50",
+        "holds": true
+      },
+      {
+        "desc": "bound 1 <= y <= 50",
+        "holds": true
+      },
+      {
+        "desc": "bound -100 <= k <= 100",
+        "holds": true
+      },
+      {
+        "desc": "constraint#0 {\"x\":1,\"y\":1,\"k\":-7} == 0 at witness {\"x\":6,\"y\":1,\"k\":1}",
+        "holds": true
+      },
+      {
+        "desc": "constraint#1 {\"y\":1,\"x\":-1} <= 0 at witness {\"x\":6,\"y\":1,\"k\":1}",
+        "holds": true
+      }
+    ],
+    "stdout_bounded": "sat\n((x 6)\n (y 1)\n (k 1))\n",
+    "honesty_note": "witness consistency is a check against the RENDERED constraints only; it is NOT evidence that the translation matches the natural-language text"
+  }
+}

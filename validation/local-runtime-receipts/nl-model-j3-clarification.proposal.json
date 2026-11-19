@@ -1,0 +1,54 @@
+{
+  "journey": {
+    "journey": "j3-vague-clarification",
+    "expectation": "NEEDS_CLARIFICATION with specific questions; no rendering; no execution; approval impossible",
+    "text": "证明我们的系统总体上是安全的",
+    "provider": {
+      "name": "deepseek",
+      "model": "deepseek-chat"
+    },
+    "attempts": [
+      {
+        "attempt_status": "NEEDS_CLARIFICATION",
+        "reason": null,
+        "issues": null
+      }
+    ],
+    "status": "NEEDS_CLARIFICATION",
+    "clarification_needed": [
+      "The request '证明我们的系统总体上是安全的' (prove our system is overall safe) is a qualitative safety claim, not a bounded finite linear integer constraint problem. What concrete quantities, variables, and numeric bounds define 'safe' for this system?",
+      "What specific linear constraints or thresholds (e.g., failure rate <= X, redundancy >= Y) should be modeled, and what are their numeric values?"
+    ],
+    "rendering_present": false,
+    "approval_attempt": {
+      "approve_threw": "NL_NOT_APPROVABLE"
+    },
+    "matched": true,
+    "source_sha": "f84d3b9789138481d96cf6d9a382fa0a2d09fbde"
+  },
+  "proposal": {
+    "schema": "formal-tools/nl-model-proposal/0.1",
+    "status": "NEEDS_CLARIFICATION",
+    "original_text": "证明我们的系统总体上是安全的",
+    "original_text_sha256": "f7525634749096a258ae9cb92d4a8e80feafa3a2e2ccfe983cbabb71c9b6f72e",
+    "provider": {
+      "name": "deepseek",
+      "model": "deepseek-chat"
+    },
+    "prompt_sha256": "26f21a452f0966bd253a7567914c0e83f60d191c60350ee0d6e2e045a0536dc0",
+    "response_sha256": "7a3d336c653f4e30b79c889372eeba6605f0ad4afd01e3ba4501fffcd0e62638",
+    "model": null,
+    "rendering": null,
+    "clarification_needed": [
+      "The request '证明我们的系统总体上是安全的' (prove our system is overall safe) is a qualitative safety claim, not a bounded finite linear integer constraint problem. What concrete quantities, variables, and numeric bounds define 'safe' for this system?",
+      "What specific linear constraints or thresholds (e.g., failure rate <= X, redundancy >= Y) should be modeled, and what are their numeric values?"
+    ],
+    "assumptions": [],
+    "issues": null,
+    "review": {
+      "approved": false
+    },
+    "honesty_note": "translation proposal requires user clarification; nothing was rendered or executed",
+    "proposal_sha256": null
+  }
+}

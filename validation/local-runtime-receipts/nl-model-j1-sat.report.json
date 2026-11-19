@@ -1,0 +1,187 @@
+{
+  "journey": "nl-j1-sat",
+  "expectation": "AGREE_SAT from real z3+cvc5 on the rendered model",
+  "text": "找出整数 x 和 y:x 至少是 3,y 至少是 1,两个都不超过 50,x+y 恰好是 7 的倍数,并且 y 不超过 x。这样的整数对存在吗?",
+  "provider": {
+    "name": "deepseek",
+    "model": "deepseek-chat"
+  },
+  "attempts": [
+    {
+      "attempt_status": "MODEL_PROPOSED",
+      "reason": null,
+      "issues": null
+    }
+  ],
+  "proposal_status": "MODEL_PROPOSED",
+  "model": {
+    "variables": [
+      {
+        "name": "x",
+        "integer": true,
+        "lower": 3,
+        "upper": 50
+      },
+      {
+        "name": "y",
+        "integer": true,
+        "lower": 1,
+        "upper": 50
+      },
+      {
+        "name": "k",
+        "integer": true,
+        "lower": -100,
+        "upper": 100
+      }
+    ],
+    "constraints": [
+      {
+        "coefficients": {
+          "x": 1,
+          "y": 1,
+          "k": -7
+        },
+        "op": "==",
+        "rhs": 0
+      },
+      {
+        "coefficients": {
+          "y": 1,
+          "x": -1
+        },
+        "op": "<=",
+        "rhs": 0
+      }
+    ],
+    "question": "sat",
+    "assumptions": [
+      "x >= 3 and x <= 50 are encoded directly as bounds on x.",
+      "y >= 1 and y <= 50 are encoded directly as bounds on y.",
+      "'x+y is exactly a multiple of 7' is encoded with auxiliary integer k: x + y = 7k.",
+      "k bounds derived from x+y range [4,100]: k must satisfy 7k in [4,100], so k in [1,14]; widened to [-100,100] for neutrality.",
+      "'y does not exceed x' is encoded as y - x <= 0."
+    ]
+  },
+  "rendering": {
+    "kind": "smt-lib2",
+    "logic": "QF_LIA",
+    "mode": "plan",
+    "text": "(set-logic QF_LIA)\n(declare-fun x () Int)\n(declare-fun y () Int)\n(declare-fun k () Int)\n(assert (>= x 3))\n(assert (<= x 50))\n(assert (>= y 1))\n(assert (<= y 50))\n(assert (>= k -100))\n(assert (<= k 100))\n(assert (= (+ (* -7 k) x y) 0))\n(assert (<= (+ (- x) y) 0))\n(check-sat)\n(exit)\n",
+    "sha256": "75c95fa5d9c5b71b742a35f3257c72a8d953fe22445eca2f0310d2434292f685",
+    "commands_allowlist": [
+      "set-logic",
+      "declare-fun",
+      "assert",
+      "check-sat",
+      "get-model",
+      "exit"
+    ],
+    "semantic_status": "TRANSLATION_PROPOSAL_NOT_VERIFIED_AGAINST_TEXT"
+  },
+  "matched": true,
+  "source_sha": "f84d3b9789138481d96cf6d9a382fa0a2d09fbde",
+  "approval": {
+    "status": "USER_APPROVED",
+    "reviewer": "driver-surrogate (NOT a human; demonstrates the approval gate; a human must review the recorded model before any production use)"
+  },
+  "plan": {
+    "plan_id": "wf-e3dbbfc68a09c717591adc992e2933df",
+    "plan_sha256": "03f41219ae4a2c5d23cabe785213595a1c8da007f4dfdb2f999ea9d516a3d347",
+    "provenance_sha256": "4a8f6928e4764ed5fc6268287efbdc08223852aa737c5911ec90ce25611a2393",
+    "steps": [
+      {
+        "id": "step-z3",
+        "tool": "z3",
+        "operation": "solve-smt"
+      },
+      {
+        "id": "step-cvc5",
+        "tool": "cvc5",
+        "operation": "solve-smt"
+      },
+      {
+        "id": "step-agree",
+        "tool": "compare",
+        "operation": "cross-check"
+      }
+    ],
+    "target": "smt"
+  },
+  "execution": {
+    "run_id": "run-mwnnix02-5cc6507e",
+    "overall": {
+      "process_outcome": "OK",
+      "solver_answer": {
+        "kind": "solve-smt",
+        "value": "sat",
+        "by_step": [
+          {
+            "step_id": "step-z3",
+            "tool": "z3",
+            "operation": "solve-smt",
+            "answer": "sat"
+          },
+          {
+            "step_id": "step-cvc5",
+            "tool": "cvc5",
+            "operation": "solve-smt",
+            "answer": "sat"
+          }
+        ]
+      },
+      "cross_tool_verdict": "AGREE_SAT",
+      "claim_verdict": "PASS"
+    },
+    "fail_closed_reason": null,
+    "workspace_dir": "/tmp/formal-workflow-dNs1qt",
+    "tool_versions": {
+      "z3": {
+        "version": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f",
+        "probe_sha256": "9af7c6f186418585f022fd2d18eb2d278e14ad21731bf3339f3cbd1f78500e7a",
+        "probe_bounded": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f\n"
+      },
+      "cvc5": {
+        "version": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]",
+        "probe_sha256": "b6c312e4bb0062a7683ca82eb08f0b25beb4e6c67f22a62a6841a8f4192fde4a",
+        "probe_bounded": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]\ncompiled as a unrestricted build with GCC version 11.4.0 on Oct  8 2026 01:24:07\n\nCopyright (c) 2009-2026 by the authors and their institutional\naffiliations listed at https://cvc5.github.io/people.html\n\ncvc5 is open"
+      }
+    }
+  },
+  "verdict": "AGREE_SAT",
+  "witness": {
+    "ok": true,
+    "stage": "checked",
+    "script_sha256": "25676b3fbf56b174ba9f20ff3864caf6b16ed7252c476e297083be0294d7422c",
+    "rendering_sha256": "75c95fa5d9c5b71b742a35f3257c72a8d953fe22445eca2f0310d2434292f685",
+    "values": {
+      "x": 6,
+      "y": 1,
+      "k": 1
+    },
+    "checks": [
+      {
+        "desc": "bound 3 <= x <= 50",
+        "holds": true
+      },
+      {
+        "desc": "bound 1 <= y <= 50",
+        "holds": true
+      },
+      {
+        "desc": "bound -100 <= k <= 100",
+        "holds": true
+      },
+      {
+        "desc": "constraint#0 {\"x\":1,\"y\":1,\"k\":-7} == 0 at witness {\"x\":6,\"y\":1,\"k\":1}",
+        "holds": true
+      },
+      {
+        "desc": "constraint#1 {\"y\":1,\"x\":-1} <= 0 at witness {\"x\":6,\"y\":1,\"k\":1}",
+        "holds": true
+      }
+    ],
+    "stdout_bounded": "sat\n((x 6)\n (y 1)\n (k 1))\n",
+    "honesty_note": "witness consistency is a check against the RENDERED constraints only; it is NOT evidence that the translation matches the natural-language text"
+  }
+}
