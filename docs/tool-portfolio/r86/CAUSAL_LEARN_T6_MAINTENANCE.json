@@ -1,0 +1,261 @@
+{
+  "schema": "formal-tools/causal-learn-t6-maintenance-baseline/1",
+  "snapshot_head": "a229566c14a0d00b9b05a4a3d5e018b487cf1c73",
+  "tool": {
+    "id": "causal-learn",
+    "version": "0.1.4.8"
+  },
+  "version_source": "portable/status/receipts/build-causal-learn.json",
+  "source_files": {
+    "portable/builders/tools/causal-learn.sh": {
+      "git_blob_sha1": "880c8ae0132fc2ae475fc555c3ff8b17d8fbbe3a",
+      "gates": [
+        "T0",
+        "T1",
+        "T2",
+        "T6"
+      ]
+    },
+    "portable/builders/make_meta.py": {
+      "git_blob_sha1": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+      "gates": [
+        "T1",
+        "T2",
+        "T6"
+      ]
+    },
+    "portable/verification/cases/causal-learn/expect.sh": {
+      "git_blob_sha1": "d747aa58e2f42b37b618208eeca75d74bb9c402f",
+      "gates": [
+        "T3",
+        "T4",
+        "T5",
+        "T6"
+      ]
+    },
+    "portable/verification/cases/causal-learn/pos.py": {
+      "git_blob_sha1": "bb65d4439b8209cf84c15097d66ad05210f5a40a",
+      "gates": [
+        "T3",
+        "T4",
+        "T5",
+        "T6"
+      ]
+    },
+    "portable/verification/cases/causal-learn/neg.py": {
+      "git_blob_sha1": "764d17899af89f138e8d3e34a3318d075a3e5005",
+      "gates": [
+        "T3",
+        "T4",
+        "T5",
+        "T6"
+      ]
+    },
+    "portable/verification/cases/causal-learn/err.py": {
+      "git_blob_sha1": "bd7ab23b997d876ac2da6d9e6fb92c89017768dc",
+      "gates": [
+        "T3",
+        "T4",
+        "T5",
+        "T6"
+      ]
+    },
+    "tests/causal-learn-fixture-contract.test.mjs": {
+      "git_blob_sha1": "821e929eb216bae4d1ba5811bb7f7f02b5d18f20",
+      "gates": [
+        "T3",
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/native.mjs": {
+      "git_blob_sha1": "2e0e669e4fa66cb27654644705e76794c0727004",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/native-catalog.mjs": {
+      "git_blob_sha1": "02f628947be3e5c270d802be150ab220e14fc2b8",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/tool-portfolio-t4.mjs": {
+      "git_blob_sha1": "922a7c208beaa0e48346403a29ec2d927189319f",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/cli.mjs": {
+      "git_blob_sha1": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/sdk.mjs": {
+      "git_blob_sha1": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/mcp.mjs": {
+      "git_blob_sha1": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/tool-result.mjs": {
+      "git_blob_sha1": "a2c61c50658fc3d7e578ffbf7ee018f707e15841",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/tool-manager.mjs": {
+      "git_blob_sha1": "a8e547718b8242c9d27f9e906b1c1ebaa2d80de6",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/tool-workspace.mjs": {
+      "git_blob_sha1": "354809f169dac5b1fef31e64eb3aa7965ea0b88f",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/artifact-collector.mjs": {
+      "git_blob_sha1": "8881dcb65f97f74036ad90e2ca01a600c2daaec8",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "portable/packaging/bundle-template/bin/tool-runner": {
+      "git_blob_sha1": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+      "gates": [
+        "T2",
+        "T3",
+        "T4",
+        "T6"
+      ]
+    },
+    "portable/packaging/pack.sh": {
+      "git_blob_sha1": "4b3cae235643f8554f1e62001268816ba205bcac",
+      "gates": [
+        "T0",
+        "T1",
+        "T2",
+        "T6"
+      ]
+    },
+    "portable/packaging/unpack-template/unpack.sh": {
+      "git_blob_sha1": "ad8ba2330a7b3bd66f5508563774b7b472fae977",
+      "gates": [
+        "T2",
+        "T3",
+        "T4",
+        "T6"
+      ]
+    },
+    "registry/PROBLEM_CAPABILITIES.json": {
+      "git_blob_sha1": "faa89997c3f7c8c71da0a69aa90e8ff37461cde0",
+      "gates": [
+        "T4",
+        "T5",
+        "T6"
+      ]
+    },
+    "package-lock.json": {
+      "git_blob_sha1": "2ad31f01195434617ac74d2f377287a15e062b95",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "package.json": {
+      "git_blob_sha1": "99cd24d1c71d2c12297730056f1b1882a770c851",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "portable/status/receipts/build-causal-learn.json": {
+      "git_blob_sha1": "8ab6f9171753b86d925cc88dc0241bd7584dc26c",
+      "gates": [
+        "T1",
+        "T2",
+        "T3",
+        "T6"
+      ]
+    },
+    "portable/status/receipts/verify-causal-learn.json": {
+      "git_blob_sha1": "875a5227bc2dfd6d1f0059565ae33450aa873251",
+      "gates": [
+        "T2",
+        "T3",
+        "T6"
+      ]
+    },
+    "docs/tool-portfolio/r20/CAUSAL_LEARN_T3_FIXTURE_REPAIR.json": {
+      "git_blob_sha1": "db8e0d64d24268eeff95f8d835842a75fdb29e52",
+      "gates": [
+        "T3",
+        "T6"
+      ]
+    }
+  },
+  "asset_pins": {
+    "tool_archive_sha256": "9c41aa7eb57bff4ef124438382f6f5b3ff9088fb6108b7fe6b5d7ee939e853bf",
+    "python313_runtime_sha256": "1dbbc431b578da5139c8f1993d5c138582dee577804fca9e85936b490606f1d5",
+    "portable_core_archive_sha256": "fe9699e6ba503d94826551bc8e82c70c7c267191a89a6a14941e3551e2b23990",
+    "upstream_source_sdist_sha256": null,
+    "independent_oracle_sha256": null
+  },
+  "gate_revalidation": {
+    "T0": [
+      "Verify upstream release identity, source bytes, license/rights, original package bytes and manifest provenance."
+    ],
+    "T1": [
+      "Reproduce the package from pinned source with a pinned Python 3.13 toolchain; compare complete dependency and output hashes."
+    ],
+    "T2": [
+      "Repeat safe archive preflight, non-root extraction, runtime identity and doctor checks using the canonical portable Python 3.13 bundle."
+    ],
+    "T3": [
+      "Re-run exact current fixtures under the canonical portable runtime and current Runner; capture raw argv, inputs, stdout, stderr, exits, duration and hashes."
+    ],
+    "T4": [
+      "Revalidate current-main Runner, Registry, gateway, CLI, SDK and MCP paths with typed POS/NEG/ERR outcomes and fail-closed controls."
+    ],
+    "T5": [
+      "Run a real source-backed causal-discovery case and an independent domain-semantic Oracle; do not infer business truth from PC graph output alone."
+    ],
+    "T6": [
+      "Update this baseline after a reviewed version/source change, execute drift regressions and revalidate every affected gate."
+    ]
+  },
+  "qualification_boundary": {
+    "T0": "PASS_SCOPED_ORIGINAL_TOOL_ARCHIVE_SHA256_MATCHES_DRIVE_SHA256SUMS; source bytes/license/rights not independently complete.",
+    "T1": "NOT_QUALIFIED_REPRODUCIBLE_SOURCE_BUILD.",
+    "T2": "HISTORICAL_SAFE_EXTRACTION_RECEIPT_ONLY; canonical Python313 runtime has not been independently extracted and replayed here.",
+    "T3": "HOST_PYTHON_3.13.5_SUBSTITUTE_ONLY; canonical Python313/current-main Runner replay NOT_RUN; formal T3 NOT_GRANTED.",
+    "T4": "NOT_ACCEPTED_CURRENT_MAIN_RUNNER_GATEWAY_CLI_SDK_MCP_ROUTES_NOT_EXECUTED.",
+    "T5": "NOT_QUALIFIED_NO_INDEPENDENT_CAUSAL_DOMAIN_ORACLE.",
+    "T6": "ASSESSOR_IMPLEMENTATION_PENDING_EXACT_HEAD_CI_AND_FRESH_INDEPENDENT_REVIEW.",
+    "product_or_release": "NOT_GRANTED."
+  },
+  "notes": {
+    "python313_runtime_sha256": "This is the manifest-declared expected digest. The 294,346,075-byte archive exceeds the Drive connector's 268,435,456-byte response ceiling; its raw bytes have not been observed in this worker. The assessor must therefore report current runtime observation as UNKNOWN until a separately verified chunked download supplies actual bytes.",
+    "portable_core_archive_sha256": "This digest is observed from the downloaded 27,989-byte Drive core archive; it is an historical package snapshot and does not prove current-main Runner identity. The Runner Git Blob is separately pinned above.",
+    "upstream_source_sdist_sha256": "NOT_ESTABLISHED; do not substitute PyPI metadata for a downloaded and hashed source archive.",
+    "independent_oracle_sha256": "NOT_ESTABLISHED; no business or domain semantic Oracle has been admitted."
+  }
+}
