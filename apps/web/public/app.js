@@ -899,6 +899,19 @@ $('#approveBtn').addEventListener('click', async () => {
   const btn = $('#approveBtn');
   const statusEl = $('#planStatus');
   btn.disabled = true;
+  setStatus(statusEl, 'Checking that the displayed assumptions match the plan…');
+  // Plan-screen assumptions are independently editable. Do not execute an
+  // OLDER plan when the review screen currently displays different values.
+  // NL plans in particular cannot be rebuilt without a fresh model approval.
+  if (JSON.stringify(collectAssumptions()) !== JSON.stringify(state.plan.assumptions || [])) {
+    const isNl = state.planSource?.kind === 'nl-model';
+    setStatus(statusEl, isNl
+      ? 'Plan assumptions changed after model approval. Return to the task input and generate/review/approve a fresh NL model.'
+      : 'Plan assumptions changed. Click Regenerate plan, then review its updated hash before running.',
+      'error');
+    btn.disabled = false;
+    return;
+  }
   setStatus(statusEl, 'Starting run…');
   try {
     const payload = { plan: state.plan };
