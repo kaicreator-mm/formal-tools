@@ -11,6 +11,7 @@ import { describeNativeTool, planNative, toolIds } from "./native-catalog.mjs";
 import { inspectInstallation } from "./tool-manager.mjs";
 import { listPortfolioTools, describePortfolioTool, inspectPortfolioTool, runPortableGate, runPortfolioOperation } from "./tool-portfolio-t4.mjs";
 import { matchValidatedTools, loadCapabilityValidation } from "./capability-validation.mjs";
+import { planWorkflow } from "./sdk.mjs";
 
 /** @typedef {{type:"text",text:string}} TextBlock */
 /** @type {(x:unknown)=>{content:TextBlock[]}} */
@@ -121,5 +122,16 @@ serveStdio(()=>{
     description:"Run real finite-model checks in pure JS: DAG, writer exclusivity, CNF or finite state.",
     inputSchema:z.object({engine:z.enum(["dag","writers","cnf","states"]),model:z.record(z.string(),z.unknown())})
   },async({engine,model})=>handle(()=>verifyPure(engine,model)));
+  server.registerTool("plan_workflow",{
+    description:"Plan a bounded user problem into a formal-tools/execution-plan/1.0 workflow (PLANNING ONLY - never executes anything; tool_execution stays NOT_RUN). Deterministic z3+cvc5 cross-check template by default; the canonical problem text is used verbatim as the SMT-LIB input of both solvers. Optional provider:'deepseek' replaces the template with ONE real DeepSeek method proposal using DEEPSEEK_API_KEY from the host environment (absent key fails closed with BLOCKED_PROVIDER; never mocked). Execution is intentionally NOT exposed over MCP: run the compiled plan on a trusted host via the SDK/CLI.",
+    inputSchema:z.object({
+      problem_text:z.string().min(1).max(65536),
+      assumptions:z.array(z.string().max(512)).max(32).default([]),
+      provider:z.enum(["deepseek"]).optional()
+    }).strict()
+  },async({problem_text,assumptions,provider})=>handle(async()=>{
+    const {problem,plan}=await planWorkflow({problemText:problem_text,assumptions,provider});
+    return {...plan,problem_id:problem.problem_id,tool_execution:"NOT_RUN"};
+  }));
   return server;
 });

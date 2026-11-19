@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /** Node ESM CLI. Native external tools require Node host process permissions. */
-import { readFile, open } from "node:fs/promises";
+import { readFile, open, mkdir, writeFile } from "node:fs/promises";
 import { constants as fsConstants } from "node:fs";
 import { pathToFileURL } from "node:url";
-import { resolve } from "node:path";
+import { resolve, join } from "node:path";
 import { verifyPure } from "../../core/src/finite.mjs";
 import { knownTools, inspectTool, validateSource, doctor, runFixture, executeNativePlan } from "./native.mjs";
 import { describeNativeTool, planNative, planRawNative, planNativeHelp, toolIds } from "./native-catalog.mjs";
 import { toolInfo, inspectInstallation, inspectAllInstallations } from "./tool-manager.mjs";
-import { invokeTool } from "./sdk.mjs";
+import { invokeTool, planWorkflow, compileWorkflowPlan, executeWorkflowPlan, WorkflowBlockedError } from "./sdk.mjs";
 import { listPortfolioTools, describePortfolioTool, inspectPortfolioTool, runPortableGate, runPortfolioOperation } from "./tool-portfolio-t4.mjs";
 import { listProblemCapabilities } from "./problem-capabilities.mjs";
 import { loadCapabilityValidation, matchValidatedTools } from "./capability-validation.mjs";
@@ -31,6 +31,119 @@ function localParams(args) {
 function flag(args,key,defaultValue) {
   const i=args.indexOf(key);
   return i<0?defaultValue:args[i+1];
+}
+/**
+ * i180/V4b `workflow` option parser: strict known-option allowlist with
+ * repeatable-value and standalone-switch support. No shell passthrough.
+ */
+function parseWorkflowFlags(args,repeatable,switches,valued) {
+  /** @type {{[key:string]:string|string[]|boolean}} */
+  const out={};
+  for(let i=0;i<args.length;i++) {
+    const token=args[i];
+    if(!token.startsWith("--"))throw new TypeError("unexpected workflow argument: "+token);
+    const key=token.slice(2);
+    if(![...repeatable,...switches,...valued].includes(key))
+      throw new TypeError("unknown workflow option: --"+key);
+    if(switches.includes(key)) {
+      if(Object.hasOwn(out,key))throw new TypeError("repeated option: --"+key);
+      out[key]=true;
+      continue;
+    }
+    const value=args[i+1];
+    if(value===undefined||value.startsWith("--"))throw new TypeError("option --"+key+" requires a value");
+    if(repeatable.includes(key)) {
+      const list=Array.isArray(out[key])?out[key]:[];
+      list.push(value);
+      out[key]=list;
+    } else {
+      if(out[key]!==undefined)throw new TypeError("repeated option: --"+key);
+      out[key]=value;
+    }
+    i++;
+  }
+  return out;
+}
+/** Receipt verdict summary shared by `workflow execute` and `workflow results`. */
+function receiptSummary(receipt,extra={}) {
+  return {
+    schema:receipt.schema,
+    plan_id:receipt.plan_id,
+    run_id:receipt.run_id,
+    source_sha:receipt.source_sha??null,
+    created_at:receipt.created_at,
+    overall:receipt.overall,
+    steps:receipt.steps.map(s=>({step_id:s.step_id,tool:s.tool,operation:s.operation,status:s.status})),
+    ...extra
+  };
+}
+/** i180/V4b: plan -> (approve) -> execute -> results over the shared
+ * execution-plan/1.0 contract. Planning never executes; execution runs only
+ * on this trusted host and fails closed (BLOCKED_TOOL_MISSING) without the
+ * pinned portable bundle — an honest outcome, never a fabricated verdict. */
+async function workflowCommand(sub,args) {
+  if(sub==="plan") {
+    const opts=parseWorkflowFlags(args,["assumption","capability"],["compile"],["problem-file","provider"]);
+    const problemFile=opts["problem-file"];
+    if(typeof problemFile!=="string"||!problemFile.length)
+      throw new TypeError("workflow plan requires --problem-file <path>");
+    if(opts.provider!==undefined&&opts.provider!=="deepseek")
+      throw new TypeError("--provider must be 'deepseek' or omitted (deterministic template)");
+    const provider=opts.provider==="deepseek"?"deepseek":undefined;
+    const problemText=await readFile(resolve(problemFile),"utf8");
+    const {plan}=await planWorkflow({
+      problemText,
+      assumptions:Array.isArray(opts.assumption)?opts.assumption:[],
+      capabilityIds:Array.isArray(opts.capability)?opts.capability:undefined,
+      provider
+    });
+    if(opts.compile!==true) return {plan,artifacts:null};
+    const compiled=compileWorkflowPlan(plan);
+    const dir=resolve("artifacts",plan.plan_id);
+    await mkdir(dir,{recursive:true});
+    const paths={dir,plan:join(dir,"plan.json"),launcher:join(dir,"launcher.mjs"),manifest:join(dir,"manifest.json")};
+    await writeFile(paths.plan,JSON.stringify(compiled.plan,null,2)+"\n","utf8");
+    await writeFile(paths.launcher,compiled.launcher,"utf8");
+    await writeFile(paths.manifest,JSON.stringify(compiled.manifest,null,2)+"\n","utf8");
+    return {plan:compiled.plan,artifacts:paths};
+  }
+  if(sub==="execute") {
+    const opts=parseWorkflowFlags(args,[],[],["plan-file","source-sha"]);
+    const planFile=opts["plan-file"];
+    if(typeof planFile!=="string"||!planFile.length)
+      throw new TypeError("workflow execute requires --plan-file <path>");
+    const sourceSha=opts["source-sha"];
+    if(sourceSha!==undefined&&typeof sourceSha!=="string")
+      throw new TypeError("--source-sha must be a string");
+    if(typeof sourceSha==="string"&&!/^[a-f0-9]{40}(?:[a-f0-9]{24})?$/.test(sourceSha))
+      throw new TypeError("--source-sha must be a 40-hex git commit SHA (or a 64-hex sha256)");
+    const plan=parseJsonRejectDuplicateKeys(await readFile(resolve(planFile),"utf8"));
+    let receipt,blockedCode=null;
+    try {
+      ({receipt}=await executeWorkflowPlan(plan,{sourceSha:typeof sourceSha==="string"?sourceSha:null}));
+    } catch(e) {
+      if(!(e instanceof WorkflowBlockedError))throw e;
+      receipt=e.receipt;
+      blockedCode=e.code;
+    }
+    if(!receipt)throw new Error("execution produced no receipt");
+    const dir=resolve("artifacts",receipt.plan_id);
+    await mkdir(dir,{recursive:true});
+    const receiptPath=join(dir,"receipt.json");
+    await writeFile(receiptPath,JSON.stringify(receipt,null,2)+"\n","utf8");
+    return receiptSummary(receipt,{blocked:blockedCode,receipt_path:receiptPath});
+  }
+  if(sub==="results") {
+    const opts=parseWorkflowFlags(args,[],[],["receipt"]);
+    const receiptFile=opts.receipt;
+    if(typeof receiptFile!=="string"||!receiptFile.length)
+      throw new TypeError("workflow results requires --receipt <path>");
+    const receipt=parseJsonRejectDuplicateKeys(await readFile(resolve(receiptFile),"utf8"));
+    if(!receipt||typeof receipt!=="object"||receipt.schema!=="formal-tools/execution-receipt/1.0")
+      throw new TypeError("not a formal-tools/execution-receipt/1.0 file: "+receiptFile);
+    return receiptSummary(receipt);
+  }
+  throw new TypeError("workflow usage: plan --problem-file <path> [--assumption <text>]... [--capability <id>]... [--provider deepseek] [--compile] | execute --plan-file <path> [--source-sha <40hex>] | results --receipt <path>");
 }
 function optNumber(v,fallback) {
   if(v===undefined)return fallback;
@@ -256,13 +369,16 @@ export async function main(args=process.argv.slice(2)) {
         if(!row)throw new RangeError("unknown tool id: "+rest[0]);
         result=row;
       } else throw new TypeError("capabilities usage: summary | match --cap <id> [...] | tool <id>");
+    } else if (action==="workflow") {
+      // i180/V4b: workflow plan|execute|results (see workflowCommand).
+      result=await workflowCommand(arg,rest);
     } else if (action==="pure") {
       const path=flag(rest,"--input");
       if (!path) throw new TypeError("pure requires --input <JSON-file>");
       const model=JSON.parse(await readFile(path,"utf8"));
       result=verifyPure(/** @type {import("../../core/src/finite.mjs").PureEngine} */(arg),model);
     } else {
-      throw new TypeError("Usage: cli.mjs <list|validate|info TOOL|where TOOL|doctor-all [--probe --timeout N]|catalog [TOOL]|plan TOOL OP --option value|exec TOOL OP --option value|invoke TOOL OP --option value|native-help TOOL|native TOOL -- [official args]|inspect TOOL|doctor TOOL|run TOOL --case positive|negative|suite|capabilities [summary|match --cap ID|tool ID]|pure KIND --input file.json>");
+      throw new TypeError("Usage: cli.mjs <list|validate|info TOOL|where TOOL|doctor-all [--probe --timeout N]|catalog [TOOL]|plan TOOL OP --option value|exec TOOL OP --option value|invoke TOOL OP --option value|native-help TOOL|native TOOL -- [official args]|inspect TOOL|doctor TOOL|run TOOL --case positive|negative|suite|capabilities [summary|match --cap ID|tool ID]|workflow plan --problem-file P [--compile]|workflow execute --plan-file P [--source-sha SHA]|workflow results --receipt P|pure KIND --input file.json>");
     }
     print(result);
     if(action==="validate")return result.status==="STATIC_PASS"?0:2;
@@ -288,9 +404,20 @@ export async function main(args=process.argv.slice(2)) {
     if(action==="pure")return result.tool_outcome==="UNKNOWN"?2:0;
     if(action==="invoke")return result.process.status==="EXIT_ZERO"?0:2;
     if(["exec","native"].includes(action))return result.process_outcome==="EXIT_ZERO"?0:2; // counterexample is a meaningful observation
+    if(action==="workflow") {
+      // plan/results are reporting actions (verdict classes live in the JSON);
+      // execute exits 0 only on a real PASS claim verdict — BLOCKED/ABORTED
+      // fail-closed receipts are honest outcomes and stay non-zero.
+      if(arg==="execute")return result.overall.claim_verdict==="PASS"?0:2;
+      return 0;
+    }
     return 0;
   } catch(e) {
-    process.stderr.write(JSON.stringify({status:"ERROR",message:String(e)})+"\n");
+    process.stderr.write(JSON.stringify({
+      status:"ERROR",
+      ...(e&&e.code?{code:e.code}:{}),
+      message:String(e&&e.message?e.message:e)
+    })+"\n");
     return 2;
   }
 }

@@ -1,6 +1,6 @@
 {
   "schema": "formal-tools-interfaces/3",
-  "version": "0.5.0-r7",
+  "version": "0.5.0-r8",
   "status": "JS_PLANNING_TESTED_NODE_NATIVE_MCP_NOT_RUN",
   "core": "packages/core/src/finite.mjs",
   "cli": "node packages/runner/js/cli.mjs",
@@ -29,7 +29,8 @@
     "match_formal_capabilities",
     "inspect_portfolio_tool",
     "verify_portable_fixture",
-    "run_portfolio_operation"
+    "run_portfolio_operation",
+    "plan_workflow"
   ],
   "pure_engines": [
     "dag",
@@ -82,7 +83,8 @@
     "doctor-all",
     "invoke",
     "capabilities",
-    "portfolio"
+    "portfolio",
+    "workflow"
   ],
   "native_cli": {
     "catalog": "packages/runner/js/native-catalog.mjs",
@@ -162,6 +164,28 @@
     "schema": "registry/GENERATED_ARTIFACTS.schema.json",
     "compatibility_schema": "registry/TOOL_COMPATIBILITY_MATRIX.schema.json",
     "native_runtime_status": "NOT_VERIFIED_ON_PR10"
+  },
+  "workflow": {
+    "issue": "#184 (i180/V4b)",
+    "plan_schema": "formal-tools/execution-plan/1.0",
+    "launcher_manifest_schema": "formal-tools/launcher-manifest/1.0",
+    "receipt_schema": "formal-tools/execution-receipt/1.0",
+    "modules": {
+      "planning": "packages/runner/js/workflow-plan.mjs",
+      "compiler": "packages/runner/js/workflow-compiler.mjs",
+      "executor": "packages/runner/js/workflow-executor.mjs",
+      "evidence": "packages/runner/js/workflow-evidence.mjs",
+      "sdk_facade": "packages/runner/js/sdk.mjs (planWorkflow / compileWorkflowPlan / executeWorkflowPlan)"
+    },
+    "sdk_exports": ["planWorkflow", "compileWorkflowPlan", "executeWorkflowPlan"],
+    "cli": "cli.mjs workflow plan --problem-file <path> [--assumption <text>]... [--capability <id>]... [--provider deepseek] [--compile] | execute --plan-file <path> [--source-sha <40hex>] | results --receipt <path>",
+    "mcp_tool": "plan_workflow",
+    "mcp_execution": "NOT_EXPOSED_BY_DESIGN: MCP is planning-only; execution runs on a trusted host via CLI/SDK/Web",
+    "deepseek_provider": "env DEEPSEEK_API_KEY only; absent key fails closed BLOCKED_PROVIDER; never mocked",
+    "deterministic_template": "default planning template: z3+cvc5 cross-check pair over the canonical problem text used verbatim as SMT-LIB input; prose input honestly fails at execution (no fabricated verdict)",
+    "binary_less_environments": "execution fails closed with an ABORTED receipt, claim_verdict BLOCKED, fail_closed_reason BLOCKED_TOOL_MISSING (honest outcome, not a crash)",
+    "artifacts_layout": "artifacts/<plan_id>/{plan.json,launcher.mjs,manifest.json,receipt.json}",
+    "status": "V4_PART_B_SHIPPED_SDK_CLI_MCP_PLANNING_ONLY_MCP_EXECUTE_NOT_EXPOSED"
   },
   "capability_validation": {
     "schema": "formal-tools/capability-validation/0.1",

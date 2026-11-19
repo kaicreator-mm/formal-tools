@@ -282,3 +282,142 @@ export interface CapabilityMatchResult {
 export function loadCapabilityValidation(options?: CapabilityValidationOptions): CapabilityValidationLedger;
 export function validateCapabilityValidation(input: unknown, options?: CapabilityValidationOptions): CapabilityValidationReport;
 export function matchValidatedTools(capabilityIds: readonly string[], options?: {includeNotVerified?: boolean}): CapabilityMatchResult;
+
+/** Issue #184 (i180/V4b): unified workflow plan/execute/results contract. */
+export interface WorkflowProblemSpec {
+  schema: "formal-tools/problem-spec/0.1";
+  problem_id: string;
+  [key: string]: unknown;
+}
+export interface WorkflowPlanStep {
+  id: string;
+  tool: "z3" | "cvc5" | "highs" | "compare";
+  operation: "solve-smt" | "solve-lp" | "cross-check";
+  depends_on: string[];
+  input: unknown;
+  input_sha256: string;
+  timeout_s: number;
+  expected_output_kind: "smt-answer" | "lp-status" | "cross-tool-verdict";
+}
+export interface WorkflowExecutionPlan {
+  schema: "formal-tools/execution-plan/1.0";
+  plan_id: string;
+  source: { problem_sha256: string; problem_kind: string };
+  assumptions: string[];
+  method_dag: { id: string; kind: string; depends_on: string[] }[];
+  steps: WorkflowPlanStep[];
+  budgets: { max_steps: number; max_total_timeout_s: number };
+  compiled: { launcher_sha256: string | null; manifest_sha256: string | null };
+}
+export interface WorkflowLauncherManifest {
+  schema: "formal-tools/launcher-manifest/1.0";
+  plan_id: string;
+  plan_sha256: string;
+  launcher_sha256: string;
+  entry: string;
+  runtime: string;
+  generated_by: string;
+  deterministic: true;
+}
+export interface WorkflowPlanRequest {
+  problemText: string;
+  assumptions?: string[];
+  capabilityIds?: string[];
+  provider?: "deepseek";
+  smtLib?: string;
+}
+export interface WorkflowPlanResult {
+  problem: WorkflowProblemSpec;
+  plan: WorkflowExecutionPlan;
+}
+export interface WorkflowCompileResult {
+  launcher: string;
+  manifest: WorkflowLauncherManifest;
+  plan: WorkflowExecutionPlan;
+}
+export interface WorkflowStepRecord {
+  step_id: string;
+  tool: string;
+  operation: string;
+  status: "EXECUTED" | "NOT_RUN" | "TIMEOUT" | "ERROR" | "SKIPPED_DOWNSTREAM";
+  exit_code: number | null;
+  elapsed_ms: number | null;
+  stdout_sha256: string | null;
+  stderr_sha256: string | null;
+  stdout_bounded: string | null;
+  stderr_bounded: string | null;
+  result: Record<string, unknown> | null;
+  artifacts: { name: string; sha256: string | null; bytes: number }[];
+}
+export interface WorkflowExecutionReceipt {
+  schema: "formal-tools/execution-receipt/1.0";
+  run_id: string;
+  plan_id: string;
+  plan_sha256: string;
+  source_sha: string | null;
+  created_at: string;
+  tool_versions: Record<string, { version: string; probe_sha256: string | null; probe_bounded: string | null }>;
+  steps: WorkflowStepRecord[];
+  overall: {
+    process_outcome: "OK" | "PARTIAL" | "FAILED" | "ABORTED";
+    solver_answer: { kind: string; value: string | null; by_step: { step_id: string; tool: string; operation: string; answer: string }[] };
+    cross_tool_verdict: "AGREE_SAT" | "AGREE_UNSAT" | "CONTRADICTION" | "UNKNOWN" | "NOT_APPLICABLE";
+    claim_verdict: "PASS" | "UNSUPPORTED_BY_MVP" | "NOT_APPLICABLE" | "BLOCKED";
+    fail_closed_reason?: string;
+  };
+  environment: { host: string; node: string; formal_portable_root_sha: string | null };
+}
+export interface WorkflowCaptureResult {
+  exit_code: number | null;
+  signal: string | null;
+  timed_out: boolean;
+  output_limit: boolean;
+  error: string | null;
+  stdout: string;
+  stderr: string;
+}
+export interface WorkflowExecuteOptions {
+  captureImpl?: ((argv: string[], opts: { cwd: string; timeoutMs: number; env: Record<string, string> }) => Promise<WorkflowCaptureResult>) | null;
+  solveLpImpl?: ((tool: string, operation: string, model: unknown, opts: { timeoutS: number }) => Promise<unknown>) | null;
+  workspaceDir?: string | null;
+  sourceSha?: string | null;
+  env?: Record<string, string>;
+  now?: (() => number) | number | null;
+  runId?: string | null;
+  host?: string | null;
+}
+/** Stable WorkflowError codes (planning): PLAN_SCHEMA_INVALID, PLAN_UNKNOWN_TOOL,
+ * PLAN_UNKNOWN_OPERATION, PLAN_DUP_STEP_ID, PLAN_UNBOUND_DEP, PLAN_CYCLE,
+ * PLAN_HASH_MISMATCH, PLAN_BUDGET_EXCEEDED, PLAN_INPUT_INVALID, PLAN_OVERSIZED,
+ * PLAN_METHOD_INVALID, BLOCKED_PROVIDER, PROVIDER_FAILED. */
+export declare class WorkflowError extends Error {
+  code: string;
+  details?: unknown;
+  constructor(code: string, message: string, details?: unknown);
+}
+/** Executor plan-revalidation error (nothing ran, nothing written). */
+export declare class WorkflowPlanError extends Error {
+  code: string;
+  constructor(code: string, message: string);
+}
+/** Preflight fail-closed error; carries the full ABORTED receipt as evidence. */
+export declare class WorkflowBlockedError extends Error {
+  code: string;
+  detail: unknown;
+  receipt: WorkflowExecutionReceipt | null;
+  workspaceDir: string | null;
+  constructor(code: string, message: string, detail?: unknown);
+}
+/**
+ * Plan a bounded user problem. Deterministic two-solver SMT template by
+ * default; provider:"deepseek" performs ONE real DeepSeek proposal call using
+ * DEEPSEEK_API_KEY from the environment (absent key: BLOCKED_PROVIDER, never
+ * mocked). Planning never executes anything.
+ */
+export function planWorkflow(request: WorkflowPlanRequest): Promise<WorkflowPlanResult>;
+/** Deterministic launcher/manifest compilation (delegates compilePlan). */
+export function compileWorkflowPlan(plan: WorkflowExecutionPlan): WorkflowCompileResult;
+/** Execute a validated plan on this trusted host. Binary-less environments
+ * fail closed: WorkflowBlockedError with an ABORTED receipt attached
+ * (fail_closed_reason BLOCKED_TOOL_MISSING) — an honest outcome, not a crash. */
+export function executeWorkflowPlan(plan: WorkflowExecutionPlan, options?: WorkflowExecuteOptions): Promise<{ receipt: WorkflowExecutionReceipt; workspaceDir: string }>;

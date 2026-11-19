@@ -34,16 +34,17 @@ test("D08: no native shell entry can masquerade as a registered SDK tool",async(
     tool:"z3",operation:"solve",sourceRoot:".",inputs:["../other"],settings:{input:"../other"}
   }),/invalid source-relative/);
 });
-test("D08: MCP exposes 14 allowlisted tools but never unrestricted native shell",async()=>{
+test("D08: MCP exposes 15 allowlisted tools but never unrestricted native shell",async()=>{
   const source=await readFile(new URL("../packages/runner/js/mcp.mjs",import.meta.url),"utf8");
   const names=[...source.matchAll(/registerTool\("([a-z_]+)"/g)].map(match=>match[1]);
-  assert.equal(names.length,14);
+  assert.equal(names.length,15);
   assert.equal(new Set(names).size,names.length);
   assert.deepEqual(names.sort(),[
     "list_formal_tools","validate_formal_source","inspect_formal_tool",
     "probe_formal_tool","run_formal_fixture","describe_native_cli",
     "inspect_native_installation","plan_native_cli","verify_formal_model",
-    "list_portfolio_tools","match_formal_capabilities","inspect_portfolio_tool","verify_portable_fixture","run_portfolio_operation"
+    "list_portfolio_tools","match_formal_capabilities","inspect_portfolio_tool","verify_portable_fixture","run_portfolio_operation",
+    "plan_workflow"
   ].sort());
   assert.doesNotMatch(source,/planRawNative|executeNativePlan|invokeStagedTool|child_process/);
   assert.match(source,/receipt\.status!==\"FIXTURE_TECHNICAL_PASS_UNREVIEWED\"/);
@@ -51,6 +52,12 @@ test("D08: MCP exposes 14 allowlisted tools but never unrestricted native shell"
   assert.match(source,/tool:z\.literal\("highs"\)/);
   assert.match(source,/operation:z\.literal\("solve-lp"\)/);
   assert.match(source,/inputSchema:z\.object\([\s\S]*?\)\.strict\(\)/);
+  // i180/V4b: plan_workflow is bounded, planning-only, and never executes.
+  assert.match(source,/registerTool\("plan_workflow"/);
+  assert.match(source,/problem_text:z\.string\(\)\.min\(1\)\.max\(65536\)/);
+  assert.match(source,/provider:z\.enum\(\["deepseek"\]\)\.optional\(\)/);
+  assert.match(source,/tool_execution:"NOT_RUN"/);
+  assert.match(source,/PLANNING ONLY/);
 });
 test("D08: sdk.d.mts type declarations cover every sdk.mjs named export",async()=>{
   const src=await readFile(new URL("../packages/runner/js/sdk.mjs",import.meta.url),"utf8");
@@ -60,10 +67,12 @@ test("D08: sdk.d.mts type declarations cover every sdk.mjs named export",async()
   for(const m of src.matchAll(/export\s*\{([^}]*)\}/g))
     for(const part of m[1].split(",").map(s=>s.trim()).filter(Boolean))
       names.add(part.includes(" as ")?part.split(/\s+as\s+/).pop():part);
-  // 7 tool-management + 7 portfolio T4 + 3 capability-validation exports.
-  assert.equal(names.size,17,"sdk.mjs export face changed; update sdk.d.mts and this pin");
+  // 7 tool-management + 7 portfolio T4 + 3 capability-validation + 3 workflow
+  // functions (planWorkflow / compileWorkflowPlan / executeWorkflowPlan)
+  // + 3 workflow error classes (WorkflowError / WorkflowPlanError / WorkflowBlockedError).
+  assert.equal(names.size,23,"sdk.mjs export face changed; update sdk.d.mts and this pin");
   for(const name of names)
-    assert.match(dts,new RegExp(`export\\s+(?:async\\s+)?function\\s+${name}\\b`),
+    assert.match(dts,new RegExp(`export\\s+(?:declare\\s+)?(?:async\\s+)?(?:function|class)\\s+${name}\\b`),
       "sdk.d.mts must declare "+name);
 });
 test("D08: process success is distinct from proof or consumer claim acceptance",()=>{
