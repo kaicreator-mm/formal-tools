@@ -1,6 +1,6 @@
 {
   "schema": "formal-tools-interfaces/3",
-  "version": "0.5.0-r5",
+  "version": "0.5.0-r6",
   "status": "JS_PLANNING_TESTED_NODE_NATIVE_MCP_NOT_RUN",
   "core": "packages/core/src/finite.mjs",
   "cli": "node packages/runner/js/cli.mjs",
@@ -26,6 +26,7 @@
     "plan_native_cli",
     "inspect_native_installation",
     "list_portfolio_tools",
+    "match_formal_capabilities",
     "inspect_portfolio_tool",
     "verify_portable_fixture",
     "run_portfolio_operation"
@@ -170,8 +171,6 @@
       "validateCapabilityValidation",
       "matchValidatedTools"
     ],
-    "capabilities_cli": "node packages/runner/js/capabilities-cli.mjs [summary|match --cap <id> ... [--include-not-verified]|tool <id>]",
-    "mcp_follow_up": "match_formal_capabilities registration is deferred: packages/runner/js/mcp.mjs and its 13-tool contract are blob-pinned by docs/tool-portfolio/r99/CBMC_CURRENT_MAIN_T4.json; adding the MCP tool requires the pin-owning lane's evidence reconciliation",
     "evidence": "docs/tool-portfolio/r176/",
     "evidence_lane": "deployed portable bundle container probe (formal-tools:deb13-r0) + merged portable-lane receipts for nuxmv/prob",
     "receipts": {
@@ -180,6 +179,15 @@
       "not_verified": 0
     },
     "discovery_registry_unchanged": "registry/PROBLEM_CAPABILITIES.json stays schema 0.1 DISCOVERY_ONLY",
-    "status": "JS_TESTED_RECEIPT_SHA256_BOUND_CAPABILITY_PROBE_ONLY_NOT_FORMAL_T3_T4_T5_T6"
+    "status": "JS_TESTED_UNIFIED_CLI_SDK_MCP_RECEIPT_SHA256_BOUND_CAPABILITY_PROBE_ONLY_NOT_FORMAL_T3_T4_T5_T6",
+    "cli": "cli.mjs capabilities [summary | match --cap <id> [...] [--include-not-verified] | tool <id>]",
+    "mcp_tool": "match_formal_capabilities",
+    "wiring": {
+      "cli_action": "packages/runner/js/cli.mjs capabilities",
+      "mcp_tool": "packages/runner/js/mcp.mjs match_formal_capabilities (14th allowlisted tool)",
+      "sdk_module_exports": "packages/runner/js/sdk.mjs re-exports the capability-validation module",
+      "standalone_entry_removed": "packages/runner/js/capabilities-cli.mjs deleted; absorbed by the unified cli.mjs action",
+      "cbmc_r99_pins": "cli.mjs/sdk.mjs/mcp.mjs blobs refreshed with additive drift block source_pin_drift.shared_interface_r177; historical window/receipt claims untouched"
+    }
   }
 }
