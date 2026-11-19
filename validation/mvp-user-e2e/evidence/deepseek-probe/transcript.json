@@ -1,0 +1,68 @@
+{
+  "schema": "formal-tools/deepseek-probe-transcript/1.0",
+  "kind": "PROBE_NOT_FINAL_E2E",
+  "entry": "deepseek-plan",
+  "generated_at": "2026-11-19T09:43:10.173Z",
+  "provider": "deepseek",
+  "endpoint": "https://api.deepseek.com/chat/completions",
+  "model": "deepseek-chat",
+  "http_status": 200,
+  "request": {
+    "system_instruction": "You are a planning assistant for a formal-methods tool harness.\nPropose a Method DAG for the user's request as a single JSON object, no prose outside JSON:\n{\"method_dag\":[{\"id\":\"s1\",\"tool\":\"z3|cvc5|highs|compare\",\"operation\":\"solve-smt|solve-lp|cross-check\",\"depends_on\":[],\"note\":\"...\"}]}\nHard constraints:\n- tools must come ONLY from: z3, cvc5, highs, compare\n- operations must come ONLY from: solve-smt, solve-lp, cross-check\n- keep the DAG minimal (typically: one solve per solver, then a compare cross-check)\nIf the request cannot be mapped onto these tools, reply with {\"method_dag\":[],\"unmappable\":true}.",
+    "user_prompt_path": "validation/mvp-user-e2e/fixtures/user-prompt-a.txt",
+    "user_prompt": "Two non-negative integer variables x and y are each capped at 1 (0 <= x <= 1 and 0 <= y <= 1).\nA colleague claims their sum can reach 4. Please determine, over the integers, whether the\nconstraints x + y >= 4 together with those bounds is satisfiable, and give a definitive answer.\nTo be trustworthy, verify the same problem with at least two independent SMT solvers (z3 and\ncvc5) and tell me explicitly whether the two solvers agree on the final answer.\n",
+    "temperature": 0,
+    "max_tokens": 800,
+    "authorization_header": "REDACTED_BY_CONSTRUCTION"
+  },
+  "response": {
+    "raw_body": "{\"id\":\"7470d1e4-4b5a-4c92-9b8e-1ca6e28505c5\",\"object\":\"chat.completion\",\"created\":1795081359,\"model\":\"deepseek-flash\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"{\\\"method_dag\\\":[{\\\"id\\\":\\\"s1\\\",\\\"tool\\\":\\\"z3\\\",\\\"operation\\\":\\\"solve-smt\\\",\\\"depends_on\\\":[],\\\"note\\\":\\\"Check integer constraints 0<=x<=1, 0<=y<=1, x+y>=4 for satisfiability.\\\"},{\\\"id\\\":\\\"s2\\\",\\\"tool\\\":\\\"cvc5\\\",\\\"operation\\\":\\\"solve-smt\\\",\\\"depends_on\\\":[],\\\"note\\\":\\\"Independently check the same integer constraints for satisfiability.\\\"},{\\\"id\\\":\\\"s3\\\",\\\"tool\\\":\\\"compare\\\",\\\"operation\\\":\\\"cross-check\\\",\\\"depends_on\\\":[\\\"s1\\\",\\\"s2\\\"],\\\"note\\\":\\\"Compare z3 and cvc5 results and report whether they agree.\\\"}]}\"},\"logprobs\":null,\"finish_reason\":\"stop\"}],\"usage\":{\"prompt_tokens\":286,\"completion_tokens\":138,\"total_tokens\":424,\"prompt_tokens_details\":{\"cached_tokens\":0},\"prompt_cache_hit_tokens\":0,\"prompt_cache_miss_tokens\":286},\"system_fingerprint\":\"bc19ba97cbe016479903222bb1578db6\"}",
+    "assistant_message": "{\"method_dag\":[{\"id\":\"s1\",\"tool\":\"z3\",\"operation\":\"solve-smt\",\"depends_on\":[],\"note\":\"Check integer constraints 0<=x<=1, 0<=y<=1, x+y>=4 for satisfiability.\"},{\"id\":\"s2\",\"tool\":\"cvc5\",\"operation\":\"solve-smt\",\"depends_on\":[],\"note\":\"Independently check the same integer constraints for satisfiability.\"},{\"id\":\"s3\",\"tool\":\"compare\",\"operation\":\"cross-check\",\"depends_on\":[\"s1\",\"s2\"],\"note\":\"Compare z3 and cvc5 results and report whether they agree.\"}]}",
+    "usage": {
+      "prompt_tokens": 286,
+      "completion_tokens": 138,
+      "total_tokens": 424,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 286
+    }
+  },
+  "proposal_mapping": {
+    "ok": true,
+    "dag_node_count": 3,
+    "unmappable_flag": false,
+    "unknown_tools": [],
+    "unknown_operations": [],
+    "parsed_proposal": {
+      "method_dag": [
+        {
+          "id": "s1",
+          "tool": "z3",
+          "operation": "solve-smt",
+          "depends_on": [],
+          "note": "Check integer constraints 0<=x<=1, 0<=y<=1, x+y>=4 for satisfiability."
+        },
+        {
+          "id": "s2",
+          "tool": "cvc5",
+          "operation": "solve-smt",
+          "depends_on": [],
+          "note": "Independently check the same integer constraints for satisfiability."
+        },
+        {
+          "id": "s3",
+          "tool": "compare",
+          "operation": "cross-check",
+          "depends_on": [
+            "s1",
+            "s2"
+          ],
+          "note": "Compare z3 and cvc5 results and report whether they agree."
+        }
+      ]
+    }
+  },
+  "disclaimer": "Connectivity/shape probe only. NOT the final E2E; the plan produced here is not an executed plan."
+}

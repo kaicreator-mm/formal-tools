@@ -1,0 +1,12 @@
+{
+  "sense": "max",
+  "objective": [3, 2],
+  "variables": [
+    { "lower": 0, "upper": null },
+    { "lower": 0, "upper": null }
+  ],
+  "constraints": [
+    { "lower": null, "upper": 4, "coefficients": [1, 1] },
+    { "lower": null, "upper": 3, "coefficients": [1, 0] }
+  ]
+}

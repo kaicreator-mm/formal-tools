@@ -1,0 +1,6 @@
+(set-logic QF_LIA)
+(set-info :source "i186 user-e2e negative: deliberate SMT-LIB2 syntax error, must fail closed with PARSE_ERROR")
+(declare-fun x () Int)
+(assert (and (>= x 0) (<= x 1)
+(check-sat)
+(exit)
