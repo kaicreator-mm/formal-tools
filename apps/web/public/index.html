@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="formal-tools task console — submit a problem, inspect and approve an execution plan, watch the run, download evidence.">
+  <title>formal-tools — task console</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%231d4ed8'/%3E%3Ctext x='8' y='12' font-size='10' text-anchor='middle' fill='white' font-family='monospace'%3E%E2%88%80%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="app-header">
+    <div class="app-header__inner">
+      <p class="brand"><span class="brand__mark" aria-hidden="true">∀</span> formal-tools <span class="brand__sub">task console</span></p>
+      <div class="badge-row">
+        <span id="modeBadge" class="badge badge--mode" data-testid="mode-badge">mode: loading…</span>
+        <span id="mockBadge" class="badge badge--mock" data-testid="mock-badge" title="This round (V5-a) runs a MOCKED engine: plans/receipts use the real pinned contract shapes, but no real solver process is executed. Wiring of the real engine happens in V5-b.">MOCKED CONTRACTS</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="stepper" aria-label="Task progress">
+    <ol id="stepper">
+      <li data-step="input" aria-current="step"><span class="stepper__num" aria-hidden="true">1</span> Input</li>
+      <li data-step="plan"><span class="stepper__num" aria-hidden="true">2</span> Plan</li>
+      <li data-step="run"><span class="stepper__num" aria-hidden="true">3</span> Run</li>
+      <li data-step="results"><span class="stepper__num" aria-hidden="true">4</span> Results</li>
+    </ol>
+  </nav>
+
+  <main id="main" class="app-main">
+
+    <!-- ============================ SCREEN 1: PROBLEM INPUT ============================ -->
+    <section id="screen-input" class="screen" data-screen="input" aria-labelledby="h-input">
+      <h1 id="h-input" tabindex="-1">1 · Problem input</h1>
+      <p class="screen-lede">Paste a supported model, or load a sample. The bridge builds a checkable execution plan — nothing runs before you approve it.</p>
+
+      <form id="problemForm" novalidate>
+        <div class="field">
+          <label for="problemText">Problem (SMT-LIB2 text or LP JSON model)</label>
+          <textarea id="problemText" name="problem_text" rows="12" spellcheck="false"
+            aria-describedby="problemHint inputStatus"
+            placeholder="; paste SMT-LIB2 here, or a JSON LP model with objective/constraints"></textarea>
+          <p id="problemHint" class="hint">Accepted: SMT-LIB2 text (needs (assert / (check-sat)) or LP JSON with objective/constraints keys. Max 1 MB.</p>
+        </div>
+
+        <div class="field">
+          <div class="label-row" role="group" aria-labelledby="samplesLabel">
+            <span id="samplesLabel" class="field-label">Samples</span>
+            <div class="sample-row">
+              <button type="button" class="btn btn--ghost sample-btn" data-sample="smt-sat" data-testid="sample-a">Sample A · SMT cross-check (sat)</button>
+              <button type="button" class="btn btn--ghost sample-btn" data-sample="lp" data-testid="sample-b">Sample B · HiGHS LP</button>
+              <button type="button" class="btn btn--ghost sample-btn" data-sample="smt-unknown" data-testid="sample-unknown">Sample · UNKNOWN</button>
+              <button type="button" class="btn btn--ghost sample-btn" data-sample="invalid" data-testid="sample-invalid">Negative · malformed (fail-closed demo)</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="assumptionsInput">Assumptions <span class="muted">(optional, one per line)</span></label>
+          <textarea id="assumptionsInput" name="assumptions" rows="3" spellcheck="false"
+            aria-describedby="assumptionsHint"
+            placeholder="Leave empty to use the bridge's default assumptions for the detected problem kind."></textarea>
+          <p id="assumptionsHint" class="hint">Assumptions are recorded in the plan; you can edit them again on the plan screen.</p>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn btn--primary" id="planBtn" data-testid="generate-plan">Generate plan</button>
+          <span id="inputStatus" class="status" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+    </section>
+
+    <!-- ============================ SCREEN 2: PLAN REVIEW ============================ -->
+    <section id="screen-plan" class="screen" data-screen="plan" aria-labelledby="h-plan" hidden>
+      <h1 id="h-plan" tabindex="-1">2 · Plan review</h1>
+      <p class="screen-lede">Check what would run. Nothing executes until you explicitly approve.</p>
+
+      <div id="planBanner" class="banner banner--info" hidden></div>
+
+      <div class="plan-grid">
+        <div class="plan-grid__main">
+          <h2>Steps</h2>
+          <div class="table-wrap">
+            <table id="stepsTable" class="steps-table">
+              <caption>Execution plan steps (DAG)</caption>
+              <thead>
+                <tr><th scope="col">Step</th><th scope="col">Tool</th><th scope="col">Operation</th><th scope="col">Depends on</th><th scope="col">Timeout</th></tr>
+              </thead>
+              <tbody id="stepsBody"></tbody>
+            </table>
+          </div>
+
+          <h2>Assumptions</h2>
+          <p class="hint">Edit inline; “Regenerate plan” rebuilds the plan (and hashes) with your edits.</p>
+          <ul id="assumptionList" class="assumption-list"></ul>
+          <div class="actions">
+            <button type="button" class="btn btn--ghost" id="addAssumptionBtn">+ Add assumption</button>
+            <button type="button" class="btn btn--ghost" id="regenBtn" data-testid="regenerate-plan">Regenerate plan</button>
+          </div>
+
+          <details id="planJsonBox" class="json-box">
+            <summary>Plan JSON (contract <code>formal-tools/execution-plan/1.0</code>)</summary>
+            <pre id="planJson" tabindex="0"></pre>
+          </details>
+        </div>
+
+        <aside class="plan-grid__side">
+          <h2>Approve</h2>
+          <div class="approve-card">
+            <p class="hint">The plan above will be executed by the bounded bridge under its caps (≤8 steps, ≤120s, allowlisted tools only).</p>
+            <p class="approve-card__gate">
+              <input type="checkbox" id="approveCheck" data-testid="approve-check">
+              <label for="approveCheck">I have reviewed the steps and assumptions.</label>
+            </p>
+            <button type="button" class="btn btn--primary btn--block" id="approveBtn" data-testid="approve-run" disabled>Approve &amp; run</button>
+            <button type="button" class="btn btn--ghost btn--block" id="backBtn">← Edit problem</button>
+            <p id="planStatus" class="status" role="status" aria-live="polite"></p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============================ SCREEN 3: RUN ============================ -->
+    <section id="screen-run" class="screen" data-screen="run" aria-labelledby="h-run" hidden>
+      <h1 id="h-run" tabindex="-1">3 · Run</h1>
+      <p class="screen-lede">Live step statuses (1s polling). Steps run in dependency order under the plan budget.</p>
+
+      <div id="runMeta" class="run-meta"></div>
+      <div id="overallBanner" class="banner" role="alert" hidden></div>
+
+      <ol id="runSteps" class="run-steps" aria-live="polite" aria-label="Run steps"></ol>
+      <p id="runStatus" class="status" role="status"></p>
+    </section>
+
+    <!-- ============================ SCREEN 4: RESULTS ============================ -->
+    <section id="screen-results" class="screen" data-screen="results" aria-labelledby="h-results" hidden>
+      <h1 id="h-results" tabindex="-1">4 · Results &amp; evidence</h1>
+      <p class="screen-lede">Each verdict dimension is reported separately — they are never conflated.</p>
+
+      <div id="verdictBlock" class="verdict-block" data-testid="verdict-block"></div>
+      <div id="resultNote" class="banner" hidden></div>
+
+      <h2>Evidence</h2>
+      <p class="hint">Raw receipt (JSON, with the exact bounded streams hashed inside) plus per-step stdout/stderr excerpts.</p>
+      <div id="evidenceActions" class="evidence-actions" data-testid="evidence-actions"></div>
+
+      <div class="actions">
+        <button type="button" class="btn btn--primary" id="newTaskBtn">Start new task</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>formal-tools · bounded trusted bridge · same-origin only · <span id="footerMeta">engine: mock-v1 (simulated)</span></p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>
