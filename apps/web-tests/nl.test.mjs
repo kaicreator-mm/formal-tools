@@ -17,7 +17,8 @@
 // (agent-surrogate evidence) and tests/nl-model.driver.mjs (trusted host).
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { promises as fsp } from 'node:fs';
+import { promises as fsp, readFileSync } from 'node:fs';
+import { runInNewContext } from 'node:vm';
 import path from 'node:path';
 import os from 'node:os';
 
@@ -142,6 +143,37 @@ after(async () => {
     if (h) await new Promise((r) => h.server.close(r));
   }
   await fsp.rm(runsDir, { recursive: true, force: true });
+});
+
+// UI correctness regression (not a substitute for the browser acceptance):
+// exercise the actual app.js comparison helper with unmodified, reordered-key
+// and changed forms. The click handler must use it before submitting approve.
+test('NL Web approval guard: visible unvalidated edits cannot silently approve an older preview', () => {
+  const source = readFileSync(new URL('../web/public/app.js', import.meta.url), 'utf8');
+  const helper = source.match(/function nlReviewFingerprint\(value\) \{[\s\S]*?\n\}/)?.[0];
+  assert.ok(helper, 'review-fingerprint helper must exist in the served app');
+  const fingerprint = runInNewContext(helper + '\n' + 'nlReviewFingerprint');
+  const clean = structuredClone(SAT_MODEL);
+  const same = structuredClone(clean);
+  same.constraints[0].coefficients = { k: -7, y: 1, x: 1 };
+  assert.equal(fingerprint(clean), fingerprint(same), 'key order must not trigger a false edit');
+  const changed = structuredClone(clean);
+  changed.variables[0].upper = 40;
+  assert.notEqual(fingerprint(clean), fingerprint(changed), 'changed displayed bound must invalidate the reviewed model');
+  const changedConstraint = structuredClone(clean);
+  changedConstraint.constraints[0].rhs = 7;
+  assert.notEqual(fingerprint(clean), fingerprint(changedConstraint), 'changed constraint must invalidate the reviewed model');
+  const changedAssumption = structuredClone(clean);
+  changedAssumption.assumptions.push('one more interpretation');
+  assert.notEqual(fingerprint(clean), fingerprint(changedAssumption), 'changed assumptions must require re-validation');
+  const handler = source.slice(
+    source.indexOf("$('#nlApproveBtn').addEventListener('click'"),
+    source.indexOf("$('#nlRejectBtn').addEventListener('click'")
+  );
+  assert.match(handler, /const visibleModel = collectNlEdits\(\)/);
+  assert.match(handler, /const reviewedModel = state\.nlEditedModel \|\| state\.nlProposal\.model/);
+  assert.match(handler, /nlReviewFingerprint\(visibleModel\) !== nlReviewFingerprint\(reviewedModel\)/);
+  assert.match(handler, /Click Re-validate edits/);
 });
 
 // --- meta ---------------------------------------------------------------------
