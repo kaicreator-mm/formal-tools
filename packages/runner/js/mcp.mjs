@@ -10,6 +10,7 @@ import { knownTools, validateSource, inspectTool, doctor, runFixture } from "./n
 import { describeNativeTool, planNative, toolIds } from "./native-catalog.mjs";
 import { inspectInstallation } from "./tool-manager.mjs";
 import { listPortfolioTools, describePortfolioTool, inspectPortfolioTool, runPortableGate, runPortfolioOperation } from "./tool-portfolio-t4.mjs";
+import { matchValidatedTools, loadCapabilityValidation } from "./capability-validation.mjs";
 
 /** @typedef {{type:"text",text:string}} TextBlock */
 /** @type {(x:unknown)=>{content:TextBlock[]}} */
@@ -73,6 +74,18 @@ serveStdio(()=>{
     description:"Read-only capability and tool metadata for all 36 tools. Never implies a T3/T4/T5 PASS.",
     inputSchema:z.object({})
   },async()=>txt({tools:listPortfolioTools(),status:"DISCOVERY_NOT_T4_QUALIFIED"}));
+  server.registerTool("match_formal_capabilities",{
+    description:"Deterministic capability-ID to validated-tool match over the r176 container probe receipts. Read-only; capability IDs come from the frozen discovery registry. Probe receipts are technical evidence, never a T3/T4/T5/T6 or business acceptance.",
+    inputSchema:z.object({
+      capabilities:z.array(z.string().min(1)).min(1).max(16),
+      include_not_verified:z.boolean().default(false)
+    }).strict()
+  },async({capabilities,include_not_verified})=>handle(async()=>{
+    const match=matchValidatedTools(capabilities,{includeNotVerified:include_not_verified});
+    const ledger=loadCapabilityValidation();
+    return {...match,ledger_counts:ledger.counts,
+      scope:"PROBE_RECEIPTS_ARE_TECHNICAL_EVIDENCE_ONLY_NOT_FORMAL_ACCEPTANCE"};
+  }));
   server.registerTool("inspect_portfolio_tool",{
     description:"Read-only pinned portable installation metadata; no process launch.",
     inputSchema:z.object({tool:portfolioId})

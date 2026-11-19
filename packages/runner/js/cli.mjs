@@ -10,6 +10,8 @@ import { describeNativeTool, planNative, planRawNative, planNativeHelp, toolIds 
 import { toolInfo, inspectInstallation, inspectAllInstallations } from "./tool-manager.mjs";
 import { invokeTool } from "./sdk.mjs";
 import { listPortfolioTools, describePortfolioTool, inspectPortfolioTool, runPortableGate, runPortfolioOperation } from "./tool-portfolio-t4.mjs";
+import { listProblemCapabilities } from "./problem-capabilities.mjs";
+import { loadCapabilityValidation, matchValidatedTools } from "./capability-validation.mjs";
 
 function localParams(args) {
   /** @type {{[key:string]:string|number|boolean}} */
@@ -228,13 +230,39 @@ export async function main(args=process.argv.slice(2)) {
         result=await runPortfolioOperation(tool,operation,model,{timeoutS:optNumber(params.timeout,30)});
       }
       else throw new TypeError("portfolio usage: list | describe TOOL | inspect TOOL | doctor CANDIDATE | verify CANDIDATE | invoke highs solve-lp --model model.json [--timeout N]");
+    } else if (action==="capabilities") {
+      // Read-only capability discovery + r176 probe-validated match. Never launches tools.
+      const sub=arg;
+      if(!sub||sub==="summary"){
+        if(sub==="summary"&&rest.length)throw new TypeError("capabilities summary takes no options");
+        const ledger=loadCapabilityValidation();
+        result={status:ledger.status,counts:ledger.counts,scope_rules:ledger.scope_rules,
+          capabilities:listProblemCapabilities(),
+          usage:"capabilities match --cap <id> [--cap <id> ...] [--include-not-verified] | capabilities tool <id>"};
+      } else if(sub==="match"){
+        /** @type {string[]} */
+        const caps=[];let includeNotVerified=false;
+        for(let i=0;i<rest.length;i++){
+          if(rest[i]==="--cap"){const v=rest[i+1];if(typeof v!=="string"||!v.length||v.startsWith("--"))throw new TypeError("--cap requires a capability id");caps.push(v);i++;}
+          else if(rest[i]==="--include-not-verified")includeNotVerified=true;
+          else throw new TypeError("capabilities match accepts only --cap <id> and --include-not-verified");
+        }
+        if(!caps.length)throw new TypeError("capabilities match requires at least one --cap <id>");
+        result=matchValidatedTools(caps,{includeNotVerified});
+      } else if(sub==="tool"){
+        if(!rest[0]||rest.length>1)throw new TypeError("capabilities tool requires exactly one tool id");
+        const ledger=loadCapabilityValidation();
+        const row=ledger.tools.find(t=>t.id===rest[0]);
+        if(!row)throw new RangeError("unknown tool id: "+rest[0]);
+        result=row;
+      } else throw new TypeError("capabilities usage: summary | match --cap <id> [...] | tool <id>");
     } else if (action==="pure") {
       const path=flag(rest,"--input");
       if (!path) throw new TypeError("pure requires --input <JSON-file>");
       const model=JSON.parse(await readFile(path,"utf8"));
       result=verifyPure(/** @type {import("../../core/src/finite.mjs").PureEngine} */(arg),model);
     } else {
-      throw new TypeError("Usage: cli.mjs <list|validate|info TOOL|where TOOL|doctor-all [--probe --timeout N]|catalog [TOOL]|plan TOOL OP --option value|exec TOOL OP --option value|invoke TOOL OP --option value|native-help TOOL|native TOOL -- [official args]|inspect TOOL|doctor TOOL|run TOOL --case positive|negative|suite|pure KIND --input file.json>");
+      throw new TypeError("Usage: cli.mjs <list|validate|info TOOL|where TOOL|doctor-all [--probe --timeout N]|catalog [TOOL]|plan TOOL OP --option value|exec TOOL OP --option value|invoke TOOL OP --option value|native-help TOOL|native TOOL -- [official args]|inspect TOOL|doctor TOOL|run TOOL --case positive|negative|suite|capabilities [summary|match --cap ID|tool ID]|pure KIND --input file.json>");
     }
     print(result);
     if(action==="validate")return result.status==="STATIC_PASS"?0:2;

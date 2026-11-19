@@ -118,8 +118,8 @@ test("includeNotVerified surfaces excluded rows without changing verified matche
   }
 });
 
-test("capabilities-cli match and tool are wired and read-only", () => {
-  const run = (args) => spawnSync(process.execPath, ["packages/runner/js/capabilities-cli.mjs", ...args],
+test("cli capabilities match and tool are wired and read-only", () => {
+  const run = (args) => spawnSync(process.execPath, ["packages/runner/js/cli.mjs", "capabilities", ...args],
     { encoding: "utf8", timeout: 30_000 });
   const listed = run(["match", "--cap", "logic.smt"]);
   assert.equal(listed.status, 0, listed.stderr);

@@ -46,6 +46,19 @@ test('CBMC T4 evidence is bound to the tested current main and 22 source blobs',
   assert.equal(evidence.exact_main_historical.sha, '530a2d7a8edf99106845be228b6451c6aa52be92');
   assert.equal(evidence.exact_main_historical.main_push.pipeline, 1867);
   assert.equal(evidence.exact_main_historical.main_push.status, 'SUCCESS');
+
+test('r177 shared-interface wiring is recorded as additive post-window pin drift', async () => {
+  const r177 = evidence.source_pin_drift.shared_interface_r177;
+  assert.equal(r177.base_main, 'e5b4f62e1e650d2785a7ee3970102c5218b9d3de');
+  assert.equal(r177.output_label, 'FORMAL_TOOLS_I24_R177_CAPABILITY_INTERFACE_CLOSEOUT');
+  assert.equal(r177.unchanged_pinned_paths, 19);
+  assert.deepEqual(r177.changed_pinned_paths.map(p => p.path),
+    ['packages/runner/js/cli.mjs', 'packages/runner/js/sdk.mjs', 'packages/runner/js/mcp.mjs']);
+  for (const entry of r177.changed_pinned_paths) {
+    assert.equal(gitBlobSha1(await readFile(resolve(entry.path))), entry.new_blob, 'post-wiring blob mismatch: ' + entry.path);
+    assert.notEqual(entry.new_blob, entry.old_blob, entry.path);
+  }
+});
   const drift = evidence.source_pin_drift;
   assert.equal(drift.window.commits, 83);
   assert.deepEqual(drift.changed_pinned_paths.map(p => p.path),
