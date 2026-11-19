@@ -9,11 +9,17 @@ import { mkdtemp, mkdir, writeFile, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
-  executeWorkflowPlan, validateExecutionPlan, WorkflowPlanError, WorkflowBlockedError
+  executeWorkflowPlan, validateExecutionPlan, WorkflowPlanError, WorkflowBlockedError,
+  EXECUTOR_CONSTANTS
 } from "../packages/runner/js/workflow-executor.mjs";
 import {
   canonicalJsonBytes, sha256Hex, EXECUTION_RECEIPT_SCHEMA, ARTIFACT_MANIFEST_SCHEMA
 } from "../packages/runner/js/workflow-evidence.mjs";
+// V2 planning layer (i180/V2, on main) — used by the cross-lane interop lock
+// test at the bottom: plans built by V2 must be accepted by V3's validator.
+import {
+  normalizeUserProblem, stepsFromMethod, buildExecutionPlan
+} from "../packages/runner/js/workflow-plan.mjs";
 
 const UNSAT_SMT = [
   "(set-logic QF_LIA)",
@@ -46,16 +52,16 @@ function smtStep(id, tool, smtLib, deps = [], timeout = 5) {
     input_sha256: sha(canonicalJsonBytes(input)), timeout_s: timeout,
     expected_output_kind: "smt-answer"};
 }
-function compareStep(id, left, right, deps) {
-  const input = {left_step: left, right_step: right, agree_on: "answer"};
+function compareStep(id, left, right, deps, agreeOn = ["sat", "unsat"]) {
+  const input = {left_step: left, right_step: right, agree_on: agreeOn};
   return {id, tool: "compare", operation: "cross-check", depends_on: deps, input,
     input_sha256: sha(canonicalJsonBytes(input)), timeout_s: 5,
-    expected_output_kind: "cross-check-verdict"};
+    expected_output_kind: "cross-tool-verdict"};
 }
 function lpStep(id, model, deps = [], timeout = 10) {
   return {id, tool: "highs", operation: "solve-lp", depends_on: deps, input: model,
     input_sha256: sha(canonicalJsonBytes(model)), timeout_s: timeout,
-    expected_output_kind: "lp-result"};
+    expected_output_kind: "lp-status"};
 }
 function buildPlan(steps, overrides = {}) {
   return {
@@ -263,9 +269,28 @@ test("V3: plan validation rejects unknown tool, operation mismatch, dup, unbound
   assert.throws(() => validateExecutionPlan(buildPlan([
     compareStep("x", "z3-solve", "ghost", ["z3-solve"]), smtStep("z3-solve", "z3", UNSAT_SMT)])),
     planErrorCode("PLAN_COMPARE_INVALID"));
-  const badKind = smtStep("s", "z3", UNSAT_SMT); badKind.expected_output_kind = "lp-result";
+  const badKind = smtStep("s", "z3", UNSAT_SMT); badKind.expected_output_kind = "lp-status";
   assert.throws(() => validateExecutionPlan(buildPlan([badKind])),
+    planErrorCode("PLAN_EXPECTED_KIND_INVALID"), "a contract-valid kind is still per-operation");
+  const badCompareKind = compareStep("x", "z3-solve", "s2", ["z3-solve"]);
+  badCompareKind.expected_output_kind = "smt-answer";
+  assert.throws(() => validateExecutionPlan(buildPlan([
+    smtStep("z3-solve", "z3", UNSAT_SMT), smtStep("s2", "cvc5", UNSAT_SMT), badCompareKind])),
     planErrorCode("PLAN_EXPECTED_KIND_INVALID"));
+  // agree_on must be the frozen V0 compareInput shape: non-empty unique array
+  // over {sat, unsat, optimal-status} — not a string, not foreign tokens.
+  const withAgree = agreeOn => buildPlan([
+    smtStep("z3-solve", "z3", UNSAT_SMT), smtStep("s2", "cvc5", UNSAT_SMT),
+    compareStep("x", "z3-solve", "s2", ["z3-solve", "s2"], agreeOn)]);
+  assert.throws(() => validateExecutionPlan(withAgree("answer")),
+    planErrorCode("PLAN_INPUT_INVALID"), "pre-fix deviant string shape must be rejected");
+  assert.throws(() => validateExecutionPlan(withAgree(["sat", "bogus"])),
+    planErrorCode("PLAN_INPUT_INVALID"));
+  assert.throws(() => validateExecutionPlan(withAgree(["sat", "sat"])),
+    planErrorCode("PLAN_INPUT_INVALID"));
+  assert.throws(() => validateExecutionPlan(withAgree([])),
+    planErrorCode("PLAN_INPUT_INVALID"));
+  assert.doesNotThrow(() => validateExecutionPlan(withAgree(["sat", "unsat", "optimal-status"])));
   const badTimeout = smtStep("s", "z3", UNSAT_SMT); badTimeout.timeout_s = 121;
   assert.throws(() => validateExecutionPlan(buildPlan([badTimeout])),
     planErrorCode("PLAN_TIMEOUT_INVALID"));
@@ -456,4 +481,103 @@ test("V3: large stdout stays bounded at 4KB while the hash covers full bytes", a
   assert.equal(receipt.steps[0].stdout_sha256, sha(bigStdout));
   assert.ok(Buffer.byteLength(receipt.steps[0].stdout_bounded, "utf8") <= 4096);
   assert.ok(receipt.steps[0].stdout_bounded.startsWith("unsat\n"));
+});
+
+// --- i180/V3-fix2 cross-lane interop lock -----------------------------------
+// Regression for the P1 integration-gate defect: V3's validator used deviant
+// expected_output_kind values ("lp-result"/"cross-check-verdict") and a
+// deviant compare input shape (agree_on:"answer") that no other lane emits,
+// so every plan built by V2's buildExecutionPlan was rejected
+// (PLAN_EXPECTED_KIND_INVALID first). These tests pin the frozen V0 contract
+// shapes end-to-end using the exact V2 fixture method from the frozen
+// contract lane (mirrors tests/workflow-plan.test.mjs).
+
+/** @param {any} problem @returns {any} two-solver method proposal (G2 shape, native ops) */
+function v2Method(problem) {
+  return {
+    schema: "formal-tools/method-proposal/0.1",
+    method_id: "methodsmt01",
+    problem_id: problem.problem_id,
+    goal_claim_ids: ["claim1"],
+    oracle_ids: ["heldout"],
+    semantic_review: "PENDING",
+    steps: [
+      { id: "step-z3", tool_id: "z3", operation: "solve", claim_ids: ["claim1"], provides: ["logic.smt"],
+        depends_on: [], source_refs: ["user-problem-text"], estimated_cost_units: 1, timeout_ms: 30000,
+        destination: "LOCAL", output_classification: "PUBLIC" },
+      { id: "step-cvc5", tool_id: "cvc5", operation: "solve", claim_ids: ["claim1"], provides: ["logic.smt"],
+        depends_on: ["step-z3"], source_refs: [], estimated_cost_units: 1, timeout_ms: 30000,
+        destination: "LOCAL", output_classification: "PUBLIC" }
+    ]
+  };
+}
+
+/** @returns {any[]} typed steps exactly as tests/workflow-plan.test.mjs builds them */
+function v2Steps(problem) {
+  const inputs = { "step-z3": { smt_lib: UNSAT_SMT }, "step-cvc5": { smt_lib: UNSAT_SMT } };
+  const compare = {
+    id: "step-agree", tool: "compare", operation: "cross-check",
+    depends_on: ["step-z3", "step-cvc5"],
+    input: { left_step: "step-z3", right_step: "step-cvc5", agree_on: ["sat", "unsat"] },
+    timeout_s: 5, expected_output_kind: "cross-tool-verdict"
+  };
+  return stepsFromMethod(v2Method(problem), inputs, { compareSteps: [compare] });
+}
+
+function v2BuiltPlan() {
+  const f = normalizeUserProblem(
+    "Check with two independent SMT solvers whether this bounded integer problem is unsat.",
+    { assumptions: ["input is bounded linear integer arithmetic", "solvers run locally"] });
+  return { f, plan: buildExecutionPlan({
+    problem: f.problem, method: v2Method(f.problem), steps: v2Steps(f.problem),
+    assumptions: f.assumptions }) };
+}
+
+test("V3-fix2 interop: a V2-built z3+cvc5+compare plan passes V3 validation unchanged", () => {
+  const { plan } = v2BuiltPlan();
+  assert.deepEqual(plan.steps.map(s => s.tool), ["z3", "cvc5", "compare"]);
+  // The exact frozen-V0 kinds the V2 compiler emits must equal V3's pin.
+  assert.deepEqual(plan.steps.map(s => s.expected_output_kind), ["smt-answer", "smt-answer", "cross-tool-verdict"]);
+  for (const step of plan.steps)
+    assert.equal(step.expected_output_kind, EXECUTOR_CONSTANTS.EXPECTED_OUTPUT_KINDS[step.operation]);
+  assert.deepEqual(plan.steps[2].input.agree_on, ["sat", "unsat"]);
+  // No PLAN_EXPECTED_KIND_INVALID / PLAN_INPUT_INVALID: full acceptance.
+  const { orderedSteps, plan_sha256 } = validateExecutionPlan(plan);
+  assert.deepEqual(orderedSteps.map(s => [s.tool, s.operation]),
+    [["z3", "solve-smt"], ["cvc5", "solve-smt"], ["compare", "cross-check"]]);
+  // Canonical-JSON hashing agrees byte-for-byte across lanes.
+  assert.equal(plan_sha256, sha(canonicalJsonBytes(plan)));
+});
+
+test("V3-fix2 interop: without tools the V2-built plan fails closed at preflight, honestly", async () => {
+  const { plan } = v2BuiltPlan();
+  const calls = [];
+  const env = {...process.env};
+  delete env.FORMAL_PORTABLE_ROOT;
+  let blocked = /** @type {any} */ (null);
+  await assert.rejects(
+    executeWorkflowPlan(plan, {captureImpl: stubCapture({}, calls), env}),
+    e => { blocked = e; return e instanceof WorkflowBlockedError && e.code === "BLOCKED_TOOL_MISSING"; });
+  assert.equal(calls.length, 0, "no process may launch before preflight passes");
+  assert.equal(blocked.receipt.overall.process_outcome, "ABORTED");
+  assert.equal(blocked.receipt.overall.claim_verdict, "BLOCKED");
+  assert.equal(blocked.receipt.overall.fail_closed_reason, "BLOCKED_TOOL_MISSING");
+  assert.equal(blocked.receipt.plan_id, plan.plan_id, "blocked receipt binds the V2-built plan");
+  assert.ok(blocked.receipt.steps.every(s => s.status === "NOT_RUN"));
+});
+
+test("V3-fix2 interop: the V2-built plan executes end-to-end to AGREE_UNSAT / PASS", async () => {
+  const { plan } = v2BuiltPlan();
+  const root = await makeFakeRoot();
+  const capture = stubCapture({z3: {stdout: "unsat\n"}, cvc5: {stdout: "unsat\n"}});
+  const {receipt} = await executeWorkflowPlan(plan, runOptions(root, capture,
+    {runId: "run-interop-fix2", host: "interop-test-host"}));
+  assert.equal(receipt.plan_id, plan.plan_id);
+  assert.equal(receipt.plan_sha256, sha(canonicalJsonBytes(plan)));
+  assert.equal(receipt.overall.process_outcome, "OK");
+  assert.equal(receipt.overall.solver_answer.kind, "solve-smt");
+  assert.equal(receipt.overall.solver_answer.value, "unsat");
+  assert.equal(receipt.overall.cross_tool_verdict, "AGREE_UNSAT");
+  assert.equal(receipt.overall.claim_verdict, "PASS");
+  assert.equal(receipt.steps[2].result.verdict, "AGREE_UNSAT");
 });

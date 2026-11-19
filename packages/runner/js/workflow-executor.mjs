@@ -31,9 +31,12 @@ const COMPARE_TOOL = "compare";
 const TOOL_OPERATIONS = Object.freeze({
   z3: "solve-smt", cvc5: "solve-smt", highs: "solve-lp", [COMPARE_TOOL]: "cross-check"
 });
+// Frozen V0 contract (docs/mvp/EXECUTION_PLAN_CONTRACT.md + registry/EXECUTION_PLAN.schema.json).
 const EXPECTED_OUTPUT_KINDS = Object.freeze({
-  "solve-smt": "smt-answer", "solve-lp": "lp-result", "cross-check": "cross-check-verdict"
+  "solve-smt": "smt-answer", "solve-lp": "lp-status", "cross-check": "cross-tool-verdict"
 });
+// cross-check agree_on: non-empty, unique, drawn from these tokens (compareInput schema).
+const COMPARE_AGREE_ON = Object.freeze(["sat","unsat","optimal-status"]);
 const TIMEOUT_LIMITS = Object.freeze({"solve-smt":[1,120], "solve-lp":[1,30], "cross-check":[1,120]});
 const SHA_PATTERN = /^[a-f0-9]{64}$/;
 const ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$/;
@@ -196,10 +199,14 @@ export function validateExecutionPlan(plan) {
       try { validateLpInputShape(step.input); }
       catch (e) { throw new WorkflowPlanError("PLAN_INPUT_INVALID", "solve-lp input invalid: " + e.message); }
     } else if (step.operation === "cross-check") {
+      const agreeOn = plainObject(step.input) ? step.input.agree_on : null;
       if (!plainObject(step.input) || !exactKeys(step.input, ["left_step","right_step","agree_on"]) ||
           typeof step.input.left_step !== "string" || typeof step.input.right_step !== "string" ||
-          step.input.agree_on !== "answer")
-        throw new WorkflowPlanError("PLAN_INPUT_INVALID", 'cross-check input must be {left_step, right_step, agree_on:"answer"}');
+          !Array.isArray(agreeOn) || agreeOn.length < 1 || agreeOn.length > COMPARE_AGREE_ON.length ||
+          new Set(agreeOn).size !== agreeOn.length ||
+          !agreeOn.every(x => COMPARE_AGREE_ON.includes(x)))
+        throw new WorkflowPlanError("PLAN_INPUT_INVALID",
+          "cross-check input must be {left_step, right_step, agree_on:[unique " + COMPARE_AGREE_ON.join("|") + "]}");
     }
     let inputHash;
     try { inputHash = sha256Hex(canonicalJsonBytes(step.input)); }
@@ -643,6 +650,6 @@ export async function executeWorkflowPlan(plan, options = {}) {
 
 export const EXECUTOR_CONSTANTS = Object.freeze({
   PLAN_SCHEMA, SOLVE_SMT_TOOLS, SOLVE_LP_TOOLS, COMPARE_TOOL,
-  TOOL_OPERATIONS, EXPECTED_OUTPUT_KINDS, TIMEOUT_LIMITS,
+  TOOL_OPERATIONS, EXPECTED_OUTPUT_KINDS, COMPARE_AGREE_ON, TIMEOUT_LIMITS,
   BOUNDED_BYTES, FAIL_CLOSED_CODES: FC
 });

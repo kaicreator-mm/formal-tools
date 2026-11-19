@@ -65,15 +65,15 @@ function smtStep(id, tool, smtLib, deps = [], timeout = 10) {
     expected_output_kind: "smt-answer"};
 }
 function compareStep(id, left, right, deps) {
-  const input = {left_step: left, right_step: right, agree_on: "answer"};
+  const input = {left_step: left, right_step: right, agree_on: ["sat", "unsat"]};
   return {id, tool: "compare", operation: "cross-check", depends_on: deps, input,
     input_sha256: sha256Hex(canonicalJsonBytes(input)), timeout_s: 5,
-    expected_output_kind: "cross-check-verdict"};
+    expected_output_kind: "cross-tool-verdict"};
 }
 function lpStep(id, model, deps = [], timeout = 25) {
   return {id, tool: "highs", operation: "solve-lp", depends_on: deps, input: model,
     input_sha256: sha256Hex(canonicalJsonBytes(model)), timeout_s: timeout,
-    expected_output_kind: "lp-result"};
+    expected_output_kind: "lp-status"};
 }
 function buildPlan(planId, problemKind, steps) {
   return {
