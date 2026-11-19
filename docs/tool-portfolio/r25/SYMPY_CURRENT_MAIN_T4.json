@@ -1,0 +1,310 @@
+{
+  "schema": "formal-tools/i24-sympy-current-main-t4/1.0",
+  "output_label": "FORMAL_TOOLS_I24_SYMPY_CURRENT_MAIN_T4_R25",
+  "date": "2026-11-15",
+  "repository": "kaicreator-mm/formal-tools",
+  "portfolio_issue": 24,
+  "tool_issue": 55,
+  "tool_id": "sympy",
+  "expected_version": "1.14.0",
+  "main_sha": "74b511e27ed2b2690be6c7e292400c723c6b9b88",
+  "branch": "docs/i24-sympy-current-main-r25",
+  "scope": "Exact current-main Runner, CLI and SDK fixture route re-executed with the original SymPy archive under a local-only TOOL_ID metadata overlay and a host-Python adapter. This is technical-only host-substitute evidence; it does not qualify the canonical portable runtime or formal T3/T4.",
+  "source_blobs": {
+    "runner": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "runner_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a",
+    "t4_gateway": "922a7c208beaa0e48346403a29ec2d927189319f",
+    "cli": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
+    "sdk": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+    "mcp": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+    "native_catalog": "02f628947be3e5c270d802be150ab220e14fc2b8",
+    "registry": "faa89997c3f7c8c71da0a69aa90e8ff37461cde0",
+    "r1_dag": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+    "make_meta_py": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+    "simpy_builder": "2015ea103e492c9b80703bf9ce6cc252c3822e8a",
+    "package_lock": "2ad31f01195434617ac74d2f377287a15e062b95",
+    "runner_source_retrieval": "GitHub exact-main file; base64 round-trip re-hashed to Git Blob and SHA256"
+  },
+  "package_archive": {
+    "drive_file_id": "1MEZJ5zKT3v8NYUSEGK_Yya56U7b9_HJn",
+    "filename": "sympy-1.14.0-linux-x86_64.tar.zst",
+    "size_bytes": 13114986,
+    "sha256": "6ec71ba8da60f96252cd0e63a5cd503ba49db58626dbed7b4b75a8288ca3e87d",
+    "manifest_match": "MATCHES_EXISTING_APP_PACKAGES_SHA256SUMS_RECEIPT",
+    "manifest_receipt_issue_comment": 6891888655,
+    "zstd_test": "PASS",
+    "decoded_bytes": 71485440,
+    "tar_members": 3437,
+    "member_types": {"directories": 331, "regular_files": 3106, "symlinks": 0, "hardlinks": 0, "special": 0},
+    "unsafe_paths": 0,
+    "duplicate_paths": 0,
+    "extraction": {
+      "uid": 65534,
+      "gid": 65534,
+      "non_root": true,
+      "no_same_owner": true,
+      "no_same_permissions": true,
+      "package_tree_read_only": true,
+      "host_usr_writes": false
+    },
+    "qualification": "Original archive SHA matches prior local producer-manifest receipt; no publisher signature or full T0 acceptance."
+  },
+  "package_identity": {
+    "meta_json_sha256": "98b725ebb2c9f906932ef4500933c0e8540393583d2627872d53f1644fb30a53",
+    "meta_json_git_blob": "ff3b49871c9d4c5a95e9c54192d3fc8e05efe77b",
+    "meta_sh_sha256": "feae78769eecf27829c3e930780b2d80a210b4c5de7763e91d356dbe9f04593b",
+    "meta_sh_git_blob": "6b00b2a1d3402d13251fc364490555dfd0917b17",
+    "run_sha256": "f727ffe098907a9e123823183692e849c1a50b0b902e26e0bd2ce102f1bebba2",
+    "run_git_blob": "6637d8dc5f1a8c8f5d70a8f99372016b88d1b6f0",
+    "meta_json_tool_id": "sympy",
+    "meta_json_version": "1.14.0",
+    "original_meta_sh_key": "TOOL_TOOL_ID=sympy (legacy double-prefix)",
+    "original_meta_sh": "TOOL_TOOL_ID=sympy\nTOOL_VERSION=1.14.0\nTOOL_KIND=python-lib\nTOOL_MAIN_BIN=''\nTOOL_GLIBC_MAX=''\nTOOL_ELF_ARCH=''\nUNAVAILABLE=0\nPAYLOAD='shared runtime: runtimes/python313-3.13.5-linux-x86_64.tar.zst'\n",
+    "original_run_requires": "$FT_ROOT/runtimes/python313/bin/python3.13",
+    "current_main_runner_original_metadata_negative_control": {
+      "operation": "doctor sympy",
+      "exit_code": 2,
+      "stderr": "invalid tool metadata: sympy (TOOL_ID/version/kind missing or mismatched)\n",
+      "interpretation": "Current Runner correctly rejects the original legacy TOOL_TOOL_ID metadata."
+    },
+    "current_main_builder_contract": {
+      "make_meta_py_blob": "2e02fb79aed836ee6cd4698415af43b7cce44da6",
+      "output_key": "TOOL_ID",
+      "simpy_builder_blob": "2015ea103e492c9b80703bf9ce6cc252c3822e8a",
+      "interpretation": "Current builder emits TOOL_ID; original delivered archive is stale and needs rebuild."
+    }
+  },
+  "local_only_overlays": {
+    "original_archive_modified": false,
+    "drive_archive_modified": false,
+    "git_source_modified": false,
+    "meta_sh_overlay": {
+      "content": "TOOL_ID=sympy\nTOOL_VERSION=1.14.0\nTOOL_KIND=python-lib\nTOOL_MAIN_BIN=''\nTOOL_GLIBC_MAX=''\nTOOL_ELF_ARCH=''\nUNAVAILABLE=0\n",
+      "git_blob": "1c7c910e97f8c10039e2d855df4a0913de3f705a",
+      "sha256": "91da3abc72a530f01e029d1d41fb6906fd4603b6e5407519e0c3e1deef07cd28"
+    },
+    "python_runtime_adapter": {
+      "content": "#!/bin/sh\nFT_ROOT=$(CDPATH= cd -- \"$(dirname -- \"$0\")/../../..\" && pwd)\nunset PYTHONHOME\nexport PYTHONPATH=\"$FT_ROOT/tools/sympy/pylib\"\nexec /opt/pyvenv/bin/python3.13 -s \"$@\"\n",
+      "git_blob": "9643ca44e31e1093bdd406110fa92b4cbb9347ff",
+      "sha256": "a7ba6104c97a108c4782c9a1377ce92b6faa7346b400c9a781bd639b419d56d8",
+      "host_python": "/opt/pyvenv/bin/python3.13",
+      "host_python_version": "3.13.5",
+      "mpmath_version": "1.3.0",
+      "portable_runtime_equivalent": false
+    }
+  },
+  "fixture_blobs": {
+    "expect": "b92ab9cdf04f5eefc1e610530fd18d19d288b053",
+    "pos": "64430756923df3134e8a89f3e9e3d4522bf0c21a",
+    "neg": "4dd3c6bd06e71a0d120deb1601e6faf78ac43a55",
+    "err": "c40cb5a6fe5fee3ac23701c542f6e850fba6ac22",
+    "fixture_contract_sha256": "c115b21f309e3a1f1edfaacacb528b2c78a7339663230a053825455c99ac2a02"
+  },
+  "host_environment": {
+    "os": "Debian GNU/Linux 13 (trixie)",
+    "arch": "x86_64",
+    "glibc": "2.41",
+    "uid": 65534,
+    "gid": 65534,
+    "node": "v22.16.0",
+    "python": "3.13.5",
+    "mpmath": "1.3.0",
+    "bundle_root_read_only": true,
+    "network_isolation": "NOT_PROVEN",
+    "canonical_python313_runtime": "NOT_PRESENT",
+    "runtime_transfer_limit": "294346075 bytes > Drive connector 268435456-byte download ceiling; runtime was not downloaded."
+  },
+  "runner_replay": {
+    "runner_git_blob": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+    "runner_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a",
+    "doctor": {
+      "exit_code": 0,
+      "stdout": "doctor: sympy kind=python-lib version=1.14.0\n  python: 3.13.5 OK\n  verdict: OK\n",
+      "stdout_sha256": "1c5f1f42ac72905a7f1848901332155029bba9bcc8ea6110d5a3898ef94db88f",
+      "stderr": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "version": {
+      "exit_code": 0,
+      "stdout": "tool: sympy\nversion: 1.14.0\nprobe: n/a\n",
+      "stdout_sha256": "0e75f4cd17d45ef9a38a7d32e639be92db188f3968b1ca6abb9a9c1d717a4d00",
+      "stderr": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "verify": {
+      "exit_code": 0,
+      "verdict": "PASS",
+      "stdout": "   sympy/pos: exit=0 dur=1395ms matched=1 exit_ok=1 label=SOLVED (log: /tmp/sympy-r25.yIpfQm/evidence/verify-sympy.pos.log)\n   sympy/neg: exit=0 dur=1172ms matched=1 exit_ok=1 label=REFUTED (log: /tmp/sympy-r25.yIpfQm/evidence/verify-sympy.neg.log)\n   sympy/err: exit=1 dur=1239ms matched=1 exit_ok=1 label=MALFORMED_EXPRESSION (log: /tmp/sympy-r25.yIpfQm/evidence/verify-sympy.err.log)\n",
+      "stdout_sha256": "1fc04d6ee8caeb4efe54cc226319f4c66451d4bbe0f090039319028189a1a02b",
+      "stderr": "",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tsv": "runner_schema\tformal-tools/portable-verify/0.2\nsympy\tpos\t0\t1395\t1\t1\tSOLVED\nsympy\tneg\t0\t1172\t1\t1\tREFUTED\nsympy\terr\t1\t1239\t1\t1\tMALFORMED_EXPRESSION\nverdict\tPASS\n",
+      "tsv_sha256": "42a5a3db9e5b1c83a9b3df1911cb1ab944a8fd39bde84340ae6dee5c1453ee66",
+      "phases": {
+        "pos": {
+          "exit_code": 0,
+          "log": "PYVERIFY: OK SOLVED\n\nPHASE_DONE phase=pos rc=0\n",
+          "log_sha256": "e2150ef48e900fb804eb2ce1237705b0b8cd294c785ce412ad5d6a4fe1a552eb"
+        },
+        "neg": {
+          "exit_code": 0,
+          "log": "PYVERIFY: OK REFUTED\n\nPHASE_DONE phase=neg rc=0\n",
+          "log_sha256": "e468cbdd8d1dc30e0d7fe5e0faec9a82faa39b72756b43e2d6be6ac90814add5"
+        },
+        "err": {
+          "exit_code": 1,
+          "log": "Traceback (most recent call last):\n  File \"/tmp/sympy-r25.yIpfQm/bundle/tools/sympy/pylib/sympy/core/sympify.py\", line 507, in sympify\n    expr = parse_expr(a, local_dict=locals, transformations=transformations, evaluate=evaluate)\n  File \"/tmp/sympy-r25.yIpfQm/bundle/tools/sympy/pylib/sympy/parsing/sympy_parser.py\", line 1075, in parse_expr\n    code = stringify_expr(s, local_dict, global_dict, _transformations)\n  File \"/tmp/sympy-r25.yIpfQm/bundle/tools/sympy/parsing/sympy_parser.py\", line 890, in stringify_expr\n    for toknum, tokval, _, _, _ in generate_tokens(input_code.readline):\n                                   ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/tokenize.py\", line 588, in _generate_tokens_from_c_tokenizer\n    raise TokenError(msg, (e.lineno, e.offset)) from None\ntokenize.TokenError: ('unexpected EOF in multi-line statement', (1, 0))\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/tmp/sympy-r25.yIpfQm/bundle/tests/sympy/err.py\", line 4, in <module>\n    sp.sympify(\"sin(\")\n    ~~~~~~~~~~^^^^^^^^\n  File \"/tmp/sympy-r25.yIpfQm/bundle/tools/sympy/pylib/sympy/core/sympify.py\", line 509, in sympify\n    raise SympifyError('could not parse %r' % a, exc)\nsympy.core.sympify.SympifyError: Sympify of expression 'could not parse 'sin('' failed, because of exception being raised:\nTokenError: ('unexpected EOF in multi-line statement', (1, 0))\n\nPHASE_DONE phase=err rc=1\n",
+          "log_sha256": "ebca738a304f12e9e0064940c04752b091b05bc1ed72193841e068dabbbcee47"
+        }
+      }
+    }
+  },
+  "cli": {
+    "doctor": {
+      "process_exit": 0,
+      "result": {
+        "schema": "formal-tools/portfolio-t4-technical/0.1",
+        "tool": "sympy",
+        "operation": "doctor",
+        "status": "DOCTOR_EXECUTED_NOT_T3",
+        "process": {
+          "exit_code": 0,
+          "signal": null,
+          "timed_out": false,
+          "output_limit": false,
+          "elapsed_ms": 770,
+          "error": null
+        },
+        "runner_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a",
+        "metadata_sha256": "98b725ebb2c9f906932ef4500933c0e8540393583d2627872d53f1644fb30a53",
+        "fixture_contract_sha256": "c115b21f309e3a1f1edfaacacb528b2c78a7339663230a053825455c99ac2a02",
+        "receipt_sha256": null,
+        "streams": {
+          "stdout": "doctor: sympy kind=python-lib version=1.14.0\n  python: 3.13.5 OK\n  verdict: OK\n",
+          "stderr": "",
+          "stdout_sha256": "1c5f1f42ac72905a7f1848901332155029bba9bcc8ea6110d5a3898ef94db88f",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "cases": [],
+        "scope": "T4_TECHNICAL_ONLY_T3_NATIVE_REVIEW_AND_T5_SEMANTICS_NOT_EVALUATED"
+      },
+      "raw_stdout_sha256": "8b1b5c792850666d34efaae906331de8a6d0b28b0a7072443eda4f78fbe648b0",
+      "stderr": ""
+    },
+    "verify": {
+      "process_exit": 0,
+      "result": {
+        "schema": "formal-tools/portfolio-t4-technical/0.1",
+        "tool": "sympy",
+        "operation": "verify-fixture",
+        "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+        "process": {
+          "exit_code": 0,
+          "signal": null,
+          "timed_out": false,
+          "output_limit": false,
+          "elapsed_ms": 3563,
+          "error": null
+        },
+        "runner_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a",
+        "metadata_sha256": "98b725ebb2c9f906932ef4500933c0e8540393583d2627872d53f1644fb30a53",
+        "fixture_contract_sha256": "c115b21f309e3a1f1edfaacacb528b2c78a7339663230a053825455c99ac2a02",
+        "receipt_sha256": "ab3ca440a1259b394b24307180c5075165c9485439e0268bcd3b9e145c0e3379",
+        "streams": {
+          "stdout": "   sympy/pos: exit=0 dur=1309ms matched=1 exit_ok=1 label=SOLVED (log: /tmp/formal-portfolio-t4-b32BhH/verify-sympy.pos.log)\n   sympy/neg: exit=0 dur=1101ms matched=1 exit_ok=1 label=REFUTED (log: /tmp/formal-portfolio-t4-b32BhH/verify-sympy.neg.log)\n   sympy/err: exit=1 dur=1123ms matched=1 exit_ok=1 label=MALFORMED_EXPRESSION (log: /tmp/formal-portfolio-t4-b32BhH/verify-sympy.err.log)\n",
+          "stderr": "",
+          "stdout_sha256": "c8f45d8f5ac526393e49126edf8b5a931eb78dfb7e2a1d1a1e615917ff822133",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "cases": [
+          {"phase":"pos","exit_code":0,"duration_ms":1309,"semantic_pattern_matched":true,"exit_contract_matched":true,"label":"SOLVED"},
+          {"phase":"neg","exit_code":0,"duration_ms":1101,"semantic_pattern_matched":true,"exit_contract_matched":true,"label":"REFUTED"},
+          {"phase":"err","exit_code":1,"duration_ms":1123,"semantic_pattern_matched":true,"exit_contract_matched":true,"label":"MALFORMED_EXPRESSION"}
+        ],
+        "scope": "T4_TECHNICAL_ONLY_T3_NATIVE_REVIEW_AND_T5_SEMANTICS_NOT_EVALUATED"
+      },
+      "raw_stdout_sha256": "af7592b6ff073c743f6e57516f4ee6e7c6f575f91e0180b92305525373c594bb",
+      "stderr": ""
+    }
+  },
+  "sdk": {
+    "process_exit": 0,
+    "doctor": {
+      "schema": "formal-tools/portfolio-t4-technical/0.1",
+      "tool": "sympy",
+      "operation": "doctor",
+      "status": "DOCTOR_EXECUTED_NOT_T3",
+      "process": {"exit_code":0,"signal":null,"timed_out":false,"output_limit":false,"elapsed_ms":786,"error":null},
+      "runner_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a",
+      "metadata_sha256": "98b725ebb2c9f906932ef4500933c0e8540393583d2627872d53f1644fb30a53",
+      "fixture_contract_sha256": "c115b21f309e3a1f1edfaacacb528b2c78a7339663230a053825455c99ac2a02",
+      "receipt_sha256": null,
+      "streams": {"stdout":"doctor: sympy kind=python-lib version=1.14.0\n  python: 3.13.5 OK\n  verdict: OK\n","stderr":"","stdout_sha256":"1c5f1f42ac72905a7f1848901332155029bba9bcc8ea6110d5a3898ef94db88f","stderr_sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "cases": [],
+      "scope": "T4_TECHNICAL_ONLY_T3_NATIVE_REVIEW_AND_T5_SEMANTICS_NOT_EVALUATED"
+    },
+    "verify": {
+      "schema": "formal-tools/portfolio-t4-technical/0.1",
+      "tool": "sympy",
+      "operation": "verify-fixture",
+      "status": "FIXTURE_TECHNICAL_PASS_UNREVIEWED",
+      "process": {"exit_code":0,"signal":null,"timed_out":false,"output_limit":false,"elapsed_ms":3432,"error":null},
+      "runner_sha256": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a",
+      "metadata_sha256": "98b725ebb2c9f906932ef4500933c0e8540393583d2627872d53f1644fb30a53",
+      "fixture_contract_sha256": "c115b21f309e3a1f1edfaacacb528b2c78a7339663230a053825455c99ac2a02",
+      "receipt_sha256": "2f8f72f57234d5c1f28ddbee91323f9612f15d3fc4b2f82ac34b3aed96b4e49b",
+      "streams": {
+        "stdout": "   sympy/pos: exit=0 dur=1257ms matched=1 exit_ok=1 label=SOLVED (log: /tmp/formal-portfolio-t4-t9dtkO/verify-sympy.pos.log)\n   sympy/neg: exit=0 dur=1138ms matched=1 exit_ok=1 label=REFUTED (log: /tmp/formal-portfolio-t4-t9dtkO/verify-sympy.neg.log)\n   sympy/err: exit=1 dur=1012ms matched=1 exit_ok=1 label=MALFORMED_EXPRESSION (log: /tmp/formal-portfolio-t4-t9dtkO/verify-sympy.err.log)\n",
+        "stderr": "",
+        "stdout_sha256": "0cc992ce5ade3d7c33d08c6543055f7974b4f7df5f1e4653268467a832d7e92e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "cases": [
+        {"phase":"pos","exit_code":0,"duration_ms":1257,"semantic_pattern_matched":true,"exit_contract_matched":true,"label":"SOLVED"},
+        {"phase":"neg","exit_code":0,"duration_ms":1138,"semantic_pattern_matched":true,"exit_contract_matched":true,"label":"REFUTED"},
+        {"phase":"err","exit_code":1,"duration_ms":1012,"semantic_pattern_matched":true,"exit_contract_matched":true,"label":"MALFORMED_EXPRESSION"}
+      ],
+      "scope": "T4_TECHNICAL_ONLY_T3_NATIVE_REVIEW_AND_T5_SEMANTICS_NOT_EVALUATED"
+    },
+    "raw_stdout_sha256": "1bcba6e0baf942d14e7ab55983047d46f50b9399cb3af63c1a5a268866a73a02",
+    "stderr": ""
+  },
+  "mcp": {
+    "source_registers": "verify_portable_fixture",
+    "source_handler_calls": "runPortableGate(tool,{mode:\"verify-fixture\",timeoutS:timeout_s})",
+    "source_blob": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+    "runtime_status": "NOT_RUN",
+    "missing_dependencies": {"zod":"4.6.7","@modelcontextprotocol/server":"2.4.0"},
+    "npm_cache_entries": {"zod_4_6_7":0,"modelcontextprotocol_server_2_4_0":0},
+    "qualification": "No MCP stdio E2E or MCP acceptance claimed."
+  },
+  "qualification": {
+    "t0": "NOT_ACCEPTED_FULL; archive SHA matches prior local producer manifest only",
+    "t1": "NOT_QUALIFIED; no reproducible source build",
+    "t2": "SCOPED_NONROOT_EXTRACTION_ONLY; canonical Python runtime absent and metadata overlay required",
+    "t3": "HOST_PYTHON_3_13_5_SCOPED_REPLAY_ONLY; no independent semantic Oracle",
+    "t4": "TECHNICAL_ONLY_UNREVIEWED; exact current-main Runner, CLI and SDK executed; MCP NOT_RUN; host adapter and metadata overlay required",
+    "t5": "NOT_QUALIFIED; no business-semantic independent Oracle",
+    "t6": "OPEN",
+    "product": "NOT_GRANTED",
+    "release": "NOT_GRANTED"
+  },
+  "blockers": [
+    "Rebuild original package with current-main builder so meta.sh contains TOOL_ID rather than legacy TOOL_TOOL_ID.",
+    "Provide canonical shared Python 3.13.5 runtime or split/transport it safely; host adapter is not portable runtime.",
+    "Run actual MCP stdio server with lockfile dependencies zod 4.6.7 and @modelcontextprotocol/server 2.4.0.",
+    "Network isolation was not proven.",
+    "Independent non-Writer Source-First review required before any lifecycle admission."
+  ],
+  "no_scope_inflation": true,
+  "no_shared_runner_or_cli_mcp_sdk_registry_writes": true,
+  "no_product_or_release_signature": true,
+  "current_integration_main_sha": "0f07c2719115b9dfdd7c0cff005b33ffb775173a",
+  "main_delta_since_execution_snapshot": {
+    "ahead": 1,
+    "behind": 0,
+    "changed_files": ["tests/fast-downward-fixture-contract.test.mjs"],
+    "disjoint_from_sympy_runner_gateway_cli_sdk_registry_and_fixture_paths": true,
+    "latest_main_push_ci": "Woodpecker pipeline #1248 SUCCESS"
+  }
+}
