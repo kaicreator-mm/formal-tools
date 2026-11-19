@@ -1,0 +1,14 @@
+{
+  "submitted": {
+    "plan_sha256_submitted": "c4633f0cc2b89b837532e68b5e28396b900327dee79249e8353705593bbc7404",
+    "approved_sha256_submitted": "d893625346bd3325612d271b7f9a5048af1a502257b02373964a021159fc80ba",
+    "actual_plan_sha256": "wf-ee0a17c2d63c688167d7a5f650dd3577"
+  },
+  "http_status": 422,
+  "response": {
+    "error": {
+      "code": "NL_PLAN_APPROVAL_MISMATCH",
+      "message": "fail-closed: the submitted plan (sha256 ccf66f112214…) does not match the approved plan covered by this approval (c4633f0cc2b8…) — approval/plan hash binding violated, refusing to execute."
+    }
+  }
+}

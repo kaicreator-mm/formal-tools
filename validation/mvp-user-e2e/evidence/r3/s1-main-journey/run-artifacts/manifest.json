@@ -1,0 +1,65 @@
+{
+  "schema": "formal-tools/execution-artifacts/1.0",
+  "run_id": "run-mwnx14na-b98594dd",
+  "plan_id": "wf-b202e011f28af3837e1d690c04526c97",
+  "receipt_sha256": "f13cca5ef96edac7eba62f5a0f6ee4199ce62277f4c5c2514f834d4612e91831",
+  "stream_cap_bytes": 4096,
+  "artifacts": [
+    {
+      "name": "logs/step-cvc5.stdout.bounded.txt",
+      "sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+      "bytes": 4,
+      "scope": "bounded-copy"
+    },
+    {
+      "name": "logs/step-cvc5.stdout.txt",
+      "sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+      "bytes": 4,
+      "scope": "full-stream"
+    },
+    {
+      "name": "logs/step-z3.stdout.bounded.txt",
+      "sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+      "bytes": 4,
+      "scope": "bounded-copy"
+    },
+    {
+      "name": "logs/step-z3.stdout.txt",
+      "sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+      "bytes": 4,
+      "scope": "full-stream"
+    },
+    {
+      "name": "receipt.json",
+      "sha256": "f13cca5ef96edac7eba62f5a0f6ee4199ce62277f4c5c2514f834d4612e91831",
+      "bytes": 3699
+    }
+  ],
+  "streams": [
+    {
+      "step_id": "step-cvc5",
+      "stream": "stdout",
+      "full_stream_sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+      "full_stream_bytes_retained": true,
+      "full_artifact": "logs/step-cvc5.stdout.txt",
+      "full_artifact_sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+      "bounded_artifact": "logs/step-cvc5.stdout.bounded.txt",
+      "bounded_sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+      "bounded_bytes": 4,
+      "bounded_matches_full_stream": true
+    },
+    {
+      "step_id": "step-z3",
+      "stream": "stdout",
+      "full_stream_sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+      "full_stream_bytes_retained": true,
+      "full_artifact": "logs/step-z3.stdout.txt",
+      "full_artifact_sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+      "bounded_artifact": "logs/step-z3.stdout.bounded.txt",
+      "bounded_sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+      "bounded_bytes": 4,
+      "bounded_matches_full_stream": true
+    }
+  ],
+  "labeling_note": "receipt steps[].stdout_sha256 / stderr_sha256 hash the FULL captured streams. logs/<step>.<part>.bounded.txt are display copies capped at 4096 bytes and carry their OWN sha256. A plain-named logs/<step>.<part>.txt exists only when its bytes were verified against the receipt full-stream hash. bounded_matches_full_stream=null means the two were NOT verifiable against each other on this host — never claim byte identity across them."
+}

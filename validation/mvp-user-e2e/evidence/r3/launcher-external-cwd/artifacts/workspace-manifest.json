@@ -1,0 +1,23 @@
+{
+  "schema": "formal-tools/execution-artifacts/1.0",
+  "run_id": "run-mwnsknit-0703eb66",
+  "plan_id": "wf-d2eafd5f6c5e1f323764afced3be893c",
+  "receipt_sha256": "cbc4a61912f3e876108058a9eb8a54fa1d7c49476245749770b7386b57fc3436",
+  "artifacts": [
+    {
+      "name": "logs/step-cvc5.stdout.txt",
+      "sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "bytes": 6
+    },
+    {
+      "name": "logs/step-z3.stdout.txt",
+      "sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "bytes": 6
+    },
+    {
+      "name": "receipt.json",
+      "sha256": "cbc4a61912f3e876108058a9eb8a54fa1d7c49476245749770b7386b57fc3436",
+      "bytes": 3660
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "submitted": {
+    "mutation": "steps[0].timeout_s 30 -> 999",
+    "plan_sha256_submitted": "ccf66f112214d8b370aabfaa5d7a93f39393adc91fd50542dd78cec68af02512",
+    "approved_sha256_submitted": "23867b8e53cf72775a8ef68d44d4bf5c6718f3a69d78c2e390b684538efdb707"
+  },
+  "http_status": 422,
+  "response": {
+    "error": {
+      "code": "NL_PLAN_APPROVAL_MISMATCH",
+      "message": "fail-closed: the submitted plan (sha256 10d70cdbde7b…) does not match the approved plan covered by this approval (ccf66f112214…) — approval/plan hash binding violated, refusing to execute."
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "info": {
+    "planBanner": "Plan wf-b202e011f28af3837e1d690c04526c97 · kind: nl_modelproblem_sha256 7e6d8f97ba1f… · 3 step(s) · budget 120s · compiled manifest c3859b08888a…",
+    "sourceBadge": "NL model (deepseek-chat) — user-approved translation proposal (hash-bound) → smt plan",
+    "lpBannerHidden": true,
+    "reviewStatus": "Approved (approved_sha256 0fd02ebcae317e01…). Plan built below — final run approval required there."
+  },
+  "plan": {
+    "schema": "formal-tools/execution-plan/1.0",
+    "plan_id": "wf-b202e011f28af3837e1d690c04526c97",
+    "source": {
+      "problem_sha256": "7e6d8f97ba1f874744266296b400a311215826951312b8e86bbeea7f3a65f942",
+      "problem_kind": "nl_model"
+    },
+    "assumptions": [
+      "'a 恰好是 b 的两倍' is encoded as a = 2b, i.e. a - 2b = 0.",
+      "Bounds on a (2..9) and b (1..9) are taken directly from the stated 'at least / at most' ranges.",
+      "The sum constraint a+b <= 12 is kept as a separate constraint rather than folded into bounds."
+    ],
+    "method_dag": [
+      {
+        "id": "step-z3",
+        "kind": "solve",
+        "depends_on": []
+      },
+      {
+        "id": "step-cvc5",
+        "kind": "solve",
+        "depends_on": [
+          "step-z3"
+        ]
+      },
+      {
+        "id": "step-agree",
+        "kind": "cross_check",
+        "depends_on": [
+          "step-z3",
+          "step-cvc5"
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "id": "step-z3",
+        "tool": "z3",
+        "operation": "solve-smt",
+        "depends_on": [],
+        "input": {
+          "smt_lib": "(set-logic QF_LIA)\n(declare-fun a () Int)\n(declare-fun b () Int)\n(assert (>= a 2))\n(assert (<= a 9))\n(assert (>= b 1))\n(assert (<= b 4))\n(assert (= (+ a (* -2 b)) 0))\n(assert (<= (+ a b) 12))\n(check-sat)\n(exit)\n"
+        },
+        "input_sha256": "20d6e776043462e3f3416da03ac8a5496539537d6c9f6c7995a4e709ae27e321",
+        "timeout_s": 30,
+        "expected_output_kind": "smt-answer"
+      },
+      {
+        "id": "step-cvc5",
+        "tool": "cvc5",
+        "operation": "solve-smt",
+        "depends_on": [
+          "step-z3"
+        ],
+        "input": {
+          "smt_lib": "(set-logic QF_LIA)\n(declare-fun a () Int)\n(declare-fun b () Int)\n(assert (>= a 2))\n(assert (<= a 9))\n(assert (>= b 1))\n(assert (<= b 4))\n(assert (= (+ a (* -2 b)) 0))\n(assert (<= (+ a b) 12))\n(check-sat)\n(exit)\n"
+        },
+        "input_sha256": "20d6e776043462e3f3416da03ac8a5496539537d6c9f6c7995a4e709ae27e321",
+        "timeout_s": 30,
+        "expected_output_kind": "smt-answer"
+      },
+      {
+        "id": "step-agree",
+        "tool": "compare",
+        "operation": "cross-check",
+        "depends_on": [
+          "step-z3",
+          "step-cvc5"
+        ],
+        "input": {
+          "left_step": "step-z3",
+          "right_step": "step-cvc5",
+          "agree_on": [
+            "sat",
+            "unsat"
+          ]
+        },
+        "timeout_s": 5,
+        "expected_output_kind": "cross-tool-verdict",
+        "input_sha256": "7a913f16cf6ae5824b30e5d9069c90934b05d35cbf1099c2da4ba501bbcb9f62"
+      }
+    ],
+    "budgets": {
+      "max_steps": 8,
+      "max_total_timeout_s": 120
+    },
+    "compiled": {
+      "launcher_sha256": "1c4dddb086cef1a33ae1729cbeb176f0f540d9b67c7c9fbc7028e2580218290e",
+      "manifest_sha256": "c3859b08888a5e1bfd2b086085791b28c04e40272b3aaa9f39b62400beb29d6f"
+    }
+  }
+}

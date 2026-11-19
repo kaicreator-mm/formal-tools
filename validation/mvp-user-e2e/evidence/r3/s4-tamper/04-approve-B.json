@@ -1,0 +1,112 @@
+{
+  "decision": "USER_APPROVED",
+  "plan": {
+    "schema": "formal-tools/execution-plan/1.0",
+    "plan_id": "wf-a4e8ecc7cc0600430d322329627ea27d",
+    "source": {
+      "problem_sha256": "3a38ad428e7bef1539642daa1e24083f75870f6dd8211bcdceea1a695b328bec",
+      "problem_kind": "nl_model"
+    },
+    "assumptions": [
+      "x in [0,10] as stated in the text",
+      "2x <= 5 stated in the text",
+      "LP relaxation: integrality constraints are dropped by the nl-model compiler (the HiGHS typed operation has no integrality field); the executed answer characterizes the continuous relaxation only, not the integer problem.",
+      "{\"ack\":{\"acknowledged\":true,\"field\":\"lpRelaxationAcknowledged\"},\"dropped\":[\"integrality\"],\"kind\":\"LP_RELAXATION_ONLY\",\"relaxed_from\":\"QF_LIA integer model\"}"
+    ],
+    "method_dag": [
+      {
+        "id": "step-highs",
+        "kind": "solve",
+        "depends_on": []
+      }
+    ],
+    "steps": [
+      {
+        "id": "step-highs",
+        "tool": "highs",
+        "operation": "solve-lp",
+        "depends_on": [],
+        "input": {
+          "sense": "max",
+          "objective": [
+            1
+          ],
+          "variables": [
+            {
+              "lower": 0,
+              "upper": 10
+            }
+          ],
+          "constraints": [
+            {
+              "lower": null,
+              "upper": 5,
+              "coefficients": [
+                2
+              ]
+            }
+          ]
+        },
+        "input_sha256": "ae61b2f9038ff6d182b587604589f8e3eb2ddb64dff1376e352ef359de7326fd",
+        "timeout_s": 30,
+        "expected_output_kind": "lp-status"
+      }
+    ],
+    "budgets": {
+      "max_steps": 8,
+      "max_total_timeout_s": 120
+    },
+    "compiled": {
+      "launcher_sha256": "2af475bdf1df13348e7a9ed01e4adff1a0fb12bdf1f7c0a45222078bb203732d",
+      "manifest_sha256": "db8c60ab21efd27239325129fffab76d0bf141ac0a35e16bdb8c8e70c8583d62"
+    }
+  },
+  "plan_sha256": "c4633f0cc2b89b837532e68b5e28396b900327dee79249e8353705593bbc7404",
+  "approval": {
+    "plan_sha256": "c4633f0cc2b89b837532e68b5e28396b900327dee79249e8353705593bbc7404",
+    "approved_sha256": "d893625346bd3325612d271b7f9a5048af1a502257b02373964a021159fc80ba",
+    "proposal_sha256": "d83f7543fc61c3bb1bf15d4387653c3e85e0b745c084b9adab7ccc63848eadf5",
+    "question": "optimize",
+    "target": "lp",
+    "created_at": "2026-11-19T18:19:15.995Z"
+  },
+  "question": "optimize",
+  "target": "lp",
+  "relaxation": {
+    "kind": "LP_RELAXATION_ONLY",
+    "dropped": [
+      "integrality"
+    ],
+    "meaning": "LP relaxation: integrality constraints are dropped by the nl-model compiler (the HiGHS typed operation has no integrality field); the executed answer characterizes the continuous relaxation only, not the integer problem.",
+    "effect": "plan results characterize the continuous LP relaxation only; the optimal value is a bound for the integer problem, not its exact optimum",
+    "ack": {
+      "acknowledged": true,
+      "kind": "LP_RELAXATION_ONLY",
+      "dropped": [
+        "integrality"
+      ],
+      "decision_field": "lpRelaxationAcknowledged"
+    }
+  },
+  "warnings": [
+    "LP RELAXATION ONLY: this question is \"optimize\", so the executed plan solves the CONTINUOUS LP relaxation (HiGHS) with integrality dropped. The answer bounds the relaxation and is NOT proven to be the integer optimum."
+  ],
+  "approved": {
+    "approved_sha256": "d893625346bd3325612d271b7f9a5048af1a502257b02373964a021159fc80ba",
+    "review": {
+      "approved": true,
+      "edited": false,
+      "lp_relaxation_ack": {
+        "acknowledged": true,
+        "kind": "LP_RELAXATION_ONLY",
+        "dropped": [
+          "integrality"
+        ],
+        "decision_field": "lpRelaxationAcknowledged"
+      },
+      "reviewer": "e2e-validator-D",
+      "note": "S4 model B approval for substitution test"
+    }
+  },
+  "note": "the plan embeds the approved model provenance (problem requirement r2); submit it with the approval binding to POST /api/runs"
+}
