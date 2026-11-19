@@ -1,0 +1,23 @@
+{
+  "schema": "formal-tools/execution-artifacts/1.0",
+  "run_id": "hostrun3-scenario-a-unsat",
+  "plan_id": "plan-v3-host-a-unsat",
+  "receipt_sha256": "19e96b26910e20afaaa3f590251412579235d53ced8731a18eae10a1252adeae",
+  "artifacts": [
+    {
+      "name": "logs/cvc5-solve.stdout.txt",
+      "sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "bytes": 6
+    },
+    {
+      "name": "logs/z3-solve.stdout.txt",
+      "sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "bytes": 6
+    },
+    {
+      "name": "receipt.json",
+      "sha256": "19e96b26910e20afaaa3f590251412579235d53ced8731a18eae10a1252adeae",
+      "bytes": 3681
+    }
+  ]
+}

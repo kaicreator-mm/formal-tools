@@ -1,0 +1,23 @@
+{
+  "schema": "formal-tools/execution-artifacts/1.0",
+  "run_id": "hostrun3-scenario-b-lp",
+  "plan_id": "plan-v3-host-b-lp",
+  "receipt_sha256": "bfa276cecba494e71a6708d1a85474ab9fed5a88b46fac23d773733151b6e48d",
+  "artifacts": [
+    {
+      "name": "logs/highs-feasible.stdout.txt",
+      "sha256": "0bdb103562112e62284567b417146e7cfc2af1a234cce19c5af45ba8a3ba9e6d",
+      "bytes": 305
+    },
+    {
+      "name": "logs/highs-infeasible.stdout.txt",
+      "sha256": "05999ba48cdd337e36de80bbc0286ec875d7619288b11f33017d1f085bd666a4",
+      "bytes": 306
+    },
+    {
+      "name": "receipt.json",
+      "sha256": "bfa276cecba494e71a6708d1a85474ab9fed5a88b46fac23d773733151b6e48d",
+      "bytes": 3615
+    }
+  ]
+}

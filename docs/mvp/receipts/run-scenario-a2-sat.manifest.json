@@ -1,0 +1,23 @@
+{
+  "schema": "formal-tools/execution-artifacts/1.0",
+  "run_id": "hostrun3-scenario-a2-sat",
+  "plan_id": "plan-v3-host-a2-sat",
+  "receipt_sha256": "21819885ecd76bed8d1ae1eb2d9c7487baf22cbeff6a28bedcc8c7eb9d60604d",
+  "artifacts": [
+    {
+      "name": "logs/cvc5-solve.stdout.txt",
+      "sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+      "bytes": 4
+    },
+    {
+      "name": "logs/z3-solve.stdout.txt",
+      "sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+      "bytes": 4
+    },
+    {
+      "name": "receipt.json",
+      "sha256": "21819885ecd76bed8d1ae1eb2d9c7487baf22cbeff6a28bedcc8c7eb9d60604d",
+      "bytes": 3657
+    }
+  ]
+}

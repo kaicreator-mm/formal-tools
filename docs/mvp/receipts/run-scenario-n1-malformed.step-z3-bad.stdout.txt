@@ -1,0 +1,2 @@
+(error "line 3 column 13: unknown constant definitely-not-a-term")
+sat

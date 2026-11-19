@@ -1,0 +1,1 @@
+{"highspy_version":"1.15.1","input_sha256":"2c2efb03425e16c187f0e5f38e3336f571e904147df55cdd0538eb2cc3f209cd","model_status":"kOptimal","numpy_version":"2.5.4","objective":1.0,"python_version":"3.13.5","schema":"formal-tools/highs-solve-lp/1.0","solver_api_status":"kOk","tool":"highs","variables":[1.0]}

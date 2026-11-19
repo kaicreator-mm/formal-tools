@@ -1,0 +1,1 @@
+(error "Parse Error: input.smt2:3.14: Symbol 'definitely-not-a-term' not declared as a variable")
