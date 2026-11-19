@@ -13,7 +13,8 @@ import {
   EXECUTOR_CONSTANTS
 } from "../packages/runner/js/workflow-executor.mjs";
 import {
-  canonicalJsonBytes, sha256Hex, EXECUTION_RECEIPT_SCHEMA, ARTIFACT_MANIFEST_SCHEMA
+  canonicalJsonBytes, sha256Hex, EXECUTION_RECEIPT_SCHEMA, ARTIFACT_MANIFEST_SCHEMA,
+  writeExecutionReceiptArtifacts
 } from "../packages/runner/js/workflow-evidence.mjs";
 // V2 planning layer (i180/V2, on main) — used by the cross-lane interop lock
 // test at the bottom: plans built by V2 must be accepted by V3's validator.
@@ -461,6 +462,18 @@ test("V3: receipt schema, hash and artifact invariants hold on disk", async () =
   assert.equal(logBytes.toString("utf8"), "unsat\n");
   assert.equal(sha(logBytes), z3.stdout_sha256, "committed log must match the receipt hash");
   assert.ok(manifest.artifacts.some(a => a.name === "logs/z3-solve.stdout.txt"));
+  // Regression: once logs exist, sorted artifacts[0] is a log, NOT receipt.json.
+  // The helper must return the receipt digest promised by its API/manifest.
+  const recheckDir = join(workspaceDir, "helper-return-regression");
+  const persisted = await writeExecutionReceiptArtifacts(recheckDir, receipt, [
+    {step_id: "z3-solve", stdout: "unsat\n", stderr: ""}
+  ]);
+  const storedReceiptHash = sha(await readFile(join(recheckDir, "receipt.json")));
+  assert.equal(persisted.receipt_sha256, storedReceiptHash);
+  assert.equal(persisted.receipt_sha256, persisted.manifest.receipt_sha256);
+  assert.notEqual(persisted.receipt_sha256,
+    persisted.manifest.artifacts.find(a => a.name === "logs/z3-solve.stdout.txt").sha256,
+    "the receipt digest must not be replaced by a log digest");
 });
 
 test("V3: receipts are deterministic under injected now/runId/host", async () => {
