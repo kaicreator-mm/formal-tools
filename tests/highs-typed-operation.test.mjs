@@ -307,13 +307,35 @@ test("MCP stdio invokes the same typed Highs operation and rejects arbitrary fie
   }finally{await bundle.cleanup();}
 });
 
+function isCiExecution(){
+  return Boolean(process.env.CI&&process.env.CI!=="false")||
+    process.env.CI_PIPELINE_NUMBER!==undefined||
+    process.env.CI_PIPELINE_EVENT!==undefined;
+}
+
+function requireCanonicalPython3135(t,probe,ci){
+  if(probe.status===0&&probe.stdout.trim()==="3.13.5")return true;
+  const detail=(probe.stderr||probe.stdout||probe.error?.message||"python3 unavailable").trim();
+  if(ci)throw new Error("CI requires Python 3.13.5 for the value_valid=false regression; "+detail);
+  t.skip("local-only skip: canonical Python 3.13.5 unavailable; "+detail);
+  return false;
+}
+
+test("missing canonical Python fails in CI and is an explicit local-only skip",()=>{
+  const wrongVersion={status:0,stdout:"3.13.4",stderr:""};
+  assert.throws(
+    ()=>requireCanonicalPython3135({skip:()=>assert.fail("CI must not skip")},wrongVersion,true),
+    /CI requires Python 3\.13\.5/
+  );
+  let skipReason="";
+  assert.equal(requireCanonicalPython3135({skip:reason=>{skipReason=reason;}},wrongVersion,false),false);
+  assert.match(skipReason,/local-only skip/);
+});
+
 test("Python Highs operation rejects value_valid=false before reading solution values",async t=>{
   const python=process.env.PYTHON??"python3";
   const probe=spawnSync(python,["-c","import platform; print(platform.python_version())"],{encoding:"utf8",timeout:5000});
-  if(probe.status!==0||probe.stdout.trim()!=="3.13.5"){
-    t.skip("requires the canonical Python 3.13.5 runtime; "+(probe.stderr||probe.stdout||probe.error?.message||"python3 unavailable").trim());
-    return;
-  }
+  if(!requireCanonicalPython3135(t,probe,isCiExecution()))return;
   const root=await mkdtemp(join(tmpdir(),"ft-highs-invalid-solution-"));
   const fake=join(root,"fake-modules");
   await mkdir(fake,{recursive:true});

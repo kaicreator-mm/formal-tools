@@ -1,0 +1,56 @@
+{
+  "schema": "formal-tools/highs-ci-runtime-contract/1.0",
+  "output_label": "FORMAL_TOOLS_I24_UNIFIED_PARALLEL_DELIVERY",
+  "portfolio_issue": 24,
+  "tool_issue": 38,
+  "tool_id": "highs",
+  "version": "1.15.1",
+  "source_pr": 96,
+  "source_merge_commit": "2e8f066c93f66d12d9a8037b9af76af06e32d1e2",
+  "baseline_main": "cbd7f173b05c4f329bf9e37c2f9a06006526ba08",
+  "scope": "Tool-owned CI regression reliability only; no shared workflow, Runner, CLI, MCP, SDK, Product, or Release changes.",
+  "test": {
+    "path": "tests/highs-typed-operation.test.mjs",
+    "prior_blob": "1c9958269abf5290d4073a354025aa2e2cec01d3",
+    "current_blob": "cdcd308d32f42706243a69faa6270908de8aaa4c",
+    "regression": "Python Highs operation rejects value_valid=false before reading solution values",
+    "required_python_version": "3.13.5",
+    "interpreter": "PYTHON environment override, otherwise python3",
+    "ci_detection": {
+      "rules": [
+        "CI is non-empty and not the string false",
+        "CI_PIPELINE_NUMBER is defined",
+        "CI_PIPELINE_EVENT is defined"
+      ],
+      "woodpecker_builtin_ci_value": "woodpecker",
+      "reference": "https://woodpecker-ci.org/docs/3.18/usage/environment"
+    },
+    "behavior": {
+      "ci_missing_or_wrong_version": "FAIL_TEST; never call t.skip",
+      "local_missing_or_wrong_version": "SKIP with explicit local-only reason",
+      "skip_is_acceptance": "false"
+    },
+    "guard_test": "A deterministic Node test proves wrong Python version throws in CI mode and produces only an explicit local-only skip outside CI.",
+    "execution_test": "When Python 3.13.5 is available, execute the committed solve-lp.py with fake NumPy/highspy modules; assert exit 3, OPTIMAL_SOLUTION_VALUE_INVALID, empty stdout, and neither col_value nor objective getter is consumed."
+  },
+  "validation": {
+    "exact_head": "PENDING_AFTER_EVIDENCE_COMMIT",
+    "woodpecker_push": "PENDING",
+    "woodpecker_pull_request": "PENDING",
+    "required_result": "Both exact-head CI contexts SUCCESS; the value_valid=false integration test must execute, not skip.",
+    "local_execution": "NOT_RUN_CONTAINER_CLIENTERROR",
+    "limitation": "The current ChatGPT execution container returns ClientError even for trivial shell commands; no local Node or Python result is claimed."
+  },
+  "qualification": {
+    "source_operation": "MERGED_SCOPED_SOURCE",
+    "regression_reliability": "PENDING_EXACT_HEAD_CI",
+    "canonical_portable_t4": "NOT_ACCEPTED",
+    "t5": "NOT_QUALIFIED",
+    "t6": "OPEN",
+    "product_release": "NOT_GRANTED"
+  },
+  "next": [
+    "Run exact-head Woodpecker push and PR checks; confirm the Python 3.13.5 test is executed and not skipped.",
+    "If the CI agent lacks Python 3.13.5, create a separately claimed CI-runtime provisioning change; do not silently skip or modify shared workflow from this tool-owned scope."
+  ]
+}
