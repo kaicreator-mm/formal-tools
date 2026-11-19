@@ -1,0 +1,167 @@
+{
+  "schema": "formal-tools/user-e2e-comparison/1.0",
+  "generated_at": "2026-11-19T12:54:10.467Z",
+  "entries": [
+    {
+      "entry": "cli",
+      "comparable": true,
+      "reason": null,
+      "run_id": "run-mwnix33i-0ef1a397",
+      "plan_sha256": "7c1e9e1dca434322f5d9aeb7efd5e47e1138b86378b6a9312e48e1cfa7a6eb12",
+      "outcome_class": "AGREE_UNSAT",
+      "cross_tool_verdict": "AGREE_UNSAT",
+      "plan_signature": "step-agree:compare:cross-check:7a913f16cf6ae5824b30e5d9069c90934b05d35cbf1099c2da4ba501bbcb9f62|step-cvc5:cvc5:solve-smt:2e762abdd1a7e700f24627422922d822ecaf4e0ade351e49c9061542bbe7c756|step-z3:z3:solve-smt:2e762abdd1a7e700f24627422922d822ecaf4e0ade351e49c9061542bbe7c756"
+    },
+    {
+      "entry": "mcp",
+      "comparable": true,
+      "reason": null,
+      "run_id": null,
+      "plan_sha256": "7c1e9e1dca434322f5d9aeb7efd5e47e1138b86378b6a9312e48e1cfa7a6eb12",
+      "outcome_class": null,
+      "cross_tool_verdict": null,
+      "plan_signature": "step-agree:compare:cross-check:7a913f16cf6ae5824b30e5d9069c90934b05d35cbf1099c2da4ba501bbcb9f62|step-cvc5:cvc5:solve-smt:2e762abdd1a7e700f24627422922d822ecaf4e0ade351e49c9061542bbe7c756|step-z3:z3:solve-smt:2e762abdd1a7e700f24627422922d822ecaf4e0ade351e49c9061542bbe7c756"
+    },
+    {
+      "entry": "web",
+      "comparable": true,
+      "reason": null,
+      "run_id": "run-mwnjkwfl-ca411ebf",
+      "plan_sha256": "e9a3239f39afbc20b0e4d9ab0e07270ea7538838bf6752905ea35e7d45b1d60d",
+      "outcome_class": "AGREE_UNSAT",
+      "cross_tool_verdict": "AGREE_UNSAT",
+      "plan_signature": "step-agree:compare:cross-check:7a913f16cf6ae5824b30e5d9069c90934b05d35cbf1099c2da4ba501bbcb9f62|step-cvc5:cvc5:solve-smt:2e762abdd1a7e700f24627422922d822ecaf4e0ade351e49c9061542bbe7c756|step-z3:z3:solve-smt:2e762abdd1a7e700f24627422922d822ecaf4e0ade351e49c9061542bbe7c756"
+    }
+  ],
+  "pairs": [
+    {
+      "pair": "cli-vs-mcp",
+      "fields": {
+        "run_id": {
+          "policy": "MAY_DIFFER",
+          "verdict": "MATCH_TOLERATED"
+        },
+        "created_at": {
+          "policy": "IGNORED",
+          "verdict": "SKIP"
+        },
+        "elapsed_ms": {
+          "policy": "IGNORED",
+          "verdict": "SKIP"
+        },
+        "environment": {
+          "policy": "IGNORED",
+          "verdict": "SKIP"
+        },
+        "plan_sha256": {
+          "policy": "EXACT_OR_SEMANTIC",
+          "verdict": "MATCH",
+          "a": "7c1e9e1dca434322f5d9aeb7efd5e47e1138b86378b6a9312e48e1cfa7a6eb12",
+          "b": "7c1e9e1dca434322f5d9aeb7efd5e47e1138b86378b6a9312e48e1cfa7a6eb12"
+        },
+        "outcome_class": {
+          "policy": "EXACT",
+          "verdict": "SKIP",
+          "detail": "field missing on at least one side (entry not executed yet)"
+        },
+        "cross_tool_verdict": {
+          "policy": "EXACT",
+          "verdict": "SKIP",
+          "detail": "field missing on at least one side (entry not executed yet)"
+        }
+      },
+      "verdict": "MATCH"
+    },
+    {
+      "pair": "cli-vs-web",
+      "fields": {
+        "run_id": {
+          "policy": "MAY_DIFFER",
+          "verdict": "MATCH_TOLERATED"
+        },
+        "created_at": {
+          "policy": "IGNORED",
+          "verdict": "SKIP"
+        },
+        "elapsed_ms": {
+          "policy": "IGNORED",
+          "verdict": "SKIP"
+        },
+        "environment": {
+          "policy": "IGNORED",
+          "verdict": "SKIP"
+        },
+        "plan_sha256": {
+          "policy": "EXACT_OR_SEMANTIC",
+          "verdict": "MATCH_SEMANTIC",
+          "a": "7c1e9e1dca434322f5d9aeb7efd5e47e1138b86378b6a9312e48e1cfa7a6eb12",
+          "b": "e9a3239f39afbc20b0e4d9ab0e07270ea7538838bf6752905ea35e7d45b1d60d",
+          "detail": "plan envelopes differ; step-set signature is identical"
+        },
+        "outcome_class": {
+          "policy": "EXACT",
+          "verdict": "MATCH",
+          "a": "AGREE_UNSAT",
+          "b": "AGREE_UNSAT"
+        },
+        "cross_tool_verdict": {
+          "policy": "EXACT",
+          "verdict": "MATCH",
+          "a": "AGREE_UNSAT",
+          "b": "AGREE_UNSAT"
+        }
+      },
+      "verdict": "MATCH"
+    },
+    {
+      "pair": "mcp-vs-web",
+      "fields": {
+        "run_id": {
+          "policy": "MAY_DIFFER",
+          "verdict": "MATCH_TOLERATED"
+        },
+        "created_at": {
+          "policy": "IGNORED",
+          "verdict": "SKIP"
+        },
+        "elapsed_ms": {
+          "policy": "IGNORED",
+          "verdict": "SKIP"
+        },
+        "environment": {
+          "policy": "IGNORED",
+          "verdict": "SKIP"
+        },
+        "plan_sha256": {
+          "policy": "EXACT_OR_SEMANTIC",
+          "verdict": "MATCH_SEMANTIC",
+          "a": "7c1e9e1dca434322f5d9aeb7efd5e47e1138b86378b6a9312e48e1cfa7a6eb12",
+          "b": "e9a3239f39afbc20b0e4d9ab0e07270ea7538838bf6752905ea35e7d45b1d60d",
+          "detail": "plan envelopes differ; step-set signature is identical"
+        },
+        "outcome_class": {
+          "policy": "EXACT",
+          "verdict": "SKIP",
+          "detail": "field missing on at least one side (entry not executed yet)"
+        },
+        "cross_tool_verdict": {
+          "policy": "EXACT",
+          "verdict": "SKIP",
+          "detail": "field missing on at least one side (entry not executed yet)"
+        }
+      },
+      "verdict": "MATCH"
+    }
+  ],
+  "overall": "MATCH",
+  "note": "SKIP means at least one entry has not executed yet (honest progress), never a fabricated pass.",
+  "bindings": {
+    "cli_plan_id": "wf-e759e1d5b18abf629caa2398a609b56a",
+    "mcp_plan_id": "wf-e759e1d5b18abf629caa2398a609b56a",
+    "web_plan_id": "wf-419ea93509325e58698ea63c7018b613",
+    "cli_plan_sha256_equals_receipt": true,
+    "mcp_plan_sha256_equals_cli_receipt_plan_sha256": true,
+    "deepseek_plan_id_cli": "wf-1023fdabe42c64cbc0d5677766aa925f",
+    "deepseek_plan_id_mcp_provider_call": "wf-1023fdabe42c64cbc0d5677766aa925f"
+  }
+}

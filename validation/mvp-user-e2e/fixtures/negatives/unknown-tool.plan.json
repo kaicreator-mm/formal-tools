@@ -1,16 +1,24 @@
 {
   "schema": "formal-tools/execution-plan/1.0",
-  "plan_id": "neg-01-unknown-tool",
   "source": {
     "problem_sha256": "149e0aba93076a800d662e7fc7c0d5f466f02be9fe63bcd201e51cca8acf3b6d",
     "problem_kind": "qf_lia-sat-consistency"
   },
+  "compiled": {
+    "launcher_sha256": null,
+    "manifest_sha256": null
+  },
+  "plan_id": "neg-01-unknown-tool",
   "assumptions": [
-    "Negative fixture: the step references a tool outside the pinned allowlist z3|cvc5|highs|compare.",
-    "Expected fail-closed class: PLAN_UNKNOWN_TOOL. The plan must never reach execution."
+    "Negative fixture (V3-shaped): the step references a tool outside the frozen allowlist z3|cvc5|highs|compare.",
+    "Expected fail-closed class: PLAN_UNKNOWN_TOOL. Rejected before any launch (executor code PLAN_TOOL_NOT_ALLOWED on the same input)."
   ],
   "method_dag": [
-    { "id": "s1", "tool": "magic-solver-9000", "operation": "solve-smt", "depends_on": [] }
+    {
+      "id": "s1",
+      "kind": "solve",
+      "depends_on": []
+    }
   ],
   "steps": [
     {
@@ -18,15 +26,16 @@
       "tool": "magic-solver-9000",
       "operation": "solve-smt",
       "depends_on": [],
-      "input": "validation/mvp-user-e2e/fixtures/scenario-a.smt2",
-      "input_sha256": "149e0aba93076a800d662e7fc7c0d5f466f02be9fe63bcd201e51cca8acf3b6d",
-      "timeout_s": 10,
-      "expected_output_kind": "solver_answer"
+      "input": {
+        "smt_lib": "(set-logic QF_LIA)\n(set-info :source \"i186 user-e2e scenario A: integers x,y in [0,1] cannot sum to 4\")\n(set-info :status unsat)\n(declare-fun x () Int)\n(declare-fun y () Int)\n(assert (>= x 0))\n(assert (<= x 1))\n(assert (>= y 0))\n(assert (<= y 1))\n(assert (>= (+ x y) 4))\n(check-sat)\n(exit)\n"
+      },
+      "input_sha256": "6a3da3fc54800a418bf45534162f441eaf90e286ee3b8dcc685293448791edbd",
+      "timeout_s": 30,
+      "expected_output_kind": "smt-answer"
     }
   ],
-  "budgets": { "max_steps": 4, "max_total_timeout_s": 60 },
-  "compiled": {
-    "launcher_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "manifest_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  "budgets": {
+    "max_steps": 8,
+    "max_total_timeout_s": 120
   }
 }

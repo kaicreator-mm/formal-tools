@@ -1,0 +1,114 @@
+{
+  "schema": "formal-tools/execution-receipt/1.0",
+  "run_id": "run-mwnjkwfl-ca411ebf",
+  "plan_id": "wf-419ea93509325e58698ea63c7018b613",
+  "plan_sha256": "e9a3239f39afbc20b0e4d9ab0e07270ea7538838bf6752905ea35e7d45b1d60d",
+  "source_sha": "ac37a58ff828e68cbd5efd554db24d1a4ba5afc77d25f9a4df3795fce56e4d84",
+  "created_at": "2026-11-19T12:44:14.770Z",
+  "tool_versions": {
+    "z3": {
+      "version": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f",
+      "probe_sha256": "9af7c6f186418585f022fd2d18eb2d278e14ad21731bf3339f3cbd1f78500e7a",
+      "probe_bounded": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f\n"
+    },
+    "cvc5": {
+      "version": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]",
+      "probe_sha256": "b6c312e4bb0062a7683ca82eb08f0b25beb4e6c67f22a62a6841a8f4192fde4a",
+      "probe_bounded": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]\ncompiled as a unrestricted build with GCC version 11.4.0 on Oct  8 2026 01:24:07\n\nCopyright (c) 2009-2026 by the authors and their institutional\naffiliations listed at https://cvc5.github.io/people.html\n\ncvc5 is open"
+    }
+  },
+  "steps": [
+    {
+      "step_id": "step-z3",
+      "tool": "z3",
+      "operation": "solve-smt",
+      "status": "EXECUTED",
+      "exit_code": 0,
+      "elapsed_ms": 12,
+      "stdout_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bounded": "unsat\n",
+      "stderr_bounded": "",
+      "result": {
+        "answer": "unsat"
+      },
+      "artifacts": [
+        {
+          "name": "steps/step-z3/input.smt2",
+          "sha256": "707ee1d140b9f09391644eea765e2ecfdbaedd2412ebc58a5e7d561bacd8c68b",
+          "bytes": 289
+        }
+      ]
+    },
+    {
+      "step_id": "step-cvc5",
+      "tool": "cvc5",
+      "operation": "solve-smt",
+      "status": "EXECUTED",
+      "exit_code": 0,
+      "elapsed_ms": 5,
+      "stdout_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bounded": "unsat\n",
+      "stderr_bounded": "",
+      "result": {
+        "answer": "unsat"
+      },
+      "artifacts": [
+        {
+          "name": "steps/step-cvc5/input.smt2",
+          "sha256": "707ee1d140b9f09391644eea765e2ecfdbaedd2412ebc58a5e7d561bacd8c68b",
+          "bytes": 289
+        }
+      ]
+    },
+    {
+      "step_id": "step-agree",
+      "tool": "compare",
+      "operation": "cross-check",
+      "status": "EXECUTED",
+      "exit_code": null,
+      "elapsed_ms": 0,
+      "stdout_sha256": null,
+      "stderr_sha256": null,
+      "stdout_bounded": null,
+      "stderr_bounded": null,
+      "result": {
+        "verdict": "AGREE_UNSAT",
+        "left_step": "step-z3",
+        "right_step": "step-cvc5",
+        "left_answer": "unsat",
+        "right_answer": "unsat"
+      },
+      "artifacts": []
+    }
+  ],
+  "overall": {
+    "process_outcome": "OK",
+    "solver_answer": {
+      "kind": "solve-smt",
+      "value": "unsat",
+      "by_step": [
+        {
+          "step_id": "step-z3",
+          "tool": "z3",
+          "operation": "solve-smt",
+          "answer": "unsat"
+        },
+        {
+          "step_id": "step-cvc5",
+          "tool": "cvc5",
+          "operation": "solve-smt",
+          "answer": "unsat"
+        }
+      ]
+    },
+    "cross_tool_verdict": "AGREE_UNSAT",
+    "claim_verdict": "PASS"
+  },
+  "environment": {
+    "host": "127.0.0.1",
+    "node": "v22.16.0",
+    "formal_portable_root_sha": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a"
+  }
+}

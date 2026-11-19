@@ -1,0 +1,96 @@
+{
+  "name": "execute",
+  "argv": [
+    "workflow",
+    "execute",
+    "--plan-file",
+    "artifacts/wf-1023fdabe42c64cbc0d5677766aa925f/plan.json",
+    "--source-sha",
+    "646859f628c4595e66c490c00c887e54e02bc215"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "stdout": "{\n  \"schema\": \"formal-tools/execution-receipt/1.0\",\n  \"plan_id\": \"wf-1023fdabe42c64cbc0d5677766aa925f\",\n  \"run_id\": \"run-mwnix0kz-84624875\",\n  \"source_sha\": \"646859f628c4595e66c490c00c887e54e02bc215\",\n  \"created_at\": \"2026-11-19T12:25:40.403Z\",\n  \"overall\": {\n    \"process_outcome\": \"OK\",\n    \"solver_answer\": {\n      \"kind\": \"solve-smt\",\n      \"value\": \"unsat\",\n      \"by_step\": [\n        {\n          \"step_id\": \"z3-solve\",\n          \"tool\": \"z3\",\n          \"operation\": \"solve-smt\",\n          \"answer\": \"unsat\"\n        },\n        {\n          \"step_id\": \"cvc5-solve\",\n          \"tool\": \"cvc5\",\n          \"operation\": \"solve-smt\",\n          \"answer\": \"unsat\"\n        }\n      ]\n    },\n    \"cross_tool_verdict\": \"AGREE_UNSAT\",\n    \"claim_verdict\": \"PASS\"\n  },\n  \"steps\": [\n    {\n      \"step_id\": \"z3-solve\",\n      \"tool\": \"z3\",\n      \"operation\": \"solve-smt\",\n      \"status\": \"EXECUTED\"\n    },\n    {\n      \"step_id\": \"cvc5-solve\",\n      \"tool\": \"cvc5\",\n      \"operation\": \"solve-smt\",\n      \"status\": \"EXECUTED\"\n    },\n    {\n      \"step_id\": \"step-agree\",\n      \"tool\": \"compare\",\n      \"operation\": \"cross-check\",\n      \"status\": \"EXECUTED\"\n    }\n  ],\n  \"blocked\": null,\n  \"receipt_path\": \"/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-1023fdabe42c64cbc0d5677766aa925f/receipt.json\"\n}\n",
+  "stderr": "",
+  "parsed": {
+    "schema": "formal-tools/execution-receipt/1.0",
+    "plan_id": "wf-1023fdabe42c64cbc0d5677766aa925f",
+    "run_id": "run-mwnix0kz-84624875",
+    "source_sha": "646859f628c4595e66c490c00c887e54e02bc215",
+    "created_at": "2026-11-19T12:25:40.403Z",
+    "overall": {
+      "process_outcome": "OK",
+      "solver_answer": {
+        "kind": "solve-smt",
+        "value": "unsat",
+        "by_step": [
+          {
+            "step_id": "z3-solve",
+            "tool": "z3",
+            "operation": "solve-smt",
+            "answer": "unsat"
+          },
+          {
+            "step_id": "cvc5-solve",
+            "tool": "cvc5",
+            "operation": "solve-smt",
+            "answer": "unsat"
+          }
+        ]
+      },
+      "cross_tool_verdict": "AGREE_UNSAT",
+      "claim_verdict": "PASS"
+    },
+    "steps": [
+      {
+        "step_id": "z3-solve",
+        "tool": "z3",
+        "operation": "solve-smt",
+        "status": "EXECUTED"
+      },
+      {
+        "step_id": "cvc5-solve",
+        "tool": "cvc5",
+        "operation": "solve-smt",
+        "status": "EXECUTED"
+      },
+      {
+        "step_id": "step-agree",
+        "tool": "compare",
+        "operation": "cross-check",
+        "status": "EXECUTED"
+      }
+    ],
+    "blocked": null,
+    "receipt_path": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-1023fdabe42c64cbc0d5677766aa925f/receipt.json"
+  },
+  "summary": {
+    "kind": "receipt-summary",
+    "plan_id": "wf-1023fdabe42c64cbc0d5677766aa925f",
+    "run_id": "run-mwnix0kz-84624875",
+    "overall": {
+      "process_outcome": "OK",
+      "solver_answer": {
+        "kind": "solve-smt",
+        "value": "unsat",
+        "by_step": [
+          {
+            "step_id": "z3-solve",
+            "tool": "z3",
+            "operation": "solve-smt",
+            "answer": "unsat"
+          },
+          {
+            "step_id": "cvc5-solve",
+            "tool": "cvc5",
+            "operation": "solve-smt",
+            "answer": "unsat"
+          }
+        ]
+      },
+      "cross_tool_verdict": "AGREE_UNSAT",
+      "claim_verdict": "PASS"
+    },
+    "blocked": null
+  }
+}

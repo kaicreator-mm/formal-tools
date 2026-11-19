@@ -1,0 +1,15 @@
+{
+  "fixture": "unknown-tool.plan.json",
+  "exit_code": 2,
+  "error_code": "PLAN_TOOL_NOT_ALLOWED",
+  "message": "tool not in executor allowlist: magic-solver-9000",
+  "receipt_written": false,
+  "receipt_existed_before": false,
+  "argv": [
+    "workflow",
+    "execute",
+    "--plan-file",
+    "validation/mvp-user-e2e/fixtures/negatives/unknown-tool.plan.json"
+  ],
+  "stdout": ""
+}

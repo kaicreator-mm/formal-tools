@@ -31,10 +31,41 @@ export const TOLERANCE_TABLE = {
   created_at: "IGNORED",
   elapsed_ms: "IGNORED",
   environment: "IGNORED",
-  plan_sha256: "EXACT",
+  plan_sha256: "EXACT_OR_SEMANTIC",
   outcome_class: "EXACT",
   cross_tool_verdict: "EXACT"
 };
+
+/**
+ * Normalize an executed receipt into the harness outcome class vocabulary.
+ * Never invents values: only OBSERVED receipt fields map to classes.
+ */
+export function outcomeClassFromReceipt(receipt) {
+  const overall = receipt?.overall;
+  if (!overall) return null;
+  if (overall.process_outcome === "ABORTED") return "FAIL_CLOSED_OTHER";
+  const cross = overall.cross_tool_verdict;
+  if (cross === "AGREE_SAT" || cross === "AGREE_UNSAT" || cross === "CONTRADICTION") return cross;
+  const lp = (receipt.steps ?? []).find((s) =>
+    s?.status === "EXECUTED" && s?.operation === "solve-lp" &&
+    typeof s.result?.model_status === "string");
+  if (lp) {
+    if (lp.result.model_status === "kOptimal" && Number.isFinite(lp.result.objective))
+      return "K_OPTIMAL_OBJECTIVE_" + Number(lp.result.objective);
+    if (lp.result.model_status === "kInfeasible") return "K_INFEASIBLE";
+    if (lp.result.model_status === "kUnbounded") return "K_UNBOUNDED";
+  }
+  return null;
+}
+
+/** Deterministic step-set signature: id:tool:operation:input_sha256, sorted, joined. */
+export function planSignatureFromPlan(plan) {
+  if (!plan || !Array.isArray(plan.steps)) return null;
+  return plan.steps
+    .map((s) => `${s.id}:${s.tool}:${s.operation}:${s.input_sha256}`)
+    .sort()
+    .join("|");
+}
 
 /** Pull the comparable, normalized core out of an entry report (or a receipt). */
 export function normalizeReport(report) {
@@ -45,6 +76,15 @@ export function normalizeReport(report) {
     report.entry_outcome_class !== "SKIP_WEB_NOT_RUNNING";
   const receipt = report.normalized?.receipt ?? report.receipt ?? null;
   const planRef = report.normalized?.plan ?? report.plan ?? null;
+  const outcome =
+    comparable
+      ? (receipt
+          ? (outcomeClassFromReceipt(receipt) ?? report.normalized?.outcome_class ?? null)
+          : report.normalized?.outcome_class ?? null)
+      : null;
+  const crossTool = comparable
+    ? (receipt?.overall?.cross_tool_verdict ?? report.normalized?.cross_tool_verdict ?? null)
+    : null;
   return {
     entry: report.entry ?? "unknown",
     comparable,
@@ -53,9 +93,22 @@ export function normalizeReport(report) {
     plan_sha256: comparable ? (receipt?.plan_sha256 ?? planRef?.plan_sha256 ?? report.normalized?.plan_sha256 ?? null) : null,
     // A not-yet-executed entry has NO outcome yet: its skip label must never be
     // compared as if it were an outcome class.
-    outcome_class: comparable ? (receipt?.overall?.solver_answer ?? report.normalized?.outcome_class ?? null) : null,
-    cross_tool_verdict: comparable ? (receipt?.overall?.cross_tool_verdict ?? report.normalized?.cross_tool_verdict ?? null) : null
+    outcome_class: outcome,
+    cross_tool_verdict: crossTool,
+    // Semantic identity of the step set: lets entries that planned the SAME
+    // steps through different plan envelopes compare as MATCH_SEMANTIC.
+    plan_signature:
+      (comparable ? (report.normalized?.plan_signature ?? null) : null) ??
+      planSignatureFromPlan(planRef) ??
+      planSignatureFromSteps(receipt?.steps)
   };
+}
+
+/** Receipt-side fallback signature (receipt steps carry no input_sha256, so
+ * id:tool:operation is the coarsest honest signature). */
+function planSignatureFromSteps(steps) {
+  if (!Array.isArray(steps) || steps.length === 0) return null;
+  return steps.map((s) => `${s.step_id}:${s.tool}:${s.operation}`).sort().join("|");
 }
 
 /** Compare two normalized entries field-by-field under the tolerance table. */
@@ -68,15 +121,25 @@ export function compareEntries(normA, normB) {
     } else {
       if (a === null || a === undefined || b === null || b === undefined)
         fields[field] = { policy, verdict: "SKIP", detail: "field missing on at least one side (entry not executed yet)" };
-      else fields[field] = { policy, verdict: a === b ? "MATCH" : "MISMATCH", a, b };
+      else if (a === b) fields[field] = { policy, verdict: "MATCH", a, b };
+      else if (field === "plan_sha256" &&
+               normA.plan_signature && normA.plan_signature === normB.plan_signature)
+        // Different plan envelopes (entries may normalize the same problem with
+        // different problem_kind metadata) but the SAME step set: honest
+        // semantic parity, explicitly labeled — never reported as an exact match.
+        fields[field] = { policy, verdict: "MATCH_SEMANTIC", a, b,
+          detail: "plan envelopes differ; step-set signature is identical" };
+      else fields[field] = { policy, verdict: "MISMATCH", a, b };
     }
   }
-  // Comparability is decided by the EXACT-policy fields only: tolerated/ignored
-  // fields can never make a pair comparable, and a pair whose EXACT fields are
-  // all missing (entries not executed yet) compares as SKIP, never MATCH.
-  const exactFields = Object.entries(fields).filter(([f]) => TOLERANCE_TABLE[f] === "EXACT").map(([f]) => f);
-  const verdict = exactFields.some((f) => fields[f].verdict === "MISMATCH") ? "MISMATCH"
-    : exactFields.every((f) => fields[f].verdict === "SKIP") ? "SKIP"
+  // Comparability is decided by the EXACT/EXACT_OR_SEMANTIC-policy fields only:
+  // tolerated/ignored fields can never make a pair comparable, and a pair whose
+  // deciding fields are all missing (entries not executed yet) compares as
+  // SKIP, never MATCH.
+  const decidingFields = Object.entries(fields)
+    .filter(([f]) => TOLERANCE_TABLE[f].startsWith("EXACT")).map(([f]) => f);
+  const verdict = decidingFields.some((f) => fields[f].verdict === "MISMATCH") ? "MISMATCH"
+    : decidingFields.every((f) => fields[f].verdict === "SKIP") ? "SKIP"
     : "MATCH";
   return { pair: `${normA.entry}-vs-${normB.entry}`, fields, verdict };
 }

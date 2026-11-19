@@ -1,0 +1,19 @@
+{
+  "name": "plan-deepseek-no-key-fails-closed",
+  "argv": [
+    "workflow",
+    "plan",
+    "--problem-file",
+    "validation/mvp-user-e2e/fixtures/scenario-a.smt2",
+    "--provider",
+    "deepseek"
+  ],
+  "exit_code": 2,
+  "timed_out": false,
+  "stdout": "",
+  "stderr": "{\"status\":\"ERROR\",\"code\":\"BLOCKED_PROVIDER\",\"message\":\"provider 'deepseek' requires DEEPSEEK_API_KEY in the host environment; it is never mocked\"}\n",
+  "parsed": null,
+  "summary": {
+    "kind": "non-json"
+  }
+}

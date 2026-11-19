@@ -1,0 +1,35 @@
+{
+  "schema": "formal-tools/user-e2e-evidence-verification/1.0",
+  "journey": "journey-lp",
+  "run_id": "run-mwnjlf9i-7b71f728",
+  "plan_id": "wf-b594def00a3c8eefabf9e426d3e9ecf2",
+  "engine": "workflow-v2+v3",
+  "receipt_downloaded_bytes": 2305,
+  "identical_to_run_summary_receipt": true,
+  "overall": {
+    "process_outcome": "OK",
+    "solver_answer": {
+      "kind": "solve-lp",
+      "value": "sat",
+      "by_step": [
+        {
+          "step_id": "step-highs",
+          "tool": "highs",
+          "operation": "solve-lp",
+          "answer": "kOptimal"
+        }
+      ]
+    },
+    "cross_tool_verdict": "NOT_APPLICABLE",
+    "claim_verdict": "NOT_APPLICABLE"
+  },
+  "tool_versions": {
+    "highs": {
+      "version": "highspy 1.15.1",
+      "probe_sha256": null,
+      "probe_bounded": null
+    }
+  },
+  "source_sha": "1c8646b2a9989ec85661416cc4dccf1d5dc08077bab65f9f420ba814f1419896",
+  "checked_at": "2026-11-19T12:55:31.848Z"
+}

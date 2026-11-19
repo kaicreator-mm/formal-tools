@@ -1,0 +1,49 @@
+{
+  "journey": "j5-lp-kinfeasible",
+  "source_sha": "646859f628c4595e66c490c00c887e54e02bc215",
+  "steps": [
+    {
+      "name": "plan-via-sdk",
+      "exit_code": 0,
+      "parsed_summary": {
+        "kind": "plan",
+        "plan_id": "wf-92ae81d5245c9df83e00bce8e4e8f075",
+        "steps": [
+          {
+            "id": "step-highs",
+            "tool": "highs",
+            "operation": "solve-lp"
+          }
+        ]
+      }
+    },
+    {
+      "name": "execute",
+      "exit_code": 2,
+      "parsed_summary": {
+        "kind": "receipt",
+        "run_id": "run-mwnj3h14-6dc930ad",
+        "overall": {
+          "process_outcome": "OK",
+          "solver_answer": {
+            "kind": "solve-lp",
+            "value": "unsat",
+            "by_step": [
+              {
+                "step_id": "step-highs",
+                "tool": "highs",
+                "operation": "solve-lp",
+                "answer": "kInfeasible"
+              }
+            ]
+          },
+          "cross_tool_verdict": "NOT_APPLICABLE",
+          "claim_verdict": "NOT_APPLICABLE"
+        }
+      }
+    }
+  ],
+  "provider": "deterministic-template-highs",
+  "expected": "kInfeasible",
+  "receipt_captured": true
+}

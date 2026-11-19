@@ -1,29 +1,29 @@
 {
   "schema": "formal-tools/user-e2e-expected-relation/1.0",
   "scenario": "mvp-user-e2e-negatives",
-  "note": "Every negative must fail closed BEFORE any solver launch. Outcome classes only.",
+  "note": "Every negative must fail closed BEFORE any solver launch. Outcome classes only. Plans are V3-shaped: typed inline inputs ({smt_lib}), canonical-JSON input hashes, null compiled hashes (resynced from the r0 path-based drafts @ 646859f).",
   "entries": [
     {
       "kind": "negatives/unknown-tool.plan.json",
       "expected_outcome_class": "PLAN_UNKNOWN_TOOL",
-      "meaning": "step s1 references tool magic-solver-9000 outside the pinned allowlist z3|cvc5|highs|compare"
+      "meaning": "step s1 references tool magic-solver-9000 outside the frozen allowlist z3|cvc5|highs|compare; harness classifier PLAN_UNKNOWN_TOOL, executor PLAN_TOOL_NOT_ALLOWED — both before any launch"
     },
     {
       "kind": "negatives/tampered-hash.plan.json",
       "expected_outcome_class": "PLAN_HASH_MISMATCH",
-      "meaning": "well-formed plan whose step input_sha256 binds to different bytes than the referenced input file"
+      "meaning": "well-formed plan whose step input_sha256 binds the SAT sibling's canonical input hash instead of the actual smt_lib content; planner and executor both reject with PLAN_HASH_MISMATCH"
     },
     {
       "kind": "negatives/timeout-crush.plan.json",
       "expected_outcome_class": "TIMEOUT_BUDGET",
-      "meaning": "step timeouts sum to 360s and plan budget declares 400s, both above the harness policy cap of 300s"
+      "meaning": "step timeout_s=180 and budget max_total_timeout_s=400 both exceed the frozen caps (120s); harness policy TIMEOUT_BUDGET, executor PLAN_TIMEOUT_INVALID before any launch"
     }
   ],
   "cross_fixture": [
     {
       "kind": "negatives/malformed.smt2",
       "expected_outcome_class": "PARSE_ERROR",
-      "meaning": "unbalanced paren inside assert; the SMT parser must fail closed, never guess an answer"
+      "meaning": "unbalanced paren inside assert; the SMT parser must fail closed, never guess an answer (executor: solver exits non-zero / no answer token -> step ERROR, process FAILED)"
     }
   ]
 }

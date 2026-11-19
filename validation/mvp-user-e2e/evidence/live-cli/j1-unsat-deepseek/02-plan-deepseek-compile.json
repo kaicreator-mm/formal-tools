@@ -1,0 +1,145 @@
+{
+  "name": "plan-deepseek-compile",
+  "argv": [
+    "workflow",
+    "plan",
+    "--problem-file",
+    "validation/mvp-user-e2e/fixtures/scenario-a.smt2",
+    "--provider",
+    "deepseek",
+    "--compile",
+    "--assumption",
+    "Input is UTF-8 SMT-LIB2 text intended for QF-style solving.",
+    "--assumption",
+    "Solvers may return \"unknown\" within the per-step timeout; that is an honest outcome, not an error."
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "stdout": "{\n  \"plan\": {\n    \"schema\": \"formal-tools/execution-plan/1.0\",\n    \"plan_id\": \"wf-1023fdabe42c64cbc0d5677766aa925f\",\n    \"source\": {\n      \"problem_sha256\": \"ac37a58ff828e68cbd5efd554db24d1a4ba5afc77d25f9a4df3795fce56e4d84\",\n      \"problem_kind\": \"user_problem\"\n    },\n    \"assumptions\": [\n      \"Input is UTF-8 SMT-LIB2 text intended for QF-style solving.\",\n      \"Solvers may return \\\"unknown\\\" within the per-step timeout; that is an honest outcome, not an error.\"\n    ],\n    \"method_dag\": [\n      {\n        \"id\": \"z3-solve\",\n        \"kind\": \"solve\",\n        \"depends_on\": []\n      },\n      {\n        \"id\": \"cvc5-solve\",\n        \"kind\": \"solve\",\n        \"depends_on\": [\n          \"z3-solve\"\n        ]\n      },\n      {\n        \"id\": \"step-agree\",\n        \"kind\": \"cross_check\",\n        \"depends_on\": [\n          \"z3-solve\",\n          \"cvc5-solve\"\n        ]\n      }\n    ],\n    \"steps\": [\n      {\n        \"id\": \"z3-solve\",\n        \"tool\": \"z3\",\n        \"operation\": \"solve-smt\",\n        \"depends_on\": [],\n        \"input\": {\n          \"smt_lib\": \"(set-logic QF_LIA)\\n(set-info :source \\\"i186 user-e2e scenario A: integers x,y in [0,1] cannot sum to 4\\\")\\n(set-info :status unsat)\\n(declare-fun x () Int)\\n(declare-fun y () Int)\\n(assert (>= x 0))\\n(assert (<= x 1))\\n(assert (>= y 0))\\n(assert (<= y 1))\\n(assert (>= (+ x y) 4))\\n(check-sat)\\n(exit)\"\n        },\n        \"input_sha256\": \"2e762abdd1a7e700f24627422922d822ecaf4e0ade351e49c9061542bbe7c756\",\n        \"timeout_s\": 30,\n        \"expected_output_kind\": \"smt-answer\"\n      },\n      {\n        \"id\": \"cvc5-solve\",\n        \"tool\": \"cvc5\",\n        \"operation\": \"solve-smt\",\n        \"depends_on\": [\n          \"z3-solve\"\n        ],\n        \"input\": {\n          \"smt_lib\": \"(set-logic QF_LIA)\\n(set-info :source \\\"i186 user-e2e scenario A: integers x,y in [0,1] cannot sum to 4\\\")\\n(set-info :status unsat)\\n(declare-fun x () Int)\\n(declare-fun y () Int)\\n(assert (>= x 0))\\n(assert (<= x 1))\\n(assert (>= y 0))\\n(assert (<= y 1))\\n(assert (>= (+ x y) 4))\\n(check-sat)\\n(exit)\"\n        },\n        \"input_sha256\": \"2e762abdd1a7e700f24627422922d822ecaf4e0ade351e49c9061542bbe7c756\",\n        \"timeout_s\": 30,\n        \"expected_output_kind\": \"smt-answer\"\n      },\n      {\n        \"id\": \"step-agree\",\n        \"tool\": \"compare\",\n        \"operation\": \"cross-check\",\n        \"depends_on\": [\n          \"z3-solve\",\n          \"cvc5-solve\"\n        ],\n        \"input\": {\n          \"left_step\": \"z3-solve\",\n          \"right_step\": \"cvc5-solve\",\n          \"agree_on\": [\n            \"sat\",\n            \"unsat\"\n          ]\n        },\n        \"timeout_s\": 5,\n        \"expected_output_kind\": \"cross-tool-verdict\",\n        \"input_sha256\": \"758ce9f17ffad2dc580d03fb6cd60abe3138ed697ec9ae3372c89a8bea1fb825\"\n      }\n    ],\n    \"budgets\": {\n      \"max_steps\": 8,\n      \"max_total_timeout_s\": 120\n    },\n    \"compiled\": {\n      \"launcher_sha256\": \"712b09461999667495effad7ea881b4960e140ca0bd935e106bd93cff7565022\",\n      \"manifest_sha256\": \"fd6c1ba0d1b994d563f081ce9abd0a239a941055286da8aa7bf4b8296f7328e2\"\n    }\n  },\n  \"artifacts\": {\n    \"dir\": \"/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-1023fdabe42c64cbc0d5677766aa925f\",\n    \"plan\": \"/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-1023fdabe42c64cbc0d5677766aa925f/plan.json\",\n    \"launcher\": \"/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-1023fdabe42c64cbc0d5677766aa925f/launcher.mjs\",\n    \"manifest\": \"/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-1023fdabe42c64cbc0d5677766aa925f/manifest.json\"\n  }\n}\n",
+  "stderr": "",
+  "parsed": {
+    "plan": {
+      "schema": "formal-tools/execution-plan/1.0",
+      "plan_id": "wf-1023fdabe42c64cbc0d5677766aa925f",
+      "source": {
+        "problem_sha256": "ac37a58ff828e68cbd5efd554db24d1a4ba5afc77d25f9a4df3795fce56e4d84",
+        "problem_kind": "user_problem"
+      },
+      "assumptions": [
+        "Input is UTF-8 SMT-LIB2 text intended for QF-style solving.",
+        "Solvers may return \"unknown\" within the per-step timeout; that is an honest outcome, not an error."
+      ],
+      "method_dag": [
+        {
+          "id": "z3-solve",
+          "kind": "solve",
+          "depends_on": []
+        },
+        {
+          "id": "cvc5-solve",
+          "kind": "solve",
+          "depends_on": [
+            "z3-solve"
+          ]
+        },
+        {
+          "id": "step-agree",
+          "kind": "cross_check",
+          "depends_on": [
+            "z3-solve",
+            "cvc5-solve"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "id": "z3-solve",
+          "tool": "z3",
+          "operation": "solve-smt",
+          "depends_on": [],
+          "input": {
+            "smt_lib": "(set-logic QF_LIA)\n(set-info :source \"i186 user-e2e scenario A: integers x,y in [0,1] cannot sum to 4\")\n(set-info :status unsat)\n(declare-fun x () Int)\n(declare-fun y () Int)\n(assert (>= x 0))\n(assert (<= x 1))\n(assert (>= y 0))\n(assert (<= y 1))\n(assert (>= (+ x y) 4))\n(check-sat)\n(exit)"
+          },
+          "input_sha256": "2e762abdd1a7e700f24627422922d822ecaf4e0ade351e49c9061542bbe7c756",
+          "timeout_s": 30,
+          "expected_output_kind": "smt-answer"
+        },
+        {
+          "id": "cvc5-solve",
+          "tool": "cvc5",
+          "operation": "solve-smt",
+          "depends_on": [
+            "z3-solve"
+          ],
+          "input": {
+            "smt_lib": "(set-logic QF_LIA)\n(set-info :source \"i186 user-e2e scenario A: integers x,y in [0,1] cannot sum to 4\")\n(set-info :status unsat)\n(declare-fun x () Int)\n(declare-fun y () Int)\n(assert (>= x 0))\n(assert (<= x 1))\n(assert (>= y 0))\n(assert (<= y 1))\n(assert (>= (+ x y) 4))\n(check-sat)\n(exit)"
+          },
+          "input_sha256": "2e762abdd1a7e700f24627422922d822ecaf4e0ade351e49c9061542bbe7c756",
+          "timeout_s": 30,
+          "expected_output_kind": "smt-answer"
+        },
+        {
+          "id": "step-agree",
+          "tool": "compare",
+          "operation": "cross-check",
+          "depends_on": [
+            "z3-solve",
+            "cvc5-solve"
+          ],
+          "input": {
+            "left_step": "z3-solve",
+            "right_step": "cvc5-solve",
+            "agree_on": [
+              "sat",
+              "unsat"
+            ]
+          },
+          "timeout_s": 5,
+          "expected_output_kind": "cross-tool-verdict",
+          "input_sha256": "758ce9f17ffad2dc580d03fb6cd60abe3138ed697ec9ae3372c89a8bea1fb825"
+        }
+      ],
+      "budgets": {
+        "max_steps": 8,
+        "max_total_timeout_s": 120
+      },
+      "compiled": {
+        "launcher_sha256": "712b09461999667495effad7ea881b4960e140ca0bd935e106bd93cff7565022",
+        "manifest_sha256": "fd6c1ba0d1b994d563f081ce9abd0a239a941055286da8aa7bf4b8296f7328e2"
+      }
+    },
+    "artifacts": {
+      "dir": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-1023fdabe42c64cbc0d5677766aa925f",
+      "plan": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-1023fdabe42c64cbc0d5677766aa925f/plan.json",
+      "launcher": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-1023fdabe42c64cbc0d5677766aa925f/launcher.mjs",
+      "manifest": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-1023fdabe42c64cbc0d5677766aa925f/manifest.json"
+    }
+  },
+  "summary": {
+    "kind": "plan",
+    "plan_id": "wf-1023fdabe42c64cbc0d5677766aa925f",
+    "steps": [
+      {
+        "id": "z3-solve",
+        "tool": "z3",
+        "operation": "solve-smt"
+      },
+      {
+        "id": "cvc5-solve",
+        "tool": "cvc5",
+        "operation": "solve-smt"
+      },
+      {
+        "id": "step-agree",
+        "tool": "compare",
+        "operation": "cross-check"
+      }
+    ],
+    "artifacts": {
+      "dir": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-1023fdabe42c64cbc0d5677766aa925f",
+      "plan": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-1023fdabe42c64cbc0d5677766aa925f/plan.json",
+      "launcher": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-1023fdabe42c64cbc0d5677766aa925f/launcher.mjs",
+      "manifest": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-1023fdabe42c64cbc0d5677766aa925f/manifest.json"
+    }
+  }
+}

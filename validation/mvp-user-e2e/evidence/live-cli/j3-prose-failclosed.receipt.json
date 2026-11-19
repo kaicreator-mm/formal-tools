@@ -1,0 +1,82 @@
+{
+  "schema": "formal-tools/execution-receipt/1.0",
+  "run_id": "run-mwnix2z2-b3d0bbda",
+  "plan_id": "wf-d87461cf5df09392b754cb60ac0d50c0",
+  "plan_sha256": "78d28d62c3eae595c712b15fbd7158a7f833e36f798f7ee3c1ee3aa19a21ac3e",
+  "source_sha": "646859f628c4595e66c490c00c887e54e02bc215",
+  "created_at": "2026-11-19T12:25:43.502Z",
+  "tool_versions": {
+    "z3": {
+      "version": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f",
+      "probe_sha256": "9af7c6f186418585f022fd2d18eb2d278e14ad21731bf3339f3cbd1f78500e7a",
+      "probe_bounded": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f\n"
+    },
+    "cvc5": {
+      "version": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]",
+      "probe_sha256": "b6c312e4bb0062a7683ca82eb08f0b25beb4e6c67f22a62a6841a8f4192fde4a",
+      "probe_bounded": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]\ncompiled as a unrestricted build with GCC version 11.4.0 on Oct  8 2026 01:24:07\n\nCopyright (c) 2009-2026 by the authors and their institutional\naffiliations listed at https://cvc5.github.io/people.html\n\ncvc5 is open"
+    }
+  },
+  "steps": [
+    {
+      "step_id": "z3-solve",
+      "tool": "z3",
+      "operation": "solve-smt",
+      "status": "ERROR",
+      "exit_code": 1,
+      "elapsed_ms": 11,
+      "stdout_sha256": "24439b09491a79fbf81bde0af7d1342d27d01b0b7b6ec3f35decfb7c5d2edcdc",
+      "stderr_sha256": "ab5050be55b0e9d0c5b55d833208d139e265fae0ac748540f04d0366f42cd8f6",
+      "stdout_bounded": "(error \"line 1 column 1: invalid command, '(' expected\")\n(error \"line 1 column 66: invalid command, symbol expected\")\nunsupported\n(error \"line 5 column 6: invalid command, '(' expected\")\n",
+      "stderr_bounded": "; z3 line: 5 position: 4\n",
+      "result": {
+        "error": "solver exited with code 1"
+      },
+      "artifacts": []
+    },
+    {
+      "step_id": "cvc5-solve",
+      "tool": "cvc5",
+      "operation": "solve-smt",
+      "status": "SKIPPED_DOWNSTREAM",
+      "exit_code": null,
+      "elapsed_ms": null,
+      "stdout_sha256": null,
+      "stderr_sha256": null,
+      "stdout_bounded": null,
+      "stderr_bounded": null,
+      "result": null,
+      "artifacts": []
+    },
+    {
+      "step_id": "step-agree",
+      "tool": "compare",
+      "operation": "cross-check",
+      "status": "SKIPPED_DOWNSTREAM",
+      "exit_code": null,
+      "elapsed_ms": null,
+      "stdout_sha256": null,
+      "stderr_sha256": null,
+      "stdout_bounded": null,
+      "stderr_bounded": null,
+      "result": null,
+      "artifacts": []
+    }
+  ],
+  "overall": {
+    "process_outcome": "FAILED",
+    "solver_answer": {
+      "kind": "none",
+      "value": null,
+      "by_step": []
+    },
+    "cross_tool_verdict": "NOT_APPLICABLE",
+    "claim_verdict": "UNSUPPORTED_BY_MVP",
+    "fail_closed_reason": "SOLVER_NONZERO_EXIT"
+  },
+  "environment": {
+    "host": "cc",
+    "node": "v22.16.0",
+    "formal_portable_root_sha": null
+  }
+}

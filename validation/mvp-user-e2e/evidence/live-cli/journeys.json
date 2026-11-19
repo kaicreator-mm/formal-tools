@@ -1,0 +1,456 @@
+{
+  "schema": "formal-tools/user-e2e-live-cli/1.0",
+  "generated_at": "2026-11-19T12:30:41.877Z",
+  "source_sha": "646859f628c4595e66c490c00c887e54e02bc215",
+  "out_dir": "/home/cc/formal-tools-build/wt-i180-v6b/validation/mvp-user-e2e/evidence/live-cli",
+  "journeys": [
+    {
+      "journey": "j1-unsat-deepseek",
+      "source_sha": "646859f628c4595e66c490c00c887e54e02bc215",
+      "steps": [
+        {
+          "name": "plan-deepseek-no-key-fails-closed",
+          "exit_code": 2,
+          "parsed_summary": {
+            "kind": "non-json"
+          }
+        },
+        {
+          "name": "plan-deepseek-compile",
+          "exit_code": 0,
+          "parsed_summary": {
+            "kind": "plan",
+            "plan_id": "wf-1023fdabe42c64cbc0d5677766aa925f",
+            "steps": [
+              {
+                "id": "z3-solve",
+                "tool": "z3",
+                "operation": "solve-smt"
+              },
+              {
+                "id": "cvc5-solve",
+                "tool": "cvc5",
+                "operation": "solve-smt"
+              },
+              {
+                "id": "step-agree",
+                "tool": "compare",
+                "operation": "cross-check"
+              }
+            ],
+            "artifacts": {
+              "dir": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-1023fdabe42c64cbc0d5677766aa925f",
+              "plan": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-1023fdabe42c64cbc0d5677766aa925f/plan.json",
+              "launcher": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-1023fdabe42c64cbc0d5677766aa925f/launcher.mjs",
+              "manifest": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-1023fdabe42c64cbc0d5677766aa925f/manifest.json"
+            }
+          }
+        },
+        {
+          "name": "execute",
+          "exit_code": 0,
+          "parsed_summary": {
+            "kind": "receipt-summary",
+            "plan_id": "wf-1023fdabe42c64cbc0d5677766aa925f",
+            "run_id": "run-mwnix0kz-84624875",
+            "overall": {
+              "process_outcome": "OK",
+              "solver_answer": {
+                "kind": "solve-smt",
+                "value": "unsat",
+                "by_step": [
+                  {
+                    "step_id": "z3-solve",
+                    "tool": "z3",
+                    "operation": "solve-smt",
+                    "answer": "unsat"
+                  },
+                  {
+                    "step_id": "cvc5-solve",
+                    "tool": "cvc5",
+                    "operation": "solve-smt",
+                    "answer": "unsat"
+                  }
+                ]
+              },
+              "cross_tool_verdict": "AGREE_UNSAT",
+              "claim_verdict": "PASS"
+            },
+            "blocked": null
+          }
+        },
+        {
+          "name": "results",
+          "exit_code": 0,
+          "parsed_summary": {
+            "kind": "receipt-summary",
+            "plan_id": "wf-1023fdabe42c64cbc0d5677766aa925f",
+            "run_id": "run-mwnix0kz-84624875",
+            "overall": {
+              "process_outcome": "OK",
+              "solver_answer": {
+                "kind": "solve-smt",
+                "value": "unsat",
+                "by_step": [
+                  {
+                    "step_id": "z3-solve",
+                    "tool": "z3",
+                    "operation": "solve-smt",
+                    "answer": "unsat"
+                  },
+                  {
+                    "step_id": "cvc5-solve",
+                    "tool": "cvc5",
+                    "operation": "solve-smt",
+                    "answer": "unsat"
+                  }
+                ]
+              },
+              "cross_tool_verdict": "AGREE_UNSAT",
+              "claim_verdict": "PASS"
+            },
+            "blocked": null
+          }
+        }
+      ],
+      "provider": "deepseek",
+      "plan_id": "wf-1023fdabe42c64cbc0d5677766aa925f",
+      "receipt_captured": true
+    },
+    {
+      "journey": "j2-sat-template",
+      "source_sha": "646859f628c4595e66c490c00c887e54e02bc215",
+      "steps": [
+        {
+          "name": "plan-template",
+          "exit_code": 0,
+          "parsed_summary": {
+            "kind": "plan",
+            "plan_id": "wf-ce26a3df27e157e3aa3a662740a6c6c1",
+            "steps": [
+              {
+                "id": "step-z3",
+                "tool": "z3",
+                "operation": "solve-smt"
+              },
+              {
+                "id": "step-cvc5",
+                "tool": "cvc5",
+                "operation": "solve-smt"
+              },
+              {
+                "id": "step-agree",
+                "tool": "compare",
+                "operation": "cross-check"
+              }
+            ],
+            "artifacts": {
+              "dir": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-ce26a3df27e157e3aa3a662740a6c6c1",
+              "plan": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-ce26a3df27e157e3aa3a662740a6c6c1/plan.json",
+              "launcher": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-ce26a3df27e157e3aa3a662740a6c6c1/launcher.mjs",
+              "manifest": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-ce26a3df27e157e3aa3a662740a6c6c1/manifest.json"
+            }
+          }
+        },
+        {
+          "name": "execute",
+          "exit_code": 0,
+          "parsed_summary": {
+            "kind": "receipt-summary",
+            "plan_id": "wf-ce26a3df27e157e3aa3a662740a6c6c1",
+            "run_id": "run-mwnix0q3-35a310b4",
+            "overall": {
+              "process_outcome": "OK",
+              "solver_answer": {
+                "kind": "solve-smt",
+                "value": "sat",
+                "by_step": [
+                  {
+                    "step_id": "step-z3",
+                    "tool": "z3",
+                    "operation": "solve-smt",
+                    "answer": "sat"
+                  },
+                  {
+                    "step_id": "step-cvc5",
+                    "tool": "cvc5",
+                    "operation": "solve-smt",
+                    "answer": "sat"
+                  }
+                ]
+              },
+              "cross_tool_verdict": "AGREE_SAT",
+              "claim_verdict": "PASS"
+            },
+            "blocked": null
+          }
+        },
+        {
+          "name": "results",
+          "exit_code": 0,
+          "parsed_summary": {
+            "kind": "receipt-summary",
+            "plan_id": "wf-ce26a3df27e157e3aa3a662740a6c6c1",
+            "run_id": "run-mwnix0q3-35a310b4",
+            "overall": {
+              "process_outcome": "OK",
+              "solver_answer": {
+                "kind": "solve-smt",
+                "value": "sat",
+                "by_step": [
+                  {
+                    "step_id": "step-z3",
+                    "tool": "z3",
+                    "operation": "solve-smt",
+                    "answer": "sat"
+                  },
+                  {
+                    "step_id": "step-cvc5",
+                    "tool": "cvc5",
+                    "operation": "solve-smt",
+                    "answer": "sat"
+                  }
+                ]
+              },
+              "cross_tool_verdict": "AGREE_SAT",
+              "claim_verdict": "PASS"
+            },
+            "blocked": null
+          }
+        }
+      ],
+      "provider": "deterministic-template",
+      "plan_id": "wf-ce26a3df27e157e3aa3a662740a6c6c1",
+      "receipt_captured": true
+    },
+    {
+      "journey": "j3-prose-failclosed",
+      "source_sha": "646859f628c4595e66c490c00c887e54e02bc215",
+      "steps": [
+        {
+          "name": "plan-deepseek-prose",
+          "exit_code": 0,
+          "parsed_summary": {
+            "kind": "plan",
+            "plan_id": "wf-d87461cf5df09392b754cb60ac0d50c0",
+            "steps": [
+              {
+                "id": "z3-solve",
+                "tool": "z3",
+                "operation": "solve-smt"
+              },
+              {
+                "id": "cvc5-solve",
+                "tool": "cvc5",
+                "operation": "solve-smt"
+              },
+              {
+                "id": "step-agree",
+                "tool": "compare",
+                "operation": "cross-check"
+              }
+            ],
+            "artifacts": {
+              "dir": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0",
+              "plan": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0/plan.json",
+              "launcher": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0/launcher.mjs",
+              "manifest": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0/manifest.json"
+            }
+          }
+        },
+        {
+          "name": "execute-honest-fail",
+          "exit_code": 2,
+          "parsed_summary": {
+            "kind": "receipt-summary",
+            "plan_id": "wf-d87461cf5df09392b754cb60ac0d50c0",
+            "run_id": "run-mwnix2z2-b3d0bbda",
+            "overall": {
+              "process_outcome": "FAILED",
+              "solver_answer": {
+                "kind": "none",
+                "value": null,
+                "by_step": []
+              },
+              "cross_tool_verdict": "NOT_APPLICABLE",
+              "claim_verdict": "UNSUPPORTED_BY_MVP",
+              "fail_closed_reason": "SOLVER_NONZERO_EXIT"
+            },
+            "blocked": null
+          }
+        }
+      ],
+      "provider": "deepseek",
+      "plan_id": "wf-d87461cf5df09392b754cb60ac0d50c0",
+      "receipt_captured": true,
+      "expected": "prose is not SMT-LIB: execution must fail closed (step ERROR / claim UNSUPPORTED_BY_MVP), never a fabricated answer"
+    },
+    {
+      "journey": "j4-lp-koptimal",
+      "source_sha": "646859f628c4595e66c490c00c887e54e02bc215",
+      "steps": [
+        {
+          "name": "plan-via-sdk",
+          "exit_code": 0,
+          "parsed_summary": {
+            "kind": "plan",
+            "plan_id": "wf-93f3dd7ddf850bebff7ba7ea1d4e66c1",
+            "steps": [
+              {
+                "id": "step-highs",
+                "tool": "highs",
+                "operation": "solve-lp"
+              }
+            ]
+          }
+        },
+        {
+          "name": "execute",
+          "exit_code": 2,
+          "parsed_summary": {
+            "kind": "receipt",
+            "run_id": "run-mwnj3gtc-f0d196fc",
+            "overall": {
+              "process_outcome": "OK",
+              "solver_answer": {
+                "kind": "solve-lp",
+                "value": "sat",
+                "by_step": [
+                  {
+                    "step_id": "step-highs",
+                    "tool": "highs",
+                    "operation": "solve-lp",
+                    "answer": "kOptimal"
+                  }
+                ]
+              },
+              "cross_tool_verdict": "NOT_APPLICABLE",
+              "claim_verdict": "NOT_APPLICABLE"
+            }
+          }
+        }
+      ],
+      "provider": "deterministic-template-highs",
+      "expected": "kOptimal objective 11",
+      "receipt_captured": true
+    },
+    {
+      "journey": "j5-lp-kinfeasible",
+      "source_sha": "646859f628c4595e66c490c00c887e54e02bc215",
+      "steps": [
+        {
+          "name": "plan-via-sdk",
+          "exit_code": 0,
+          "parsed_summary": {
+            "kind": "plan",
+            "plan_id": "wf-92ae81d5245c9df83e00bce8e4e8f075",
+            "steps": [
+              {
+                "id": "step-highs",
+                "tool": "highs",
+                "operation": "solve-lp"
+              }
+            ]
+          }
+        },
+        {
+          "name": "execute",
+          "exit_code": 2,
+          "parsed_summary": {
+            "kind": "receipt",
+            "run_id": "run-mwnj3h14-6dc930ad",
+            "overall": {
+              "process_outcome": "OK",
+              "solver_answer": {
+                "kind": "solve-lp",
+                "value": "unsat",
+                "by_step": [
+                  {
+                    "step_id": "step-highs",
+                    "tool": "highs",
+                    "operation": "solve-lp",
+                    "answer": "kInfeasible"
+                  }
+                ]
+              },
+              "cross_tool_verdict": "NOT_APPLICABLE",
+              "claim_verdict": "NOT_APPLICABLE"
+            }
+          }
+        }
+      ],
+      "provider": "deterministic-template-highs",
+      "expected": "kInfeasible",
+      "receipt_captured": true
+    },
+    {
+      "journey": "j6-template-parity",
+      "source_sha": "646859f628c4595e66c490c00c887e54e02bc215",
+      "steps": [
+        {
+          "name": "plan-template-uncompiled",
+          "exit_code": 0,
+          "parsed_summary": {
+            "kind": "plan",
+            "plan_id": "wf-e759e1d5b18abf629caa2398a609b56a",
+            "steps": [
+              {
+                "id": "step-z3",
+                "tool": "z3",
+                "operation": "solve-smt"
+              },
+              {
+                "id": "step-cvc5",
+                "tool": "cvc5",
+                "operation": "solve-smt"
+              },
+              {
+                "id": "step-agree",
+                "tool": "compare",
+                "operation": "cross-check"
+              }
+            ],
+            "artifacts": null
+          }
+        },
+        {
+          "name": "execute",
+          "exit_code": 0,
+          "parsed_summary": {
+            "kind": "receipt-summary",
+            "plan_id": "wf-e759e1d5b18abf629caa2398a609b56a",
+            "run_id": "run-mwnix33i-0ef1a397",
+            "overall": {
+              "process_outcome": "OK",
+              "solver_answer": {
+                "kind": "solve-smt",
+                "value": "unsat",
+                "by_step": [
+                  {
+                    "step_id": "step-z3",
+                    "tool": "z3",
+                    "operation": "solve-smt",
+                    "answer": "unsat"
+                  },
+                  {
+                    "step_id": "step-cvc5",
+                    "tool": "cvc5",
+                    "operation": "solve-smt",
+                    "answer": "unsat"
+                  }
+                ]
+              },
+              "cross_tool_verdict": "AGREE_UNSAT",
+              "claim_verdict": "PASS"
+            },
+            "blocked": null
+          }
+        }
+      ],
+      "provider": "deterministic-template",
+      "plan_id": "wf-e759e1d5b18abf629caa2398a609b56a",
+      "receipt_captured": true
+    }
+  ],
+  "note": "Every step above is a real subprocess/SDK run on the trusted host. Honest fail-closed outcomes are recorded, never retried into fakes."
+}

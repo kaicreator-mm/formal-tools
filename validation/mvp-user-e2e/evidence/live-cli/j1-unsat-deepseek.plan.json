@@ -1,0 +1,90 @@
+{
+  "schema": "formal-tools/execution-plan/1.0",
+  "plan_id": "wf-1023fdabe42c64cbc0d5677766aa925f",
+  "source": {
+    "problem_sha256": "ac37a58ff828e68cbd5efd554db24d1a4ba5afc77d25f9a4df3795fce56e4d84",
+    "problem_kind": "user_problem"
+  },
+  "assumptions": [
+    "Input is UTF-8 SMT-LIB2 text intended for QF-style solving.",
+    "Solvers may return \"unknown\" within the per-step timeout; that is an honest outcome, not an error."
+  ],
+  "method_dag": [
+    {
+      "id": "z3-solve",
+      "kind": "solve",
+      "depends_on": []
+    },
+    {
+      "id": "cvc5-solve",
+      "kind": "solve",
+      "depends_on": [
+        "z3-solve"
+      ]
+    },
+    {
+      "id": "step-agree",
+      "kind": "cross_check",
+      "depends_on": [
+        "z3-solve",
+        "cvc5-solve"
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "id": "z3-solve",
+      "tool": "z3",
+      "operation": "solve-smt",
+      "depends_on": [],
+      "input": {
+        "smt_lib": "(set-logic QF_LIA)\n(set-info :source \"i186 user-e2e scenario A: integers x,y in [0,1] cannot sum to 4\")\n(set-info :status unsat)\n(declare-fun x () Int)\n(declare-fun y () Int)\n(assert (>= x 0))\n(assert (<= x 1))\n(assert (>= y 0))\n(assert (<= y 1))\n(assert (>= (+ x y) 4))\n(check-sat)\n(exit)"
+      },
+      "input_sha256": "2e762abdd1a7e700f24627422922d822ecaf4e0ade351e49c9061542bbe7c756",
+      "timeout_s": 30,
+      "expected_output_kind": "smt-answer"
+    },
+    {
+      "id": "cvc5-solve",
+      "tool": "cvc5",
+      "operation": "solve-smt",
+      "depends_on": [
+        "z3-solve"
+      ],
+      "input": {
+        "smt_lib": "(set-logic QF_LIA)\n(set-info :source \"i186 user-e2e scenario A: integers x,y in [0,1] cannot sum to 4\")\n(set-info :status unsat)\n(declare-fun x () Int)\n(declare-fun y () Int)\n(assert (>= x 0))\n(assert (<= x 1))\n(assert (>= y 0))\n(assert (<= y 1))\n(assert (>= (+ x y) 4))\n(check-sat)\n(exit)"
+      },
+      "input_sha256": "2e762abdd1a7e700f24627422922d822ecaf4e0ade351e49c9061542bbe7c756",
+      "timeout_s": 30,
+      "expected_output_kind": "smt-answer"
+    },
+    {
+      "id": "step-agree",
+      "tool": "compare",
+      "operation": "cross-check",
+      "depends_on": [
+        "z3-solve",
+        "cvc5-solve"
+      ],
+      "input": {
+        "left_step": "z3-solve",
+        "right_step": "cvc5-solve",
+        "agree_on": [
+          "sat",
+          "unsat"
+        ]
+      },
+      "timeout_s": 5,
+      "expected_output_kind": "cross-tool-verdict",
+      "input_sha256": "758ce9f17ffad2dc580d03fb6cd60abe3138ed697ec9ae3372c89a8bea1fb825"
+    }
+  ],
+  "budgets": {
+    "max_steps": 8,
+    "max_total_timeout_s": 120
+  },
+  "compiled": {
+    "launcher_sha256": "712b09461999667495effad7ea881b4960e140ca0bd935e106bd93cff7565022",
+    "manifest_sha256": "fd6c1ba0d1b994d563f081ce9abd0a239a941055286da8aa7bf4b8296f7328e2"
+  }
+}

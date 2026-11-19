@@ -1,0 +1,74 @@
+{
+  "schema": "formal-tools/user-e2e-live-mcp/1.0",
+  "generated_at": "2026-11-19T12:36:59.312Z",
+  "planner": "deterministic-template",
+  "assertions": [
+    {
+      "name": "initialize handshake",
+      "pass": true,
+      "detail": "{\"name\":\"formal-tools-skill\",\"version\":\"0.4.0\"}"
+    },
+    {
+      "name": "tools/list exposes exactly the 15 registered tools",
+      "pass": true,
+      "detail": "describe_native_cli,inspect_formal_tool,inspect_native_installation,inspect_portfolio_tool,list_formal_tools,list_portfolio_tools,match_formal_capabilities,plan_native_cli,plan_workflow,probe_formal_tool,run_formal_fixture,run_portfolio_operation,validate_formal_source,verify_formal_model,verify_portable_fixture"
+    },
+    {
+      "name": "plan_workflow is registered",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "plan_workflow returns an execution-plan/1.0",
+      "pass": true,
+      "detail": "{\"plan_id\":\"wf-e759e1d5b18abf629caa2398a609b56a\",\"steps\":[\"z3\",\"cvc5\",\"compare\"]}"
+    },
+    {
+      "name": "returned plan conforms to the pinned V3 shape (after removing the two declared wrapper keys)",
+      "pass": true,
+      "detail": "{\"errors\":[],\"classes\":[]}"
+    },
+    {
+      "name": "plan carries null compiled hashes (planning-only over MCP)",
+      "pass": true,
+      "detail": "{\"launcher_sha256\":null,\"manifest_sha256\":null}"
+    },
+    {
+      "name": "plan declares tool_execution NOT_RUN (MCP never executes)",
+      "pass": true,
+      "detail": "NOT_RUN"
+    },
+    {
+      "name": "plan_workflow is deterministic (same input -> same plan_id)",
+      "pass": true,
+      "detail": "{\"first\":\"wf-e759e1d5b18abf629caa2398a609b56a\",\"second\":\"wf-e759e1d5b18abf629caa2398a609b56a\"}"
+    },
+    {
+      "name": "plan_workflow with provider:'deepseek' returns a real LLM-planned execution-plan/1.0",
+      "pass": true,
+      "detail": "{\"plan_id\":\"wf-1023fdabe42c64cbc0d5677766aa925f\",\"blocked\":null}"
+    },
+    {
+      "name": "DeepSeek proposal reproduces the CLI DeepSeek journey's plan (temperature-0 determinism across entries)",
+      "pass": true,
+      "detail": "{\"mcp_deepseek_plan_id\":\"wf-1023fdabe42c64cbc0d5677766aa925f\",\"cli_deepseek_plan_id\":\"wf-1023fdabe42c64cbc0d5677766aa925f\"}"
+    },
+    {
+      "name": "provider:'deepseek' without a key fails closed with BLOCKED_PROVIDER (never mocked)",
+      "pass": true,
+      "detail": "{\"status\":\"ERROR\",\"message\":\"WorkflowError: provider 'deepseek' requires DEEPSEEK_API_KEY in the host environment; it is never mocked\"}"
+    },
+    {
+      "name": "CLI and MCP planners agree on the identical plan object (same plan_id)",
+      "pass": true,
+      "detail": "{\"cli\":\"wf-e759e1d5b18abf629caa2398a609b56a\",\"mcp\":\"wf-e759e1d5b18abf629caa2398a609b56a\"}"
+    }
+  ],
+  "summary": {
+    "checks": 12,
+    "passed": 12,
+    "failed": 0
+  },
+  "plan_id": "wf-e759e1d5b18abf629caa2398a609b56a",
+  "credential_material_present": false
+}

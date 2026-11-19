@@ -1,0 +1,73 @@
+{
+  "schema": "formal-tools/execution-plan/1.0",
+  "plan_id": "wf-92ae81d5245c9df83e00bce8e4e8f075",
+  "source": {
+    "problem_sha256": "60f60e5f8e534e7cfcc9d7efdd3ed437440041cf98d98f1d9197f0dad982c227",
+    "problem_kind": "lp-json"
+  },
+  "assumptions": [
+    "LP model is well-formed and interpreted with standard HiGHS linear-programming semantics.",
+    "Numerical tolerance for optimality follows the solver default."
+  ],
+  "method_dag": [
+    {
+      "id": "step-highs",
+      "kind": "solve",
+      "depends_on": []
+    }
+  ],
+  "steps": [
+    {
+      "id": "step-highs",
+      "tool": "highs",
+      "operation": "solve-lp",
+      "depends_on": [],
+      "input": {
+        "sense": "max",
+        "objective": [
+          3,
+          2
+        ],
+        "variables": [
+          {
+            "lower": 0,
+            "upper": null
+          },
+          {
+            "lower": 0,
+            "upper": null
+          }
+        ],
+        "constraints": [
+          {
+            "lower": null,
+            "upper": 1,
+            "coefficients": [
+              1,
+              1
+            ]
+          },
+          {
+            "lower": 2,
+            "upper": null,
+            "coefficients": [
+              1,
+              0
+            ]
+          }
+        ]
+      },
+      "input_sha256": "3de55a014df17cd4a15e67e73a1b069995033d187c2f8680e540e835a7571077",
+      "timeout_s": 30,
+      "expected_output_kind": "lp-status"
+    }
+  ],
+  "budgets": {
+    "max_steps": 8,
+    "max_total_timeout_s": 120
+  },
+  "compiled": {
+    "launcher_sha256": null,
+    "manifest_sha256": null
+  }
+}

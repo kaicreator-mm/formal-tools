@@ -1,0 +1,49 @@
+{
+  "journey": "j4-lp-koptimal",
+  "source_sha": "646859f628c4595e66c490c00c887e54e02bc215",
+  "steps": [
+    {
+      "name": "plan-via-sdk",
+      "exit_code": 0,
+      "parsed_summary": {
+        "kind": "plan",
+        "plan_id": "wf-93f3dd7ddf850bebff7ba7ea1d4e66c1",
+        "steps": [
+          {
+            "id": "step-highs",
+            "tool": "highs",
+            "operation": "solve-lp"
+          }
+        ]
+      }
+    },
+    {
+      "name": "execute",
+      "exit_code": 2,
+      "parsed_summary": {
+        "kind": "receipt",
+        "run_id": "run-mwnj3gtc-f0d196fc",
+        "overall": {
+          "process_outcome": "OK",
+          "solver_answer": {
+            "kind": "solve-lp",
+            "value": "sat",
+            "by_step": [
+              {
+                "step_id": "step-highs",
+                "tool": "highs",
+                "operation": "solve-lp",
+                "answer": "kOptimal"
+              }
+            ]
+          },
+          "cross_tool_verdict": "NOT_APPLICABLE",
+          "claim_verdict": "NOT_APPLICABLE"
+        }
+      }
+    }
+  ],
+  "provider": "deterministic-template-highs",
+  "expected": "kOptimal objective 11",
+  "receipt_captured": true
+}

@@ -1,0 +1,64 @@
+{
+  "schema": "formal-tools/execution-receipt/1.0",
+  "run_id": "run-mwnj3h14-6dc930ad",
+  "plan_id": "wf-92ae81d5245c9df83e00bce8e4e8f075",
+  "plan_sha256": "8b78dc79712a861fc38b17b599ca1b3806ac2c126d9f3f9234e8aa84415d3073",
+  "source_sha": "646859f628c4595e66c490c00c887e54e02bc215",
+  "created_at": "2026-11-19T12:30:41.656Z",
+  "tool_versions": {
+    "highs": {
+      "version": "highspy 1.15.1",
+      "probe_sha256": null,
+      "probe_bounded": null
+    }
+  },
+  "steps": [
+    {
+      "step_id": "step-highs",
+      "tool": "highs",
+      "operation": "solve-lp",
+      "status": "EXECUTED",
+      "exit_code": 0,
+      "elapsed_ms": 217,
+      "stdout_sha256": "361b940da98034a365b86419150178312d624a7477b0a2f3ed2ff0530fb32ee3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bounded": "{\"highspy_version\":\"1.15.1\",\"input_sha256\":\"4283c6b41e80a4f55414356fda549943ce2a11d4393fcd8b133937b2a3b2e4ba\",\"model_status\":\"kInfeasible\",\"numpy_version\":\"2.5.4\",\"objective\":null,\"python_version\":\"3.13.5\",\"schema\":\"formal-tools/highs-solve-lp/1.0\",\"solver_api_status\":\"kOk\",\"tool\":\"highs\",\"variables\":[]}\n",
+      "stderr_bounded": "",
+      "result": {
+        "highspy_version": "1.15.1",
+        "input_sha256": "4283c6b41e80a4f55414356fda549943ce2a11d4393fcd8b133937b2a3b2e4ba",
+        "model_status": "kInfeasible",
+        "numpy_version": "2.5.4",
+        "objective": null,
+        "python_version": "3.13.5",
+        "schema": "formal-tools/highs-solve-lp/1.0",
+        "solver_api_status": "kOk",
+        "tool": "highs",
+        "variables": []
+      },
+      "artifacts": []
+    }
+  ],
+  "overall": {
+    "process_outcome": "OK",
+    "solver_answer": {
+      "kind": "solve-lp",
+      "value": "unsat",
+      "by_step": [
+        {
+          "step_id": "step-highs",
+          "tool": "highs",
+          "operation": "solve-lp",
+          "answer": "kInfeasible"
+        }
+      ]
+    },
+    "cross_tool_verdict": "NOT_APPLICABLE",
+    "claim_verdict": "NOT_APPLICABLE"
+  },
+  "environment": {
+    "host": "cc",
+    "node": "v22.16.0",
+    "formal_portable_root_sha": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a"
+  }
+}

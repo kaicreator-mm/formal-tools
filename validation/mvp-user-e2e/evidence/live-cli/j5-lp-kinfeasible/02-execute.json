@@ -1,0 +1,31 @@
+{
+  "name": "execute",
+  "exit_code": 2,
+  "stdout": "{\"schema\":\"formal-tools/execution-receipt/1.0\",\"run_id\":\"run-mwnj3h14-6dc930ad\",\"overall\":{\"process_outcome\":\"OK\",\"solver_answer\":{\"kind\":\"solve-lp\",\"value\":\"unsat\",\"by_step\":[{\"step_id\":\"step-highs\",\"tool\":\"highs\",\"operation\":\"solve-lp\",\"answer\":\"kInfeasible\"}]},\"cross_tool_verdict\":\"NOT_APPLICABLE\",\"claim_verdict\":\"NOT_APPLICABLE\"}}",
+  "stderr": "",
+  "argv": [
+    "<executeWorkflowPlan(plan, {sourceSha})>"
+  ],
+  "workspaceDir": "/tmp/formal-workflow-vviFKL",
+  "summary": {
+    "kind": "receipt",
+    "run_id": "run-mwnj3h14-6dc930ad",
+    "overall": {
+      "process_outcome": "OK",
+      "solver_answer": {
+        "kind": "solve-lp",
+        "value": "unsat",
+        "by_step": [
+          {
+            "step_id": "step-highs",
+            "tool": "highs",
+            "operation": "solve-lp",
+            "answer": "kInfeasible"
+          }
+        ]
+      },
+      "cross_tool_verdict": "NOT_APPLICABLE",
+      "claim_verdict": "NOT_APPLICABLE"
+    }
+  }
+}

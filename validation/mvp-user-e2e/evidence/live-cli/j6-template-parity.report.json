@@ -1,0 +1,68 @@
+{
+  "journey": "j6-template-parity",
+  "source_sha": "646859f628c4595e66c490c00c887e54e02bc215",
+  "steps": [
+    {
+      "name": "plan-template-uncompiled",
+      "exit_code": 0,
+      "parsed_summary": {
+        "kind": "plan",
+        "plan_id": "wf-e759e1d5b18abf629caa2398a609b56a",
+        "steps": [
+          {
+            "id": "step-z3",
+            "tool": "z3",
+            "operation": "solve-smt"
+          },
+          {
+            "id": "step-cvc5",
+            "tool": "cvc5",
+            "operation": "solve-smt"
+          },
+          {
+            "id": "step-agree",
+            "tool": "compare",
+            "operation": "cross-check"
+          }
+        ],
+        "artifacts": null
+      }
+    },
+    {
+      "name": "execute",
+      "exit_code": 0,
+      "parsed_summary": {
+        "kind": "receipt-summary",
+        "plan_id": "wf-e759e1d5b18abf629caa2398a609b56a",
+        "run_id": "run-mwnix33i-0ef1a397",
+        "overall": {
+          "process_outcome": "OK",
+          "solver_answer": {
+            "kind": "solve-smt",
+            "value": "unsat",
+            "by_step": [
+              {
+                "step_id": "step-z3",
+                "tool": "z3",
+                "operation": "solve-smt",
+                "answer": "unsat"
+              },
+              {
+                "step_id": "step-cvc5",
+                "tool": "cvc5",
+                "operation": "solve-smt",
+                "answer": "unsat"
+              }
+            ]
+          },
+          "cross_tool_verdict": "AGREE_UNSAT",
+          "claim_verdict": "PASS"
+        },
+        "blocked": null
+      }
+    }
+  ],
+  "provider": "deterministic-template",
+  "plan_id": "wf-e759e1d5b18abf629caa2398a609b56a",
+  "receipt_captured": true
+}
