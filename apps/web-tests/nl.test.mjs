@@ -181,6 +181,30 @@ test('NL Web approval guard: visible unvalidated edits cannot silently approve a
   assert.match(planRunHandler, /JSON\.stringify\(collectAssumptions\(\)\) !== JSON\.stringify\(state\.plan\.assumptions \|\| \[\]\)/);
   assert.match(planRunHandler, /Plan assumptions changed/);
   assert.match(planRunHandler, /btn\.disabled = false;\s*return;/);
+  // This approved NL plan cannot go through the unrelated direct-model
+  // /api/plan regeneration API: that would discard the approved model source.
+  const planRender = source.slice(
+    source.indexOf('function setPlan('),
+    source.indexOf('function renderPlanSummary()')
+  );
+  assert.match(planRender, /const nlPlan = state\.planSource\?\.kind === 'nl-model'/);
+  assert.match(planRender, /\$\('#regenBtn'\)\.hidden = nlPlan/);
+  assert.match(planRender, /\$\('#regenBtn'\)\.disabled = nlPlan/);
+  assert.match(planRender, /\$\('#addAssumptionBtn'\)\.hidden = nlPlan/);
+  const regenHandler = source.slice(
+    source.indexOf("\$('#regenBtn').addEventListener('click'"),
+    source.indexOf("\$('#approveCheck').addEventListener('change'")
+  );
+  assert.match(regenHandler, /if \(state\.planSource\?\.kind === 'nl-model'\)/);
+  assert.match(regenHandler, /Start a new NL proposal/);
+  const assumptionRender = source.slice(
+    source.indexOf('function renderAssumptions('),
+    source.indexOf('function collectAssumptions()')
+  );
+  assert.match(assumptionRender, /input\.readOnly = state\.planSource\?\.kind === 'nl-model'/);
+  assert.match(assumptionRender, /removeBtn\.hidden = state\.planSource\?\.kind === 'nl-model'/);
+  const page = readFileSync(new URL('../web/public/index.html', import.meta.url), 'utf8');
+  assert.match(page, /id="planAssumptionsHelp"/);
 });
 
 // --- meta ---------------------------------------------------------------------
