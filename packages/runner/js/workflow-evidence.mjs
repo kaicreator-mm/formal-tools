@@ -290,5 +290,5 @@ export async function writeExecutionReceiptArtifacts(dir, receipt, rawStreams = 
   };
   const manifestBytes = Buffer.from(JSON.stringify(manifest, null, 2) + "\n", "utf8");
   await writeFile(join(dir, "manifest.json"), manifestBytes);
-  return {manifest, receipt_sha256: artifacts[0].sha256};
+  return {manifest, receipt_sha256: receiptSha256};
 }
