@@ -1,10 +1,11 @@
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { mkdir, writeFile } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { canonicalJsonBytes, sha256Hex } from "../packages/runner/js/workflow-evidence.mjs";
 
 /**
- * Real MCP stdio acceptance for the 15 registered tools. Speaks newline-delimited
+ * Real MCP stdio acceptance for the 16 registered tools. Speaks newline-delimited
  * JSON-RPC to a spawned packages/runner/js/mcp.mjs child — no SDK client shortcut,
  * so the handshake exercises the same transport an external MCP host would use.
  * Read-only plus registered-tool calls only; never opens a raw shell channel.
@@ -19,7 +20,8 @@ const EXPECTED_TOOLS=[
   "probe_formal_tool","run_formal_fixture","describe_native_cli",
   "inspect_native_installation","plan_native_cli","verify_formal_model",
   "list_portfolio_tools","match_formal_capabilities","inspect_portfolio_tool",
-  "verify_portable_fixture","run_portfolio_operation","plan_workflow"
+  "verify_portable_fixture","run_portfolio_operation","plan_workflow",
+  "execute_workflow"
 ].sort();
 
 const childEnv={...process.env};
@@ -94,7 +96,7 @@ try{
 
   const list=await request("tools/list",{});
   const names=(list.result?.tools??[]).map(t=>t.name).sort();
-  check("tools/list exposes exactly the 15 registered tools",
+  check("tools/list exposes exactly the 16 registered tools",
     JSON.stringify(names)===JSON.stringify(EXPECTED_TOOLS),names.join(","));
   const toolMeta={};
   for(const t of list.result?.tools??[])toolMeta[t.name]=t.inputSchema;
@@ -252,6 +254,64 @@ try{
   const wfExecuteProbe=JSON.stringify(wfSchema)+JSON.stringify(firstText(wfRes.result));
   check("plan_workflow exposes no execution lane (plan output carries no argv/shell/launcher execution fields)",
     !/"argv"|"shell"|"command"/.test(wfExecuteProbe),wfExecuteProbe.slice(0,160));
+
+  // i180/R2-B: execute_workflow — bounded typed execution over the real V3
+  // executor (16th tool). In this binary-less acceptance environment the
+  // executor preflight fails closed and the tool must return the honest
+  // ABORTED/BLOCKED receipt as a NON-error result — never a fabricated PASS.
+  const exSchema=JSON.stringify(toolMeta.execute_workflow);
+  check("execute_workflow schema is a bounded typed execution interface (plan/source_sha/budget_caps; no argv/shell/cwd/file_path)",
+    /"plan"/.test(exSchema)&&/"source_sha"/.test(exSchema)&&/"budget_caps"/.test(exSchema)&&
+    !/"argv"|"shell"|"command"|"cwd"|"file_path"/.test(exSchema),exSchema.slice(0,220));
+
+  const executionPlan=(({schema,plan_id,source,assumptions,method_dag,budgets,compiled,steps})=>
+    ({schema,plan_id,source,assumptions,method_dag,budgets,compiled,steps}))(wf);
+  const expectedPlanSha=sha256Hex(canonicalJsonBytes(executionPlan));
+  const gitHead=spawnSync("git",["rev-parse","HEAD"],{cwd:resolve(here,".."),encoding:"utf8"});
+  const sourceSha=gitHead.status===0?String(gitHead.stdout).trim():"";
+  check("execute_workflow runs are labeled with the caller's 40-hex git HEAD (no anonymous runs)",
+    /^[a-f0-9]{40}$/.test(sourceSha),"HEAD="+(/^[a-f0-9]{40}$/.test(sourceSha)?sourceSha.slice(0,12)+"...":"unavailable"));
+
+  const exRes=await call("execute_workflow",{plan:executionPlan,source_sha:sourceSha},30000);
+  const ex=firstText(exRes.result);
+  check("execute_workflow returns the honest fail-closed ABORTED receipt in a binary-less environment (never PASS)",
+    exRes.result?.isError!==true&&ex?.status==="FAIL_CLOSED_RECEIPT_RETURNED"&&
+    ex?.execution==="REAL_WORKFLOW_EXECUTOR"&&ex?.executed===false&&
+    ex?.blocked_code==="BLOCKED_TOOL_MISSING"&&ex?.schema==="formal-tools/execution-receipt/1.0"&&
+    ex?.run_id&&ex?.plan_sha256===expectedPlanSha&&ex?.source_sha===sourceSha&&
+    ex?.overall?.process_outcome==="ABORTED"&&ex?.overall?.claim_verdict==="BLOCKED"&&
+    ex?.overall?.fail_closed_reason==="BLOCKED_TOOL_MISSING"&&
+    Array.isArray(ex?.steps)&&ex.steps.length===3&&ex.steps.every(s=>s.status==="NOT_RUN")&&
+    /^[a-f0-9]{64}$/.test(String(ex?.artifact_manifest?.receipt_sha256)),
+    JSON.stringify({status:ex?.status,executed:ex?.executed,blocked:ex?.blocked_code,
+      overall:ex?.overall,steps:(ex?.steps??[]).map(s=>s.status),
+      receipt_sha256:ex?.artifact_manifest?.receipt_sha256}).slice(0,240));
+
+  const tamperPlan=structuredClone(executionPlan);
+  tamperPlan.steps[0].input_sha256="0".repeat(64);
+  const tamperRes=await call("execute_workflow",{plan:tamperPlan,source_sha:sourceSha});
+  const tamper=firstText(tamperRes.result);
+  check("execute_workflow rejects a hash-tampered plan with PLAN_HASH_MISMATCH before anything runs",
+    tamperRes.result?.isError===true&&tamper?.status==="ERROR"&&tamper?.executed===false&&
+    tamper?.code==="PLAN_HASH_MISMATCH",
+    JSON.stringify({code:tamper?.code,message:tamper?.message}).slice(0,160));
+
+  const noShaRes=await call("execute_workflow",{plan:executionPlan});
+  check("execute_workflow requires source_sha (schema rejects anonymous unlabeled runs)",
+    noShaRes.result?.isError===true||Boolean(noShaRes.error),
+    JSON.stringify(noShaRes.error??noShaRes.result?.content?.[0]?.text).slice(0,160));
+
+  const looseRes=await call("execute_workflow",{plan:executionPlan,source_sha:sourceSha,
+    budget_caps:{max_total_timeout_s:86400}});
+  const loose=firstText(looseRes.result);
+  check("execute_workflow budget_caps are tighten-only (looser caps fail closed PLAN_BUDGET_EXCEEDED)",
+    looseRes.result?.isError===true&&loose?.code==="PLAN_BUDGET_EXCEEDED",
+    JSON.stringify({code:loose?.code,message:loose?.message}).slice(0,160));
+
+  const argvRes=await call("execute_workflow",{plan:executionPlan,source_sha:sourceSha,argv:["sh"]});
+  check("execute_workflow rejects raw argv extension (strict schema)",
+    argvRes.result?.isError===true||Boolean(argvRes.error),
+    JSON.stringify(argvRes.error??argvRes.result?.content?.[0]?.text).slice(0,160));
 }catch(e){
   check("driver completed without exception",false,String(e).slice(0,300));
 }finally{

@@ -34,17 +34,17 @@ test("D08: no native shell entry can masquerade as a registered SDK tool",async(
     tool:"z3",operation:"solve",sourceRoot:".",inputs:["../other"],settings:{input:"../other"}
   }),/invalid source-relative/);
 });
-test("D08: MCP exposes 15 allowlisted tools but never unrestricted native shell",async()=>{
+test("D08: MCP exposes 16 allowlisted tools but never unrestricted native shell",async()=>{
   const source=await readFile(new URL("../packages/runner/js/mcp.mjs",import.meta.url),"utf8");
   const names=[...source.matchAll(/registerTool\("([a-z_]+)"/g)].map(match=>match[1]);
-  assert.equal(names.length,15);
+  assert.equal(names.length,16);
   assert.equal(new Set(names).size,names.length);
   assert.deepEqual(names.sort(),[
     "list_formal_tools","validate_formal_source","inspect_formal_tool",
     "probe_formal_tool","run_formal_fixture","describe_native_cli",
     "inspect_native_installation","plan_native_cli","verify_formal_model",
     "list_portfolio_tools","match_formal_capabilities","inspect_portfolio_tool","verify_portable_fixture","run_portfolio_operation",
-    "plan_workflow"
+    "plan_workflow","execute_workflow"
   ].sort());
   assert.doesNotMatch(source,/planRawNative|executeNativePlan|invokeStagedTool|child_process/);
   assert.match(source,/receipt\.status!==\"FIXTURE_TECHNICAL_PASS_UNREVIEWED\"/);
@@ -58,6 +58,19 @@ test("D08: MCP exposes 15 allowlisted tools but never unrestricted native shell"
   assert.match(source,/provider:z\.enum\(\["deepseek"\]\)\.optional\(\)/);
   assert.match(source,/tool_execution:"NOT_RUN"/);
   assert.match(source,/PLANNING ONLY/);
+  // i180/R2-B: execute_workflow is the ONE bounded typed execution lane: it
+  // delegates to the real V3 executor, requires a labeled source_sha, bounds
+  // the plan transport, and never takes argv/shell/file-path inputs.
+  assert.match(source,/registerTool\("execute_workflow"/);
+  assert.match(source,/executeWorkflowPlan\(plan,\{sourceSha:source_sha,env:process\.env\}\)/);
+  assert.match(source,/source_sha:z\.string\(\)\.regex\(\/\^\[a-f0-9\]\{40\}\$\/,"must be a 40-hex git commit SHA"\)/);
+  assert.match(source,/plan:executePlanSchema/);
+  assert.match(source,/EXECUTE_MAX_PLAN_BYTES = 65536/);
+  assert.match(source,/validateExecutionPlan\(plan\)/);
+  assert.match(source,/budget_caps may only tighten, never extend/);
+  assert.match(source,/FAIL_CLOSED_RECEIPT_RETURNED/);
+  assert.match(source,/BLOCKED_TOOL_MISSING/);
+  assert.match(source,/claim_verdict BLOCKED, fail_closed_reason BLOCKED_TOOL_MISSING/);
 });
 test("D08: sdk.d.mts type declarations cover every sdk.mjs named export",async()=>{
   const src=await readFile(new URL("../packages/runner/js/sdk.mjs",import.meta.url),"utf8");
