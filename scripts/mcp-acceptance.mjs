@@ -4,7 +4,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 /**
- * Real MCP stdio acceptance for the 14 registered tools. Speaks newline-delimited
+ * Real MCP stdio acceptance for the 15 registered tools. Speaks newline-delimited
  * JSON-RPC to a spawned packages/runner/js/mcp.mjs child — no SDK client shortcut,
  * so the handshake exercises the same transport an external MCP host would use.
  * Read-only plus registered-tool calls only; never opens a raw shell channel.
@@ -19,7 +19,7 @@ const EXPECTED_TOOLS=[
   "probe_formal_tool","run_formal_fixture","describe_native_cli",
   "inspect_native_installation","plan_native_cli","verify_formal_model",
   "list_portfolio_tools","match_formal_capabilities","inspect_portfolio_tool",
-  "verify_portable_fixture","run_portfolio_operation"
+  "verify_portable_fixture","run_portfolio_operation","plan_workflow"
 ].sort();
 
 const childEnv={...process.env};
@@ -94,7 +94,7 @@ try{
 
   const list=await request("tools/list",{});
   const names=(list.result?.tools??[]).map(t=>t.name).sort();
-  check("tools/list exposes exactly the 14 registered tools",
+  check("tools/list exposes exactly the 15 registered tools",
     JSON.stringify(names)===JSON.stringify(EXPECTED_TOOLS),names.join(","));
   const toolMeta={};
   for(const t of list.result?.tools??[])toolMeta[t.name]=t.inputSchema;
@@ -212,6 +212,46 @@ try{
   const badRes=await call("inspect_native_installation",{tool:"definitely-not-a-tool"});
   check("unknown tool id is rejected by schema (no generic executable)",
     badRes.result?.isError===true||Boolean(badRes.error),JSON.stringify(badRes.error??badRes.result?.content?.[0]?.text).slice(0,160));
+
+  // i180/V4b: plan_workflow — planning-only workflow surface (15th tool).
+  const wfSchema=JSON.stringify(toolMeta.plan_workflow);
+  check("plan_workflow schema is a closed planning-only interface (no argv/shell/execute/cwd)",
+    /"problem_text"/.test(wfSchema)&&/"assumptions"/.test(wfSchema)&&/"provider"/.test(wfSchema)&&
+    !/"argv"|"shell"|"command"|"cwd"|"execute"/.test(wfSchema),wfSchema.slice(0,220));
+
+  const WF_PROBLEM="(set-logic QF_LIA)\n(declare-const x Int)\n(assert (> x 0))\n(assert (< x 0))\n(check-sat)\n(exit)";
+  const wfRes=await call("plan_workflow",{problem_text:WF_PROBLEM,assumptions:["bounded linear integer arithmetic"]});
+  const wf=firstText(wfRes.result);
+  check("plan_workflow returns an execution-plan/1.0 with allowlisted steps, hash-bound inputs, null compilation",
+    wfRes.result?.isError!==true&&wf?.schema==="formal-tools/execution-plan/1.0"&&
+    typeof wf?.plan_id==="string"&&/^wf-[a-f0-9]{32}$/.test(wf.plan_id)&&
+    Array.isArray(wf?.steps)&&wf.steps.length===3&&
+    ["z3","cvc5","compare"].every(t=>wf.steps.some(s=>s.tool===t))&&
+    wf.steps.every(s=>typeof s.input_sha256==="string"&&/^[a-f0-9]{64}$/.test(s.input_sha256))&&
+    wf?.compiled?.launcher_sha256===null&&wf?.compiled?.manifest_sha256===null&&
+    wf?.tool_execution==="NOT_RUN",
+    JSON.stringify({plan_id:wf?.plan_id,steps:(wf?.steps??[]).map(s=>s.tool),
+      compiled:wf?.compiled,tool_execution:wf?.tool_execution}).slice(0,240));
+
+  const wfReplay=await call("plan_workflow",{problem_text:WF_PROBLEM,assumptions:["bounded linear integer arithmetic"]});
+  const wf2=firstText(wfReplay.result);
+  check("plan_workflow is deterministic (same input -> same plan_id, no hidden randomness)",
+    wfRes.result?.isError!==true&&wf2?.plan_id===wf?.plan_id&&wf2?.schema===wf?.schema,
+    JSON.stringify({first:wf?.plan_id,second:wf2?.plan_id}).slice(0,160));
+
+  const wfEmpty=await call("plan_workflow",{problem_text:""});
+  check("plan_workflow rejects empty problem_text (fail-closed zod min(1))",
+    wfEmpty.result?.isError===true||Boolean(wfEmpty.error),
+    JSON.stringify(wfEmpty.error??wfEmpty.result?.content?.[0]?.text).slice(0,160));
+
+  const wfBadProvider=await call("plan_workflow",{problem_text:"ok",provider:"bogus"});
+  check("plan_workflow rejects an unknown provider (fail-closed enum)",
+    wfBadProvider.result?.isError===true||Boolean(wfBadProvider.error),
+    JSON.stringify(wfBadProvider.error??wfBadProvider.result?.content?.[0]?.text).slice(0,160));
+
+  const wfExecuteProbe=JSON.stringify(wfSchema)+JSON.stringify(firstText(wfRes.result));
+  check("plan_workflow exposes no execution lane (plan output carries no argv/shell/launcher execution fields)",
+    !/"argv"|"shell"|"command"/.test(wfExecuteProbe),wfExecuteProbe.slice(0,160));
 }catch(e){
   check("driver completed without exception",false,String(e).slice(0,300));
 }finally{

@@ -1,6 +1,6 @@
 {
   "schema": "formal-mcp-local-acceptance/1",
-  "written_at": "2026-11-19T09:34:30.877Z",
+  "written_at": "2026-11-19T10:49:49.306Z",
   "transport": "stdio newline-delimited JSON-RPC",
   "server": {
     "serverInfo": {
@@ -18,6 +18,7 @@
     "list_portfolio_tools",
     "match_formal_capabilities",
     "plan_native_cli",
+    "plan_workflow",
     "probe_formal_tool",
     "run_formal_fixture",
     "run_portfolio_operation",
@@ -42,6 +43,7 @@
       "list_portfolio_tools",
       "match_formal_capabilities",
       "plan_native_cli",
+      "plan_workflow",
       "probe_formal_tool",
       "run_formal_fixture",
       "run_portfolio_operation",
@@ -558,7 +560,7 @@
             "argv": [
               "z3",
               "-smt2",
-              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-qdtWzT\\examples\\positive.smt2"
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-sfvD52\\examples\\positive.smt2"
             ],
             "exit_code": null,
             "signal": null,
@@ -743,6 +745,14 @@
       },
       "isError": true,
       "result": "Input validation error: Invalid arguments for tool match_formal_capabilities: capabilities: Too small: expected array to have >=1 items"
+    },
+    "plan_workflow": {
+      "arguments": {
+        "problem_text": "ok",
+        "provider": "bogus"
+      },
+      "isError": true,
+      "result": "Input validation error: Invalid arguments for tool plan_workflow: provider: Invalid input: expected \"deepseek\""
     }
   },
   "assertions": [
@@ -752,9 +762,9 @@
       "detail": "serverInfo={\"name\":\"formal-tools-skill\",\"version\":\"0.4.0\"} protocol=2025-06-18"
     },
     {
-      "name": "tools/list exposes exactly the 14 registered tools",
+      "name": "tools/list exposes exactly the 15 registered tools",
       "pass": true,
-      "detail": "describe_native_cli,inspect_formal_tool,inspect_native_installation,inspect_portfolio_tool,list_formal_tools,list_portfolio_tools,match_formal_capabilities,plan_native_cli,probe_formal_tool,run_formal_fixture,run_portfolio_operation,validate_formal_source,verify_formal_model,verify_portable_fixture"
+      "detail": "describe_native_cli,inspect_formal_tool,inspect_native_installation,inspect_portfolio_tool,list_formal_tools,list_portfolio_tools,match_formal_capabilities,plan_native_cli,plan_workflow,probe_formal_tool,run_formal_fixture,run_portfolio_operation,validate_formal_source,verify_formal_model,verify_portable_fixture"
     },
     {
       "name": "inspect_native_installation input schema is tool-only (no shell/argv/cwd passthrough)",
@@ -845,11 +855,41 @@
       "name": "unknown tool id is rejected by schema (no generic executable)",
       "pass": true,
       "detail": "\"Input validation error: Invalid arguments for tool inspect_native_installation: tool: Unknown registered formal tool\""
+    },
+    {
+      "name": "plan_workflow schema is a closed planning-only interface (no argv/shell/execute/cwd)",
+      "pass": true,
+      "detail": "{\"type\":\"object\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"properties\":{\"problem_text\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":65536},\"assumptions\":{\"default\":[],\"maxItems\":32,\"type\":\"array\",\"items\":{\""
+    },
+    {
+      "name": "plan_workflow returns an execution-plan/1.0 with allowlisted steps, hash-bound inputs, null compilation",
+      "pass": true,
+      "detail": "{\"plan_id\":\"wf-8bb1bf45a6d0fbd5dbdff9fceae08cd5\",\"steps\":[\"z3\",\"cvc5\",\"compare\"],\"compiled\":{\"launcher_sha256\":null,\"manifest_sha256\":null},\"tool_execution\":\"NOT_RUN\"}"
+    },
+    {
+      "name": "plan_workflow is deterministic (same input -> same plan_id, no hidden randomness)",
+      "pass": true,
+      "detail": "{\"first\":\"wf-8bb1bf45a6d0fbd5dbdff9fceae08cd5\",\"second\":\"wf-8bb1bf45a6d0fbd5dbdff9fceae08cd5\"}"
+    },
+    {
+      "name": "plan_workflow rejects empty problem_text (fail-closed zod min(1))",
+      "pass": true,
+      "detail": "\"Input validation error: Invalid arguments for tool plan_workflow: problem_text: Too small: expected string to have >=1 characters\""
+    },
+    {
+      "name": "plan_workflow rejects an unknown provider (fail-closed enum)",
+      "pass": true,
+      "detail": "\"Input validation error: Invalid arguments for tool plan_workflow: provider: Invalid input: expected \\\"deepseek\\\"\""
+    },
+    {
+      "name": "plan_workflow exposes no execution lane (plan output carries no argv/shell/launcher execution fields)",
+      "pass": true,
+      "detail": "\"{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"problem_text\\\":{\\\"type\\\":\\\"string\\\",\\\"minLength\\\":1,\\\"maxLe"
     }
   ],
   "summary": {
-    "checks": 20,
-    "passed": 20,
+    "checks": 26,
+    "passed": 26,
     "failed": 0
   },
   "transcript": [
@@ -1266,6 +1306,40 @@
                   "model"
                 ]
               }
+            },
+            {
+              "name": "plan_workflow",
+              "description": "Plan a bounded user problem into a formal-tools/execution-plan/1.0 workflow (PLANNING ONLY - never executes anything; tool_execution stays NOT_RUN). Deterministic z3+cvc5 cross-check template by default; the canonical problem text is used verbatim as the SMT-LIB input of both solvers. Optional provider:'deepseek' replaces the template with ONE real DeepSeek method proposal using DEEPSEEK_API_KEY from the host environment (absent key fails closed with BLOCKED_PROVIDER; never mocked). Execution is intentionally NOT exposed over MCP: run the compiled plan on a trusted host via the SDK/CLI.",
+              "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                  "problem_text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 65536
+                  },
+                  "assumptions": {
+                    "default": [],
+                    "maxItems": 32,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "maxLength": 512
+                    }
+                  },
+                  "provider": {
+                    "type": "string",
+                    "enum": [
+                      "deepseek"
+                    ]
+                  }
+                },
+                "required": [
+                  "problem_text"
+                ],
+                "additionalProperties": false
+              }
             }
           ]
         },
@@ -1365,7 +1439,7 @@
           "content": [
             {
               "type": "text",
-              "text": "{\"tool\":\"z3\",\"case\":\"positive\",\"run_status\":\"NOT_RUN\",\"tool_outcome\":\"UNKNOWN\",\"test_verdict\":\"INCONCLUSIVE\",\"claim_verdict\":\"NOT_EVALUATED\",\"input_sha256\":{\"negative.smt2\":\"1d3336271d42ac7e4f4b12d95c70ae5c715a4cfd689e43a7119ea095fee75c4b\",\"positive.smt2\":\"431edcb1fb96d9aeda5c8b4a59845d3793e1b1957bdc221d6847ca9a769c8db0\"},\"executions\":[{\"argv\":[\"z3\",\"-smt2\",\"C:\\\\Users\\\\15549\\\\AppData\\\\Local\\\\Temp\\\\formal-js-qdtWzT\\\\examples\\\\positive.smt2\"],\"exit_code\":null,\"signal\":null,\"elapsed_ms\":2,\"timed_out\":false,\"stdout\":\"\",\"stderr\":\"\",\"stdout_sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"stderr_sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"error\":\"spawn z3 ENOENT\",\"output_truncated\":false}],\"scope\":\"committed fixture only; not a proof of a project requirement\"}"
+              "text": "{\"tool\":\"z3\",\"case\":\"positive\",\"run_status\":\"NOT_RUN\",\"tool_outcome\":\"UNKNOWN\",\"test_verdict\":\"INCONCLUSIVE\",\"claim_verdict\":\"NOT_EVALUATED\",\"input_sha256\":{\"negative.smt2\":\"1d3336271d42ac7e4f4b12d95c70ae5c715a4cfd689e43a7119ea095fee75c4b\",\"positive.smt2\":\"431edcb1fb96d9aeda5c8b4a59845d3793e1b1957bdc221d6847ca9a769c8db0\"},\"executions\":[{\"argv\":[\"z3\",\"-smt2\",\"C:\\\\Users\\\\15549\\\\AppData\\\\Local\\\\Temp\\\\formal-js-sfvD52\\\\examples\\\\positive.smt2\"],\"exit_code\":null,\"signal\":null,\"elapsed_ms\":2,\"timed_out\":false,\"stdout\":\"\",\"stderr\":\"\",\"stdout_sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"stderr_sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"error\":\"spawn z3 ENOENT\",\"output_truncated\":false}],\"scope\":\"committed fixture only; not a proof of a project requirement\"}"
             }
           ]
         },
@@ -1576,6 +1650,88 @@
         },
         "jsonrpc": "2.0",
         "id": 17
+      }
+    },
+    {
+      "outbound": {
+        "id": 18,
+        "method": "tools/call"
+      }
+    },
+    {
+      "inbound": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"schema\":\"formal-tools/execution-plan/1.0\",\"plan_id\":\"wf-8bb1bf45a6d0fbd5dbdff9fceae08cd5\",\"source\":{\"problem_sha256\":\"6b2871253916cf65ff349f2205071b9e46fd3e3b09f62f3f517a5005b899dd19\",\"problem_kind\":\"user_problem\"},\"assumptions\":[\"bounded linear integer arithmetic\"],\"method_dag\":[{\"id\":\"step-z3\",\"kind\":\"solve\",\"depends_on\":[]},{\"id\":\"step-cvc5\",\"kind\":\"solve\",\"depends_on\":[\"step-z3\"]},{\"id\":\"step-agree\",\"kind\":\"cross_check\",\"depends_on\":[\"step-z3\",\"step-cvc5\"]}],\"steps\":[{\"id\":\"step-z3\",\"tool\":\"z3\",\"operation\":\"solve-smt\",\"depends_on\":[],\"input\":{\"smt_lib\":\"(set-logic QF_LIA)\\n(declare-const x Int)\\n(assert (> x 0))\\n(assert (< x 0))\\n(check-sat)\\n(exit)\"},\"input_sha256\":\"00e67f87e03bd98dd92f0de5ab6ffb52f6ca7792a0bf77410ae578f7b4d5a3f4\",\"timeout_s\":30,\"expected_output_kind\":\"smt-answer\"},{\"id\":\"step-cvc5\",\"tool\":\"cvc5\",\"operation\":\"solve-smt\",\"depends_on\":[\"step-z3\"],\"input\":{\"smt_lib\":\"(set-logic QF_LIA)\\n(declare-const x Int)\\n(assert (> x 0))\\n(assert (< x 0))\\n(check-sat)\\n(exit)\"},\"input_sha256\":\"00e67f87e03bd98dd92f0de5ab6ffb52f6ca7792a0bf77410ae578f7b4d5a3f4\",\"timeout_s\":30,\"expected_output_kind\":\"smt-answer\"},{\"id\":\"step-agree\",\"tool\":\"compare\",\"operation\":\"cross-check\",\"depends_on\":[\"step-z3\",\"step-cvc5\"],\"input\":{\"left_step\":\"step-z3\",\"right_step\":\"step-cvc5\",\"agree_on\":[\"sat\",\"unsat\"]},\"timeout_s\":5,\"expected_output_kind\":\"cross-tool-verdict\",\"input_sha256\":\"7a913f16cf6ae5824b30e5d9069c90934b05d35cbf1099c2da4ba501bbcb9f62\"}],\"budgets\":{\"max_steps\":8,\"max_total_timeout_s\":120},\"compiled\":{\"launcher_sha256\":null,\"manifest_sha256\":null},\"problem_id\":\"user.8aff03bae41c90c1\",\"tool_execution\":\"NOT_RUN\"}"
+            }
+          ]
+        },
+        "jsonrpc": "2.0",
+        "id": 18
+      }
+    },
+    {
+      "outbound": {
+        "id": 19,
+        "method": "tools/call"
+      }
+    },
+    {
+      "inbound": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"schema\":\"formal-tools/execution-plan/1.0\",\"plan_id\":\"wf-8bb1bf45a6d0fbd5dbdff9fceae08cd5\",\"source\":{\"problem_sha256\":\"6b2871253916cf65ff349f2205071b9e46fd3e3b09f62f3f517a5005b899dd19\",\"problem_kind\":\"user_problem\"},\"assumptions\":[\"bounded linear integer arithmetic\"],\"method_dag\":[{\"id\":\"step-z3\",\"kind\":\"solve\",\"depends_on\":[]},{\"id\":\"step-cvc5\",\"kind\":\"solve\",\"depends_on\":[\"step-z3\"]},{\"id\":\"step-agree\",\"kind\":\"cross_check\",\"depends_on\":[\"step-z3\",\"step-cvc5\"]}],\"steps\":[{\"id\":\"step-z3\",\"tool\":\"z3\",\"operation\":\"solve-smt\",\"depends_on\":[],\"input\":{\"smt_lib\":\"(set-logic QF_LIA)\\n(declare-const x Int)\\n(assert (> x 0))\\n(assert (< x 0))\\n(check-sat)\\n(exit)\"},\"input_sha256\":\"00e67f87e03bd98dd92f0de5ab6ffb52f6ca7792a0bf77410ae578f7b4d5a3f4\",\"timeout_s\":30,\"expected_output_kind\":\"smt-answer\"},{\"id\":\"step-cvc5\",\"tool\":\"cvc5\",\"operation\":\"solve-smt\",\"depends_on\":[\"step-z3\"],\"input\":{\"smt_lib\":\"(set-logic QF_LIA)\\n(declare-const x Int)\\n(assert (> x 0))\\n(assert (< x 0))\\n(check-sat)\\n(exit)\"},\"input_sha256\":\"00e67f87e03bd98dd92f0de5ab6ffb52f6ca7792a0bf77410ae578f7b4d5a3f4\",\"timeout_s\":30,\"expected_output_kind\":\"smt-answer\"},{\"id\":\"step-agree\",\"tool\":\"compare\",\"operation\":\"cross-check\",\"depends_on\":[\"step-z3\",\"step-cvc5\"],\"input\":{\"left_step\":\"step-z3\",\"right_step\":\"step-cvc5\",\"agree_on\":[\"sat\",\"unsat\"]},\"timeout_s\":5,\"expected_output_kind\":\"cross-tool-verdict\",\"input_sha256\":\"7a913f16cf6ae5824b30e5d9069c90934b05d35cbf1099c2da4ba501bbcb9f62\"}],\"budgets\":{\"max_steps\":8,\"max_total_timeout_s\":120},\"compiled\":{\"launcher_sha256\":null,\"manifest_sha256\":null},\"problem_id\":\"user.8aff03bae41c90c1\",\"tool_execution\":\"NOT_RUN\"}"
+            }
+          ]
+        },
+        "jsonrpc": "2.0",
+        "id": 19
+      }
+    },
+    {
+      "outbound": {
+        "id": 20,
+        "method": "tools/call"
+      }
+    },
+    {
+      "inbound": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: Invalid arguments for tool plan_workflow: problem_text: Too small: expected string to have >=1 characters"
+            }
+          ],
+          "isError": true
+        },
+        "jsonrpc": "2.0",
+        "id": 20
+      }
+    },
+    {
+      "outbound": {
+        "id": 21,
+        "method": "tools/call"
+      }
+    },
+    {
+      "inbound": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: Invalid arguments for tool plan_workflow: provider: Invalid input: expected \"deepseek\""
+            }
+          ],
+          "isError": true
+        },
+        "jsonrpc": "2.0",
+        "id": 21
       }
     },
     {
