@@ -23,7 +23,10 @@ import os from 'node:os';
 
 import { startServer } from '../web/server.mjs';
 import { sha256Canonical, validateExecutionPlan } from '../../packages/runner/js/workflow-plan.mjs';
-import { NL_LP_RELAXATION_ASSUMPTION } from '../../packages/runner/js/nl-model.mjs';
+import {
+  NL_LP_RELAXATION_ASSUMPTION,
+  nlLpRelaxationPlanAssumption,
+} from '../../packages/runner/js/nl-model.mjs';
 
 // --- deterministic stub provider (single dispatching provider for all cases) --
 const SAT_MODEL = {
@@ -401,30 +404,95 @@ describe('POST /api/nl/approve + approval-bound execution', () => {
   });
 });
 
-// --- LP arm: prominent relaxation disclosure ------------------------------------
-describe('NL optimize arm — LP relaxation disclosure (never an integer optimum)', () => {
-  test('propose carries the LP warning; approve yields an lp plan with the integrality-drop assumption', async () => {
+// --- LP arm (i180/R3 seam, B's fail-closed gate): explicit relaxation ack -------
+describe('NL optimize arm — explicit LP-relaxation gate (UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION)', () => {
+  test('optimize WITHOUT ack -> restricted record (plan:null), rendered contract, nothing executable', async () => {
     const { proposal, warnings } = await propose(base.origin, OPT_TEXT);
     assert.equal(proposal.model.question, 'optimize');
-    assert.equal(proposal.model.objective.direction, 'maximize');
     assert.equal(warnings.length, 1);
     assert.match(warnings[0], /LP RELAXATION ONLY/);
-    assert.match(warnings[0], /NOT proven to be the integer optimum/);
 
-    const { res, body } = await approve(base.origin, proposal);
+    const { res, body } = await approve(base.origin, proposal); // no lpRelaxationAcknowledged
     assert.equal(res.status, 200, JSON.stringify(body));
+    assert.equal(body.decision, 'UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION');
+    assert.equal(body.note.includes('lpRelaxationAcknowledged'), true);
+    const record = body.record;
+    assert.equal(record.schema, 'formal-tools/nl-model-approved/0.1');
+    assert.equal(record.status, 'UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION');
+    assert.equal(record.plan, null, 'no plan is produced');
+    assert.equal(record.question, 'optimize');
+    assert.equal(record.unsupported.code, 'UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION');
+    assert.equal(record.unsupported.reason, 'LP_RELAXATION_NOT_ACKNOWLEDGED');
+    assert.deepEqual(record.unsupported.dropped, ['integrality']);
+    assert.equal(record.unsupported.required_decision_field, 'lpRelaxationAcknowledged');
+    assert.ok(Array.isArray(record.unsupported.remedies) && record.unsupported.remedies.length >= 1);
+    assert.match(record.unsupported.remedies[0], /lpRelaxationAcknowledged: true/);
+    assert.match(record.detail, /never presents an LP relaxation optimum as an integer optimum/);
+    assert.equal(record.review.unsupported, true);
+    assert.equal(body.approval, undefined, 'no approval binding is registered');
+    assert.equal(body.warnings.length, 1, 'the restricted result still carries the LP warning');
+    // the restricted record is NOT executable: a run submission referencing it fails closed
+    const ghost = await postJson(base.origin, '/api/runs', {
+      plan: SAT_MODEL, // arbitrary plan; the binding is the point
+      approval: { plan_sha256: sha256Canonical(SAT_MODEL), approved_sha256: record.proposal_sha256 },
+    });
+    assert.equal(ghost.res.status, 422);
+    assert.equal(ghost.body.error.code, 'NL_APPROVAL_UNKNOWN', 'restricted approvals never register an execution binding');
+  });
+
+  test('gate applies to the FINAL model: sat proposal edited into optimize without ack -> restricted, edited:true', async () => {
+    const proposal = (await propose(base.origin, SAT_TEXT)).proposal;
+    assert.equal(proposal.model.question, 'sat');
+    const { res, body } = await approve(base.origin, proposal, { edited: structuredClone(OPT_MODEL) });
+    assert.equal(res.status, 200, JSON.stringify(body));
+    assert.equal(body.decision, 'UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION');
+    assert.equal(body.record.edited, true, 'the gate sees the edited model');
+    assert.equal(body.record.model.question, 'optimize');
+    assert.equal(body.record.plan, null);
+  });
+
+  test('optimize WITH ack -> USER_APPROVED: relaxation metadata on the wrapper, marker assumption in the plan, binding still enforced', async () => {
+    const proposal = (await propose(base.origin, OPT_TEXT)).proposal;
+    const { res, body } = await approve(base.origin, proposal, { lpRelaxationAcknowledged: true });
+    assert.equal(res.status, 200, JSON.stringify(body));
+    assert.equal(body.decision, 'USER_APPROVED');
     assert.equal(body.target, 'lp');
     assert.equal(body.warnings.length, 1);
     assert.match(body.warnings[0], /LP RELAXATION ONLY/);
+    // frozen wrapper relaxation contract
+    const relaxation = body.relaxation;
+    assert.equal(relaxation.kind, 'LP_RELAXATION_ONLY');
+    assert.deepEqual(relaxation.dropped, ['integrality']);
+    assert.equal(relaxation.ack.acknowledged, true);
+    assert.equal(relaxation.ack.decision_field, 'lpRelaxationAcknowledged');
+    assert.match(relaxation.meaning, /integrality constraints are dropped/);
+    assert.match(relaxation.effect, /not its exact optimum/);
+    // approved record carries the hash-covered ack review
+    assert.equal(body.approved.review.lp_relaxation_ack.acknowledged, true);
+    // plan carries BOTH the prose assumption and the canonical JSON marker
     assert.deepEqual(body.plan.steps.map((s) => s.tool), ['highs']);
-    assert.ok(
-      body.plan.assumptions.includes(NL_LP_RELAXATION_ASSUMPTION),
-      'the plan itself records the integrality drop as an assumption',
-    );
+    assert.ok(body.plan.assumptions.includes(NL_LP_RELAXATION_ASSUMPTION), 'prose integrality-drop assumption');
+    assert.ok(body.plan.assumptions.includes(nlLpRelaxationPlanAssumption()), 'canonical JSON relaxation marker');
+    assert.equal(body.plan_sha256, sha256Canonical(body.plan));
     validateExecutionPlan(body.plan);
-    const hi = body.plan.steps[0].input;
-    assert.equal(hi.sense, 'max');
-    assert.deepEqual(hi.variables, [{ lower: 0, upper: 3 }, { lower: 0, upper: 4 }]);
+    // the acknowledgement is hash-covered: the binding run still executes
+    const { res: runRes, body: started } = await postJson(base.origin, '/api/runs', {
+      plan: body.plan,
+      approval: { plan_sha256: body.approval.plan_sha256, approved_sha256: body.approval.approved_sha256 },
+    });
+    assert.equal(runRes.status, 200, JSON.stringify(started));
+    const view = await waitForRun(base.origin, started.run_id);
+    assert.equal(view.receipt.overall.fail_closed_reason, 'BLOCKED_TOOL_MISSING', 'honest local fail-closed unchanged');
+    assert.equal(view.nl_approval_binding.verified, true, 'ack-inclusive approved_sha256 binds the run');
+    // tampering with the ack-bearing plan is still refused
+    const planB = structuredClone(body.plan);
+    planB.steps[0].input.sense = 'min';
+    const tamper = await postJson(base.origin, '/api/runs', {
+      plan: planB,
+      approval: { plan_sha256: body.approval.plan_sha256, approved_sha256: body.approval.approved_sha256 },
+    });
+    assert.equal(tamper.res.status, 422);
+    assert.equal(tamper.body.error.code, 'NL_PLAN_APPROVAL_MISMATCH', 'tamper rejection regression on the ack path');
   });
 });
 

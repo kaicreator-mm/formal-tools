@@ -185,6 +185,10 @@
               <h3>Provenance</h3>
               <dl id="nlProvenance" class="provenance-list" data-testid="nl-provenance"></dl>
               <p id="nlHonestyNote" class="hint" data-testid="nl-honesty-note"></p>
+              <p class="approve-card__gate" id="nlLpAckGate" data-testid="nl-lp-ack-gate" hidden>
+                <input type="checkbox" id="nlLpAckCheck" data-testid="nl-lp-ack-check">
+                <label for="nlLpAckCheck">I understand the result is the <strong>continuous LP relaxation</strong> — integrality is dropped; the answer is <strong>NOT the integer optimum</strong>.</label>
+              </p>
               <p class="hint" style="margin-top:8px">Approving records your decision hash-bound (<code>approved_sha256</code>) and builds the execution plan. Rejecting is terminal: nothing is planned or executed.</p>
               <button type="button" class="btn btn--primary btn--block" id="nlApproveBtn" data-testid="nl-approve" disabled>Approve model &amp; build plan</button>
               <button type="button" class="btn btn--ghost btn--block" id="nlRejectBtn" data-testid="nl-reject">Reject (terminal)</button>

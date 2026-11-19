@@ -79,8 +79,9 @@ const state = {
   nlProposal: null,       // the hash-bound proposal object (client-carried, server-verified)
   nlEditedModel: null,    // validated edited model from the last successful /api/nl/revise
   nlWarnings: [],         // server honesty warnings (LP relaxation, …)
-  nlDecision: null,       // 'USER_APPROVED' | 'USER_REJECTED' once decided
+  nlDecision: null,       // 'USER_APPROVED' | 'USER_REJECTED' | 'UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION'
   nlApprovalBinding: null, // {plan_sha256, approved_sha256} — submitted with the run
+  nlRelaxation: null,     // LP_RELAXATION_ONLY wrapper metadata (optimize approvals with ack)
 };
 
 const $ = (sel) => document.querySelector(sel);
@@ -258,6 +259,7 @@ $('#nlProposeBtn').addEventListener('click', async () => {
       state.nlEditedModel = null;
       state.nlDecision = null;
       state.nlApprovalBinding = null;
+      state.nlRelaxation = null;
       setStatus(statusEl, '');
       renderNlProposal(proposal);
       showScreen('plan');
@@ -436,6 +438,18 @@ function renderNlProposal(proposal) {
   }
 
   $('#nlEditNote').hidden = true;
+  // R3 seam: the LP-relaxation acknowledgement is an EXPLICIT, INDEPENDENT
+  // interaction, required only for optimize questions (B's fail-closed gate in
+  // approveModel applies to the final model; the question is not editable in
+  // this UI, so the proposal's question decides visibility). Reset per render.
+  const lpGate = $('#nlLpAckGate');
+  if (model.question === 'optimize') {
+    lpGate.hidden = false;
+    $('#nlLpAckCheck').checked = false;
+  } else {
+    lpGate.hidden = true;
+    $('#nlLpAckCheck').checked = false;
+  }
   $('#nlApproveBtn').disabled = false;
   $('#nlRejectBtn').disabled = false;
   setStatus($('#nlReviewStatus'), '');
@@ -591,14 +605,57 @@ $('#nlApproveBtn').addEventListener('click', async () => {
   try {
     const payload = { proposal: state.nlProposal, approved: true };
     if (state.nlEditedModel) payload.edited = state.nlEditedModel;
+    // R3 seam: the acknowledgement rides the decision ONLY when the explicit
+    // checkbox is ticked. An unticked optimize approval is submitted anyway so
+    // the SERVER's fail-closed gate returns the restricted record, which is
+    // rendered below as a clear restricted outcome (never a generic error).
+    const optimize = state.nlProposal.model && state.nlProposal.model.question === 'optimize';
+    if (optimize && $('#nlLpAckCheck').checked) payload.lpRelaxationAcknowledged = true;
     const result = await api('/api/nl/approve', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
+    if (result.decision === 'UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION') {
+      // Restricted result (docs/mvp/NL_MODEL.md §3.2a): no plan, no binding,
+      // nothing executable. Rendered as its own honest state — the user may
+      // tick the acknowledgement and re-approve, or reject.
+      state.nlDecision = result.decision;
+      state.nlApprovalBinding = null;
+      state.nlRelaxation = null;
+      const record = result.record;
+      const banner = $('#nlReviewBanner');
+      banner.className = 'banner banner--blocked';
+      banner.textContent = '';
+      const title = document.createElement('span');
+      title.className = 'banner__title';
+      title.textContent = 'UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION — no plan was produced';
+      banner.append(title, document.createTextNode(record.detail || record.honesty_note || ''));
+      const meta = document.createElement('p');
+      meta.className = 'hint';
+      meta.textContent = `reason: ${record.unsupported.reason} · dropped: ${(record.unsupported.dropped || []).join(', ')} · available operation: ${record.unsupported.available_operation}`;
+      banner.append(meta);
+      const ul = document.createElement('ul');
+      for (const remedy of record.unsupported.remedies || []) {
+        const li = document.createElement('li');
+        li.textContent = remedy;
+        ul.append(li);
+      }
+      banner.append(ul);
+      const howTo = document.createElement('p');
+      howTo.className = 'hint';
+      howTo.textContent = 'Remedy 1 is this checkbox: tick the LP-relaxation acknowledgement above and approve again. Nothing has been planned or executed.';
+      banner.append(howTo);
+      banner.hidden = false;
+      setStatus(statusEl, 'Restricted result: exact integer optimization is unsupported. Nothing was planned or executed.', 'error');
+      btn.disabled = false;
+      $('#nlRejectBtn').disabled = false;
+      return;
+    }
     state.nlDecision = 'USER_APPROVED';
     state.nlApprovalBinding = result.approval;
     state.nlWarnings = Array.isArray(result.warnings) ? result.warnings : [];
+    state.nlRelaxation = result.relaxation || null;
     setPlan(result.plan, {
       kind: 'nl-model',
       provider: state.nlProposal.provider,
@@ -632,6 +689,7 @@ $('#nlRejectBtn').addEventListener('click', async () => {
     });
     state.nlDecision = 'USER_REJECTED';
     state.nlApprovalBinding = null;
+    state.nlRelaxation = null;
     const banner = $('#nlReviewBanner');
     banner.className = 'banner banner--danger';
     banner.textContent = '';
@@ -682,10 +740,24 @@ function setPlan(plan, planSource) {
       : 'Built by the deterministic template; identical problem text always yields an identical plan.';
   $('#planSourceLine').hidden = false;
   // LP relaxation disclosure (NL optimize lane): prominent, from the server's
-  // own warnings, cross-checked against the plan assumptions.
+  // own warnings + the R3 relaxation wrapper metadata, cross-checked against
+  // the plan assumptions (prose sentence AND the canonical JSON marker).
   const lpBanner = $('#planLpBanner');
   const lpAssumption = (plan.assumptions || []).some((a) => a.startsWith('LP relaxation: integrality constraints are dropped'));
-  if (state.nlWarnings.length && (lpAssumption || (plan.source && plan.source.problem_kind === 'nl_model'))) {
+  const relaxation = state.nlRelaxation;
+  if (relaxation && relaxation.kind === 'LP_RELAXATION_ONLY') {
+    lpBanner.className = 'banner banner--warn';
+    lpBanner.textContent = '';
+    const title = document.createElement('span');
+    title.className = 'banner__title';
+    title.textContent = 'LP RELAXATION ONLY — NON-INTEGER RESULT (you acknowledged the relaxation)';
+    lpBanner.append(title, document.createTextNode(relaxation.effect || state.nlWarnings[0] || NL_LP_BANNER_TEXT));
+    const meta = document.createElement('p');
+    meta.className = 'hint';
+    meta.textContent = `kind: ${relaxation.kind} · dropped: ${(relaxation.dropped || []).join(', ')} · acknowledged: ${relaxation.ack && relaxation.ack.acknowledged === true ? 'yes (decision field ' + relaxation.ack.decision_field + ')' : 'no'} · meaning: ${relaxation.meaning}`;
+    lpBanner.append(meta);
+    lpBanner.hidden = false;
+  } else if (state.nlWarnings.length && (lpAssumption || (plan.source && plan.source.problem_kind === 'nl_model'))) {
     lpBanner.className = 'banner banner--warn';
     lpBanner.textContent = '';
     const title = document.createElement('span');
@@ -1045,9 +1117,16 @@ async function renderResults(view) {
   // RENDERED MODEL — never claimed to be equivalent to the original prose.
   const nlNote = $('#nlTranslationNote');
   if (state.nlDecision === 'USER_APPROVED') {
-    nlNote.textContent = 'NL lane caveat: these verdicts answer the approved RENDERED MODEL ' +
+    let text = 'NL lane caveat: these verdicts answer the approved RENDERED MODEL ' +
       '(user-reviewed translation proposal, hash-bound), not your natural-language text. ' +
       'Render/solve validity does not prove translation fidelity.';
+    // R3 seam: an acknowledged relaxation must never read as an integer optimum.
+    if (state.nlRelaxation && state.nlRelaxation.kind === 'LP_RELAXATION_ONLY') {
+      text += ' LP_RELAXATION_ONLY: integrality was dropped — the reported optimum ' +
+        'characterizes the continuous LP relaxation and is a BOUND for the integer problem, ' +
+        'not its exact integer optimum.';
+    }
+    nlNote.textContent = text;
     nlNote.hidden = false;
   } else {
     nlNote.hidden = true;
@@ -1139,6 +1218,7 @@ $('#newTaskBtn').addEventListener('click', () => {
   state.nlWarnings = [];
   state.nlDecision = null;
   state.nlApprovalBinding = null;
+  state.nlRelaxation = null;
   $('#problemText').value = '';
   $('#assumptionsInput').value = '';
   $('#providerInput').value = '';

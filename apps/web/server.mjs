@@ -784,7 +784,7 @@ export function startServer(options = {}) {
           module: 'packages/runner/js/nl-model.mjs',
           propose: 'POST /api/nl/propose {text} -> {proposal: MODEL_PROPOSED | NEEDS_CLARIFICATION | UNKNOWN, warnings}',
           revise: 'POST /api/nl/revise {proposal, edited} -> {preview} (server re-validation + re-render; hashes unchanged)',
-          approve: 'POST /api/nl/approve {proposal, approved, edited?} -> USER_REJECTED record | {plan, plan_sha256, approval}',
+          approve: 'POST /api/nl/approve {proposal, approved, edited?, lpRelaxationAcknowledged?: true} -> USER_REJECTED | UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION (restricted record, plan:null) | {plan, plan_sha256, approval, relaxation}',
           execution_binding: 'POST /api/runs accepts {plan, approval:{plan_sha256, approved_sha256}}; the plan sha must match a real approval of this process or the run is refused (NL_APPROVAL_UNKNOWN / NL_PLAN_APPROVAL_MISMATCH)',
           lp_relaxation_disclosure: NL_LP_RELAXATION_ASSUMPTION,
           provider: opts.nlProviderImpl !== null ? 'injected (test seam)' : 'deepseek via makeNlModelProvider (env key, header-only)',
@@ -955,21 +955,39 @@ export function startServer(options = {}) {
         if (err.code === 'BODY_TOO_LARGE') return sendError(res, 413, 'BODY_TOO_LARGE', 'fail-closed: request body exceeds the 1MB cap.');
         return sendError(res, 400, 'BAD_JSON', 'fail-closed: request body is not valid JSON.');
       }
-      const { proposal, approved, edited, reviewer, note } = body && typeof body === 'object' ? body : {};
+      const { proposal, approved, edited, reviewer, note, lpRelaxationAcknowledged } = body && typeof body === 'object' ? body : {};
       if (!proposal || typeof proposal !== 'object' || proposal.schema !== 'formal-tools/nl-model-proposal/0.1' || typeof approved !== 'boolean') {
-        return sendError(res, 422, 'NL_APPROVAL_INVALID', 'fail-closed: body must be {proposal: <proposeConstraintModel result>, approved: boolean, edited?: <structured model>, reviewer?: string, note?: string}.');
+        return sendError(res, 422, 'NL_APPROVAL_INVALID', 'fail-closed: body must be {proposal: <proposeConstraintModel result>, approved: boolean, edited?: <structured model>, reviewer?: string, note?: string, lpRelaxationAcknowledged?: true}.');
       }
       try {
         const decision = { approved };
         if (edited !== undefined) decision.edited = edited;
         if (reviewer !== undefined) decision.reviewer = reviewer;
         if (note !== undefined) decision.note = note;
+        // R3 LP gate (docs/mvp/NL_MODEL.md §3): passed through verbatim; only a
+        // strict true unlocks optimize approvals — anything else lets
+        // approveModel return the fail-closed restricted record below.
+        if (lpRelaxationAcknowledged === true) decision.lpRelaxationAcknowledged = true;
         const record = approveModel(proposal, decision); // NL_TAMPERED / NL_NOT_APPROVABLE / NL_MODEL_INVALID fail closed
         if (record.status === 'USER_REJECTED') {
           // Terminal, honest refusal: no plan, no run, nothing executed.
           return sendJson(res, 200, { decision: 'USER_REJECTED', record, warnings: [] });
         }
-        const built = buildPlanFromApprovedModel(record); // re-checks approved_sha256 + render drift
+        if (record.status === 'UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION') {
+          // Fail-closed restricted result (i180/R3 seam): the optimize model was
+          // approved WITHOUT the explicit LP-relaxation acknowledgement. No
+          // plan, no approval registered, nothing executable — the response
+          // carries the frozen unsupported contract (reason/dropped/remedies)
+          // so the UI can render a clear restricted outcome, never a generic
+          // error and never a silent relaxation.
+          return sendJson(res, 200, {
+            decision: record.status,
+            record,
+            warnings: nlServerWarnings(record.question),
+            note: 'restricted record: no plan was produced; re-approve with lpRelaxationAcknowledged:true to explicitly accept the continuous LP relaxation, or wait for an integer MIP adapter',
+          });
+        }
+        const built = buildPlanFromApprovedModel(record); // re-checks approved_sha256 + render drift + ack shape
         const compiled = compilePlan(built.plan); // real compiled hashes, like the direct lane
         const plan = compiled.plan;
         const planSha = sha256Canonical(plan);
@@ -989,6 +1007,10 @@ export function startServer(options = {}) {
           approval,
           question: built.question,
           target: built.target,
+          // R3 seam: wrapper relaxation metadata (null for smt; for lp it is the
+          // frozen LP_RELAXATION_ONLY contract incl. the hash-covered ack) —
+          // the plan itself also carries the canonical JSON assumption string.
+          relaxation: built.relaxation,
           warnings: nlServerWarnings(built.question),
           approved: { approved_sha256: record.approved_sha256, review: record.review },
           note: 'the plan embeds the approved model provenance (problem requirement r2); submit it with the approval binding to POST /api/runs',
