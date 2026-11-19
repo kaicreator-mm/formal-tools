@@ -559,6 +559,39 @@ export function startServer(options = {}) {
   // server restart forgets approvals and the next bound run fails closed
   // (NL_APPROVAL_UNKNOWN) instead of silently executing.
   const nlApprovals = new Map();
+  // Hashes supplied by a browser are not provenance credentials. Remember the
+  // FULL model proposals that THIS server actually returned, so callers
+  // cannot forge a provider identity by hashing their own JSON. Bounded FIFO:
+  // stale proposals must be re-proposed rather than silently trusted.
+  const nlIssuedProposals = new Map();
+  const MAX_NL_ISSUED_PROPOSALS = 128;
+
+  function rememberIssuedProposal(proposal) {
+    if (proposal?.status !== 'MODEL_PROPOSED' || typeof proposal.proposal_sha256 !== 'string') return;
+    const key = proposal.proposal_sha256;
+    nlIssuedProposals.delete(key);
+    nlIssuedProposals.set(key, { fingerprint: sha256Canonical(proposal), rejected: false });
+    while (nlIssuedProposals.size > MAX_NL_ISSUED_PROPOSALS) {
+      nlIssuedProposals.delete(nlIssuedProposals.keys().next().value);
+    }
+  }
+
+  function requireIssuedProposal(proposal) {
+    const issued = nlIssuedProposals.get(proposal.proposal_sha256);
+    if (!issued) {
+      throw new WorkflowError('NL_PROPOSAL_UNKNOWN',
+        'the submitted NL proposal was not issued by this server (or has expired); request a fresh proposal');
+    }
+    if (issued.fingerprint !== sha256Canonical(proposal)) {
+      throw new WorkflowError('NL_TAMPERED',
+        'the submitted NL proposal differs from the originally issued server proposal');
+    }
+    if (issued.rejected) {
+      throw new WorkflowError('NL_PROPOSAL_REJECTED',
+        'this NL proposal was explicitly rejected; request a new proposal to reconsider');
+    }
+    return issued;
+  }
 
   /** NL provider for proposeConstraintModel (real DeepSeek, or the test seam). */
   const nlProvider = () => (opts.nlProviderImpl !== null
@@ -888,6 +921,7 @@ export function startServer(options = {}) {
         // NEEDS_CLARIFICATION | UNKNOWN — never executed here, never
         // auto-approved.
         const proposal = await proposeConstraintModel({ text: body.text, provider: nlProvider() });
+        rememberIssuedProposal(proposal);
         return sendJson(res, 200, { proposal, warnings: nlServerWarnings(proposal?.model?.question) });
       } catch (err) {
         return engineError(res, err);
@@ -918,6 +952,7 @@ export function startServer(options = {}) {
           throw new WorkflowError('NL_NOT_APPROVABLE', 'only MODEL_PROPOSED proposals have an editable model', { status: proposal.status ?? null });
         }
         assertProposalIntegrity(proposal);
+        requireIssuedProposal(proposal);
         if (edited === undefined || edited === null || typeof edited !== 'object') {
           throw new WorkflowError('NL_MODEL_INVALID', 'edited structured model required', { issues: ['edited_missing'] });
         }
@@ -960,6 +995,12 @@ export function startServer(options = {}) {
         return sendError(res, 422, 'NL_APPROVAL_INVALID', 'fail-closed: body must be {proposal: <proposeConstraintModel result>, approved: boolean, edited?: <structured model>, reviewer?: string, note?: string, lpRelaxationAcknowledged?: true}.');
       }
       try {
+        // A client-generated SHA verifies internal bytes, NOT that the LLM
+        // provider or this bridge actually issued the proposal.
+        if (proposal.status === 'MODEL_PROPOSED') {
+          assertProposalIntegrity(proposal);
+          requireIssuedProposal(proposal);
+        }
         const decision = { approved };
         if (edited !== undefined) decision.edited = edited;
         if (reviewer !== undefined) decision.reviewer = reviewer;
@@ -970,7 +1011,9 @@ export function startServer(options = {}) {
         if (lpRelaxationAcknowledged === true) decision.lpRelaxationAcknowledged = true;
         const record = approveModel(proposal, decision); // NL_TAMPERED / NL_NOT_APPROVABLE / NL_MODEL_INVALID fail closed
         if (record.status === 'USER_REJECTED') {
-          // Terminal, honest refusal: no plan, no run, nothing executed.
+          // Rejection is a real terminal decision for this issued proposal,
+          // not just a disabled browser button.
+          if (proposal.status === 'MODEL_PROPOSED') nlIssuedProposals.get(proposal.proposal_sha256).rejected = true;
           return sendJson(res, 200, { decision: 'USER_REJECTED', record, warnings: [] });
         }
         if (record.status === 'UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION') {
@@ -1035,6 +1078,12 @@ export function startServer(options = {}) {
       // Anything else is refused BEFORE any validation of the plan proceeds —
       // a tampered or substituted plan can never ride an approval.
       let approvalBinding = null;
+      // All NL plans require an actual approval; omitting the optional
+      // binding must not bypass the user-review gate.
+      if (plan?.source?.problem_kind === 'nl_model' && (body?.approval === undefined || body?.approval === null)) {
+        return sendError(res, 422, 'NL_APPROVAL_REQUIRED',
+          'fail-closed: NL model execution requires a valid user-approval binding issued by this server.');
+      }
       if (body && typeof body === 'object' && body.approval !== undefined && body.approval !== null) {
         const ap = body.approval;
         if (!ap || typeof ap !== 'object' ||
