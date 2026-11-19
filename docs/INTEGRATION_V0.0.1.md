@@ -25,7 +25,7 @@ node packages/runner/js/cli.mjs validate
 node packages/runner/js/cli.mjs capabilities summary
 ```
 
-Required Node: **>=20**. The monorepo packages are private workspace packages; v0.0.1 is a **Git/tag/source release**, not an npm registry package. An application must run a trusted process or vendor/import the source explicitly; do not suggest `npm install formal-tools@0.0.1`.
+Required Node: **>=20**. The monorepo packages are private workspace packages; v0.0.1 is a **Git/tag/source release**, not an npm registry package. No top-level LICENSE was present at the inspected baseline: integration outside the owner's projects or redistribution requires an explicit licensing decision; a GitHub source release alone does not grant those rights. An application must run a trusted process or vendor/import the source explicitly; do not suggest `npm install formal-tools@0.0.1`.
 
 For native execution, prepare the trusted portable tools and set `FORMAL_PORTABLE_ROOT` to their verified bundle root. Verify Z3/cvc5 and the tool versions on the **actual executor**, not only in the calling application. An absent bundle produces a fail-closed blocked receipt. HiGHS may also require `FORMAL_PORTABLE_RUNNER_SHA256` and a bundle with the canonical pinned operation script. Earlier published r0/r1 images had pin/version drift; see [release limitations](releases/v0.0.1.md) and #24 before enabling HiGHS for consumers.
 
