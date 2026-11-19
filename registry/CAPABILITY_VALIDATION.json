@@ -69,7 +69,7 @@
    "version_drift": {
     "declared": "5.03c",
     "probed": "3.13",
-    "note": "declared meta version differs from probed binary self-report"
+    "note": "meta 5.03c vs probed 3.13 — probe exec failed (rc=127 loader error); the token comes from the libpython3.13.so.1.0 error line, not a tool self-report"
    },
    "applicable_problems": [
     "二进制与源码程序的覆盖率引导模糊测试",
@@ -188,7 +188,7 @@
    "version_drift": {
     "declared": "0.63.0",
     "probed": "0.29.0",
-    "note": "declared meta version differs from probed binary self-report"
+    "note": "meta 0.63.0 vs probed 0.29.0 — probe printed a usage banner with no version line; the token comes from banner help text, not a tool self-report"
    },
    "applicable_problems": [
     "TLA+规约的符号化有界模型检查",
@@ -496,7 +496,7 @@
    "version_drift": {
     "declared": "4.3.0",
     "probed": "22.16.0",
-    "note": "declared meta version differs from probed binary self-report"
+    "note": "meta 4.3.0 vs probed 22.16.0 — probe returned the Node.js runtime banner, not the library self-report"
    },
    "applicable_problems": [
     "JS/TS 代码的属性测试与随机用例生成",
