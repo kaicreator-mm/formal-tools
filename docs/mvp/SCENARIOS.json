@@ -1,0 +1,368 @@
+{
+ "schema": "formal-tools/mvp-scenarios/1.0",
+ "version": "1.0.0",
+ "output_label": "FORMAL_TOOLS_I180_V1_TOOL_READINESS",
+ "issue": 181,
+ "parent_issue": 180,
+ "base_main_sha": "33bd3d0",
+ "generated_at_utc": "2026-11-19T09:35:24Z",
+ "status": "HOST_VALIDATED_WITH_DECLARED_GAPS",
+ "honesty": {
+  "fixture_pass_is_not_a_user_operation": "CAPABILITY_VALIDATION.json certifies scoped native fixture probes only; it is not a typed user-operation grant.",
+  "user_operation_coverage_not_universal": "Only highs solve-lp is an admitted typed user operation in main @ 33bd3d0. z3/cvc5 solve-smt are planned (READY-VIA-V3-PLAN, issue #183). The other 33 tools are FIXTURE_ONLY.",
+  "scenario_b_canonical_bundle_gap": "The deployed bundle's copy of tests/highs/solve-lp.py (sha256 869a341e76139131eea9fb22c6a152d5e4fdca9dc604160cc6d0b41109030b20) predates the r20-hardened script pinned by packages/runner/js/tool-portfolio-t4.mjs (sha256 6b43add5fbb8dc3b2aa65b951f85d9ee41f7827921d8d624588fe3aaae339136). The full JS receipt path against the canonical bundle root therefore fails closed (HIGHS_OPERATION_SCRIPT_SHA256_MISMATCH). The T4 receipts recorded below were produced against a minimal standalone root whose script is the exact repo-pinned bytes and whose runtimes/ is a symlink to the same bundled Python 3.13.5 runtime; the canonical bundle was not modified (integrity re-checked)."
+ },
+ "host": {
+  "host": "cc@192.168.100.200 (trusted build host, Debian 13, ext4)",
+  "bundle": "/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64",
+  "access": "ssh -o BatchMode=yes cc@192.168.100.200",
+  "validated_at_utc": "2026-11-19T09:35:24Z",
+  "method": "inputs shipped base64-encoded over ssh and decoded on host (byte-exact; on-host sha256sum recorded below); every command and output in this evidence block was captured from real host runs, not synthesized"
+ },
+ "scenarios": [
+  {
+   "id": "A",
+   "name": "smt-cross-check",
+   "kind": "positive",
+   "question": "Two bounded integer-linear questions over {x,y} in QF_LIA, each answered independently by z3 and cvc5: (A1) is the constraint set contradictory, (A2) does the linear system have a satisfying assignment and what is it?",
+   "theory": "QF_LIA",
+   "tools": [
+    "z3",
+    "cvc5"
+   ],
+   "pins": {
+    "z3": {
+     "version": "5.4.0",
+     "dag_ref": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json#tools[slug=z3].version",
+     "probed": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f"
+    },
+    "cvc5": {
+     "version": "1.4.2",
+     "dag_ref": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json#tools[slug=cvc5].version",
+     "probed": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]"
+    }
+   },
+   "inputs": [
+    {
+     "file": "a1_unsat.smt2",
+     "bytes": 153,
+     "sha256": "a697d2b86b32657857330b04f48bd37a24ce48353384f731a1c3528a4599ba48",
+     "text": "(set-logic QF_LIA)\n(declare-const x Int)\n(declare-const y Int)\n(assert (>= x 0))\n(assert (>= y 0))\n(assert (<= (+ x y) 2))\n(assert (>= x 3))\n(check-sat)\n",
+     "intended_question": "Does there exist an integer pair (x,y) with x>=0, y>=0, x+y<=2 and x>=3? (bounded integer-linear contradiction)",
+     "expected_verdict_class": "AGREE_UNSAT"
+    },
+    {
+     "file": "a2_sat.smt2",
+     "bytes": 241,
+     "sha256": "09ee2dccfa0353b3bea4b0c80e4db94ef177b65fb74c28220dbe6b426ef021ac",
+     "text": "(set-logic QF_LIA)\n(set-option :produce-models true)\n(declare-const x Int)\n(declare-const y Int)\n(assert (>= x 0))\n(assert (<= x 10))\n(assert (>= y 0))\n(assert (<= y 10))\n(assert (= x 2))\n(assert (= (+ x y) 5))\n(check-sat)\n(get-value (x y))\n",
+     "intended_question": "Within 0<=x,y<=10, does x=2 and x+y=5 have a satisfying assignment, and what is it? (unique model x=2, y=3 so both solvers report the same model)",
+     "expected_verdict_class": "AGREE_SAT",
+     "expected_model": {
+      "x": 2,
+      "y": 3
+     }
+    }
+   ],
+   "comparison_rule": "AGREE_UNSAT when both solvers emit unsat; AGREE_SAT when both emit sat (A2 additionally compares get-value models, which are unique by construction). Any verdict mismatch, unknown, timeout or parse failure is fail-closed: TOOL_DISAGREEMENT / UNKNOWN / PARSE_ERROR, never a silent pass.",
+   "runner_path": {
+    "current_main": "No typed SMT portfolio operation exists in main @ 33bd3d0. This scenario was validated by direct CLI invocation of the pinned bundle binaries. The native catalog (packages/runner/js/native-catalog.mjs) does expose trusted-local typed ops z3/solve and cvc5/solve executable via executeNativePlan, but those are not admitted portfolio user operations.",
+    "planned": "typed solve-smt workflow operation via the #183 workflow-executor (READY-VIA-V3-PLAN); once landed, scenario A should be re-expressed as two solve-smt calls plus a cross-check step",
+    "planned_issue": 183
+   },
+   "host_validated_evidence": {
+    "host": "cc@192.168.100.200 (trusted build host, Debian 13, ext4)",
+    "bundle": "/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64",
+    "access": "ssh -o BatchMode=yes cc@192.168.100.200",
+    "validated_at_utc": "2026-11-19T09:35:24Z",
+    "method": "inputs shipped base64-encoded over ssh and decoded on host (byte-exact; on-host sha256sum recorded below); every command and output in this evidence block was captured from real host runs, not synthesized",
+    "commands": [
+     {
+      "cmd": "$B/tools/z3/bin/z3 /tmp/ft-i180-v1-j8096i/a1_unsat.smt2",
+      "exit_code": 0,
+      "stdout": "unsat"
+     },
+     {
+      "cmd": "$B/tools/cvc5/bin/cvc5 /tmp/ft-i180-v1-j8096i/a1_unsat.smt2",
+      "exit_code": 0,
+      "stdout": "unsat"
+     },
+     {
+      "cmd": "$B/tools/z3/bin/z3 /tmp/ft-i180-v1-j8096i/a2_sat.smt2",
+      "exit_code": 0,
+      "stdout": "sat\n((x 2)\n (y 3))"
+     },
+     {
+      "cmd": "$B/tools/cvc5/bin/cvc5 /tmp/ft-i180-v1-j8096i/a2_sat.smt2",
+      "exit_code": 0,
+      "stdout": "sat\n((x 2) (y 3))"
+     }
+    ],
+    "observed": {
+     "a1": "AGREE_UNSAT",
+     "a2": "AGREE_SAT",
+     "model_agreement": "both solvers reported x=2, y=3"
+    },
+    "input_sha256_on_host": {
+     "a1_unsat.smt2": "a697d2b86b32657857330b04f48bd37a24ce48353384f731a1c3528a4599ba48",
+     "a2_sat.smt2": "09ee2dccfa0353b3bea4b0c80e4db94ef177b65fb74c28220dbe6b426ef021ac"
+    }
+   },
+   "negatives_ref": [
+    "malformed-smt-input",
+    "tool-disagreement",
+    "timeout-budget-exhaustion"
+   ]
+  },
+  {
+   "id": "B",
+   "name": "highs-lp",
+   "kind": "positive",
+   "question": "Maximize 3x+2y over 0<=x,y<=10 with x+y<=4 and x-y>=1 (feasible variant; unique optimum x=4,y=0, objective 12), and the same box with x+y<=1 and x-y>=3 (infeasible variant). Does the pinned typed HiGHS operation return kOptimal/kInfeasible accordingly?",
+   "tools": [
+    "highs"
+   ],
+   "pins": {
+    "highs": {
+     "version": "1.15.1",
+     "dag_ref": "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json#tools[slug=highs].version"
+    },
+    "highspy": "1.15.1 (checked at runtime by the pinned script)",
+    "python": "3.13.5 (exact match required by the pinned script; observed 3.13.5)",
+    "numpy": "floor >= 2.1 required by the pinned script; observed 2.5.4"
+   },
+   "model_contract": {
+    "schema": "formal-tools/highs-solve-lp/1.0",
+    "validator_source": "packages/runner/js/tool-portfolio-t4.mjs validateHighsModel + portable/verification/cases/highs/solve-lp.py",
+    "required_keys_exact": [
+     "sense",
+     "objective",
+     "variables",
+     "constraints"
+    ],
+    "sense_enum": [
+     "min",
+     "max"
+    ],
+    "objective_shape": "dense finite-number array, length 1..64",
+    "variables_shape": "same length as objective; each {lower, upper} with null or finite number, lower<=upper",
+    "constraints_shape": "0..128 items, each {lower, upper, coefficients} with coefficients a dense array of objective.length finite numbers",
+    "byte_cap": 65536,
+    "budget": {
+     "max_variables": 64,
+     "max_constraints": 128,
+     "max_input_bytes": 65536,
+     "max_timeout_s": 30
+    }
+   },
+   "inputs": [
+    {
+     "file": "model-feasible.json",
+     "bytes": 202,
+     "sha256": "d1a96f55ed1ed032bc203b81a6ce3216c21f64ba586663282c9f4df22ad5ad39",
+     "text": "{\"sense\":\"max\",\"objective\":[3,2],\"variables\":[{\"lower\":0,\"upper\":10},{\"lower\":0,\"upper\":10}],\"constraints\":[{\"lower\":null,\"upper\":4,\"coefficients\":[1,1]},{\"lower\":1,\"upper\":null,\"coefficients\":[1,-1]}]}",
+     "input_sha256_matches_plan_model": true,
+     "intended_question": "max 3x+2y s.t. x+y<=4, x-y>=1, 0<=x,y<=10 (optimum provably unique at x=4,y=0 by linear search over the polytope)",
+     "expected": {
+      "model_status": "kOptimal",
+      "objective": 12,
+      "variables": [
+       4,
+       0
+      ]
+     },
+     "expected_verdict_class": "OPTIMAL"
+    },
+    {
+     "file": "model-infeasible.json",
+     "bytes": 202,
+     "sha256": "e9833db84149dc38e25d06613f1f39d71cc913072b391049b376f6805f41a303",
+     "text": "{\"sense\":\"max\",\"objective\":[3,2],\"variables\":[{\"lower\":0,\"upper\":10},{\"lower\":0,\"upper\":10}],\"constraints\":[{\"lower\":null,\"upper\":1,\"coefficients\":[1,1]},{\"lower\":3,\"upper\":null,\"coefficients\":[1,-1]}]}",
+     "input_sha256_matches_plan_model": true,
+     "intended_question": "max 3x+2y s.t. x+y<=1, x-y>=3, 0<=x,y<=10 (constraint set is empty; x>=3+y forces x+y>=3+2y>=3)",
+     "expected": {
+      "model_status": "kInfeasible",
+      "objective": null,
+      "variables": []
+     },
+     "expected_verdict_class": "INFEASIBLE"
+    }
+   ],
+   "pinned_script": {
+    "path": "portable/verification/cases/highs/solve-lp.py",
+    "sha256": "6b43add5fbb8dc3b2aa65b951f85d9ee41f7827921d8d624588fe3aaae339136",
+    "js_pin_source": "packages/runner/js/tool-portfolio-t4.mjs highsSolveScriptSha256"
+   },
+   "runner_path": {
+    "sdk": "planPortfolioOperation('highs','solve-lp',model) + runPortfolioOperation(...,{timeoutS:1..30})",
+    "cli": "packages/runner/js/cli.mjs portfolio invoke highs solve-lp --model <file> [--timeout N]",
+    "mcp": "run_portfolio_operation",
+    "spawned_argv": "[<FORMAL_PORTABLE_ROOT>/bin/tool-runner, run, highs, <root>/tests/highs/solve-lp.py, <mkdtemp>/model.json] with FORMAL_TOOLS_HIGHS_TIME_LIMIT_S=timeoutS-0.5"
+   },
+   "host_validated_evidence": {
+    "host": "cc@192.168.100.200 (trusted build host, Debian 13, ext4)",
+    "bundle": "/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64",
+    "access": "ssh -o BatchMode=yes cc@192.168.100.200",
+    "validated_at_utc": "2026-11-19T09:35:24Z",
+    "method": "inputs shipped base64-encoded over ssh and decoded on host (byte-exact; on-host sha256sum recorded below); every command and output in this evidence block was captured from real host runs, not synthesized",
+    "manual_runner_reproduction": {
+     "commands": [
+      {
+       "cmd": "FORMAL_PORTABLE_ROOT=$B FORMAL_TOOLS_HIGHS_TIME_LIMIT_S=29.5 $B/bin/tool-runner run highs $B/tests/highs/solve-lp.py /tmp/ft-i180-v1-j8096i/model-feasible.json",
+       "exit_code": 0,
+       "stdout": "{\"highspy_version\":\"1.15.1\",\"input_sha256\":\"d1a96f55ed1ed032bc203b81a6ce3216c21f64ba586663282c9f4df22ad5ad39\",\"model_status\":\"kOptimal\",\"numpy_version\":\"2.5.4\",\"objective\":12.0,\"python_version\":\"3.13.5\",\"schema\":\"formal-tools/highs-solve-lp/1.0\",\"solver_api_status\":\"kOk\",\"tool\":\"highs\",\"variables\":[4.0,0.0]}"
+      },
+      {
+       "cmd": "FORMAL_PORTABLE_ROOT=$B FORMAL_TOOLS_HIGHS_TIME_LIMIT_S=29.5 $B/bin/tool-runner run highs $B/tests/highs/solve-lp.py /tmp/ft-i180-v1-j8096i/model-infeasible.json",
+       "exit_code": 0,
+       "stdout": "{\"highspy_version\":\"1.15.1\",\"input_sha256\":\"e9833db84149dc38e25d06613f1f39d71cc913072b391049b376f6805f41a303\",\"model_status\":\"kInfeasible\",\"numpy_version\":\"2.5.4\",\"objective\":null,\"python_version\":\"3.13.5\",\"schema\":\"formal-tools/highs-solve-lp/1.0\",\"solver_api_status\":\"kOk\",\"tool\":\"highs\",\"variables\":[]}"
+      }
+     ],
+     "note": "Manual reproduction bypasses the JS pin checks; it proves the tool chain (bundled Python 3.13.5 + highspy 1.15.1 + numpy 2.5.4 + runner shim) returns exactly the expected statuses. Also verified: the same script invoked with an input outside TMPDIR fails closed (rc=2, HIGHS_TYPED_OPERATION_ERROR: REQUEST_OUTSIDE_PRIVATE_TMP)."
+    },
+    "js_receipt_path": {
+     "canonical_bundle_root": {
+      "result": "NOT_RUN_FAIL_CLOSED",
+      "reason": "Error: HIGHS_OPERATION_SCRIPT_SHA256_MISMATCH",
+      "explanation": "Bundle copy sha256 869a341e76139131eea9fb22c6a152d5e4fdca9dc604160cc6d0b41109030b20 (pre-r20 script: no python-version gate, no numpy floor, no value_valid check) does not equal the JS pin 6b43add5fbb8dc3b2aa65b951f85d9ee41f7827921d8d624588fe3aaae339136. Recorded honestly: a real user operation against the canonical bundle root is fail-closed until the bundle ships the pinned script."
+     },
+     "pinned_script_minimal_root": {
+      "setup": "minimal standalone root /home/cc/i180-minroot: real copies of bin/tool-runner, tools/highs/{meta.json,meta.sh,run}, tests/highs/expect.sh, plus tests/highs/solve-lp.py written as the exact repo-pinned bytes; runtimes/ symlinked to the same bundled Python runtime; nothing under the canonical bundle was modified",
+      "commands": [
+       {
+        "cmd": "FORMAL_PORTABLE_ROOT=/home/cc/i180-minroot FORMAL_PORTABLE_RUNNER_SHA256=020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a $B/bin/tool-runner node run-check2.mjs (runPortfolioOperation feasible, timeoutS=30)",
+        "status": "T4_OPERATION_EXECUTED_UNREVIEWED",
+        "qualification": "NOT_T4_ACCEPTED_INDEPENDENT_REVIEW_PENDING",
+        "solver": {
+         "model_status": "kOptimal",
+         "objective": 12,
+         "variables": [
+          4,
+          0
+         ],
+         "highspy_version": "1.15.1",
+         "python_version": "3.13.5",
+         "numpy_version": "2.5.4"
+        },
+        "operation_script_sha256": "6b43add5fbb8dc3b2aa65b951f85d9ee41f7827921d8d624588fe3aaae339136",
+        "input_sha256": "d1a96f55ed1ed032bc203b81a6ce3216c21f64ba586663282c9f4df22ad5ad39",
+        "metadata_sha256": "89c86464ede46d1555be9dc84c5ef00664d11c7a90c5f7bc5306f7e73d8b867c",
+        "process": {
+         "exit_code": 0,
+         "elapsed_ms": 160
+        }
+       },
+       {
+        "cmd": "same invocation for the infeasible model (runPortfolioOperation, timeoutS=30)",
+        "status": "T4_OPERATION_EXECUTED_UNREVIEWED",
+        "qualification": "NOT_T4_ACCEPTED_INDEPENDENT_REVIEW_PENDING",
+        "solver": {
+         "model_status": "kInfeasible",
+         "objective": null,
+         "variables": []
+        },
+        "operation_script_sha256": "6b43add5fbb8dc3b2aa65b951f85d9ee41f7827921d8d624588fe3aaae339136",
+        "input_sha256": "e9833db84149dc38e25d06613f1f39d71cc913072b391049b376f6805f41a303",
+        "metadata_sha256": "89c86464ede46d1555be9dc84c5ef00664d11c7a90c5f7bc5306f7e73d8b867c",
+        "process": {
+         "exit_code": 0,
+         "elapsed_ms": 240
+        }
+       }
+      ],
+      "cross_evidence": {
+       "runner_sha256_matches_ledger_r181_refresh": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a == registry/CAPABILITY_VALIDATION.json authority.r181_refresh.tool_runner_sha256",
+       "metadata_sha256_matches_r10_meta_gate": "89c86464ede46d1555be9dc84c5ef00664d11c7a90c5f7bc5306f7e73d8b867c == docs/tool-portfolio/r10/HIGHS_1151_META_GATE.json host.bundle_meta_sha256"
+      }
+     },
+     "canonical_integrity_after_all_runs": {
+      "cmd": "sha256sum $B/tests/highs/solve-lp.py",
+      "stdout": "869a341e76139131eea9fb22c6a152d5e4fdca9dc604160cc6d0b41109030b20  <bundle>/tests/highs/solve-lp.py",
+      "meaning": "canonical bundle untouched by this validation"
+     }
+    }
+   },
+   "negatives_ref": [
+    "unknown-tool-id",
+    "tampered-plan-hash",
+    "timeout-budget-exhaustion"
+   ]
+  }
+ ],
+ "negatives": [
+  {
+   "id": "unknown-tool-id",
+   "applies_to": [
+    "A",
+    "B"
+   ],
+   "trigger": "planPortfolioOperation('definitely-not-a-tool','solve-lp',model) (JS gateway), equivalently an unregistered tool id on any lane",
+   "expected_behavior": "fail-closed TypeError; no execution",
+   "evidence": {
+    "where": "live host run 2026-11-19 (js-run3/js-run4 driver NEG1)",
+    "captured": "NEG1=TypeError: unadmitted typed portfolio operation"
+   }
+  },
+  {
+   "id": "tampered-plan-hash",
+   "applies_to": [
+    "B"
+   ],
+   "trigger": "FORMAL_PORTABLE_RUNNER_SHA256 pinned to 64 zeros (tampered runner digest); the same fail-closed class covers HIGHS_OPERATION_SCRIPT_SHA256_MISMATCH when the pinned script bytes change",
+   "expected_behavior": "NOT_RUN_FAIL_CLOSED before any process spawn",
+   "evidence": {
+    "where": "live host run 2026-11-19 (js-run3/js-run4 driver TAMPER_PIN)",
+    "captured": "{\"status\":\"NOT_RUN_FAIL_CLOSED\",\"reason\":\"Error: PORTABLE_RUNNER_SHA256_MISMATCH\"}",
+    "also_observed": "HIGHS_OPERATION_SCRIPT_SHA256_MISMATCH on the canonical bundle root (stale script copy)"
+   }
+  },
+  {
+   "id": "timeout-budget-exhaustion",
+   "applies_to": [
+    "A",
+    "B"
+   ],
+   "trigger": "options.timeoutS outside integer 1..30, or solver exceeding timeoutS-0.5 (scenario A direct CLI has no budget wrapper and is judged by the scenario comparator)",
+   "expected_behavior": "runPortfolioOperation: TypeError for out-of-range; PORTFOLIO_OPERATION_FAILED with process.timed_out=true on solver overrun; scenario verdict UNKNOWN, fail-closed",
+   "evidence": {
+    "where": "committed test tests/highs-typed-operation.test.mjs ('timed' and out-of-range modes, synthetic pinned runner)",
+    "note": "not re-triggered live: both B models solve in <300ms, so a genuine live timeout needs a model near the 64-var/128-constraint budget; the contract (timeoutS 1..30, solver limit timeoutS-0.5) is exercised by the committed synthetic test"
+   }
+  },
+  {
+   "id": "tool-disagreement",
+   "applies_to": [
+    "A"
+   ],
+   "trigger": "z3 and cvc5 return different verdict classes for the same input (one sat, one unsat/unknown), or models differ in A2",
+   "expected_behavior": "scenario verdict TOOL_DISAGREEMENT; fail-closed, never averaged or resolved by majority",
+   "evidence": {
+    "where": "comparator rule in scenario A; not triggered live (both tools agreed on A1 and A2)",
+    "captured": "A1: z3=unsat rc=0, cvc5=unsat rc=0; A2: z3=sat x=2,y=3, cvc5=sat x=2,y=3"
+   }
+  },
+  {
+   "id": "malformed-smt-input",
+   "applies_to": [
+    "A"
+   ],
+   "trigger": "neg_malformed.smt2 (unbalanced paren: '(assert (> x 0)' without closing ')') fed to both solvers",
+   "expected_behavior": "solver-level parse error, non-zero exit, no verdict; scenario verdict PARSE_ERROR, fail-closed",
+   "evidence": {
+    "where": "live host run 2026-11-19",
+    "captured": [
+     {
+      "cmd": "$B/tools/z3/bin/z3 /tmp/ft-i180-v1-j8096i/neg_malformed.smt2",
+      "exit_code": 1,
+      "stdout": "(error \"line 4 column 0: invalid assert command, ')' expected\")"
+     },
+     {
+      "cmd": "$B/tools/cvc5/bin/cvc5 /tmp/ft-i180-v1-j8096i/neg_malformed.smt2",
+      "exit_code": 1,
+      "stdout": "(error \"Parse Error: /tmp/ft-i180-v1-j8096i/neg_malformed.smt2:4.1: Expected a RPAREN_TOK, got `(` (LPAREN_TOK).\")"
+     }
+    ]
+   }
+  }
+ ]
+}
