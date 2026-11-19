@@ -174,6 +174,13 @@ test('NL Web approval guard: visible unvalidated edits cannot silently approve a
   assert.match(handler, /const reviewedModel = state\.nlEditedModel \|\| state\.nlProposal\.model/);
   assert.match(handler, /nlReviewFingerprint\(visibleModel\) !== nlReviewFingerprint\(reviewedModel\)/);
   assert.match(handler, /Click Re-validate edits/);
+  const planRunHandler = source.slice(
+    source.indexOf("$('#approveBtn').addEventListener('click'"),
+    source.indexOf("// ---------------------------------------------------------------------------\n// screen 3: run view")
+  );
+  assert.match(planRunHandler, /JSON\.stringify\(collectAssumptions\(\)\) !== JSON\.stringify\(state\.plan\.assumptions \|\| \[\]\)/);
+  assert.match(planRunHandler, /Plan assumptions changed/);
+  assert.match(planRunHandler, /btn\.disabled = false;\s*return;/);
 });
 
 // --- meta ---------------------------------------------------------------------
