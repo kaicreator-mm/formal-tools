@@ -27,9 +27,12 @@
  *   J3 vague        — "prove our system is safe" -> NEEDS_CLARIFICATION with
  *                     the model's own questions; never rendered, never
  *                     executed; approval must be impossible.
- *   J4 optimize(lp) — maximize 3x+2y (nonneg integers, x+y<=4, x<=3) -> LP
- *                     plan (integrality dropped, recorded) -> HiGHS kOptimal
- *                     with objective 11 (hand-provable LP optimum at (3,1)).
+ *   J4 optimize(lp) — maximize 3x+2y (nonneg integers, x+y<=4, x<=3) -> R3
+ *                     fail-closed probe (approval WITHOUT acknowledgement ->
+ *                     UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION, plan:null) ->
+ *                     explicit lpRelaxationAcknowledged:true -> LP plan with
+ *                     LP_RELAXATION_ONLY metadata -> HiGHS kOptimal with
+ *                     objective 11 (hand-provable LP optimum at (3,1)).
  *
  * Receipts: --out (default validation/local-runtime-receipts), files
  * nl-model-*.json plus nl-model-run.json summary and nl-model-driver.log.
@@ -45,7 +48,8 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { createHash } from "node:crypto";
 import {
-  proposeConstraintModel, approveModel, buildPlanFromApprovedModel, renderSmtLib
+  proposeConstraintModel, approveModel, buildPlanFromApprovedModel, renderSmtLib,
+  NL_UNSUPPORTED_EXACT_INTEGER, NL_LP_RELAXATION_ONLY
 } from "../packages/runner/js/nl-model.mjs";
 import { WorkflowError } from "../packages/runner/js/workflow-plan.mjs";
 import { executeWorkflowPlan } from "../packages/runner/js/workflow-executor.mjs";
@@ -106,12 +110,15 @@ async function realPropose(text) {
 }
 
 /** Surrogate approval: demonstrates the gate; NOT a human review. The
- * reviewer metadata is part of the hash-covered approval decision itself. */
-function surrogateApprove(proposal) {
+ * reviewer metadata is part of the hash-covered approval decision itself.
+ * `extra` carries additional decision fields (e.g. the R3
+ * lpRelaxationAcknowledged acknowledgement for the LP arm). */
+function surrogateApprove(proposal, extra = {}) {
   return approveModel(proposal, {
     approved: true,
     reviewer: "driver-surrogate (NOT a human; demonstrates the approval gate; a human must review the recorded model before any production use)",
-    note: "basis: the full structured model and rendered text are preserved verbatim in the proposal receipt for the human reviewer"
+    note: "basis: the full structured model and rendered text are preserved verbatim in the proposal receipt for the human reviewer",
+    ...extra
   });
 }
 
@@ -312,7 +319,9 @@ async function main() {
     /** @type {any} */
     const j4 = {
       journey: "nl-j4-lp-optimize",
-      expectation: "HiGHS kOptimal with objective 11 on the LP relaxation (integrality dropped, recorded)",
+      expectation: "fail-closed UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION without the acknowledgement; " +
+        "with lpRelaxationAcknowledged:true, HiGHS kOptimal with objective 11 on the LP relaxation " +
+        "(integrality dropped; LP_RELAXATION_ONLY metadata recorded in plan + approval)",
       text: J4_TEXT,
       provider: PROVIDER,
       attempts: r4.attempts.map(a => ({ attempt_status: a.status, reason: a.reason ?? null, issues: a.issues ?? null })),
@@ -322,8 +331,20 @@ async function main() {
       source_sha: SOURCE_SHA
     };
     if (p4?.status === "MODEL_PROPOSED" && p4.model?.question === "optimize") {
-      const approved = surrogateApprove(p4);
-      j4.approval = { status: approved.status, reviewer: approved.review.reviewer };
+      // R3 fail-closed probe: surrogate approval WITHOUT the LP acknowledgement
+      // must return the restricted unsupported record, never a plan.
+      const noAck = surrogateApprove(p4);
+      j4.fail_closed_probe = {
+        decision: "approved:true WITHOUT lpRelaxationAcknowledged",
+        status: noAck.status ?? null,
+        reason: noAck.unsupported?.reason ?? null,
+        plan: noAck.plan
+      };
+      const approved = surrogateApprove(p4, { lpRelaxationAcknowledged: true });
+      j4.approval = {
+        status: approved.status, reviewer: approved.review.reviewer,
+        lp_relaxation_ack: approved.review.lp_relaxation_ack ?? null
+      };
       try {
         const { built, receipt, workspaceDir } = await executeApproved(approved);
         const step = receipt.steps.find(s => s.tool === "highs");
@@ -333,6 +354,7 @@ async function main() {
           provenance_sha256: built.provenance_sha256, target: built.target,
           assumptions: built.plan.assumptions
         };
+        j4.relaxation = built.relaxation ?? null;
         j4.execution = {
           run_id: receipt.run_id, overall: receipt.overall ?? null,
           fail_closed_reason: receipt.fail_closed_reason ?? null, workspace_dir: workspaceDir
@@ -340,7 +362,12 @@ async function main() {
         j4.solver = solver;
         j4.objective = solver?.objective ?? null;
         j4.model_status = solver?.model_status ?? null;
-        j4.matched = solver?.model_status === "kOptimal" &&
+        j4.matched = j4.fail_closed_probe.status === NL_UNSUPPORTED_EXACT_INTEGER &&
+          j4.fail_closed_probe.plan === null &&
+          j4.fail_closed_probe.reason === "LP_RELAXATION_NOT_ACKNOWLEDGED" &&
+          approved.review?.lp_relaxation_ack?.kind === NL_LP_RELAXATION_ONLY &&
+          built.relaxation?.kind === NL_LP_RELAXATION_ONLY &&
+          solver?.model_status === "kOptimal" &&
           typeof solver?.objective === "number" && Math.abs(solver.objective - 11) < 1e-9;
         await save("nl-model-j4-lp.proposal.json", { journey: "nl-j4-lp-optimize", proposal: p4 });
         await save("nl-model-j4-lp.execution-receipt.json", { journey: "nl-j4-lp-optimize", plan: built.plan, receipt });

@@ -16,9 +16,14 @@
  *   - Scope: bounded integer linear problems expressible in QF_LIA
  *     (question "sat", executed by z3 + cvc5 + cross-check), and the LP
  *     relaxation shape of the existing HiGHS typed portfolio for question
- *     "optimize" (integrality is DROPPED and the drop is recorded as an
- *     explicit plan assumption; results are bounds for the continuous
- *     relaxation, NOT the integer problem).
+ *     "optimize" (integrality is DROPPED; results are bounds for the
+ *     continuous relaxation, NOT the integer problem). Because no integer
+ *     MIP typed operation exists, R3 makes the relaxation EXPLICIT and
+ *     FAIL-CLOSED: approving an optimize question without decision
+ *     `lpRelaxationAcknowledged === true` returns the restricted record
+ *     UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION (no plan, never a silent LP
+ *     stand-in for the integer optimum); with the acknowledgement the plan
+ *     carries machine-readable LP_RELAXATION_ONLY metadata.
  *   - Vague or missing-bounds texts must surface as NEEDS_CLARIFICATION with
  *     the model's own questions; this module never guesses missing
  *     constraints, bounds or objectives.
@@ -79,7 +84,76 @@ export const NL_LP_RELAXATION_ASSUMPTION =
   "(the HiGHS typed operation has no integrality field); the executed answer " +
   "characterizes the continuous relaxation only, not the integer problem.";
 
+/**
+ * R3: machine-readable label for the LP arm. Every approved optimize model
+ * (decision.lpRelaxationAcknowledged === true) records this kind in
+ * review.lp_relaxation_ack (hash-covered), in the buildPlanFromApprovedModel
+ * wrapper field `relaxation`, and inside the plan assumption JSON string
+ * (see nlLpRelaxationPlanAssumption).
+ */
+export const NL_LP_RELAXATION_ONLY = "LP_RELAXATION_ONLY";
+
+/**
+ * R3: verdict for the fail-closed gate. Without an explicit LP-relaxation
+ * acknowledgement, an integer optimize question is UNSUPPORTED: there is no
+ * trusted exact-integer execution operation, and the runner must never
+ * present the LP relaxation optimum as the integer optimum.
+ */
+export const NL_UNSUPPORTED_EXACT_INTEGER = "UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION";
+
+/**
+ * R3: fixed deterministic explanation carried in the `detail` field of the
+ * UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION record.
+ */
+export const NL_INTEGER_OPTIMIZATION_UNSUPPORTED_NOTE =
+  "No trusted execution operation exists for exact integer optimization: the " +
+  "only typed operation available is the continuous HiGHS LP relaxation " +
+  "(integrality dropped), whose optimal value can differ from the integer " +
+  "optimum. To proceed, explicitly accept the LP relaxation by approving with " +
+  "lpRelaxationAcknowledged: true (results then characterize the continuous " +
+  "relaxation only), or provide a future integer MIP typed operation adapter. " +
+  "This runner never presents an LP relaxation optimum as an integer optimum.";
+
 export const NL_PLAN_TARGETS = Object.freeze({ sat: "smt", optimize: "lp" });
+
+/**
+ * Canonical LP-relaxation acknowledgement record stored hash-covered at
+ * review.lp_relaxation_ack of every approved optimize model. approveModel
+ * writes it iff decision.lpRelaxationAcknowledged === true;
+ * buildPlanFromApprovedModel requires exactly this canonical shape.
+ */
+export function nlLpRelaxationAckRecord() {
+  return Object.freeze({
+    acknowledged: true,
+    kind: NL_LP_RELAXATION_ONLY,
+    dropped: ["integrality"],
+    decision_field: "lpRelaxationAcknowledged"
+  });
+}
+
+/** @param {any} ack @returns {boolean} exact canonical-shape match */
+function isCanonicalLpRelaxationAck(ack) {
+  try {
+    return canonicalJson(ack) === canonicalJson(nlLpRelaxationAckRecord());
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Machine-readable LP-relaxation metadata embedded as an additional plan
+ * assumption (a canonical JSON string). The frozen ExecutionPlan envelope has
+ * no metadata slot, so this is the machine-readable marker INSIDE the plan:
+ * consumers can detect LP_RELAXATION_ONLY from the plan envelope alone.
+ */
+export function nlLpRelaxationPlanAssumption() {
+  return canonicalJson({
+    kind: NL_LP_RELAXATION_ONLY,
+    dropped: ["integrality"],
+    relaxed_from: "QF_LIA integer model",
+    ack: { field: "lpRelaxationAcknowledged", acknowledged: true }
+  });
+}
 
 // ---------------------------------------------------------------------------
 // System prompt (the LLM proposes ONLY this JSON schema; temperature 0 comes
@@ -589,15 +663,31 @@ function unknownResult({ originalText, provider, promptSha, responseSha, reason,
 
 /**
  * Explicit user decision on a MODEL_PROPOSED proposal.
- *   approved === true            -> USER_APPROVED record (plan-eligible)
- *   approved === false           -> USER_REJECTED record (final, no throw)
- *   edited (optional object)     -> replaces the structured model; the edited
- *                                   model is re-validated and re-rendered and
- *                                   the approval records the edit.
+ *   approved === true                    -> USER_APPROVED record (plan-eligible)
+ *   approved === false                   -> USER_REJECTED record (final, no throw)
+ *   edited (optional object)             -> replaces the structured model; the
+ *                                           edited model is re-validated and
+ *                                           re-rendered and the approval
+ *                                           records the edit.
+ *   lpRelaxationAcknowledged (optional)  -> R3 fail-closed LP gate. When the
+ *                                           FINAL (possibly edited) model has
+ *                                           question "optimize" and this is
+ *                                           not exactly true, approval returns
+ *                                           the restricted record
+ *                                           UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION
+ *                                           (plan: null, never plan-eligible):
+ *                                           there is no exact integer
+ *                                           execution operation, only the
+ *                                           continuous LP relaxation. With
+ *                                           exactly true, the approval records
+ *                                           the canonical acknowledgement
+ *                                           hash-covered at
+ *                                           review.lp_relaxation_ack.
  * Anything but a MODEL_PROPOSED proposal throws NL_NOT_APPROVABLE; a tampered
  * proposal (proposal_sha256 mismatch) throws NL_TAMPERED.
  * @param {any} proposal
- * @param {{approved?: boolean, edited?: any, reviewer?: string, note?: string}} decision
+ * @param {{approved?: boolean, edited?: any, reviewer?: string, note?: string,
+ *          lpRelaxationAcknowledged?: boolean}} decision
  * @returns {any}
  */
 export function approveModel(proposal, decision = {}) {
@@ -643,10 +733,20 @@ export function approveModel(proposal, decision = {}) {
     rendering = renderSmtArtifact(model, "plan");
     edited = true;
   }
+  // R3 fail-closed LP gate: the FINAL model (after any edit) with question
+  // "optimize" has every variable integer-declared, but the only execution
+  // operation is the continuous LP relaxation (integrality dropped). Without
+  // the explicit acknowledgement there is no exact-integer operation to run,
+  // so approval must NOT yield a plan-eligible record — return the restricted
+  // unsupported result instead of silently degrading to the relaxation.
+  if (model.question === "optimize" && decision.lpRelaxationAcknowledged !== true)
+    return unsupportedIntegerRecord(proposal, model, edited);
   // Review metadata (who approved, on what grounds) is part of the APPROVAL
   // and therefore hash-covered — post-hoc mutation of the approved record is
   // rejected by buildPlanFromApprovedModel's integrity recheck.
   const review = { approved: true, edited };
+  if (model.question === "optimize")
+    review.lp_relaxation_ack = nlLpRelaxationAckRecord();
   if (typeof decision.reviewer === "string" && decision.reviewer.trim())
     review.reviewer = decision.reviewer.trim().slice(0, 256);
   if (typeof decision.note === "string" && decision.note.trim())
@@ -668,14 +768,61 @@ export function approveModel(proposal, decision = {}) {
 }
 
 /**
+ * R3 restricted unsupported result for an approved integer optimize model
+ * without an explicit LP-relaxation acknowledgement. Returned (never thrown)
+ * so callers can inspect the verdict; it is NOT plan-eligible —
+ * buildPlanFromApprovedModel rejects it with NL_NOT_APPROVED, and no plan is
+ * ever produced from it.
+ * @param {any} proposal
+ * @param {any} model final validated structured model (question "optimize")
+ * @param {boolean} edited
+ * @returns {any}
+ */
+function unsupportedIntegerRecord(proposal, model, edited) {
+  return {
+    schema: NL_MODEL_APPROVED_SCHEMA,
+    status: NL_UNSUPPORTED_EXACT_INTEGER,
+    original_text: proposal.original_text,
+    proposal_sha256: proposal.proposal_sha256,
+    question: "optimize",
+    edited,
+    model,
+    unsupported: {
+      code: NL_UNSUPPORTED_EXACT_INTEGER,
+      reason: "LP_RELAXATION_NOT_ACKNOWLEDGED",
+      dropped: ["integrality"],
+      available_operation: "highs/solve-lp (continuous LP relaxation only; no integer MIP typed operation)",
+      required_decision_field: "lpRelaxationAcknowledged",
+      remedies: [
+        "re-approve with lpRelaxationAcknowledged: true to explicitly accept the LP relaxation (results then characterize the continuous relaxation only)",
+        "wait for a future integer MIP typed operation adapter"
+      ]
+    },
+    detail: NL_INTEGER_OPTIMIZATION_UNSUPPORTED_NOTE,
+    review: { approved: false, edited, rejected: false, unsupported: true },
+    plan: null,
+    honesty_note: "fail-closed: no plan was produced and the LP relaxation was not presented as an integer optimum"
+  };
+}
+
+/**
  * Approved record -> typed ExecutionPlan. The plan's problem embeds the FULL
  * provenance chain (original text + structured model + rendering) as a second
  * requirement, so plan.source.problem_sha256 and every step input hash bind
- * that chain. Re-validated on entry: schema/status/integrity/render drift.
+ * that chain. Re-validated on entry: schema/status/integrity/ack/render drift.
  *
  * Target mapping (deterministic): question "sat" -> SMT plan
- * (z3 + cvc5 + cross-check), question "optimize" -> LP plan (HiGHS, with the
- * integrality-drop assumption). An explicit options.target must match.
+ * (z3 + cvc5 + cross-check), question "optimize" -> LP plan (HiGHS). An
+ * explicit options.target must match.
+ *
+ * R3 LP relaxation contract: the plan envelope is frozen (no metadata slot),
+ * so machine-readable relaxation metadata lives (a) on the returned wrapper
+ * field `relaxation` (null for the smt target), (b) hash-covered at
+ * approved.review.lp_relaxation_ack, and (c) INSIDE the plan as an
+ * additional canonical-JSON-string assumption (nlLpRelaxationPlanAssumption).
+ * An optimize model whose approval lacks the exact canonical
+ * lp_relaxation_ack is rejected fail-closed with
+ * UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION — hand-carried records included.
  * @param {any} approved
  * @param {{target?: "smt"|"lp"}} [options]
  * @returns {any}
@@ -698,6 +845,15 @@ export function buildPlanFromApprovedModel(approved, options = {}) {
   };
   if (approved.approved_sha256 !== sha256Canonical(approvedCore))
     throw new WorkflowError("NL_TAMPERED", "approved_sha256 does not cover the approved record");
+  // R3 fail-closed ack gate (defense in depth for hand-carried records with a
+  // self-consistent hash): an optimize model is plan-eligible only with the
+  // exact canonical LP-relaxation acknowledgement.
+  if (approved.model.question === "optimize" && !isCanonicalLpRelaxationAck(approved.review?.lp_relaxation_ack))
+    throw new WorkflowError(NL_UNSUPPORTED_EXACT_INTEGER,
+      "integer optimize model without the explicit LP-relaxation acknowledgement " +
+      "(review.lp_relaxation_ack must equal the canonical record; approveModel writes it " +
+      "iff decision.lpRelaxationAcknowledged === true): no exact integer execution " +
+      "operation exists, only the continuous LP relaxation");
   // Render drift: the stored rendering must equal a fresh render of the
   // stored model (guards edited/hand-carried approved records).
   const fresh = renderSmtArtifact(approved.model, "plan");
@@ -719,7 +875,23 @@ export function buildPlanFromApprovedModel(approved, options = {}) {
 
   const assumptions = [...approved.model.assumptions];
   const capabilityIds = target === "lp" ? ["opt.numerical"] : ["logic.smt"];
-  if (target === "lp") assumptions.push(NL_LP_RELAXATION_ASSUMPTION);
+  if (target === "lp") {
+    assumptions.push(NL_LP_RELAXATION_ASSUMPTION);
+    assumptions.push(nlLpRelaxationPlanAssumption());
+  }
+  // R3 machine-readable relaxation metadata on the wrapper (the plan envelope
+  // schema is frozen; the same metadata also rides INSIDE the plan as the
+  // canonical JSON-string assumption pushed above).
+  const relaxation = target === "lp"
+    ? {
+        kind: NL_LP_RELAXATION_ONLY,
+        dropped: ["integrality"],
+        meaning: NL_LP_RELAXATION_ASSUMPTION,
+        effect: "plan results characterize the continuous LP relaxation only; " +
+          "the optimal value is a bound for the integer problem, not its exact optimum",
+        ack: approved.review.lp_relaxation_ack
+      }
+    : null;
 
   const normalized = normalizeUserProblem(approved.original_text, {
     assumptions, problemKind: NL_PROBLEM_KIND, capabilityIds
@@ -787,6 +959,7 @@ export function buildPlanFromApprovedModel(approved, options = {}) {
     problem,
     method,
     provenance_sha256: provenanceSha,
-    question: approved.model.question
+    question: approved.model.question,
+    relaxation
   };
 }
