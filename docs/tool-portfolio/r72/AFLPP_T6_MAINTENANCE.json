@@ -1,0 +1,197 @@
+{
+  "schema": "formal-tools/aflpp-t6-maintenance-baseline/1",
+  "snapshot_head": "069444c176bbacc804f107482f356dbc2eb95736",
+  "tool": {
+    "id": "aflpp",
+    "version": "5.03c"
+  },
+  "version_source": "portable/builders/tools/aflpp.sh",
+  "asset_pins": {
+    "portable_package_sha256": "728a9e2cdd38704b1270c478fccfe476e012bbb866b61c9984d274bd8a8cf157",
+    "upstream_source_archive_sha256": null,
+    "binary_sha256": null,
+    "oracle_sha256": null
+  },
+  "source_files": {
+    "portable/builders/tools/aflpp.sh": {
+      "git_blob_sha1": "4ff63dad2f6986ddf2bffadf769c13186dab99c5",
+      "gates": [
+        "T1",
+        "T2",
+        "T3",
+        "T6"
+      ]
+    },
+    "portable/verification/cases/aflpp/expect.sh": {
+      "git_blob_sha1": "b1f277b443ae4b52c428d2e1e27a99e9f6da2d4c",
+      "gates": [
+        "T3",
+        "T4",
+        "T5",
+        "T6"
+      ]
+    },
+    "portable/status/receipts/build-aflpp.json": {
+      "git_blob_sha1": "964f2261c2b88ad115d5c7ef8b67d03c6598005e",
+      "gates": [
+        "T0",
+        "T1",
+        "T2",
+        "T6"
+      ]
+    },
+    "portable/status/receipts/verify-aflpp.json": {
+      "git_blob_sha1": "67f577826c546b02122c9af6db9bcca11bd0dfe5",
+      "gates": [
+        "T3",
+        "T4",
+        "T6"
+      ]
+    },
+    "portable/packaging/bundle-template/bin/tool-runner": {
+      "git_blob_sha1": "102e971481a3e213fdb41fa45230b1dd3beaf2bd",
+      "gates": [
+        "T2",
+        "T3",
+        "T4",
+        "T6"
+      ]
+    },
+    "portable/packaging/pack.sh": {
+      "git_blob_sha1": "4b3cae235643f8554f1e62001268816ba205bcac",
+      "gates": [
+        "T2",
+        "T3",
+        "T4",
+        "T6"
+      ]
+    },
+    "portable/packaging/make-manifest.py": {
+      "git_blob_sha1": "f48318997276289f049260902c474650907e96ec",
+      "gates": [
+        "T0",
+        "T1",
+        "T2",
+        "T6"
+      ]
+    },
+    "portable/packaging/unpack-template/unpack.sh": {
+      "git_blob_sha1": "ad8ba2330a7b3bd66f5508563774b7b472fae977",
+      "gates": [
+        "T2",
+        "T3",
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/native-catalog.mjs": {
+      "git_blob_sha1": "02f628947be3e5c270d802be150ab220e14fc2b8",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/tool-portfolio-t4.mjs": {
+      "git_blob_sha1": "922a7c208beaa0e48346403a29ec2d927189319f",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/cli.mjs": {
+      "git_blob_sha1": "05a0693f1ab34a881c7fd8de81b3d609e6568047",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/sdk.mjs": {
+      "git_blob_sha1": "774899d95911f9650f12f4de0dbfa38dc3f4d07d",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "packages/runner/js/mcp.mjs": {
+      "git_blob_sha1": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
+      "gates": [
+        "T4",
+        "T6"
+      ]
+    },
+    "registry/PROBLEM_CAPABILITIES.json": {
+      "git_blob_sha1": "faa89997c3f7c8c71da0a69aa90e8ff37461cde0",
+      "gates": [
+        "T4",
+        "T5",
+        "T6"
+      ]
+    },
+    "docs/tool-portfolio/r1/TOOL_PORTFOLIO_DAG.json": {
+      "git_blob_sha1": "250b84ae0638d98115d748a32ae2f2c9357942b0",
+      "gates": [
+        "T0",
+        "T4",
+        "T6"
+      ]
+    }
+  },
+  "component_applicability": {
+    "native_adapter": "NOT_APPLICABLE_CANDIDATE_PORTFOLIO_ROUTE",
+    "runner": "APPLICABLE",
+    "gateway": "APPLICABLE",
+    "cli": "APPLICABLE",
+    "sdk": "APPLICABLE",
+    "mcp": "APPLICABLE"
+  },
+  "gate_revalidation": {
+    "T0": [
+      "Re-fetch original AFL++ archive and producer manifest; independently verify archive SHA256 and publisher/rights scope."
+    ],
+    "T1": [
+      "Reproduce source build in two clean Debian 13 x86_64 environments; record toolchain, dependencies, build options and exact binary SHA256."
+    ],
+    "T2": [
+      "Re-run safe archive preflight, non-root extraction, ABI/dependency and offline doctor checks."
+    ],
+    "T3": [
+      "Re-run only changed native POS/NEG/ERR/UNKNOWN cases with raw stdout/stderr/exit and immutable receipt hashes."
+    ],
+    "T4": [
+      "Re-run current-main portable Runner and candidate CLI/SDK/MCP routes on exact source pins; preserve missing-dependency NOT_RUN."
+    ],
+    "T5": [
+      "Re-run a source-backed fuzzing case and obtain independent semantic/coverage Oracle; fixture success alone is insufficient."
+    ],
+    "T6": [
+      "Review the changed pins, update this baseline only after evidence review, and retain a versioned regression/maintenance record."
+    ]
+  },
+  "qualification_boundary": {
+    "T0": "PASS_SCOPED_PORTABLE_PACKAGE_PRODUCER_MANIFEST_ONLY; UPSTREAM_SOURCE_ARCHIVE_PIN_UNKNOWN",
+    "T1": "NOT_QUALIFIED_REPRODUCIBLE_SOURCE_BUILD; UPSTREAM_SOURCE_ARCHIVE_PIN_UNKNOWN",
+    "T2": "PASS_SCOPED_R3_NONROOT_INSTALL",
+    "T3": "PASS_SCOPED_R8_R9_NATIVE_FIXTURE_REVIEWED",
+    "T4": "NOT_ACCEPTED_FULL_CURRENT_MAIN_RUNNER_CLI_MCP_SDK",
+    "T5": "NOT_QUALIFIED_INDEPENDENT_FUZZING_ORACLE",
+    "T6": "ASSESSOR_IMPLEMENTATION_PENDING_INDEPENDENT_REVIEW",
+    "product_or_release": "NOT_GRANTED"
+  },
+  "notes": [
+    "Original AFL++ 5.03c portable package archive SHA256 728a9e2c... was recorded by R12 and matched the canonical producer manifest; this is not publisher-signature verification and is not the upstream source tarball hash.",
+    "The exact upstream source archive SHA256 is not present in the current versioned receipt and remains UNKNOWN for T0/T1.",
+    "The binary SHA256 is not present in the current versioned receipt and remains UNKNOWN; no binary digest is invented.",
+    "The R12 meta.sh-corrected archive is a noncanonical validation candidate, not the original package and not a T1 build.",
+    "AFL++ is a candidate portfolio route; it does not use the 13-tool native.mjs adapter/catalog. Native adapter is explicitly NOT_APPLICABLE.",
+    "A current source identity result is not a solver run, build, semantic Oracle, or qualification promotion.",
+    "R80: current-main snapshot refreshed to 069444c176bbacc804f107482f356dbc2eb95736 after independently re-fetching all 15 source/evidence Git blobs; all match. Main Push #1610 is SUCCESS. The delta from prior snapshot 0f2141dc... is disjoint cvc5 evidence and a solution-store replay test."
+  ],
+  "previous_snapshot_head": "0f2141dc4dcecacd5a6db72b22c28af447b50b23",
+  "current_main_snapshot": {
+    "commit": "069444c176bbacc804f107482f356dbc2eb95736",
+    "woodpecker_push_pipeline": 1610,
+    "woodpecker_push_status": "SUCCESS",
+    "source_blob_pin_verification": "15_OF_15_EXACT_GIT_BLOB_MATCHES",
+    "delta_from_previous_snapshot": "Six main commits after 0f2141dc... add cvc5 R27 evidence and solution-store cross-process replay test only; all 15 AFL++ source/evidence pins re-fetched and unchanged."
+  }
+}
