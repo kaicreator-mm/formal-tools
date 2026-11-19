@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Content-Length: 3406
+X-Content-Type-Options: nosniff
+Cache-Control: no-store
+Date: Thu, 19 Nov 2026 14:56:31 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+

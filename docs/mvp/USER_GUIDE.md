@@ -242,3 +242,147 @@ Nothing in this harness fabricates solver internals; the only numeric claim
 (LP objective 11) carries its offline duality proof, and the live receipts
 reproduced it exactly. The committed evidence is hash-pinned by
 `evidence/SHA256SUMS` and re-verified offline by the test suite.
+
+---
+
+## 8. R2 addendum (i180 closeout, branch `i180/r2-e2e` @ 7b85e82e434152e139d0d93bfb76ef72ad076f21)
+
+R2 adds three real surfaces on top of the V6 runbook: the NL→model approval
+lane (R2-C), the typed `execute_workflow` MCP tool (R2-B), and honest
+full-stream vs bounded evidence labels (R2-D). The R2 E2E acceptance validator
+(non-writer) re-ran everything end-to-end on the trusted host; evidence is
+committed under `validation/mvp-user-e2e/evidence/r2/` (pinned by
+`evidence/r2/SHA256SUMS`, re-verified offline by
+`node --test tests/workflow-user-e2e-r2.test.mjs`).
+
+### 8.1 NL journey (propose → review → approve → execute)
+
+The real path is programmatic (`packages/runner/js/nl-model.mjs`,
+docs/mvp/NL_MODEL.md). Reference driver:
+`tests/nl-model.driver.mjs`; acceptance evidence driver:
+`evidence/r2/drivers/j1-nl-journey.mjs` (two phases, so the approval gate
+requires a separately authored review file):
+
+```bash
+cd /home/cc/formal-tools-build/wt-i180-r2e    # synced worktree (node_modules minus .bin)
+B=/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64
+set -a && . ./.dsenv && set +a                # DEEPSEEK_API_KEY, 0600 file, delete afterwards
+
+# phase 1: ONE real DeepSeek proposal (untrusted data; nothing approved/executed here)
+FORMAL_PORTABLE_ROOT=$B FORMAL_PORTABLE_RUNNER_SHA256=020f8f5e… \
+  $B/bin/tool-runner node validation/mvp-user-e2e/evidence/r2/drivers/j1-nl-journey.mjs \
+  --phase propose --source-sha 7b85e82e434152e139d0d93bfb76ef72ad076f21
+
+# HUMAN STEP: read nl-journey/proposal.json; check every rendered assert against
+# your text; author nl-journey/review.json with your per-line verdicts and the
+# decision. If the translation is wrong: record NEEDS_CORRECTION and correct via
+# approveModel's {approved:true, edited:{...}} path or re-propose — never fake
+# an approval.
+
+# phase 2: approve (hash-covered) -> plan -> real z3 + cvc5 -> witness on AGREE_SAT
+FORMAL_PORTABLE_ROOT=$B FORMAL_PORTABLE_RUNNER_SHA256=020f8f5e… \
+  $B/bin/tool-runner node validation/mvp-user-e2e/evidence/r2/drivers/j1-nl-journey.mjs \
+  --phase approve-execute --proposal validation/mvp-user-e2e/evidence/r2/nl-journey/proposal.json \
+  --review validation/mvp-user-e2e/evidence/r2/nl-journey/review.json \
+  --source-sha 7b85e82e434152e139d0d93bfb76ef72ad076f21
+```
+
+Real outcome @ 7b85e82: a NEW Chinese puzzle (p,e ∈ [1,12]; 3p+2e=17; e−p≥2)
+→ `MODEL_PROPOSED` → review 7/7 line checks MATCH → **AGREE_SAT** with z3
+witness (p,e)=(1,7) (`evidence/r2/nl-journey/`). The witness proves the
+RENDERED model's answer, not translation fidelity — that is what the review
+gate is for. Vague texts fail closed: `NEEDS_CLARIFICATION` with the model's
+own questions, approval impossible (`NL_NOT_APPROVABLE`).
+
+### 8.2 MCP `execute_workflow` (R2-B, 16th tool)
+
+`plan_workflow` stays planning-only; `execute_workflow` executes a
+`formal-tools/execution-plan/1.0` plan through the SAME executor the CLI uses:
+
+- input (strict zod): `plan` (≤ 64 KiB JSON), `source_sha` (**REQUIRED 40-hex
+  git commit SHA — no anonymous runs**), optional tighten-only `budget_caps`
+  (may only shrink the plan's own budgets);
+- executor-owned gates are never duplicated or bypassed: plan re-validation,
+  tool allowlist, canonical input hashes (`PLAN_HASH_MISMATCH` before anything
+  runs), DAG closure, budgets;
+- returns the receipt's verdict dimensions un-collapsed
+  (process_outcome / solver_answer / cross_tool_verdict / claim_verdict),
+  stream hashes with 512-byte bounded log copies, artifact pointers;
+- without the pinned bundle: honest ABORTED receipt
+  (`BLOCKED_TOOL_MISSING`, claim `BLOCKED`) as a NON-error result — never a
+  fabricated PASS.
+
+Minimal stdio session (see `evidence/r2/parity/mcp-transcript.json` for a full
+real transcript):
+
+```bash
+node packages/runner/js/mcp.mjs
+{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"manual","version":"0.0.1"}}}
+{"jsonrpc":"2.0","method":"notifications/initialized"}
+{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"execute_workflow","arguments":{"plan":<plan object>,"source_sha":"<40-hex git SHA of your source tree>"}}}
+```
+
+### 8.3 Three-entry parity (how to reproduce)
+
+Build the plan ONCE and feed the SAME plan object to all three entries; the
+web bridge also re-derives it deterministically from the same text:
+
+```bash
+# plan once (bridge deterministic template; save the plan object)
+curl -s -X POST http://127.0.0.1:8788/api/plan -H 'Content-Type: application/json' \
+  -d "$(node -e '...{"problem_text": <file content>}...')" > plan-response.json
+# (a) CLI
+node packages/runner/js/cli.mjs workflow execute --plan-file plan.json --source-sha <40-hex>
+# (b) MCP: tools/call execute_workflow with the same plan + source_sha
+# (c) Web: paste the same text in the UI (deterministic plan), approve, run
+```
+
+Real outcome @ 7b85e82 (`evidence/r2/parity/parity-report.json`, 14/14 PASS):
+identical `plan_sha256 ae4979bf…` on all three receipts, identical
+AGREE_UNSAT + claim PASS, run_ids pairwise distinct, source_sha recorded
+everywhere. Honest labeling: CLI/MCP carry the required git SHA; the Web
+bridge binds `receipt.source_sha` to `plan.source.problem_sha256` by design —
+an expected difference, never claimed equal.
+
+### 8.4 Evidence scope semantics (R2-D)
+
+`GET /api/runs/:id/evidence` returns the receipt bytes; `?part=manifest` the
+hash manifest; `?part=stdout|stderr&step=<id>&scope=full|bounded` the log
+artifacts. The rules the bridge enforces (verified live in
+`evidence/r2/evidence-check/`):
+
+- `receipt.steps[].stdout_sha256 / stderr_sha256` hash the **FULL captured
+  streams** — authoritative.
+- `logs/<step>.<part>.bounded.txt` are display copies capped at 4096 bytes and
+  carry their **own** sha256 in the manifest (`scope: "bounded-copy"`).
+- A plain-named `logs/<step>.<part>.txt` (`scope: "full-stream"`) exists only
+  when its bytes VERIFY against the receipt's full-stream hash.
+- Response headers: `X-Formal-Evidence-Scope: full-stream|bounded-copy` and
+  `X-Formal-Full-Stream-Sha256` = the receipt's full-stream hash on BOTH
+  scopes (never the bounded hash).
+- `bounded_matches_full_stream` is `true` only when verified or provable
+  (< cap); **null means never claimed**. For short-output runs full and
+  bounded exist and are identical — asserted only via hash verification.
+- Unknown scope values fail closed (`422 EVIDENCE_SCOPE_INVALID`).
+
+### 8.5 Non-loopback token rule (fail-closed)
+
+The bridge binds `127.0.0.1` by default. A **non-loopback bind REQUIRES
+`FORMAL_WEB_TOKEN`**: startup refuses otherwise (`fail-closed: non-loopback
+bind requires FORMAL_WEB_TOKEN`), so anonymous execution beyond the loopback
+interface is impossible. With a token set, every non-`/api/meta` request needs
+`Authorization: Bearer <token>` (401 without, 403 on mismatch). `FORMAL_WEB_TOKEN`
+must never be committed; set it per-run from your environment.
+
+### 8.6 R2 negative journeys (committed)
+
+`evidence/r2/negatives/`: vague NL → `NEEDS_CLARIFICATION` + `NL_NOT_APPROVABLE`;
+tampered plan over MCP → `PLAN_HASH_MISMATCH` pre-execution; empty
+`FORMAL_PORTABLE_ROOT` via CLI and via the web bridge → honest ABORTED
+`BLOCKED_TOOL_MISSING` receipts (browser banner screenshot
+`screenshots/07-blocked-tool-missing-banner.png`). An honest solver-UNKNOWN
+case was deliberately **not** fabricated (recorded NOT_RUN in the report).
+
+R2-A launcher stack (#197/#198) is NOT on this main — launcher external-cwd
+remains a PENDING_EXTERNAL_REVIEW item and was not tested here.
+

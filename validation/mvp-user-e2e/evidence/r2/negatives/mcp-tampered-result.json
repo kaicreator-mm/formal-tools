@@ -1,0 +1,8 @@
+{
+  "isError": true,
+  "status": "ERROR",
+  "code": "PLAN_HASH_MISMATCH",
+  "executed": false,
+  "message": "input_sha256 mismatch on step step-z3",
+  "matched": true
+}

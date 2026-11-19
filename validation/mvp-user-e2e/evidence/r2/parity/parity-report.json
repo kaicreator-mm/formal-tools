@@ -1,0 +1,191 @@
+{
+  "schema": "formal-tools/r2e2e-parity-report/1.0",
+  "label": "FORMAL_TOOLS_I180_R2_E2E_ACCEPTANCE",
+  "journey": "j2-three-entry-parity",
+  "source_sha_git_label": "7b85e82e434152e139d0d93bfb76ef72ad076f21",
+  "plan_file": "/home/cc/formal-tools-build/wt-i180-r2e/validation/mvp-user-e2e/evidence/r2/parity/plan.json",
+  "plan_file_sha256": "060872a6adb17d15cea8c8df113ba4bed43a5f38d06ebd8b8e1bfa6ddaa86950",
+  "plan_id": "wf-84b428d69985159a3ff634e51e8a3672",
+  "plan_source_problem_sha256": "38960d6f7776a33c502d18d06789a2ebc1e0955a8dc628de59183af7ee2387ab",
+  "expected_verdict": "AGREE_UNSAT",
+  "cli": {
+    "run_id": "run-mwnoin47-c2aae129",
+    "plan_sha256": "ae4979bff7d92f6be4b4cef972416d910e1832ec572a5e189fcfbca8e0dd7b12",
+    "source_sha": "7b85e82e434152e139d0d93bfb76ef72ad076f21",
+    "overall": {
+      "process_outcome": "OK",
+      "solver_answer": {
+        "kind": "solve-smt",
+        "value": "unsat",
+        "by_step": [
+          {
+            "step_id": "step-z3",
+            "tool": "z3",
+            "operation": "solve-smt",
+            "answer": "unsat"
+          },
+          {
+            "step_id": "step-cvc5",
+            "tool": "cvc5",
+            "operation": "solve-smt",
+            "answer": "unsat"
+          }
+        ]
+      },
+      "cross_tool_verdict": "AGREE_UNSAT",
+      "claim_verdict": "PASS"
+    },
+    "tool_versions": {
+      "z3": {
+        "version": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f",
+        "probe_sha256": "9af7c6f186418585f022fd2d18eb2d278e14ad21731bf3339f3cbd1f78500e7a",
+        "probe_bounded": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f\n"
+      },
+      "cvc5": {
+        "version": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]",
+        "probe_sha256": "b6c312e4bb0062a7683ca82eb08f0b25beb4e6c67f22a62a6841a8f4192fde4a",
+        "probe_bounded": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]\ncompiled as a unrestricted build with GCC version 11.4.0 on Oct  8 2026 01:24:07\n\nCopyright (c) 2009-2026 by the authors and their institutional\naffiliations listed at https://cvc5.github.io/people.html\n\ncvc5 is open"
+      }
+    },
+    "exit_code": null
+  },
+  "mcp": {
+    "isError": false,
+    "parsed_status": "EXECUTION_RECEIPT_RETURNED",
+    "executed": true,
+    "run_id": "run-mwnoind9-0a2b5645",
+    "plan_sha256": "ae4979bff7d92f6be4b4cef972416d910e1832ec572a5e189fcfbca8e0dd7b12",
+    "source_sha": "7b85e82e434152e139d0d93bfb76ef72ad076f21",
+    "overall": {
+      "process_outcome": "OK",
+      "solver_answer": {
+        "kind": "solve-smt",
+        "value": "unsat",
+        "by_step": [
+          {
+            "step_id": "step-z3",
+            "tool": "z3",
+            "operation": "solve-smt",
+            "answer": "unsat"
+          },
+          {
+            "step_id": "step-cvc5",
+            "tool": "cvc5",
+            "operation": "solve-smt",
+            "answer": "unsat"
+          }
+        ]
+      },
+      "cross_tool_verdict": "AGREE_UNSAT",
+      "claim_verdict": "PASS"
+    },
+    "blocked_code": null
+  },
+  "web": {
+    "run_id": "run-mwnolhqi-56e1aaf1",
+    "plan_sha256": "ae4979bff7d92f6be4b4cef972416d910e1832ec572a5e189fcfbca8e0dd7b12",
+    "source_sha": "38960d6f7776a33c502d18d06789a2ebc1e0955a8dc628de59183af7ee2387ab",
+    "overall": {
+      "process_outcome": "OK",
+      "solver_answer": {
+        "kind": "solve-smt",
+        "value": "unsat",
+        "by_step": [
+          {
+            "step_id": "step-z3",
+            "tool": "z3",
+            "operation": "solve-smt",
+            "answer": "unsat"
+          },
+          {
+            "step_id": "step-cvc5",
+            "tool": "cvc5",
+            "operation": "solve-smt",
+            "answer": "unsat"
+          }
+        ]
+      },
+      "cross_tool_verdict": "AGREE_UNSAT",
+      "claim_verdict": "PASS"
+    },
+    "environment": {
+      "host": "127.0.0.1",
+      "node": "v22.16.0",
+      "formal_portable_root_sha": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a"
+    }
+  },
+  "findings": [
+    {
+      "name": "CLI receipt source_sha is the required git SHA label",
+      "pass": true,
+      "detail": "7b85e82e434152e139d0d93bfb76ef72ad076f21"
+    },
+    {
+      "name": "CLI receipt plan_sha256 matches the plan file's raw sha256 OR is the executor's canonical plan hash (recorded)",
+      "pass": true,
+      "detail": "ae4979bff7d92f6be4b4cef972416d910e1832ec572a5e189fcfbca8e0dd7b12"
+    },
+    {
+      "name": "CLI overall cross_tool_verdict is AGREE_UNSAT",
+      "pass": true,
+      "detail": "AGREE_UNSAT"
+    },
+    {
+      "name": "CLI overall claim_verdict is PASS",
+      "pass": true,
+      "detail": "PASS"
+    },
+    {
+      "name": "MCP response source_sha is the required git SHA label",
+      "pass": true,
+      "detail": "7b85e82e434152e139d0d93bfb76ef72ad076f21"
+    },
+    {
+      "name": "MCP overall cross_tool_verdict is AGREE_UNSAT",
+      "pass": true,
+      "detail": "AGREE_UNSAT"
+    },
+    {
+      "name": "MCP overall claim_verdict is PASS",
+      "pass": true,
+      "detail": "PASS"
+    },
+    {
+      "name": "CLI and MCP executed the IDENTICAL plan (equal plan_sha256)",
+      "pass": true,
+      "detail": "{\"cli\":\"ae4979bff7d92f6be4b4cef972416d910e1832ec572a5e189fcfbca8e0dd7b12\",\"mcp\":\"ae4979bff7d92f6be4b4cef972416d910e1832ec572a5e189fcfbca8e0dd7b12\"}"
+    },
+    {
+      "name": "CLI and MCP run_ids are distinct",
+      "pass": true,
+      "detail": "{\"cli\":\"run-mwnoin47-c2aae129\",\"mcp\":\"run-mwnoind9-0a2b5645\"}"
+    },
+    {
+      "name": "Web receipt plan_sha256 identical to CLI/MCP (same fixed plan object)",
+      "pass": true,
+      "detail": "{\"web\":\"ae4979bff7d92f6be4b4cef972416d910e1832ec572a5e189fcfbca8e0dd7b12\",\"cli\":\"ae4979bff7d92f6be4b4cef972416d910e1832ec572a5e189fcfbca8e0dd7b12\"}"
+    },
+    {
+      "name": "Web overall cross_tool_verdict is AGREE_UNSAT",
+      "pass": true,
+      "detail": "AGREE_UNSAT"
+    },
+    {
+      "name": "Web receipt records a source_sha (bridge design: problem_sha256)",
+      "pass": true,
+      "detail": "38960d6f7776a33c502d18d06789a2ebc1e0955a8dc628de59183af7ee2387ab"
+    },
+    {
+      "name": "Web source_sha honestly DIFFERS from the git SHA label (bridge binds problem_sha256; recorded as expected design difference, never claimed equal)",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Web run_id distinct from CLI/MCP",
+      "pass": true,
+      "detail": "run-mwnolhqi-56e1aaf1"
+    }
+  ],
+  "all_checks_passed": true,
+  "honesty_note": "All three entries executed the SAME fixed plan object (built once by the bridge's deterministic template). Web binds receipt.source_sha to the plan's problem_sha256 by design (the bridge derives it deterministically); CLI and MCP carry the required 40-hex git commit label. This difference is recorded, never hidden."
+}

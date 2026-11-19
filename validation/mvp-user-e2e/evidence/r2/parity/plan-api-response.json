@@ -1,0 +1,96 @@
+{
+  "plan": {
+    "schema": "formal-tools/execution-plan/1.0",
+    "plan_id": "wf-84b428d69985159a3ff634e51e8a3672",
+    "source": {
+      "problem_sha256": "38960d6f7776a33c502d18d06789a2ebc1e0955a8dc628de59183af7ee2387ab",
+      "problem_kind": "smt2"
+    },
+    "assumptions": [
+      "Input is UTF-8 SMT-LIB2 text intended for QF-style solving.",
+      "Solvers may return \"unknown\" within the per-step timeout; that is an honest outcome, not an error."
+    ],
+    "method_dag": [
+      {
+        "id": "step-z3",
+        "kind": "solve",
+        "depends_on": []
+      },
+      {
+        "id": "step-cvc5",
+        "kind": "solve",
+        "depends_on": [
+          "step-z3"
+        ]
+      },
+      {
+        "id": "step-agree",
+        "kind": "cross_check",
+        "depends_on": [
+          "step-z3",
+          "step-cvc5"
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "id": "step-z3",
+        "tool": "z3",
+        "operation": "solve-smt",
+        "depends_on": [],
+        "input": {
+          "smt_lib": "(set-logic QF_LIA)\n; R2 E2E three-entry parity fixture (i180/r2-e2e @ 7b85e82e434152e139d0d93bfb76ef72ad076f21).\n; Hand-certain UNSAT: x,y in [0,3] force x+y <= 6, so x+y >= 9 is unsatisfiable\n; over any interpretation. Distinct from the V6 scenario-a fixture on purpose.\n(declare-fun x () Int)\n(declare-fun y () Int)\n(assert (>= x 0))\n(assert (<= x 3))\n(assert (>= y 0))\n(assert (<= y 3))\n(assert (>= (+ x y) 9))\n(check-sat)\n(exit)"
+        },
+        "input_sha256": "d52873f47212583dc8d8d057a4d98447feca1242075d29de29c2d2c863c2c93d",
+        "timeout_s": 30,
+        "expected_output_kind": "smt-answer"
+      },
+      {
+        "id": "step-cvc5",
+        "tool": "cvc5",
+        "operation": "solve-smt",
+        "depends_on": [
+          "step-z3"
+        ],
+        "input": {
+          "smt_lib": "(set-logic QF_LIA)\n; R2 E2E three-entry parity fixture (i180/r2-e2e @ 7b85e82e434152e139d0d93bfb76ef72ad076f21).\n; Hand-certain UNSAT: x,y in [0,3] force x+y <= 6, so x+y >= 9 is unsatisfiable\n; over any interpretation. Distinct from the V6 scenario-a fixture on purpose.\n(declare-fun x () Int)\n(declare-fun y () Int)\n(assert (>= x 0))\n(assert (<= x 3))\n(assert (>= y 0))\n(assert (<= y 3))\n(assert (>= (+ x y) 9))\n(check-sat)\n(exit)"
+        },
+        "input_sha256": "d52873f47212583dc8d8d057a4d98447feca1242075d29de29c2d2c863c2c93d",
+        "timeout_s": 30,
+        "expected_output_kind": "smt-answer"
+      },
+      {
+        "id": "step-agree",
+        "tool": "compare",
+        "operation": "cross-check",
+        "depends_on": [
+          "step-z3",
+          "step-cvc5"
+        ],
+        "input": {
+          "left_step": "step-z3",
+          "right_step": "step-cvc5",
+          "agree_on": [
+            "sat",
+            "unsat"
+          ]
+        },
+        "timeout_s": 5,
+        "expected_output_kind": "cross-tool-verdict",
+        "input_sha256": "7a913f16cf6ae5824b30e5d9069c90934b05d35cbf1099c2da4ba501bbcb9f62"
+      }
+    ],
+    "budgets": {
+      "max_steps": 8,
+      "max_total_timeout_s": 120
+    },
+    "compiled": {
+      "launcher_sha256": "210f0fd040abb632e0d6b48803cf7147522fe59af2e139501ae78e1f9b81aa25",
+      "manifest_sha256": "10bcc10fef8a0513b776a5005cec501c774bb0773b08c276adea9e9605439351"
+    }
+  },
+  "plan_source": {
+    "kind": "deterministic-template",
+    "template": "smt-cross-check@v1"
+  }
+}
