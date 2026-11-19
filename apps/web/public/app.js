@@ -566,17 +566,58 @@ async function renderResults(view) {
   manifestLink.textContent = '⬇ Hash manifest (JSON)';
   actions.append(manifestLink);
 
+  // Evidence honesty: the receipt's stream hashes cover the FULL captured
+  // streams; the downloadable logs are bounded (<=4 KiB) display copies unless
+  // the manifest says a verified full-stream artifact exists. Both hashes are
+  // shown labeled; identity is claimed only when the manifest verified it.
+  const manifestStreams = await loadEvidenceStreams(view.run_id);
   for (const step of receipt.steps) {
     for (const part of ['stdout', 'stderr']) {
       const bounded = part === 'stdout' ? step.stdout_bounded : step.stderr_bounded;
       if (typeof bounded !== 'string' || bounded.length === 0) continue; // no artifact for a step that never ran
-      const link = document.createElement('a');
-      link.className = 'btn btn--ghost';
-      link.href = `/api/runs/${encodeURIComponent(view.run_id)}/evidence?part=${part}&step=${encodeURIComponent(step.step_id)}`;
-      link.setAttribute('download', `${part}-${step.step_id}.txt`);
-      link.textContent = `⬇ ${step.step_id} ${part}`;
-      actions.append(link);
+      const fullSha = part === 'stdout' ? step.stdout_sha256 : step.stderr_sha256;
+      const entry = manifestStreams ? manifestStreams.get(`${step.step_id}:${part}`) : null;
+
+      const line = document.createElement('p');
+      line.className = 'hint';
+      line.dataset.testid = 'evidence-hash-line';
+      const parts = [`${step.step_id} ${part} — full-stream SHA-256 ${fullSha ? fullSha.slice(0, 12) + '…' : 'none'} (over the FULL captured stream)`];
+      if (entry && entry.bounded_sha256) {
+        let claim;
+        if (entry.bounded_matches_full_stream === true) claim = 'verified identical to the full stream';
+        else if (entry.bounded_matches_full_stream === false) claim = 'TRUNCATED prefix — full stream is larger';
+        else claim = `capped at ${entry.bounded_bytes} bytes; not verified against the full stream on this host`;
+        parts.push(`bounded copy SHA-256 ${entry.bounded_sha256.slice(0, 12)}… (${claim})`);
+      }
+      line.textContent = parts.join(' · ');
+      actions.append(line);
+
+      const boundedLink = document.createElement('a');
+      boundedLink.className = 'btn btn--ghost';
+      boundedLink.href = `/api/runs/${encodeURIComponent(view.run_id)}/evidence?part=${part}&step=${encodeURIComponent(step.step_id)}&scope=bounded`;
+      boundedLink.setAttribute('download', `${part}-${step.step_id}.bounded.txt`);
+      boundedLink.textContent = `⬇ ${step.step_id} ${part} (bounded ≤4 KiB copy)`;
+      actions.append(boundedLink);
+
+      if (entry && entry.full_artifact) {
+        const fullLink = document.createElement('a');
+        fullLink.className = 'btn btn--ghost';
+        fullLink.href = `/api/runs/${encodeURIComponent(view.run_id)}/evidence?part=${part}&step=${encodeURIComponent(step.step_id)}&scope=full`;
+        fullLink.setAttribute('download', `${part}-${step.step_id}.txt`);
+        fullLink.textContent = `⬇ ${step.step_id} ${part} (full stream)`;
+        actions.append(fullLink);
+      }
     }
+  }
+}
+
+/** Best-effort fetch of the run's artifact manifest streams (for hash labels). */
+async function loadEvidenceStreams(runId) {
+  try {
+    const manifest = await api(`/api/runs/${encodeURIComponent(runId)}/evidence?part=manifest`);
+    return new Map((manifest.streams || []).map((e) => [`${e.step_id}:${e.stream}`, e]));
+  } catch {
+    return null; // labels degrade to the receipt's full-stream hash only
   }
 }
 
