@@ -1,5 +1,5 @@
-PASS  initialize handshake — serverInfo={"name":"formal-tools-skill","version":"0.3.0"} protocol=2025-06-18
-PASS  tools/list exposes exactly the 9 registered tools — describe_native_cli,inspect_formal_tool,inspect_native_installation,list_formal_tools,plan_native_cli,probe_formal_tool,run_formal_fixture,validate_formal_source,verify_formal_model
+PASS  initialize handshake — serverInfo={"name":"formal-tools-skill","version":"0.4.0"} protocol=2025-06-18
+PASS  tools/list exposes exactly the 14 registered tools — describe_native_cli,inspect_formal_tool,inspect_native_installation,inspect_portfolio_tool,list_formal_tools,list_portfolio_tools,match_formal_capabilities,plan_native_cli,probe_formal_tool,run_formal_fixture,run_portfolio_operation,validate_formal_source,verify_formal_model,verify_portable_fixture
 PASS  inspect_native_installation input schema is tool-only (no shell/argv/cwd passthrough) — {"type":"object","$schema":"https://json-schema.org/draft/2020-12/schema","properties":{"tool":{"type":"string"}},"required":["tool"]}
 PASS  list_formal_tools reports 13 native tools — native=13 pure=["dag","writers","cnf","states"]
 PASS  validate_formal_source returns STATIC_PASS — STATIC_PASS
@@ -10,6 +10,13 @@ PASS  describe_native_cli returns operations — operations=solve,dimacs
 PASS  inspect_native_installation is read-only (probe_status NOT_RUN, no execution) — {"status":"MISSING_EXECUTABLE","probe_status":"NOT_RUN"}
 PASS  plan_native_cli validates settings and returns argv without executing — {"tool":"z3","operation":"solve","entry":"z3","args":["-smt2","skills/z3/examples/positive.smt2"],"mode":"typed","runtime":"NOT_RUN"}
 PASS  verify_formal_model really verifies the DAG model in pure JS — {"tool_outcome":"ACYCLIC","test_verdict":"PASS","claim_verdict":"NOT_EVALUATED","execution":"PURE_JS","topological_order":["L1","L2","task"],"node_count":3,"edg
+PASS  run_portfolio_operation schema is a closed typed Highs LP interface — {"type":"object","$schema":"https://json-schema.org/draft/2020-12/schema","properties":{"tool":{"type":"string","const":"highs"},"operation":{"type":"string","const":"solve-lp"},"model":{"type":"object","properties":{"sense":{"type":"string","enum":["min","max"]},"objective":{"minItems":1,"maxItems"
+PASS  run_portfolio_operation fails closed when no pinned portable root is configured — {"status":"NOT_RUN_FAIL_CLOSED","isError":true}
+PASS  run_portfolio_operation rejects raw argv extension — "Input validation error: Invalid arguments for tool run_portfolio_operation: Unrecognized key: \"argv\""
+PASS  match_formal_capabilities schema is a closed capability-ID list interface — {"type":"object","$schema":"https://json-schema.org/draft/2020-12/schema","properties":{"capabilities":{"minItems":1,"maxItems":16,"type":"array","items":{"type":"string","minLength":1}},"include_not_
+PASS  match_formal_capabilities matches logic.smt over probe receipts (read-only, scoped) — {"required":["logic.smt"],"matches":["apalache:NATIVE_PROBE_PASS_SCOPED","cvc5:NATIVE_PROBE_PASS_SCOPED","z3:NATIVE_PROBE_PASS_SCOPED"],"uncovered":[],"counts":{"tools":36,"capabilities":23,"native_probe_pass_scoped":36,"portable_lane_pass_
+PASS  unknown capability id fails closed (no silent empty success) — "{\"status\":\"ERROR\",\"message\":\"RangeError: unknown capability: capability.does.not.exist\"}"
+PASS  schema-invalid capabilities:[] is rejected (fail-closed zod min(1)) — "Input validation error: Invalid arguments for tool match_formal_capabilities: capabilities: Too small: expected array to have >=1 items"
 PASS  unknown tool id is rejected by schema (no generic executable) — "Input validation error: Invalid arguments for tool inspect_native_installation: tool: Unknown registered formal tool"
-receipt: C:\xDev\kAiCreator\formal-tools\i7-r1-accept\validation\local-runtime-receipts\mcp-acceptance.json — 13/13 checks passed
+receipt: C:\xDev\kAiCreator\formal-tools\wt-i180-v4\validation\local-runtime-receipts\mcp-acceptance.json — 20/20 checks passed
 EXIT=0

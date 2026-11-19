@@ -1,11 +1,11 @@
 {
   "schema": "formal-mcp-local-acceptance/1",
-  "written_at": "2026-11-10T04:34:19.328Z",
+  "written_at": "2026-11-19T09:34:30.877Z",
   "transport": "stdio newline-delimited JSON-RPC",
   "server": {
     "serverInfo": {
       "name": "formal-tools-skill",
-      "version": "0.3.0"
+      "version": "0.4.0"
     },
     "protocolVersion": "2025-06-18"
   },
@@ -13,18 +13,23 @@
     "describe_native_cli",
     "inspect_formal_tool",
     "inspect_native_installation",
+    "inspect_portfolio_tool",
     "list_formal_tools",
+    "list_portfolio_tools",
+    "match_formal_capabilities",
     "plan_native_cli",
     "probe_formal_tool",
     "run_formal_fixture",
+    "run_portfolio_operation",
     "validate_formal_source",
-    "verify_formal_model"
+    "verify_formal_model",
+    "verify_portable_fixture"
   ],
   "calls": {
     "initialize": {
       "serverInfo": {
         "name": "formal-tools-skill",
-        "version": "0.3.0"
+        "version": "0.4.0"
       },
       "protocolVersion": "2025-06-18"
     },
@@ -32,12 +37,17 @@
       "describe_native_cli",
       "inspect_formal_tool",
       "inspect_native_installation",
+      "inspect_portfolio_tool",
       "list_formal_tools",
+      "list_portfolio_tools",
+      "match_formal_capabilities",
       "plan_native_cli",
       "probe_formal_tool",
       "run_formal_fixture",
+      "run_portfolio_operation",
       "validate_formal_source",
-      "verify_formal_model"
+      "verify_formal_model",
+      "verify_portable_fixture"
     ],
     "list_formal_tools": {
       "arguments": {},
@@ -58,6 +68,410 @@
           "prob",
           "dafny"
         ],
+        "portfolio": [
+          {
+            "id": "lean4",
+            "origin": "native-ref",
+            "expected_version": "4.35.0",
+            "capability_ids": [
+              "proof.deductive"
+            ],
+            "execution_adapter": "NATIVE_CATALOG_13",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "z3",
+            "origin": "native-ref",
+            "expected_version": "5.4.0",
+            "capability_ids": [
+              "logic.smt"
+            ],
+            "execution_adapter": "NATIVE_CATALOG_13",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "cvc5",
+            "origin": "native-ref",
+            "expected_version": "1.4.2",
+            "capability_ids": [
+              "logic.smt",
+              "proof.deductive"
+            ],
+            "execution_adapter": "NATIVE_CATALOG_13",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "tla-tlc",
+            "origin": "native-ref",
+            "expected_version": "1.8.0",
+            "capability_ids": [
+              "model.state"
+            ],
+            "execution_adapter": "NATIVE_CATALOG_13",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "apalache",
+            "origin": "native-ref",
+            "expected_version": "0.63.0",
+            "capability_ids": [
+              "model.state",
+              "logic.smt"
+            ],
+            "execution_adapter": "NATIVE_CATALOG_13",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "alloy",
+            "origin": "native-ref",
+            "expected_version": "6.2.0",
+            "capability_ids": [
+              "model.relational",
+              "model.state"
+            ],
+            "execution_adapter": "NATIVE_CATALOG_13",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "souffle",
+            "origin": "native-ref",
+            "expected_version": "2.5",
+            "capability_ids": [
+              "logic.rules"
+            ],
+            "execution_adapter": "NATIVE_CATALOG_13",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "rdf-shacl",
+            "origin": "native-ref",
+            "expected_version": "0.40.2",
+            "capability_ids": [
+              "knowledge.rdf"
+            ],
+            "execution_adapter": "NATIVE_CATALOG_13",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "vampire",
+            "origin": "native-ref",
+            "expected_version": "5.1.0",
+            "capability_ids": [
+              "proof.deductive"
+            ],
+            "execution_adapter": "NATIVE_CATALOG_13",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "clingo",
+            "origin": "native-ref",
+            "expected_version": "5.8.3",
+            "capability_ids": [
+              "logic.rules",
+              "opt.combinatorial"
+            ],
+            "execution_adapter": "NATIVE_CATALOG_13",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "apache-jena",
+            "origin": "native-ref",
+            "expected_version": "5.5.0",
+            "capability_ids": [
+              "knowledge.rdf"
+            ],
+            "execution_adapter": "NATIVE_CATALOG_13",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "prob",
+            "origin": "native-ref",
+            "expected_version": "1.16.1",
+            "capability_ids": [
+              "model.state"
+            ],
+            "execution_adapter": "NATIVE_CATALOG_13",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "dafny",
+            "origin": "native-ref",
+            "expected_version": "4.11.0",
+            "capability_ids": [
+              "proof.deductive",
+              "code.verify"
+            ],
+            "execution_adapter": "NATIVE_CATALOG_13",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "ortools",
+            "origin": "candidate",
+            "expected_version": "9.15.6755",
+            "capability_ids": [
+              "opt.combinatorial",
+              "opt.numerical"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "sympy",
+            "origin": "candidate",
+            "expected_version": "1.14.0",
+            "capability_ids": [
+              "math.symbolic"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "networkx",
+            "origin": "candidate",
+            "expected_version": "3.7",
+            "capability_ids": [
+              "graph.algorithms"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "minizinc",
+            "origin": "candidate",
+            "expected_version": "2.10.1",
+            "capability_ids": [
+              "opt.combinatorial"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "fast-check",
+            "origin": "candidate",
+            "expected_version": "4.10.2",
+            "capability_ids": [
+              "test.property"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "hypothesis",
+            "origin": "candidate",
+            "expected_version": "6.170.15",
+            "capability_ids": [
+              "test.property"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "highs",
+            "origin": "candidate",
+            "expected_version": "1.15.1",
+            "capability_ids": [
+              "opt.numerical"
+            ],
+            "execution_adapter": "PORTABLE_TYPED_PYTHON_LIBRARY_CANDIDATE",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "cbmc",
+            "origin": "candidate",
+            "expected_version": "6.11.0",
+            "capability_ids": [
+              "code.verify"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "storm",
+            "origin": "candidate",
+            "expected_version": "1.8.0",
+            "capability_ids": [
+              "model.probabilistic"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "fast-downward",
+            "origin": "candidate",
+            "expected_version": "24.06",
+            "capability_ids": [
+              "planning.classical"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "dowhy",
+            "origin": "candidate",
+            "expected_version": "0.14",
+            "capability_ids": [
+              "causal.inference"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "pymc",
+            "origin": "candidate",
+            "expected_version": "6.4.0",
+            "capability_ids": [
+              "stats.bayesian"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "why3",
+            "origin": "candidate",
+            "expected_version": "1.8.0",
+            "capability_ids": [
+              "proof.deductive"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "elk",
+            "origin": "candidate",
+            "expected_version": "0.6.0",
+            "capability_ids": [
+              "ontology.inference"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "kani",
+            "origin": "candidate",
+            "expected_version": "0.68.0",
+            "capability_ids": [
+              "code.verify"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "tree-sitter",
+            "origin": "candidate",
+            "expected_version": "0.27.2",
+            "capability_ids": [
+              "code.syntax"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "prism",
+            "origin": "candidate",
+            "expected_version": "4.11",
+            "capability_ids": [
+              "model.probabilistic"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "nuxmv",
+            "origin": "candidate",
+            "expected_version": "2.2.0",
+            "capability_ids": [
+              "model.state"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "aflpp",
+            "origin": "candidate",
+            "expected_version": "5.03c",
+            "capability_ids": [
+              "test.fuzz"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "simpy",
+            "origin": "candidate",
+            "expected_version": "4.1.2",
+            "capability_ids": [
+              "sim.discrete"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "mesa",
+            "origin": "candidate",
+            "expected_version": "3.5.2",
+            "capability_ids": [
+              "sim.agent"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "causal-learn",
+            "origin": "candidate",
+            "expected_version": "0.1.4.8",
+            "capability_ids": [
+              "causal.discovery"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          },
+          {
+            "id": "robot",
+            "origin": "candidate",
+            "expected_version": "1.9.11",
+            "capability_ids": [
+              "ontology.processing"
+            ],
+            "execution_adapter": "PORTABLE_FIXTURE_GATE_ONLY",
+            "t4_status": "NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED",
+            "t5_status": "NOT_QUALIFIED"
+          }
+        ],
         "pure": [
           "dag",
           "writers",
@@ -73,21 +487,7 @@
         "status": "STATIC_PASS",
         "count": 13,
         "issues": [],
-        "warnings": [
-          "optional Skill header mismatch for lean4",
-          "optional Skill header mismatch for z3",
-          "optional Skill header mismatch for cvc5",
-          "optional Skill header mismatch for tla-tlc",
-          "optional Skill header mismatch for apalache",
-          "optional Skill header mismatch for alloy",
-          "optional Skill header mismatch for souffle",
-          "optional Skill header mismatch for rdf-shacl",
-          "optional Skill header mismatch for vampire",
-          "optional Skill header mismatch for clingo",
-          "optional Skill header mismatch for apache-jena",
-          "optional Skill header mismatch for prob",
-          "optional Skill header mismatch for dafny"
-        ],
+        "warnings": [],
         "native_runtime": "NOT_RUN"
       }
     },
@@ -150,15 +550,15 @@
         "test_verdict": "INCONCLUSIVE",
         "claim_verdict": "NOT_EVALUATED",
         "input_sha256": {
-          "negative.smt2": "137366ea277f3908fd6f9d7e50d9ed48729d0c1f95e7d9c76ed9fd51852e3b8f",
-          "positive.smt2": "ad656e3f970926420c3cb999f34b64593a020844cf4fcde79b7ed391e8ac5b4c"
+          "negative.smt2": "1d3336271d42ac7e4f4b12d95c70ae5c715a4cfd689e43a7119ea095fee75c4b",
+          "positive.smt2": "431edcb1fb96d9aeda5c8b4a59845d3793e1b1957bdc221d6847ca9a769c8db0"
         },
         "executions": [
           {
             "argv": [
               "z3",
               "-smt2",
-              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-yAUpRr\\examples\\positive.smt2"
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-qdtWzT\\examples\\positive.smt2"
             ],
             "exit_code": null,
             "signal": null,
@@ -297,18 +697,64 @@
         "edge_count": 2,
         "scope": "complete supplied finite graph"
       }
+    },
+    "run_portfolio_operation": {
+      "arguments": {
+        "tool": "highs",
+        "operation": "solve-lp",
+        "model": {
+          "sense": "max",
+          "objective": [
+            3,
+            2
+          ],
+          "variables": [
+            {
+              "lower": 0,
+              "upper": null
+            },
+            {
+              "lower": 0,
+              "upper": null
+            }
+          ],
+          "constraints": [
+            {
+              "lower": null,
+              "upper": 1,
+              "coefficients": [
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        "timeout_s": 5,
+        "argv": [
+          "sh"
+        ]
+      },
+      "isError": true,
+      "result": "Input validation error: Invalid arguments for tool run_portfolio_operation: Unrecognized key: \"argv\""
+    },
+    "match_formal_capabilities": {
+      "arguments": {
+        "capabilities": []
+      },
+      "isError": true,
+      "result": "Input validation error: Invalid arguments for tool match_formal_capabilities: capabilities: Too small: expected array to have >=1 items"
     }
   },
   "assertions": [
     {
       "name": "initialize handshake",
       "pass": true,
-      "detail": "serverInfo={\"name\":\"formal-tools-skill\",\"version\":\"0.3.0\"} protocol=2025-06-18"
+      "detail": "serverInfo={\"name\":\"formal-tools-skill\",\"version\":\"0.4.0\"} protocol=2025-06-18"
     },
     {
-      "name": "tools/list exposes exactly the 9 registered tools",
+      "name": "tools/list exposes exactly the 14 registered tools",
       "pass": true,
-      "detail": "describe_native_cli,inspect_formal_tool,inspect_native_installation,list_formal_tools,plan_native_cli,probe_formal_tool,run_formal_fixture,validate_formal_source,verify_formal_model"
+      "detail": "describe_native_cli,inspect_formal_tool,inspect_native_installation,inspect_portfolio_tool,list_formal_tools,list_portfolio_tools,match_formal_capabilities,plan_native_cli,probe_formal_tool,run_formal_fixture,run_portfolio_operation,validate_formal_source,verify_formal_model,verify_portable_fixture"
     },
     {
       "name": "inspect_native_installation input schema is tool-only (no shell/argv/cwd passthrough)",
@@ -361,14 +807,49 @@
       "detail": "{\"tool_outcome\":\"ACYCLIC\",\"test_verdict\":\"PASS\",\"claim_verdict\":\"NOT_EVALUATED\",\"execution\":\"PURE_JS\",\"topological_order\":[\"L1\",\"L2\",\"task\"],\"node_count\":3,\"edg"
     },
     {
+      "name": "run_portfolio_operation schema is a closed typed Highs LP interface",
+      "pass": true,
+      "detail": "{\"type\":\"object\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"properties\":{\"tool\":{\"type\":\"string\",\"const\":\"highs\"},\"operation\":{\"type\":\"string\",\"const\":\"solve-lp\"},\"model\":{\"type\":\"object\",\"properties\":{\"sense\":{\"type\":\"string\",\"enum\":[\"min\",\"max\"]},\"objective\":{\"minItems\":1,\"maxItems\""
+    },
+    {
+      "name": "run_portfolio_operation fails closed when no pinned portable root is configured",
+      "pass": true,
+      "detail": "{\"status\":\"NOT_RUN_FAIL_CLOSED\",\"isError\":true}"
+    },
+    {
+      "name": "run_portfolio_operation rejects raw argv extension",
+      "pass": true,
+      "detail": "\"Input validation error: Invalid arguments for tool run_portfolio_operation: Unrecognized key: \\\"argv\\\"\""
+    },
+    {
+      "name": "match_formal_capabilities schema is a closed capability-ID list interface",
+      "pass": true,
+      "detail": "{\"type\":\"object\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"properties\":{\"capabilities\":{\"minItems\":1,\"maxItems\":16,\"type\":\"array\",\"items\":{\"type\":\"string\",\"minLength\":1}},\"include_not_"
+    },
+    {
+      "name": "match_formal_capabilities matches logic.smt over probe receipts (read-only, scoped)",
+      "pass": true,
+      "detail": "{\"required\":[\"logic.smt\"],\"matches\":[\"apalache:NATIVE_PROBE_PASS_SCOPED\",\"cvc5:NATIVE_PROBE_PASS_SCOPED\",\"z3:NATIVE_PROBE_PASS_SCOPED\"],\"uncovered\":[],\"counts\":{\"tools\":36,\"capabilities\":23,\"native_probe_pass_scoped\":36,\"portable_lane_pass_"
+    },
+    {
+      "name": "unknown capability id fails closed (no silent empty success)",
+      "pass": true,
+      "detail": "\"{\\\"status\\\":\\\"ERROR\\\",\\\"message\\\":\\\"RangeError: unknown capability: capability.does.not.exist\\\"}\""
+    },
+    {
+      "name": "schema-invalid capabilities:[] is rejected (fail-closed zod min(1))",
+      "pass": true,
+      "detail": "\"Input validation error: Invalid arguments for tool match_formal_capabilities: capabilities: Too small: expected array to have >=1 items\""
+    },
+    {
       "name": "unknown tool id is rejected by schema (no generic executable)",
       "pass": true,
       "detail": "\"Input validation error: Invalid arguments for tool inspect_native_installation: tool: Unknown registered formal tool\""
     }
   ],
   "summary": {
-    "checks": 13,
-    "passed": 13,
+    "checks": 20,
+    "passed": 20,
     "failed": 0
   },
   "transcript": [
@@ -389,7 +870,7 @@
           },
           "serverInfo": {
             "name": "formal-tools-skill",
-            "version": "0.3.0"
+            "version": "0.4.0"
           }
         },
         "jsonrpc": "2.0",
@@ -413,7 +894,7 @@
           "tools": [
             {
               "name": "list_formal_tools",
-              "description": "List 13 native tools, 4 pure JS model checkers and source status.",
+              "description": "List original 13 native adapters, 23 candidate portfolio tools, and 4 pure JS model checkers.",
               "inputSchema": {
                 "type": "object",
                 "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -565,6 +1046,198 @@
               }
             },
             {
+              "name": "list_portfolio_tools",
+              "description": "Read-only capability and tool metadata for all 36 tools. Never implies a T3/T4/T5 PASS.",
+              "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {}
+              }
+            },
+            {
+              "name": "match_formal_capabilities",
+              "description": "Deterministic capability-ID to validated-tool match over the r176 container probe receipts. Read-only; capability IDs come from the frozen discovery registry. Probe receipts are technical evidence, never a T3/T4/T5/T6 or business acceptance.",
+              "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                  "capabilities": {
+                    "minItems": 1,
+                    "maxItems": 16,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "include_not_verified": {
+                    "default": false,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "capabilities"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "inspect_portfolio_tool",
+              "description": "Read-only pinned portable installation metadata; no process launch.",
+              "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                  "tool": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "tool"
+                ]
+              }
+            },
+            {
+              "name": "verify_portable_fixture",
+              "description": "Run ONLY the candidate tool's committed portable pos/neg/err fixture through a SHA-pinned runner. No user input/raw argv/shell. Technical evidence only, not business verification.",
+              "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                  "tool": {
+                    "type": "string"
+                  },
+                  "timeout_s": {
+                    "default": 120,
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 120
+                  }
+                },
+                "required": [
+                  "tool"
+                ]
+              }
+            },
+            {
+              "name": "run_portfolio_operation",
+              "description": "Run a registered typed candidate operation through the shared portfolio Runner. Currently only Highs 1.15.1 solve-lp is admitted; accepts a bounded LP model, never raw argv, shell, script path or arbitrary file input.",
+              "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                  "tool": {
+                    "type": "string",
+                    "const": "highs"
+                  },
+                  "operation": {
+                    "type": "string",
+                    "const": "solve-lp"
+                  },
+                  "model": {
+                    "type": "object",
+                    "properties": {
+                      "sense": {
+                        "type": "string",
+                        "enum": [
+                          "min",
+                          "max"
+                        ]
+                      },
+                      "objective": {
+                        "minItems": 1,
+                        "maxItems": 64,
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        }
+                      },
+                      "variables": {
+                        "minItems": 1,
+                        "maxItems": 64,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "lower": {
+                              "type": [
+                                "number",
+                                "null"
+                              ]
+                            },
+                            "upper": {
+                              "type": [
+                                "number",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "lower",
+                            "upper"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "constraints": {
+                        "maxItems": 128,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "lower": {
+                              "type": [
+                                "number",
+                                "null"
+                              ]
+                            },
+                            "upper": {
+                              "type": [
+                                "number",
+                                "null"
+                              ]
+                            },
+                            "coefficients": {
+                              "maxItems": 64,
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              }
+                            }
+                          },
+                          "required": [
+                            "lower",
+                            "upper",
+                            "coefficients"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "sense",
+                      "objective",
+                      "variables",
+                      "constraints"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "timeout_s": {
+                    "default": 30,
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 30
+                  }
+                },
+                "required": [
+                  "tool",
+                  "operation",
+                  "model"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
               "name": "verify_formal_model",
               "description": "Run real finite-model checks in pure JS: DAG, writer exclusivity, CNF or finite state.",
               "inputSchema": {
@@ -612,7 +1285,7 @@
           "content": [
             {
               "type": "text",
-              "text": "{\"native\":[\"lean4\",\"z3\",\"cvc5\",\"tla-tlc\",\"apalache\",\"alloy\",\"souffle\",\"rdf-shacl\",\"vampire\",\"clingo\",\"apache-jena\",\"prob\",\"dafny\"],\"pure\":[\"dag\",\"writers\",\"cnf\",\"states\"]}"
+              "text": "{\"native\":[\"lean4\",\"z3\",\"cvc5\",\"tla-tlc\",\"apalache\",\"alloy\",\"souffle\",\"rdf-shacl\",\"vampire\",\"clingo\",\"apache-jena\",\"prob\",\"dafny\"],\"portfolio\":[{\"id\":\"lean4\",\"origin\":\"native-ref\",\"expected_version\":\"4.35.0\",\"capability_ids\":[\"proof.deductive\"],\"execution_adapter\":\"NATIVE_CATALOG_13\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"z3\",\"origin\":\"native-ref\",\"expected_version\":\"5.4.0\",\"capability_ids\":[\"logic.smt\"],\"execution_adapter\":\"NATIVE_CATALOG_13\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"cvc5\",\"origin\":\"native-ref\",\"expected_version\":\"1.4.2\",\"capability_ids\":[\"logic.smt\",\"proof.deductive\"],\"execution_adapter\":\"NATIVE_CATALOG_13\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"tla-tlc\",\"origin\":\"native-ref\",\"expected_version\":\"1.8.0\",\"capability_ids\":[\"model.state\"],\"execution_adapter\":\"NATIVE_CATALOG_13\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"apalache\",\"origin\":\"native-ref\",\"expected_version\":\"0.63.0\",\"capability_ids\":[\"model.state\",\"logic.smt\"],\"execution_adapter\":\"NATIVE_CATALOG_13\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"alloy\",\"origin\":\"native-ref\",\"expected_version\":\"6.2.0\",\"capability_ids\":[\"model.relational\",\"model.state\"],\"execution_adapter\":\"NATIVE_CATALOG_13\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"souffle\",\"origin\":\"native-ref\",\"expected_version\":\"2.5\",\"capability_ids\":[\"logic.rules\"],\"execution_adapter\":\"NATIVE_CATALOG_13\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"rdf-shacl\",\"origin\":\"native-ref\",\"expected_version\":\"0.40.2\",\"capability_ids\":[\"knowledge.rdf\"],\"execution_adapter\":\"NATIVE_CATALOG_13\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"vampire\",\"origin\":\"native-ref\",\"expected_version\":\"5.1.0\",\"capability_ids\":[\"proof.deductive\"],\"execution_adapter\":\"NATIVE_CATALOG_13\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"clingo\",\"origin\":\"native-ref\",\"expected_version\":\"5.8.3\",\"capability_ids\":[\"logic.rules\",\"opt.combinatorial\"],\"execution_adapter\":\"NATIVE_CATALOG_13\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"apache-jena\",\"origin\":\"native-ref\",\"expected_version\":\"5.5.0\",\"capability_ids\":[\"knowledge.rdf\"],\"execution_adapter\":\"NATIVE_CATALOG_13\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"prob\",\"origin\":\"native-ref\",\"expected_version\":\"1.16.1\",\"capability_ids\":[\"model.state\"],\"execution_adapter\":\"NATIVE_CATALOG_13\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"dafny\",\"origin\":\"native-ref\",\"expected_version\":\"4.11.0\",\"capability_ids\":[\"proof.deductive\",\"code.verify\"],\"execution_adapter\":\"NATIVE_CATALOG_13\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"ortools\",\"origin\":\"candidate\",\"expected_version\":\"9.15.6755\",\"capability_ids\":[\"opt.combinatorial\",\"opt.numerical\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"sympy\",\"origin\":\"candidate\",\"expected_version\":\"1.14.0\",\"capability_ids\":[\"math.symbolic\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"networkx\",\"origin\":\"candidate\",\"expected_version\":\"3.7\",\"capability_ids\":[\"graph.algorithms\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"minizinc\",\"origin\":\"candidate\",\"expected_version\":\"2.10.1\",\"capability_ids\":[\"opt.combinatorial\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"fast-check\",\"origin\":\"candidate\",\"expected_version\":\"4.10.2\",\"capability_ids\":[\"test.property\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"hypothesis\",\"origin\":\"candidate\",\"expected_version\":\"6.170.15\",\"capability_ids\":[\"test.property\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"highs\",\"origin\":\"candidate\",\"expected_version\":\"1.15.1\",\"capability_ids\":[\"opt.numerical\"],\"execution_adapter\":\"PORTABLE_TYPED_PYTHON_LIBRARY_CANDIDATE\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"cbmc\",\"origin\":\"candidate\",\"expected_version\":\"6.11.0\",\"capability_ids\":[\"code.verify\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"storm\",\"origin\":\"candidate\",\"expected_version\":\"1.8.0\",\"capability_ids\":[\"model.probabilistic\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"fast-downward\",\"origin\":\"candidate\",\"expected_version\":\"24.06\",\"capability_ids\":[\"planning.classical\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"dowhy\",\"origin\":\"candidate\",\"expected_version\":\"0.14\",\"capability_ids\":[\"causal.inference\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"pymc\",\"origin\":\"candidate\",\"expected_version\":\"6.4.0\",\"capability_ids\":[\"stats.bayesian\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"why3\",\"origin\":\"candidate\",\"expected_version\":\"1.8.0\",\"capability_ids\":[\"proof.deductive\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"elk\",\"origin\":\"candidate\",\"expected_version\":\"0.6.0\",\"capability_ids\":[\"ontology.inference\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"kani\",\"origin\":\"candidate\",\"expected_version\":\"0.68.0\",\"capability_ids\":[\"code.verify\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"tree-sitter\",\"origin\":\"candidate\",\"expected_version\":\"0.27.2\",\"capability_ids\":[\"code.syntax\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"prism\",\"origin\":\"candidate\",\"expected_version\":\"4.11\",\"capability_ids\":[\"model.probabilistic\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"nuxmv\",\"origin\":\"candidate\",\"expected_version\":\"2.2.0\",\"capability_ids\":[\"model.state\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"aflpp\",\"origin\":\"candidate\",\"expected_version\":\"5.03c\",\"capability_ids\":[\"test.fuzz\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"simpy\",\"origin\":\"candidate\",\"expected_version\":\"4.1.2\",\"capability_ids\":[\"sim.discrete\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"mesa\",\"origin\":\"candidate\",\"expected_version\":\"3.5.2\",\"capability_ids\":[\"sim.agent\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"causal-learn\",\"origin\":\"candidate\",\"expected_version\":\"0.1.4.8\",\"capability_ids\":[\"causal.discovery\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"},{\"id\":\"robot\",\"origin\":\"candidate\",\"expected_version\":\"1.9.11\",\"capability_ids\":[\"ontology.processing\"],\"execution_adapter\":\"PORTABLE_FIXTURE_GATE_ONLY\",\"t4_status\":\"NOT_QUALIFIED_NATIVE_REVIEW_REQUIRED\",\"t5_status\":\"NOT_QUALIFIED\"}],\"pure\":[\"dag\",\"writers\",\"cnf\",\"states\"]}"
             }
           ]
         },
@@ -632,7 +1305,7 @@
           "content": [
             {
               "type": "text",
-              "text": "{\"status\":\"STATIC_PASS\",\"count\":13,\"issues\":[],\"warnings\":[\"optional Skill header mismatch for lean4\",\"optional Skill header mismatch for z3\",\"optional Skill header mismatch for cvc5\",\"optional Skill header mismatch for tla-tlc\",\"optional Skill header mismatch for apalache\",\"optional Skill header mismatch for alloy\",\"optional Skill header mismatch for souffle\",\"optional Skill header mismatch for rdf-shacl\",\"optional Skill header mismatch for vampire\",\"optional Skill header mismatch for clingo\",\"optional Skill header mismatch for apache-jena\",\"optional Skill header mismatch for prob\",\"optional Skill header mismatch for dafny\"],\"native_runtime\":\"NOT_RUN\"}"
+              "text": "{\"status\":\"STATIC_PASS\",\"count\":13,\"issues\":[],\"warnings\":[],\"native_runtime\":\"NOT_RUN\"}"
             }
           ]
         },
@@ -692,7 +1365,7 @@
           "content": [
             {
               "type": "text",
-              "text": "{\"tool\":\"z3\",\"case\":\"positive\",\"run_status\":\"NOT_RUN\",\"tool_outcome\":\"UNKNOWN\",\"test_verdict\":\"INCONCLUSIVE\",\"claim_verdict\":\"NOT_EVALUATED\",\"input_sha256\":{\"negative.smt2\":\"137366ea277f3908fd6f9d7e50d9ed48729d0c1f95e7d9c76ed9fd51852e3b8f\",\"positive.smt2\":\"ad656e3f970926420c3cb999f34b64593a020844cf4fcde79b7ed391e8ac5b4c\"},\"executions\":[{\"argv\":[\"z3\",\"-smt2\",\"C:\\\\Users\\\\15549\\\\AppData\\\\Local\\\\Temp\\\\formal-js-yAUpRr\\\\examples\\\\positive.smt2\"],\"exit_code\":null,\"signal\":null,\"elapsed_ms\":2,\"timed_out\":false,\"stdout\":\"\",\"stderr\":\"\",\"stdout_sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"stderr_sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"error\":\"spawn z3 ENOENT\",\"output_truncated\":false}],\"scope\":\"committed fixture only; not a proof of a project requirement\"}"
+              "text": "{\"tool\":\"z3\",\"case\":\"positive\",\"run_status\":\"NOT_RUN\",\"tool_outcome\":\"UNKNOWN\",\"test_verdict\":\"INCONCLUSIVE\",\"claim_verdict\":\"NOT_EVALUATED\",\"input_sha256\":{\"negative.smt2\":\"1d3336271d42ac7e4f4b12d95c70ae5c715a4cfd689e43a7119ea095fee75c4b\",\"positive.smt2\":\"431edcb1fb96d9aeda5c8b4a59845d3793e1b1957bdc221d6847ca9a769c8db0\"},\"executions\":[{\"argv\":[\"z3\",\"-smt2\",\"C:\\\\Users\\\\15549\\\\AppData\\\\Local\\\\Temp\\\\formal-js-qdtWzT\\\\examples\\\\positive.smt2\"],\"exit_code\":null,\"signal\":null,\"elapsed_ms\":2,\"timed_out\":false,\"stdout\":\"\",\"stderr\":\"\",\"stdout_sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"stderr_sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"error\":\"spawn z3 ENOENT\",\"output_truncated\":false}],\"scope\":\"committed fixture only; not a proof of a project requirement\"}"
             }
           ]
         },
@@ -732,7 +1405,7 @@
           "content": [
             {
               "type": "text",
-              "text": "{\"tool\":\"z3\",\"status\":\"MISSING_EXECUTABLE\",\"launcher\":\"binary\",\"diagnostics\":[\"No matching executable found in the configured directory or PATH\"],\"searched\":230,\"probe_status\":\"NOT_RUN\"}"
+              "text": "{\"tool\":\"z3\",\"status\":\"MISSING_EXECUTABLE\",\"launcher\":\"binary\",\"diagnostics\":[\"No matching executable found in the configured directory or PATH\"],\"searched\":225,\"probe_status\":\"NOT_RUN\"}"
             }
           ]
         },
@@ -792,13 +1465,117 @@
           "content": [
             {
               "type": "text",
-              "text": "Input validation error: Invalid arguments for tool inspect_native_installation: tool: Unknown registered formal tool"
+              "text": "{\"schema\":\"formal-tools/portfolio-operation/0.1\",\"tool\":\"highs\",\"operation\":\"solve-lp\",\"status\":\"NOT_RUN_FAIL_CLOSED\",\"qualification\":\"NOT_T4_ACCEPTED\",\"reason\":\"Error: PORTABLE_HOST_UNSUPPORTED: Debian/Linux x86_64 only\",\"scope\":\"T3_T4_T5_NOT_QUALIFIED\"}"
             }
           ],
           "isError": true
         },
         "jsonrpc": "2.0",
         "id": 12
+      }
+    },
+    {
+      "outbound": {
+        "id": 13,
+        "method": "tools/call"
+      }
+    },
+    {
+      "inbound": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: Invalid arguments for tool run_portfolio_operation: Unrecognized key: \"argv\""
+            }
+          ],
+          "isError": true
+        },
+        "jsonrpc": "2.0",
+        "id": 13
+      }
+    },
+    {
+      "outbound": {
+        "id": 14,
+        "method": "tools/call"
+      }
+    },
+    {
+      "inbound": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"required_capabilities\":[\"logic.smt\"],\"matches\":[{\"id\":\"apalache\",\"origin\":\"native-ref\",\"matched_capabilities\":[\"logic.smt\"],\"status\":\"NATIVE_PROBE_PASS_SCOPED\",\"probe_quality\":\"INEFFECTIVE_OUTPUT\",\"declared_version\":\"0.63.0\",\"probed_version\":\"0.29.0\",\"version_drift\":{\"declared\":\"0.63.0\",\"probed\":\"0.29.0\",\"note\":\"meta 0.63.0 vs probed 0.29.0 — probe printed a usage banner with no version line; the token comes from banner help text, not a tool self-report\"},\"evidence_ref\":\"docs/tool-portfolio/r176/receipts/apalache/receipt.json\",\"applicable_problems\":[\"TLA+规约的符号化有界模型检查\",\"基于SMT求解的不变式验证\"],\"io\":{\"inputs\":[\".tla TLA+ spec (Apalache-supported subset)\"],\"outputs\":[\"counterexample trace\",\"bounded model checking statistics report\"]},\"limitations\":\"Symbolic SMT-based bounded model checking of a TLA+ subset; requires explicit bounds and does not prove unbounded properties or full liveness.\"},{\"id\":\"cvc5\",\"origin\":\"native-ref\",\"matched_capabilities\":[\"logic.smt\"],\"status\":\"NATIVE_PROBE_PASS_SCOPED\",\"probe_quality\":\"EFFECTIVE\",\"declared_version\":\"1.4.2\",\"probed_version\":\"1.4.2\",\"version_drift\":null,\"evidence_ref\":\"docs/tool-portfolio/r176/receipts/cvc5/receipt.json\",\"applicable_problems\":[\"SMT约束可满足性判定与模型生成\",\"可产出证明与不可满足核心的判定\",\"量词与非线性算术公式的尝试求解\"],\"io\":{\"inputs\":[\".smt2 SMT-LIB2 script\"],\"outputs\":[\"sat/unsat/unknown verdict\",\"satisfying model\",\"proof certificate or unsat core (on request)\"]},\"limitations\":\"cvc5 decides formulas over supported SMT theories; quantified and nonlinear goals may return unknown, and results concern the encoding, not user intent.\"},{\"id\":\"z3\",\"origin\":\"native-ref\",\"matched_capabilities\":[\"logic.smt\"],\"status\":\"NATIVE_PROBE_PASS_SCOPED\",\"probe_quality\":\"EFFECTIVE\",\"declared_version\":\"5.4.0\",\"probed_version\":\"5.4.0\",\"version_drift\":null,\"evidence_ref\":\"docs/tool-portfolio/r176/receipts/z3/receipt.json\",\"applicable_problems\":[\"SMT公式可满足性判定与模型生成\",\"位向量/数组/线性算术约束求解\",\"程序验证中的证明义务判定后端\"],\"io\":{\"inputs\":[\".smt2 SMT-LIB2 script\",\".dimacs CNF formula\"],\"outputs\":[\"sat/unsat/unknown verdict\",\"satisfying model, unsat core, or proof (on request)\"]},\"limitations\":\"Z3 decides satisfiability of the encoded formula only; it does not check that the encoding faithfully captures the intended mathematical statement.\"}],\"uncovered_capabilities\":[],\"status\":\"PROBE_VALIDATED_SCOPED_NOT_FORMAL_ACCEPTANCE\",\"ledger_counts\":{\"tools\":36,\"capabilities\":23,\"native_probe_pass_scoped\":36,\"portable_lane_pass_scoped\":0,\"not_verified\":0,\"probe_quality_effective\":29,\"probe_quality_ineffective\":7,\"probe_not_probed_unavailable\":0},\"scope\":\"PROBE_RECEIPTS_ARE_TECHNICAL_EVIDENCE_ONLY_NOT_FORMAL_ACCEPTANCE\"}"
+            }
+          ]
+        },
+        "jsonrpc": "2.0",
+        "id": 14
+      }
+    },
+    {
+      "outbound": {
+        "id": 15,
+        "method": "tools/call"
+      }
+    },
+    {
+      "inbound": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"status\":\"ERROR\",\"message\":\"RangeError: unknown capability: capability.does.not.exist\"}"
+            }
+          ],
+          "isError": true
+        },
+        "jsonrpc": "2.0",
+        "id": 15
+      }
+    },
+    {
+      "outbound": {
+        "id": 16,
+        "method": "tools/call"
+      }
+    },
+    {
+      "inbound": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: Invalid arguments for tool match_formal_capabilities: capabilities: Too small: expected array to have >=1 items"
+            }
+          ],
+          "isError": true
+        },
+        "jsonrpc": "2.0",
+        "id": 16
+      }
+    },
+    {
+      "outbound": {
+        "id": 17,
+        "method": "tools/call"
+      }
+    },
+    {
+      "inbound": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: Invalid arguments for tool inspect_native_installation: tool: Unknown registered formal tool"
+            }
+          ],
+          "isError": true
+        },
+        "jsonrpc": "2.0",
+        "id": 17
       }
     },
     {

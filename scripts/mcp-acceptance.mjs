@@ -4,7 +4,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 /**
- * Real MCP stdio acceptance for the 13 registered tools. Speaks newline-delimited
+ * Real MCP stdio acceptance for the 14 registered tools. Speaks newline-delimited
  * JSON-RPC to a spawned packages/runner/js/mcp.mjs child — no SDK client shortcut,
  * so the handshake exercises the same transport an external MCP host would use.
  * Read-only plus registered-tool calls only; never opens a raw shell channel.
@@ -18,7 +18,8 @@ const EXPECTED_TOOLS=[
   "list_formal_tools","validate_formal_source","inspect_formal_tool",
   "probe_formal_tool","run_formal_fixture","describe_native_cli",
   "inspect_native_installation","plan_native_cli","verify_formal_model",
-  "list_portfolio_tools","inspect_portfolio_tool","verify_portable_fixture","run_portfolio_operation"
+  "list_portfolio_tools","match_formal_capabilities","inspect_portfolio_tool",
+  "verify_portable_fixture","run_portfolio_operation"
 ].sort();
 
 const childEnv={...process.env};
@@ -93,7 +94,7 @@ try{
 
   const list=await request("tools/list",{});
   const names=(list.result?.tools??[]).map(t=>t.name).sort();
-  check("tools/list exposes exactly the 13 registered tools",
+  check("tools/list exposes exactly the 14 registered tools",
     JSON.stringify(names)===JSON.stringify(EXPECTED_TOOLS),names.join(","));
   const toolMeta={};
   for(const t of list.result?.tools??[])toolMeta[t.name]=t.inputSchema;
@@ -181,6 +182,32 @@ try{
   check("run_portfolio_operation rejects raw argv extension",
     rawRes.result?.isError===true||Boolean(rawRes.error),
     JSON.stringify(rawRes.error??rawRes.result?.content?.[0]?.text).slice(0,160));
+
+  const matchSchema=JSON.stringify(toolMeta.match_formal_capabilities);
+  check("match_formal_capabilities schema is a closed capability-ID list interface",
+    /"capabilities"/.test(matchSchema)&&/"include_not_verified"/.test(matchSchema)&&
+    !/"argv"|"shell"|"command"|"cwd"/.test(matchSchema),matchSchema.slice(0,200));
+
+  const matchRes=await call("match_formal_capabilities",{capabilities:["logic.smt"],include_not_verified:false});
+  const match=firstText(matchRes.result);
+  check("match_formal_capabilities matches logic.smt over probe receipts (read-only, scoped)",
+    matchRes.result?.isError!==true&&match?.required_capabilities?.[0]==="logic.smt"&&
+    Array.isArray(match?.matches)&&match.matches.length>0&&
+    typeof match?.status==="string"&&match?.ledger_counts?.tools===36&&
+    match?.scope==="PROBE_RECEIPTS_ARE_TECHNICAL_EVIDENCE_ONLY_NOT_FORMAL_ACCEPTANCE",
+    JSON.stringify({required:match?.required_capabilities,
+      matches:(match?.matches??[]).map(m=>`${m.id}:${m.status}`).slice(0,6),
+      uncovered:match?.uncovered_capabilities,counts:match?.ledger_counts}).slice(0,240));
+
+  const unknownCapRes=await call("match_formal_capabilities",{capabilities:["capability.does.not.exist"]});
+  check("unknown capability id fails closed (no silent empty success)",
+    unknownCapRes.result?.isError===true||Boolean(unknownCapRes.error),
+    JSON.stringify(unknownCapRes.error??unknownCapRes.result?.content?.[0]?.text).slice(0,160));
+
+  const emptyCapRes=await call("match_formal_capabilities",{capabilities:[]});
+  check("schema-invalid capabilities:[] is rejected (fail-closed zod min(1))",
+    emptyCapRes.result?.isError===true||Boolean(emptyCapRes.error),
+    JSON.stringify(emptyCapRes.error??emptyCapRes.result?.content?.[0]?.text).slice(0,160));
 
   const badRes=await call("inspect_native_installation",{tool:"definitely-not-a-tool"});
   check("unknown tool id is rejected by schema (no generic executable)",
