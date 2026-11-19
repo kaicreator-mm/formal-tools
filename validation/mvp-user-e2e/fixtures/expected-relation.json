@@ -1,0 +1,32 @@
+{
+  "schema": "formal-tools/user-e2e-expected-relation/1.0",
+  "scenario": "mvp-user-e2e-positives",
+  "note": "Outcome CLASSES only. Solver internals are never fabricated; the only numeric claim (LP objective 11) is hand-derived and re-provable offline via the primal vertex (3,1) plus the dual certificate u=2,v=1 (see tests/workflow-user-e2e.test.mjs).",
+  "hash_conventions": {
+    "text_inputs": "input_sha256 = sha256 of the raw file bytes (e.g. .smt2)",
+    "json_inputs": "input_sha256 = sha256 of canonical JSON (recursively key-sorted, no whitespace) of the parsed model",
+    "recorded_at": "33bd3d0 (i180/v6 preparation, issue #186)"
+  },
+  "entries": [
+    {
+      "kind": "scenario-a.smt2",
+      "expected_outcome_class": "AGREE_UNSAT",
+      "meaning": "z3 and cvc5 both report unsat for the QF_LIA problem; cross-tool verdict AGREE_UNSAT"
+    },
+    {
+      "kind": "scenario-a-sat.smt2",
+      "expected_outcome_class": "AGREE_SAT",
+      "meaning": "z3 and cvc5 both report sat; x=y=1 is an explicit witness in [0,1]^2 with x+y=2"
+    },
+    {
+      "kind": "scenario-b-lp.json",
+      "expected_outcome_class": "K_OPTIMAL_OBJECTIVE_11",
+      "meaning": "HiGHS kOptimal with objective exactly 11 (max 3x+2y s.t. x+y<=4, x<=3, x,y>=0; optimum at vertex x=3,y=1)"
+    },
+    {
+      "kind": "scenario-b-infeasible.json",
+      "expected_outcome_class": "K_INFEASIBLE",
+      "meaning": "HiGHS kInfeasible: x>=2 forces x+y>=2, contradicting x+y<=1 (not kUnboundedOrInfeasible)"
+    }
+  ]
+}

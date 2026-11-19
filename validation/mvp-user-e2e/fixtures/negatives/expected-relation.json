@@ -1,0 +1,29 @@
+{
+  "schema": "formal-tools/user-e2e-expected-relation/1.0",
+  "scenario": "mvp-user-e2e-negatives",
+  "note": "Every negative must fail closed BEFORE any solver launch. Outcome classes only.",
+  "entries": [
+    {
+      "kind": "negatives/unknown-tool.plan.json",
+      "expected_outcome_class": "PLAN_UNKNOWN_TOOL",
+      "meaning": "step s1 references tool magic-solver-9000 outside the pinned allowlist z3|cvc5|highs|compare"
+    },
+    {
+      "kind": "negatives/tampered-hash.plan.json",
+      "expected_outcome_class": "PLAN_HASH_MISMATCH",
+      "meaning": "well-formed plan whose step input_sha256 binds to different bytes than the referenced input file"
+    },
+    {
+      "kind": "negatives/timeout-crush.plan.json",
+      "expected_outcome_class": "TIMEOUT_BUDGET",
+      "meaning": "step timeouts sum to 360s and plan budget declares 400s, both above the harness policy cap of 300s"
+    }
+  ],
+  "cross_fixture": [
+    {
+      "kind": "negatives/malformed.smt2",
+      "expected_outcome_class": "PARSE_ERROR",
+      "meaning": "unbalanced paren inside assert; the SMT parser must fail closed, never guess an answer"
+    }
+  ]
+}

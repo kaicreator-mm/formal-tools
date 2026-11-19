@@ -1,0 +1,5 @@
+Two non-negative integer variables x and y are each capped at 1 (0 <= x <= 1 and 0 <= y <= 1).
+A colleague claims their sum can reach 4. Please determine, over the integers, whether the
+constraints x + y >= 4 together with those bounds is satisfiable, and give a definitive answer.
+To be trustworthy, verify the same problem with at least two independent SMT solvers (z3 and
+cvc5) and tell me explicitly whether the two solvers agree on the final answer.

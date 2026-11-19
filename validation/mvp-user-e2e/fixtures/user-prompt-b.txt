@@ -1,0 +1,5 @@
+We manufacture two products. Product 1 earns 3 per unit and product 2 earns 2 per unit.
+Machine capacity allows at most 4 total units produced (x + y <= 4), and supply limits
+product 1 to at most 3 units (x <= 3). Quantities x and y are non-negative and unbounded
+above by nothing else. Find the production plan that maximizes total revenue 3x + 2y and
+report the exact optimal revenue value, using the linear programming solver (HiGHS).

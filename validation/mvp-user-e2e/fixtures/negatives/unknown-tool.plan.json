@@ -1,0 +1,32 @@
+{
+  "schema": "formal-tools/execution-plan/1.0",
+  "plan_id": "neg-01-unknown-tool",
+  "source": {
+    "problem_sha256": "149e0aba93076a800d662e7fc7c0d5f466f02be9fe63bcd201e51cca8acf3b6d",
+    "problem_kind": "qf_lia-sat-consistency"
+  },
+  "assumptions": [
+    "Negative fixture: the step references a tool outside the pinned allowlist z3|cvc5|highs|compare.",
+    "Expected fail-closed class: PLAN_UNKNOWN_TOOL. The plan must never reach execution."
+  ],
+  "method_dag": [
+    { "id": "s1", "tool": "magic-solver-9000", "operation": "solve-smt", "depends_on": [] }
+  ],
+  "steps": [
+    {
+      "id": "s1",
+      "tool": "magic-solver-9000",
+      "operation": "solve-smt",
+      "depends_on": [],
+      "input": "validation/mvp-user-e2e/fixtures/scenario-a.smt2",
+      "input_sha256": "149e0aba93076a800d662e7fc7c0d5f466f02be9fe63bcd201e51cca8acf3b6d",
+      "timeout_s": 10,
+      "expected_output_kind": "solver_answer"
+    }
+  ],
+  "budgets": { "max_steps": 4, "max_total_timeout_s": 60 },
+  "compiled": {
+    "launcher_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "manifest_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
