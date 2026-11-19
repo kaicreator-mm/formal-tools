@@ -1,0 +1,114 @@
+{
+  "schema": "formal-tools/execution-receipt/1.0",
+  "run_id": "hostrun3-scenario-a2-sat",
+  "plan_id": "plan-v3-host-a2-sat",
+  "plan_sha256": "b5c23f036f0dcdd4a4ca3205f074a5deb96c6a2116fc363bdca83d94cf1ca963",
+  "source_sha": "33bd3d0c588f40adad8dfb5a7a5449de3345bd0a",
+  "created_at": "2026-11-19T10:07:18.623Z",
+  "tool_versions": {
+    "z3": {
+      "version": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f",
+      "probe_sha256": "9af7c6f186418585f022fd2d18eb2d278e14ad21731bf3339f3cbd1f78500e7a",
+      "probe_bounded": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f\n"
+    },
+    "cvc5": {
+      "version": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]",
+      "probe_sha256": "b6c312e4bb0062a7683ca82eb08f0b25beb4e6c67f22a62a6841a8f4192fde4a",
+      "probe_bounded": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]\ncompiled as a unrestricted build with GCC version 11.4.0 on Oct  8 2026 01:24:07\n\nCopyright (c) 2009-2026 by the authors and their institutional\naffiliations listed at https://cvc5.github.io/people.html\n\ncvc5 is open"
+    }
+  },
+  "steps": [
+    {
+      "step_id": "z3-solve",
+      "tool": "z3",
+      "operation": "solve-smt",
+      "status": "EXECUTED",
+      "exit_code": 0,
+      "elapsed_ms": 11,
+      "stdout_sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bounded": "sat\n",
+      "stderr_bounded": "",
+      "result": {
+        "answer": "sat"
+      },
+      "artifacts": [
+        {
+          "name": "steps/z3-solve/input.smt2",
+          "sha256": "20824081138d2dae76a47f9d158f597c4af99589772b8961415938243885ccec",
+          "bytes": 95
+        }
+      ]
+    },
+    {
+      "step_id": "cvc5-solve",
+      "tool": "cvc5",
+      "operation": "solve-smt",
+      "status": "EXECUTED",
+      "exit_code": 0,
+      "elapsed_ms": 4,
+      "stdout_sha256": "d9dbf94b05b8314af9ca7f2034e92685c33447917605a7243b1099c693a12e5e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bounded": "sat\n",
+      "stderr_bounded": "",
+      "result": {
+        "answer": "sat"
+      },
+      "artifacts": [
+        {
+          "name": "steps/cvc5-solve/input.smt2",
+          "sha256": "20824081138d2dae76a47f9d158f597c4af99589772b8961415938243885ccec",
+          "bytes": 95
+        }
+      ]
+    },
+    {
+      "step_id": "xcheck",
+      "tool": "compare",
+      "operation": "cross-check",
+      "status": "EXECUTED",
+      "exit_code": null,
+      "elapsed_ms": 0,
+      "stdout_sha256": null,
+      "stderr_sha256": null,
+      "stdout_bounded": null,
+      "stderr_bounded": null,
+      "result": {
+        "verdict": "AGREE_SAT",
+        "left_step": "z3-solve",
+        "right_step": "cvc5-solve",
+        "left_answer": "sat",
+        "right_answer": "sat"
+      },
+      "artifacts": []
+    }
+  ],
+  "overall": {
+    "process_outcome": "OK",
+    "solver_answer": {
+      "kind": "solve-smt",
+      "value": "sat",
+      "by_step": [
+        {
+          "step_id": "z3-solve",
+          "tool": "z3",
+          "operation": "solve-smt",
+          "answer": "sat"
+        },
+        {
+          "step_id": "cvc5-solve",
+          "tool": "cvc5",
+          "operation": "solve-smt",
+          "answer": "sat"
+        }
+      ]
+    },
+    "cross_tool_verdict": "AGREE_SAT",
+    "claim_verdict": "PASS"
+  },
+  "environment": {
+    "host": "cc",
+    "node": "v22.16.0",
+    "formal_portable_root_sha": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a"
+  }
+}

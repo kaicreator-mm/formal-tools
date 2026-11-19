@@ -1,0 +1,23 @@
+{
+  "schema": "formal-tools/execution-artifacts/1.0",
+  "run_id": "hostrun3-scenario-n1-malformed",
+  "plan_id": "plan-v3-host-n1-malformed",
+  "receipt_sha256": "51dc886a9bd5029c4ce4baa6d3b9c5606c0395e5e4e0baa73808f7d02d992e30",
+  "artifacts": [
+    {
+      "name": "logs/cvc5-bad.stdout.txt",
+      "sha256": "65df8c5feebfe93eead5e334cf86dc888cdfadacd13f7239c5c25496fa235f7c",
+      "bytes": 98
+    },
+    {
+      "name": "logs/z3-bad.stdout.txt",
+      "sha256": "e999f3ca6036c53ffb397fb49eb344fde3207f19c52082e6f7a97f2d18cc39a3",
+      "bytes": 71
+    },
+    {
+      "name": "receipt.json",
+      "sha256": "51dc886a9bd5029c4ce4baa6d3b9c5606c0395e5e4e0baa73808f7d02d992e30",
+      "bytes": 2771
+    }
+  ]
+}
