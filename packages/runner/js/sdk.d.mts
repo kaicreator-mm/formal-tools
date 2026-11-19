@@ -221,3 +221,64 @@ export function planPortfolioOperation(tool: "highs", operation: "solve-lp", mod
 export function runPortfolioOperation(tool: "highs", operation: "solve-lp", model: HighsLinearProgram, options?: {
   timeoutS?: number;
 }): Promise<PortfolioOperationReceipt>;
+
+/** r176 capability validation ledger: technical probe evidence only, never a
+ * lifecycle gate or formal acceptance claim (see registry/INTERFACES.json). */
+export interface CapabilityVersionDrift {
+  declared: string;
+  probed: string;
+  note: string;
+}
+export interface CapabilityProbeIo {
+  inputs: string[];
+  outputs: string[];
+}
+export interface CapabilityValidationOptions {
+  discovery?: unknown;
+  receiptHasher?: (repoRelativePath: string) => string;
+}
+export interface CapabilityValidationReport {
+  ok: boolean;
+  issues: string[];
+}
+export interface CapabilityToolMatch {
+  id: string;
+  origin: string;
+  matched_capabilities: string[];
+  status: string;
+  probe_quality: string;
+  declared_version: string;
+  probed_version: string | null;
+  version_drift: CapabilityVersionDrift | null;
+  evidence_ref: string;
+  applicable_problems: string[];
+  io: CapabilityProbeIo;
+  limitations: string;
+}
+export interface CapabilityValidationRow extends Omit<CapabilityToolMatch, "matched_capabilities"> {
+  capability_ids: string[];
+  evidence_sha256: string | null;
+  verify_verdict: string;
+  verify_phases: string[];
+  probe_status: string;
+  probe_note: string | null;
+  container_probe_receipt: {path: string; sha256: string} | null;
+}
+export interface CapabilityValidationLedger {
+  schema: "formal-tools/capability-validation/0.1";
+  status: string;
+  authority: Record<string, unknown>;
+  semantics: Record<string, unknown>;
+  scope_rules: string[];
+  counts: Record<string, number>;
+  tools: CapabilityValidationRow[];
+}
+export interface CapabilityMatchResult {
+  required_capabilities: string[];
+  matches: CapabilityToolMatch[];
+  uncovered_capabilities: string[];
+  status: string;
+}
+export function loadCapabilityValidation(options?: CapabilityValidationOptions): CapabilityValidationLedger;
+export function validateCapabilityValidation(input: unknown, options?: CapabilityValidationOptions): CapabilityValidationReport;
+export function matchValidatedTools(capabilityIds: readonly string[], options?: {includeNotVerified?: boolean}): CapabilityMatchResult;
