@@ -330,6 +330,13 @@ describe('POST /api/nl/approve + approval-bound execution', () => {
     assert.equal(view.receipt.overall.solver_answer.value, null, 'no solver answer claimed');
     assert.equal(view.nl_approval_binding.verified, true, 'run view discloses the verified approval binding');
     assert.equal(view.nl_approval_binding.approved_sha256, body.approved.approved_sha256);
+    // An NL plan without its binding used to execute like a direct trusted
+    // SMT plan. The approval gate must be mandatory, not opt-in.
+    for (const attempted of [{plan: body.plan}, body.plan]) {
+      const unapproved = await postJson(base.origin, '/api/runs', attempted);
+      assert.equal(unapproved.res.status, 422);
+      assert.equal(unapproved.body.error.code, 'NL_APPROVAL_REQUIRED');
+    }
   });
 
   test('TAMPER: approve model A, submit plan B with approval A -> refused (binding violated)', async () => {
@@ -365,6 +372,32 @@ describe('POST /api/nl/approve + approval-bound execution', () => {
     assert.equal(body.error.code, 'NL_TAMPERED');
   });
 
+  test('FORGED: a self-hashed client proposal cannot impersonate the server DeepSeek provider', async () => {
+    const issued = (await propose(base.origin, SAT_TEXT)).proposal;
+    const forged = structuredClone(issued);
+    forged.provider = { name: 'deepseek', model: 'deepseek-chat' };
+    forged.proposal_sha256 = sha256Canonical({
+      original_text: forged.original_text,
+      provider: forged.provider,
+      prompt_sha256: forged.prompt_sha256,
+      response_sha256: forged.response_sha256,
+      model: forged.model,
+      rendering: forged.rendering,
+    });
+    const fakeApprove = await approve(base.origin, forged);
+    assert.equal(fakeApprove.res.status, 422);
+    assert.equal(fakeApprove.body.error.code, 'NL_PROPOSAL_UNKNOWN');
+    const fakeRevise = await postJson(base.origin, '/api/nl/revise', {
+      proposal: forged, edited: structuredClone(SAT_MODEL),
+    });
+    assert.equal(fakeRevise.res.status, 422);
+    assert.equal(fakeRevise.body.error.code, 'NL_PROPOSAL_UNKNOWN');
+    // The same real server-issued, unchanged proposal still works.
+    const genuine = await approve(base.origin, issued);
+    assert.equal(genuine.res.status, 200);
+    assert.equal(genuine.body.decision, 'USER_APPROVED');
+  });
+
   test('edited approval: edit is re-validated, re-rendered and changes the approval hash + plan', async () => {
     const proposal = (await propose(base.origin, SAT_TEXT)).proposal;
     const edited = structuredClone(proposal.model);
@@ -390,17 +423,16 @@ describe('POST /api/nl/approve + approval-bound execution', () => {
     assert.equal(body.record.proposal_sha256, proposal.proposal_sha256, 'rejection cites the proposal hash');
     assert.equal(body.plan, undefined);
     assert.equal(body.approval, undefined);
-    // the rejected proposal cannot be approved afterwards in the same process:
+    // Rejection is terminal for the server-issued proposal. A fresh proposal
+    // can be requested if the user changes their mind.
     const late = await approve(base.origin, proposal);
-    assert.equal(late.res.status, 200, 'approveModel is pure: the reject did not mutate server state');
-    assert.equal(late.body.decision, 'USER_APPROVED', 'approveModel has no session side effects (approval is explicit per call)');
-    // ...but an approval whose plan was never registered cannot execute:
-    const ghostRun = await postJson(base.origin, '/api/runs', {
-      plan: late.body.plan,
-      approval: { plan_sha256: 'f'.repeat(64), approved_sha256: late.body.approved.approved_sha256 },
+    assert.equal(late.res.status, 422);
+    assert.equal(late.body.error.code, 'NL_PROPOSAL_REJECTED');
+    const reviseAfterReject = await postJson(base.origin, '/api/nl/revise', {
+      proposal, edited: structuredClone(SAT_MODEL),
     });
-    assert.equal(ghostRun.res.status, 422);
-    assert.equal(ghostRun.body.error.code, 'NL_APPROVAL_UNKNOWN');
+    assert.equal(reviseAfterReject.res.status, 422);
+    assert.equal(reviseAfterReject.body.error.code, 'NL_PROPOSAL_REJECTED');
   });
 });
 
