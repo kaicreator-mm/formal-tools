@@ -1,0 +1,15 @@
+{
+  "fixture": "tampered-hash.plan.json",
+  "exit_code": 2,
+  "error_code": "PLAN_HASH_MISMATCH",
+  "message": "input_sha256 mismatch on step s1",
+  "receipt_written": false,
+  "receipt_existed_before": false,
+  "argv": [
+    "workflow",
+    "execute",
+    "--plan-file",
+    "validation/mvp-user-e2e/fixtures/negatives/tampered-hash.plan.json"
+  ],
+  "stdout": ""
+}

@@ -3,9 +3,9 @@
   "scenario": "mvp-user-e2e-positives",
   "note": "Outcome CLASSES only. Solver internals are never fabricated; the only numeric claim (LP objective 11) is hand-derived and re-provable offline via the primal vertex (3,1) plus the dual certificate u=2,v=1 (see tests/workflow-user-e2e.test.mjs).",
   "hash_conventions": {
-    "text_inputs": "input_sha256 = sha256 of the raw file bytes (e.g. .smt2)",
+    "text_inputs": "smt2 files enter plans as typed {smt_lib} step inputs; input_sha256 = canonical JSON hash of that input object (raw-byte hashes are used only for problem_sha256 bookkeeping)",
     "json_inputs": "input_sha256 = sha256 of canonical JSON (recursively key-sorted, no whitespace) of the parsed model",
-    "recorded_at": "33bd3d0 (i180/v6 preparation, issue #186)"
+    "recorded_at": "646859f (i180/v6b live resync, issue #186)"
   },
   "entries": [
     {

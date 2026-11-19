@@ -1,0 +1,15 @@
+{
+  "fixture": "timeout-crush.plan.json",
+  "exit_code": 2,
+  "error_code": "PLAN_TIMEOUT_INVALID",
+  "message": "timeout_s out of admitted range for solve-smt",
+  "receipt_written": false,
+  "receipt_existed_before": false,
+  "argv": [
+    "workflow",
+    "execute",
+    "--plan-file",
+    "validation/mvp-user-e2e/fixtures/negatives/timeout-crush.plan.json"
+  ],
+  "stdout": ""
+}

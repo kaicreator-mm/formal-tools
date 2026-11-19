@@ -1,19 +1,24 @@
 {
   "schema": "formal-tools/execution-plan/1.0",
-  "plan_id": "neg-03-timeout-crush",
   "source": {
     "problem_sha256": "149e0aba93076a800d662e7fc7c0d5f466f02be9fe63bcd201e51cca8acf3b6d",
     "problem_kind": "qf_lia-sat-consistency"
   },
+  "compiled": {
+    "launcher_sha256": null,
+    "manifest_sha256": null
+  },
+  "plan_id": "neg-03-timeout-crush",
   "assumptions": [
-    "Negative fixture: the three step timeouts sum to 360s, above the harness budget policy cap max_total_timeout_s=300, and the plan itself declares max_total_timeout_s=400.",
-    "Expected fail-closed class: TIMEOUT_BUDGET. The plan must be rejected before any solver launch.",
-    "compiled.* carry the documented format-conformant placeholder (sha256 of the empty string); real values are planner-owned and produced by the V4-b workflow planner."
+    "Negative fixture (V3-shaped): the step declares timeout_s=180 and the plan budget declares max_total_timeout_s=400, both above the frozen caps (step 120s, total 120s).",
+    "Expected fail-closed class: TIMEOUT_BUDGET (harness policy layer); the executor rejects the same plan with PLAN_TIMEOUT_INVALID before any launch."
   ],
   "method_dag": [
-    { "id": "s1", "tool": "z3", "operation": "solve-smt", "depends_on": [] },
-    { "id": "s2", "tool": "cvc5", "operation": "solve-smt", "depends_on": [] },
-    { "id": "s3", "tool": "compare", "operation": "cross-check", "depends_on": ["s1", "s2"] }
+    {
+      "id": "s1",
+      "kind": "solve",
+      "depends_on": []
+    }
   ],
   "steps": [
     {
@@ -21,35 +26,16 @@
       "tool": "z3",
       "operation": "solve-smt",
       "depends_on": [],
-      "input": "validation/mvp-user-e2e/fixtures/scenario-a.smt2",
-      "input_sha256": "149e0aba93076a800d662e7fc7c0d5f466f02be9fe63bcd201e51cca8acf3b6d",
-      "timeout_s": 120,
-      "expected_output_kind": "solver_answer"
-    },
-    {
-      "id": "s2",
-      "tool": "cvc5",
-      "operation": "solve-smt",
-      "depends_on": [],
-      "input": "validation/mvp-user-e2e/fixtures/scenario-a.smt2",
-      "input_sha256": "149e0aba93076a800d662e7fc7c0d5f466f02be9fe63bcd201e51cca8acf3b6d",
-      "timeout_s": 120,
-      "expected_output_kind": "solver_answer"
-    },
-    {
-      "id": "s3",
-      "tool": "compare",
-      "operation": "cross-check",
-      "depends_on": ["s1", "s2"],
-      "input": "validation/mvp-user-e2e/fixtures/scenario-a.smt2",
-      "input_sha256": "149e0aba93076a800d662e7fc7c0d5f466f02be9fe63bcd201e51cca8acf3b6d",
-      "timeout_s": 120,
-      "expected_output_kind": "cross_tool_verdict"
+      "input": {
+        "smt_lib": "(set-logic QF_LIA)\n(set-info :source \"i186 user-e2e scenario A: integers x,y in [0,1] cannot sum to 4\")\n(set-info :status unsat)\n(declare-fun x () Int)\n(declare-fun y () Int)\n(assert (>= x 0))\n(assert (<= x 1))\n(assert (>= y 0))\n(assert (<= y 1))\n(assert (>= (+ x y) 4))\n(check-sat)\n(exit)\n"
+      },
+      "input_sha256": "6a3da3fc54800a418bf45534162f441eaf90e286ee3b8dcc685293448791edbd",
+      "timeout_s": 180,
+      "expected_output_kind": "smt-answer"
     }
   ],
-  "budgets": { "max_steps": 4, "max_total_timeout_s": 400 },
-  "compiled": {
-    "launcher_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "manifest_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  "budgets": {
+    "max_steps": 8,
+    "max_total_timeout_s": 400
   }
 }

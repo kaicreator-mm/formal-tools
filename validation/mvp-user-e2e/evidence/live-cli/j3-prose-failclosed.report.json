@@ -1,0 +1,62 @@
+{
+  "journey": "j3-prose-failclosed",
+  "source_sha": "646859f628c4595e66c490c00c887e54e02bc215",
+  "steps": [
+    {
+      "name": "plan-deepseek-prose",
+      "exit_code": 0,
+      "parsed_summary": {
+        "kind": "plan",
+        "plan_id": "wf-d87461cf5df09392b754cb60ac0d50c0",
+        "steps": [
+          {
+            "id": "z3-solve",
+            "tool": "z3",
+            "operation": "solve-smt"
+          },
+          {
+            "id": "cvc5-solve",
+            "tool": "cvc5",
+            "operation": "solve-smt"
+          },
+          {
+            "id": "step-agree",
+            "tool": "compare",
+            "operation": "cross-check"
+          }
+        ],
+        "artifacts": {
+          "dir": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0",
+          "plan": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0/plan.json",
+          "launcher": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0/launcher.mjs",
+          "manifest": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0/manifest.json"
+        }
+      }
+    },
+    {
+      "name": "execute-honest-fail",
+      "exit_code": 2,
+      "parsed_summary": {
+        "kind": "receipt-summary",
+        "plan_id": "wf-d87461cf5df09392b754cb60ac0d50c0",
+        "run_id": "run-mwnix2z2-b3d0bbda",
+        "overall": {
+          "process_outcome": "FAILED",
+          "solver_answer": {
+            "kind": "none",
+            "value": null,
+            "by_step": []
+          },
+          "cross_tool_verdict": "NOT_APPLICABLE",
+          "claim_verdict": "UNSUPPORTED_BY_MVP",
+          "fail_closed_reason": "SOLVER_NONZERO_EXIT"
+        },
+        "blocked": null
+      }
+    }
+  ],
+  "provider": "deepseek",
+  "plan_id": "wf-d87461cf5df09392b754cb60ac0d50c0",
+  "receipt_captured": true,
+  "expected": "prose is not SMT-LIB: execution must fail closed (step ERROR / claim UNSUPPORTED_BY_MVP), never a fabricated answer"
+}

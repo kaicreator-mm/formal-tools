@@ -1,0 +1,136 @@
+{
+  "name": "plan-template",
+  "argv": [
+    "workflow",
+    "plan",
+    "--problem-file",
+    "validation/mvp-user-e2e/fixtures/scenario-a-sat.smt2",
+    "--compile"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "stdout": "{\n  \"plan\": {\n    \"schema\": \"formal-tools/execution-plan/1.0\",\n    \"plan_id\": \"wf-ce26a3df27e157e3aa3a662740a6c6c1\",\n    \"source\": {\n      \"problem_sha256\": \"3dc349032f4911d8a73d9e59fb5579a88a02ba768e7f84f4bf8f02207a8280b7\",\n      \"problem_kind\": \"user_problem\"\n    },\n    \"assumptions\": [],\n    \"method_dag\": [\n      {\n        \"id\": \"step-z3\",\n        \"kind\": \"solve\",\n        \"depends_on\": []\n      },\n      {\n        \"id\": \"step-cvc5\",\n        \"kind\": \"solve\",\n        \"depends_on\": [\n          \"step-z3\"\n        ]\n      },\n      {\n        \"id\": \"step-agree\",\n        \"kind\": \"cross_check\",\n        \"depends_on\": [\n          \"step-z3\",\n          \"step-cvc5\"\n        ]\n      }\n    ],\n    \"steps\": [\n      {\n        \"id\": \"step-z3\",\n        \"tool\": \"z3\",\n        \"operation\": \"solve-smt\",\n        \"depends_on\": [],\n        \"input\": {\n          \"smt_lib\": \"(set-logic QF_LIA)\\n(set-info :source \\\"i186 user-e2e scenario A variant: integers x,y in [0,1] can sum to 2\\\")\\n(set-info :status sat)\\n(declare-fun x () Int)\\n(declare-fun y () Int)\\n(assert (>= x 0))\\n(assert (<= x 1))\\n(assert (>= y 0))\\n(assert (<= y 1))\\n(assert (>= (+ x y) 2))\\n(check-sat)\\n(exit)\"\n        },\n        \"input_sha256\": \"516e00dc1a528b00a4e9700f349f8357a1a11f6a7e756cff5aef4a0dff9baaaf\",\n        \"timeout_s\": 30,\n        \"expected_output_kind\": \"smt-answer\"\n      },\n      {\n        \"id\": \"step-cvc5\",\n        \"tool\": \"cvc5\",\n        \"operation\": \"solve-smt\",\n        \"depends_on\": [\n          \"step-z3\"\n        ],\n        \"input\": {\n          \"smt_lib\": \"(set-logic QF_LIA)\\n(set-info :source \\\"i186 user-e2e scenario A variant: integers x,y in [0,1] can sum to 2\\\")\\n(set-info :status sat)\\n(declare-fun x () Int)\\n(declare-fun y () Int)\\n(assert (>= x 0))\\n(assert (<= x 1))\\n(assert (>= y 0))\\n(assert (<= y 1))\\n(assert (>= (+ x y) 2))\\n(check-sat)\\n(exit)\"\n        },\n        \"input_sha256\": \"516e00dc1a528b00a4e9700f349f8357a1a11f6a7e756cff5aef4a0dff9baaaf\",\n        \"timeout_s\": 30,\n        \"expected_output_kind\": \"smt-answer\"\n      },\n      {\n        \"id\": \"step-agree\",\n        \"tool\": \"compare\",\n        \"operation\": \"cross-check\",\n        \"depends_on\": [\n          \"step-z3\",\n          \"step-cvc5\"\n        ],\n        \"input\": {\n          \"left_step\": \"step-z3\",\n          \"right_step\": \"step-cvc5\",\n          \"agree_on\": [\n            \"sat\",\n            \"unsat\"\n          ]\n        },\n        \"timeout_s\": 5,\n        \"expected_output_kind\": \"cross-tool-verdict\",\n        \"input_sha256\": \"7a913f16cf6ae5824b30e5d9069c90934b05d35cbf1099c2da4ba501bbcb9f62\"\n      }\n    ],\n    \"budgets\": {\n      \"max_steps\": 8,\n      \"max_total_timeout_s\": 120\n    },\n    \"compiled\": {\n      \"launcher_sha256\": \"61ee6a45a2c123be787a8105e40671918d67fd1ae7a0fa526460471eed45c3c4\",\n      \"manifest_sha256\": \"62b29b0f702246a18c1de8e46c712ed6dc48f8f701f961e76a51c7ff2f6d3db4\"\n    }\n  },\n  \"artifacts\": {\n    \"dir\": \"/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-ce26a3df27e157e3aa3a662740a6c6c1\",\n    \"plan\": \"/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-ce26a3df27e157e3aa3a662740a6c6c1/plan.json\",\n    \"launcher\": \"/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-ce26a3df27e157e3aa3a662740a6c6c1/launcher.mjs\",\n    \"manifest\": \"/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-ce26a3df27e157e3aa3a662740a6c6c1/manifest.json\"\n  }\n}\n",
+  "stderr": "",
+  "parsed": {
+    "plan": {
+      "schema": "formal-tools/execution-plan/1.0",
+      "plan_id": "wf-ce26a3df27e157e3aa3a662740a6c6c1",
+      "source": {
+        "problem_sha256": "3dc349032f4911d8a73d9e59fb5579a88a02ba768e7f84f4bf8f02207a8280b7",
+        "problem_kind": "user_problem"
+      },
+      "assumptions": [],
+      "method_dag": [
+        {
+          "id": "step-z3",
+          "kind": "solve",
+          "depends_on": []
+        },
+        {
+          "id": "step-cvc5",
+          "kind": "solve",
+          "depends_on": [
+            "step-z3"
+          ]
+        },
+        {
+          "id": "step-agree",
+          "kind": "cross_check",
+          "depends_on": [
+            "step-z3",
+            "step-cvc5"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "id": "step-z3",
+          "tool": "z3",
+          "operation": "solve-smt",
+          "depends_on": [],
+          "input": {
+            "smt_lib": "(set-logic QF_LIA)\n(set-info :source \"i186 user-e2e scenario A variant: integers x,y in [0,1] can sum to 2\")\n(set-info :status sat)\n(declare-fun x () Int)\n(declare-fun y () Int)\n(assert (>= x 0))\n(assert (<= x 1))\n(assert (>= y 0))\n(assert (<= y 1))\n(assert (>= (+ x y) 2))\n(check-sat)\n(exit)"
+          },
+          "input_sha256": "516e00dc1a528b00a4e9700f349f8357a1a11f6a7e756cff5aef4a0dff9baaaf",
+          "timeout_s": 30,
+          "expected_output_kind": "smt-answer"
+        },
+        {
+          "id": "step-cvc5",
+          "tool": "cvc5",
+          "operation": "solve-smt",
+          "depends_on": [
+            "step-z3"
+          ],
+          "input": {
+            "smt_lib": "(set-logic QF_LIA)\n(set-info :source \"i186 user-e2e scenario A variant: integers x,y in [0,1] can sum to 2\")\n(set-info :status sat)\n(declare-fun x () Int)\n(declare-fun y () Int)\n(assert (>= x 0))\n(assert (<= x 1))\n(assert (>= y 0))\n(assert (<= y 1))\n(assert (>= (+ x y) 2))\n(check-sat)\n(exit)"
+          },
+          "input_sha256": "516e00dc1a528b00a4e9700f349f8357a1a11f6a7e756cff5aef4a0dff9baaaf",
+          "timeout_s": 30,
+          "expected_output_kind": "smt-answer"
+        },
+        {
+          "id": "step-agree",
+          "tool": "compare",
+          "operation": "cross-check",
+          "depends_on": [
+            "step-z3",
+            "step-cvc5"
+          ],
+          "input": {
+            "left_step": "step-z3",
+            "right_step": "step-cvc5",
+            "agree_on": [
+              "sat",
+              "unsat"
+            ]
+          },
+          "timeout_s": 5,
+          "expected_output_kind": "cross-tool-verdict",
+          "input_sha256": "7a913f16cf6ae5824b30e5d9069c90934b05d35cbf1099c2da4ba501bbcb9f62"
+        }
+      ],
+      "budgets": {
+        "max_steps": 8,
+        "max_total_timeout_s": 120
+      },
+      "compiled": {
+        "launcher_sha256": "61ee6a45a2c123be787a8105e40671918d67fd1ae7a0fa526460471eed45c3c4",
+        "manifest_sha256": "62b29b0f702246a18c1de8e46c712ed6dc48f8f701f961e76a51c7ff2f6d3db4"
+      }
+    },
+    "artifacts": {
+      "dir": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-ce26a3df27e157e3aa3a662740a6c6c1",
+      "plan": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-ce26a3df27e157e3aa3a662740a6c6c1/plan.json",
+      "launcher": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-ce26a3df27e157e3aa3a662740a6c6c1/launcher.mjs",
+      "manifest": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-ce26a3df27e157e3aa3a662740a6c6c1/manifest.json"
+    }
+  },
+  "summary": {
+    "kind": "plan",
+    "plan_id": "wf-ce26a3df27e157e3aa3a662740a6c6c1",
+    "steps": [
+      {
+        "id": "step-z3",
+        "tool": "z3",
+        "operation": "solve-smt"
+      },
+      {
+        "id": "step-cvc5",
+        "tool": "cvc5",
+        "operation": "solve-smt"
+      },
+      {
+        "id": "step-agree",
+        "tool": "compare",
+        "operation": "cross-check"
+      }
+    ],
+    "artifacts": {
+      "dir": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-ce26a3df27e157e3aa3a662740a6c6c1",
+      "plan": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-ce26a3df27e157e3aa3a662740a6c6c1/plan.json",
+      "launcher": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-ce26a3df27e157e3aa3a662740a6c6c1/launcher.mjs",
+      "manifest": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-ce26a3df27e157e3aa3a662740a6c6c1/manifest.json"
+    }
+  }
+}

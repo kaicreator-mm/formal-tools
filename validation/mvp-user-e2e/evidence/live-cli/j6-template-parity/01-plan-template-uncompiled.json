@@ -1,0 +1,132 @@
+{
+  "name": "plan-template-uncompiled",
+  "argv": [
+    "workflow",
+    "plan",
+    "--problem-file",
+    "validation/mvp-user-e2e/fixtures/scenario-a.smt2",
+    "--assumption",
+    "Input is UTF-8 SMT-LIB2 text intended for QF-style solving.",
+    "--assumption",
+    "Solvers may return \"unknown\" within the per-step timeout; that is an honest outcome, not an error."
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "stdout": "{\n  \"plan\": {\n    \"schema\": \"formal-tools/execution-plan/1.0\",\n    \"plan_id\": \"wf-e759e1d5b18abf629caa2398a609b56a\",\n    \"source\": {\n      \"problem_sha256\": \"ac37a58ff828e68cbd5efd554db24d1a4ba5afc77d25f9a4df3795fce56e4d84\",\n      \"problem_kind\": \"user_problem\"\n    },\n    \"assumptions\": [\n      \"Input is UTF-8 SMT-LIB2 text intended for QF-style solving.\",\n      \"Solvers may return \\\"unknown\\\" within the per-step timeout; that is an honest outcome, not an error.\"\n    ],\n    \"method_dag\": [\n      {\n        \"id\": \"step-z3\",\n        \"kind\": \"solve\",\n        \"depends_on\": []\n      },\n      {\n        \"id\": \"step-cvc5\",\n        \"kind\": \"solve\",\n        \"depends_on\": [\n          \"step-z3\"\n        ]\n      },\n      {\n        \"id\": \"step-agree\",\n        \"kind\": \"cross_check\",\n        \"depends_on\": [\n          \"step-z3\",\n          \"step-cvc5\"\n        ]\n      }\n    ],\n    \"steps\": [\n      {\n        \"id\": \"step-z3\",\n        \"tool\": \"z3\",\n        \"operation\": \"solve-smt\",\n        \"depends_on\": [],\n        \"input\": {\n          \"smt_lib\": \"(set-logic QF_LIA)\\n(set-info :source \\\"i186 user-e2e scenario A: integers x,y in [0,1] cannot sum to 4\\\")\\n(set-info :status unsat)\\n(declare-fun x () Int)\\n(declare-fun y () Int)\\n(assert (>= x 0))\\n(assert (<= x 1))\\n(assert (>= y 0))\\n(assert (<= y 1))\\n(assert (>= (+ x y) 4))\\n(check-sat)\\n(exit)\"\n        },\n        \"input_sha256\": \"2e762abdd1a7e700f24627422922d822ecaf4e0ade351e49c9061542bbe7c756\",\n        \"timeout_s\": 30,\n        \"expected_output_kind\": \"smt-answer\"\n      },\n      {\n        \"id\": \"step-cvc5\",\n        \"tool\": \"cvc5\",\n        \"operation\": \"solve-smt\",\n        \"depends_on\": [\n          \"step-z3\"\n        ],\n        \"input\": {\n          \"smt_lib\": \"(set-logic QF_LIA)\\n(set-info :source \\\"i186 user-e2e scenario A: integers x,y in [0,1] cannot sum to 4\\\")\\n(set-info :status unsat)\\n(declare-fun x () Int)\\n(declare-fun y () Int)\\n(assert (>= x 0))\\n(assert (<= x 1))\\n(assert (>= y 0))\\n(assert (<= y 1))\\n(assert (>= (+ x y) 4))\\n(check-sat)\\n(exit)\"\n        },\n        \"input_sha256\": \"2e762abdd1a7e700f24627422922d822ecaf4e0ade351e49c9061542bbe7c756\",\n        \"timeout_s\": 30,\n        \"expected_output_kind\": \"smt-answer\"\n      },\n      {\n        \"id\": \"step-agree\",\n        \"tool\": \"compare\",\n        \"operation\": \"cross-check\",\n        \"depends_on\": [\n          \"step-z3\",\n          \"step-cvc5\"\n        ],\n        \"input\": {\n          \"left_step\": \"step-z3\",\n          \"right_step\": \"step-cvc5\",\n          \"agree_on\": [\n            \"sat\",\n            \"unsat\"\n          ]\n        },\n        \"timeout_s\": 5,\n        \"expected_output_kind\": \"cross-tool-verdict\",\n        \"input_sha256\": \"7a913f16cf6ae5824b30e5d9069c90934b05d35cbf1099c2da4ba501bbcb9f62\"\n      }\n    ],\n    \"budgets\": {\n      \"max_steps\": 8,\n      \"max_total_timeout_s\": 120\n    },\n    \"compiled\": {\n      \"launcher_sha256\": null,\n      \"manifest_sha256\": null\n    }\n  },\n  \"artifacts\": null\n}\n",
+  "stderr": "",
+  "parsed": {
+    "plan": {
+      "schema": "formal-tools/execution-plan/1.0",
+      "plan_id": "wf-e759e1d5b18abf629caa2398a609b56a",
+      "source": {
+        "problem_sha256": "ac37a58ff828e68cbd5efd554db24d1a4ba5afc77d25f9a4df3795fce56e4d84",
+        "problem_kind": "user_problem"
+      },
+      "assumptions": [
+        "Input is UTF-8 SMT-LIB2 text intended for QF-style solving.",
+        "Solvers may return \"unknown\" within the per-step timeout; that is an honest outcome, not an error."
+      ],
+      "method_dag": [
+        {
+          "id": "step-z3",
+          "kind": "solve",
+          "depends_on": []
+        },
+        {
+          "id": "step-cvc5",
+          "kind": "solve",
+          "depends_on": [
+            "step-z3"
+          ]
+        },
+        {
+          "id": "step-agree",
+          "kind": "cross_check",
+          "depends_on": [
+            "step-z3",
+            "step-cvc5"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "id": "step-z3",
+          "tool": "z3",
+          "operation": "solve-smt",
+          "depends_on": [],
+          "input": {
+            "smt_lib": "(set-logic QF_LIA)\n(set-info :source \"i186 user-e2e scenario A: integers x,y in [0,1] cannot sum to 4\")\n(set-info :status unsat)\n(declare-fun x () Int)\n(declare-fun y () Int)\n(assert (>= x 0))\n(assert (<= x 1))\n(assert (>= y 0))\n(assert (<= y 1))\n(assert (>= (+ x y) 4))\n(check-sat)\n(exit)"
+          },
+          "input_sha256": "2e762abdd1a7e700f24627422922d822ecaf4e0ade351e49c9061542bbe7c756",
+          "timeout_s": 30,
+          "expected_output_kind": "smt-answer"
+        },
+        {
+          "id": "step-cvc5",
+          "tool": "cvc5",
+          "operation": "solve-smt",
+          "depends_on": [
+            "step-z3"
+          ],
+          "input": {
+            "smt_lib": "(set-logic QF_LIA)\n(set-info :source \"i186 user-e2e scenario A: integers x,y in [0,1] cannot sum to 4\")\n(set-info :status unsat)\n(declare-fun x () Int)\n(declare-fun y () Int)\n(assert (>= x 0))\n(assert (<= x 1))\n(assert (>= y 0))\n(assert (<= y 1))\n(assert (>= (+ x y) 4))\n(check-sat)\n(exit)"
+          },
+          "input_sha256": "2e762abdd1a7e700f24627422922d822ecaf4e0ade351e49c9061542bbe7c756",
+          "timeout_s": 30,
+          "expected_output_kind": "smt-answer"
+        },
+        {
+          "id": "step-agree",
+          "tool": "compare",
+          "operation": "cross-check",
+          "depends_on": [
+            "step-z3",
+            "step-cvc5"
+          ],
+          "input": {
+            "left_step": "step-z3",
+            "right_step": "step-cvc5",
+            "agree_on": [
+              "sat",
+              "unsat"
+            ]
+          },
+          "timeout_s": 5,
+          "expected_output_kind": "cross-tool-verdict",
+          "input_sha256": "7a913f16cf6ae5824b30e5d9069c90934b05d35cbf1099c2da4ba501bbcb9f62"
+        }
+      ],
+      "budgets": {
+        "max_steps": 8,
+        "max_total_timeout_s": 120
+      },
+      "compiled": {
+        "launcher_sha256": null,
+        "manifest_sha256": null
+      }
+    },
+    "artifacts": null
+  },
+  "summary": {
+    "kind": "plan",
+    "plan_id": "wf-e759e1d5b18abf629caa2398a609b56a",
+    "steps": [
+      {
+        "id": "step-z3",
+        "tool": "z3",
+        "operation": "solve-smt"
+      },
+      {
+        "id": "step-cvc5",
+        "tool": "cvc5",
+        "operation": "solve-smt"
+      },
+      {
+        "id": "step-agree",
+        "tool": "compare",
+        "operation": "cross-check"
+      }
+    ],
+    "artifacts": null
+  }
+}

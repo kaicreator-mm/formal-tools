@@ -1,0 +1,46 @@
+{
+  "schema": "formal-tools/user-e2e-evidence-verification/1.0",
+  "journey": "journey-smt-template",
+  "run_id": "run-mwnjkwfl-ca411ebf",
+  "plan_id": "wf-419ea93509325e58698ea63c7018b613",
+  "engine": "workflow-v2+v3",
+  "receipt_downloaded_bytes": 3721,
+  "identical_to_run_summary_receipt": true,
+  "overall": {
+    "process_outcome": "OK",
+    "solver_answer": {
+      "kind": "solve-smt",
+      "value": "unsat",
+      "by_step": [
+        {
+          "step_id": "step-z3",
+          "tool": "z3",
+          "operation": "solve-smt",
+          "answer": "unsat"
+        },
+        {
+          "step_id": "step-cvc5",
+          "tool": "cvc5",
+          "operation": "solve-smt",
+          "answer": "unsat"
+        }
+      ]
+    },
+    "cross_tool_verdict": "AGREE_UNSAT",
+    "claim_verdict": "PASS"
+  },
+  "tool_versions": {
+    "z3": {
+      "version": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f",
+      "probe_sha256": "9af7c6f186418585f022fd2d18eb2d278e14ad21731bf3339f3cbd1f78500e7a",
+      "probe_bounded": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f\n"
+    },
+    "cvc5": {
+      "version": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]",
+      "probe_sha256": "b6c312e4bb0062a7683ca82eb08f0b25beb4e6c67f22a62a6841a8f4192fde4a",
+      "probe_bounded": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]\ncompiled as a unrestricted build with GCC version 11.4.0 on Oct  8 2026 01:24:07\n\nCopyright (c) 2009-2026 by the authors and their institutional\naffiliations listed at https://cvc5.github.io/people.html\n\ncvc5 is open"
+    }
+  },
+  "source_sha": "ac37a58ff828e68cbd5efd554db24d1a4ba5afc77d25f9a4df3795fce56e4d84",
+  "checked_at": "2026-11-19T12:55:31.842Z"
+}

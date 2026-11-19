@@ -1,0 +1,38 @@
+{
+  "schema": "formal-tools/user-e2e-report/1.0",
+  "entry": "web",
+  "generated_at": "2026-11-19T12:45:00.084Z",
+  "base_url": "http://127.0.0.1:8788",
+  "checks": [
+    {
+      "name": "server-reachable",
+      "outcome": "OK",
+      "detail": "/api/meta -> 200"
+    },
+    {
+      "name": "api-plan-shape",
+      "outcome": "OK",
+      "detail": "plan_id=wf-4b157038432985ca0be0790ac7d46bd1"
+    },
+    {
+      "name": "run-detail-probe",
+      "outcome": "OK",
+      "detail": "/api/runs/PROBE-RUN-ID -> 404 RUN_NOT_FOUND"
+    },
+    {
+      "name": "run-evidence-probe",
+      "outcome": "OK",
+      "detail": "/api/runs/PROBE-RUN-ID/evidence -> 404 RUN_NOT_FOUND"
+    }
+  ],
+  "receipt_conformance": null,
+  "plan_conformance": {
+    "ok": true,
+    "errors": [],
+    "plan_source": {
+      "kind": "deterministic-template",
+      "template": "smt-cross-check@v1"
+    }
+  },
+  "entry_outcome_class": "WEB_REACHABLE_PARTIAL_SEE_CHECKS"
+}

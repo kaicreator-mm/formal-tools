@@ -1,0 +1,84 @@
+{
+  "schema": "formal-tools/user-e2e-live-negatives/1.0",
+  "generated_at": "2026-11-19T12:38:37.530Z",
+  "source_sha": "646859f628c4595e66c490c00c887e54e02bc215",
+  "classifications": {
+    "unknown-tool.plan.json": {
+      "harness_class": "PLAN_UNKNOWN_TOOL",
+      "expected": "PLAN_UNKNOWN_TOOL"
+    },
+    "tampered-hash.plan.json": {
+      "harness_class": "PLAN_HASH_MISMATCH",
+      "expected": "PLAN_HASH_MISMATCH"
+    },
+    "timeout-crush.plan.json": {
+      "harness_class": "TIMEOUT_BUDGET",
+      "expected": "TIMEOUT_BUDGET"
+    }
+  },
+  "executor": {
+    "unknown-tool.plan.json": {
+      "exit_code": 2,
+      "error_code": "PLAN_TOOL_NOT_ALLOWED",
+      "message": "tool not in executor allowlist: magic-solver-9000",
+      "receipt_written": false,
+      "receipt_existed_before": false
+    },
+    "tampered-hash.plan.json": {
+      "exit_code": 2,
+      "error_code": "PLAN_HASH_MISMATCH",
+      "message": "input_sha256 mismatch on step s1",
+      "receipt_written": false,
+      "receipt_existed_before": false
+    },
+    "timeout-crush.plan.json": {
+      "exit_code": 2,
+      "error_code": "PLAN_TIMEOUT_INVALID",
+      "message": "timeout_s out of admitted range for solve-smt",
+      "receipt_written": false,
+      "receipt_existed_before": false
+    }
+  },
+  "assertions": [
+    {
+      "name": "policy layer: unknown-tool.plan.json -> PLAN_UNKNOWN_TOOL",
+      "pass": true,
+      "detail": "observed PLAN_UNKNOWN_TOOL"
+    },
+    {
+      "name": "policy layer: tampered-hash.plan.json -> PLAN_HASH_MISMATCH",
+      "pass": true,
+      "detail": "observed PLAN_HASH_MISMATCH"
+    },
+    {
+      "name": "policy layer: timeout-crush.plan.json -> TIMEOUT_BUDGET",
+      "pass": true,
+      "detail": "observed TIMEOUT_BUDGET"
+    },
+    {
+      "name": "executor: unknown-tool.plan.json fails closed with a PLAN_* code and no receipt",
+      "pass": true,
+      "detail": "exit=2 code=PLAN_TOOL_NOT_ALLOWED"
+    },
+    {
+      "name": "executor: tampered-hash.plan.json fails closed with a PLAN_* code and no receipt",
+      "pass": true,
+      "detail": "exit=2 code=PLAN_HASH_MISMATCH"
+    },
+    {
+      "name": "executor: timeout-crush.plan.json fails closed with a PLAN_* code and no receipt",
+      "pass": true,
+      "detail": "exit=2 code=PLAN_TIMEOUT_INVALID"
+    },
+    {
+      "name": "malformed.smt2: solvers fail closed (FAILED outcome, UNSUPPORTED_BY_MVP, no sat/unsat invented)",
+      "pass": true,
+      "detail": "{\"overall\":{\"process_outcome\":\"FAILED\",\"solver_answer\":{\"kind\":\"none\",\"value\":null,\"by_step\":[]},\"cross_tool_verdict\":\"NOT_APPLICABLE\",\"claim_verdict\":\"UNSUPPORTED_BY_MVP\",\"fail_closed_reason\":\"SOLVER_NONZERO_EXIT\"},\"fail_closed_reason\":\"SOLVER_NONZERO_EXIT\"}"
+    }
+  ],
+  "summary": {
+    "checks": 7,
+    "passed": 7,
+    "failed": 0
+  }
+}

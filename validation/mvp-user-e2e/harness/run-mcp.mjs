@@ -6,10 +6,11 @@
  * `node packages/runner/js/mcp.mjs` as a real child, speaks newline-delimited
  * JSON-RPC (initialize → tools/list → tools/call), never an SDK client shortcut.
  *
- * Workflow tool names are a config table (best guess until V4-b ships). When the
- * registered tool list does not contain them the report says NOT_REGISTERED_YET —
- * honest progress, not a failure. Existing registered tools are called as a real
- * sanity signal that the MCP surface itself works today.
+ * The real V4-b surface (since 646859f) exposes exactly ONE workflow tool,
+ * `plan_workflow` (planning-only; execution is intentionally not an MCP tool).
+ * Existing registered tools are called as a real sanity signal that the MCP
+ * surface itself works today. For the full LIVE journey transcript use
+ * run-live-mcp-journey.mjs.
  *
  * Exit codes: 0 = report produced (NOT_REGISTERED_YET is OK), 2 = registered-tool
  * sanity mismatch, 5 = harness error.
@@ -22,13 +23,24 @@ import {
 
 const MCP_SERVER_PATH = "packages/runner/js/mcp.mjs";
 
-/** Config table: intended workflow tools (V4-b). Update names here when V4-b lands. */
+/** Real workflow tool surface (V4-b @ 646859f): exactly ONE planning tool,
+ * `plan_workflow`. Execution is intentionally NOT exposed over MCP (the tool's
+ * own contract says so): runs happen on a trusted host via the SDK/CLI. */
 export const WORKFLOW_MCP_TOOLS = {
-  plan: ["plan_workflow", "workflow_plan", "plan_method_dag"],
-  execute: ["execute_workflow", "workflow_execute", "run_workflow"],
-  status: ["workflow_status", "get_workflow_status"],
-  results: ["workflow_results", "get_workflow_results"]
+  plan: ["plan_workflow"],
+  execute: [],
+  status: [],
+  results: []
 };
+export const UNEXPOSED_BY_DESIGN = new Set(["execute", "status", "results"]);
+/** The 15 registered tools (scripts/mcp-acceptance.mjs EXPECTED_TOOLS). */
+export const EXPECTED_MCP_TOOLS = [
+  "list_formal_tools", "validate_formal_source", "inspect_formal_tool",
+  "probe_formal_tool", "run_formal_fixture", "describe_native_cli",
+  "inspect_native_installation", "plan_native_cli", "verify_formal_model",
+  "list_portfolio_tools", "match_formal_capabilities", "inspect_portfolio_tool",
+  "verify_portable_fixture", "run_portfolio_operation", "plan_workflow"
+].sort();
 
 const firstText = (result) => {
   const block = result?.content?.find((b) => b.type === "text");
@@ -120,8 +132,8 @@ export async function buildReport() {
     report.registered_tools = names;
     report.checks.push({
       name: "tools-list",
-      outcome: names.length >= 13 ? "OK" : "OBSERVED",
-      detail: `${names.length} tools registered`
+      outcome: JSON.stringify(names) === JSON.stringify(EXPECTED_MCP_TOOLS) ? "OK" : "MISMATCH",
+      detail: `${names.length} tools registered (expected exactly ${EXPECTED_MCP_TOOLS.length})`
     });
 
     // Real sanity on a tool registered TODAY (read-only, no binaries required).
@@ -133,9 +145,13 @@ export async function buildReport() {
       detail: `native=${Array.isArray(listed?.native) ? listed.native.length : "n/a"} portfolio=${Array.isArray(listed?.portfolio) ? listed.portfolio.length : "n/a"}`
     });
 
-    // Workflow tools: detect by name from the config table.
+    // Workflow tools: detect by name from the real-surface config table.
     const workflow = {};
     for (const [role, candidates] of Object.entries(WORKFLOW_MCP_TOOLS)) {
+      if (candidates.length === 0 && UNEXPOSED_BY_DESIGN.has(role)) {
+        workflow[role] = { status: "UNEXPOSED_BY_DESIGN", note: "not an MCP tool at V4-b by contract; runs happen via SDK/CLI on a trusted host" };
+        continue;
+      }
       const found = candidates.find((n) => names.includes(n));
       workflow[role] = found ? { status: "REGISTERED", tool: found } : { status: "NOT_REGISTERED_YET", candidates };
     }
@@ -145,14 +161,25 @@ export async function buildReport() {
       : "NOT_REGISTERED_YET";
 
     if (report.entry_outcome_class !== "NOT_REGISTERED_YET") {
-      for (const w of Object.values(report.workflow_tools)) {
-        if (w.status !== "REGISTERED") continue;
-        const callResp = await client.call(w.tool, {});
-        if (callResp.parsed?.schema === EXECUTION_RECEIPT_SCHEMA) {
-          const conf = validateExecutionReceiptShape(callResp.parsed);
-          report.receipt_conformance = { tool: w.tool, ok: conf.ok, errors: conf.errors };
-        }
+      // Planning-only surface: a real plan_workflow call must return a
+      // well-formed execution-plan/1.0, never a receipt.
+      const planTool = workflow.plan?.tool;
+      if (planTool) {
+        const callResp = await client.call(planTool, {
+          problem_text: "(set-logic QF_LIA)\n(declare-const x Int)\n(assert (> x 0))\n(assert (< x 0))\n(check-sat)\n(exit)",
+          assumptions: ["bounded linear integer arithmetic"]
+        });
+        const plan = callResp.parsed;
+        report.plan_conformance = {
+          tool: planTool,
+          is_plan: plan?.schema === "formal-tools/execution-plan/1.0",
+          plan_id: plan?.plan_id ?? null,
+          steps: Array.isArray(plan?.steps) ? plan.steps.map((s) => s.tool) : null,
+          tool_execution: plan?.tool_execution ?? null
+        };
       }
+      const receiptResp = report.receipt_conformance;
+      if (receiptResp === null) report.receipt_conformance = null; // planning-only: no receipt over MCP by design
     }
   } catch (e) {
     report.checks.push({ name: "driver", outcome: "HARNESS_ERROR", detail: String(e).slice(0, 300) });

@@ -1,14 +1,15 @@
-# formal-tools — real-user E2E guide (MVP runbook draft)
+# formal-tools — real-user E2E guide (MVP runbook, LIVE)
 
-Status: **PREPARATION DRAFT** (issue #186, r0 @ 33bd3d0, branch i180/v6).
-The live E2E execution happens after the V1–V5 workflow lanes merge; sections that
-will receive real screenshots/outputs are marked `PENDING-LIVE-RUN`.
+Status: **LIVE** (issue #186, V6 @ 646859f628c4595e66c490c00c887e54e02bc215).
+The three journeys (CLI / MCP / Web) ran for real on the trusted Debian host
+with the real DeepSeek planner and real z3 5.4.0 / cvc5 1.4.2 / HiGHS 1.15.1
+binaries. Every receipt, transcript and screenshot below is committed under
+`validation/mvp-user-e2e/evidence/` and pinned by `evidence/SHA256SUMS`
+(re-verified by `node --test tests/workflow-user-e2e.test.mjs` on every run —
+nothing can drift silently).
 
-What you can do today: run the three harness entries and see honest, fail-closed
-reports (`SKIP_NOT_WIRED` / `NOT_REGISTERED_YET` / `SKIP_WEB_NOT_RUNNING`) —
-real subprocesses against the current CLI and MCP surfaces, with no fabricated
-passes. What you will do after V1–V5: plan → execute → inspect → evidence for
-three real journeys (CLI, MCP, Web).
+What you can reproduce: the exact commands below, on the trusted host, at the
+pinned HEAD.
 
 ---
 
@@ -16,96 +17,89 @@ three real journeys (CLI, MCP, Web).
 
 | requirement | detail |
 | --- | --- |
-| Node.js | >= 20 (repo `engines` field); ESM only |
-| repo checkout | this repository; `npm install` once (workspaces; the MCP path needs `@modelcontextprotocol/server` + `zod`) |
-| trusted host (real runs) | `ssh -o BatchMode=yes cc@192.168.100.200`, portable bundle at `/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64` (z3 5.4.0, cvc5 1.4.2, HiGHS via `$B/bin/tool-runner run highs $B/tests/highs/solve-lp.py model.json`) |
-| env: `DEEPSEEK_API_KEY` | your real DeepSeek API key, read from the environment only; the harness never hardcodes or logs it |
-| env (optional): `HTTPS_PROXY` | fallback proxy for the DeepSeek probe when direct egress fails |
-| env (optional): `WEB_E2E_BASE_URL` | base URL of a running apps/web server (default `http://127.0.0.1:8787`) |
+| Node.js | >= 20 locally (ESM only); the trusted host uses the bundled node 22.16.0 via `$B/bin/tool-runner node` |
+| repo checkout | this repository at the pinned HEAD; `npm install` once (workspaces; the MCP path needs `@modelcontextprotocol/server` + `zod`) |
+| trusted host | `ssh -o BatchMode=yes cc@192.168.100.200`; portable bundle `B=/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64` (z3 5.4.0, cvc5 1.4.2, HiGHS via `$B/bin/tool-runner run highs $B/tests/highs/solve-lp.py model.json`, solve-lp.py pinned `6b43add5…`) |
+| env: `DEEPSEEK_API_KEY` | your real DeepSeek API key, read from the environment only; never hardcoded, never logged, never committed. On the host: write it to a `0600` file and source it per-run (`set -a; . ./.dsenv; set +a`), delete the file afterwards |
+| host env pins | `FORMAL_PORTABLE_ROOT=$B` for any execution; `FORMAL_PORTABLE_RUNNER_SHA256=020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a` additionally required by the HiGHS portfolio gateway (without it the highs step fails closed `HIGHS_ADAPTER_FAIL_CLOSED` — that honest first-attempt receipt is committed too) |
 
-Host note: real portfolio/tool execution requires Debian/Linux x86_64 (the portable
-runner fails closed with `PORTABLE_HOST_UNSUPPORTED` elsewhere, by design).
-
-All harness commands below run from the repo root:
+Host run pattern (all journeys below):
 
 ```bash
-node validation/mvp-user-e2e/harness/<entry>.mjs
+cd /home/cc/formal-tools-build/wt-i180-v6b   # the synced worktree
+B=/home/cc/formal-tools-build/out/bundle/formal-tools-portable-debian13-x86_64
+set -a && . ./.dsenv && set +a               # DEEPSEEK_API_KEY, 0600 file
+FORMAL_PORTABLE_ROOT=$B FORMAL_PORTABLE_RUNNER_SHA256=020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a \
+  $B/bin/tool-runner node validation/mvp-user-e2e/harness/run-live-cli-journey.mjs \
+  --source-sha 646859f628c4595e66c490c00c887e54e02bc215
 ```
 
-Exit-code convention (all entries): `0` report produced (a SKIP class is honest
-progress, not a failure) · `2` executed-but-mismatched · `3` `BLOCKED_PROVIDER`
-(probe only) · `4` provider HTTP/network failure (probe only) · `5` harness error.
+Syncing the worktree to the host: `tar czf - --exclude=node_modules --exclude=.git --exclude=artifacts . | ssh cc@192.168.100.200 'rm -rf <tree> && mkdir -p <tree> && tar xzf - -C <tree>'`, then the same for `node_modules` (excluding `node_modules/.bin`; deps are pure JS).
 
 ---
 
-## 1. Journey A — CLI
+## 1. Journey A — CLI (real LLM plan -> compile -> execute -> results)
 
-Intended workflow (subcommands land with V4-b):
+The one-liner driver runs six real journeys and records everything under
+`validation/mvp-user-e2e/evidence/live-cli/`:
 
-```bash
-# 1. plan: natural language -> ExecutionPlan (formal-tools/execution-plan/1.0)
-node packages/runner/js/cli.mjs plan --user-prompt validation/mvp-user-e2e/fixtures/user-prompt-a.txt
+| journey | what actually happened @ 646859f |
+| --- | --- |
+| J1 `j1-unsat-deepseek` | `workflow plan --problem-file scenario-a.smt2 --provider deepseek --compile` — first proves the provider path fails closed **without** a key (`BLOCKED_PROVIDER`), then ONE real `deepseek-chat` proposal (step ids `z3-solve` / `cvc5-solve` — the LLM's own naming, the template says `step-z3`) → compiled → executed: z3 **unsat** + cvc5 **unsat** → `AGREE_UNSAT`, claim **PASS**, exit 0 |
+| J2 `j2-sat-template` | `scenario-a-sat.smt2` via the deterministic template → both solvers **sat** → `AGREE_SAT`, claim **PASS** |
+| J3 `j3-prose-failclosed` | natural-language `user-prompt-a.txt` via DeepSeek: the LLM plans fine, but prose is not SMT-LIB — execution fails closed (`SOLVER_NONZERO_EXIT`, `UNSUPPORTED_BY_MVP`), never a guessed answer |
+| J4 `j4-lp-koptimal` | feasible LP through the workflow-plan APIs (the CLI template is SMT-only by design) → HiGHS `kOptimal`, **objective 11** at vertex **(3,1)** — exactly the hand-proven optimum |
+| J5 `j5-lp-kinfeasible` | infeasible LP → `kInfeasible` |
+| J6 `j6-template-parity` | the deterministic scenario-A plan (uncompiled) used for the cross-entry comparison |
 
-# 2. execute: plan -> ExecutionReceipt (formal-tools/execution-receipt/1.0)
-node packages/runner/js/cli.mjs execute --plan <plan.json>
+Trimmed real output (J1 execute):
 
-# 3. status / 4. results
-node packages/runner/js/cli.mjs status --run-id <run_id>
-node packages/runner/js/cli.mjs results --run-id <run_id>
+```json
+{"plan_id":"wf-1023fdabe42c64cbc0d5677766aa925f","run_id":"run-mwnix0kz-84624875",
+ "overall":{"process_outcome":"OK",
+   "solver_answer":{"kind":"solve-smt","value":"unsat","by_step":[
+     {"step_id":"z3-solve","tool":"z3","answer":"unsat"},
+     {"step_id":"cvc5-solve","tool":"cvc5","answer":"unsat"}]},
+   "cross_tool_verdict":"AGREE_UNSAT","claim_verdict":"PASS"}}
 ```
 
-Run the harness entry for this journey:
+Manual step-by-step (what the driver automates):
 
 ```bash
-node validation/mvp-user-e2e/harness/run-cli.mjs          # probe mode (default)
-node validation/mvp-user-e2e/harness/run-cli.mjs --help   # documents the intended workflow
+node packages/runner/js/cli.mjs workflow plan --problem-file validation/mvp-user-e2e/fixtures/scenario-a.smt2 \
+  --provider deepseek --compile          # -> artifacts/<plan_id>/{plan.json,launcher.mjs,manifest.json}
+node packages/runner/js/cli.mjs workflow execute --plan-file artifacts/<plan_id>/plan.json \
+  --source-sha 646859f628c4595e66c490c00c887e54e02bc215   # -> artifacts/<plan_id>/receipt.json (exit 0 only on claim PASS)
+node packages/runner/js/cli.mjs workflow results --receipt artifacts/<plan_id>/receipt.json
 ```
 
-What it does: spawns the real CLI as a subprocess, proves the CLI itself is
-invocable (`list` → 13 native tools), then probes the intended workflow
-invocations and reports honestly. Today's expected report:
-`entry_outcome_class: "SKIP_NOT_WIRED"` with the raw CLI responses recorded.
+### What fail-closed looks like (negatives, all committed under `evidence/live-negatives/`)
 
-What you will see after V4-b (PENDING-LIVE-RUN): a plan for `user-prompt-a.txt`
-whose steps stay inside the allowlist (`z3|cvc5|highs|compare` ×
-`solve-smt|solve-lp|cross-check`), an execution receipt on the trusted host, and
-`AGREE_UNSAT` for scenario A.
-
-### What fail-closed looks like
-
-- Unknown tool in a plan (`fixtures/negatives/unknown-tool.plan.json`) →
-  rejected with class `PLAN_UNKNOWN_TOOL` before any launch.
-- Wrong input hash (`tampered-hash.plan.json`) → `PLAN_HASH_MISMATCH`.
-- Timeouts above policy (`timeout-crush.plan.json`, steps sum 360s > 300s cap)
-  → `TIMEOUT_BUDGET`.
-- Broken SMT-LIB input (`negatives/malformed.smt2`, unbalanced paren) → the
-  parser fails closed `PARSE_ERROR`; you never get a guessed `sat`/`unsat`.
+| input | harness policy layer | real executor |
+| --- | --- | --- |
+| `negatives/unknown-tool.plan.json` (tool `magic-solver-9000`) | `PLAN_UNKNOWN_TOOL` | `PLAN_TOOL_NOT_ALLOWED`, exit 2, no receipt |
+| `negatives/tampered-hash.plan.json` (input_sha256 binds the SAT sibling) | `PLAN_HASH_MISMATCH` | `PLAN_HASH_MISMATCH`, exit 2, no receipt |
+| `negatives/timeout-crush.plan.json` (step 180s, budget 400s > caps) | `TIMEOUT_BUDGET` | `PLAN_TIMEOUT_INVALID`, exit 2, no receipt |
+| `negatives/malformed.smt2` (unbalanced paren, planned+executed for real) | — | solvers fail: `FAILED` / `UNSUPPORTED_BY_MVP` / `SOLVER_NONZERO_EXIT` |
 
 ---
 
-## 2. Journey B — MCP (JSON-RPC over stdio)
+## 2. Journey B — MCP (JSON-RPC over stdio, planning-only)
 
 ```bash
-node validation/mvp-user-e2e/harness/run-mcp.mjs
+node validation/mvp-user-e2e/harness/run-live-mcp-journey.mjs --out validation/mvp-user-e2e/evidence/live-mcp
 ```
 
-What it does: spawns `packages/runner/js/mcp.mjs` as a real child and speaks
-newline-delimited JSON-RPC (initialize → tools/list → tools/call) — the same
-transport an external MCP host uses. It sanity-calls a tool registered today
-(`list_formal_tools`: 13 native + 36 portfolio), then looks for the workflow
-tools by name from a small config table at the top of the file.
+12/12 real checks @ 646859f (committed transcript + plan + report):
 
-Today's expected report: handshake OK, 14 tools listed,
-`entry_outcome_class: "NOT_REGISTERED_YET"` for the workflow tools
-(`plan_workflow` / `execute_workflow` / `workflow_status` / `workflow_results`
-are the current name guesses; when V4-b ships with different names, only the
-`WORKFLOW_MCP_TOOLS` table changes).
+- `initialize` handshake (`formal-tools-skill`), `tools/list` = **exactly the 15 registered tools** incl. `plan_workflow`;
+- `plan_workflow` with the scenario-A problem (deterministic provider) returns a valid `formal-tools/execution-plan/1.0`, replay-deterministic (same `plan_id`);
+- the CLI planner and the MCP planner return the **identical plan object** (`wf-e759e1d5b18abf629caa2398a609b56a`) for the same input;
+- `provider:'deepseek'` returns a real LLM plan whose `plan_id` **reproduces the CLI DeepSeek journey's plan exactly** (temperature-0 determinism across entries);
+- `provider:'deepseek'` **without a key fails closed** (`BLOCKED_PROVIDER` — never mocked);
+- MCP never executes: plans carry `compiled: {null, null}` and `tool_execution: "NOT_RUN"`; execution happens via the SDK/CLI on a trusted host.
 
-After V4-b (PENDING-LIVE-RUN): `tools/call plan_workflow` with the user prompt,
-then `execute_workflow`, then the results tools — each answer JSON-parsed and
-shape-checked against the pinned contracts.
-
-Direct manual session (what the harness automates):
+Manual session (what the harness automates):
 
 ```bash
 node packages/runner/js/mcp.mjs
@@ -113,81 +107,118 @@ node packages/runner/js/mcp.mjs
 {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"manual","version":"0.0.1"}}}
 {"jsonrpc":"2.0","method":"notifications/initialized"}
 {"jsonrpc":"2.0","id":2,"method":"tools/list"}
+{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"plan_workflow","arguments":{"problem_text":"(set-logic QF_LIA)\n(declare-const x Int)\n(assert (> x 0))\n(assert (< x 0))\n(check-sat)\n(exit)","assumptions":["bounded linear integer arithmetic"]}}}
 ```
 
 ---
 
-## 3. Journey C — Web (HTTP)
+## 3. Journey C — Web (HTTP + browser)
+
+Start the bounded bridge on the trusted host:
 
 ```bash
-# start the web app once it exists (PENDING-LIVE-RUN), then:
-node validation/mvp-user-e2e/harness/run-web.mjs
+PORT=8788 FORMAL_PORTABLE_ROOT=$B FORMAL_PORTABLE_RUNNER_SHA256=020f8f5e… nohup \
+  $B/bin/tool-runner node apps/web/server.mjs > /tmp/formal-web-8788.log 2>&1 &
 ```
 
-Endpoints exercised: `GET /api/meta`, `POST /api/plan` (user prompt →
-ExecutionPlan), `GET /api/runs`, `GET /api/runs/:id` (→ ExecutionReceipt),
-`GET /api/runs/:id/evidence` (evidence download). Responses are shape-checked
-against the pinned contracts exactly like the CLI/MCP entries.
+Browser from your workstation — port-forward recipe:
 
-Today's expected report: `entry_outcome_class: "SKIP_WEB_NOT_RUNNING"`
-(`apps/web` does not exist at r0 — the refusal is detected and reported, never
-worked around).
+```bash
+ssh -N -L 8788:127.0.0.1:8788 cc@192.168.100.200     # keep running; Ctrl-C to stop
+# then open http://127.0.0.1:8788 in the browser
+```
 
-Evidence download (after V4-b): `/api/runs/:id/evidence` returns the run's
-evidence bundle (plan, receipt, bounded stdout/stderr hashes, tool versions).
-Keep the whole bundle; `plan_sha256` inside the receipt is what makes a claim
-auditable — an evidence file whose hashes do not re-verify is worth nothing.
+Committed browser journey (screenshots under `evidence/live-web/screenshots/`):
+
+| file | shows |
+| --- | --- |
+| `01-input-scenario-a-deepseek.png` | scenario A pasted, "DeepSeek — real LLM proposal" selected, `engine: workflow-v2+v3 (real)` badge |
+| `02-plan-deepseek-llm.png` | plan `wf-5a30b326…` review screen — steps table (z3-solve / cvc5-solve / step-agree), plan-source badge "DeepSeek (deepseek-chat) — LLM proposal, admitted as data via static validation", approve gate |
+| `03-run-steps-real-solvers.png` | run screen mid-run (`status: running`, steps QUEUED — real z3/cvc5 executing on the host) |
+| `04-results-agree-unsat.png` | results: process **OK**, solver answer **unsat**, cross-tool **AGREE_UNSAT**, claim **PASS**, environment line with the portable-root sha, evidence download links |
+| `05-evidence-download-attempt.png` | the "⬇ Download receipt (JSON)" click (server answers `Content-Disposition: attachment; filename="receipt-<run_id>.json"`) |
+| `06-lp-result-koptimal.png` | LP sample: `kOptimal` (objective 11 in the receipt; screen shows normalized `sat` + honest `NOT_APPLICABLE` cross-check for a single-solver plan) |
+
+HTTP-level journey (what `run-web.mjs --live` automates; saved verbatim under
+`evidence/live-web/journey-*`):
+
+```bash
+node validation/mvp-user-e2e/harness/run-web.mjs --live \
+  --problem validation/mvp-user-e2e/fixtures/scenario-a.smt2 \
+  --out validation/mvp-user-e2e/evidence/live-web/journey-smt-template
+node validation/mvp-user-e2e/harness/run-web.mjs --live \
+  --problem validation/mvp-user-e2e/fixtures/scenario-b-lp.json \
+  --out validation/mvp-user-e2e/evidence/live-web/journey-lp
+```
+
+Real result: both journeys `ok: true`; the downloaded
+`/api/runs/:id/evidence` bytes are **byte-identical** to the served run receipt
+(`evidence-verification.json` files pin this). There is no `GET /api/runs`
+list by design — run state is per-id, and unknown ids fail closed with
+`404 RUN_NOT_FOUND`.
 
 ---
 
-## 4. Comparing the three entries
+## 4. Comparing the three entries (committed result: MATCH)
 
 ```bash
-node validation/mvp-user-e2e/harness/run-cli.mjs > /tmp/cli.json
-node validation/mvp-user-e2e/harness/run-mcp.mjs  > /tmp/mcp.json
-node validation/mvp-user-e2e/harness/run-web.mjs  > /tmp/web.json
-node validation/mvp-user-e2e/harness/compare.mjs --cli /tmp/cli.json --mcp /tmp/mcp.json --web /tmp/web.json
+node validation/mvp-user-e2e/harness/build-entry-reports.mjs
+# reads the committed live evidence, writes evidence/live-compare/{cli,mcp,web}-report.json + comparison.json
 ```
+
+Real outcome @ 646859f (`evidence/live-compare/comparison.json`): **overall MATCH** —
+
+- `cli-vs-mcp` **MATCH (exact)**: identical plan object — same `plan_id`
+  `wf-e759e1d5b18abf629caa2398a609b56a`, and the executed CLI receipt's
+  `plan_sha256` equals the MCP plan's canonical hash; outcome fields SKIP
+  honestly (MCP is planning-only by contract).
+- `cli-vs-web` / `mcp-vs-web` **MATCH**: the bridge normalizes with
+  `problem_kind: "smt2"` (CLI records `user_problem`), so plan envelopes
+  differ; the comparison uses the step-set signature (identical z3/cvc5/compare
+  steps with identical canonical input hashes) plus exact outcome parity
+  (`AGREE_UNSAT` everywhere). The differing `plan_sha256` is reported as
+  `MATCH_SEMANTIC`, never disguised as an exact hash match.
+- DeepSeek determinism: the real LLM proposal reproduced the same plan
+  (`wf-1023fdabe42c64cbc0d5677766aa925f`) through CLI and MCP at temperature 0.
 
 Tolerance table: `run_id`, `created_at`, `elapsed_ms` may differ per entry;
-`plan_sha256`, `outcome_class`, `cross_tool_verdict` must match exactly.
-Entries that did not execute compare as `SKIP` — the tool never fabricates a
-match. `PENDING-LIVE-RUN` for real three-way output.
+outcome classes and cross-tool verdicts must match exactly; `plan_sha256` must
+match exactly when the same plan object is used, or via the step-set signature
+when only the envelope differs. A `SKIP`/`MATCH_SEMANTIC` is labeled as such —
+the tool never fabricates an exact pass.
 
 ---
 
-## 5. The real-provider planning probe
+## 5. The real-provider planning probe (connectivity/shape)
 
 ```bash
 DEEPSEEK_API_KEY must be set in your environment (never passed on the command line).
 node validation/mvp-user-e2e/harness/run-deepseek-plan.mjs
 ```
 
-Reads `fixtures/user-prompt-a.txt`, asks `deepseek-chat` (temperature 0) for a
-Method DAG proposal, checks it against the allowlist, and saves the REAL
-response to `validation/mvp-user-e2e/evidence/deepseek-probe/transcript.json`
-(labeled `PROBE_NOT_FINAL_E2E`; the Authorization header is redacted by
-construction). Exit `3` = `BLOCKED_PROVIDER` (no key), exit `4` = provider
-HTTP/network failure. One committed probe transcript from 2026-11-19 already
-exists: HTTP 200, 3-node DAG (z3 → cvc5 → compare cross-check), fully inside
-the allowlist.
+Asks `deepseek-chat` (temperature 0) for a Method DAG proposal, checks it
+against the allowlist, and saves the REAL response to
+`evidence/deepseek-probe/transcript.json` (labeled `PROBE_NOT_FINAL_E2E`;
+Authorization header redacted by construction). Exit `3` = `BLOCKED_PROVIDER`,
+exit `4` = provider HTTP/network failure. The committed transcript predates the
+live run; the LIVE DeepSeek planning evidence is now `evidence/live-cli/j1-*`
+and `evidence/live-mcp/` (the same proposal, executed end-to-end).
 
 ---
 
 ## 6. Fixtures and expected relations
 
 Everything under `validation/mvp-user-e2e/fixtures/` — see
-`fixtures/README.md` for the binding hash conventions. Summary:
+`fixtures/README.md` for the binding hash conventions (V3: typed inline inputs,
+canonical-JSON input hashes). Summary with the LIVE observed class:
 
-- `scenario-a.smt2` → both solvers `unsat` → class `AGREE_UNSAT`;
-  `scenario-a-sat.smt2` (witness x=y=1) → `AGREE_SAT`.
-- `scenario-b-lp.json` → HiGHS `kOptimal`, objective exactly **11**
-  (hand-derived; offline duality proof in the test suite);
-  `scenario-b-infeasible.json` → `kInfeasible`.
-- `negatives/` → `PLAN_UNKNOWN_TOOL`, `PLAN_HASH_MISMATCH`, `TIMEOUT_BUDGET`,
-  `PARSE_ERROR` — every one fails closed before any solver launch.
+- `scenario-a.smt2` → both solvers `unsat` → `AGREE_UNSAT` ✅ (CLI J1 DeepSeek, CLI J6 template, MCP plan, Web bridge, browser run)
+- `scenario-a-sat.smt2` (witness x=y=1) → `AGREE_SAT` ✅ (CLI J2)
+- `scenario-b-lp.json` → HiGHS `kOptimal`, objective exactly **11** (hand-derived; offline duality proof in the test suite) ✅ (CLI J4, Web journey, browser run)
+- `scenario-b-infeasible.json` → `kInfeasible` ✅ (CLI J5)
+- `negatives/` → `PLAN_UNKNOWN_TOOL` / `PLAN_HASH_MISMATCH` / `TIMEOUT_BUDGET` / `PARSE_ERROR` ✅ all failed closed before/during execution with no invented answers
 
-Offline invariant suite (no binaries, no network):
+Offline invariant suite + committed-evidence integrity (no binaries, no network — CI-safe):
 
 ```bash
 node --test tests/workflow-user-e2e.test.mjs
@@ -199,13 +230,15 @@ node --test tests/workflow-user-e2e.test.mjs
 
 | class | meaning |
 | --- | --- |
-| `SKIP_NOT_WIRED` | the V4-b CLI workflow subcommands are not present yet |
-| `NOT_REGISTERED_YET` | the MCP workflow tools are not registered yet |
-| `SKIP_WEB_NOT_RUNNING` | no web server reachable at the base URL |
-| `BLOCKED_PROVIDER` | planning probe ran without `DEEPSEEK_API_KEY` |
-| `PLAN_UNKNOWN_TOOL` / `PLAN_HASH_MISMATCH` / `TIMEOUT_BUDGET` / `PARSE_ERROR` | deliberate fail-closed negatives |
-| `AGREE_UNSAT` / `AGREE_SAT` / `K_OPTIMAL_OBJECTIVE_<n>` / `K_INFEASIBLE` | cross-tool/solver outcome classes |
+| `AGREE_UNSAT` / `AGREE_SAT` | z3 and cvc5 both answered unsat / sat (observed live) |
+| `K_OPTIMAL_OBJECTIVE_11` / `K_INFEASIBLE` | HiGHS model status with the exact objective (observed live) |
+| `BLOCKED_PROVIDER` | DeepSeek requested without `DEEPSEEK_API_KEY` — fails closed (observed live) |
+| `SOLVER_NONZERO_EXIT` / `UNSUPPORTED_BY_MVP` | honest failure classes (prose input, malformed input) — no answer invented |
+| `PLAN_UNKNOWN_TOOL` / `PLAN_HASH_MISMATCH` / `TIMEOUT_BUDGET` | deliberate negatives, rejected before any launch |
+| `MATCH_SEMANTIC` | same step set + verdict across entries, different plan envelope — labeled, never an exact-hash pass |
+| `SKIP_*` / `NOT_REGISTERED_YET` | honest not-run states (e.g. MCP outcome fields; no web server) |
 
-A `SKIP`/`NOT_*` status is recorded progress, not a pass and not a failure.
 Nothing in this harness fabricates solver internals; the only numeric claim
-(LP objective 11) carries its offline duality proof.
+(LP objective 11) carries its offline duality proof, and the live receipts
+reproduced it exactly. The committed evidence is hash-pinned by
+`evidence/SHA256SUMS` and re-verified offline by the test suite.

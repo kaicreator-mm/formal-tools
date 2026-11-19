@@ -1,0 +1,72 @@
+{
+  "name": "execute-honest-fail",
+  "argv": [
+    "workflow",
+    "execute",
+    "--plan-file",
+    "artifacts/wf-d87461cf5df09392b754cb60ac0d50c0/plan.json",
+    "--source-sha",
+    "646859f628c4595e66c490c00c887e54e02bc215"
+  ],
+  "exit_code": 2,
+  "timed_out": false,
+  "stdout": "{\n  \"schema\": \"formal-tools/execution-receipt/1.0\",\n  \"plan_id\": \"wf-d87461cf5df09392b754cb60ac0d50c0\",\n  \"run_id\": \"run-mwnix2z2-b3d0bbda\",\n  \"source_sha\": \"646859f628c4595e66c490c00c887e54e02bc215\",\n  \"created_at\": \"2026-11-19T12:25:43.502Z\",\n  \"overall\": {\n    \"process_outcome\": \"FAILED\",\n    \"solver_answer\": {\n      \"kind\": \"none\",\n      \"value\": null,\n      \"by_step\": []\n    },\n    \"cross_tool_verdict\": \"NOT_APPLICABLE\",\n    \"claim_verdict\": \"UNSUPPORTED_BY_MVP\",\n    \"fail_closed_reason\": \"SOLVER_NONZERO_EXIT\"\n  },\n  \"steps\": [\n    {\n      \"step_id\": \"z3-solve\",\n      \"tool\": \"z3\",\n      \"operation\": \"solve-smt\",\n      \"status\": \"ERROR\"\n    },\n    {\n      \"step_id\": \"cvc5-solve\",\n      \"tool\": \"cvc5\",\n      \"operation\": \"solve-smt\",\n      \"status\": \"SKIPPED_DOWNSTREAM\"\n    },\n    {\n      \"step_id\": \"step-agree\",\n      \"tool\": \"compare\",\n      \"operation\": \"cross-check\",\n      \"status\": \"SKIPPED_DOWNSTREAM\"\n    }\n  ],\n  \"blocked\": null,\n  \"receipt_path\": \"/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0/receipt.json\"\n}\n",
+  "stderr": "",
+  "parsed": {
+    "schema": "formal-tools/execution-receipt/1.0",
+    "plan_id": "wf-d87461cf5df09392b754cb60ac0d50c0",
+    "run_id": "run-mwnix2z2-b3d0bbda",
+    "source_sha": "646859f628c4595e66c490c00c887e54e02bc215",
+    "created_at": "2026-11-19T12:25:43.502Z",
+    "overall": {
+      "process_outcome": "FAILED",
+      "solver_answer": {
+        "kind": "none",
+        "value": null,
+        "by_step": []
+      },
+      "cross_tool_verdict": "NOT_APPLICABLE",
+      "claim_verdict": "UNSUPPORTED_BY_MVP",
+      "fail_closed_reason": "SOLVER_NONZERO_EXIT"
+    },
+    "steps": [
+      {
+        "step_id": "z3-solve",
+        "tool": "z3",
+        "operation": "solve-smt",
+        "status": "ERROR"
+      },
+      {
+        "step_id": "cvc5-solve",
+        "tool": "cvc5",
+        "operation": "solve-smt",
+        "status": "SKIPPED_DOWNSTREAM"
+      },
+      {
+        "step_id": "step-agree",
+        "tool": "compare",
+        "operation": "cross-check",
+        "status": "SKIPPED_DOWNSTREAM"
+      }
+    ],
+    "blocked": null,
+    "receipt_path": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0/receipt.json"
+  },
+  "summary": {
+    "kind": "receipt-summary",
+    "plan_id": "wf-d87461cf5df09392b754cb60ac0d50c0",
+    "run_id": "run-mwnix2z2-b3d0bbda",
+    "overall": {
+      "process_outcome": "FAILED",
+      "solver_answer": {
+        "kind": "none",
+        "value": null,
+        "by_step": []
+      },
+      "cross_tool_verdict": "NOT_APPLICABLE",
+      "claim_verdict": "UNSUPPORTED_BY_MVP",
+      "fail_closed_reason": "SOLVER_NONZERO_EXIT"
+    },
+    "blocked": null
+  }
+}

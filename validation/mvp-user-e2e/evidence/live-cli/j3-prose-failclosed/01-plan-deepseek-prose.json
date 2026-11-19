@@ -1,0 +1,138 @@
+{
+  "name": "plan-deepseek-prose",
+  "argv": [
+    "workflow",
+    "plan",
+    "--problem-file",
+    "validation/mvp-user-e2e/fixtures/user-prompt-a.txt",
+    "--provider",
+    "deepseek",
+    "--compile"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "stdout": "{\n  \"plan\": {\n    \"schema\": \"formal-tools/execution-plan/1.0\",\n    \"plan_id\": \"wf-d87461cf5df09392b754cb60ac0d50c0\",\n    \"source\": {\n      \"problem_sha256\": \"95303952542656ad04f55b38297a96e474487f309a224768f588ed5ed16ab621\",\n      \"problem_kind\": \"user_problem\"\n    },\n    \"assumptions\": [],\n    \"method_dag\": [\n      {\n        \"id\": \"z3-solve\",\n        \"kind\": \"solve\",\n        \"depends_on\": []\n      },\n      {\n        \"id\": \"cvc5-solve\",\n        \"kind\": \"solve\",\n        \"depends_on\": [\n          \"z3-solve\"\n        ]\n      },\n      {\n        \"id\": \"step-agree\",\n        \"kind\": \"cross_check\",\n        \"depends_on\": [\n          \"z3-solve\",\n          \"cvc5-solve\"\n        ]\n      }\n    ],\n    \"steps\": [\n      {\n        \"id\": \"z3-solve\",\n        \"tool\": \"z3\",\n        \"operation\": \"solve-smt\",\n        \"depends_on\": [],\n        \"input\": {\n          \"smt_lib\": \"Two non-negative integer variables x and y are each capped at 1 (0 <= x <= 1 and 0 <= y <= 1).\\nA colleague claims their sum can reach 4. Please determine, over the integers, whether the\\nconstraints x + y >= 4 together with those bounds is satisfiable, and give a definitive answer.\\nTo be trustworthy, verify the same problem with at least two independent SMT solvers (z3 and\\ncvc5) and tell me explicitly whether the two solvers agree on the final answer.\"\n        },\n        \"input_sha256\": \"81343a247755051ce90e19871698e2675156a263c41056057ba11198680bff94\",\n        \"timeout_s\": 30,\n        \"expected_output_kind\": \"smt-answer\"\n      },\n      {\n        \"id\": \"cvc5-solve\",\n        \"tool\": \"cvc5\",\n        \"operation\": \"solve-smt\",\n        \"depends_on\": [\n          \"z3-solve\"\n        ],\n        \"input\": {\n          \"smt_lib\": \"Two non-negative integer variables x and y are each capped at 1 (0 <= x <= 1 and 0 <= y <= 1).\\nA colleague claims their sum can reach 4. Please determine, over the integers, whether the\\nconstraints x + y >= 4 together with those bounds is satisfiable, and give a definitive answer.\\nTo be trustworthy, verify the same problem with at least two independent SMT solvers (z3 and\\ncvc5) and tell me explicitly whether the two solvers agree on the final answer.\"\n        },\n        \"input_sha256\": \"81343a247755051ce90e19871698e2675156a263c41056057ba11198680bff94\",\n        \"timeout_s\": 30,\n        \"expected_output_kind\": \"smt-answer\"\n      },\n      {\n        \"id\": \"step-agree\",\n        \"tool\": \"compare\",\n        \"operation\": \"cross-check\",\n        \"depends_on\": [\n          \"z3-solve\",\n          \"cvc5-solve\"\n        ],\n        \"input\": {\n          \"left_step\": \"z3-solve\",\n          \"right_step\": \"cvc5-solve\",\n          \"agree_on\": [\n            \"sat\",\n            \"unsat\"\n          ]\n        },\n        \"timeout_s\": 5,\n        \"expected_output_kind\": \"cross-tool-verdict\",\n        \"input_sha256\": \"758ce9f17ffad2dc580d03fb6cd60abe3138ed697ec9ae3372c89a8bea1fb825\"\n      }\n    ],\n    \"budgets\": {\n      \"max_steps\": 8,\n      \"max_total_timeout_s\": 120\n    },\n    \"compiled\": {\n      \"launcher_sha256\": \"a34675f56fdc45f39fc39d1a17fdf9cdb5e160f18669303f539fa1d17e9d9b20\",\n      \"manifest_sha256\": \"bb49f431861546cde56491bbd7a7baa091194a1322c04ba1231203f007665e78\"\n    }\n  },\n  \"artifacts\": {\n    \"dir\": \"/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0\",\n    \"plan\": \"/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0/plan.json\",\n    \"launcher\": \"/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0/launcher.mjs\",\n    \"manifest\": \"/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0/manifest.json\"\n  }\n}\n",
+  "stderr": "",
+  "parsed": {
+    "plan": {
+      "schema": "formal-tools/execution-plan/1.0",
+      "plan_id": "wf-d87461cf5df09392b754cb60ac0d50c0",
+      "source": {
+        "problem_sha256": "95303952542656ad04f55b38297a96e474487f309a224768f588ed5ed16ab621",
+        "problem_kind": "user_problem"
+      },
+      "assumptions": [],
+      "method_dag": [
+        {
+          "id": "z3-solve",
+          "kind": "solve",
+          "depends_on": []
+        },
+        {
+          "id": "cvc5-solve",
+          "kind": "solve",
+          "depends_on": [
+            "z3-solve"
+          ]
+        },
+        {
+          "id": "step-agree",
+          "kind": "cross_check",
+          "depends_on": [
+            "z3-solve",
+            "cvc5-solve"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "id": "z3-solve",
+          "tool": "z3",
+          "operation": "solve-smt",
+          "depends_on": [],
+          "input": {
+            "smt_lib": "Two non-negative integer variables x and y are each capped at 1 (0 <= x <= 1 and 0 <= y <= 1).\nA colleague claims their sum can reach 4. Please determine, over the integers, whether the\nconstraints x + y >= 4 together with those bounds is satisfiable, and give a definitive answer.\nTo be trustworthy, verify the same problem with at least two independent SMT solvers (z3 and\ncvc5) and tell me explicitly whether the two solvers agree on the final answer."
+          },
+          "input_sha256": "81343a247755051ce90e19871698e2675156a263c41056057ba11198680bff94",
+          "timeout_s": 30,
+          "expected_output_kind": "smt-answer"
+        },
+        {
+          "id": "cvc5-solve",
+          "tool": "cvc5",
+          "operation": "solve-smt",
+          "depends_on": [
+            "z3-solve"
+          ],
+          "input": {
+            "smt_lib": "Two non-negative integer variables x and y are each capped at 1 (0 <= x <= 1 and 0 <= y <= 1).\nA colleague claims their sum can reach 4. Please determine, over the integers, whether the\nconstraints x + y >= 4 together with those bounds is satisfiable, and give a definitive answer.\nTo be trustworthy, verify the same problem with at least two independent SMT solvers (z3 and\ncvc5) and tell me explicitly whether the two solvers agree on the final answer."
+          },
+          "input_sha256": "81343a247755051ce90e19871698e2675156a263c41056057ba11198680bff94",
+          "timeout_s": 30,
+          "expected_output_kind": "smt-answer"
+        },
+        {
+          "id": "step-agree",
+          "tool": "compare",
+          "operation": "cross-check",
+          "depends_on": [
+            "z3-solve",
+            "cvc5-solve"
+          ],
+          "input": {
+            "left_step": "z3-solve",
+            "right_step": "cvc5-solve",
+            "agree_on": [
+              "sat",
+              "unsat"
+            ]
+          },
+          "timeout_s": 5,
+          "expected_output_kind": "cross-tool-verdict",
+          "input_sha256": "758ce9f17ffad2dc580d03fb6cd60abe3138ed697ec9ae3372c89a8bea1fb825"
+        }
+      ],
+      "budgets": {
+        "max_steps": 8,
+        "max_total_timeout_s": 120
+      },
+      "compiled": {
+        "launcher_sha256": "a34675f56fdc45f39fc39d1a17fdf9cdb5e160f18669303f539fa1d17e9d9b20",
+        "manifest_sha256": "bb49f431861546cde56491bbd7a7baa091194a1322c04ba1231203f007665e78"
+      }
+    },
+    "artifacts": {
+      "dir": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0",
+      "plan": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0/plan.json",
+      "launcher": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0/launcher.mjs",
+      "manifest": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0/manifest.json"
+    }
+  },
+  "summary": {
+    "kind": "plan",
+    "plan_id": "wf-d87461cf5df09392b754cb60ac0d50c0",
+    "steps": [
+      {
+        "id": "z3-solve",
+        "tool": "z3",
+        "operation": "solve-smt"
+      },
+      {
+        "id": "cvc5-solve",
+        "tool": "cvc5",
+        "operation": "solve-smt"
+      },
+      {
+        "id": "step-agree",
+        "tool": "compare",
+        "operation": "cross-check"
+      }
+    ],
+    "artifacts": {
+      "dir": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0",
+      "plan": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0/plan.json",
+      "launcher": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0/launcher.mjs",
+      "manifest": "/home/cc/formal-tools-build/wt-i180-v6b/artifacts/wf-d87461cf5df09392b754cb60ac0d50c0/manifest.json"
+    }
+  }
+}
