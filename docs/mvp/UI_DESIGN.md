@@ -1,9 +1,13 @@
-# UI_DESIGN.md — formal-tools V5 Web UI design system (OUTPUT_LABEL=FORMAL_TOOLS_I180_V5_WEB_UI)
+# UI_DESIGN.md — formal-tools V5 Web UI design system (OUTPUT_LABEL=FORMAL_TOOLS_I180_V5B_LIVE_ENGINE)
 
 Scope: `apps/web/**` (zero-build vanilla frontend + bounded Node bridge) as delivered for
-issue #185 (parent #180). The execution engine is **MOCKED this round (V5-a)**; plans and
-receipts use the pinned V0 contract shapes exactly so the real V2/V3 engine can be wired
-behind the same endpoints in V5-b without UI changes.
+issue #185 (parent #180). **Since V5-b the execution engine is REAL**: plans are built by
+the V2 planner (`workflow-plan.mjs` + `workflow-compiler.mjs`) and runs go through the V3
+executor (`workflow-executor.mjs`). On machines without the trusted portable tool bundle
+the executor fails closed before any step and the receipt honestly reports
+`ABORTED / BLOCKED_TOOL_MISSING` — the UI renders this as a distinct blocked state, never
+as a solver answer and never simulated. (V5-a's mocked engine is fully removed; its
+evidence lives in git history.)
 
 ---
 
@@ -44,11 +48,11 @@ behind the same endpoints in V5-b without UI changes.
 
 | Meaning | ink (on its bg) | bg | border | Used for |
 |---|---|---|---|---|
-| OK / agree | `#0f6b33` | `#e7f6ec` | `#b7e2c3` | `EXECUTED`, `OK`, `AGREE_SAT`, `AGREE_UNSAT`, `RUN COMPLETE` |
-| warning / degraded | `#7a4900` | `#fff3d6` | `#ecd39b` | `TIMEOUT`, `PARTIAL`, MOCKED badge |
+| OK / agree | `#0f6b33` | `#e7f6ec` | `#b7e2c3` | `EXECUTED`, `OK`, `AGREE_SAT`, `AGREE_UNSAT`, `RUN COMPLETE`, `engine: … (real)` badge |
+| warning / degraded | `#7a4900` | `#fff3d6` | `#ecd39b` | `TIMEOUT`, `PARTIAL`, **BLOCKED banner + chip** (dashed border + left accent to never read as FAILED) |
 | danger / fail-closed | `#a92019` | `#fdecea` | `#f3c2bd` | `ERROR`, `FAILED`, `ABORTED`, `CONTRADICTION` |
 | unknown / undecided | `#5b3ba8` | `#f1edfd` | `#d9cff2` | `UNKNOWN` verdict, honest "cannot decide" |
-| info | `#0b4a6f` | `#e3f2fa` | `#bcdff2` | `mode:` badge, plan banner |
+| info | `#0b4a6f` | `#e3f2fa` | `#bcdff2` | `mode:` badge, plan banner, plan-source badge |
 
 Measured WCAG contrast (computed, WCAG 2.x relative luminance formula, all pass AA ≥ 4.5:1):
 
@@ -96,25 +100,41 @@ checkbox, summary, headings used as focus targets).
   `QUEUED` (muted), `RUNNING` (accent outline), `EXECUTED` (ok), `ERROR`/`FAILED`/
   `CONTRADICTION`/`ABORTED` (danger), `TIMEOUT`/`PARTIAL` (warning), `SKIPPED_DOWNSTREAM`
   (muted, dashed border), `UNKNOWN` (unknown-purple), `NOT_APPLICABLE` (muted).
-- **Banners** (`.banner--ok|warn|danger|unknown|info`): a single top banner per screen for
-  fail-closed / CONTRADICTION / UNKNOWN messaging with `role="alert"`.
+- **Banners** (`.banner--ok|warn|danger|unknown|info|blocked`): a single top banner per
+  screen for fail-closed / CONTRADICTION / UNKNOWN / BLOCKED messaging with `role="alert"`
+  (the results-screen verdict banner is `#resultNote`, on the screen the user lands on).
+- **Blocked presentation** (`.banner--blocked`): warn tones with a **dashed border and a
+  4px left accent bar** so "trusted tools unavailable" never reads as FAILED/ERROR; text
+  always names the exact `fail_closed_reason` (e.g. `BLOCKED_TOOL_MISSING`) and states
+  that no step ran and nothing is simulated. `claim_verdict=BLOCKED` gets the matching
+  `.chip--BLOCKED`.
 - **Verdict block** (results screen): definition-list rows, one labeled row per verdict
   dimension (`process_outcome`, `solver_answer`, `cross_tool_verdict`, `claim_verdict`),
   each with its own plain-language description — the dimensions are deliberately rendered
-  as separate rows so they can never be visually conflated into a single "PASS".
+  as separate rows so they can never be visually conflated into a single "PASS". The real
+  receipt's `solver_answer` is an object; the row shows `value` (`null (kind: none)` when
+  nothing ran) with a `by_step` hint line when answers exist. An environment line below
+  the block discloses `host / node / formal_portable_root_sha / run_id`.
 - **Stepper**: 4 steps (Input → Plan → Run → Results), `aria-current="step"` on active,
   done steps tinted ok.
-- **Evidence links**: native `<a download>` buttons → same-origin attachment endpoints.
-- **Honesty labels**: header `MOCKED CONTRACTS` badge (warn colors, tooltip explains V5-a
-  mock scope) + `mode:` badge (`local-only` / `token-auth`) — both driven by `GET /api/meta`.
-- All simulated stdout/stderr streams rendered in dark `pre` blocks; every stream content
-  produced by the mock engine starts with `# [SIMULATED]`.
+- **Evidence links**: native `<a download>` buttons → same-origin attachment endpoints
+  (receipt JSON + hash manifest always; per-step stream links only for steps that
+  actually produced streams).
+- **Honesty labels**: header `engine: workflow-v2+v3 (real)` badge (ok colors, tooltip
+  explains the fail-closed behavior without the bundle) + `mode:` badge (`local-only` /
+  `token-auth`) + a **plan-source badge** on the plan screen ("deterministic template
+  (template@v) — built-in, offline" vs "DeepSeek (deepseek-chat) — LLM proposal, admitted
+  as data via static validation") — all driven by `GET /api/meta` and the plan response.
+- The planning-source `<select>` on the input screen offers template vs `provider:
+  "deepseek"`; its hint states the LLM proposes only and has no execution authority.
+- Real solver stdout/stderr (when a trusted host exists) render in dark `pre` blocks;
+  steps that never ran show "NOT_RUN — this step never executed" instead of streams.
 
 ## 4. Screen flow (text diagram)
 
 ```
                     ┌──────────────────────────────────────────────┐
-                    │ header: brand · mode badge · MOCKED badge    │
+                    │ header: brand · mode badge · engine(real)    │
                     │ stepper: [1 Input]-[2 Plan]-[3 Run]-[4 Results] │
                     └──────────────────────────────────────────────┘
    (1) screen-input                     (2) screen-plan
@@ -131,12 +151,13 @@ checkbox, summary, headings used as focus targets).
         │  executes                                     ▼
    (4) screen-results                (3) screen-run (1s polling)
    ┌─────────────────────────┐  done   ┌──────────────────────────────┐
-   │ verdict block:          │ ◀───────│ run meta (run_id/status)     │
-   │  process_outcome (chip) │ status≠ │ overall banner: CONTRADICTION │
-   │  solver_answer   (chip) │ running │  / UNKNOWN / FAILED warn      │
-   │  cross_tool_verdict     │         │ per-step cards: live chip +   │
-   │  claim_verdict          │         │  expandable stdout/stderr     │
-   │ evidence download links │         └──────────────────────────────┘
+   │ verdict banner          │ ◀───────│ run meta (run_id/status)     │
+   │  BLOCKED / FAIL-CLOSED/ │ status≠ │ per-step cards: live chip +  │
+   │  CONTRADICTION /UNKNOWN │ running │  expandable stdout/stderr    │
+   │  / OK (role=alert)      │         │  (streams only if they ran)  │
+   │ verdict block (4 rows)  │         └──────────────────────────────┘
+   │ environment line        │
+   │ evidence download links │
    │ [Start new task]        │
    └─────────────────────────┘
 ```
@@ -160,7 +181,7 @@ Error states = inline `role="status"` text with error tone + fail-closed banner.
 6. **Responsive**: single column ≤ 720px; plan side-panel stacks below; tables get
    horizontal scroll wrappers; header stacks; verified at 360px and 1440px.
 7. **Language**: `lang="en"`; honest wording — "unknown" is never rendered as an error;
-   simulated streams always carry the `[SIMULATED]` prefix.
+   blocked runs state plainly that no step ran and nothing is simulated.
 
 ## 6. API surface (bounded trusted bridge, `apps/web/server.mjs`)
 
@@ -171,33 +192,44 @@ Transport: same-origin HTTP on `127.0.0.1` (default port 8788, env `PORT`). Auth
 
 | Method+Path | Auth | Request | Response |
 |---|---|---|---|
-| `GET /api/meta` | none | — | `{mode:"local-only"|"token-auth", mocked_contracts:true, engine:{kind,note}, versions:{bridge,engine,plan_schema,receipt_schema}, caps:{body_limit_bytes,max_concurrent_runs,run_wall_clock_s,max_plan_steps,max_step_timeout_s}, allowlist}` |
-| `POST /api/plan` | bearer (if set) | `{problem_text:string, assumptions?:string[]}` | `{plan:<ExecutionPlan 1.0>, assumptions:[{id,text}], mocked_contracts:true}` · 422 fail-closed codes: `EMPTY_PROBLEM`, `UNSUPPORTED_PROBLEM`, `MALFORMED_LP_JSON`, `UNSUPPORTED_JSON`, `INVALID_ASSUMPTIONS`, `MISSING_PROBLEM` |
-| `POST /api/runs` | bearer (if set) | `{plan:<ExecutionPlan>}` | `{run_id, status:"running", poll, mocked:true}` · 422 codes: `PLAN_SCHEMA_MISMATCH`, `UNKNOWN_TOOL`, `OPERATION_MISMATCH`, `STEP_INPUT_HASH_MISMATCH`, `PLAN_STEPS_COUNT`, `PLAN_CYCLE`, `BUDGETS_EXCEEDED`, `STEP_TIMEOUT_INVALID`, … · 429 `CONCURRENCY_LIMIT` when 2 runs active |
-| `GET /api/runs/:id` | bearer (if set) | — | `{run_id, plan_id, status, created_at, plan_summary, step_states, receipt:<ExecutionReceipt 1.0, partial while running>, streams:{step:{stdout,stderr}}, mocked:true}` · 404 `RUN_NOT_FOUND` |
-| `GET /api/runs/:id/evidence` | bearer (if set) | optional `?part=stdout\|stderr&step=<id>` | full: `attachment; filename="receipt-<run_id>.json"` with `{receipt, streams}` · per-stream: `attachment; filename="<part>-<run_id>-<step>.txt"` · 404/409/422 codes as applicable |
+| `GET /api/meta` | none | — | `{mode:"local-only"|"token-auth", mocked_contracts:false, engine:{kind:"workflow-engine-v2-v3", real:true, planner, executor, note}, provider:{deepseek:{configured,model}}, versions:{bridge,engine,plan_schema,receipt_schema}, caps:{body_limit_bytes,max_concurrent_runs,run_wall_clock_s,max_plan_steps,max_step_timeout_s}, allowlist}` |
+| `POST /api/plan` | bearer (if set) | `{problem_text:string, assumptions?:string[], provider?:"deepseek"}` | `{plan:<ExecutionPlan 1.0 with real compiled hashes>, plan_source:{kind:"deterministic-template",template} \| {kind:"deepseek",provider,model,method_sha256}}` · 422 fail-closed codes: `EMPTY_PROBLEM`, `UNSUPPORTED_PROBLEM`, `MALFORMED_LP_JSON`, `UNSUPPORTED_LP_MODEL`, `INVALID_ASSUMPTIONS`, `MISSING_PROBLEM`, `INVALID_PROVIDER`, `BLOCKED_PROVIDER` (no key), `PLAN_OVERSIZED`, `PLAN_INPUT_INVALID`, `PLAN_METHOD_INVALID` · 502 `PROVIDER_FAILED` (provider transport, details carry only status/reason — never the key) |
+| `POST /api/runs` | bearer (if set) | `{plan:<ExecutionPlan>}` | `{run_id, status:"running", poll}` · bridge hard caps then the **executor's own re-validation** (identical codes): `PLAN_BUDGET_EXCEEDED`, `PLAN_TOOL_NOT_ALLOWED`, `PLAN_OPERATION_MISMATCH`, `PLAN_HASH_MISMATCH`, `PLAN_SCHEMA_INVALID`, `PLAN_CYCLE`, `PLAN_TIMEOUT_INVALID`, `PLAN_EXPECTED_KIND_INVALID`, `PLAN_INPUT_INVALID`, … · 429 `CONCURRENCY_LIMIT` when 2 runs active |
+| `GET /api/runs/:id` | bearer (if set) | — | `{run_id, plan_id, status, created_at, engine:"workflow-v2+v3", plan_summary, step_states, receipt:<ExecutionReceipt 1.0, null while running>, streams:{step:{stdout,stderr}}}` · 404 `RUN_NOT_FOUND` |
+| `GET /api/runs/:id/evidence` | bearer (if set) | optional `?part=manifest` or `?part=stdout\|stderr&step=<id>` | full: **the persisted real `receipt.json` bytes** as `attachment; filename="receipt-<run_id>.json"` · `?part=manifest`: hash-bound artifact manifest `attachment; filename="manifest-<run_id>.json"` · per-stream log artifact: `attachment; filename="<part>-<run_id>-<step>.txt"` (404 `ARTIFACT_NOT_FOUND` when the step never produced a stream) · 404/409/422 codes as applicable |
 
-Hard caps (enforced server-side): body ≤ 1,000,000 bytes; ≤ 2 concurrent runs (429);
-run wall clock ≤ 120s (hard ABORTED timer); plan steps ≤ 8; per-step `timeout_s` ≤ 120;
-tools allowlist `z3/cvc5 → solve-smt`, `highs → solve-lp`, `compare → cross-check`;
-`input_sha256` must equal `sha256(input)`; no `child_process` anywhere; fs writes only to
-the runs directory; run ids validated `[A-Za-z0-9-]+` before any path use.
+Hard caps (enforced server-side, mirrored by the engine): body ≤ 1,000,000 bytes (413);
+≤ 2 concurrent runs (429); run wall clock ≤ 120s (plan budgets); plan steps ≤ 8;
+per-step `timeout_s` ≤ 120; tools allowlist `z3/cvc5 → solve-smt`, `highs → solve-lp`,
+`compare → cross-check`; `input_sha256` = `sha256Canonical(input)`; the bridge file
+imports no `child_process` — the only process launch lives inside the V3 executor
+(`spawn` argv, `shell:false`) and is unreachable without the trusted bundle; fs writes
+go to the runs directory (per-run `receipt.json` + `manifest.json` + `logs/`) and the
+executor's temp workspace is removed after each run; run ids validated `[A-Za-z0-9-]+`
+before any path use.
 
-Receipt verdict semantics (mock engine, deterministic, marker-driven via `;; @expect:` in
-the SMT input): default `sat` → `AGREE_SAT`/`OK`; `unsat` → `AGREE_UNSAT`/`OK`;
-`unknown` → `UNKNOWN`/`OK` (honest undecided, not an error); `contradiction` →
-`CONTRADICTION`/`PARTIAL` (danger warning in UI); `error` → step `ERROR` (exit 1) +
-downstream `SKIPPED_DOWNSTREAM` → `FAILED` with `fail_closed_reason`; `timeout` → step
-`TIMEOUT` (exit null) + skip → `FAILED`. LP scenario → `optimal`,
-`cross_tool_verdict: NOT_APPLICABLE`. `claim_verdict` is always `NOT_APPLICABLE` in this
-MVP round (no user claim is submitted); it is rendered as its own labeled row regardless,
-so the four verdict dimensions stay distinct.
+Receipt verdict semantics (REAL engine): verdict layering is receipt-owned — `overall`
+carries `process_outcome` (`OK|PARTIAL|FAILED|ABORTED`), `solver_answer`
+(`{kind, value, by_step}`; `value` null when nothing/nothing-definitive ran),
+`cross_tool_verdict` and `claim_verdict` as separate fields, plus
+`fail_closed_reason` (`BLOCKED_TOOL_MISSING`, `BLOCKED_TOOL_VERSION_PROBE`,
+`STEP_TIMEOUT`, `SOLVER_NONZERO_EXIT`, `SOLVER_OUTPUT_UNPARSABLE`,
+`CROSS_TOOL_CONTRADICTION`, `BUDGET_WALL_CLOCK_EXCEEDED`, …). On a binary-less machine
+every run is `ABORTED` + `BLOCKED_TOOL_MISSING` + `claim_verdict=BLOCKED` (honest
+fail-closed, displayed distinctly — never an error tone, never a solver answer). On the
+trusted host the same UI renders `OK`/`AGREE_SAT|AGREE_UNSAT`/`UNKNOWN`/`CONTRADICTION`
+receipts from real solver output; `claim_verdict` stays `NOT_APPLICABLE` in this MVP
+(no user claim submitted) and is always its own labeled row.
 
 ## 7. File map
 
-- `apps/web/server.mjs` — bridge + mocked engine (no deps, node ≥ 20; `node server.mjs`)
+- `apps/web/server.mjs` — bounded bridge + REAL V2/V3 engine wiring (no deps, node ≥ 20;
+  `node server.mjs`); imports `packages/runner/js/{workflow-plan,workflow-compiler,
+  workflow-executor,workflow-evidence,method-planner}.mjs`
 - `apps/web/public/{index.html,app.js,styles.css}` — zero-build UI (vanilla JS, fetch only)
 - `apps/web/package.json` — own package (NOT in root workspaces), `npm start` convenience
-- `apps/web-tests/api.test.mjs` — `node --test` API conformance + caps (28 tests)
+- `apps/web-tests/api.test.mjs` — `node --test` API conformance against the real engine
+  (plan shape, DeepSeek path incl. the real-call test when `DEEPSEEK_API_KEY` is set,
+  honest blocked receipts, evidence bytes, caps, auth)
 - `apps/web-tests/artifacts/` — real-browser screenshots (see UI_VISUAL_ACCEPTANCE.md)
-- `docs/mvp/UI_VISUAL_ACCEPTANCE.md` — browser evidence & checklist
+- `docs/mvp/UI_VISUAL_ACCEPTANCE.md` — browser evidence & checklist (V5-b live engine)

@@ -1,8 +1,8 @@
 {
   "name": "formal-tools-web",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": true,
-  "description": "formal-tools V5 bounded trusted Web bridge + zero-build UI (mocked engine this round; see docs/mvp/UI_DESIGN.md). Not part of the root workspaces by design.",
+  "description": "formal-tools V5-b bounded trusted Web bridge + zero-build UI (real V2/V3 workflow engine; honest fail-closed states; see docs/mvp/UI_DESIGN.md). Not part of the root workspaces by design.",
   "type": "module",
   "main": "server.mjs",
   "scripts": {

@@ -1,20 +1,32 @@
 #!/usr/bin/env node
-// formal-tools — V5 bounded trusted Web bridge (issue #185, OUTPUT_LABEL=FORMAL_TOOLS_I180_V5_WEB_UI)
+// formal-tools — V5-b bounded trusted Web bridge (issue #185, OUTPUT_LABEL=FORMAL_TOOLS_I180_V5B_LIVE_ENGINE)
 //
-// Scope of this round (V5-a): the execution engine is MOCKED. Plans and receipts use the
-// pinned V0 contract shapes exactly ("formal-tools/execution-plan/1.0" and
-// "formal-tools/execution-receipt/1.0"), but no real solver process is launched:
-//   * no child_process is imported anywhere in this file
-//   * every simulated stream is prefixed "# [SIMULATED]"
-//   * GET /api/meta advertises mocked_contracts:true and the UI shows a MOCKED badge
-// Master wires the real V2/V3 engine behind the same endpoints in V5-b.
+// Scope of this round (V5-b): the execution engine is REAL. The mocked planner /
+// executor of V5-a is replaced by the actual engine modules:
+//   * planning  — packages/runner/js/workflow-plan.mjs (V2): normalizeUserProblem,
+//     stepsFromMethod, buildExecutionPlan; compilePlan (workflow-compiler.mjs)
+//     backfills the real compiled hashes.
+//   * execution — packages/runner/js/workflow-executor.mjs (V3): executeWorkflowPlan
+//     re-validates the plan as data and runs the typed DAG. On machines without the
+//     trusted portable tool bundle (FORMAL_PORTABLE_ROOT) the executor fails closed
+//     BEFORE any step and returns an honest ABORTED receipt with
+//     fail_closed_reason=BLOCKED_TOOL_MISSING. That receipt is a REAL result and is
+//     served/displayed as-is — nothing is simulated anywhere.
+//   * provider  — provider:"deepseek" plans through makeDeepSeekChatProvider +
+//     proposeMethod; the LLM proposal is UNTRUSTED DATA that only enters a plan via
+//     the static V2 gates (assessMethod + buildExecutionPlan). No key ⇒ honest
+//     BLOCKED_PROVIDER. The key travels only in the Authorization header.
 //
 // Security posture:
 //   * binds 127.0.0.1 by default; optional bearer token via FORMAL_WEB_TOKEN
-//   * request bodies are capped (413 over the limit), plans are validated against a
-//     strict tool/operation allowlist (422 fail-closed on any violation)
-//   * max 2 concurrent runs, per-run wall clock <= 120s, plan steps <= 8
-//   * fs writes only inside the runs directory; run ids are strictly validated
+//   * request bodies are capped (413 over the limit); plans are re-validated by the
+//     executor's own validator plus bridge hard caps (422 fail-closed)
+//   * max 2 concurrent runs, per-run wall clock <= 120s (budgets), plan steps <= 8
+//   * this file imports no child_process and spawns nothing; the only process launch
+//     path lives inside the V3 executor (spawn argv with shell:false) and is
+//     unreachable without the trusted bundle; fs writes go only to the runs directory
+//     (per-run receipts/artifacts) and the executor's own temp workspace is removed
+//     after each run
 //   * no CORS headers at all (same-origin only)
 
 import http from 'node:http';
@@ -23,13 +35,32 @@ import { promises as fsp } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import {
+  CAPS,
+  WorkflowError,
+  normalizeUserProblem,
+  makeDeepSeekChatProvider,
+  stepsFromMethod,
+  buildExecutionPlan,
+} from '../../packages/runner/js/workflow-plan.mjs';
+import { proposeMethod } from '../../packages/runner/js/method-planner.mjs';
+import { compilePlan } from '../../packages/runner/js/workflow-compiler.mjs';
+import {
+  executeWorkflowPlan,
+  validateExecutionPlan as validateExecutorPlan,
+  WorkflowBlockedError,
+  WorkflowPlanError,
+} from '../../packages/runner/js/workflow-executor.mjs';
+import { writeExecutionReceiptArtifacts } from '../../packages/runner/js/workflow-evidence.mjs';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
 
 const PLAN_SCHEMA = 'formal-tools/execution-plan/1.0';
 const RECEIPT_SCHEMA = 'formal-tools/execution-receipt/1.0';
 
-// Tool -> the single operation each tool may perform. Anything else is fail-closed.
+// Tool -> the single operation each tool may perform. Anything else is fail-closed
+// at plan validation (the frozen V2 allowlist is enforced again by the executor).
 const TOOL_ALLOWLIST = {
   z3: 'solve-smt',
   cvc5: 'solve-smt',
@@ -37,43 +68,22 @@ const TOOL_ALLOWLIST = {
   compare: 'cross-check',
 };
 
-// Simulated tool versions. Clearly suffixed so no output can be mistaken for a real run.
-const TOOL_VERSIONS_SIMULATED = {
-  z3: '4.13.0-SIMULATED',
-  cvc5: '1.2.1-SIMULATED',
-  highs: '1.11.0-SIMULATED',
-  compare: '0.1.0-mock-bridge',
-};
-
-const STEP_STATUSES = ['EXECUTED', 'NOT_RUN', 'TIMEOUT', 'ERROR', 'SKIPPED_DOWNSTREAM'];
-const PROCESS_OUTCOMES = ['OK', 'PARTIAL', 'FAILED', 'ABORTED'];
-const CROSS_VERDICTS = ['AGREE_SAT', 'AGREE_UNSAT', 'CONTRADICTION', 'UNKNOWN', 'NOT_APPLICABLE'];
-
-const STEP_STATUS_ENUM = new Set(STEP_STATUSES);
-
-function sha256(text) {
-  return crypto.createHash('sha256').update(text, 'utf8').digest('hex');
-}
-
-function stableStringify(value) {
-  if (Array.isArray(value)) return '[' + value.map(stableStringify).join(',') + ']';
-  if (value && typeof value === 'object') {
-    const keys = Object.keys(value).sort();
-    return '{' + keys.map((k) => JSON.stringify(k) + ':' + stableStringify(value[k])).join(',') + '}';
-  }
-  return JSON.stringify(value);
-}
+// Bridge hard caps (mirror CAPS and the executor's assumption bound; enforced here
+// in addition to the engine's own validation — defense in depth).
+const BRIDGE_MAX_STEPS = 8;
+const BRIDGE_MAX_TOTAL_TIMEOUT_S = 120;
+const BRIDGE_MAX_ASSUMPTION_CHARS = 256; // executor re-validates at 256
 
 function defaultRunsDir() {
   return path.join(REPO_ROOT, 'apps', 'web-tests', '.runs');
 }
 
 // ---------------------------------------------------------------------------
-// Problem kind detection + deterministic plan builder (mocked "planner")
+// Problem kind detection (deterministic, fail-closed)
 // ---------------------------------------------------------------------------
 
 const SMT_MARKERS = ['(set-logic', '(declare-fun', '(declare-const', '(assert', '(check-sat'];
-const LP_KEYS = ['objective', 'constraints', 'variables', 'sense', 'optimize', 'subject_to', 'minimize', 'maximize'];
+const LP_MODEL_KEYS = ['sense', 'objective', 'variables', 'constraints'];
 
 function failClosed(code, message, extra) {
   const err = new Error(message);
@@ -84,532 +94,187 @@ function failClosed(code, message, extra) {
   return err;
 }
 
-function detectProblemKind(text) {
-  const trimmed = text.trim();
-  if (!trimmed) throw failClosed('EMPTY_PROBLEM', 'fail-closed: problem input is empty.');
-  if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
-    let parsed;
-    try {
-      parsed = JSON.parse(trimmed);
-    } catch {
-      throw failClosed('MALFORMED_LP_JSON', 'fail-closed: input looks like JSON but does not parse; not accepted as any known problem kind.');
-    }
-    const isObject = parsed && typeof parsed === 'object' && !Array.isArray(parsed);
-    const hasLpKey = isObject && Object.keys(parsed).some((k) => LP_KEYS.includes(k));
-    if (!hasLpKey) {
-      throw failClosed('UNSUPPORTED_JSON', 'fail-closed: parsed JSON carries no known LP model keys (objective/constraints/variables/...).');
-    }
-    return 'lp-json';
-  }
-  if (SMT_MARKERS.some((m) => trimmed.includes(m))) return 'smt2';
-  throw failClosed(
-    'UNSUPPORTED_PROBLEM',
-    'fail-closed: input is neither SMT-LIB2 text (needs (assert / (check-sat ...) forms) nor an LP JSON model with objective/constraints keys.',
+function canonicalProblemTextLocal(text) {
+  return String(text).normalize('NFC').replace(/\r\n?/g, '\n').trim();
+}
+
+/** Exactly the LP model shape the frozen contract admits (docs §4). */
+function isLpModelShape(parsed) {
+  return Boolean(
+    parsed && typeof parsed === 'object' && !Array.isArray(parsed) &&
+    LP_MODEL_KEYS.every((k) => Object.prototype.hasOwnProperty.call(parsed, k)) &&
+    (parsed.sense === 'min' || parsed.sense === 'max'),
   );
 }
 
+function detectProblemKind(rawText) {
+  const text = canonicalProblemTextLocal(rawText);
+  if (!text) throw failClosed('EMPTY_PROBLEM', 'fail-closed: problem input is empty.');
+  if (text.startsWith('{') || text.startsWith('[')) {
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      throw failClosed('MALFORMED_LP_JSON', 'fail-closed: input looks like JSON but does not parse; not accepted as any known problem kind.');
+    }
+    if (!isLpModelShape(parsed)) {
+      throw failClosed(
+        'UNSUPPORTED_LP_MODEL',
+        'fail-closed: parsed JSON is not an LP model with exactly the keys sense ("min"|"max"), objective, variables, constraints (frozen HiGHS model shape).',
+      );
+    }
+    return { kind: 'lp-json', lpModel: parsed, canonicalText: text };
+  }
+  if (SMT_MARKERS.some((m) => text.includes(m))) {
+    return { kind: 'smt2', lpModel: null, canonicalText: text };
+  }
+  throw failClosed(
+    'UNSUPPORTED_PROBLEM',
+    'fail-closed: input is neither SMT-LIB2 text (needs (assert / (check-sat ...) forms) nor an LP JSON model with exactly sense/objective/variables/constraints keys.',
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Deterministic method templates + typed steps (mirror the frozen fixture
+// shapes of tests/workflow-plan.test.mjs; never guessed)
+// ---------------------------------------------------------------------------
+
+const CAPABILITY_BY_KIND = { smt2: ['logic.smt'], 'lp-json': ['opt.numerical'] };
+const TEMPLATE_BY_KIND = { smt2: 'smt-cross-check@v1', 'lp-json': 'highs-lp@v1' };
+
 const DEFAULT_ASSUMPTIONS = {
   smt2: [
-    'Input is UTF-8 SMT-LIB2 text intended for QF_LIA-style solving.',
+    'Input is UTF-8 SMT-LIB2 text intended for QF-style solving.',
     'Solvers may return "unknown" within the per-step timeout; that is an honest outcome, not an error.',
   ],
   'lp-json': [
-    'LP JSON model is well-formed and interpreted with standard HiGHS linear-programming semantics.',
+    'LP model is well-formed and interpreted with standard HiGHS linear-programming semantics.',
     'Numerical tolerance for optimality follows the solver default.',
   ],
 };
 
-function sanitizeAssumptions(input, kind) {
-  if (input === undefined || input === null) {
-    return (DEFAULT_ASSUMPTIONS[kind] || []).map((text, i) => ({ id: `a${i + 1}`, text }));
+function sanitizeAssumptions(input) {
+  if (input === undefined || input === null) return [];
+  if (!Array.isArray(input) || input.length > CAPS.assumptionItems) {
+    throw failClosed('INVALID_ASSUMPTIONS', `fail-closed: assumptions must be an array of at most ${CAPS.assumptionItems} strings.`);
   }
-  if (!Array.isArray(input) || input.length > 12) {
-    throw failClosed('INVALID_ASSUMPTIONS', 'fail-closed: assumptions must be an array of at most 12 strings.');
-  }
-  const out = [];
-  for (const item of input) {
-    const text = typeof item === 'string' ? item : item && typeof item === 'object' ? item.text : null;
-    if (typeof text !== 'string' || !text.trim() || text.length > 500) {
-      throw failClosed('INVALID_ASSUMPTIONS', 'fail-closed: each assumption must be a non-empty string of at most 500 characters.');
+  for (const text of input) {
+    if (typeof text !== 'string' || !text.trim() || text.length > BRIDGE_MAX_ASSUMPTION_CHARS) {
+      throw failClosed('INVALID_ASSUMPTIONS', `fail-closed: each assumption must be a non-empty string of at most ${BRIDGE_MAX_ASSUMPTION_CHARS} characters (executor bound).`);
     }
-    out.push({ id: `a${out.length + 1}`, text: text.trim() });
   }
-  return out;
+  return input.map((t) => t.trim());
 }
 
-function buildMethodDag(kind) {
+function deterministicMethod(kind, problem) {
   if (kind === 'smt2') {
-    return [
-      { id: 'parse', kind: 'parse', depends_on: [] },
-      { id: 'solve-z3', kind: 'solve', depends_on: ['parse'] },
-      { id: 'solve-cvc5', kind: 'solve', depends_on: ['parse'] },
-      { id: 'cross-check', kind: 'verify', depends_on: ['solve-z3', 'solve-cvc5'] },
-    ];
-  }
-  return [
-    { id: 'parse', kind: 'parse', depends_on: [] },
-    { id: 'solve-highs', kind: 'solve', depends_on: ['parse'] },
-  ];
-}
-
-function buildPlan(problemText, assumptionsInput) {
-  const kind = detectProblemKind(problemText);
-  const assumptions = sanitizeAssumptions(assumptionsInput, kind);
-  const canonicalCore = stableStringify({ problem_sha256: sha256(problemText), kind });
-
-  let steps;
-  if (kind === 'smt2') {
-    const compareInput = stableStringify({ compare_steps: ['s1', 's2'], strategy: 'sat-unsat-agreement' });
-    steps = [
-      { id: 's1', tool: 'z3', operation: 'solve-smt', depends_on: [], input: problemText, input_sha256: sha256(problemText), timeout_s: 30, expected_output_kind: 'solver_result' },
-      { id: 's2', tool: 'cvc5', operation: 'solve-smt', depends_on: [], input: problemText, input_sha256: sha256(problemText), timeout_s: 30, expected_output_kind: 'solver_result' },
-      { id: 's3', tool: 'compare', operation: 'cross-check', depends_on: ['s1', 's2'], input: compareInput, input_sha256: sha256(compareInput), timeout_s: 15, expected_output_kind: 'comparison' },
-    ];
-  } else {
-    steps = [
-      { id: 's1', tool: 'highs', operation: 'solve-lp', depends_on: [], input: problemText, input_sha256: sha256(problemText), timeout_s: 60, expected_output_kind: 'solver_result' },
-    ];
-  }
-
-  const budgets = { max_steps: 8, max_total_timeout_s: 120 };
-  const canonical = stableStringify({ schema: PLAN_SCHEMA, source: { problem_sha256: sha256(problemText), problem_kind: kind }, steps, budgets });
-  return {
-    plan: {
-      schema: PLAN_SCHEMA,
-      plan_id: 'plan-' + sha256(canonicalCore + canonical).slice(0, 16),
-      source: { problem_sha256: sha256(problemText), problem_kind: kind },
-      assumptions,
-      method_dag: buildMethodDag(kind),
-      steps,
-      budgets,
-      compiled: {
-        launcher_sha256: sha256('launcher:' + canonical),
-        manifest_sha256: sha256('manifest:' + canonical),
-      },
-    },
-    assumptions,
-    mocked_contracts: true,
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Plan validation for POST /api/runs (trusted bridge; allowlist + fail-closed)
-// ---------------------------------------------------------------------------
-
-function isHex64(s) {
-  return typeof s === 'string' && /^[0-9a-f]{64}$/.test(s);
-}
-
-function validatePlan(plan) {
-  if (!plan || typeof plan !== 'object' || Array.isArray(plan)) {
-    throw failClosed('PLAN_NOT_OBJECT', 'fail-closed: plan must be a JSON object.');
-  }
-  if (plan.schema !== PLAN_SCHEMA) {
-    throw failClosed('PLAN_SCHEMA_MISMATCH', `fail-closed: plan.schema must be exactly "${PLAN_SCHEMA}".`);
-  }
-  if (typeof plan.plan_id !== 'string' || !plan.plan_id) {
-    throw failClosed('PLAN_ID_INVALID', 'fail-closed: plan.plan_id must be a non-empty string.');
-  }
-  const src = plan.source;
-  if (!src || !isHex64(src.problem_sha256) || typeof src.problem_kind !== 'string') {
-    throw failClosed('PLAN_SOURCE_INVALID', 'fail-closed: plan.source must carry problem_sha256 (sha256 hex) and problem_kind.');
-  }
-  if (!Array.isArray(plan.steps) || plan.steps.length < 1 || plan.steps.length > 8) {
-    throw failClosed('PLAN_STEPS_COUNT', 'fail-closed: plan.steps must contain between 1 and 8 steps.');
-  }
-  const ids = new Set();
-  for (const step of plan.steps) {
-    if (!step || typeof step !== 'object') throw failClosed('STEP_INVALID', 'fail-closed: every step must be an object.');
-    if (typeof step.id !== 'string' || !/^[A-Za-z0-9_-]{1,32}$/.test(step.id)) {
-      throw failClosed('STEP_ID_INVALID', 'fail-closed: step.id must match [A-Za-z0-9_-]{1,32}.');
-    }
-    if (ids.has(step.id)) throw failClosed('STEP_ID_DUPLICATE', `fail-closed: duplicate step id "${step.id}".`);
-    ids.add(step.id);
-    const expectedOp = TOOL_ALLOWLIST[step.tool];
-    if (!expectedOp) {
-      throw failClosed('UNKNOWN_TOOL', `fail-closed: tool "${String(step.tool)}" is not in the allowlist (${Object.keys(TOOL_ALLOWLIST).join(', ')}).`);
-    }
-    if (step.operation !== expectedOp) {
-      throw failClosed('OPERATION_MISMATCH', `fail-closed: tool "${step.tool}" only allows operation "${expectedOp}", got "${String(step.operation)}".`);
-    }
-    if (!Array.isArray(step.depends_on)) throw failClosed('STEP_DEPS_INVALID', `fail-closed: step "${step.id}" depends_on must be an array.`);
-    if (typeof step.input !== 'string' || step.input.length === 0 || step.input.length > 200000) {
-      throw failClosed('STEP_INPUT_INVALID', `fail-closed: step "${step.id}" input must be a non-empty string of at most 200000 chars.`);
-    }
-    if (!isHex64(step.input_sha256) || step.input_sha256 !== sha256(step.input)) {
-      throw failClosed('STEP_INPUT_HASH_MISMATCH', `fail-closed: step "${step.id}" input_sha256 does not match sha256(input).`);
-    }
-    if (typeof step.timeout_s !== 'number' || !Number.isFinite(step.timeout_s) || step.timeout_s < 1 || step.timeout_s > 120) {
-      throw failClosed('STEP_TIMEOUT_INVALID', `fail-closed: step "${step.id}" timeout_s must be a number in [1, 120].`);
-    }
-    if (typeof step.expected_output_kind !== 'string' || !step.expected_output_kind) {
-      throw failClosed('STEP_OUTPUT_KIND_INVALID', `fail-closed: step "${step.id}" expected_output_kind must be a non-empty string.`);
-    }
-  }
-  for (const step of plan.steps) {
-    for (const dep of step.depends_on) {
-      if (!ids.has(dep)) throw failClosed('STEP_DEP_UNKNOWN', `fail-closed: step "${step.id}" depends on unknown step "${dep}".`);
-      if (dep === step.id) throw failClosed('STEP_DEP_SELF', `fail-closed: step "${step.id}" depends on itself.`);
-    }
-  }
-  // cycle check (DFS with colors)
-  const color = new Map();
-  const byId = new Map(plan.steps.map((s) => [s.id, s]));
-  const visit = (id) => {
-    const c = color.get(id);
-    if (c === 1) throw failClosed('PLAN_CYCLE', `fail-closed: dependency cycle detected at step "${id}".`);
-    if (c === 2) return;
-    color.set(id, 1);
-    for (const dep of byId.get(id).depends_on) visit(dep);
-    color.set(id, 2);
-  };
-  for (const s of plan.steps) visit(s.id);
-
-  const budgets = plan.budgets;
-  if (!budgets || typeof budgets !== 'object') throw failClosed('BUDGETS_INVALID', 'fail-closed: plan.budgets must be an object.');
-  if (budgets.max_steps !== 8 || budgets.max_total_timeout_s !== 120) {
-    throw failClosed('BUDGETS_EXCEEDED', 'fail-closed: budgets must be max_steps=8, max_total_timeout_s=120 (bridge hard caps).');
-  }
-  const compiled = plan.compiled;
-  if (!compiled || !isHex64(compiled.launcher_sha256) || !isHex64(compiled.manifest_sha256)) {
-    throw failClosed('COMPILED_INVALID', 'fail-closed: plan.compiled must carry launcher_sha256 and manifest_sha256 (sha256 hex).');
-  }
-  return true;
-}
-
-// ---------------------------------------------------------------------------
-// MOCKED execution engine — deterministic simulated progression
-// ---------------------------------------------------------------------------
-
-function parseExpectMarker(text) {
-  const m = text.match(/(?:^|\n)\s*;;\s*@expect:\s*(sat|unsat|unknown|contradiction|error|timeout)\s*(?:\n|$)/);
-  return m ? m[1] : null;
-}
-
-function deterministicObjective(inputText) {
-  const h = sha256(inputText);
-  return ((parseInt(h.slice(0, 8), 16) % 1000000) / 100).toFixed(2);
-}
-
-function simulatedStreams(tool, expectation, objectiveValue) {
-  const banner = '# [SIMULATED] mock engine output — no real solver process was executed.';
-  switch (expectation) {
-    case 'error':
-      return {
-        stdout: '',
-        stderr: `${banner}\n(error "line 5 column 3: illegal literal - unsupported sort")\n`,
-        exit_code: 1,
-      };
-    case 'timeout':
-      return {
-        stdout: `${banner}\n...search still incomplete after budget...\n`,
-        stderr: '',
-        exit_code: null,
-        timedOut: true,
-      };
-    default:
-      break;
-  }
-  if (tool === 'z3') {
-    const answer = expectation === 'unsat' ? 'unsat' : expectation === 'unknown' ? 'unknown' : expectation === 'contradiction' ? 'sat' : 'sat';
-    return { stdout: `${banner}\nz3 4.13.0-SIMULATED\n${answer}\n`, stderr: '', exit_code: 0, answer };
-  }
-  if (tool === 'cvc5') {
-    const answer = expectation === 'unsat' ? 'unsat' : expectation === 'unknown' ? 'unknown' : expectation === 'contradiction' ? 'unsat' : 'sat';
-    return { stdout: `${banner}\ncvc5 1.2.1-SIMULATED\n${answer}\n`, stderr: '', exit_code: 0, answer };
-  }
-  if (tool === 'highs') {
     return {
-      stdout: `${banner}\nRunning HiGHS 1.11.0-SIMULATED ...\nOptimal: objective value = ${objectiveValue}\n`,
-      stderr: '',
-      exit_code: 0,
-      answer: 'optimal',
+      schema: 'formal-tools/method-proposal/0.1',
+      method_id: 'template-smt-cross-check',
+      problem_id: problem.problem_id,
+      goal_claim_ids: ['claim1'],
+      oracle_ids: ['heldout'],
+      semantic_review: 'PENDING',
+      steps: [
+        { id: 'step-z3', tool_id: 'z3', operation: 'solve', claim_ids: ['claim1'], provides: ['logic.smt'],
+          depends_on: [], source_refs: ['user-problem-text'], estimated_cost_units: 1, timeout_ms: 30000,
+          destination: 'LOCAL', output_classification: 'PUBLIC' },
+        { id: 'step-cvc5', tool_id: 'cvc5', operation: 'solve', claim_ids: ['claim1'], provides: ['logic.smt'],
+          depends_on: ['step-z3'], source_refs: [], estimated_cost_units: 1, timeout_ms: 30000,
+          destination: 'LOCAL', output_classification: 'PUBLIC' },
+      ],
     };
   }
-  // compare
-  return { stdout: `${banner}\ncompare 0.1.0-mock-bridge: agreement computed from simulated solver answers\n`, stderr: '', exit_code: 0, answer: null };
+  return {
+    schema: 'formal-tools/method-proposal/0.1',
+    method_id: 'template-highs-lp',
+    problem_id: problem.problem_id,
+    goal_claim_ids: ['claim1'],
+    oracle_ids: ['heldout'],
+    semantic_review: 'PENDING',
+    steps: [
+      { id: 'step-highs', tool_id: 'highs', operation: 'UNRESOLVED', claim_ids: ['claim1'],
+        provides: ['opt.numerical'], depends_on: [], source_refs: ['user-problem-text'],
+        estimated_cost_units: 1, timeout_ms: 30000, destination: 'LOCAL', output_classification: 'PUBLIC' },
+    ],
+  };
 }
 
-function topoOrder(steps) {
-  const byId = new Map(steps.map((s) => [s.id, s]));
-  const order = [];
-  const done = new Set();
-  let remaining = [...steps.map((s) => s.id)];
-  while (remaining.length) {
-    const ready = remaining.filter((id) => byId.get(id).depends_on.every((d) => done.has(d)));
-    if (!ready.length) {
-      // validated acyclic earlier; defensive fallback
-      for (const id of remaining) order.push(byId.get(id));
-      break;
-    }
-    for (const id of ready) {
-      order.push(byId.get(id));
-      done.add(id);
-    }
-    remaining = remaining.filter((id) => !done.has(id));
+/** Trusted caller inputs for stepsFromMethod, keyed by method step id. */
+function trustedInputsForMethod(method, canonicalText, lpModel) {
+  const inputs = {};
+  for (const s of method.steps) {
+    if (s.tool_id === 'z3' || s.tool_id === 'cvc5') inputs[s.id] = { smt_lib: canonicalText };
+    else if (s.tool_id === 'highs') inputs[s.id] = lpModel;
   }
-  return order;
+  return inputs;
 }
 
-function failDependents(steps, failedIds, receiptSteps) {
-  const byId = new Map(steps.map((s) => [s.id, s]));
-  const skipped = new Set();
-  let changed = true;
-  while (changed) {
-    changed = false;
-    for (const s of steps) {
-      if (skipped.has(s.id) || failedIds.has(s.id)) continue;
-      if (s.depends_on.some((d) => skipped.has(d) || failedIds.has(d))) {
-        skipped.add(s.id);
-        changed = true;
-      }
-    }
-  }
-  for (const s of steps) {
-    if (skipped.has(s.id)) {
-      const rs = receiptSteps.get(s.id);
-      rs.status = 'SKIPPED_DOWNSTREAM';
-      rs.exit_code = null;
-      rs.stdout_sha256 = sha256('');
-      rs.stderr_sha256 = sha256('');
-      rs.stdout_bounded = false;
-      rs.stderr_bounded = false;
-      rs.result = { kind: 'skipped', reason: 'upstream step failed; step not run (fail-closed)' };
-    }
-  }
-  return skipped;
+/**
+ * Executor-side compare step appended after the typed solver steps (compare has
+ * no method counterpart; docs/mvp/EXECUTION_PLAN_CONTRACT.md §3). Applied when
+ * at least two solver steps exist so a cross-tool verdict is always attempted.
+ */
+function compareStepFor(solverStepIds) {
+  return {
+    id: 'step-agree',
+    tool: 'compare',
+    operation: 'cross-check',
+    depends_on: [...solverStepIds],
+    input: { left_step: solverStepIds[0], right_step: solverStepIds[1], agree_on: ['sat', 'unsat'] },
+    timeout_s: 5,
+    expected_output_kind: 'cross-tool-verdict',
+  };
 }
 
-function makeRunExecutor(state) {
-  const { plan, runId, opts } = state;
-  const stepDelayMs = opts.stepDelayMs;
-  const toolsUsed = [...new Set(plan.steps.map((s) => s.tool))];
-  const expectation = parseExpectMarker(plan.steps[0].input) || (plan.source.problem_kind === 'lp-json' ? 'optimal' : 'sat');
-  const objectiveValue = deterministicObjective(plan.steps[0].input);
+/**
+ * Shared plan build path: normalize -> stepsFromMethod -> buildExecutionPlan ->
+ * compilePlan (real compiled hashes). `method` is either the deterministic
+ * template or the DeepSeek proposal (untrusted data already admitted by
+ * proposeMethod's assessMethod; buildExecutionPlan re-admits it).
+ */
+function buildRealPlan({ kind, canonicalText, lpModel, method, problem, assumptions }) {
+  const inputs = trustedInputsForMethod(method, canonicalText, lpModel);
+  const typed = stepsFromMethod(method, inputs);
+  const solverIds = typed.filter((s) => s.tool === 'z3' || s.tool === 'cvc5' || s.tool === 'highs').map((s) => s.id);
+  const compareSteps = solverIds.length >= 2 ? [compareStepFor(solverIds)] : [];
+  const steps = stepsFromMethod(method, inputs, { compareSteps });
+  const plan = buildExecutionPlan({ problem, method, steps, assumptions, problemKind: kind });
+  const compiled = compilePlan(plan); // deterministic; never mutates `plan`
+  return compiled.plan;
+}
 
-  const receipt = {
-    schema: RECEIPT_SCHEMA,
-    run_id: runId,
-    plan_id: plan.plan_id,
-    plan_sha256: sha256(stableStringify(plan)),
-    source_sha: plan.source.problem_sha256,
-    created_at: new Date().toISOString(),
-    tool_versions: Object.fromEntries(toolsUsed.map((t) => [t, TOOL_VERSIONS_SIMULATED[t]])),
-    steps: plan.steps.map((s) => ({
-      step_id: s.id,
-      tool: s.tool,
-      operation: s.operation,
-      status: 'NOT_RUN',
-      exit_code: null,
-      elapsed_ms: 0,
-      stdout_sha256: sha256(''),
-      stderr_sha256: sha256(''),
-      stdout_bounded: false,
-      stderr_bounded: false,
-      result: { kind: 'pending', note: 'step has not run yet' },
-      artifacts: [],
-    })),
-    overall: {
-      process_outcome: 'ABORTED',
-      solver_answer: null,
-      cross_tool_verdict: 'NOT_APPLICABLE',
-      claim_verdict: 'NOT_APPLICABLE',
-    },
-    environment: {
-      engine: 'mock-v1',
-      simulated: true,
-      node: process.version,
-      platform: process.platform,
-      host: '127.0.0.1',
-      note: 'mocked engine round (V5-a); real V2/V3 wiring pending',
+async function planWithProvider(kind, canonicalText, lpModel, problem, assumptions, apiKey) {
+  const provider = makeDeepSeekChatProvider({ apiKey });
+  // Host egress authority: the user explicitly selected provider:"deepseek" for
+  // their own problem text in this request, which is the whole approved payload.
+  const egressAuthority = { authorizePublicPayload: async () => true };
+  const verdict = await proposeMethod(problem, provider.generate, egressAuthority);
+  if (verdict.status !== 'STRUCTURALLY_VALID') {
+    throw failClosed('PLAN_METHOD_INVALID', 'fail-closed: DeepSeek method proposal rejected by assessMethod.', {
+      issues: (verdict.issues || []).slice(0, 8),
+    });
+  }
+  const method = provider.getProposal();
+  const plan = buildRealPlan({ kind, canonicalText, lpModel, method, problem, assumptions });
+  return {
+    plan,
+    plan_source: {
+      kind: 'deepseek',
+      provider: 'deepseek',
+      model: provider.model,
+      method_sha256: verdict.method_sha256,
     },
   };
-  const receiptSteps = new Map(receipt.steps.map((rs) => [rs.step_id, rs]));
-  const streams = new Map(); // step_id -> {stdout, stderr}
-  for (const s of plan.steps) streams.set(s.id, { stdout: '', stderr: '' });
+}
 
-  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
-  async function executeStep(step) {
-    state.stepStates.set(step.id, 'running');
-    await sleep(stepDelayMs * (step.operation === 'cross-check' ? 1.5 : 1));
-    const sim = simulatedStreams(step.tool, expectation, objectiveValue);
-    const rs = receiptSteps.get(step.id);
-    const bounded = (s) => (s.length > 2000 ? s.slice(0, 2000) : s);
-    const stdout = bounded(sim.stdout);
-    const stderr = bounded(sim.stderr);
-    streams.set(step.id, { stdout, stderr });
-    rs.stdout_sha256 = sha256(stdout);
-    rs.stderr_sha256 = sha256(stderr);
-    rs.stdout_bounded = stdout.length < sim.stdout.length;
-    rs.stderr_bounded = stderr.length < sim.stderr.length;
-    rs.elapsed_ms = step.tool === 'z3' ? 520 : step.tool === 'cvc5' ? 640 : step.tool === 'highs' ? 900 : 380;
-    if (sim.timedOut) {
-      rs.status = 'TIMEOUT';
-      rs.exit_code = null;
-      rs.result = { kind: 'timeout', note: `simulated timeout after ${step.timeout_s}s budget` };
-      return 'TIMEOUT';
-    }
-    rs.exit_code = sim.exit_code;
-    if (sim.exit_code !== 0) {
-      rs.status = 'ERROR';
-      rs.result = { kind: 'error', note: 'simulated solver error (fail-closed)' };
-      return 'ERROR';
-    }
-    rs.status = 'EXECUTED';
-    if (step.tool === 'highs') {
-      rs.result = { kind: 'solver_result', answer: 'optimal', objective: Number(objectiveValue) };
-    } else if (step.tool === 'compare') {
-      // filled after both solvers; computed below
-      rs.result = { kind: 'comparison', note: 'computed below' };
-    } else {
-      rs.result = { kind: 'solver_result', answer: sim.answer };
-    }
-    state.stepStates.set(step.id, 'done');
-    return 'EXECUTED';
-  }
-
-  async function run() {
-    state.status = 'running';
-    const order = topoOrder(plan.steps);
-    const failures = new Set();
-    const answers = new Map(); // tool -> answer
-
-    for (const step of order) {
-      const rs = receiptSteps.get(step.id);
-      if (rs.status === 'SKIPPED_DOWNSTREAM') {
-        state.stepStates.set(step.id, 'skipped');
-        continue;
-      }
-      const outcome = await executeStep(step);
-      if (outcome === 'ERROR' || outcome === 'TIMEOUT') {
-        failures.add(step.id);
-        state.stepStates.set(step.id, outcome === 'ERROR' ? 'error' : 'timeout');
-      } else {
-        const sim = simulatedStreams(step.tool, expectation, objectiveValue);
-        if (sim.answer) answers.set(step.tool, sim.answer);
-        state.stepStates.set(step.id, 'done');
-      }
-      failDependents(plan.steps, failures, receiptSteps);
-    }
-
-    // cross-check result
-    const compareStep = plan.steps.find((s) => s.tool === 'compare');
-    let crossVerdict = 'NOT_APPLICABLE';
-    let solverAnswer = null;
-    if (plan.source.problem_kind === 'smt2') {
-      const z3 = answers.get('z3');
-      const cvc5 = answers.get('cvc5');
-      if (z3 && cvc5) {
-        if (z3 === cvc5) crossVerdict = z3 === 'sat' ? 'AGREE_SAT' : z3 === 'unsat' ? 'AGREE_UNSAT' : 'UNKNOWN';
-        else crossVerdict = 'CONTRADICTION';
-        solverAnswer = z3 === cvc5 ? z3 : `conflicting (z3: ${z3}, cvc5: ${cvc5})`;
-      } else {
-        // a cross-check that never executed must not claim an UNKNOWN verdict
-        const compareExecuted = compareStep && receiptSteps.get(compareStep.id).status === 'EXECUTED';
-        crossVerdict = compareExecuted ? 'UNKNOWN' : 'NOT_APPLICABLE';
-        solverAnswer = answers.get('z3') || answers.get('cvc5') || null;
-      }
-      if (expectation === 'unknown') solverAnswer = 'unknown';
-      if (compareStep) {
-        const crs = receiptSteps.get(compareStep.id);
-        if (crs.status === 'EXECUTED') {
-          const agree = crossVerdict === 'AGREE_SAT' || crossVerdict === 'AGREE_UNSAT';
-          const agreeUnknown = crossVerdict === 'UNKNOWN';
-          crs.result = {
-            kind: 'comparison',
-            agree,
-            agree_unknown: agreeUnknown,
-            verdict: crossVerdict,
-            z3: answers.get('z3') || 'not-run',
-            cvc5: answers.get('cvc5') || 'not-run',
-          };
-          const cs = streams.get(compareStep.id);
-          const line = `z3=${answers.get('z3') || 'not-run'} cvc5=${answers.get('cvc5') || 'not-run'} -> ${crossVerdict}`;
-          cs.stdout = `${cs.stdout}${line}\n`;
-          crs.stdout_sha256 = sha256(cs.stdout);
-        } else if (crs.status === 'SKIPPED_DOWNSTREAM') {
-          crs.result = { kind: 'skipped', reason: 'solver steps failed or timed out; cross-check not run (fail-closed)' };
-        }
-      }
-    } else if (plan.source.problem_kind === 'lp-json') {
-      const highs = answers.get('highs');
-      solverAnswer = highs || null;
-    }
-
-    // overall
-    const statuses = [...receiptSteps.values()].map((r) => r.status);
-    let process_outcome = 'OK';
-    let fail_closed_reason;
-    if (statuses.every((s) => s === 'EXECUTED')) {
-      process_outcome = crossVerdict === 'CONTRADICTION' ? 'PARTIAL' : 'OK';
-    } else if (statuses.includes('ERROR') || statuses.includes('TIMEOUT')) {
-      process_outcome = 'FAILED';
-      const failed = [...receiptSteps.values()].filter((r) => r.status === 'ERROR' || r.status === 'TIMEOUT').map((r) => r.step_id);
-      fail_closed_reason = `fail-closed: steps ${failed.join(', ')} did not produce a trusted result (${statuses.includes('ERROR') ? 'solver error' : 'timeout'}); downstream comparison refused.`;
-    }
-    receipt.overall = {
-      process_outcome,
-      solver_answer: solverAnswer,
-      cross_tool_verdict: crossVerdict,
-      claim_verdict: 'NOT_APPLICABLE',
-    };
-    if (fail_closed_reason) receipt.overall.fail_closed_reason = fail_closed_reason;
-    if (expectation === 'unknown' && process_outcome === 'OK') {
-      receipt.overall.fail_closed_reason = undefined;
-      delete receipt.overall.fail_closed_reason;
-    }
-
-    state.receipt = receipt;
-    state.streams = streams;
-    state.status = 'complete';
-    state.finishedAt = Date.now();
-
-    // persist to the runs dir (only fs writes the bridge performs)
-    try {
-      await state.opts.ensureRunsDir();
-      const payload = { receipt, streams: Object.fromEntries(streams.entries()) };
-      await fsp.writeFile(path.join(state.opts.runsDir, `${runId}.json`), JSON.stringify(payload, null, 2), 'utf8');
-    } catch (err) {
-      console.error(`[formal-web] failed to persist run ${runId}: ${err.message}`);
-    }
-  }
-
-  const hardTimer = setTimeout(() => {
-    if (state.status === 'running') {
-      receipt.overall = {
-        process_outcome: 'ABORTED',
-        solver_answer: null,
-        cross_tool_verdict: 'NOT_APPLICABLE',
-        claim_verdict: 'NOT_APPLICABLE',
-        fail_closed_reason: `fail-closed: run exceeded ${120}s wall-clock budget; aborted.`,
-      };
-      state.receipt = receipt;
-      state.streams = streams;
-      state.status = 'aborted';
-    }
-  }, 120000);
-  hardTimer.unref?.();
-
-  run()
-    .catch((err) => {
-      state.status = 'aborted';
-      receipt.overall = {
-        process_outcome: 'ABORTED',
-        solver_answer: null,
-        cross_tool_verdict: 'NOT_APPLICABLE',
-        claim_verdict: 'NOT_APPLICABLE',
-        fail_closed_reason: `fail-closed: internal engine error: ${err.message}`,
-      };
-      state.receipt = receipt;
-      state.streams = streams;
-    })
-    .finally(() => {
-      clearTimeout(hardTimer);
-      state.opts.onFinished(runId);
-    });
-
-  return { receipt, streams };
+function deterministicPlan({ kind, canonicalText, lpModel, problem, assumptions }) {
+  const method = deterministicMethod(kind, problem);
+  const plan = buildRealPlan({ kind, canonicalText, lpModel, method, problem, assumptions });
+  return {
+    plan,
+    plan_source: { kind: 'deterministic-template', template: TEMPLATE_BY_KIND[kind] },
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -622,11 +287,18 @@ export function startServer(options = {}) {
     port: options.port !== undefined ? Number(options.port) : 8788,
     bodyLimitBytes: options.bodyLimitBytes || 1000000,
     maxConcurrentRuns: options.maxConcurrentRuns || 2,
-    maxPlanSteps: options.maxPlanSteps || 8,
     token: options.token !== undefined ? options.token : process.env.FORMAL_WEB_TOKEN || '',
     runsDir: options.runsDir || defaultRunsDir(),
-    stepDelayMs: options.stepDelayMs !== undefined ? Number(options.stepDelayMs) : Number(process.env.FORMAL_WEB_STEP_DELAY_MS || 600),
     publicDir: options.publicDir || path.join(__dirname, 'public'),
+    // DeepSeek API key: env by default; explicit '' forces the honest
+    // BLOCKED_PROVIDER path (tests); explicit string injects a key (tests).
+    deepseekApiKey: options.deepseekApiKey !== undefined ? options.deepseekApiKey : process.env.DEEPSEEK_API_KEY,
+    // Environment handed to the executor (preflight + child env). Tests force
+    // FORMAL_PORTABLE_ROOT:'' so the fail-closed path is deterministic everywhere.
+    executorEnv: options.executorEnv !== undefined ? options.executorEnv : process.env,
+    // Test-only: awaited before a run starts executing (stretches wall time for
+    // concurrency-cap coverage; receipts are unaffected and fully real).
+    testRunGate: options.testRunGate || null,
   };
   let ensureRunsDirDone = false;
   const ensureRunsDir = async () => {
@@ -698,19 +370,126 @@ export function startServer(options = {}) {
     });
   }
 
+  // Real engine error -> honest HTTP mapping.
+  function engineError(res, err) {
+    if (err instanceof WorkflowError) {
+      // BLOCKED_PROVIDER is an honest 4xx; provider transport failures are 502.
+      const status = err.code === 'PROVIDER_FAILED' ? 502 : 422;
+      return sendError(res, status, err.code, `fail-closed: ${err.message}`, err.details ? { details: err.details } : undefined);
+    }
+    if (err instanceof WorkflowPlanError) {
+      return sendError(res, 422, err.code, `fail-closed: ${err.message}`);
+    }
+    return sendError(res, 500, 'ENGINE_ERROR', `internal engine error: ${err.message}`);
+  }
+
+  /** Receipt step records -> bounded display streams for the run view. */
+  function streamsFromReceipt(receipt) {
+    const streams = {};
+    for (const s of receipt.steps) {
+      const stdout = typeof s.stdout_bounded === 'string' ? s.stdout_bounded : '';
+      const stderr = typeof s.stderr_bounded === 'string' ? s.stderr_bounded : '';
+      if (stdout || stderr) streams[s.step_id] = { stdout, stderr };
+    }
+    return streams;
+  }
+
+  /** Persist the real receipt + hash-bound artifacts under the runs dir. */
+  async function persistRunArtifacts(runId, receipt) {
+    await ensureRunsDir();
+    const dir = path.join(opts.runsDir, runId);
+    const rawStreams = [];
+    for (const s of receipt.steps) {
+      const stdout = typeof s.stdout_bounded === 'string' ? s.stdout_bounded : '';
+      const stderr = typeof s.stderr_bounded === 'string' ? s.stderr_bounded : '';
+      if (stdout || stderr) rawStreams.push({ step_id: s.step_id, stdout, stderr });
+    }
+    // Re-derives receipt.json + manifest.json + logs/* with verified hashes
+    // (identical bytes to the executor's own workspace artifacts).
+    return writeExecutionReceiptArtifacts(dir, receipt, rawStreams);
+  }
+
+  function startRun(plan) {
+    const runId = `run-${Date.now().toString(36)}-${crypto.randomBytes(4).toString('hex')}`;
+    const state = {
+      runId,
+      plan,
+      status: 'running',
+      createdAt: new Date().toISOString(),
+      receipt: null,
+      streams: {},
+      workspaceDir: null,
+    };
+    runs.set(runId, state);
+    activeRuns.add(runId);
+
+    (async () => {
+      if (opts.testRunGate) await opts.testRunGate();
+      let outcome;
+      try {
+        const { receipt, workspaceDir } = await executeWorkflowPlan(plan, {
+          runId,
+          sourceSha: plan.source.problem_sha256,
+          host: '127.0.0.1',
+          env: opts.executorEnv,
+        });
+        outcome = { receipt, workspaceDir };
+      } catch (err) {
+        if (err instanceof WorkflowBlockedError && err.receipt) {
+          // Honest fail-closed result (e.g. trusted bundle absent): the executor
+          // produced a REAL ABORTED receipt before any step ran. Return it as-is.
+          outcome = { receipt: err.receipt, workspaceDir: err.workspaceDir, blocked: err.code };
+        } else {
+          state.status = 'aborted';
+          state.error = `engine error: ${err.message}`;
+          return;
+        }
+      }
+      state.receipt = outcome.receipt;
+      state.streams = streamsFromReceipt(outcome.receipt);
+      state.workspaceDir = outcome.workspaceDir;
+      try {
+        await persistRunArtifacts(runId, outcome.receipt);
+      } catch (err) {
+        console.error(`[formal-web] failed to persist run ${runId}: ${err.message}`);
+      }
+      state.status = 'complete';
+    })()
+      .catch((err) => {
+        state.status = 'aborted';
+        state.error = `internal error: ${err.message}`;
+      })
+      .finally(() => {
+        activeRuns.delete(runId);
+        // The executor workspace (tmp) is no longer needed; its artifacts live
+        // under the runs dir. Best-effort cleanup.
+        if (state.workspaceDir) {
+          fsp.rm(state.workspaceDir, { recursive: true, force: true }).catch(() => {});
+        }
+      });
+
+    return state;
+  }
+
   function runSummaryView(state) {
+    const stepStates = {};
+    if (state.receipt) {
+      for (const s of state.receipt.steps) stepStates[s.step_id] = s.status;
+    } else {
+      for (const s of state.plan.steps) stepStates[s.id] = 'queued';
+    }
     return {
       run_id: state.runId,
       plan_id: state.plan.plan_id,
       status: state.status,
       created_at: state.createdAt,
+      engine: 'workflow-v2+v3',
       plan_summary: {
         steps: state.plan.steps.map((s) => ({ id: s.id, tool: s.tool, operation: s.operation, depends_on: s.depends_on, timeout_s: s.timeout_s })),
       },
-      step_states: Object.fromEntries(state.stepStates.entries()),
+      step_states: stepStates,
       receipt: state.receipt,
-      streams: state.streams ? Object.fromEntries(state.streams.entries()) : {},
-      mocked: true,
+      streams: state.streams,
     };
   }
 
@@ -719,14 +498,23 @@ export function startServer(options = {}) {
       if (req.method !== 'GET') return sendError(res, 405, 'METHOD_NOT_ALLOWED', 'use GET /api/meta.');
       return sendJson(res, 200, {
         mode: opts.token ? 'token-auth' : 'local-only',
-        mocked_contracts: true,
-        engine: { kind: 'mock-v1', note: 'execution engine is MOCKED this round (V5-a); no real solver is launched. Real V2/V3 wiring pending.' },
-        versions: { bridge: '0.5.0', engine: 'mock-v1', plan_schema: PLAN_SCHEMA, receipt_schema: RECEIPT_SCHEMA },
+        mocked_contracts: false,
+        engine: {
+          kind: 'workflow-engine-v2-v3',
+          real: true,
+          planner: 'packages/runner/js/workflow-plan.mjs (V2: normalizeUserProblem + buildExecutionPlan) + workflow-compiler.mjs (compilePlan)',
+          executor: 'packages/runner/js/workflow-executor.mjs (V3: executeWorkflowPlan, fail-closed preflight)',
+          note: 'Solver binaries live on the trusted tool host only. Without the portable bundle (FORMAL_PORTABLE_ROOT) a run fails closed before any step: the receipt is ABORTED with fail_closed_reason=BLOCKED_TOOL_MISSING. Nothing is simulated.',
+        },
+        provider: {
+          deepseek: { configured: typeof opts.deepseekApiKey === 'string' && opts.deepseekApiKey.length > 0, model: 'deepseek-chat' },
+        },
+        versions: { bridge: '0.6.0', engine: 'workflow-v2+v3', plan_schema: PLAN_SCHEMA, receipt_schema: RECEIPT_SCHEMA },
         caps: {
           body_limit_bytes: opts.bodyLimitBytes,
           max_concurrent_runs: opts.maxConcurrentRuns,
-          run_wall_clock_s: 120,
-          max_plan_steps: opts.maxPlanSteps,
+          run_wall_clock_s: BRIDGE_MAX_TOTAL_TIMEOUT_S,
+          max_plan_steps: BRIDGE_MAX_STEPS,
           max_step_timeout_s: 120,
         },
         allowlist: Object.fromEntries(Object.entries(TOOL_ALLOWLIST).map(([t, o]) => [t, [o]])),
@@ -746,14 +534,35 @@ export function startServer(options = {}) {
         return sendError(res, 400, 'BAD_JSON', 'fail-closed: request body is not valid JSON.');
       }
       if (!body || typeof body !== 'object' || typeof body.problem_text !== 'string') {
-        return sendError(res, 422, 'MISSING_PROBLEM', 'fail-closed: body must be {problem_text: string, assumptions?: string[]}.');
+        return sendError(res, 422, 'MISSING_PROBLEM', 'fail-closed: body must be {problem_text: string, assumptions?: string[], provider?: "deepseek"}.');
+      }
+      if (body.provider !== undefined && body.provider !== 'deepseek') {
+        return sendError(res, 422, 'INVALID_PROVIDER', 'fail-closed: provider, when present, must be "deepseek" (omit for the deterministic template).');
+      }
+      let assumptions;
+      try {
+        assumptions = sanitizeAssumptions(body.assumptions);
+      } catch (err) {
+        return sendError(res, err.status, err.code, err.message);
       }
       try {
-        const result = buildPlan(body.problem_text, body.assumptions);
+        const detected = detectProblemKind(body.problem_text);
+        const normalized = normalizeUserProblem(detected.canonicalText, {
+          assumptions: assumptions.length ? assumptions : DEFAULT_ASSUMPTIONS[detected.kind],
+          problemKind: detected.kind,
+          capabilityIds: CAPABILITY_BY_KIND[detected.kind],
+        });
+        const useProvider = body.provider === 'deepseek';
+        if (useProvider && !(typeof opts.deepseekApiKey === 'string' && opts.deepseekApiKey.length > 0)) {
+          return sendError(res, 422, 'BLOCKED_PROVIDER', 'fail-closed: provider "deepseek" requested but DEEPSEEK_API_KEY is not set on this machine; no plan is produced.');
+        }
+        const result = useProvider
+          ? await planWithProvider(detected.kind, detected.canonicalText, detected.lpModel, normalized.problem, normalized.assumptions, opts.deepseekApiKey)
+          : deterministicPlan({ kind: detected.kind, canonicalText: detected.canonicalText, lpModel: detected.lpModel, problem: normalized.problem, assumptions: normalized.assumptions });
         return sendJson(res, 200, result);
       } catch (err) {
-        if (err.failClosed) return sendError(res, err.status, err.code, err.message);
-        return sendError(res, 500, 'PLAN_BUILDER_ERROR', `internal error: ${err.message}`);
+        if (err.failClosed) return sendError(res, err.status, err.code, err.message, err.extra);
+        return engineError(res, err);
       }
     }
 
@@ -765,33 +574,27 @@ export function startServer(options = {}) {
         if (err.code === 'BODY_TOO_LARGE') return sendError(res, 413, 'BODY_TOO_LARGE', 'fail-closed: request body exceeds the 1MB cap.');
         return sendError(res, 400, 'BAD_JSON', 'fail-closed: request body is not valid JSON.');
       }
+      const plan = body && body.plan ? body.plan : body;
       try {
-        validatePlan(body && body.plan ? body.plan : body);
+        // Bridge hard caps first (fail-closed, mirror the frozen budget caps)…
+        if (!plan || typeof plan !== 'object') throw new WorkflowPlanError('PLAN_SCHEMA_INVALID', 'plan must be a JSON object');
+        if (!plan.budgets || typeof plan.budgets !== 'object' ||
+            plan.budgets.max_steps !== BRIDGE_MAX_STEPS ||
+            plan.budgets.max_total_timeout_s !== BRIDGE_MAX_TOTAL_TIMEOUT_S) {
+          throw new WorkflowPlanError('PLAN_BUDGET_EXCEEDED', `bridge hard caps: budgets must be max_steps=${BRIDGE_MAX_STEPS}, max_total_timeout_s=${BRIDGE_MAX_TOTAL_TIMEOUT_S}`);
+        }
+        // …then the executor's own re-validation (the same gate it applies
+        // immediately before executing; identical codes).
+        validateExecutorPlan(plan);
       } catch (err) {
-        if (err.failClosed) return sendError(res, err.status, err.code, err.message);
+        if (err instanceof WorkflowPlanError) return sendError(res, 422, err.code, `fail-closed: ${err.message}`);
         return sendError(res, 500, 'VALIDATOR_ERROR', `internal error: ${err.message}`);
       }
-      const plan = body.plan || body;
       if (activeRuns.size >= opts.maxConcurrentRuns) {
         return sendError(res, 429, 'CONCURRENCY_LIMIT', `fail-closed: max ${opts.maxConcurrentRuns} concurrent runs; wait for a run to finish.`);
       }
-      const runId = `run-${Date.now().toString(36)}-${crypto.randomBytes(4).toString('hex')}`;
-      const state = {
-        runId,
-        plan,
-        status: 'running',
-        createdAt: new Date().toISOString(),
-        stepStates: new Map(plan.steps.map((s) => [s.id, 'queued'])),
-        receipt: null,
-        streams: null,
-        opts: { ...opts, ensureRunsDir, onFinished: (id) => activeRuns.delete(id) },
-      };
-      runs.set(runId, state);
-      activeRuns.add(runId);
-      const executor = makeRunExecutor(state);
-      state.receipt = executor.receipt;
-      state.streams = executor.streams;
-      return sendJson(res, 200, { run_id: runId, status: 'running', poll: `/api/runs/${runId}`, mocked: true });
+      const state = startRun(plan);
+      return sendJson(res, 200, { run_id: state.runId, status: state.status, poll: `/api/runs/${state.runId}` });
     }
 
     let m = pathname.match(/^\/api\/runs\/([A-Za-z0-9-]+)$/);
@@ -805,38 +608,63 @@ export function startServer(options = {}) {
     m = pathname.match(/^\/api\/runs\/([A-Za-z0-9-]+)\/evidence$/);
     if (m) {
       if (req.method !== 'GET') return sendError(res, 405, 'METHOD_NOT_ALLOWED', 'use GET /api/runs/:id/evidence.');
-      const state = runs.get(m[1]);
-      if (!state || !state.receipt) return sendError(res, 404, 'RUN_NOT_FOUND', `fail-closed: no completed run with id "${m[1]}".`);
-      const part = query.get('part');
-      const stepId = query.get('step');
-      if (part || stepId) {
-        if (!part || !['stdout', 'stderr'].includes(part) || !stepId) {
-          return sendError(res, 422, 'EVIDENCE_PART_INVALID', 'fail-closed: per-stream evidence needs ?part=stdout|stderr&step=<step_id>.');
-        }
-        const stream = state.streams.get(stepId);
-        if (!stream) return sendError(res, 404, 'STEP_NOT_FOUND', `fail-closed: no step "${stepId}" in run.`);
-        const body = stream[part];
-        res.writeHead(200, {
-          'Content-Type': 'text/plain; charset=utf-8',
-          'Content-Length': Buffer.byteLength(body),
-          'Content-Disposition': `attachment; filename="${part}-${state.runId}-${stepId}.txt"`,
-          'X-Content-Type-Options': 'nosniff',
-          'Cache-Control': 'no-store',
-        });
-        return res.end(body);
-      }
+      const runId = m[1];
+      const state = runs.get(runId);
+      if (!state) return sendError(res, 404, 'RUN_NOT_FOUND', `fail-closed: no run with id "${runId}".`);
       if (state.status === 'running') {
         return sendError(res, 409, 'RUN_STILL_RUNNING', 'fail-closed: evidence is available once the run completes.');
       }
-      const payload = JSON.stringify({ receipt: state.receipt, streams: Object.fromEntries(state.streams.entries()) }, null, 2);
+      if (!state.receipt) {
+        return sendError(res, 404, 'NO_RECEIPT', `fail-closed: run "${runId}" produced no receipt (${state.error || 'engine error'}).`);
+      }
+      const part = query.get('part');
+      const stepId = query.get('step');
+      const runDir = path.join(opts.runsDir, runId);
+
+      if (part === 'manifest') {
+        const bytes = await fsp.readFile(path.join(runDir, 'manifest.json'), 'utf8').catch(() => null);
+        if (bytes === null) return sendError(res, 404, 'ARTIFACT_NOT_FOUND', 'fail-closed: manifest.json was not persisted for this run.');
+        res.writeHead(200, {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Content-Length': Buffer.byteLength(bytes),
+          'Content-Disposition': `attachment; filename="manifest-${runId}.json"`,
+          'X-Content-Type-Options': 'nosniff',
+          'Cache-Control': 'no-store',
+        });
+        return res.end(bytes);
+      }
+
+      if (part || stepId) {
+        if (!part || !['stdout', 'stderr'].includes(part) || !stepId) {
+          return sendError(res, 422, 'EVIDENCE_PART_INVALID', 'fail-closed: per-stream evidence needs ?part=stdout|stderr&step=<step_id> (or ?part=manifest).');
+        }
+        const bytes = await fsp.readFile(path.join(runDir, 'logs', `${stepId}.${part}.txt`), 'utf8').catch(() => null);
+        if (bytes === null) {
+          const step = state.receipt.steps.find((s) => s.step_id === stepId);
+          if (!step) return sendError(res, 404, 'STEP_NOT_FOUND', `fail-closed: no step "${stepId}" in run.`);
+          return sendError(res, 404, 'ARTIFACT_NOT_FOUND', `fail-closed: step "${stepId}" never produced a ${part} stream on this host (status ${step.status}); no log artifact exists.`);
+        }
+        res.writeHead(200, {
+          'Content-Type': 'text/plain; charset=utf-8',
+          'Content-Length': Buffer.byteLength(bytes),
+          'Content-Disposition': `attachment; filename="${part}-${runId}-${stepId}.txt"`,
+          'X-Content-Type-Options': 'nosniff',
+          'Cache-Control': 'no-store',
+        });
+        return res.end(bytes);
+      }
+
+      // full receipt: the real persisted receipt.json bytes
+      const bytes = await fsp.readFile(path.join(runDir, 'receipt.json'), 'utf8').catch(() => null);
+      if (bytes === null) return sendError(res, 404, 'ARTIFACT_NOT_FOUND', 'fail-closed: receipt.json was not persisted for this run.');
       res.writeHead(200, {
         'Content-Type': 'application/json; charset=utf-8',
-        'Content-Length': Buffer.byteLength(payload),
-        'Content-Disposition': `attachment; filename="receipt-${state.runId}.json"`,
+        'Content-Length': Buffer.byteLength(bytes),
+        'Content-Disposition': `attachment; filename="receipt-${runId}.json"`,
         'X-Content-Type-Options': 'nosniff',
         'Cache-Control': 'no-store',
       });
-      return res.end(payload);
+      return res.end(bytes);
     }
 
     return sendError(res, 404, 'NOT_FOUND', `fail-closed: unknown API route "${pathname}".`);
@@ -875,7 +703,7 @@ export function startServer(options = {}) {
   return new Promise((resolve) => {
     server.listen(opts.port, opts.host, () => {
       const addr = server.address();
-      const line = `FORMAL_WEB_LISTENING host=${opts.host} port=${addr.port} mode=${opts.token ? 'token-auth' : 'local-only'} engine=mock-v1`;
+      const line = `FORMAL_WEB_LISTENING host=${opts.host} port=${addr.port} mode=${opts.token ? 'token-auth' : 'local-only'} engine=workflow-v2+v3`;
       console.log(line);
       resolve({ server, port: addr.port, opts, runs, activeRuns });
     });
@@ -887,6 +715,6 @@ const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPat
 if (isMain) {
   const port = Number(process.env.PORT || 8788);
   startServer({ port }).then(({ port: actual }) => {
-    console.log(`[formal-web] UI: http://127.0.0.1:${actual}/  (engine=mock-v1, mocked_contracts=true)`);
+    console.log(`[formal-web] UI: http://127.0.0.1:${actual}/  (engine=workflow-v2+v3, mocked_contracts=false)`);
   });
 }

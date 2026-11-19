@@ -16,7 +16,8 @@
       <p class="brand"><span class="brand__mark" aria-hidden="true">∀</span> formal-tools <span class="brand__sub">task console</span></p>
       <div class="badge-row">
         <span id="modeBadge" class="badge badge--mode" data-testid="mode-badge">mode: loading…</span>
-        <span id="mockBadge" class="badge badge--mock" data-testid="mock-badge" title="This round (V5-a) runs a MOCKED engine: plans/receipts use the real pinned contract shapes, but no real solver process is executed. Wiring of the real engine happens in V5-b.">MOCKED CONTRACTS</span>
+        <span id="engineBadge" class="badge badge--engine" data-testid="engine-badge" hidden
+          title="Real engine: V2 planner/compiler + V3 executor (workflow-plan.mjs / workflow-compiler.mjs / workflow-executor.mjs). Without the trusted portable tool bundle the run fails closed with BLOCKED_TOOL_MISSING — displayed as-is, never simulated."></span>
       </div>
     </div>
   </header>
@@ -43,7 +44,16 @@
           <textarea id="problemText" name="problem_text" rows="12" spellcheck="false"
             aria-describedby="problemHint inputStatus"
             placeholder="; paste SMT-LIB2 here, or a JSON LP model with objective/constraints"></textarea>
-          <p id="problemHint" class="hint">Accepted: SMT-LIB2 text (needs (assert / (check-sat)) or LP JSON with objective/constraints keys. Max 1 MB.</p>
+          <p id="problemHint" class="hint">Accepted: SMT-LIB2 text (needs (assert / (check-sat)) or an LP JSON model with exactly sense (&quot;min&quot;|&quot;max&quot;), objective, variables, constraints keys. Max 64&nbsp;kB (engine cap).</p>
+        </div>
+
+        <div class="field">
+          <label for="providerInput">Planning source</label>
+          <select id="providerInput" name="provider" aria-describedby="providerHint">
+            <option value="" selected>Deterministic template (built-in, offline)</option>
+            <option value="deepseek">DeepSeek — real LLM proposal (untrusted, validated)</option>
+          </select>
+          <p id="providerHint" class="hint">The LLM only <em>proposes</em> a method; it is admitted through the same static validation gates as the template and has no execution authority. Requires DEEPSEEK_API_KEY on the bridge host (otherwise the request fails closed with BLOCKED_PROVIDER).</p>
         </div>
 
         <div class="field">
@@ -63,7 +73,7 @@
           <textarea id="assumptionsInput" name="assumptions" rows="3" spellcheck="false"
             aria-describedby="assumptionsHint"
             placeholder="Leave empty to use the bridge's default assumptions for the detected problem kind."></textarea>
-          <p id="assumptionsHint" class="hint">Assumptions are recorded in the plan; you can edit them again on the plan screen.</p>
+          <p id="assumptionsHint" class="hint">Assumptions are recorded verbatim in the plan; you can edit them again on the plan screen (max 256 characters each).</p>
         </div>
 
         <div class="actions">
@@ -79,6 +89,7 @@
       <p class="screen-lede">Check what would run. Nothing executes until you explicitly approve.</p>
 
       <div id="planBanner" class="banner banner--info" hidden></div>
+      <p class="hint" id="planSourceLine" hidden>Plan source: <span id="planSourceBadge" class="badge badge--source" data-testid="plan-source-badge"></span></p>
 
       <div class="plan-grid">
         <div class="plan-grid__main">
@@ -140,8 +151,9 @@
       <h1 id="h-results" tabindex="-1">4 · Results &amp; evidence</h1>
       <p class="screen-lede">Each verdict dimension is reported separately — they are never conflated.</p>
 
+      <div id="resultNote" class="banner" role="alert" hidden></div>
       <div id="verdictBlock" class="verdict-block" data-testid="verdict-block"></div>
-      <div id="resultNote" class="banner" hidden></div>
+      <p id="environmentLine" class="hint" data-testid="environment-line"></p>
 
       <h2>Evidence</h2>
       <p class="hint">Raw receipt (JSON, with the exact bounded streams hashed inside) plus per-step stdout/stderr excerpts.</p>
@@ -154,7 +166,7 @@
   </main>
 
   <footer class="app-footer">
-    <p>formal-tools · bounded trusted bridge · same-origin only · <span id="footerMeta">engine: mock-v1 (simulated)</span></p>
+    <p>formal-tools · bounded trusted bridge · same-origin only · <span id="footerMeta">engine: loading…</span></p>
   </footer>
 
   <script src="/app.js"></script>
