@@ -23,3 +23,13 @@ steps:
       - node packages/runner/js/cli.mjs catalog z3
       - node packages/runner/js/cli.mjs info z3
       - node packages/runner/js/cli.mjs plan z3 solve --input skills/z3/examples/positive.smt2
+  # Real MCP stdio acceptance: spawns packages/runner/js/mcp.mjs as a child
+  # process and speaks newline-delimited JSON-RPC over stdio (initialize ->
+  # tools/list -> tools/call across all 14 registered tools, including
+  # fail-closed invalid-argument checks). Exits non-zero unless every
+  # assertion holds; depends on the workspace node_modules installed by the
+  # preceding step (shared workspace under backend=local).
+  - name: mcp-stdio-smoke
+    image: bash
+    commands:
+      - node scripts/mcp-acceptance.mjs

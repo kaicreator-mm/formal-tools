@@ -81,6 +81,7 @@
     "where",
     "doctor-all",
     "invoke",
+    "capabilities",
     "portfolio"
   ],
   "native_cli": {
