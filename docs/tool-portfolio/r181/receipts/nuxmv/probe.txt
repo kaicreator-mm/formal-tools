@@ -1,0 +1,3 @@
+cmd=run nuxmv --version
+The command line option "--version" is unknown
+rc=255

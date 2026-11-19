@@ -4,6 +4,8 @@
  *
  * Binds each of the 36 registered tools to its actual native capability-probe
  * receipt from the deployed portable bundle, with sha256 receipt binding.
+ * r181: nuxmv/prob were rebound from portable-lane receipts to container-native
+ * receipts produced by the refreshed formal-tools:deb13-r1 image sweep.
  * This layer never launches tools and never upgrades a lifecycle gate: a
  * capability probe is technical evidence, not T3/T4/T5/T6/Product acceptance.
  * The G1 discovery registry stays untouched and remains the only source of
@@ -21,6 +23,12 @@ const PROBE_STATUSES = new Set(["PROBED", "NOT_PROBED_UNAVAILABLE"]);
 const SHA_RE = /^[a-f0-9]{64}$/;
 const GIT_SHA_RE = /^[a-f0-9]{40}$/;
 const PHASES = new Set(["setup", "pos", "neg", "err"]);
+// Versioned sweep-receipt roots: r176 = original deployed-bundle sweep; r181 = refreshed
+// image (deb13-r1) sweep that rebound the two r0-era UNAVAILABLE tools. Explicit
+// allowlist stays fail-closed against fabricated receipt locations.
+const RECEIPT_ROOTS = ["docs/tool-portfolio/r176/receipts/", "docs/tool-portfolio/r181/receipts/"];
+const isVersionedReceiptRef = (ref) =>
+  typeof ref === "string" && RECEIPT_ROOTS.some((root) => ref.startsWith(root));
 
 const DEFAULT_REPO_ROOT = new URL("../../../", import.meta.url);
 const sha256RepoFile = (repoRelativePath) =>
@@ -56,7 +64,7 @@ export function validateCapabilityValidation(input, {
 
   if (!hasOnlyFields(input.authority, ["discovery_registry", "discovery_registry_schema", "portfolio_issue",
     "closed_product_issue", "base_main_sha", "deployment", "bundle_manifest_sha256", "tool_runner_sha256",
-    "sweep_summary", "sweep_summary_sha256", "probe_harness", "output_label"]))
+    "sweep_summary", "sweep_summary_sha256", "probe_harness", "output_label", "r181_refresh"]))
     fail("unexpected authority fields");
   else {
     if (input.authority.discovery_registry !== "registry/PROBLEM_CAPABILITIES.json") fail("wrong discovery registry authority");
@@ -74,6 +82,30 @@ export function validateCapabilityValidation(input, {
         if (receiptHasher(input.authority.sweep_summary) !== input.authority.sweep_summary_sha256)
           fail("sweep summary hash mismatch");
       } catch { fail("sweep summary unreadable"); }
+    }
+    if (input.authority.r181_refresh !== undefined) {
+      const refresh = input.authority.r181_refresh;
+      if (!hasOnlyFields(refresh, ["sweep_summary", "sweep_summary_sha256", "deployment",
+        "bundle_manifest_sha256", "tool_runner_sha256", "rebound_tools", "executed_at_utc"]))
+        fail("unexpected r181 refresh authority fields");
+      else {
+        if (refresh.sweep_summary !== "docs/tool-portfolio/r181/SWEEP_SUMMARY.json")
+          fail("r181 refresh must bind its own committed sweep summary");
+        if (!isSha(refresh.sweep_summary_sha256) || !isSha(refresh.bundle_manifest_sha256) ||
+            !isSha(refresh.tool_runner_sha256))
+          fail("r181 refresh provenance hashes must be sha256");
+        if (!nonEmptyString(refresh.deployment) || !nonEmptyString(refresh.executed_at_utc))
+          fail("r181 refresh must record deployment and execution time");
+        if (!Array.isArray(refresh.rebound_tools) || !refresh.rebound_tools.length ||
+            !refresh.rebound_tools.every(nonEmptyString))
+          fail("r181 refresh must list its rebound tools");
+        if (isSha(refresh.sweep_summary_sha256)) {
+          try {
+            if (receiptHasher(refresh.sweep_summary) !== refresh.sweep_summary_sha256)
+              fail("r181 sweep summary hash mismatch");
+          } catch { fail("r181 sweep summary unreadable"); }
+        }
+      }
     }
   }
 
@@ -127,8 +159,8 @@ export function validateCapabilityValidation(input, {
 
     if (row.status === "NATIVE_PROBE_PASS_SCOPED") {
       recount.native += 1;
-      if (typeof row.evidence_ref !== "string" || !row.evidence_ref.startsWith("docs/tool-portfolio/r176/receipts/"))
-        fail("native probe row must bind an r176 receipt: " + row.id);
+      if (!isVersionedReceiptRef(row.evidence_ref))
+        fail("native probe row must bind a versioned sweep receipt (r176 or r181): " + row.id);
       if (!isSha(row.evidence_sha256)) fail("native probe row must sha256-bind its receipt: " + row.id);
       else {
         try {
@@ -167,6 +199,15 @@ export function validateCapabilityValidation(input, {
   }
   const extra = [...discoveryMap.keys()].filter((id) => !seen.has(id));
   if (extra.length) fail("missing validation rows for: " + extra.sort().join(","));
+
+  if (Array.isArray(input.authority?.r181_refresh?.rebound_tools)) {
+    for (const id of input.authority.r181_refresh.rebound_tools) {
+      const row = rows.find((r) => r.id === id);
+      if (!row || row.status !== "NATIVE_PROBE_PASS_SCOPED" ||
+          !row.evidence_ref.startsWith("docs/tool-portfolio/r181/receipts/"))
+        fail("declared rebound tool lacks an r181 native receipt binding: " + id);
+    }
+  }
 
   if (!hasOnlyFields(input.counts, ["tools", "capabilities", "native_probe_pass_scoped",
     "portable_lane_pass_scoped", "not_verified", "probe_quality_effective", "probe_quality_ineffective",

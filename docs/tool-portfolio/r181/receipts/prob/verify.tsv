@@ -1,0 +1,6 @@
+runner_schema	formal-tools/portable-verify/0.2
+prob	setup	0	5	1	1	SETUP
+prob	pos	0	1597	1	1	PROPERTY_HOLDS
+prob	neg	0	1713	1	1	COUNTEREXAMPLE
+prob	err	0	1361	1	1	ERROR
+verdict	PASS

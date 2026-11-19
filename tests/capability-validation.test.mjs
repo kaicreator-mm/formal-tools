@@ -8,18 +8,19 @@ import { readCapabilityRegistry } from "../packages/runner/js/problem-capabiliti
 
 const clone = (x) => structuredClone(x);
 
-test("r176 ledger loads and validates against the frozen discovery registry", () => {
+test("r176+r181 ledger loads and validates against the frozen discovery registry", () => {
   const ledger = loadCapabilityValidation();
   assert.equal(ledger.schema, "formal-tools/capability-validation/0.1");
   assert.equal(ledger.status, "PROBE_VALIDATED_SCOPED_NOT_FORMAL_ACCEPTANCE");
   assert.equal(ledger.tools.length, 36);
   assert.deepEqual(ledger.counts, {
     tools: 36, capabilities: 23,
-    native_probe_pass_scoped: 34, portable_lane_pass_scoped: 2, not_verified: 0,
-    probe_quality_effective: 28, probe_quality_ineffective: 6, probe_not_probed_unavailable: 2
+    native_probe_pass_scoped: 36, portable_lane_pass_scoped: 0, not_verified: 0,
+    probe_quality_effective: 29, probe_quality_ineffective: 7, probe_not_probed_unavailable: 0
   });
   assert.equal(ledger.authority.portfolio_issue, 24);
   assert.equal(ledger.authority.closed_product_issue, 11);
+  assert.deepEqual(ledger.authority.r181_refresh.rebound_tools, ["nuxmv", "prob"]);
 });
 
 test("capability mappings are inherited verbatim from the discovery registry", () => {
@@ -67,19 +68,52 @@ test("forged verification or status claims fail closed", () => {
   assert.ok(validateCapabilityValidation(d).issues.some((x) => x.includes("inherited verbatim")));
 });
 
-test("portable-lane rows stay honest: no fabricated container probe", () => {
+test("r181 rebound rows stay honest: native receipts, truthful probe quality", () => {
   const ledger = loadCapabilityValidation();
-  for (const id of ["nuxmv", "prob"]) {
-    const row = ledger.tools.find((t) => t.id === id);
-    assert.equal(row.status, "PORTABLE_LANE_PASS_SCOPED", id);
-    assert.equal(row.probe_status, "NOT_PROBED_UNAVAILABLE", id);
-    assert.equal(row.probed_version, null, id);
-    assert.equal(row.evidence_ref, `portable/status/receipts/verify-${id}.json`, id);
-    assert.match(row.probe_note ?? "", /UNAVAILABLE/);
-  }
+  const nuxmv = ledger.tools.find((t) => t.id === "nuxmv");
+  assert.equal(nuxmv.status, "NATIVE_PROBE_PASS_SCOPED");
+  assert.equal(nuxmv.evidence_ref, "docs/tool-portfolio/r181/receipts/nuxmv/receipt.json");
+  assert.equal(nuxmv.evidence_sha256?.length, 64);
+  assert.equal(nuxmv.probe_status, "PROBED");
+  assert.equal(nuxmv.probe_quality, "INEFFECTIVE_OUTPUT"); // rc=255 unknown-option banner, no version obtained
+  assert.equal(nuxmv.probed_version, null);
+  assert.equal(nuxmv.container_probe_receipt, null);
+  assert.match(nuxmv.probe_note, /r176\/receipts\/nuxmv/); // prior honest skip receipt still referenced
+  const prob = ledger.tools.find((t) => t.id === "prob");
+  assert.equal(prob.status, "NATIVE_PROBE_PASS_SCOPED");
+  assert.equal(prob.evidence_ref, "docs/tool-portfolio/r181/receipts/prob/receipt.json");
+  assert.equal(prob.probe_quality, "EFFECTIVE");
+  assert.equal(prob.probed_version, "1.16.1-final");
+  assert.deepEqual(prob.verify_phases, ["setup", "pos", "neg", "err"]);
+  assert.equal(prob.version_drift?.probed, "1.16.1-final");
+  assert.equal(prob.container_probe_receipt, null);
+  // A fabricated portable-lane probe version on a rebound row must still fail closed.
   const forged = clone(ledger);
-  forged.tools.find((t) => t.id === "prob").probed_version = "1.16.1";
-  assert.ok(validateCapabilityValidation(forged).issues.some((x) => x.includes("must not fabricate")));
+  forged.tools.find((t) => t.id === "prob").status = "PORTABLE_LANE_PASS_SCOPED";
+  forged.tools.find((t) => t.id === "prob").evidence_ref = "portable/status/receipts/verify-prob.json";
+  assert.ok(validateCapabilityValidation(forged).issues.some((x) => x.includes("must not fabricate") || x.includes("counts do not match")));
+});
+
+test("receipt roots are an explicit versioned allowlist; r181 authority is hash-bound", () => {
+  const ledger = loadCapabilityValidation();
+  // fabricated sweep rounds (r999) must fail closed even with a well-formed sha
+  const alien = clone(ledger);
+  const z3 = alien.tools.find((t) => t.id === "z3");
+  z3.evidence_ref = "docs/tool-portfolio/r999/receipts/z3/receipt.json";
+  assert.ok(validateCapabilityValidation(alien).issues.some((x) => x.includes("versioned sweep receipt")));
+  // tampering with the r181 sweep summary binding must fail closed
+  const tampered = clone(ledger);
+  tampered.authority.r181_refresh.sweep_summary_sha256 = "1".repeat(64);
+  const report = validateCapabilityValidation(tampered, { receiptHasher: () => "0".repeat(64) });
+  assert.equal(report.ok, false);
+  assert.ok(report.issues.some((x) => x.includes("r181 sweep summary hash mismatch")));
+  // declaring a rebound tool whose row does not carry an r181 receipt must fail closed
+  const lying = clone(ledger);
+  lying.authority.r181_refresh.rebound_tools = ["z3"];
+  assert.ok(validateCapabilityValidation(lying).issues.some((x) => x.includes("lacks an r181 native receipt binding")));
+  // the committed r181 sweep summary itself hashes to the authority pin (real-file binding)
+  const report2 = validateCapabilityValidation(clone(ledger));
+  assert.equal(report2.ok, true, report2.issues.join("; "));
 });
 
 test("recorded version drift observations exist for storm, fast-downward and tla-tlc", () => {

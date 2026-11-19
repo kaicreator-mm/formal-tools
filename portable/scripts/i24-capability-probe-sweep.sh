@@ -10,6 +10,9 @@
 # Usage: bash i24-capability-probe-sweep.sh <bundle_root> <out_dir>
 # Outputs: <out_dir>/<tool_id>/  (verify.tsv copy, pos/neg/err.log copies, probe.txt, receipt.json)
 #          <out_dir>/SWEEP_SUMMARY.json + SHA256SUMS
+# FT_SWEEP_DEPLOYMENT env (optional) overrides the receipt/summary deployment
+#   description — set it truthfully when sweeping a non-default deployment,
+#   e.g. the refreshed formal-tools:deb13-r1 ephemeral container (r181).
 set -uo pipefail
 
 BUNDLE="${1:?bundle root required}"
@@ -129,7 +132,9 @@ receipt = {
         "bundle_manifest_sha256": msha,
         "tool_runner_sha256": rsha,
         "uname": uname,
-        "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh, cc@192.168.100.200:2222)",
+        "deployment": os.environ.get(
+            "FT_SWEEP_DEPLOYMENT",
+            "docker formal-tools:deb13-r0 (container formal-tools-ssh, cc@192.168.100.200:2222)"),
         "executed_at_utc": stamp,
     },
 }
@@ -144,7 +149,7 @@ import json, os, sys
 out, stamp, msha, rsha = sys.argv[1:5]
 summary = {"schema": "formal-tools/capability-probe-sweep/0.1", "executed_at_utc": stamp,
            "bundle_manifest_sha256": msha, "tool_runner_sha256": rsha,
-           "deployment": "docker formal-tools:deb13-r0 (container formal-tools-ssh)", "tools": {}}
+           "deployment": os.environ.get("FT_SWEEP_DEPLOYMENT", "docker formal-tools:deb13-r0 (container formal-tools-ssh)"), "tools": {}}
 for name in sorted(os.listdir(out)):
     rp = os.path.join(out, name, "receipt.json")
     if not os.path.isfile(rp):
