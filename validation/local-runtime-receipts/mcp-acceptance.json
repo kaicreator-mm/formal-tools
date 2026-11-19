@@ -1,6 +1,6 @@
 {
   "schema": "formal-mcp-local-acceptance/1",
-  "written_at": "2026-11-19T10:49:49.306Z",
+  "written_at": "2026-11-19T14:27:11.120Z",
   "transport": "stdio newline-delimited JSON-RPC",
   "server": {
     "serverInfo": {
@@ -11,6 +11,7 @@
   },
   "tools": [
     "describe_native_cli",
+    "execute_workflow",
     "inspect_formal_tool",
     "inspect_native_installation",
     "inspect_portfolio_tool",
@@ -36,6 +37,7 @@
     },
     "tools_list": [
       "describe_native_cli",
+      "execute_workflow",
       "inspect_formal_tool",
       "inspect_native_installation",
       "inspect_portfolio_tool",
@@ -527,7 +529,7 @@
         ],
         "exit_code": null,
         "signal": null,
-        "elapsed_ms": 4,
+        "elapsed_ms": 3,
         "timed_out": false,
         "stdout": "",
         "stderr": "",
@@ -560,11 +562,11 @@
             "argv": [
               "z3",
               "-smt2",
-              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-sfvD52\\examples\\positive.smt2"
+              "C:\\Users\\15549\\AppData\\Local\\Temp\\formal-js-Wni7Bw\\examples\\positive.smt2"
             ],
             "exit_code": null,
             "signal": null,
-            "elapsed_ms": 2,
+            "elapsed_ms": 3,
             "timed_out": false,
             "stdout": "",
             "stderr": "",
@@ -753,6 +755,105 @@
       },
       "isError": true,
       "result": "Input validation error: Invalid arguments for tool plan_workflow: provider: Invalid input: expected \"deepseek\""
+    },
+    "execute_workflow": {
+      "arguments": {
+        "plan": {
+          "schema": "formal-tools/execution-plan/1.0",
+          "plan_id": "wf-8bb1bf45a6d0fbd5dbdff9fceae08cd5",
+          "source": {
+            "problem_sha256": "6b2871253916cf65ff349f2205071b9e46fd3e3b09f62f3f517a5005b899dd19",
+            "problem_kind": "user_problem"
+          },
+          "assumptions": [
+            "bounded linear integer arithmetic"
+          ],
+          "method_dag": [
+            {
+              "id": "step-z3",
+              "kind": "solve",
+              "depends_on": []
+            },
+            {
+              "id": "step-cvc5",
+              "kind": "solve",
+              "depends_on": [
+                "step-z3"
+              ]
+            },
+            {
+              "id": "step-agree",
+              "kind": "cross_check",
+              "depends_on": [
+                "step-z3",
+                "step-cvc5"
+              ]
+            }
+          ],
+          "budgets": {
+            "max_steps": 8,
+            "max_total_timeout_s": 120
+          },
+          "compiled": {
+            "launcher_sha256": null,
+            "manifest_sha256": null
+          },
+          "steps": [
+            {
+              "id": "step-z3",
+              "tool": "z3",
+              "operation": "solve-smt",
+              "depends_on": [],
+              "input": {
+                "smt_lib": "(set-logic QF_LIA)\n(declare-const x Int)\n(assert (> x 0))\n(assert (< x 0))\n(check-sat)\n(exit)"
+              },
+              "input_sha256": "00e67f87e03bd98dd92f0de5ab6ffb52f6ca7792a0bf77410ae578f7b4d5a3f4",
+              "timeout_s": 30,
+              "expected_output_kind": "smt-answer"
+            },
+            {
+              "id": "step-cvc5",
+              "tool": "cvc5",
+              "operation": "solve-smt",
+              "depends_on": [
+                "step-z3"
+              ],
+              "input": {
+                "smt_lib": "(set-logic QF_LIA)\n(declare-const x Int)\n(assert (> x 0))\n(assert (< x 0))\n(check-sat)\n(exit)"
+              },
+              "input_sha256": "00e67f87e03bd98dd92f0de5ab6ffb52f6ca7792a0bf77410ae578f7b4d5a3f4",
+              "timeout_s": 30,
+              "expected_output_kind": "smt-answer"
+            },
+            {
+              "id": "step-agree",
+              "tool": "compare",
+              "operation": "cross-check",
+              "depends_on": [
+                "step-z3",
+                "step-cvc5"
+              ],
+              "input": {
+                "left_step": "step-z3",
+                "right_step": "step-cvc5",
+                "agree_on": [
+                  "sat",
+                  "unsat"
+                ]
+              },
+              "timeout_s": 5,
+              "expected_output_kind": "cross-tool-verdict",
+              "input_sha256": "7a913f16cf6ae5824b30e5d9069c90934b05d35cbf1099c2da4ba501bbcb9f62"
+            }
+          ]
+        },
+        "source_sha": "80a0a07a59b058faf2c57442c22b5cf5edd5f57f",
+        "argv": [
+          "sh"
+        ]
+      },
+      "isError": true,
+      "result": "Input validation error: Invalid arguments for tool execute_workflow: Unrecognized key: \"argv\""
     }
   },
   "assertions": [
@@ -762,9 +863,9 @@
       "detail": "serverInfo={\"name\":\"formal-tools-skill\",\"version\":\"0.4.0\"} protocol=2025-06-18"
     },
     {
-      "name": "tools/list exposes exactly the 15 registered tools",
+      "name": "tools/list exposes exactly the 16 registered tools",
       "pass": true,
-      "detail": "describe_native_cli,inspect_formal_tool,inspect_native_installation,inspect_portfolio_tool,list_formal_tools,list_portfolio_tools,match_formal_capabilities,plan_native_cli,plan_workflow,probe_formal_tool,run_formal_fixture,run_portfolio_operation,validate_formal_source,verify_formal_model,verify_portable_fixture"
+      "detail": "describe_native_cli,execute_workflow,inspect_formal_tool,inspect_native_installation,inspect_portfolio_tool,list_formal_tools,list_portfolio_tools,match_formal_capabilities,plan_native_cli,plan_workflow,probe_formal_tool,run_formal_fixture,run_portfolio_operation,validate_formal_source,verify_formal_model,verify_portable_fixture"
     },
     {
       "name": "inspect_native_installation input schema is tool-only (no shell/argv/cwd passthrough)",
@@ -789,7 +890,7 @@
     {
       "name": "probe_formal_tool fails closed without fabricating a version",
       "pass": true,
-      "detail": "{\"tool\":\"z3\",\"run_status\":\"NOT_RUN\",\"version_verdict\":\"UNVERIFIED\",\"argv\":[\"z3\",\"-version\"],\"exit_code\":null,\"signal\":null,\"elapsed_ms\":4,\"timed_out\":false,\"std"
+      "detail": "{\"tool\":\"z3\",\"run_status\":\"NOT_RUN\",\"version_verdict\":\"UNVERIFIED\",\"argv\":[\"z3\",\"-version\"],\"exit_code\":null,\"signal\":null,\"elapsed_ms\":3,\"timed_out\":false,\"std"
     },
     {
       "name": "run_formal_fixture records honest non-PASS when binary missing",
@@ -885,11 +986,46 @@
       "name": "plan_workflow exposes no execution lane (plan output carries no argv/shell/launcher execution fields)",
       "pass": true,
       "detail": "\"{\\\"type\\\":\\\"object\\\",\\\"$schema\\\":\\\"https://json-schema.org/draft/2020-12/schema\\\",\\\"properties\\\":{\\\"problem_text\\\":{\\\"type\\\":\\\"string\\\",\\\"minLength\\\":1,\\\"maxLe"
+    },
+    {
+      "name": "execute_workflow schema is a bounded typed execution interface (plan/source_sha/budget_caps; no argv/shell/cwd/file_path)",
+      "pass": true,
+      "detail": "{\"type\":\"object\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"properties\":{\"plan\":{\"type\":\"object\",\"properties\":{\"schema\":{\"type\":\"string\",\"const\":\"formal-tools/execution-plan/1.0\"},\"plan_id\":{\"type\":\"string"
+    },
+    {
+      "name": "execute_workflow runs are labeled with the caller's 40-hex git HEAD (no anonymous runs)",
+      "pass": true,
+      "detail": "HEAD=80a0a07a59b0..."
+    },
+    {
+      "name": "execute_workflow returns the honest fail-closed ABORTED receipt in a binary-less environment (never PASS)",
+      "pass": true,
+      "detail": "{\"status\":\"FAIL_CLOSED_RECEIPT_RETURNED\",\"executed\":false,\"blocked\":\"BLOCKED_TOOL_MISSING\",\"overall\":{\"process_outcome\":\"ABORTED\",\"solver_answer\":{\"kind\":\"none\",\"value\":null,\"by_step\":[]},\"cross_tool_verdict\":\"NOT_APPLICABLE\",\"claim_verdict"
+    },
+    {
+      "name": "execute_workflow rejects a hash-tampered plan with PLAN_HASH_MISMATCH before anything runs",
+      "pass": true,
+      "detail": "{\"code\":\"PLAN_HASH_MISMATCH\",\"message\":\"input_sha256 mismatch on step step-z3\"}"
+    },
+    {
+      "name": "execute_workflow requires source_sha (schema rejects anonymous unlabeled runs)",
+      "pass": true,
+      "detail": "\"Input validation error: Invalid arguments for tool execute_workflow: source_sha: Invalid input: expected string, received undefined\""
+    },
+    {
+      "name": "execute_workflow budget_caps are tighten-only (looser caps fail closed PLAN_BUDGET_EXCEEDED)",
+      "pass": true,
+      "detail": "{\"code\":\"PLAN_BUDGET_EXCEEDED\",\"message\":\"budget_caps.max_total_timeout_s=86400 exceeds the plan budget 120; budget_caps may only tighten, never extend\"}"
+    },
+    {
+      "name": "execute_workflow rejects raw argv extension (strict schema)",
+      "pass": true,
+      "detail": "\"Input validation error: Invalid arguments for tool execute_workflow: Unrecognized key: \\\"argv\\\"\""
     }
   ],
   "summary": {
-    "checks": 26,
-    "passed": 26,
+    "checks": 33,
+    "passed": 33,
     "failed": 0
   },
   "transcript": [
@@ -1309,7 +1445,7 @@
             },
             {
               "name": "plan_workflow",
-              "description": "Plan a bounded user problem into a formal-tools/execution-plan/1.0 workflow (PLANNING ONLY - never executes anything; tool_execution stays NOT_RUN). Deterministic z3+cvc5 cross-check template by default; the canonical problem text is used verbatim as the SMT-LIB input of both solvers. Optional provider:'deepseek' replaces the template with ONE real DeepSeek method proposal using DEEPSEEK_API_KEY from the host environment (absent key fails closed with BLOCKED_PROVIDER; never mocked). Execution is intentionally NOT exposed over MCP: run the compiled plan on a trusted host via the SDK/CLI.",
+              "description": "Plan a bounded user problem into a formal-tools/execution-plan/1.0 workflow (PLANNING ONLY - this tool never executes anything; tool_execution stays NOT_RUN; execution exists as the separate execute_workflow tool). Deterministic z3+cvc5 cross-check template by default; the canonical problem text is used verbatim as the SMT-LIB input of both solvers. Optional provider:'deepseek' replaces the template with ONE real DeepSeek method proposal using DEEPSEEK_API_KEY from the host environment (absent key fails closed with BLOCKED_PROVIDER; never mocked).",
               "inputSchema": {
                 "type": "object",
                 "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1337,6 +1473,243 @@
                 },
                 "required": [
                   "problem_text"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "name": "execute_workflow",
+              "description": "Execute a formal-tools/execution-plan/1.0 plan through the real typed DAG executor on this trusted host (the same executor the CLI 'workflow execute' path uses). Bounded typed input: the plan object (<=64KiB JSON), a REQUIRED source_sha (40-hex git commit of the caller's source tree - no anonymous or unlabeled runs), and optional tighten-only budget_caps. Plan re-validation, tool allowlist, canonical input hashes, DAG closure and budgets are enforced by the executor itself (never duplicated or bypassed here); no raw shell, no argv passthrough, no file-path inputs, no tool escalation. The host environment must provide FORMAL_PORTABLE_ROOT pointing at the pinned portable bundle; env is inherited from the MCP server process. Returns the receipt's overall verdicts (process_outcome / solver_answer / cross_tool_verdict / claim_verdict - never collapsed), per-step statuses with stream hashes (bounded log copies further truncated to 512 bytes) and receipt artifact pointers. Without the pinned bundle the executor preflight fails closed and the tool returns the honest ABORTED receipt (claim_verdict BLOCKED, fail_closed_reason BLOCKED_TOOL_MISSING) as a NON-error result - never a fabricated PASS. Invalid plans (schema/hash/budget violations) are tool errors before anything runs.",
+              "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                  "plan": {
+                    "type": "object",
+                    "properties": {
+                      "schema": {
+                        "type": "string",
+                        "const": "formal-tools/execution-plan/1.0"
+                      },
+                      "plan_id": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,79}$"
+                      },
+                      "source": {
+                        "type": "object",
+                        "properties": {
+                          "problem_sha256": {
+                            "type": "string",
+                            "pattern": "^[a-f0-9]{64}$"
+                          },
+                          "problem_kind": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 64
+                          }
+                        },
+                        "required": [
+                          "problem_sha256",
+                          "problem_kind"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "assumptions": {
+                        "maxItems": 32,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "maxLength": 256
+                        }
+                      },
+                      "method_dag": {
+                        "maxItems": 64,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "maxLength": 64
+                            },
+                            "kind": {
+                              "type": "string",
+                              "maxLength": 64
+                            },
+                            "depends_on": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "maxLength": 64
+                              }
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind",
+                            "depends_on"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "budgets": {
+                        "type": "object",
+                        "properties": {
+                          "max_steps": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1024
+                          },
+                          "max_total_timeout_s": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 86400
+                          }
+                        },
+                        "required": [
+                          "max_steps",
+                          "max_total_timeout_s"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "compiled": {
+                        "type": "object",
+                        "properties": {
+                          "launcher_sha256": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "pattern": "^[a-f0-9]{64}$"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "manifest_sha256": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "pattern": "^[a-f0-9]{64}$"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "launcher_sha256",
+                          "manifest_sha256"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "steps": {
+                        "minItems": 1,
+                        "maxItems": 1024,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$"
+                            },
+                            "tool": {
+                              "type": "string",
+                              "enum": [
+                                "z3",
+                                "cvc5",
+                                "highs",
+                                "compare"
+                              ]
+                            },
+                            "operation": {
+                              "type": "string",
+                              "enum": [
+                                "solve-smt",
+                                "solve-lp",
+                                "cross-check"
+                              ]
+                            },
+                            "depends_on": {
+                              "maxItems": 64,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 64
+                              }
+                            },
+                            "input": {},
+                            "input_sha256": {
+                              "type": "string",
+                              "pattern": "^[a-f0-9]{64}$"
+                            },
+                            "timeout_s": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 120
+                            },
+                            "expected_output_kind": {
+                              "type": "string",
+                              "enum": [
+                                "smt-answer",
+                                "lp-status",
+                                "cross-tool-verdict"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "tool",
+                            "operation",
+                            "depends_on",
+                            "input",
+                            "input_sha256",
+                            "timeout_s",
+                            "expected_output_kind"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "schema",
+                      "plan_id",
+                      "source",
+                      "assumptions",
+                      "method_dag",
+                      "budgets",
+                      "compiled",
+                      "steps"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "source_sha": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{40}$"
+                  },
+                  "budget_caps": {
+                    "type": "object",
+                    "properties": {
+                      "max_steps": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 1024
+                      },
+                      "max_total_timeout_s": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 86400
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "plan",
+                  "source_sha"
                 ],
                 "additionalProperties": false
               }
@@ -1419,7 +1792,7 @@
           "content": [
             {
               "type": "text",
-              "text": "{\"tool\":\"z3\",\"run_status\":\"NOT_RUN\",\"version_verdict\":\"UNVERIFIED\",\"argv\":[\"z3\",\"-version\"],\"exit_code\":null,\"signal\":null,\"elapsed_ms\":4,\"timed_out\":false,\"stdout\":\"\",\"stderr\":\"\",\"stdout_sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"stderr_sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"error\":\"spawn z3 ENOENT\",\"output_truncated\":false}"
+              "text": "{\"tool\":\"z3\",\"run_status\":\"NOT_RUN\",\"version_verdict\":\"UNVERIFIED\",\"argv\":[\"z3\",\"-version\"],\"exit_code\":null,\"signal\":null,\"elapsed_ms\":3,\"timed_out\":false,\"stdout\":\"\",\"stderr\":\"\",\"stdout_sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"stderr_sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"error\":\"spawn z3 ENOENT\",\"output_truncated\":false}"
             }
           ]
         },
@@ -1439,7 +1812,7 @@
           "content": [
             {
               "type": "text",
-              "text": "{\"tool\":\"z3\",\"case\":\"positive\",\"run_status\":\"NOT_RUN\",\"tool_outcome\":\"UNKNOWN\",\"test_verdict\":\"INCONCLUSIVE\",\"claim_verdict\":\"NOT_EVALUATED\",\"input_sha256\":{\"negative.smt2\":\"1d3336271d42ac7e4f4b12d95c70ae5c715a4cfd689e43a7119ea095fee75c4b\",\"positive.smt2\":\"431edcb1fb96d9aeda5c8b4a59845d3793e1b1957bdc221d6847ca9a769c8db0\"},\"executions\":[{\"argv\":[\"z3\",\"-smt2\",\"C:\\\\Users\\\\15549\\\\AppData\\\\Local\\\\Temp\\\\formal-js-sfvD52\\\\examples\\\\positive.smt2\"],\"exit_code\":null,\"signal\":null,\"elapsed_ms\":2,\"timed_out\":false,\"stdout\":\"\",\"stderr\":\"\",\"stdout_sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"stderr_sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"error\":\"spawn z3 ENOENT\",\"output_truncated\":false}],\"scope\":\"committed fixture only; not a proof of a project requirement\"}"
+              "text": "{\"tool\":\"z3\",\"case\":\"positive\",\"run_status\":\"NOT_RUN\",\"tool_outcome\":\"UNKNOWN\",\"test_verdict\":\"INCONCLUSIVE\",\"claim_verdict\":\"NOT_EVALUATED\",\"input_sha256\":{\"negative.smt2\":\"1d3336271d42ac7e4f4b12d95c70ae5c715a4cfd689e43a7119ea095fee75c4b\",\"positive.smt2\":\"431edcb1fb96d9aeda5c8b4a59845d3793e1b1957bdc221d6847ca9a769c8db0\"},\"executions\":[{\"argv\":[\"z3\",\"-smt2\",\"C:\\\\Users\\\\15549\\\\AppData\\\\Local\\\\Temp\\\\formal-js-Wni7Bw\\\\examples\\\\positive.smt2\"],\"exit_code\":null,\"signal\":null,\"elapsed_ms\":3,\"timed_out\":false,\"stdout\":\"\",\"stderr\":\"\",\"stdout_sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"stderr_sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"error\":\"spawn z3 ENOENT\",\"output_truncated\":false}],\"scope\":\"committed fixture only; not a proof of a project requirement\"}"
             }
           ]
         },
@@ -1732,6 +2105,110 @@
         },
         "jsonrpc": "2.0",
         "id": 21
+      }
+    },
+    {
+      "outbound": {
+        "id": 22,
+        "method": "tools/call"
+      }
+    },
+    {
+      "inbound": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"status\":\"FAIL_CLOSED_RECEIPT_RETURNED\",\"execution\":\"REAL_WORKFLOW_EXECUTOR\",\"schema\":\"formal-tools/execution-receipt/1.0\",\"run_id\":\"run-mwnn9a4c-f1774cca\",\"plan_id\":\"wf-8bb1bf45a6d0fbd5dbdff9fceae08cd5\",\"plan_sha256\":\"59c61e1d89f2e4604e68418b3164aee835be24771242d318c611d9a3b1b0b07e\",\"source_sha\":\"80a0a07a59b058faf2c57442c22b5cf5edd5f57f\",\"created_at\":\"2026-11-19T14:27:11.102Z\",\"executed\":false,\"blocked_code\":\"BLOCKED_TOOL_MISSING\",\"overall\":{\"process_outcome\":\"ABORTED\",\"solver_answer\":{\"kind\":\"none\",\"value\":null,\"by_step\":[]},\"cross_tool_verdict\":\"NOT_APPLICABLE\",\"claim_verdict\":\"BLOCKED\",\"fail_closed_reason\":\"BLOCKED_TOOL_MISSING\"},\"tool_versions\":{},\"steps\":[{\"step_id\":\"step-z3\",\"tool\":\"z3\",\"operation\":\"solve-smt\",\"status\":\"NOT_RUN\",\"exit_code\":null,\"elapsed_ms\":null,\"stdout_sha256\":null,\"stderr_sha256\":null,\"stdout_bounded\":null,\"stdout_truncated\":false,\"stderr_bounded\":null,\"stderr_truncated\":false,\"result\":null,\"artifact_count\":0,\"artifacts\":[],\"artifacts_truncated\":false},{\"step_id\":\"step-cvc5\",\"tool\":\"cvc5\",\"operation\":\"solve-smt\",\"status\":\"NOT_RUN\",\"exit_code\":null,\"elapsed_ms\":null,\"stdout_sha256\":null,\"stderr_sha256\":null,\"stdout_bounded\":null,\"stdout_truncated\":false,\"stderr_bounded\":null,\"stderr_truncated\":false,\"result\":null,\"artifact_count\":0,\"artifacts\":[],\"artifacts_truncated\":false},{\"step_id\":\"step-agree\",\"tool\":\"compare\",\"operation\":\"cross-check\",\"status\":\"NOT_RUN\",\"exit_code\":null,\"elapsed_ms\":null,\"stdout_sha256\":null,\"stderr_sha256\":null,\"stdout_bounded\":null,\"stdout_truncated\":false,\"stderr_bounded\":null,\"stderr_truncated\":false,\"result\":null,\"artifact_count\":0,\"artifacts\":[],\"artifacts_truncated\":false}],\"artifact_manifest\":{\"receipt_sha256\":\"115365a063f2c88dfd789a3e5a2f5aa2b2ed26ab731f19bdea9a22e668c653ee\",\"artifacts\":[{\"name\":\"receipt.json\",\"sha256\":\"115365a063f2c88dfd789a3e5a2f5aa2b2ed26ab731f19bdea9a22e668c653ee\",\"bytes\":1762}],\"artifacts_truncated\":false},\"workspace_dir\":\"C:\\\\Users\\\\15549\\\\AppData\\\\Local\\\\Temp\\\\formal-workflow-JwTQBr\",\"response_bounds\":{\"step_log_bytes\":512,\"max_artifact_pointers\":256}}"
+            }
+          ]
+        },
+        "jsonrpc": "2.0",
+        "id": 22
+      }
+    },
+    {
+      "outbound": {
+        "id": 23,
+        "method": "tools/call"
+      }
+    },
+    {
+      "inbound": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"status\":\"ERROR\",\"executed\":false,\"code\":\"PLAN_HASH_MISMATCH\",\"message\":\"input_sha256 mismatch on step step-z3\"}"
+            }
+          ],
+          "isError": true
+        },
+        "jsonrpc": "2.0",
+        "id": 23
+      }
+    },
+    {
+      "outbound": {
+        "id": 24,
+        "method": "tools/call"
+      }
+    },
+    {
+      "inbound": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: Invalid arguments for tool execute_workflow: source_sha: Invalid input: expected string, received undefined"
+            }
+          ],
+          "isError": true
+        },
+        "jsonrpc": "2.0",
+        "id": 24
+      }
+    },
+    {
+      "outbound": {
+        "id": 25,
+        "method": "tools/call"
+      }
+    },
+    {
+      "inbound": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"status\":\"ERROR\",\"executed\":false,\"code\":\"PLAN_BUDGET_EXCEEDED\",\"message\":\"budget_caps.max_total_timeout_s=86400 exceeds the plan budget 120; budget_caps may only tighten, never extend\"}"
+            }
+          ],
+          "isError": true
+        },
+        "jsonrpc": "2.0",
+        "id": 25
+      }
+    },
+    {
+      "outbound": {
+        "id": 26,
+        "method": "tools/call"
+      }
+    },
+    {
+      "inbound": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Input validation error: Invalid arguments for tool execute_workflow: Unrecognized key: \"argv\""
+            }
+          ],
+          "isError": true
+        },
+        "jsonrpc": "2.0",
+        "id": 26
       }
     },
     {

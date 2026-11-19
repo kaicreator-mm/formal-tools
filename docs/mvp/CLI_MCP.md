@@ -1,8 +1,9 @@
-# CLI and MCP quickstart (i180 / V4, Parts A + B)
+# CLI and MCP quickstart (i180 / V4 Parts A + B, R2-B execution)
 
 How to drive the formal-tools JavaScript surface: the unified Node CLI, the
 MCP stdio server, the real stdio acceptance smoke that CI runs, and the
-workflow plan → execute → results contract (Part B). Status semantics
+workflow plan → execute → results contract (Part B; MCP-side execution was
+added in R2-B via `execute_workflow`). Status semantics
 (probe receipts are technical evidence, never T3/T4/T5/T6 or business
 acceptance) follow `docs/CLI_MCP_CONTRACT.md`.
 
@@ -107,7 +108,7 @@ npm run formal:mcp        # node packages/runner/js/mcp.mjs
 Any MCP host can attach over stdio (`@modelcontextprotocol/server` v2,
 protocol `2025-06-18`).
 
-## Registered MCP tools (exactly 15)
+## Registered MCP tools (exactly 16)
 
 1. `list_formal_tools` — 13 native adapters + candidate portfolio + 4 pure engines.
 2. `validate_formal_source` — static validation, no proof execution.
@@ -124,20 +125,56 @@ protocol `2025-06-18`).
 11. `inspect_portfolio_tool` — read-only portable installation metadata.
 12. `verify_portable_fixture` — pinned portable pos/neg/err fixture via the
     SHA-pinned runner.
-13. `run_portfolio_operation` — the only admitted execution lane: Highs
+13. `run_portfolio_operation` — a bounded typed execution lane: Highs
     1.15.1 `solve-lp` with a bounded typed LP model (no raw argv/shell).
 14. `verify_formal_model` — pure JS finite-model checks (`dag|writers|cnf|states`).
 15. `plan_workflow` — **planning only**: a bounded `problem_text` (1..64 KiB,
     ≤32 assumptions, optional `provider: "deepseek"`) becomes an
     `execution-plan/1.0` plan. It NEVER executes anything.
+16. `execute_workflow` — **bounded typed execution** over the real V3 DAG
+    executor (see below).
 
 Every tool rejects execution-shaped arguments (raw argv/shell/cwd) at the
 zod schema or handler boundary and fails closed.
 
-**MCP is planning-only by design.** There is no workflow-execute tool over
-MCP in this round: execution requires a trusted host context (pinned portable
-bundle, filesystem receipts), so it belongs to the CLI/SDK/Web lanes. Wiring
-MCP execution to a trusted host is future work (issue #180 V6).
+### `execute_workflow` (trusted-host execution over MCP, R2-B)
+
+The one workflow-execute surface over MCP. Input is strictly typed and
+bounded; the executor keeps every security-relevant choke point:
+
+- `plan` — the `formal-tools/execution-plan/1.0` object (exactly the frozen
+  8-key schema, ≤64 KiB JSON). Structure, tool allowlist, canonical input
+  hashes, DAG closure and budgets are re-validated by `executeWorkflowPlan`
+  itself — never duplicated or bypassed at the MCP layer.
+- `source_sha` — **required**, 40-hex git commit SHA of the caller's source
+  tree. No anonymous or unlabeled runs; the receipt binds it.
+- `budget_caps` — optional, tighten-only (`max_steps`, `max_total_timeout_s`).
+  A cap looser than the plan's own budget is rejected `PLAN_BUDGET_EXCEEDED`;
+  caps never extend budgets.
+
+Environment contract: the MCP server process inherits the trusted host
+environment; execution requires `FORMAL_PORTABLE_ROOT` to point at the pinned
+portable bundle (the same env the CLI path uses). There is no raw shell, no
+argv passthrough, no file-path inputs and no tool escalation — the only
+process launches are the executor's hash-bound, allowlisted solver calls.
+
+Results: the response carries the receipt's `overall` verdicts
+(`process_outcome` / `solver_answer` / `cross_tool_verdict` / `claim_verdict`
+— never collapsed), per-step statuses with full-byte stream hashes (bounded
+log copies further truncated to 512 bytes, truncation flagged), and artifact
+pointers (`receipt_sha256` + `manifest.json` entry hashes; capped at 256).
+Without the pinned bundle the preflight fails closed and the tool returns the
+honest `ABORTED` receipt — `claim_verdict: "BLOCKED"`,
+`fail_closed_reason: "BLOCKED_TOOL_MISSING"` — as a **non-error** result
+(never a fabricated PASS). Invalid plans (schema/hash/budget violations) are
+tool errors before anything runs (`PLAN_HASH_MISMATCH`, `PLAN_OVERSIZED`, ...).
+
+Planning tools are unchanged: `plan_workflow` still never executes; to run a
+plan over MCP, pass its `execution-plan/1.0` object (the 8 schema keys) to
+`execute_workflow` with the caller's git HEAD as `source_sha`. Live three-entry
+parity receipts (same plan over MCP and CLI on the trusted host: identical
+`plan_sha256`, identical verdicts, distinct `run_id`s) live under
+`validation/local-runtime-receipts/mcp-execute-*`.
 
 ## Run the real stdio acceptance smoke
 
@@ -147,11 +184,13 @@ node scripts/mcp-acceptance.mjs
 
 This spawns `packages/runner/js/mcp.mjs` as a real child process and speaks
 newline-delimited JSON-RPC over stdio — the same transport an external MCP
-host uses: `initialize` → `tools/list` → `tools/call` across all 15 tools,
+host uses: `initialize` → `tools/list` → `tools/call` across all 16 tools,
 including fail-closed assertions (unknown capability ID, schema-invalid
 `capabilities: []`, raw `argv` extension, unknown tool id, empty
-`problem_text`, unknown workflow provider) and `plan_workflow`
-determinism. It writes a receipt to
+`problem_text`, unknown workflow provider), `plan_workflow`
+determinism, and the `execute_workflow` honest fail-closed receipt plus
+`PLAN_HASH_MISMATCH` / missing-`source_sha` / tighten-only-`budget_caps` /
+argv rejections. It writes a receipt to
 `validation/local-runtime-receipts/mcp-acceptance.json` and exits 0 only
 when every assertion holds; CI runs it as the `mcp-stdio-smoke` step in
 `.woodpecker/formal-static.yaml`. No native binaries are needed.
@@ -159,8 +198,8 @@ when every assertion holds; CI runs it as the `mcp-stdio-smoke` step in
 Static offline parity guards additionally pin the tool set:
 `tests/workflow-interfaces-smoke.test.mjs` asserts `mcp.mjs` `registerTool`
 names == `EXPECTED_TOOLS` == `registry/INTERFACES.json` `mcp_tools` == exactly
-15; `tests/tool-contract-parity.test.mjs` asserts the SDK/CLI/MCP catalog
+16; `tests/tool-contract-parity.test.mjs` asserts the SDK/CLI/MCP catalog
 faces. The end-to-end workflow contract itself (SDK plan/compile/execute,
-CLI subprocess flows, real stdio `plan_workflow`, real DeepSeek when
-`DEEPSEEK_API_KEY` is set — skipped where absent) is covered by
+CLI subprocess flows, real stdio `plan_workflow` + `execute_workflow`, real
+DeepSeek when `DEEPSEEK_API_KEY` is set — skipped where absent) is covered by
 `tests/workflow-interfaces-workflow.test.mjs`.

@@ -30,7 +30,8 @@
     "inspect_portfolio_tool",
     "verify_portable_fixture",
     "run_portfolio_operation",
-    "plan_workflow"
+    "plan_workflow",
+    "execute_workflow"
   ],
   "pure_engines": [
     "dag",
@@ -180,12 +181,14 @@
     "sdk_exports": ["planWorkflow", "compileWorkflowPlan", "executeWorkflowPlan"],
     "cli": "cli.mjs workflow plan --problem-file <path> [--assumption <text>]... [--capability <id>]... [--provider deepseek] [--compile] | execute --plan-file <path> [--source-sha <40hex>] | results --receipt <path>",
     "mcp_tool": "plan_workflow",
-    "mcp_execution": "NOT_EXPOSED_BY_DESIGN: MCP is planning-only; execution runs on a trusted host via CLI/SDK/Web",
+    "mcp_execution_tool": "execute_workflow",
+    "mcp_execution": "EXECUTES_ON_TRUSTED_HOST: execute_workflow (16th tool) delegates the typed plan to the real V3 executor (executeWorkflowPlan) with a REQUIRED 40-hex source_sha label (no anonymous runs); bounded input (plan <=64KiB JSON, tighten-only budget_caps), no argv/shell/file-path inputs; plan re-validation, allowlist and budgets stay executor choke points; honest ABORTED/BLOCKED_TOOL_MISSING receipt returned as a non-error result in binary-less environments (never PASS)",
     "deepseek_provider": "env DEEPSEEK_API_KEY only; absent key fails closed BLOCKED_PROVIDER; never mocked",
     "deterministic_template": "default planning template: z3+cvc5 cross-check pair over the canonical problem text used verbatim as SMT-LIB input; prose input honestly fails at execution (no fabricated verdict)",
     "binary_less_environments": "execution fails closed with an ABORTED receipt, claim_verdict BLOCKED, fail_closed_reason BLOCKED_TOOL_MISSING (honest outcome, not a crash)",
     "artifacts_layout": "artifacts/<plan_id>/{plan.json,launcher.mjs,manifest.json,receipt.json}",
-    "status": "V4_PART_B_SHIPPED_SDK_CLI_MCP_PLANNING_ONLY_MCP_EXECUTE_NOT_EXPOSED"
+    "mcp_response_bounds": "per-step stream copies truncated to 512 bytes (hashes always kept over full bytes), artifact pointer list capped at 256 entries, plan transport capped at 64KiB",
+    "status": "R2_B_SHIPPED_SDK_CLI_MCP_PLAN_AND_EXECUTE_MCP_EXECUTE_OVER_REAL_V3_EXECUTOR"
   },
   "capability_validation": {
     "schema": "formal-tools/capability-validation/0.1",

@@ -82,7 +82,7 @@
   "portable/packaging/bundle-template/bin/tool-runner": "40427c1e541f294d71d803b0225984175708391e",
   "packages/runner/js/cli.mjs": "041194c002047c2d8cbd9966b8c4b5ac90c1804a",
   "packages/runner/js/sdk.mjs": "9297e6471fe8f83188c548e6d3cf4e805b9638d9",
-  "packages/runner/js/mcp.mjs": "a61b1714c2e522744b4d3851bfe4de38d7bff436",
+  "packages/runner/js/mcp.mjs": "489a112adff0a737c14ec9aeff7d1de3daef6b60",
   "packages/runner/js/tool-portfolio-t4.mjs": "922a7c208beaa0e48346403a29ec2d927189319f",
   "packages/runner/js/native.mjs": "8bb35b48a67a7220956e5605520d31c8a5a598ae",
   "packages/runner/js/native-catalog.mjs": "02f628947be3e5c270d802be150ab220e14fc2b8",
@@ -133,7 +133,7 @@
    "base_main": "e5b4f62e1e650d2785a7ee3970102c5218b9d3de",
    "source_branch": "work/i24-capability-interface-r177",
    "output_label": "FORMAL_TOOLS_I24_R177_CAPABILITY_INTERFACE_CLOSEOUT",
-   "refresh_note": "new_blob + source_pins refreshed for i180/V4b (issue #184 Part B) shared-interface edits (planWorkflow/compileWorkflowPlan/executeWorkflowPlan in sdk.mjs; workflow subcommand in cli.mjs; plan_workflow in mcp.mjs); old_blob values preserved as the historical r177 record",
+   "refresh_note": "new_blob + source_pins refreshed for shared-interface edits: i180/V4b (issue #184 Part B: planWorkflow/compileWorkflowPlan/executeWorkflowPlan in sdk.mjs; workflow subcommand in cli.mjs; plan_workflow in mcp.mjs) and i180/R2-B (issue #184 follow-up R2: execute_workflow — the bounded typed MCP execution tool delegating to executeWorkflowPlan — in mcp.mjs only; cli.mjs/sdk.mjs untouched in R2-B); old_blob values preserved as the historical r177 record",
    "changed_pinned_paths": [
     {
      "path": "packages/runner/js/cli.mjs",
@@ -150,8 +150,8 @@
     {
      "path": "packages/runner/js/mcp.mjs",
      "old_blob": "27f654b99a49d86a148f4b86f01cf7b5b85c0754",
-     "new_blob": "a61b1714c2e522744b4d3851bfe4de38d7bff436",
-     "change": "capability discovery/match interface wiring (read-only): cli.mjs adds the `capabilities` action (summary|match --cap|tool); sdk.mjs re-exports loadCapabilityValidation/validateCapabilityValidation/matchValidatedTools; mcp.mjs registers the read-only match_formal_capabilities tool (14th allowlisted tool). No execution surface added; fixtures and native adapters untouched."
+     "new_blob": "489a112adff0a737c14ec9aeff7d1de3daef6b60",
+     "change": "capability discovery/match interface wiring (read-only): cli.mjs adds the `capabilities` action (summary|match --cap|tool); sdk.mjs re-exports loadCapabilityValidation/validateCapabilityValidation/matchValidatedTools; mcp.mjs registers the read-only match_formal_capabilities tool (14th allowlisted tool). No execution surface added; fixtures and native adapters untouched. R2-B refresh: mcp.mjs additionally registers execute_workflow (16th allowlisted tool) — bounded typed execution delegating to the real V3 executor executeWorkflowPlan with a required 40-hex source_sha, tighten-only budget_caps, 64KiB plan transport bound and bounded responses; plan re-validation/allowlist/budgets stay executor choke points; cli.mjs and sdk.mjs untouched by R2-B (their blobs are unchanged)."
     }
    ],
    "unchanged_pinned_paths": 19,

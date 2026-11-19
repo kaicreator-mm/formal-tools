@@ -270,7 +270,7 @@ test("V4b CLI: workflow usage errors exit 2 with machine-readable stderr", () =>
 
 // ---------- MCP stdio coverage (real child process, JSON-RPC over stdio) ----------
 
-test("V4b MCP: real stdio server lists plan_workflow among exactly 15 tools and plans without executing", async () => {
+test("V4b+R2B MCP: real stdio server lists 16 tools; plans without executing; execute_workflow fails closed honestly", async () => {
   const child = spawn(process.execPath, [mcpPath], {
     stdio: ["pipe", "pipe", "pipe"], env: scrubEnv()
   });
@@ -314,11 +314,16 @@ test("V4b MCP: real stdio server lists plan_workflow among exactly 15 tools and 
     child.stdin.write(JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized", params: {} }) + "\n");
     const list = await request("tools/list", {});
     const names = (list.result?.tools ?? []).map(t => t.name).sort();
-    assert.equal(names.length, 15);
+    assert.equal(names.length, 16);
     assert.ok(names.includes("plan_workflow"), "tools/list must include plan_workflow");
+    assert.ok(names.includes("execute_workflow"), "tools/list must include execute_workflow (R2-B)");
     const schema = JSON.stringify(list.result.tools.find(t => t.name === "plan_workflow").inputSchema);
     assert.match(schema, /problem_text/);
     assert.doesNotMatch(schema, /argv|shell|command|cwd|execute/);
+    const execSchema = JSON.stringify(list.result.tools.find(t => t.name === "execute_workflow").inputSchema);
+    assert.match(execSchema, /plan/);
+    assert.match(execSchema, /source_sha/);
+    assert.doesNotMatch(execSchema, /"argv"|"shell"|"command"|"cwd"|"file_path"/);
 
     const call = async (name, args) => request("tools/call", { name, arguments: args });
     const ok = await call("plan_workflow", { problem_text: SMT_PROBLEM, assumptions: ["bounded"] });
@@ -335,6 +340,34 @@ test("V4b MCP: real stdio server lists plan_workflow among exactly 15 tools and 
     assert.equal(badProvider.result?.isError, true, "unknown provider must be rejected");
     const extra = await call("plan_workflow", { problem_text: "ok", argv: ["sh"] });
     assert.equal(extra.result?.isError, true, "execution-shaped arguments must be rejected by .strict()");
+
+    // i180/R2-B: execute_workflow over stdio, binary-less environment — the
+    // executor preflight fails closed and the tool returns the honest ABORTED
+    // receipt as a NON-error result; tampering is a pre-execution tool error.
+    const executionPlan = (({ schema, plan_id, source, assumptions, method_dag, budgets, compiled, steps }) =>
+      ({ schema, plan_id, source, assumptions, method_dag, budgets, compiled, steps }))(plan);
+    const exec = await call("execute_workflow", { plan: executionPlan, source_sha: "f2b6a8df2b6a8df2b6a8df2b6a8df2b6a8df2b6a" });
+    const receiptView = firstText(exec.result);
+    assert.equal(exec.result?.isError, undefined, "honest fail-closed receipts are non-error results");
+    assert.equal(receiptView?.status, "FAIL_CLOSED_RECEIPT_RETURNED");
+    assert.equal(receiptView?.execution, "REAL_WORKFLOW_EXECUTOR");
+    assert.equal(receiptView?.executed, false);
+    assert.equal(receiptView?.blocked_code, "BLOCKED_TOOL_MISSING");
+    assert.equal(receiptView?.schema, "formal-tools/execution-receipt/1.0");
+    assert.equal(receiptView?.overall?.process_outcome, "ABORTED");
+    assert.equal(receiptView?.overall?.claim_verdict, "BLOCKED");
+    assert.equal(receiptView?.overall?.fail_closed_reason, "BLOCKED_TOOL_MISSING");
+    assert.deepEqual(receiptView?.steps?.map(s => s.status), ["NOT_RUN", "NOT_RUN", "NOT_RUN"]);
+    assert.match(String(receiptView?.artifact_manifest?.receipt_sha256), /^[a-f0-9]{64}$/);
+    const tampered = structuredClone(executionPlan);
+    tampered.steps[0].input_sha256 = "0".repeat(64);
+    const tamperCall = await call("execute_workflow", { plan: tampered, source_sha: "f2b6a8df2b6a8df2b6a8df2b6a8df2b6a8df2b6a" });
+    assert.equal(tamperCall.result?.isError, true, "hash tampering must be a tool error");
+    assert.equal(firstText(tamperCall.result)?.code, "PLAN_HASH_MISMATCH");
+    const noSha = await call("execute_workflow", { plan: executionPlan });
+    assert.equal(noSha.result?.isError, true, "source_sha is required (no anonymous runs)");
+    const argvExec = await call("execute_workflow", { plan: executionPlan, source_sha: "f2b6a8df2b6a8df2b6a8df2b6a8df2b6a8df2b6a", argv: ["sh"] });
+    assert.equal(argvExec.result?.isError, true, "execution-shaped arguments must be rejected by .strict()");
   } finally {
     child.stdin.end();
     child.kill();

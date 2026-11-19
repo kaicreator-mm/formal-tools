@@ -1,10 +1,10 @@
 PASS  initialize handshake — serverInfo={"name":"formal-tools-skill","version":"0.4.0"} protocol=2025-06-18
-PASS  tools/list exposes exactly the 14 registered tools — describe_native_cli,inspect_formal_tool,inspect_native_installation,inspect_portfolio_tool,list_formal_tools,list_portfolio_tools,match_formal_capabilities,plan_native_cli,probe_formal_tool,run_formal_fixture,run_portfolio_operation,validate_formal_source,verify_formal_model,verify_portable_fixture
+PASS  tools/list exposes exactly the 16 registered tools — describe_native_cli,execute_workflow,inspect_formal_tool,inspect_native_installation,inspect_portfolio_tool,list_formal_tools,list_portfolio_tools,match_formal_capabilities,plan_native_cli,plan_workflow,probe_formal_tool,run_formal_fixture,run_portfolio_operation,validate_formal_source,verify_formal_model,verify_portable_fixture
 PASS  inspect_native_installation input schema is tool-only (no shell/argv/cwd passthrough) — {"type":"object","$schema":"https://json-schema.org/draft/2020-12/schema","properties":{"tool":{"type":"string"}},"required":["tool"]}
 PASS  list_formal_tools reports 13 native tools — native=13 pure=["dag","writers","cnf","states"]
 PASS  validate_formal_source returns STATIC_PASS — STATIC_PASS
 PASS  inspect_formal_tool describes z3 — {"id":"z3","skill":"skills/z3/SKILL.md","cwd":"skills/z3","doctor":"z3 -version","positive_command":"z3 -smt2 examples/p
-PASS  probe_formal_tool fails closed without fabricating a version — {"tool":"z3","run_status":"NOT_RUN","version_verdict":"UNVERIFIED","argv":["z3","-version"],"exit_code":null,"signal":null,"elapsed_ms":4,"timed_out":false,"std
+PASS  probe_formal_tool fails closed without fabricating a version — {"tool":"z3","run_status":"NOT_RUN","version_verdict":"UNVERIFIED","argv":["z3","-version"],"exit_code":null,"signal":null,"elapsed_ms":3,"timed_out":false,"std
 PASS  run_formal_fixture records honest non-PASS when binary missing — {"test_verdict":"INCONCLUSIVE"}
 PASS  describe_native_cli returns operations — operations=solve,dimacs
 PASS  inspect_native_installation is read-only (probe_status NOT_RUN, no execution) — {"status":"MISSING_EXECUTABLE","probe_status":"NOT_RUN"}
@@ -18,5 +18,17 @@ PASS  match_formal_capabilities matches logic.smt over probe receipts (read-only
 PASS  unknown capability id fails closed (no silent empty success) — "{\"status\":\"ERROR\",\"message\":\"RangeError: unknown capability: capability.does.not.exist\"}"
 PASS  schema-invalid capabilities:[] is rejected (fail-closed zod min(1)) — "Input validation error: Invalid arguments for tool match_formal_capabilities: capabilities: Too small: expected array to have >=1 items"
 PASS  unknown tool id is rejected by schema (no generic executable) — "Input validation error: Invalid arguments for tool inspect_native_installation: tool: Unknown registered formal tool"
-receipt: C:\xDev\kAiCreator\formal-tools\wt-i180-v4\validation\local-runtime-receipts\mcp-acceptance.json — 20/20 checks passed
-EXIT=0
+PASS  plan_workflow schema is a closed planning-only interface (no argv/shell/execute/cwd) — {"type":"object","$schema":"https://json-schema.org/draft/2020-12/schema","properties":{"problem_text":{"type":"string","minLength":1,"maxLength":65536},"assumptions":{"default":[],"maxItems":32,"type":"array","items":{"
+PASS  plan_workflow returns an execution-plan/1.0 with allowlisted steps, hash-bound inputs, null compilation — {"plan_id":"wf-8bb1bf45a6d0fbd5dbdff9fceae08cd5","steps":["z3","cvc5","compare"],"compiled":{"launcher_sha256":null,"manifest_sha256":null},"tool_execution":"NOT_RUN"}
+PASS  plan_workflow is deterministic (same input -> same plan_id, no hidden randomness) — {"first":"wf-8bb1bf45a6d0fbd5dbdff9fceae08cd5","second":"wf-8bb1bf45a6d0fbd5dbdff9fceae08cd5"}
+PASS  plan_workflow rejects empty problem_text (fail-closed zod min(1)) — "Input validation error: Invalid arguments for tool plan_workflow: problem_text: Too small: expected string to have >=1 characters"
+PASS  plan_workflow rejects an unknown provider (fail-closed enum) — "Input validation error: Invalid arguments for tool plan_workflow: provider: Invalid input: expected \"deepseek\""
+PASS  plan_workflow exposes no execution lane (plan output carries no argv/shell/launcher execution fields) — "{\"type\":\"object\",\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"properties\":{\"problem_text\":{\"type\":\"string\",\"minLength\":1,\"maxLe
+PASS  execute_workflow schema is a bounded typed execution interface (plan/source_sha/budget_caps; no argv/shell/cwd/file_path) — {"type":"object","$schema":"https://json-schema.org/draft/2020-12/schema","properties":{"plan":{"type":"object","properties":{"schema":{"type":"string","const":"formal-tools/execution-plan/1.0"},"plan_id":{"type":"string
+PASS  execute_workflow runs are labeled with the caller's 40-hex git HEAD (no anonymous runs) — HEAD=80a0a07a59b0...
+PASS  execute_workflow returns the honest fail-closed ABORTED receipt in a binary-less environment (never PASS) — {"status":"FAIL_CLOSED_RECEIPT_RETURNED","executed":false,"blocked":"BLOCKED_TOOL_MISSING","overall":{"process_outcome":"ABORTED","solver_answer":{"kind":"none","value":null,"by_step":[]},"cross_tool_verdict":"NOT_APPLICABLE","claim_verdict
+PASS  execute_workflow rejects a hash-tampered plan with PLAN_HASH_MISMATCH before anything runs — {"code":"PLAN_HASH_MISMATCH","message":"input_sha256 mismatch on step step-z3"}
+PASS  execute_workflow requires source_sha (schema rejects anonymous unlabeled runs) — "Input validation error: Invalid arguments for tool execute_workflow: source_sha: Invalid input: expected string, received undefined"
+PASS  execute_workflow budget_caps are tighten-only (looser caps fail closed PLAN_BUDGET_EXCEEDED) — {"code":"PLAN_BUDGET_EXCEEDED","message":"budget_caps.max_total_timeout_s=86400 exceeds the plan budget 120; budget_caps may only tighten, never extend"}
+PASS  execute_workflow rejects raw argv extension (strict schema) — "Input validation error: Invalid arguments for tool execute_workflow: Unrecognized key: \"argv\""
+receipt: C:\xDev\kAiCreator\formal-tools\wt-i180-r2b\validation\local-runtime-receipts\mcp-acceptance.json — 33/33 checks passed
