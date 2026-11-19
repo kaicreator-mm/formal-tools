@@ -1,0 +1,30 @@
+{
+  "ok": true,
+  "stage": "checked",
+  "script_sha256": "8485a12d2f7718f09ee533ab17442c37758cfdacf0aad3ed44e5477c5ae1c380",
+  "rendering_sha256": "89add0ce0c459caf55ed612e0e15e8befa4aa846ef2ce163b14933ab3e5208ee",
+  "values": {
+    "p": 1,
+    "e": 7
+  },
+  "checks": [
+    {
+      "desc": "bound 1 <= p <= 12",
+      "holds": true
+    },
+    {
+      "desc": "bound 1 <= e <= 12",
+      "holds": true
+    },
+    {
+      "desc": "constraint#0 {\"p\":3,\"e\":2} == 17 at witness {\"p\":1,\"e\":7}",
+      "holds": true
+    },
+    {
+      "desc": "constraint#1 {\"e\":1,\"p\":-1} >= 2 at witness {\"p\":1,\"e\":7}",
+      "holds": true
+    }
+  ],
+  "stdout_bounded": "sat\n((p 1)\n (e 7))\n",
+  "honesty_note": "witness consistency is a check against the RENDERED constraints only; it is NOT evidence that the translation matches the natural-language text"
+}

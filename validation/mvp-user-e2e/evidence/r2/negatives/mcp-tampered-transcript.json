@@ -1,0 +1,58 @@
+{
+  "schema": "formal-tools/r2e2e-mcp-transcript/1.0",
+  "note": "execute_workflow tampered-plan negative transcript (tampered plan payload omitted; committed under negatives/ as metadata)",
+  "tampered_plan_meta": {
+    "plan_id": "wf-84b428d69985159a3ff634e51e8a3672",
+    "mutated_step": "step-z3",
+    "mutation": "appended comment line to steps[0].input.smt_lib; input_sha256 kept stale"
+  },
+  "transcript": [
+    {
+      "outbound": {
+        "id": 1,
+        "method": "initialize"
+      }
+    },
+    {
+      "inbound": {
+        "result": {
+          "protocolVersion": "2025-06-18",
+          "capabilities": {
+            "tools": {
+              "listChanged": true
+            }
+          },
+          "serverInfo": {
+            "name": "formal-tools-skill",
+            "version": "0.4.0"
+          }
+        },
+        "jsonrpc": "2.0",
+        "id": 1
+      }
+    },
+    {
+      "outbound": {
+        "id": 2,
+        "method": "tools/call",
+        "params_summary": "execute_workflow(tampered plan<omitted>, source_sha)"
+      }
+    },
+    {
+      "inbound": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"status\":\"ERROR\",\"executed\":false,\"code\":\"PLAN_HASH_MISMATCH\",\"message\":\"input_sha256 mismatch on step step-z3\"}"
+            }
+          ],
+          "isError": true
+        },
+        "jsonrpc": "2.0",
+        "id": 2
+      }
+    }
+  ],
+  "stderr_tail": []
+}

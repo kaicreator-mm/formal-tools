@@ -1,0 +1,156 @@
+{
+  "status": "EXECUTION_RECEIPT_RETURNED",
+  "execution": "REAL_WORKFLOW_EXECUTOR",
+  "schema": "formal-tools/execution-receipt/1.0",
+  "run_id": "run-mwnoind9-0a2b5645",
+  "plan_id": "wf-84b428d69985159a3ff634e51e8a3672",
+  "plan_sha256": "ae4979bff7d92f6be4b4cef972416d910e1832ec572a5e189fcfbca8e0dd7b12",
+  "source_sha": "7b85e82e434152e139d0d93bfb76ef72ad076f21",
+  "created_at": "2026-11-19T15:02:27.789Z",
+  "executed": true,
+  "blocked_code": null,
+  "overall": {
+    "process_outcome": "OK",
+    "solver_answer": {
+      "kind": "solve-smt",
+      "value": "unsat",
+      "by_step": [
+        {
+          "step_id": "step-z3",
+          "tool": "z3",
+          "operation": "solve-smt",
+          "answer": "unsat"
+        },
+        {
+          "step_id": "step-cvc5",
+          "tool": "cvc5",
+          "operation": "solve-smt",
+          "answer": "unsat"
+        }
+      ]
+    },
+    "cross_tool_verdict": "AGREE_UNSAT",
+    "claim_verdict": "PASS"
+  },
+  "tool_versions": {
+    "z3": {
+      "version": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f",
+      "probe_sha256": "9af7c6f186418585f022fd2d18eb2d278e14ad21731bf3339f3cbd1f78500e7a",
+      "probe_bounded": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f\n"
+    },
+    "cvc5": {
+      "version": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]",
+      "probe_sha256": "b6c312e4bb0062a7683ca82eb08f0b25beb4e6c67f22a62a6841a8f4192fde4a",
+      "probe_bounded": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]\ncompiled as a unrestricted build with GCC version 11.4.0 on Oct  8 2026 01:24:07\n\nCopyright (c) 2009-2026 by the authors and their institutional\naffiliations listed at https://cvc5.github.io/people.html\n\ncvc5 is open"
+    }
+  },
+  "environment": {
+    "host": "cc",
+    "node": "v22.16.0",
+    "formal_portable_root_sha": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a"
+  },
+  "steps": [
+    {
+      "step_id": "step-z3",
+      "tool": "z3",
+      "operation": "solve-smt",
+      "status": "EXECUTED",
+      "exit_code": 0,
+      "elapsed_ms": 12,
+      "stdout_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bounded": "unsat\n",
+      "stdout_truncated": false,
+      "stderr_bounded": "",
+      "stderr_truncated": false,
+      "result": {
+        "answer": "unsat"
+      },
+      "artifact_count": 1,
+      "artifacts": [
+        {
+          "name": "steps/step-z3/input.smt2",
+          "sha256": "7b0aa03a9790f175a0985845693ec6d339d0826d235619ceaa6ceb13b86a8601",
+          "bytes": 432
+        }
+      ],
+      "artifacts_truncated": false
+    },
+    {
+      "step_id": "step-cvc5",
+      "tool": "cvc5",
+      "operation": "solve-smt",
+      "status": "EXECUTED",
+      "exit_code": 0,
+      "elapsed_ms": 5,
+      "stdout_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bounded": "unsat\n",
+      "stdout_truncated": false,
+      "stderr_bounded": "",
+      "stderr_truncated": false,
+      "result": {
+        "answer": "unsat"
+      },
+      "artifact_count": 1,
+      "artifacts": [
+        {
+          "name": "steps/step-cvc5/input.smt2",
+          "sha256": "7b0aa03a9790f175a0985845693ec6d339d0826d235619ceaa6ceb13b86a8601",
+          "bytes": 432
+        }
+      ],
+      "artifacts_truncated": false
+    },
+    {
+      "step_id": "step-agree",
+      "tool": "compare",
+      "operation": "cross-check",
+      "status": "EXECUTED",
+      "exit_code": null,
+      "elapsed_ms": 0,
+      "stdout_sha256": null,
+      "stderr_sha256": null,
+      "stdout_bounded": null,
+      "stdout_truncated": false,
+      "stderr_bounded": null,
+      "stderr_truncated": false,
+      "result": {
+        "verdict": "AGREE_UNSAT",
+        "left_step": "step-z3",
+        "right_step": "step-cvc5",
+        "left_answer": "unsat",
+        "right_answer": "unsat"
+      },
+      "artifact_count": 0,
+      "artifacts": [],
+      "artifacts_truncated": false
+    }
+  ],
+  "artifact_manifest": {
+    "receipt_sha256": "6557446cf1da3345e7d87bf8d35a9fadc969e5c0ff00f23c00f7a784b7929a4d",
+    "artifacts": [
+      {
+        "name": "logs/step-cvc5.stdout.txt",
+        "sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+        "bytes": 6
+      },
+      {
+        "name": "logs/step-z3.stdout.txt",
+        "sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+        "bytes": 6
+      },
+      {
+        "name": "receipt.json",
+        "sha256": "6557446cf1da3345e7d87bf8d35a9fadc969e5c0ff00f23c00f7a784b7929a4d",
+        "bytes": 3690
+      }
+    ],
+    "artifacts_truncated": false
+  },
+  "workspace_dir": "/tmp/formal-workflow-6DWFXe",
+  "response_bounds": {
+    "step_log_bytes": 512,
+    "max_artifact_pointers": 256
+  }
+}

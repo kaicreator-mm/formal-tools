@@ -1,0 +1,23 @@
+{
+  "input": "帮我们改进排班系统,让大家都能双休,同时公司成本更低、效率更高。请直接求解。\n",
+  "provider": {
+    "name": "deepseek",
+    "model": "deepseek-chat"
+  },
+  "attempts": [
+    {
+      "status": "NEEDS_CLARIFICATION",
+      "reason": null,
+      "issues": null
+    }
+  ],
+  "status": "NEEDS_CLARIFICATION",
+  "clarification_needed": [
+    "文本没有给出任何可量化的排班要素：需要明确员工人数、班次类型与每日各班次需求人数、排班周期天数、每人每周工作天数上限、'双休'的具体含义（是否每人每周恰好休息2天且连续）、以及成本与效率的量化定义（如每人每班成本、加班成本、效率指标）。",
+    "'公司成本更低、效率更高'是相对目标，缺少基准方案与可度量的目标函数；请给出成本系数与效率指标，或明确要最小化/最大化的具体线性表达式。",
+    "请确认这是否是一个有界整数规划问题（例如以周为周期的0-1排班模型），并提供上述数据后我才能建立模型。"
+  ],
+  "rendering_present": false,
+  "approval_attempt_threw": "NL_NOT_APPROVABLE",
+  "matched": true
+}

@@ -1,0 +1,32 @@
+{
+  "schema": "formal-tools/r2e2e-nl-review/1.0",
+  "label": "FORMAL_TOOLS_I180_R2_E2E_ACCEPTANCE",
+  "journey": "j1-nl-core",
+  "reviewer_role": "R2 non-Writer E2E acceptance validator (agent surrogate performing the approval gate; NOT an independent human — recorded as such). This file is authored separately from the proposal and is the approval gate input.",
+  "review_basis": "Line-by-line check of proposal.json rendering.text and model against the question text in inputs/nl-sat-puzzle.txt, after reading the proposal pulled back from the host. The LLM translation was checked BEFORE any approval; nothing was approved unread.",
+  "review_notes": [
+    "Text asks for integer quantities p (pencils) and e (erasers), each at least 1 and at most 12 -> model bounds p in [1,12], e in [1,12]: MATCH.",
+    "Text: each pencil costs 3 yuan, each eraser 2 yuan, total exactly 17 yuan -> constraint 3*p + 2*e == 17: MATCH (exact-equality op '==', rhs 17).",
+    "Text: eraser count must exceed pencil count by at least 2, spelled out as e minus p >= 2 -> constraint e - p >= 2: MATCH (op '>=', rhs 2).",
+    "Text asks whether ANY satisfying integer pair exists (existence question, no optimum requested) -> question 'sat', no objective field: MATCH (an objective here would have been an unrequested invention).",
+    "No auxiliary variables were introduced (none needed: no divisibility/multiple-of phrasing in my text): MATCH.",
+    "Assumptions recorded by the proposer accurately describe the three interpretation decisions; no missing-bound guessing occurred because the text states every bound explicitly.",
+    "Rendering re-check: the rendered QF_LIA text asserts exactly the six facts above (p>=1, p<=12, e>=1, e<=12, 2e+3p=17, e-p>=2) and nothing else; term order (+ (* 2 e) (* 3 p)) is the renderer's sorted-name convention, semantically identical to 3p+2e.",
+    "Hand analysis of the rendered model (independent of any solver): 3p+2e=17 with p,e in [1,12] forces e=7-p... enumeration: p=1 -> e=7 (e-p=6>=2, feasible); p=3 -> e=4 (e-p=1<2, infeasible); no other integer solutions. Expected verdict under the rendered model: AGREE_SAT with witness (p,e)=(1,7)."
+  ],
+  "rendering_checks": [
+    { "line": "(assert (>= p 1))", "encodes": "p 至少为 1", "verdict": "MATCH" },
+    { "line": "(assert (<= p 12))", "encodes": "p 不超过 12", "verdict": "MATCH" },
+    { "line": "(assert (>= e 1))", "encodes": "e 至少为 1", "verdict": "MATCH" },
+    { "line": "(assert (<= e 12))", "encodes": "e 不超过 12", "verdict": "MATCH" },
+    { "line": "(assert (= (+ (* 2 e) (* 3 p)) 17))", "encodes": "3 元/铅笔 * p + 2 元/橡皮 * e 恰好 17 元", "verdict": "MATCH" },
+    { "line": "(assert (>= (+ e (- p)) 2))", "encodes": "e - p >= 2", "verdict": "MATCH" },
+    { "line": "(check-sat)", "encodes": "存在性提问(无优化目标)", "verdict": "MATCH" }
+  ],
+  "expected_verdict": "AGREE_SAT",
+  "decision": {
+    "approved": true,
+    "reviewer": "r2-e2e acceptance validator (agent surrogate on behalf of the human requester; rendering verified line-by-line against the question text before approval; this approval covers the RENDERED model only)",
+    "note": "basis: every rendered bound/constraint was checked against inputs/nl-sat-puzzle.txt (see rendering_checks); translation judged faithful for this text; semantic equivalence beyond the checked renderings is NOT claimed"
+  }
+}

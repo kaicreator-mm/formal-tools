@@ -1,0 +1,41 @@
+{
+  "run_id": "run-mwnolhqi-56e1aaf1",
+  "receipt_headers": {
+    "cache-control": "no-store",
+    "connection": "keep-alive",
+    "content-disposition": "attachment; filename=\"receipt-run-mwnolhqi-56e1aaf1.json\"",
+    "content-length": "3721",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 19 Nov 2026 15:08:32 GMT",
+    "keep-alive": "timeout=5",
+    "x-content-type-options": "nosniff"
+  },
+  "manifest_headers": {
+    "cache-control": "no-store",
+    "connection": "keep-alive",
+    "content-disposition": "attachment; filename=\"manifest-run-mwnolhqi-56e1aaf1.json\"",
+    "content-length": "2820",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Thu, 19 Nov 2026 15:08:32 GMT",
+    "keep-alive": "timeout=5",
+    "x-content-type-options": "nosniff"
+  },
+  "per_stream": [
+    {
+      "step_id": "step-z3",
+      "stream": "stdout",
+      "full_scope_header": "full-stream",
+      "full_stream_header": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "bounded_scope_header": "bounded-copy",
+      "bounded_stream_header": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18"
+    },
+    {
+      "step_id": "step-cvc5",
+      "stream": "stdout",
+      "full_scope_header": "full-stream",
+      "full_stream_header": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "bounded_scope_header": "bounded-copy",
+      "bounded_stream_header": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18"
+    }
+  ]
+}

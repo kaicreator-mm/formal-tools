@@ -1,0 +1,190 @@
+{
+  "schema": "formal-tools/r2e2e-nl-journey-report/1.0",
+  "label": "FORMAL_TOOLS_I180_R2_E2E_ACCEPTANCE",
+  "journey": "j1-nl-core",
+  "source_sha": "7b85e82e434152e139d0d93bfb76ef72ad076f21",
+  "provider": {
+    "name": "deepseek",
+    "model": "deepseek-chat"
+  },
+  "input_text": "购买铅笔和橡皮:铅笔的数量 p 与橡皮的数量 e 都必须是整数,两者都至少为 1,都不超过 12。每支铅笔 3 元,每块橡皮 2 元,总价要恰好等于 17 元;并且要求橡皮的数量比铅笔的数量至少多 2,即 e 减去 p 的差大于或等于 2。请问:存在满足上述全部条件的整数组合 (p, e) 吗?\n",
+  "proposal_status": "MODEL_PROPOSED",
+  "proposal_sha256": "f210941c8b6497515369d50dc69c193968eb653397b2c775c3be9128e495dd46",
+  "review": {
+    "decision": {
+      "approved": true,
+      "reviewer": "r2-e2e acceptance validator (agent surrogate on behalf of the human requester; rendering verified line-by-line against the question text before approval; this approval covers the RENDERED model only)",
+      "note": "basis: every rendered bound/constraint was checked against inputs/nl-sat-puzzle.txt (see rendering_checks); translation judged faithful for this text; semantic equivalence beyond the checked renderings is NOT claimed"
+    },
+    "review_notes": [
+      "Text asks for integer quantities p (pencils) and e (erasers), each at least 1 and at most 12 -> model bounds p in [1,12], e in [1,12]: MATCH.",
+      "Text: each pencil costs 3 yuan, each eraser 2 yuan, total exactly 17 yuan -> constraint 3*p + 2*e == 17: MATCH (exact-equality op '==', rhs 17).",
+      "Text: eraser count must exceed pencil count by at least 2, spelled out as e minus p >= 2 -> constraint e - p >= 2: MATCH (op '>=', rhs 2).",
+      "Text asks whether ANY satisfying integer pair exists (existence question, no optimum requested) -> question 'sat', no objective field: MATCH (an objective here would have been an unrequested invention).",
+      "No auxiliary variables were introduced (none needed: no divisibility/multiple-of phrasing in my text): MATCH.",
+      "Assumptions recorded by the proposer accurately describe the three interpretation decisions; no missing-bound guessing occurred because the text states every bound explicitly.",
+      "Rendering re-check: the rendered QF_LIA text asserts exactly the six facts above (p>=1, p<=12, e>=1, e<=12, 2e+3p=17, e-p>=2) and nothing else; term order (+ (* 2 e) (* 3 p)) is the renderer's sorted-name convention, semantically identical to 3p+2e.",
+      "Hand analysis of the rendered model (independent of any solver): 3p+2e=17 with p,e in [1,12] forces e=7-p... enumeration: p=1 -> e=7 (e-p=6>=2, feasible); p=3 -> e=4 (e-p=1<2, infeasible); no other integer solutions. Expected verdict under the rendered model: AGREE_SAT with witness (p,e)=(1,7)."
+    ],
+    "rendering_checks": [
+      {
+        "line": "(assert (>= p 1))",
+        "encodes": "p 至少为 1",
+        "verdict": "MATCH"
+      },
+      {
+        "line": "(assert (<= p 12))",
+        "encodes": "p 不超过 12",
+        "verdict": "MATCH"
+      },
+      {
+        "line": "(assert (>= e 1))",
+        "encodes": "e 至少为 1",
+        "verdict": "MATCH"
+      },
+      {
+        "line": "(assert (<= e 12))",
+        "encodes": "e 不超过 12",
+        "verdict": "MATCH"
+      },
+      {
+        "line": "(assert (= (+ (* 2 e) (* 3 p)) 17))",
+        "encodes": "3 元/铅笔 * p + 2 元/橡皮 * e 恰好 17 元",
+        "verdict": "MATCH"
+      },
+      {
+        "line": "(assert (>= (+ e (- p)) 2))",
+        "encodes": "e - p >= 2",
+        "verdict": "MATCH"
+      },
+      {
+        "line": "(check-sat)",
+        "encodes": "存在性提问(无优化目标)",
+        "verdict": "MATCH"
+      }
+    ]
+  },
+  "approved_sha256": "bc1f6d262a6bf1522b6833b37f82593ff40064085ae8a0ec85b810d79b16e15e",
+  "plan": {
+    "plan_id": "wf-97ae30ca2ac1dcf5a287c4ac7fd8b122",
+    "plan_sha256": "fc9f7e76f248fec6c70a877fa37739fa38faddde421ed70964a8f24f45c23507",
+    "provenance_sha256": "f1e5c794844811f33e67e327776c321a948516ff9eb04779a45e45e8c932afc2",
+    "target": "smt",
+    "steps": [
+      {
+        "id": "step-z3",
+        "tool": "z3",
+        "operation": "solve-smt"
+      },
+      {
+        "id": "step-cvc5",
+        "tool": "cvc5",
+        "operation": "solve-smt"
+      },
+      {
+        "id": "step-agree",
+        "tool": "compare",
+        "operation": "cross-check"
+      }
+    ]
+  },
+  "execution": {
+    "run_id": "run-mwnod31f-6904946b",
+    "overall": {
+      "process_outcome": "OK",
+      "solver_answer": {
+        "kind": "solve-smt",
+        "value": "sat",
+        "by_step": [
+          {
+            "step_id": "step-z3",
+            "tool": "z3",
+            "operation": "solve-smt",
+            "answer": "sat"
+          },
+          {
+            "step_id": "step-cvc5",
+            "tool": "cvc5",
+            "operation": "solve-smt",
+            "answer": "sat"
+          }
+        ]
+      },
+      "cross_tool_verdict": "AGREE_SAT",
+      "claim_verdict": "PASS"
+    },
+    "fail_closed_reason": null,
+    "tool_versions": {
+      "z3": {
+        "version": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f",
+        "probe_sha256": "9af7c6f186418585f022fd2d18eb2d278e14ad21731bf3339f3cbd1f78500e7a",
+        "probe_bounded": "Z3 version 5.4.0 - 64 bit - build hashcode d6c9b4fbb31cb76e35cc325dd7e64b7c26c7d70f\n"
+      },
+      "cvc5": {
+        "version": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]",
+        "probe_sha256": "b6c312e4bb0062a7683ca82eb08f0b25beb4e6c67f22a62a6841a8f4192fde4a",
+        "probe_bounded": "cvc5 1.4.2 [git 282d5e0 on branch HEAD]\ncompiled as a unrestricted build with GCC version 11.4.0 on Oct  8 2026 01:24:07\n\nCopyright (c) 2009-2026 by the authors and their institutional\naffiliations listed at https://cvc5.github.io/people.html\n\ncvc5 is open"
+      }
+    },
+    "source_sha": "7b85e82e434152e139d0d93bfb76ef72ad076f21"
+  },
+  "verdict": "AGREE_SAT",
+  "witness": {
+    "ok": true,
+    "stage": "checked",
+    "script_sha256": "8485a12d2f7718f09ee533ab17442c37758cfdacf0aad3ed44e5477c5ae1c380",
+    "rendering_sha256": "89add0ce0c459caf55ed612e0e15e8befa4aa846ef2ce163b14933ab3e5208ee",
+    "values": {
+      "p": 1,
+      "e": 7
+    },
+    "checks": [
+      {
+        "desc": "bound 1 <= p <= 12",
+        "holds": true
+      },
+      {
+        "desc": "bound 1 <= e <= 12",
+        "holds": true
+      },
+      {
+        "desc": "constraint#0 {\"p\":3,\"e\":2} == 17 at witness {\"p\":1,\"e\":7}",
+        "holds": true
+      },
+      {
+        "desc": "constraint#1 {\"e\":1,\"p\":-1} >= 2 at witness {\"p\":1,\"e\":7}",
+        "holds": true
+      }
+    ],
+    "stdout_bounded": "sat\n((p 1)\n (e 7))\n",
+    "honesty_note": "witness consistency is a check against the RENDERED constraints only; it is NOT evidence that the translation matches the natural-language text"
+  },
+  "checks": [
+    {
+      "name": "approval record is USER_APPROVED",
+      "pass": true
+    },
+    {
+      "name": "plan built from approved model",
+      "pass": true,
+      "detail": "wf-97ae30ca2ac1dcf5a287c4ac7fd8b122"
+    },
+    {
+      "name": "execution receipt recorded",
+      "pass": true,
+      "detail": "run-mwnod31f-6904946b"
+    },
+    {
+      "name": "cross-tool verdict is AGREE_SAT",
+      "pass": true,
+      "detail": "AGREE_SAT"
+    },
+    {
+      "name": "witness probe holds on every rendered bound/constraint",
+      "pass": true,
+      "detail": "{\"p\":1,\"e\":7}"
+    }
+  ],
+  "all_checks_passed": true,
+  "honesty_note": "All verdicts answer the RENDERED model. The DeepSeek output is a translation proposal; the approval here is the recorded, hash-covered decision of the E2E validator after checking the rendering against the text (agent surrogate, not an independent human). Witness consistency never implies translation fidelity."
+}

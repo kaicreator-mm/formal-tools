@@ -1,0 +1,228 @@
+{
+  "schema": "formal-tools/r2e2e-evidence-verification/1.0",
+  "label": "FORMAL_TOOLS_I180_R2_E2E_ACCEPTANCE",
+  "journey": "j4-web-evidence-correctness",
+  "base": "http://127.0.0.1:8788",
+  "run_id": "run-mwnolhqi-56e1aaf1",
+  "receipt_full_stream_hashes": [
+    {
+      "step_id": "step-z3",
+      "stdout": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "step_id": "step-cvc5",
+      "stdout": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "step_id": "step-agree",
+      "stdout": null,
+      "stderr": null
+    }
+  ],
+  "manifest_remit": {
+    "receipt_sha256": "91ac9da6709af84cfa252374b7a529328283f20b87c82dae4b2bda2584c41218",
+    "stream_cap_bytes": 4096
+  },
+  "streams": [
+    {
+      "step_id": "step-z3",
+      "stream": "stdout",
+      "receipt_full_stream_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "full_http_status": 200,
+      "full_scope_header": "full-stream",
+      "full_stream_header": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "full_bytes_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "full_bytes_len": 6,
+      "bounded_http_status": 200,
+      "bounded_scope_header": "bounded-copy",
+      "bounded_stream_header": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "bounded_bytes_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "bounded_bytes_len": 6,
+      "manifest_entry": {
+        "step_id": "step-z3",
+        "stream": "stdout",
+        "full_stream_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+        "full_stream_bytes_retained": true,
+        "full_artifact": "logs/step-z3.stdout.txt",
+        "full_artifact_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+        "bounded_artifact": "logs/step-z3.stdout.bounded.txt",
+        "bounded_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+        "bounded_bytes": 6,
+        "bounded_matches_full_stream": true
+      }
+    },
+    {
+      "step_id": "step-cvc5",
+      "stream": "stdout",
+      "receipt_full_stream_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "full_http_status": 200,
+      "full_scope_header": "full-stream",
+      "full_stream_header": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "full_bytes_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "full_bytes_len": 6,
+      "bounded_http_status": 200,
+      "bounded_scope_header": "bounded-copy",
+      "bounded_stream_header": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "bounded_bytes_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+      "bounded_bytes_len": 6,
+      "manifest_entry": {
+        "step_id": "step-cvc5",
+        "stream": "stdout",
+        "full_stream_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+        "full_stream_bytes_retained": true,
+        "full_artifact": "logs/step-cvc5.stdout.txt",
+        "full_artifact_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+        "bounded_artifact": "logs/step-cvc5.stdout.bounded.txt",
+        "bounded_sha256": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18",
+        "bounded_bytes": 6,
+        "bounded_matches_full_stream": true
+      }
+    }
+  ],
+  "findings": [
+    {
+      "name": "evidence receipt.json served with attachment disposition",
+      "pass": true,
+      "detail": "attachment; filename=\"receipt-run-mwnolhqi-56e1aaf1.json\""
+    },
+    {
+      "name": "downloaded receipt.json run_id matches",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "manifest.receipt_sha256 == sha256(receipt.json bytes)",
+      "pass": true,
+      "detail": "{\"manifest\":\"91ac9da6709af84cfa252374b7a529328283f20b87c82dae4b2bda2584c41218\",\"actual\":\"91ac9da6709af84cfa252374b7a529328283f20b87c82dae4b2bda2584c41218\"}"
+    },
+    {
+      "name": "manifest.labels_note present (bounded copies carry their OWN sha; plain names reserved for verified full streams)",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "step-z3 stdout full: X-Formal-Evidence-Scope is full-stream",
+      "pass": true,
+      "detail": "full-stream"
+    },
+    {
+      "name": "step-z3 stdout full: X-Formal-Full-Stream-Sha256 equals the receipt full-stream hash",
+      "pass": true,
+      "detail": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18"
+    },
+    {
+      "name": "step-z3 stdout full: sha256(bytes) == receipt full-stream hash",
+      "pass": true,
+      "detail": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18"
+    },
+    {
+      "name": "step-z3 stdout bounded: X-Formal-Evidence-Scope is bounded-copy",
+      "pass": true,
+      "detail": "bounded-copy"
+    },
+    {
+      "name": "step-z3 stdout bounded: X-Formal-Full-Stream-Sha256 still the FULL-stream hash (never the bounded hash)",
+      "pass": true,
+      "detail": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18"
+    },
+    {
+      "name": "step-z3 stdout bounded: sha256(bytes) == manifest bounded_sha256",
+      "pass": true,
+      "detail": "{\"actual\":\"5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18\",\"manifest\":\"5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18\"}"
+    },
+    {
+      "name": "step-z3 stdout manifest full_stream_sha256 == receipt hash",
+      "pass": true,
+      "detail": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18"
+    },
+    {
+      "name": "step-z3 stdout manifest bounded_matches_full_stream === true (verified/provable on this short-output run)",
+      "pass": true,
+      "detail": "true"
+    },
+    {
+      "name": "step-z3 stdout observed: full bytes == bounded bytes (consistent with the verified claim, authority = hashes above)",
+      "pass": true,
+      "detail": "6 vs 6"
+    },
+    {
+      "name": "step-z3 stdout manifest artifact scopes labeled (full-stream / bounded-copy)",
+      "pass": true,
+      "detail": "{\"full\":\"full-stream\",\"bounded\":\"bounded-copy\"}"
+    },
+    {
+      "name": "step-z3 stdout manifest artifact hashes match served bytes",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "step-cvc5 stdout full: X-Formal-Evidence-Scope is full-stream",
+      "pass": true,
+      "detail": "full-stream"
+    },
+    {
+      "name": "step-cvc5 stdout full: X-Formal-Full-Stream-Sha256 equals the receipt full-stream hash",
+      "pass": true,
+      "detail": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18"
+    },
+    {
+      "name": "step-cvc5 stdout full: sha256(bytes) == receipt full-stream hash",
+      "pass": true,
+      "detail": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18"
+    },
+    {
+      "name": "step-cvc5 stdout bounded: X-Formal-Evidence-Scope is bounded-copy",
+      "pass": true,
+      "detail": "bounded-copy"
+    },
+    {
+      "name": "step-cvc5 stdout bounded: X-Formal-Full-Stream-Sha256 still the FULL-stream hash (never the bounded hash)",
+      "pass": true,
+      "detail": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18"
+    },
+    {
+      "name": "step-cvc5 stdout bounded: sha256(bytes) == manifest bounded_sha256",
+      "pass": true,
+      "detail": "{\"actual\":\"5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18\",\"manifest\":\"5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18\"}"
+    },
+    {
+      "name": "step-cvc5 stdout manifest full_stream_sha256 == receipt hash",
+      "pass": true,
+      "detail": "5c17dfcc2a8f1f30d9e96df6a9825a5030ade046d560332c19de74d93d591a18"
+    },
+    {
+      "name": "step-cvc5 stdout manifest bounded_matches_full_stream === true (verified/provable on this short-output run)",
+      "pass": true,
+      "detail": "true"
+    },
+    {
+      "name": "step-cvc5 stdout observed: full bytes == bounded bytes (consistent with the verified claim, authority = hashes above)",
+      "pass": true,
+      "detail": "6 vs 6"
+    },
+    {
+      "name": "step-cvc5 stdout manifest artifact scopes labeled (full-stream / bounded-copy)",
+      "pass": true,
+      "detail": "{\"full\":\"full-stream\",\"bounded\":\"bounded-copy\"}"
+    },
+    {
+      "name": "step-cvc5 stdout manifest artifact hashes match served bytes",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "at least one stream verified",
+      "pass": true,
+      "detail": "2"
+    },
+    {
+      "name": "scope=everything refused fail-closed (422 EVIDENCE_SCOPE_INVALID)",
+      "pass": true,
+      "detail": "{\"status\":422,\"code\":\"EVIDENCE_SCOPE_INVALID\"}"
+    }
+  ],
+  "all_checks_passed": true,
+  "honesty_note": "Verification is over real HTTP bytes and headers. bounded_matches_full_stream is asserted TRUE only because the manifest recorded verified identity AND the served bytes hash-verify; no identity claim is made beyond that."
+}

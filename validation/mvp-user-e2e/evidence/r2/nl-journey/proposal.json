@@ -1,0 +1,104 @@
+{
+  "record": {
+    "schema": "formal-tools/r2e2e-nl-proposal/1.0",
+    "label": "FORMAL_TOOLS_I180_R2_E2E_ACCEPTANCE",
+    "journey": "j1-nl-core",
+    "phase": "propose",
+    "source_sha": "7b85e82e434152e139d0d93bfb76ef72ad076f21",
+    "provider": {
+      "name": "deepseek",
+      "model": "deepseek-chat"
+    },
+    "input_text": "购买铅笔和橡皮:铅笔的数量 p 与橡皮的数量 e 都必须是整数,两者都至少为 1,都不超过 12。每支铅笔 3 元,每块橡皮 2 元,总价要恰好等于 17 元;并且要求橡皮的数量比铅笔的数量至少多 2,即 e 减去 p 的差大于或等于 2。请问:存在满足上述全部条件的整数组合 (p, e) 吗?\n",
+    "attempts": [
+      {
+        "status": "MODEL_PROPOSED",
+        "reason": null,
+        "issues": null,
+        "clarification_needed": null,
+        "proposal_sha256": "f210941c8b6497515369d50dc69c193968eb653397b2c775c3be9128e495dd46"
+      }
+    ],
+    "chosen_status": "MODEL_PROPOSED"
+  },
+  "proposal": {
+    "schema": "formal-tools/nl-model-proposal/0.1",
+    "status": "MODEL_PROPOSED",
+    "original_text": "购买铅笔和橡皮:铅笔的数量 p 与橡皮的数量 e 都必须是整数,两者都至少为 1,都不超过 12。每支铅笔 3 元,每块橡皮 2 元,总价要恰好等于 17 元;并且要求橡皮的数量比铅笔的数量至少多 2,即 e 减去 p 的差大于或等于 2。请问:存在满足上述全部条件的整数组合 (p, e) 吗?",
+    "provider": {
+      "name": "deepseek",
+      "model": "deepseek-chat"
+    },
+    "prompt_sha256": "2402d7b7c6c3ca3dca758c47dfacf0f42c6c0c8046c7faf1c1a2afbbfb5330c6",
+    "response_sha256": "7b3b3f5219ac96d8efa99d7c65ad1e1f319b830f0af8530e4c58895ab21f2dc9",
+    "model": {
+      "variables": [
+        {
+          "name": "p",
+          "integer": true,
+          "lower": 1,
+          "upper": 12
+        },
+        {
+          "name": "e",
+          "integer": true,
+          "lower": 1,
+          "upper": 12
+        }
+      ],
+      "constraints": [
+        {
+          "coefficients": {
+            "p": 3,
+            "e": 2
+          },
+          "op": "==",
+          "rhs": 17
+        },
+        {
+          "coefficients": {
+            "e": 1,
+            "p": -1
+          },
+          "op": ">=",
+          "rhs": 2
+        }
+      ],
+      "question": "sat",
+      "assumptions": [
+        "p and e are bounded to [1,12] as stated in the text",
+        "The price constraint 3p+2e=17 is encoded exactly",
+        "The condition e-p>=2 is encoded as a linear constraint"
+      ]
+    },
+    "rendering": {
+      "kind": "smt-lib2",
+      "logic": "QF_LIA",
+      "mode": "plan",
+      "text": "(set-logic QF_LIA)\n(declare-fun p () Int)\n(declare-fun e () Int)\n(assert (>= p 1))\n(assert (<= p 12))\n(assert (>= e 1))\n(assert (<= e 12))\n(assert (= (+ (* 2 e) (* 3 p)) 17))\n(assert (>= (+ e (- p)) 2))\n(check-sat)\n(exit)\n",
+      "sha256": "89add0ce0c459caf55ed612e0e15e8befa4aa846ef2ce163b14933ab3e5208ee",
+      "commands_allowlist": [
+        "set-logic",
+        "declare-fun",
+        "assert",
+        "check-sat",
+        "get-model",
+        "exit"
+      ],
+      "semantic_status": "TRANSLATION_PROPOSAL_NOT_VERIFIED_AGAINST_TEXT"
+    },
+    "original_text_sha256": "a611c6ea88275d3c174189a9192e5b41983d4c22e94ab978c527578f3ab0b8ac",
+    "clarification_needed": null,
+    "assumptions": [
+      "p and e are bounded to [1,12] as stated in the text",
+      "The price constraint 3p+2e=17 is encoded exactly",
+      "The condition e-p>=2 is encoded as a linear constraint"
+    ],
+    "issues": null,
+    "review": {
+      "approved": false
+    },
+    "honesty_note": "TRANSLATION PROPOSAL: the structured model is unverified against the text; a human must review it. Render validity does not imply translation fidelity.",
+    "proposal_sha256": "f210941c8b6497515369d50dc69c193968eb653397b2c775c3be9128e495dd46"
+  }
+}

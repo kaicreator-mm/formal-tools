@@ -1,0 +1,91 @@
+{
+  "schema": "formal-tools/execution-plan/1.0",
+  "plan_id": "wf-97ae30ca2ac1dcf5a287c4ac7fd8b122",
+  "source": {
+    "problem_sha256": "fbff719d5265e91b40f9fa11094c220fc20de778e3bf80d944724dd3a1f2f15f",
+    "problem_kind": "nl_model"
+  },
+  "assumptions": [
+    "p and e are bounded to [1,12] as stated in the text",
+    "The price constraint 3p+2e=17 is encoded exactly",
+    "The condition e-p>=2 is encoded as a linear constraint"
+  ],
+  "method_dag": [
+    {
+      "id": "step-z3",
+      "kind": "solve",
+      "depends_on": []
+    },
+    {
+      "id": "step-cvc5",
+      "kind": "solve",
+      "depends_on": [
+        "step-z3"
+      ]
+    },
+    {
+      "id": "step-agree",
+      "kind": "cross_check",
+      "depends_on": [
+        "step-z3",
+        "step-cvc5"
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "id": "step-z3",
+      "tool": "z3",
+      "operation": "solve-smt",
+      "depends_on": [],
+      "input": {
+        "smt_lib": "(set-logic QF_LIA)\n(declare-fun p () Int)\n(declare-fun e () Int)\n(assert (>= p 1))\n(assert (<= p 12))\n(assert (>= e 1))\n(assert (<= e 12))\n(assert (= (+ (* 2 e) (* 3 p)) 17))\n(assert (>= (+ e (- p)) 2))\n(check-sat)\n(exit)\n"
+      },
+      "input_sha256": "3ceac308b3eaa29536b0c27bec3d84ef32c2bc13e3cfa8f7c611ba5958c826f0",
+      "timeout_s": 30,
+      "expected_output_kind": "smt-answer"
+    },
+    {
+      "id": "step-cvc5",
+      "tool": "cvc5",
+      "operation": "solve-smt",
+      "depends_on": [
+        "step-z3"
+      ],
+      "input": {
+        "smt_lib": "(set-logic QF_LIA)\n(declare-fun p () Int)\n(declare-fun e () Int)\n(assert (>= p 1))\n(assert (<= p 12))\n(assert (>= e 1))\n(assert (<= e 12))\n(assert (= (+ (* 2 e) (* 3 p)) 17))\n(assert (>= (+ e (- p)) 2))\n(check-sat)\n(exit)\n"
+      },
+      "input_sha256": "3ceac308b3eaa29536b0c27bec3d84ef32c2bc13e3cfa8f7c611ba5958c826f0",
+      "timeout_s": 30,
+      "expected_output_kind": "smt-answer"
+    },
+    {
+      "id": "step-agree",
+      "tool": "compare",
+      "operation": "cross-check",
+      "depends_on": [
+        "step-z3",
+        "step-cvc5"
+      ],
+      "input": {
+        "left_step": "step-z3",
+        "right_step": "step-cvc5",
+        "agree_on": [
+          "sat",
+          "unsat"
+        ]
+      },
+      "timeout_s": 5,
+      "expected_output_kind": "cross-tool-verdict",
+      "input_sha256": "7a913f16cf6ae5824b30e5d9069c90934b05d35cbf1099c2da4ba501bbcb9f62"
+    }
+  ],
+  "budgets": {
+    "max_steps": 8,
+    "max_total_timeout_s": 120
+  },
+  "compiled": {
+    "launcher_sha256": null,
+    "manifest_sha256": null
+  }
+}

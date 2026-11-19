@@ -1,0 +1,140 @@
+{
+  "schema": "formal-tools/r2e2e-negatives-report/1.0",
+  "label": "FORMAL_TOOLS_I180_R2_E2E_ACCEPTANCE",
+  "journey": "j3-negatives",
+  "source_sha_git_label": "7b85e82e434152e139d0d93bfb76ef72ad076f21",
+  "results": {
+    "needsClarification": {
+      "input": "帮我们改进排班系统,让大家都能双休,同时公司成本更低、效率更高。请直接求解。\n",
+      "provider": {
+        "name": "deepseek",
+        "model": "deepseek-chat"
+      },
+      "attempts": [
+        {
+          "status": "NEEDS_CLARIFICATION",
+          "reason": null,
+          "issues": null
+        }
+      ],
+      "status": "NEEDS_CLARIFICATION",
+      "clarification_needed": [
+        "文本没有给出任何可量化的排班要素：需要明确员工人数、班次类型与每日各班次需求人数、排班周期天数、每人每周工作天数上限、'双休'的具体含义（是否每人每周恰好休息2天且连续）、以及成本与效率的量化定义（如每人每班成本、加班成本、效率指标）。",
+        "'公司成本更低、效率更高'是相对目标，缺少基准方案与可度量的目标函数；请给出成本系数与效率指标，或明确要最小化/最大化的具体线性表达式。",
+        "请确认这是否是一个有界整数规划问题（例如以周为周期的0-1排班模型），并提供上述数据后我才能建立模型。"
+      ],
+      "rendering_present": false,
+      "approval_attempt_threw": "NL_NOT_APPROVABLE",
+      "matched": true
+    },
+    "tamperedMcp": {
+      "isError": true,
+      "status": "ERROR",
+      "code": "PLAN_HASH_MISMATCH",
+      "executed": false,
+      "message": "input_sha256 mismatch on step step-z3",
+      "matched": true
+    },
+    "cliBlocked": {
+      "exit_code": 2,
+      "blocked": "BLOCKED_TOOL_MISSING",
+      "overall": {
+        "process_outcome": "ABORTED",
+        "solver_answer": {
+          "kind": "none",
+          "value": null,
+          "by_step": []
+        },
+        "cross_tool_verdict": "NOT_APPLICABLE",
+        "claim_verdict": "BLOCKED",
+        "fail_closed_reason": "BLOCKED_TOOL_MISSING"
+      },
+      "receipt_existed_before": true,
+      "receipt": {
+        "schema": "formal-tools/execution-receipt/1.0",
+        "run_id": "run-mwnoq3de-4c1dfe81",
+        "source_sha": "7b85e82e434152e139d0d93bfb76ef72ad076f21",
+        "overall": {
+          "process_outcome": "ABORTED",
+          "solver_answer": {
+            "kind": "none",
+            "value": null,
+            "by_step": []
+          },
+          "cross_tool_verdict": "NOT_APPLICABLE",
+          "claim_verdict": "BLOCKED",
+          "fail_closed_reason": "BLOCKED_TOOL_MISSING"
+        },
+        "step_statuses": [
+          {
+            "step_id": "step-z3",
+            "status": "NOT_RUN"
+          },
+          {
+            "step_id": "step-cvc5",
+            "status": "NOT_RUN"
+          },
+          {
+            "step_id": "step-agree",
+            "status": "NOT_RUN"
+          }
+        ],
+        "environment": {
+          "host": "cc",
+          "node": "v22.16.0",
+          "formal_portable_root_sha": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a"
+        }
+      },
+      "matched": true
+    },
+    "webBlocked": {
+      "base": "http://127.0.0.1:8789",
+      "run_id": "run-mwnoq3dq-ba7531c8",
+      "status": "complete",
+      "overall": {
+        "process_outcome": "ABORTED",
+        "solver_answer": {
+          "kind": "none",
+          "value": null,
+          "by_step": []
+        },
+        "cross_tool_verdict": "NOT_APPLICABLE",
+        "claim_verdict": "BLOCKED",
+        "fail_closed_reason": "BLOCKED_TOOL_MISSING"
+      },
+      "matched": true
+    }
+  },
+  "unknown_class_case": {
+    "status": "NOT_RUN",
+    "reason": "an honest solver-UNKNOWN verdict is not cleanly constructible under the fixed budget/inputs without scripting a solver; deliberately not fabricated"
+  },
+  "findings": [
+    {
+      "name": "(a) vague NL -> NEEDS_CLARIFICATION with questions; nothing rendered; approval impossible",
+      "pass": true,
+      "detail": "{\"status\":\"NEEDS_CLARIFICATION\",\"threw\":\"NL_NOT_APPROVABLE\"}"
+    },
+    {
+      "name": "(b) MCP initialize handshake",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "(b) tampered plan over MCP -> PLAN_HASH_MISMATCH as a PRE-execution tool error (executed:false, no receipt)",
+      "pass": true,
+      "detail": "{\"isError\":true,\"code\":\"PLAN_HASH_MISMATCH\",\"executed\":false,\"msg\":\"input_sha256 mismatch on step step-z3\"}"
+    },
+    {
+      "name": "(c) CLI with empty FORMAL_PORTABLE_ROOT -> honest ABORTED receipt (BLOCKED_TOOL_MISSING, claim BLOCKED, steps NOT_RUN, exit 2, no crash)",
+      "pass": true,
+      "detail": "{\"exit\":2,\"blocked\":\"BLOCKED_TOOL_MISSING\",\"overall\":{\"process_outcome\":\"ABORTED\",\"solver_answer\":{\"kind\":\"none\",\"value\":null,\"by_step\":[]},\"cross_tool_verdict\":\"NOT_APPLICABLE\",\"claim_verdict\":\"BLOCKED\",\"fail_closed_reason\":\"BLOCKED_TOOL_MISSING\"}}"
+    },
+    {
+      "name": "(d) Web bridge without the bundle -> honest ABORTED receipt (BLOCKED_TOOL_MISSING), no crash, no PASS",
+      "pass": true,
+      "detail": "{\"status\":\"complete\",\"overall\":{\"process_outcome\":\"ABORTED\",\"solver_answer\":{\"kind\":\"none\",\"value\":null,\"by_step\":[]},\"cross_tool_verdict\":\"NOT_APPLICABLE\",\"claim_verdict\":\"BLOCKED\",\"fail_closed_reason\":\"BLOCKED_TOOL_MISSING\"}}"
+    }
+  ],
+  "all_checks_passed": true
+}
