@@ -51,6 +51,9 @@
 
 /* ------------------------------- base ------------------------------- */
 * { box-sizing: border-box; }
+/* Author display rules (e.g. .actions { display:flex }) must never defeat the
+   hidden attribute — i180/R3 NL mode toggle depends on it. */
+[hidden] { display: none !important; }
 html { font-size: var(--fs-3); }
 body {
   margin: 0;
@@ -253,6 +256,52 @@ select:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-o
 
 .evidence-actions { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin: var(--sp-3) 0 var(--sp-5); }
 .evidence-actions a.btn { text-decoration: none; }
+
+/* ------------------------------- NL lane (i180/R3) ------------------------------- */
+.mode-toggle {
+  border: 1px solid var(--c-border); border-radius: var(--r-2);
+  background: var(--c-surface); padding: var(--sp-2) var(--sp-3); margin: 0 0 var(--sp-4);
+}
+.mode-toggle legend { font-weight: 600; padding: 0 var(--sp-1); }
+.mode-toggle .mode-option {
+  display: inline-flex; gap: var(--sp-2); align-items: center;
+  margin-right: var(--sp-4); font-size: var(--fs-2); font-weight: 400;
+}
+.mode-toggle .mode-option input { width: 15px; height: 15px; }
+
+#nlOriginalText, #nlRenderedSmt, #nlRenderedLp {
+  background: var(--c-bg); border: 1px solid var(--c-border);
+  border-radius: var(--r-1); padding: var(--sp-3);
+  max-height: 260px; overflow: auto; white-space: pre-wrap; margin: var(--sp-1) 0 0;
+}
+#nlRenderedSmt { font-family: var(--font-mono); font-size: var(--fs-1); }
+
+.nl-constraint-list { list-style: none; margin: var(--sp-2) 0 0; padding: 0; display: grid; gap: var(--sp-2); }
+.nl-constraint-row { display: flex; gap: var(--sp-2); align-items: center; flex-wrap: wrap; }
+.nl-coeff-input {
+  flex: 1; min-width: 180px; font-family: var(--font-mono); font-size: var(--fs-2);
+  color: var(--c-ink); background: var(--c-surface);
+  border: 1px solid var(--c-border-strong); border-radius: var(--r-1); padding: var(--sp-1) var(--sp-2);
+}
+.nl-op-select {
+  font: inherit; font-size: var(--fs-2); font-family: var(--font-mono);
+  color: var(--c-ink); background: var(--c-surface);
+  border: 1px solid var(--c-border-strong); border-radius: var(--r-1); padding: var(--sp-1) var(--sp-2);
+}
+.nl-rhs-input, .nl-bound-input {
+  width: 110px; font-family: var(--font-mono); font-size: var(--fs-2);
+  color: var(--c-ink); background: var(--c-surface);
+  border: 1px solid var(--c-border-strong); border-radius: var(--r-1); padding: var(--sp-1) var(--sp-2);
+}
+.nl-vars-table input { width: 100%; }
+
+.provenance-list { margin: 0 0 var(--sp-2); display: grid; gap: 2px; }
+.provenance-row { display: grid; grid-template-columns: 130px 1fr; gap: var(--sp-2); font-size: var(--fs-0); }
+.provenance-row dt { color: var(--c-ink-muted); font-weight: 600; }
+.provenance-row dd {
+  margin: 0; font-family: var(--font-mono); color: var(--c-ink);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
 
 /* ------------------------------- responsive ------------------------------- */
 @media (max-width: 720px) {
