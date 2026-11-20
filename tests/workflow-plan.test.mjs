@@ -513,3 +513,55 @@ test("V2: canonical JSON is key-order independent and registry schema describes 
   assert.equal(schema.$defs.sha256.pattern, "^[a-f0-9]{64}$");
   assert.equal(readFileSync(new URL("../registry/EXECUTION_PLAN.schema.json", import.meta.url), "utf8").includes("\"additionalProperties\": false"), true);
 });
+
+
+test("V2/V3: generated launcher writes unwrapped receipt and propagates non-PASS exit status", () => {
+  const f = fixtureProblem();
+  const plan = buildExecutionPlan({
+    problem: f.problem, method: smtMethod(f.problem), steps: smtSteps(),
+    assumptions: f.assumptions
+  });
+  const {launcher} = compilePlan(plan);
+  for (const scenario of [
+    {verdict: "PASS", expectedExit: 0, blocked: false},
+    {verdict: "UNKNOWN", expectedExit: 2, blocked: false},
+    {verdict: "BLOCKED", expectedExit: 2, blocked: true}
+  ]) {
+    const root = mkdtempSync(join(tmpdir(), "wf-v2-v3-receipt-"));
+    try {
+      // This stub is placed exactly where the generated launcher's trusted
+      // relative import expects the executor. Real solvers are not required.
+      const executableRoot = join(root, "packages", "runner", "js");
+      const artifactDir = join(root, "artifacts", plan.plan_id);
+      mkdirSync(executableRoot, {recursive: true});
+      mkdirSync(artifactDir, {recursive: true});
+      const stub = [
+        "export async function executeWorkflowPlan() {",
+        '  const receipt = {schema:"formal-tools/execution-receipt/1.0",overall:{claim_verdict:' +
+          JSON.stringify(scenario.verdict) + '}};',
+        scenario.blocked
+          ? '  const e = new Error("BLOCKED_TOOL_MISSING"); e.receipt = receipt; throw e;'
+          : '  return {receipt,workspaceDir:"/tmp/not-a-receipt"};',
+        "}"
+      ].join("\n");
+      writeFileSync(join(executableRoot, "workflow-executor.mjs"), stub);
+      const launcherPath = join(artifactDir, "launcher.mjs");
+      const receiptPath = join(artifactDir, "receipt.json");
+      writeFileSync(launcherPath, launcher);
+      const run = spawnSync(process.execPath, [launcherPath, receiptPath], {
+        cwd: root, encoding: "utf8", timeout: 15000
+      });
+      assert.equal(run.status, scenario.expectedExit,
+        scenario.verdict + ": stderr=" + run.stderr + " stdout=" + run.stdout);
+      assert.ok(existsSync(receiptPath), "blocked and non-PASS executions must persist receipts");
+      const persisted = JSON.parse(readFileSync(receiptPath, "utf8"));
+      assert.equal(persisted.schema, "formal-tools/execution-receipt/1.0");
+      assert.equal(persisted.overall.claim_verdict, scenario.verdict);
+      assert.equal(Object.hasOwn(persisted, "workspaceDir"), false,
+        "executor envelope must not be serialized as a receipt");
+      assert.equal(Object.hasOwn(persisted, "receipt"), false);
+    } finally {
+      rmSync(root, {recursive: true, force: true});
+    }
+  }
+});
