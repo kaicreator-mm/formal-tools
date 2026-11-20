@@ -12,17 +12,31 @@ when:
     branch: main
   - event: pull_request
   - event: manual
+
+# Match the already-used disposable local Woodpecker backend in
+# domain-harness/tally; do not schedule native execution on an arbitrary agent.
+labels:
+  backend: local
+
 steps:
   - name: formal-js-source-and-finite-model
     image: bash
     commands:
+      - set -euo pipefail
+      - 'echo "FORMAL_STATIC_EVENT=${CI_PIPELINE_EVENT:-unknown} PIPELINE=${CI_PIPELINE_NUMBER:-unknown}"'
+      - test -n "${CI_COMMIT_SHA:-}"
+      - test "$(git rev-parse HEAD)" = "$CI_COMMIT_SHA"
       - node --version
+      - node -e 'if (Number(process.versions.node.split(".")[0]) < 20) process.exit(1)'
       # M03 FINAL: install strictly from the Git-tracked, registry-generated
       # monorepo lockfile. Do not regenerate lock data on the CI agent.
       - npm --version
       - node -e 'const p=require("./package-lock.json").packages; if (!p || !p["packages/core"] || !p["packages/runner"]) process.exit(1)'
       - npm ci --ignore-scripts --no-audit --no-fund --prefer-offline
-      - node --test tests/*.test.mjs
+      # Offline source/unit tests even when the disposable agent happens to
+      # have a provider key configured. Paid/live provider tests belong to
+      # separately authorized native acceptance, never this static gate.
+      - DEEPSEEK_API_KEY= node --test tests/*.test.mjs
       - npm run typecheck
       - node packages/runner/js/cli.mjs validate
       - node packages/runner/js/cli.mjs pure dag --input validation/js/dag-positive.json
@@ -31,18 +45,20 @@ steps:
       - node packages/runner/js/cli.mjs plan z3 solve --input skills/z3/examples/positive.smt2
   # Real MCP stdio acceptance: spawns packages/runner/js/mcp.mjs as a child
   # process and speaks newline-delimited JSON-RPC over stdio (initialize ->
-  # tools/list -> tools/call across all 14 registered tools, including
+  # tools/list -> tools/call across all 16 registered tools, including
   # fail-closed invalid-argument checks). Exits non-zero unless every
   # assertion holds; depends on the workspace node_modules installed by the
   # preceding step (shared workspace under backend=local).
   - name: mcp-stdio-smoke
     image: bash
     commands:
-      - node scripts/mcp-acceptance.mjs
+      - set -euo pipefail
+      - DEEPSEEK_API_KEY= node scripts/mcp-acceptance.mjs
   # i180/R3: web bridge conformance incl. the NL lane (apps/web/server.mjs).
   # Fully offline: providers are deterministic stubs; the suite skips real
   # DeepSeek calls when DEEPSEEK_API_KEY is unset (it is unset in CI).
   - name: web-bridge-tests
     image: bash
     commands:
+      - set -euo pipefail
       - DEEPSEEK_API_KEY= node --test apps/web-tests/*.test.mjs
