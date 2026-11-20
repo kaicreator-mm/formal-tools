@@ -40,13 +40,29 @@ const SAMPLES = {
 (exit)
 `,
   'invalid': `this is not a model, just prose !!!`,
+  // NL lane samples (i180/R3) — Chinese prose; the first two have committed
+  // real-DeepSeek precedents in docs/mvp/NL_MODEL.md §3 (J1 / J4 / J3).
+  'nl-sat': `找出整数 x 和 y：x 至少是 3，y 至少是 1，两个都不超过 50，x+y 恰好是 7 的倍数，并且 y 不超过 x。这样的整数对存在吗？`,
+  'nl-opt': `最大化 3x+2y，其中 x 和 y 都是非负整数，x+y 不超过 4，并且 x 不超过 3。`,
+  'nl-vague': `证明我们的系统总体上是安全的。`,
 };
+
+const NL_LP_BANNER_TEXT =
+  'LP RELAXATION ONLY: this question is "optimize", so the executed plan solves the CONTINUOUS LP ' +
+  'relaxation (HiGHS) with integrality dropped. The answer bounds the relaxation and is NOT proven ' +
+  'to be the integer optimum.';
 
 const SAMPLE_TITLES = {
   'smt-sat': 'SMT cross-check sample A loaded. Expected plan: z3 + cvc5 solve steps and an executor-side cross-check step.',
   'lp': 'HiGHS LP sample B loaded (frozen model shape). Expected plan: one highs solve-lp step.',
   'smt-nia': 'Nonlinear sample loaded. The receipt decides the verdict honestly (sat / unsat / unknown) — if the trusted tool host is reachable.',
   'invalid': 'Malformed sample loaded. The bridge must refuse it fail-closed (422).',
+};
+
+const NL_SAMPLE_TITLES = {
+  'nl-sat': 'NL sample loaded (bounded integer problem). Proposing calls the REAL DeepSeek API; the proposal stays untrusted until you approve it.',
+  'nl-opt': 'NL optimization sample loaded. Expect question=optimize: the executed plan is the CONTINUOUS LP relaxation (integrality dropped) — prominently disclosed.',
+  'nl-vague': 'Vague NL sample loaded. Expect NEEDS_CLARIFICATION: the model asks questions instead of guessing; nothing can be executed from that state.',
 };
 
 // ---------------------------------------------------------------------------
@@ -59,6 +75,13 @@ const state = {
   planSource: null,
   runId: null,
   pollTimer: null,
+  // NL lane (i180/R3)
+  nlProposal: null,       // the hash-bound proposal object (client-carried, server-verified)
+  nlEditedModel: null,    // validated edited model from the last successful /api/nl/revise
+  nlWarnings: [],         // server honesty warnings (LP relaxation, …)
+  nlDecision: null,       // 'USER_APPROVED' | 'USER_REJECTED' | 'UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION'
+  nlApprovalBinding: null, // {plan_sha256, approved_sha256} — submitted with the run
+  nlRelaxation: null,     // LP_RELAXATION_ONLY wrapper metadata (optimize approvals with ack)
 };
 
 const $ = (sel) => document.querySelector(sel);
@@ -189,6 +212,504 @@ $('#problemForm').addEventListener('submit', async (event) => {
 });
 
 // ---------------------------------------------------------------------------
+// NL lane (i180/R3): input mode toggle, samples, propose
+// ---------------------------------------------------------------------------
+function inputMode() {
+  const el = document.querySelector('input[name="inputMode"]:checked');
+  return el ? el.value : 'model';
+}
+
+document.querySelectorAll('input[name="inputMode"]').forEach((radio) => {
+  radio.addEventListener('change', () => {
+    const nl = inputMode() === 'nl';
+    $('#modelInputFields').hidden = nl;
+    $('#modelFormActions').hidden = nl;
+    $('#nlInputFields').hidden = !nl;
+    $('#nlClarifyBox').hidden = true;
+  });
+});
+
+document.querySelectorAll('.nl-sample-btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const key = btn.dataset.nlSample;
+    $('#nlText').value = SAMPLES[key];
+    setStatus($('#nlStatus'), NL_SAMPLE_TITLES[key]);
+    $('#nlText').focus();
+  });
+});
+
+$('#nlProposeBtn').addEventListener('click', async () => {
+  const btn = $('#nlProposeBtn');
+  const statusEl = $('#nlStatus');
+  const box = $('#nlClarifyBox');
+  box.hidden = true;
+  box.textContent = '';
+  btn.disabled = true;
+  setStatus(statusEl, 'Asking DeepSeek to propose a constraint model (real call)…');
+  try {
+    const result = await api('/api/nl/propose', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: $('#nlText').value }),
+    });
+    state.nlWarnings = Array.isArray(result.warnings) ? result.warnings : [];
+    const proposal = result.proposal;
+    if (proposal.status === 'MODEL_PROPOSED') {
+      state.nlProposal = proposal;
+      state.nlEditedModel = null;
+      state.nlDecision = null;
+      state.nlApprovalBinding = null;
+      state.nlRelaxation = null;
+      setStatus(statusEl, '');
+      renderNlProposal(proposal);
+      showScreen('plan');
+    } else if (proposal.status === 'NEEDS_CLARIFICATION') {
+      // Honest dead end: questions instead of a guess; NO model, NO rendering,
+      // no approvable proposal — the execution path is unreachable by design.
+      setStatus(statusEl, `NEEDS_CLARIFICATION — ${proposal.clarification_needed.length} question(s) returned; nothing was rendered or planned.`, 'error');
+      box.className = 'banner banner--warn';
+      const title = document.createElement('span');
+      title.className = 'banner__title';
+      title.textContent = 'NEEDS_CLARIFICATION — no model was proposed, nothing can be executed';
+      box.append(title, document.createTextNode('The translator refused to guess. Answer its questions in your text and propose again:'));
+      const ul = document.createElement('ul');
+      for (const q of proposal.clarification_needed) {
+        const li = document.createElement('li');
+        li.textContent = q;
+        ul.append(li);
+      }
+      box.append(ul);
+      box.hidden = false;
+    } else {
+      // UNKNOWN: provider transport failure or structurally rejected reply.
+      const issues = Array.isArray(proposal.issues) ? proposal.issues.join('; ') : '';
+      setStatus(statusEl, `UNKNOWN (${proposal.reason || 'no usable proposal'})${issues ? ': ' + issues : ''} — nothing was rendered or planned.`, 'error');
+    }
+  } catch (err) {
+    const hint = err.code === 'BLOCKED_PROVIDER'
+      ? ' — set DEEPSEEK_API_KEY on the bridge host; no proposal is made without it.'
+      : '';
+    setStatus(statusEl, `fail-closed (${err.status}) ${err.code}: ${err.message}${hint}`, 'error');
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+// ---------------------------------------------------------------------------
+// NL model review screen (edit / re-validate / approve / reject)
+// ---------------------------------------------------------------------------
+function shortSha(sha) {
+  return typeof sha === 'string' && sha.length > 16 ? sha.slice(0, 16) + '…' : String(sha ?? '—');
+}
+
+function provenanceRow(dt, dd) {
+  const row = document.createElement('div');
+  row.className = 'provenance-row';
+  const dtEl = document.createElement('dt');
+  dtEl.textContent = dt;
+  const ddEl = document.createElement('dd');
+  ddEl.textContent = dd;
+  ddEl.title = dd;
+  row.append(dtEl, ddEl);
+  return row;
+}
+
+function renderNlProvenance(proposal) {
+  const dl = $('#nlProvenance');
+  dl.textContent = '';
+  dl.append(
+    provenanceRow('provider', `${proposal.provider.name} (${proposal.provider.model})`),
+    provenanceRow('schema', proposal.schema),
+    provenanceRow('original text sha', shortSha(proposal.original_text_sha256)),
+    provenanceRow('prompt sha', shortSha(proposal.prompt_sha256)),
+    provenanceRow('response sha', shortSha(proposal.response_sha256)),
+    provenanceRow('proposal sha', shortSha(proposal.proposal_sha256)),
+    provenanceRow('rendering sha', shortSha(proposal.rendering && proposal.rendering.sha256)),
+    provenanceRow('render status', (proposal.rendering && proposal.rendering.semantic_status) || '—'),
+  );
+}
+
+/** One editable constraints row (coefficients shorthand, op, rhs). */
+function nlConstraintRow(constraint) {
+  const li = document.createElement('li');
+  li.className = 'nl-constraint-row';
+  const coeffs = document.createElement('input');
+  coeffs.type = 'text';
+  coeffs.className = 'nl-coeff-input';
+  coeffs.spellcheck = false;
+  coeffs.setAttribute('aria-label', 'Constraint coefficients (name:value pairs)');
+  coeffs.value = Object.entries(constraint.coefficients).map(([n, c]) => `${n}:${c}`).join(' ');
+  const op = document.createElement('select');
+  op.className = 'nl-op-select';
+  op.setAttribute('aria-label', 'Constraint operator');
+  for (const o of ['<', '<=', '==', '>=', '>']) {
+    const opt = document.createElement('option');
+    opt.value = o; opt.textContent = o;
+    if (o === constraint.op) opt.selected = true;
+    op.append(opt);
+  }
+  const rhs = document.createElement('input');
+  rhs.type = 'number';
+  rhs.step = '1';
+  rhs.className = 'nl-rhs-input';
+  rhs.setAttribute('aria-label', 'Constraint right-hand side');
+  rhs.value = constraint.rhs;
+  const removeBtn = document.createElement('button');
+  removeBtn.type = 'button';
+  removeBtn.className = 'assumption-remove';
+  removeBtn.textContent = '✕';
+  removeBtn.setAttribute('aria-label', 'Remove constraint');
+  removeBtn.addEventListener('click', () => li.remove());
+  li.append(coeffs, op, rhs, removeBtn);
+  return li;
+}
+
+function renderNlProposal(proposal) {
+  const model = proposal.model;
+  // The model review replaces the execution-plan review until approval.
+  $('#nlModelReview').hidden = false;
+  $('#planReview').hidden = true;
+  $('#nlOriginalText').textContent = proposal.original_text;
+  renderNlProvenance(proposal);
+  $('#nlHonestyNote').textContent = proposal.honesty_note || '';
+
+  // variables (bounds editable)
+  const tbody = $('#nlVarsBody');
+  tbody.textContent = '';
+  for (const v of model.variables) {
+    const tr = document.createElement('tr');
+    const name = document.createElement('td');
+    name.textContent = v.name;
+    const int = document.createElement('td');
+    int.textContent = v.integer ? 'Int' : '?';
+    const lower = document.createElement('td');
+    const lowerIn = document.createElement('input');
+    lowerIn.type = 'number'; lowerIn.step = '1'; lowerIn.value = v.lower;
+    lowerIn.className = 'nl-bound-input';
+    lowerIn.setAttribute('aria-label', `Lower bound for ${v.name}`);
+    lower.dataset.bind = 'lower'; lower.dataset.var = v.name;
+    lower.append(lowerIn);
+    const upper = document.createElement('td');
+    const upperIn = document.createElement('input');
+    upperIn.type = 'number'; upperIn.step = '1'; upperIn.value = v.upper;
+    upperIn.className = 'nl-bound-input';
+    upperIn.setAttribute('aria-label', `Upper bound for ${v.name}`);
+    upper.dataset.bind = 'upper'; upper.dataset.var = v.name;
+    upper.append(upperIn);
+    tr.append(name, int, lower, upper);
+    tbody.append(tr);
+  }
+
+  // constraints
+  const list = $('#nlConstraintsList');
+  list.textContent = '';
+  for (const c of model.constraints) list.append(nlConstraintRow(c));
+
+  // objective (optimize only)
+  const objRow = $('#nlObjectiveRow');
+  if (model.question === 'optimize' && model.objective) {
+    $('#nlObjectiveDirection').value = model.objective.direction;
+    $('#nlObjectiveCoeffs').value = Object.entries(model.objective.coefficients).map(([n, c]) => `${n}:${c}`).join(' ');
+    objRow.hidden = false;
+  } else {
+    objRow.hidden = true;
+  }
+
+  // assumptions (editable, mirrors the plan-screen editor pattern)
+  renderNlAssumptions(model.assumptions || []);
+
+  // rendered SMT (read-only display of the hash-bound artifact)
+  $('#nlRenderedSmt').textContent = proposal.rendering.text;
+
+  // LP preview box + prominent relaxation banner when optimize
+  const banner = $('#nlReviewBanner');
+  banner.hidden = true;
+  banner.textContent = '';
+  const lpBox = $('#nlLpBox');
+  lpBox.hidden = true;
+  if (model.question === 'optimize') {
+    banner.className = 'banner banner--warn';
+    const title = document.createElement('span');
+    title.className = 'banner__title';
+    title.textContent = 'LP RELAXATION — NON-INTEGER RESULT';
+    banner.append(title, document.createTextNode(
+      state.nlWarnings[0] || NL_LP_BANNER_TEXT));
+    banner.hidden = false;
+  }
+
+  $('#nlEditNote').hidden = true;
+  // R3 seam: the LP-relaxation acknowledgement is an EXPLICIT, INDEPENDENT
+  // interaction, required only for optimize questions (B's fail-closed gate in
+  // approveModel applies to the final model; the question is not editable in
+  // this UI, so the proposal's question decides visibility). Reset per render.
+  const lpGate = $('#nlLpAckGate');
+  if (model.question === 'optimize') {
+    lpGate.hidden = false;
+    $('#nlLpAckCheck').checked = false;
+  } else {
+    lpGate.hidden = true;
+    $('#nlLpAckCheck').checked = false;
+  }
+  $('#nlApproveBtn').disabled = false;
+  $('#nlRejectBtn').disabled = false;
+  setStatus($('#nlReviewStatus'), '');
+}
+
+function renderNlAssumptions(assumptions) {
+  const list = $('#nlAssumptionList');
+  list.textContent = '';
+  (assumptions || []).forEach((text, index) => {
+    const li = document.createElement('li');
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = typeof text === 'string' ? text : '';
+    input.maxLength = 256;
+    input.id = `nl-assumption-${index + 1}`;
+    input.setAttribute('aria-label', `Model assumption ${index + 1}`);
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'assumption-remove';
+    removeBtn.textContent = '✕';
+    removeBtn.setAttribute('aria-label', `Remove model assumption ${index + 1}`);
+    removeBtn.addEventListener('click', () => li.remove());
+    li.append(input, removeBtn);
+    list.append(li);
+  });
+}
+
+$('#nlAddAssumptionBtn').addEventListener('click', () => {
+  renderNlAssumptions([...collectNlAssumptions(), '']);
+  const inputs = document.querySelectorAll('#nlAssumptionList input[type="text"]');
+  if (inputs.length) inputs[inputs.length - 1].focus();
+});
+
+$('#nlAddConstraintBtn').addEventListener('click', () => {
+  $('#nlConstraintsList').append(nlConstraintRow({ coefficients: { }, op: '<=', rhs: 0 }));
+});
+
+function collectNlAssumptions() {
+  return [...document.querySelectorAll('#nlAssumptionList input[type="text"]')]
+    .map((input) => input.value.trim())
+    .filter(Boolean);
+}
+
+/** "x:1 y:-7" -> {x:1, y:-7}; null on any malformed pair (server re-validates). */
+function parseCoeffPairs(text) {
+  const out = {};
+  for (const pair of String(text).trim().split(/\s+/)) {
+    if (!pair) continue;
+    const m = pair.match(/^([a-z][a-z0-9_]{0,15}):(-?\d+)$/);
+    if (!m) return null;
+    out[m[1]] = Number(m[2]);
+  }
+  return Object.keys(out).length ? out : null;
+}
+
+/** Structured edit payload from the form (never the raw SMT text). */
+function collectNlEdits() {
+  const model = state.nlProposal.model;
+  const variables = [...document.querySelectorAll('#nlVarsBody tr')].map((tr) => {
+    const name = tr.querySelector('td').textContent;
+    const lower = Number(tr.querySelector('[data-bind="lower"] input').value);
+    const upper = Number(tr.querySelector('[data-bind="upper"] input').value);
+    return { name, integer: true, lower, upper };
+  });
+  const constraints = [];
+  for (const li of document.querySelectorAll('#nlConstraintsList .nl-constraint-row')) {
+    const coefficients = parseCoeffPairs(li.querySelector('.nl-coeff-input').value);
+    if (!coefficients) throw new Error('constraint coefficients must be name:int pairs, e.g. "x:1 y:-7"');
+    constraints.push({
+      coefficients,
+      op: li.querySelector('.nl-op-select').value,
+      rhs: Number(li.querySelector('.nl-rhs-input').value),
+    });
+  }
+  const edits = {
+    variables,
+    constraints,
+    question: model.question, // fixed this round: deterministic target mapping
+    assumptions: collectNlAssumptions(),
+  };
+  if (model.question === 'optimize' && model.objective) {
+    const coefficients = parseCoeffPairs($('#nlObjectiveCoeffs').value);
+    if (!coefficients) throw new Error('objective coefficients must be name:int pairs, e.g. "x:3 y:2"');
+    edits.objective = { direction: $('#nlObjectiveDirection').value, coefficients };
+  }
+  return edits;
+}
+
+function renderNlPreview(preview, note) {
+  const model = preview.model;
+  // Re-render the form FROM the validated model: the form state is the
+  // validated truth (e.g. coefficient maps are now sorted/cleaned).
+  const fakeProposal = { ...state.nlProposal, model };
+  renderNlProposalKeepDecision(fakeProposal);
+  $('#nlRenderedSmt').textContent = preview.rendering.text;
+  const lpBox = $('#nlLpBox');
+  if (model.question === 'optimize') {
+    lpBox.hidden = false;
+    $('#nlRenderedLp').textContent = preview.lp_model
+      ? JSON.stringify(preview.lp_model, null, 2)
+      : `LP rendering rejected: ${preview.lp_render_error ? preview.lp_render_error.code + ': ' + preview.lp_render_error.message : 'unknown'}`;
+  }
+  const noteEl = $('#nlEditNote');
+  noteEl.textContent = note;
+  noteEl.hidden = false;
+}
+
+/** Like renderNlProposal but without resetting decision-button state. */
+function renderNlProposalKeepDecision(proposal) {
+  const approved = $('#nlApproveBtn').disabled;
+  const rejected = $('#nlRejectBtn').disabled;
+  renderNlProposal(proposal);
+  $('#nlApproveBtn').disabled = approved;
+  $('#nlRejectBtn').disabled = rejected;
+}
+
+$('#nlReviseBtn').addEventListener('click', async () => {
+  const btn = $('#nlReviseBtn');
+  const statusEl = $('#nlReviewStatus');
+  btn.disabled = true;
+  setStatus(statusEl, 'Re-validating edits server-side…');
+  let edits;
+  try {
+    edits = collectNlEdits();
+  } catch (err) {
+    setStatus(statusEl, `invalid edit: ${err.message}`, 'error');
+    btn.disabled = false;
+    return;
+  }
+  try {
+    const result = await api('/api/nl/revise', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ proposal: state.nlProposal, edited: edits }),
+    });
+    state.nlEditedModel = result.preview.model;
+    if (Array.isArray(result.warnings) && result.warnings.length) state.nlWarnings = result.warnings;
+    renderNlPreview(result.preview, 'Edits re-validated and re-rendered server-side. They are NOT yet part of the proposal hash — approving now binds the edited model into the approval hash.');
+    setStatus(statusEl, 'Edits validated (preview only). Approve to bind them.', 'ok');
+  } catch (err) {
+    setStatus(statusEl, `fail-closed (${err.status}) ${err.code}: ${err.message}`, 'error');
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+$('#nlApproveBtn').addEventListener('click', async () => {
+  const btn = $('#nlApproveBtn');
+  const statusEl = $('#nlReviewStatus');
+  btn.disabled = true;
+  $('#nlRejectBtn').disabled = true;
+  setStatus(statusEl, 'Recording your approval (hash-bound) and building the execution plan…');
+  try {
+    const payload = { proposal: state.nlProposal, approved: true };
+    if (state.nlEditedModel) payload.edited = state.nlEditedModel;
+    // R3 seam: the acknowledgement rides the decision ONLY when the explicit
+    // checkbox is ticked. An unticked optimize approval is submitted anyway so
+    // the SERVER's fail-closed gate returns the restricted record, which is
+    // rendered below as a clear restricted outcome (never a generic error).
+    const optimize = state.nlProposal.model && state.nlProposal.model.question === 'optimize';
+    if (optimize && $('#nlLpAckCheck').checked) payload.lpRelaxationAcknowledged = true;
+    const result = await api('/api/nl/approve', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (result.decision === 'UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION') {
+      // Restricted result (docs/mvp/NL_MODEL.md §3.2a): no plan, no binding,
+      // nothing executable. Rendered as its own honest state — the user may
+      // tick the acknowledgement and re-approve, or reject.
+      state.nlDecision = result.decision;
+      state.nlApprovalBinding = null;
+      state.nlRelaxation = null;
+      const record = result.record;
+      const banner = $('#nlReviewBanner');
+      banner.className = 'banner banner--blocked';
+      banner.textContent = '';
+      const title = document.createElement('span');
+      title.className = 'banner__title';
+      title.textContent = 'UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION — no plan was produced';
+      banner.append(title, document.createTextNode(record.detail || record.honesty_note || ''));
+      const meta = document.createElement('p');
+      meta.className = 'hint';
+      meta.textContent = `reason: ${record.unsupported.reason} · dropped: ${(record.unsupported.dropped || []).join(', ')} · available operation: ${record.unsupported.available_operation}`;
+      banner.append(meta);
+      const ul = document.createElement('ul');
+      for (const remedy of record.unsupported.remedies || []) {
+        const li = document.createElement('li');
+        li.textContent = remedy;
+        ul.append(li);
+      }
+      banner.append(ul);
+      const howTo = document.createElement('p');
+      howTo.className = 'hint';
+      howTo.textContent = 'Remedy 1 is this checkbox: tick the LP-relaxation acknowledgement above and approve again. Nothing has been planned or executed.';
+      banner.append(howTo);
+      banner.hidden = false;
+      setStatus(statusEl, 'Restricted result: exact integer optimization is unsupported. Nothing was planned or executed.', 'error');
+      btn.disabled = false;
+      $('#nlRejectBtn').disabled = false;
+      return;
+    }
+    state.nlDecision = 'USER_APPROVED';
+    state.nlApprovalBinding = result.approval;
+    state.nlWarnings = Array.isArray(result.warnings) ? result.warnings : [];
+    state.nlRelaxation = result.relaxation || null;
+    setPlan(result.plan, {
+      kind: 'nl-model',
+      provider: state.nlProposal.provider,
+      model: state.nlProposal.provider.model,
+      question: result.question,
+      target: result.target,
+      proposal_sha256: state.nlProposal.proposal_sha256,
+      approved_sha256: result.approved.approved_sha256,
+      edited: Boolean(state.nlEditedModel),
+    });
+    setStatus(statusEl, `Approved (approved_sha256 ${shortSha(result.approved.approved_sha256)}). Plan built below — final run approval required there.`, 'ok');
+    showScreen('plan'); // refresh stepper focus; plan review is now visible
+  } catch (err) {
+    setStatus(statusEl, `fail-closed (${err.status}) ${err.code}: ${err.message}`, 'error');
+    btn.disabled = false;
+    $('#nlRejectBtn').disabled = false;
+  }
+});
+
+$('#nlRejectBtn').addEventListener('click', async () => {
+  const btn = $('#nlRejectBtn');
+  const statusEl = $('#nlReviewStatus');
+  btn.disabled = true;
+  $('#nlApproveBtn').disabled = true;
+  setStatus(statusEl, 'Recording your rejection…');
+  try {
+    const result = await api('/api/nl/approve', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ proposal: state.nlProposal, approved: false }),
+    });
+    state.nlDecision = 'USER_REJECTED';
+    state.nlApprovalBinding = null;
+    state.nlRelaxation = null;
+    const banner = $('#nlReviewBanner');
+    banner.className = 'banner banner--danger';
+    banner.textContent = '';
+    const title = document.createElement('span');
+    title.className = 'banner__title';
+    title.textContent = 'REJECTED — terminal decision';
+    banner.append(title, document.createTextNode(
+      `Decision record: ${result.record.status} (proposal_sha256 ${shortSha(result.record.proposal_sha256)}). No plan was built and nothing will execute.`));
+    banner.hidden = false;
+    setStatus(statusEl, 'Model rejected. Nothing planned, nothing executed.', 'ok');
+  } catch (err) {
+    setStatus(statusEl, `fail-closed (${err.status}) ${err.code}: ${err.message}`, 'error');
+    btn.disabled = false;
+    $('#nlApproveBtn').disabled = false;
+  }
+});
+
+$('#nlBackBtn').addEventListener('click', () => showScreen('input'));
+
+// ---------------------------------------------------------------------------
 // screen 2: plan review
 // ---------------------------------------------------------------------------
 function planSourceText(source) {
@@ -196,20 +717,57 @@ function planSourceText(source) {
   if (source.kind === 'deepseek') {
     return `DeepSeek (${source.model}) — LLM proposal, admitted as data via static validation`;
   }
+  if (source.kind === 'nl-model') {
+    return `NL model (${source.provider.model}) — user-approved translation proposal (hash-bound) → ${source.target} plan`;
+  }
   return `deterministic template (${source.template}) — built-in, offline`;
 }
 
 function setPlan(plan, planSource) {
   state.plan = plan;
   state.planSource = planSource || null;
+  // NL model review yields to the execution-plan review once approved.
+  $('#nlModelReview').hidden = true;
+  $('#planReview').hidden = false;
   renderPlanSummary();
   renderAssumptions(plan.assumptions || []);
   const sourceBadge = $('#planSourceBadge');
   sourceBadge.textContent = planSourceText(planSource);
-  sourceBadge.title = state.planSource && state.planSource.kind === 'deepseek'
+  sourceBadge.title = state.planSource && (state.planSource.kind === 'deepseek')
     ? `method_sha256 ${state.planSource.method_sha256 || '?'} — proposal is untrusted data; validated by buildExecutionPlan before this plan existed`
-    : 'Built by the deterministic template; identical problem text always yields an identical plan.';
+    : state.planSource && state.planSource.kind === 'nl-model'
+      ? `proposal_sha256 ${state.planSource.proposal_sha256 || '?'} · approved_sha256 ${state.planSource.approved_sha256 || '?'} — the plan embeds the approved model provenance; the run submission verifies the approval hash binding`
+      : 'Built by the deterministic template; identical problem text always yields an identical plan.';
   $('#planSourceLine').hidden = false;
+  // LP relaxation disclosure (NL optimize lane): prominent, from the server's
+  // own warnings + the R3 relaxation wrapper metadata, cross-checked against
+  // the plan assumptions (prose sentence AND the canonical JSON marker).
+  const lpBanner = $('#planLpBanner');
+  const lpAssumption = (plan.assumptions || []).some((a) => a.startsWith('LP relaxation: integrality constraints are dropped'));
+  const relaxation = state.nlRelaxation;
+  if (relaxation && relaxation.kind === 'LP_RELAXATION_ONLY') {
+    lpBanner.className = 'banner banner--warn';
+    lpBanner.textContent = '';
+    const title = document.createElement('span');
+    title.className = 'banner__title';
+    title.textContent = 'LP RELAXATION ONLY — NON-INTEGER RESULT (you acknowledged the relaxation)';
+    lpBanner.append(title, document.createTextNode(relaxation.effect || state.nlWarnings[0] || NL_LP_BANNER_TEXT));
+    const meta = document.createElement('p');
+    meta.className = 'hint';
+    meta.textContent = `kind: ${relaxation.kind} · dropped: ${(relaxation.dropped || []).join(', ')} · acknowledged: ${relaxation.ack && relaxation.ack.acknowledged === true ? 'yes (decision field ' + relaxation.ack.decision_field + ')' : 'no'} · meaning: ${relaxation.meaning}`;
+    lpBanner.append(meta);
+    lpBanner.hidden = false;
+  } else if (state.nlWarnings.length && (lpAssumption || (plan.source && plan.source.problem_kind === 'nl_model'))) {
+    lpBanner.className = 'banner banner--warn';
+    lpBanner.textContent = '';
+    const title = document.createElement('span');
+    title.className = 'banner__title';
+    title.textContent = 'LP RELAXATION — NON-INTEGER RESULT';
+    lpBanner.append(title, document.createTextNode(state.nlWarnings[0] || NL_LP_BANNER_TEXT));
+    lpBanner.hidden = false;
+  } else {
+    lpBanner.hidden = true;
+  }
   $('#planJson').textContent = JSON.stringify(plan, null, 2);
   $('#approveCheck').checked = false;
   $('#approveBtn').disabled = true;
@@ -317,10 +875,20 @@ $('#approveBtn').addEventListener('click', async () => {
   btn.disabled = true;
   setStatus(statusEl, 'Starting run…');
   try {
+    const payload = { plan: state.plan };
+    // NL lane: submit the approval binding so the bridge verifies that this
+    // exact plan (sha256) is the one covered by the recorded approval before
+    // anything runs; a substituted/tampered plan is refused server-side.
+    if (state.nlApprovalBinding) {
+      payload.approval = {
+        plan_sha256: state.nlApprovalBinding.plan_sha256,
+        approved_sha256: state.nlApprovalBinding.approved_sha256,
+      };
+    }
     const result = await api('/api/runs', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ plan: state.plan }),
+      body: JSON.stringify(payload),
     });
     state.runId = result.run_id;
     setStatus(statusEl, `Run started: ${result.run_id}`, 'ok');
@@ -545,6 +1113,24 @@ async function renderResults(view) {
   }
 
   const env = receipt.environment || {};
+  // NL lane translation caveat (i180/R3): the verdicts answer the APPROVED
+  // RENDERED MODEL — never claimed to be equivalent to the original prose.
+  const nlNote = $('#nlTranslationNote');
+  if (state.nlDecision === 'USER_APPROVED') {
+    let text = 'NL lane caveat: these verdicts answer the approved RENDERED MODEL ' +
+      '(user-reviewed translation proposal, hash-bound), not your natural-language text. ' +
+      'Render/solve validity does not prove translation fidelity.';
+    // R3 seam: an acknowledged relaxation must never read as an integer optimum.
+    if (state.nlRelaxation && state.nlRelaxation.kind === 'LP_RELAXATION_ONLY') {
+      text += ' LP_RELAXATION_ONLY: integrality was dropped — the reported optimum ' +
+        'characterizes the continuous LP relaxation and is a BOUND for the integer problem, ' +
+        'not its exact integer optimum.';
+    }
+    nlNote.textContent = text;
+    nlNote.hidden = false;
+  } else {
+    nlNote.hidden = true;
+  }
   const envLine = $('#environmentLine');
   envLine.textContent = `environment — host: ${env.host} · node: ${env.node} · portable root sha: ${env.formal_portable_root_sha || 'none'} · receipt run_id: ${receipt.run_id}`;
 
@@ -626,11 +1212,26 @@ $('#newTaskBtn').addEventListener('click', () => {
   state.plan = null;
   state.planSource = null;
   state.runId = null;
+  // NL lane reset (i180/R3)
+  state.nlProposal = null;
+  state.nlEditedModel = null;
+  state.nlWarnings = [];
+  state.nlDecision = null;
+  state.nlApprovalBinding = null;
+  state.nlRelaxation = null;
   $('#problemText').value = '';
   $('#assumptionsInput').value = '';
   $('#providerInput').value = '';
+  $('#nlText').value = '';
+  $('#nlClarifyBox').hidden = true;
+  $('#nlClarifyBox').textContent = '';
+  $('#nlReviewBanner').hidden = true;
+  $('#planLpBanner').hidden = true;
+  $('#nlTranslationNote').hidden = true;
   $('#problemForm').reset();
   setStatus($('#inputStatus'), '');
+  setStatus($('#nlStatus'), '');
+  setStatus($('#nlReviewStatus'), '');
   showScreen('input');
 });
 

@@ -41,6 +41,17 @@
 // executorCaptureImpl test seam, or the bounded copy is provably the whole
 // stream (< BOUNDED_BYTES). bounded_matches_full_stream is null (never claimed)
 // whenever the two cannot be verified against each other.
+//
+// NL lane (i180/R3, additive): POST /api/nl/propose (natural language -> real
+// DeepSeek translation proposal via packages/runner/js/nl-model.mjs —
+// UNTRUSTED data, never auto-approved), POST /api/nl/revise (server-side
+// re-validation + re-render preview of user edits), POST /api/nl/approve
+// (explicit approve/reject gate; approve builds the typed ExecutionPlan and
+// registers its exact sha256), and an OPTIONAL approval hash binding on
+// POST /api/runs: a submitted approval executes only the exact plan sha256 it
+// covered (tamper/substitution -> 422, nothing runs). NEEDS_CLARIFICATION
+// proposals are not approvable; "optimize" questions are disclosed as
+// CONTINUOUS LP RELAXATION results, never as integer optima.
 
 import http from 'node:http';
 import crypto from 'node:crypto';
@@ -55,7 +66,17 @@ import {
   makeDeepSeekChatProvider,
   stepsFromMethod,
   buildExecutionPlan,
+  sha256Canonical,
 } from '../../packages/runner/js/workflow-plan.mjs';
+import {
+  NL_LP_RELAXATION_ASSUMPTION,
+  proposeConstraintModel,
+  approveModel,
+  buildPlanFromApprovedModel,
+  validateStructuredModel,
+  renderSmtArtifact,
+  renderLpModel,
+} from '../../packages/runner/js/nl-model.mjs';
 import { proposeMethod } from '../../packages/runner/js/method-planner.mjs';
 import { compilePlan } from '../../packages/runner/js/workflow-compiler.mjs';
 import {
@@ -91,6 +112,51 @@ const TOOL_ALLOWLIST = {
 const BRIDGE_MAX_STEPS = 8;
 const BRIDGE_MAX_TOTAL_TIMEOUT_S = 120;
 const BRIDGE_MAX_ASSUMPTION_CHARS = 256; // executor re-validates at 256
+
+// ---------------------------------------------------------------------------
+// NL lane (i180/R3): natural language -> nl-model.mjs proposal -> explicit
+// user approval -> typed ExecutionPlan -> the EXISTING restricted /api/runs.
+// The server is stateless across propose/revise (the browser carries the
+// hash-bound proposal); approveModel/buildPlanFromApprovedModel re-verify the
+// hashes (NL_TAMPERED) so a mutated proposal can never reach a plan. The ONLY
+// new execution authority is an in-memory approval registry: /api/runs accepts
+// an optional `approval` binding and executes an NL plan only when its exact
+// sha256 was produced by a real approveModel USER_APPROVED record in THIS
+// server process. Everything else about the lane is honest data:
+// NEEDS_CLARIFICATION proposals carry no model/rendering and are not
+// approvable (NL_NOT_APPROVABLE); optimize questions are disclosed as
+// CONTINUOUS LP RELAXATION results (integrality dropped), never as integer
+// optima; the DeepSeek key travels only in the Authorization header upstream
+// and never reaches the browser.
+// ---------------------------------------------------------------------------
+
+const NL_LP_WARNING =
+  'LP RELAXATION ONLY: this question is "optimize", so the executed plan solves the ' +
+  'CONTINUOUS LP relaxation (HiGHS) with integrality dropped. The answer bounds the ' +
+  'relaxation and is NOT proven to be the integer optimum.';
+
+/** Server-side honesty warnings for an NL question kind (defensive: additive). */
+function nlServerWarnings(question) {
+  return question === 'optimize' ? [NL_LP_WARNING] : [];
+}
+
+/**
+ * Integrity guard for a client-carried proposal: recompute the canonical core
+ * hash exactly like nl-model.mjs does. Throws NL_TAMPERED on any mismatch.
+ */
+function assertProposalIntegrity(proposal) {
+  const core = {
+    original_text: proposal.original_text,
+    provider: proposal.provider,
+    prompt_sha256: proposal.prompt_sha256,
+    response_sha256: proposal.response_sha256,
+    model: proposal.model,
+    rendering: proposal.rendering,
+  };
+  if (proposal.proposal_sha256 !== sha256Canonical(core)) {
+    throw new WorkflowError('NL_TAMPERED', 'proposal_sha256 does not cover the recorded proposal core');
+  }
+}
 
 function defaultRunsDir() {
   return path.join(REPO_ROOT, 'apps', 'web-tests', '.runs');
@@ -447,6 +513,12 @@ export function startServer(options = {}) {
     // DeepSeek API key: env by default; explicit '' forces the honest
     // BLOCKED_PROVIDER path (tests); explicit string injects a key (tests).
     deepseekApiKey: options.deepseekApiKey !== undefined ? options.deepseekApiKey : process.env.DEEPSEEK_API_KEY,
+    // NL lane provider (i180/R3). Default: the REAL DeepSeek NL provider built
+    // from the env key (makeNlModelProvider). Test-only seam: a deterministic
+    // generate(payload) function or {generate, model} object injected here is
+    // passed straight to proposeConstraintModel as its provider — used by the
+    // offline web tests; never set in production.
+    nlProviderImpl: options.nlProviderImpl !== undefined ? options.nlProviderImpl : null,
     // Environment handed to the executor (preflight + child env). Tests force
     // FORMAL_PORTABLE_ROOT:'' so the fail-closed path is deterministic everywhere.
     executorEnv: options.executorEnv !== undefined ? options.executorEnv : process.env,
@@ -481,6 +553,17 @@ export function startServer(options = {}) {
 
   const runs = new Map(); // run_id -> state
   const activeRuns = new Set();
+  // NL approval registry (i180/R3): plan_sha256 -> approved record binding.
+  // Populated ONLY by POST /api/nl/approve successes; consumed by POST /api/runs
+  // when the client submits an `approval` binding. In-memory by design: a
+  // server restart forgets approvals and the next bound run fails closed
+  // (NL_APPROVAL_UNKNOWN) instead of silently executing.
+  const nlApprovals = new Map();
+
+  /** NL provider for proposeConstraintModel (real DeepSeek, or the test seam). */
+  const nlProvider = () => (opts.nlProviderImpl !== null
+    ? opts.nlProviderImpl
+    : 'deepseek');
 
   const STATIC_FILES = new Map([
     ['/', { file: 'index.html', type: 'text/html; charset=utf-8' }],
@@ -546,7 +629,7 @@ export function startServer(options = {}) {
     if (err instanceof WorkflowError) {
       // BLOCKED_PROVIDER is an honest 4xx; provider transport failures are 502.
       const status = err.code === 'PROVIDER_FAILED' ? 502 : 422;
-      return sendError(res, status, err.code, `fail-closed: ${err.message}`, err.details ? { details: err.details } : undefined);
+      return sendError(res, status, err.code, `fail-closed: ${err.message}`, err.details ? err.details : undefined);
     }
     if (err instanceof WorkflowPlanError) {
       return sendError(res, 422, err.code, `fail-closed: ${err.message}`);
@@ -586,7 +669,7 @@ export function startServer(options = {}) {
     };
   }
 
-  function startRun(plan) {
+  function startRun(plan, approvalBinding = null) {
     const runId = `run-${Date.now().toString(36)}-${crypto.randomBytes(4).toString('hex')}`;
     const state = {
       runId,
@@ -596,6 +679,7 @@ export function startServer(options = {}) {
       receipt: null,
       streams: {},
       workspaceDir: null,
+      approvalBinding,
     };
     runs.set(runId, state);
     activeRuns.add(runId);
@@ -666,6 +750,11 @@ export function startServer(options = {}) {
       status: state.status,
       created_at: state.createdAt,
       engine: 'workflow-v2+v3',
+      nl_approval_binding: state.approvalBinding ? {
+        plan_sha256: state.approvalBinding.plan_sha256,
+        approved_sha256: state.approvalBinding.approved_sha256,
+        verified: true,
+      } : null,
       plan_summary: {
         steps: state.plan.steps.map((s) => ({ id: s.id, tool: s.tool, operation: s.operation, depends_on: s.depends_on, timeout_s: s.timeout_s })),
       },
@@ -690,6 +779,16 @@ export function startServer(options = {}) {
         },
         provider: {
           deepseek: { configured: typeof opts.deepseekApiKey === 'string' && opts.deepseekApiKey.length > 0, model: 'deepseek-chat' },
+        },
+        nl_lane: {
+          module: 'packages/runner/js/nl-model.mjs',
+          propose: 'POST /api/nl/propose {text} -> {proposal: MODEL_PROPOSED | NEEDS_CLARIFICATION | UNKNOWN, warnings}',
+          revise: 'POST /api/nl/revise {proposal, edited} -> {preview} (server re-validation + re-render; hashes unchanged)',
+          approve: 'POST /api/nl/approve {proposal, approved, edited?, lpRelaxationAcknowledged?: true} -> USER_REJECTED | UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION (restricted record, plan:null) | {plan, plan_sha256, approval, relaxation}',
+          execution_binding: 'POST /api/runs accepts {plan, approval:{plan_sha256, approved_sha256}}; the plan sha must match a real approval of this process or the run is refused (NL_APPROVAL_UNKNOWN / NL_PLAN_APPROVAL_MISMATCH)',
+          lp_relaxation_disclosure: NL_LP_RELAXATION_ASSUMPTION,
+          provider: opts.nlProviderImpl !== null ? 'injected (test seam)' : 'deepseek via makeNlModelProvider (env key, header-only)',
+          provider_configured: opts.nlProviderImpl !== null || (typeof opts.deepseekApiKey === 'string' && opts.deepseekApiKey.length > 0),
         },
         versions: { bridge: '0.7.0', engine: 'workflow-v2+v3', plan_schema: PLAN_SCHEMA, receipt_schema: RECEIPT_SCHEMA },
         caps: {
@@ -754,6 +853,173 @@ export function startServer(options = {}) {
       }
     }
 
+    // ------------------------------------------------------------------
+    // NL lane (i180/R3): propose / revise / approve. All routes fail closed;
+    // a WorkflowError from nl-model.mjs maps through engineError (422, or 502
+    // for PROVIDER_FAILED transport failures). No endpoint here ever returns
+    // or accepts an API key, and nothing on this lane executes by itself:
+    // execution happens only through the existing restricted POST /api/runs,
+    // which additionally verifies the approval hash binding when present.
+    // ------------------------------------------------------------------
+
+    if (pathname === '/api/nl/propose') {
+      if (req.method !== 'POST') return sendError(res, 405, 'METHOD_NOT_ALLOWED', 'use POST /api/nl/propose.');
+      let body;
+      try {
+        body = JSON.parse(await readBody(req));
+      } catch (err) {
+        if (err.code === 'BODY_TOO_LARGE') return sendError(res, 413, 'BODY_TOO_LARGE', 'fail-closed: request body exceeds the 1MB cap.');
+        return sendError(res, 400, 'BAD_JSON', 'fail-closed: request body is not valid JSON.');
+      }
+      if (!body || typeof body !== 'object' || typeof body.text !== 'string' || body.text.trim().length === 0) {
+        return sendError(res, 422, 'NL_TEXT_INVALID', 'fail-closed: body must be {text: string} — the natural-language problem text (<= 8 KiB after canonicalization).');
+      }
+      // Honest provider naming + fail-closed key handling: the production path
+      // passes the provider string "deepseek" so the proposal provenance names
+      // the REAL provider ({name:"deepseek", model:"deepseek-chat"}); with no
+      // key configured the request is refused here, before any provider is
+      // built. Only the explicit test seam (nlProviderImpl) may inject a
+      // deterministic provider.
+      if (opts.nlProviderImpl === null && !(typeof opts.deepseekApiKey === 'string' && opts.deepseekApiKey.length > 0)) {
+        return sendError(res, 422, 'BLOCKED_PROVIDER', 'fail-closed: DEEPSEEK_API_KEY is not set on this machine; no model proposal is made.');
+      }
+      try {
+        // The reply is an UNTRUSTED translation proposal: MODEL_PROPOSED |
+        // NEEDS_CLARIFICATION | UNKNOWN — never executed here, never
+        // auto-approved.
+        const proposal = await proposeConstraintModel({ text: body.text, provider: nlProvider() });
+        return sendJson(res, 200, { proposal, warnings: nlServerWarnings(proposal?.model?.question) });
+      } catch (err) {
+        return engineError(res, err);
+      }
+    }
+
+    if (pathname === '/api/nl/revise') {
+      if (req.method !== 'POST') return sendError(res, 405, 'METHOD_NOT_ALLOWED', 'use POST /api/nl/revise.');
+      let body;
+      try {
+        body = JSON.parse(await readBody(req));
+      } catch (err) {
+        if (err.code === 'BODY_TOO_LARGE') return sendError(res, 413, 'BODY_TOO_LARGE', 'fail-closed: request body exceeds the 1MB cap.');
+        return sendError(res, 400, 'BAD_JSON', 'fail-closed: request body is not valid JSON.');
+      }
+      const { proposal, edited } = body && typeof body === 'object' ? body : {};
+      if (!proposal || typeof proposal !== 'object' || proposal.schema !== 'formal-tools/nl-model-proposal/0.1') {
+        return sendError(res, 422, 'NL_PROPOSAL_INVALID', 'fail-closed: body must be {proposal: <proposeConstraintModel result>, edited: <structured model>}.');
+      }
+      try {
+        // The browser-carried proposal is untrusted: status gate first (only
+        // MODEL_PROPOSED has an editable model — NEEDS_CLARIFICATION is a dead
+        // end), then verify the hash, then re-validate + re-render the EDITED
+        // model. This endpoint only produces a PREVIEW for review — hashes are
+        // unchanged; the edit itself is bound into the approval hash by
+        // POST /api/nl/approve (decision.edited).
+        if (proposal.status !== 'MODEL_PROPOSED' || !proposal.model) {
+          throw new WorkflowError('NL_NOT_APPROVABLE', 'only MODEL_PROPOSED proposals have an editable model', { status: proposal.status ?? null });
+        }
+        assertProposalIntegrity(proposal);
+        if (edited === undefined || edited === null || typeof edited !== 'object') {
+          throw new WorkflowError('NL_MODEL_INVALID', 'edited structured model required', { issues: ['edited_missing'] });
+        }
+        const model = validateStructuredModel(edited);
+        const rendering = renderSmtArtifact(model, 'plan');
+        let lpModel = null;
+        let lpRenderError = null;
+        if (model.question === 'optimize') {
+          try {
+            lpModel = renderLpModel(model);
+          } catch (e) {
+            lpRenderError = e instanceof WorkflowError ? { code: e.code, message: e.message } : { code: 'NL_RENDER_INVALID', message: String(e && e.message || e) };
+          }
+        }
+        return sendJson(res, 200, {
+          preview: {
+            model,
+            rendering,
+            ...(model.question === 'optimize' ? { lp_model: lpModel, lp_render_error: lpRenderError } : {}),
+          },
+          warnings: nlServerWarnings(model.question),
+          note: 'preview only: re-validated and re-rendered server-side; the proposal hashes are unchanged and the edit is bound into the approval hash at approve time',
+        });
+      } catch (err) {
+        return engineError(res, err);
+      }
+    }
+
+    if (pathname === '/api/nl/approve') {
+      if (req.method !== 'POST') return sendError(res, 405, 'METHOD_NOT_ALLOWED', 'use POST /api/nl/approve.');
+      let body;
+      try {
+        body = JSON.parse(await readBody(req));
+      } catch (err) {
+        if (err.code === 'BODY_TOO_LARGE') return sendError(res, 413, 'BODY_TOO_LARGE', 'fail-closed: request body exceeds the 1MB cap.');
+        return sendError(res, 400, 'BAD_JSON', 'fail-closed: request body is not valid JSON.');
+      }
+      const { proposal, approved, edited, reviewer, note, lpRelaxationAcknowledged } = body && typeof body === 'object' ? body : {};
+      if (!proposal || typeof proposal !== 'object' || proposal.schema !== 'formal-tools/nl-model-proposal/0.1' || typeof approved !== 'boolean') {
+        return sendError(res, 422, 'NL_APPROVAL_INVALID', 'fail-closed: body must be {proposal: <proposeConstraintModel result>, approved: boolean, edited?: <structured model>, reviewer?: string, note?: string, lpRelaxationAcknowledged?: true}.');
+      }
+      try {
+        const decision = { approved };
+        if (edited !== undefined) decision.edited = edited;
+        if (reviewer !== undefined) decision.reviewer = reviewer;
+        if (note !== undefined) decision.note = note;
+        // R3 LP gate (docs/mvp/NL_MODEL.md §3): passed through verbatim; only a
+        // strict true unlocks optimize approvals — anything else lets
+        // approveModel return the fail-closed restricted record below.
+        if (lpRelaxationAcknowledged === true) decision.lpRelaxationAcknowledged = true;
+        const record = approveModel(proposal, decision); // NL_TAMPERED / NL_NOT_APPROVABLE / NL_MODEL_INVALID fail closed
+        if (record.status === 'USER_REJECTED') {
+          // Terminal, honest refusal: no plan, no run, nothing executed.
+          return sendJson(res, 200, { decision: 'USER_REJECTED', record, warnings: [] });
+        }
+        if (record.status === 'UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION') {
+          // Fail-closed restricted result (i180/R3 seam): the optimize model was
+          // approved WITHOUT the explicit LP-relaxation acknowledgement. No
+          // plan, no approval registered, nothing executable — the response
+          // carries the frozen unsupported contract (reason/dropped/remedies)
+          // so the UI can render a clear restricted outcome, never a generic
+          // error and never a silent relaxation.
+          return sendJson(res, 200, {
+            decision: record.status,
+            record,
+            warnings: nlServerWarnings(record.question),
+            note: 'restricted record: no plan was produced; re-approve with lpRelaxationAcknowledged:true to explicitly accept the continuous LP relaxation, or wait for an integer MIP adapter',
+          });
+        }
+        const built = buildPlanFromApprovedModel(record); // re-checks approved_sha256 + render drift + ack shape
+        const compiled = compilePlan(built.plan); // real compiled hashes, like the direct lane
+        const plan = compiled.plan;
+        const planSha = sha256Canonical(plan);
+        const approval = {
+          plan_sha256: planSha,
+          approved_sha256: record.approved_sha256,
+          proposal_sha256: record.proposal_sha256,
+          question: built.question,
+          target: built.target,
+          created_at: new Date().toISOString(),
+        };
+        nlApprovals.set(planSha, approval);
+        return sendJson(res, 200, {
+          decision: 'USER_APPROVED',
+          plan,
+          plan_sha256: planSha,
+          approval,
+          question: built.question,
+          target: built.target,
+          // R3 seam: wrapper relaxation metadata (null for smt; for lp it is the
+          // frozen LP_RELAXATION_ONLY contract incl. the hash-covered ack) —
+          // the plan itself also carries the canonical JSON assumption string.
+          relaxation: built.relaxation,
+          warnings: nlServerWarnings(built.question),
+          approved: { approved_sha256: record.approved_sha256, review: record.review },
+          note: 'the plan embeds the approved model provenance (problem requirement r2); submit it with the approval binding to POST /api/runs',
+        });
+      } catch (err) {
+        return engineError(res, err);
+      }
+    }
+
     if (pathname === '/api/runs' && req.method === 'POST') {
       let body;
       try {
@@ -763,6 +1029,28 @@ export function startServer(options = {}) {
         return sendError(res, 400, 'BAD_JSON', 'fail-closed: request body is not valid JSON.');
       }
       const plan = body && body.plan ? body.plan : body;
+      // NL approval binding (i180/R3, additive): when the client submits an
+      // approval, the plan's exact sha256 must (a) match the submitted binding
+      // and (b) be the product of a real USER_APPROVED record in this process.
+      // Anything else is refused BEFORE any validation of the plan proceeds —
+      // a tampered or substituted plan can never ride an approval.
+      let approvalBinding = null;
+      if (body && typeof body === 'object' && body.approval !== undefined && body.approval !== null) {
+        const ap = body.approval;
+        if (!ap || typeof ap !== 'object' ||
+            typeof ap.plan_sha256 !== 'string' || typeof ap.approved_sha256 !== 'string') {
+          return sendError(res, 422, 'NL_APPROVAL_INVALID', 'fail-closed: approval must be {plan_sha256, approved_sha256} as returned by POST /api/nl/approve.');
+        }
+        const actualPlanSha = sha256Canonical(plan);
+        const recorded = nlApprovals.get(ap.plan_sha256);
+        if (!recorded) {
+          return sendError(res, 422, 'NL_APPROVAL_UNKNOWN', `fail-closed: no NL approval is registered in this server for plan sha256 ${ap.plan_sha256.slice(0, 12)}…; the binding is refused and nothing runs.`);
+        }
+        if (actualPlanSha !== ap.plan_sha256 || recorded.approved_sha256 !== ap.approved_sha256) {
+          return sendError(res, 422, 'NL_PLAN_APPROVAL_MISMATCH', `fail-closed: the submitted plan (sha256 ${actualPlanSha.slice(0, 12)}…) does not match the approved plan covered by this approval (${ap.plan_sha256.slice(0, 12)}…) — approval/plan hash binding violated, refusing to execute.`);
+        }
+        approvalBinding = ap;
+      }
       try {
         // Bridge hard caps first (fail-closed, mirror the frozen budget caps)…
         if (!plan || typeof plan !== 'object') throw new WorkflowPlanError('PLAN_SCHEMA_INVALID', 'plan must be a JSON object');
@@ -781,7 +1069,7 @@ export function startServer(options = {}) {
       if (activeRuns.size >= opts.maxConcurrentRuns) {
         return sendError(res, 429, 'CONCURRENCY_LIMIT', `fail-closed: max ${opts.maxConcurrentRuns} concurrent runs; wait for a run to finish.`);
       }
-      const state = startRun(plan);
+      const state = startRun(plan, approvalBinding);
       return sendJson(res, 200, { run_id: state.runId, status: state.status, poll: `/api/runs/${state.runId}` });
     }
 

@@ -162,3 +162,97 @@ solve-smt steps only (the solve-lp portfolio path does not route through `captur
 so LP streams stay bounded-only with `bounded_matches_full_stream: null` — correct, just
 not verifiable); browser download materialization still verified over HTTP headers +
 API tests (IAB sandbox limitation unchanged from V5-b).
+
+---
+
+## R3 addendum (2026-11-20, branch `i180/r3-web-nl`) — NL lane real-browser evidence (OUTPUT_LABEL=FORMAL_TOOLS_I180_R3_WEB_NL_ENTRY)
+
+Server: `node apps/web/server.mjs` on http://127.0.0.1:8801/ (real engine
+`workflow-v2+v3`, `mocked_contracts:false`, `provider.deepseek.configured:true` from
+`DEEPSEEK_API_KEY`). Browser: ZCode in-app browser (IAB/Chromium), viewport 1280×900.
+**All journeys were agent-surrogate driven** (in-page genuine `el.click()` calls
+through the same handler paths a user click takes — the documented IAB input-path
+degradation of V5-a/V5-b recurred; locator `click()` did not dispatch). Button
+disabled/enabled states and banner/checkbox states were read back before/after every
+step; nothing was fabricated.
+
+**Real-LLM budget disclosure: exactly 2 real DeepSeek calls were made, both
+`deepseek-chat` proposes of the sat sample on the production server (journey A). The
+first was spent on a pre-fix build (its proposal is NOT used as evidence — see bugs
+below); the second is the recorded journey A. The clarification/reject journeys (B/C)
+run on a second local instance (port 8802) with the deterministic `nlProviderImpl`
+stub (provider provenance honestly displays `injected (stub-nl-model)`) to stay
+within the 2-call budget; the real-DeepSeek clarification precedent for the same
+vague text is the committed receipt
+`validation/local-runtime-receipts/nl-model-j3-clarification.proposal.json`
+(docs/mvp/NL_MODEL.md §3.3). The BLOCKED run receipt is a real V3 executor receipt on
+this binary-less machine — the honest negative, not a mock.
+
+### Artifacts (all under `apps/web-tests/artifacts/`)
+
+| File | Screen | What it proves |
+|---|---|---|
+| `r3-nl-1-input.png` | 1 · Input (NL mode) | Input-mode radio pair; NL prose textarea with the sat sample loaded; untrusted-proposal hint; "Generate plan" correctly hidden in NL mode (the `[hidden]` CSS fix) |
+| `r3-nl-2-model-review.png` | 2 · NL model review (REAL DeepSeek) | Real `deepseek-chat` proposal of the 7-multiples problem: x∈[3,50], y∈[1,50], auxiliary k∈[0,14] with derivation recorded in 4 assumptions; constraints `x:1 y:1 k:-7 == 0` / `y:1 x:-1 <= 0`; provenance panel names `deepseek (deepseek-chat)` with prompt/response/proposal/rendering shas + `TRANSLATION_PROPOSAL_…` status; honesty note verbatim. Note: the decision-card gate paragraph still shows the pre-fix flex-wrap layout bug (fixed immediately after; corrected layout visible in r3-nl-3/7) |
+| `r3-nl-3-edited-revalidated.png` | 2 · after structured edit | x upper edited 50→40 in the FORM (never the raw SMT); "Apply edits & re-validate" → server preview note "NOT yet part of the proposal hash — approving now binds the edited model into the approval hash"; read-only SMT re-rendered with `(assert (<= x 40))`; status "Edits validated (preview only). Approve to bind them." |
+| `r3-nl-4-plan-review.png` | 2 · plan review (post-approval) | Banner `Plan wf-19cd9f7c1af1016cefd77b6e4793791d · kind: nl_model`; plan-source badge "NL model (deepseek-chat) — user-approved translation proposal (hash-bound) → smt plan"; steps z3 → cvc5 → compare; the model's 4 assumptions carried verbatim; Approve & run still gated by the review checkbox |
+| `r3-nl-5-results-blocked.png` | 4 · Results | **BLOCKED banner** (warn tones, dashed border): `BLOCKED_TOOL_MISSING`, nothing simulated; verdict rows `ABORTED / null (kind: none) / NOT_APPLICABLE / BLOCKED`; standing NL translation caveat "verdicts answer the approved RENDERED MODEL … not your natural-language text"; environment line `run_id: run-mwnt7tkj-96c3b3b2`; receipt+manifest downloads. Run view (verified over HTTP): `nl_approval_binding.verified:true` with `approved_sha256 bd0cc96d4fc69604…` — the executed plan is the exact approved one |
+| `r3-nl-6-clarification.png` | 1 · NEEDS_CLARIFICATION (stub instance 8802) | Vague text → warn `role="alert"` banner listing the model's 2 questions ("no model was proposed, nothing can be executed"); red status "nothing was rendered or planned"; stays on input; no approve/execution path exists in this state |
+| `r3-nl-7-reject-terminal.png` | 2 · REJECTED terminal (stub instance 8802) | Danger banner "REJECTED — terminal decision · Decision record: USER_REJECTED (proposal_sha256 92e181a2ff8aad8f…) · No plan was built and nothing will execute"; Approve/Reject buttons disabled; provider honestly shows `injected (stub-nl-model)`; also evidences the fixed gate-paragraph layout and the fixed model-review visibility on a fresh load |
+
+### Journeys
+
+1. **A (REAL DeepSeek, production server 8801)** — NL mode → sat sample → Propose
+   (real `deepseek-chat` call) → model review with full provenance → structured edit
+   x.upper 50→40 → Apply edits (server re-validate/re-render preview) → "Approve model
+   & build plan" (`approved_sha256 bd0cc96d…`, edited=true) → plan review
+   (`wf-19cd9f7c…`, `nl_model`, z3+cvc5+compare) → review checkbox → "Approve & run"
+   (submits plan + approval binding) → honest `ABORTED / BLOCKED_TOOL_MISSING`
+   receipt + translation caveat (r3-nl-1…5). Run artifacts persisted under
+   `apps/web-tests/.runs/run-mwnt7tkj-96c3b3b2/` (receipt.json + manifest.json).
+2. **B (stub instance 8802)** — vague sample → Propose → NEEDS_CLARIFICATION banner
+   with the two questions; no plan, no approve path (r3-nl-6).
+3. **C (stub instance 8802)** — sat sample → Propose → model review → "Reject
+   (terminal)" → USER_REJECTED terminal banner, both decision buttons disabled
+   (r3-nl-7).
+
+### Bugs found & fixed during this walk (each reproduced before the fix)
+
+1. **Model review never became visible** — `renderNlProposal` filled the review but
+   never cleared `hidden`; the first real proposal was fully rendered yet invisible.
+   Fix: renderNlProposal unhides `#nlModelReview` / hides `#planReview` (verified on
+   fresh loads in journeys B/C and by the live session continuing to completion).
+2. **`[hidden]` defeated by author CSS** — `.actions{display:flex}` (V5-b rule)
+   overrode the UA hidden style, so "Generate plan" stayed visible in NL mode. Fix:
+   global `[hidden]{display:none !important}`.
+3. **Provider provenance mislabeled "injected"** — passing the provider OBJECT from
+   `makeNlModelProvider` made `normalizeProvider` name the real DeepSeek call
+   "injected". Fix: production passes the `"deepseek"` string (env-key path,
+   provenance `{name:"deepseek", model:"deepseek-chat"}`); no-key requests are
+   refused 422 `BLOCKED_PROVIDER` server-side before any provider is built; the
+   `nlProviderImpl` seam remains the only injection path (honestly named
+   `injected`).
+4. **Decision-card gate paragraph used the flex checkbox-gate class** and wrapped
+   into columns; now a plain hint paragraph.
+
+### Honest gaps / limitations
+
+1. **Local execution stays BLOCKED by design** — this machine has no z3/cvc5/highs;
+   journey A's receipt is the real fail-closed ABORT (nothing simulated). The real
+   solver full-chain walk is deferred to the trusted-host lane (sub-agent D, V6).
+2. **LLM call budget** — 2 real calls total (both journey-A proposes; the first on a
+   pre-fix build is disclosed, not used as evidence). Clarification/reject UI states
+   were exercised via the deterministic stub instance and are labeled as such in the
+   screenshots; the real-LLM clarification behavior for the same text is committed
+   evidence (`nl-model-j3-clarification.proposal.json`).
+3. **Agent-surrogate input** — all clicks were in-page `el.click()` calls (IAB
+   input-path degradation documented since V5-a); no OS-level input events. States
+   were verified programmatically around every step.
+4. **In-flight `UNSUPPORTED_EXACT_INTEGER_OPTIMIZATION` alignment** — per the R3
+   split, the LP arm is coded against current main (relaxation plan + verbatim
+   assumption + prominent warning; `renderLpModel` rejections surface as
+   `NL_RENDER_INVALID` 422s). Additive metadata/codes the nl-model lane gains later
+   (e.g. exact-integer restrictions) flow through the same defensive rendering and
+   WorkflowError → 422 mapping; alignment happens at integration.
+5. One IAB full-page capture glitch (duplicated content) occurred on the model-review
+   screenshot; viewport captures were used instead (known V5-b gap #5 recurrence).

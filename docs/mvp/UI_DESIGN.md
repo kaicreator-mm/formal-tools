@@ -237,3 +237,57 @@ receipts from real solver output; `claim_verdict` stays `NOT_APPLICABLE` in this
   honest blocked receipts, evidence bytes, caps, auth)
 - `apps/web-tests/artifacts/` — real-browser screenshots (see UI_VISUAL_ACCEPTANCE.md)
 - `docs/mvp/UI_VISUAL_ACCEPTANCE.md` — browser evidence & checklist (V5-b live engine)
+
+---
+
+## 8. R3 addendum (2026-11-20, branch `i180/r3-web-nl`) — NL lane: natural-language entry + user-inspectable model approval (OUTPUT_LABEL=FORMAL_TOOLS_I180_R3_WEB_NL_ENTRY)
+
+Scope: wires the EXISTING `packages/runner/js/nl-model.mjs` pipeline into the EXISTING
+Web UI. No second parser/runner/UI was built; design tokens, the four-phase stepper
+and all V5-b behaviors are unchanged. Reproduced pre-fix state first: `POST /api/plan`
+with Chinese prose fail-closed with 422 `UNSUPPORTED_PROBLEM` and no plan — ordinary
+users had no prose entry at all.
+
+### 8.1 New bridge endpoints (apps/web/server.mjs, additive)
+
+| Method+Path | Request | Response |
+|---|---|---|
+| `POST /api/nl/propose` | `{text}` (≤ 8 KiB canonical) | `{proposal:<proposeConstraintModel result>, warnings:string[]}` — `MODEL_PROPOSED` (full provenance: original text/sha, provider name+model, prompt/response/proposal shas, structured model, rendered QF_LIA artifact + `semantic_status=TRANSLATION_PROPOSAL_NOT_VERIFIED_AGAINST_TEXT`, honesty note), `NEEDS_CLARIFICATION` (questions list, `model:null`, `rendering:null`, `proposal_sha256:null`), or `UNKNOWN` (reason+issues). Provider: the `"deepseek"` string path (env key, header-only; provenance names `{name:"deepseek", model:"deepseek-chat"}`); no key ⇒ 422 `BLOCKED_PROVIDER` before any provider is built. `NL_TEXT_INVALID` / `NL_TEXT_OVERSIZED` 422 |
+| `POST /api/nl/revise` | `{proposal, edited:<structured model>}` | `{preview:{model, rendering, lp_model?, lp_render_error?}, warnings, note}` — status gate first (`NL_NOT_APPROVABLE` for non-MODEL_PROPOSED), then `proposal_sha256` integrity recheck (`NL_TAMPERED`), then `validateStructuredModel` + fresh `renderSmtArtifact` of the EDITED model. PREVIEW ONLY: proposal hashes unchanged; the edit is bound into the approval hash at approve time |
+| `POST /api/nl/approve` | `{proposal, approved:boolean, edited?, reviewer?, note?}` | `approved:false` → `{decision:"USER_REJECTED", record}` (terminal; explicit rejection of NEEDS_CLARIFICATION/UNKNOWN records also allowed, mirroring `approveModel`). `approved:true` → `approveModel` (re-validates `edited`, sets `review.edited`) → `buildPlanFromApprovedModel` (re-checks `approved_sha256` + render drift) → `compilePlan` → `{decision:"USER_APPROVED", plan, plan_sha256, approval:{plan_sha256, approved_sha256, proposal_sha256, question, target}, question, target, warnings, approved:{approved_sha256, review}}`. Nothing auto-executes |
+| `POST /api/runs` (additive) | `{plan, approval?:{plan_sha256, approved_sha256}}` | When `approval` is present the bridge refuses to run unless (a) `sha256Canonical(plan)` equals `approval.plan_sha256` and (b) that plan sha was produced by a real USER_APPROVED record in THIS process with the matching `approved_sha256`. Codes: `NL_APPROVAL_INVALID` (shape), `NL_APPROVAL_UNKNOWN` (no registered approval), `NL_PLAN_APPROVAL_MISMATCH` (binding violated — tamper/substitution). The run view gains additive `nl_approval_binding:{plan_sha256, approved_sha256, verified:true}` |
+
+`GET /api/meta` gains additive `nl_lane` (module, endpoint contracts, execution-binding
+rule, the verbatim LP relaxation disclosure, provider/configured flags). All NL routes
+sit behind the same bearer-token gate as the rest of the API; the API key never
+reaches the browser; no child_process is introduced; server NL state is one in-memory
+approval registry (restart ⇒ approvals forgotten ⇒ bound runs fail closed
+`NL_APPROVAL_UNKNOWN`, never silently execute).
+
+### 8.2 UI flow (tokens/stepper unchanged)
+
+- **Screen 1**: `Input mode` radio pair — structured model (previous behavior byte-for-byte) vs "Natural language". NL section: prose textarea (Chinese/English), three NL samples (整数对 sat / 最大化 LP / 模糊 clarification), "Propose model (DeepSeek)" button. `NEEDS_CLARIFICATION` renders a `role="alert"` warn banner listing the model's questions on the input screen — no plan, no approve path, execution impossible from that state; `UNKNOWN` renders reason+issues as a fail-closed status.
+- **Screen 2a — NL model review** (replaces plan review until approval): original request (verbatim pre), editable structured form (variable bounds table, per-constraint rows with `name:int` coefficient shorthand + op select + rhs, assumptions editor, objective row for optimize) — NEVER a raw-SMT edit box; read-only rendered SMT-LIB2 (the hash-bound artifact the solvers will answer); LP box (HiGHS shape) for optimize; provenance panel (provider, schema, original-text/prompt/response/proposal/rendering shas, render status) + the verbatim honesty note; decision card with Approve (hash-bound `approved_sha256`) / Reject (terminal) / ← Edit input. "Apply edits & re-validate" posts to `/api/nl/revise` and re-renders the form FROM the validated model (the form state is the validated truth). `question:"optimize"` shows a prominent warn banner ("LP RELAXATION — NON-INTEGER RESULT") at propose, revise and again on the plan screen (server `warnings` + the plan's `NL_LP_RELAXATION_ASSUMPTION` assumption are cross-checked; never presented as an integer optimum).
+- **Screen 2b — plan review**: after approval the existing plan review appears with the derived plan (`problem_kind:"nl_model"`), a new plan-source badge ("NL model (deepseek-chat) — user-approved translation proposal (hash-bound) → smt|lp plan") and the final existing "Approve & run" gate, which now submits the plan WITH the approval binding for server-side verification. Results screen gains the standing translation caveat: verdicts answer the APPROVED RENDERED MODEL, not the prose; render/solve validity does not prove translation fidelity.
+- CSS: additive NL styles only (mode toggle, provenance list, constraint rows, coefficient/bound inputs) on the existing tokens; one global fix `[hidden]{display:none !important}` so author display rules can never defeat the hidden attribute (NL mode toggle depends on it).
+
+### 8.3 Tests & CI
+
+`apps/web-tests/nl.test.mjs` (17 tests, fully offline via the `nlProviderImpl` seam):
+meta advertisement; propose happy path incl. provenance/rendering; NEEDS_CLARIFICATION
+dead end (approve 422 `NL_NOT_APPROVABLE`, revise 422, explicit reject allowed);
+hostile reply → UNKNOWN; empty/oversized/bad input 422; no-key 422
+`BLOCKED_PROVIDER`; revise happy/edit-hash/render-change + tampered proposal
+`NL_TAMPERED` + invalid edits (`bounds_crossed`, undeclared coefficient); approve→plan
+binding (`plan_sha256 === sha256Canonical(plan)`, nl_model kind, assumptions verbatim,
+z3+cvc5+compare); approval-bound run through the EXISTING `/api/runs` (honest
+`BLOCKED_TOOL_MISSING` receipt, `nl_approval_binding.verified`); tamper matrix
+(plan A approval + plan B submission → `NL_PLAN_APPROVAL_MISMATCH`; unregistered plan
+sha → `NL_APPROVAL_UNKNOWN`; malformed binding → `NL_APPROVAL_INVALID`; mutated
+proposal → `NL_TAMPERED`); edited approval changes approval+plan hashes and the plan
+input carries the edited bound; reject terminal record; LP arm (warnings at
+propose+approve, highs-only plan, integrality-drop assumption present); direct-lane
+regression (prose still 422 on `/api/plan`); token-auth enforcement. CI
+(`.woodpecker/formal-static.yaml`) gains an additive `web-bridge-tests` step running
+`node --test apps/web-tests/*.test.mjs` with `DEEPSEEK_API_KEY=` cleared (fully
+offline; the suite skips real-LLM paths when the key is unset).

@@ -38,7 +38,16 @@
       <h1 id="h-input" tabindex="-1">1 · Problem input</h1>
       <p class="screen-lede">Paste a supported model, or load a sample. The bridge builds a checkable execution plan — nothing runs before you approve it.</p>
 
+      <div id="nlClarifyBox" class="banner banner--warn" role="alert" data-testid="nl-clarify-box" hidden></div>
+
       <form id="problemForm" novalidate>
+        <fieldset class="field mode-toggle" id="inputModeToggle">
+          <legend class="field-label">Input mode</legend>
+          <label class="mode-option"><input type="radio" name="inputMode" value="model" checked data-testid="mode-model"> Structured model (SMT-LIB2 / LP JSON)</label>
+          <label class="mode-option"><input type="radio" name="inputMode" value="nl" data-testid="mode-nl"> Natural language (prose — DeepSeek proposes a model, you review it)</label>
+        </fieldset>
+
+        <div id="modelInputFields">
         <div class="field">
           <label for="problemText">Problem (SMT-LIB2 text or LP JSON model)</label>
           <textarea id="problemText" name="problem_text" rows="12" spellcheck="false"
@@ -75,8 +84,35 @@
             placeholder="Leave empty to use the bridge's default assumptions for the detected problem kind."></textarea>
           <p id="assumptionsHint" class="hint">Assumptions are recorded verbatim in the plan; you can edit them again on the plan screen (max 256 characters each).</p>
         </div>
+        </div><!-- /modelInputFields -->
 
-        <div class="actions">
+        <div id="nlInputFields" hidden>
+          <div class="field">
+            <label for="nlText">Problem in natural language (Chinese or English prose)</label>
+            <textarea id="nlText" name="nl_text" rows="8" spellcheck="false"
+              aria-describedby="nlHint nlStatus"
+              placeholder="例如：找出整数 x 和 y：x 至少是 3，y 至少是 1，两个都不超过 50，x+y 恰好是 7 的倍数，并且 y 不超过 x。这样的整数对存在吗？"></textarea>
+            <p id="nlHint" class="hint">A REAL DeepSeek call proposes a structured constraint model (max 8&nbsp;kB text). The proposal is <strong>untrusted</strong>: it is never executed until you inspect and explicitly approve it on the next screen. Vague texts come back with clarification questions instead of a guess. Requires DEEPSEEK_API_KEY on the bridge host (otherwise: honest BLOCKED_PROVIDER).</p>
+          </div>
+
+          <div class="field">
+            <div class="label-row" role="group" aria-labelledby="nlSamplesLabel">
+              <span id="nlSamplesLabel" class="field-label">NL samples</span>
+              <div class="sample-row">
+                <button type="button" class="btn btn--ghost nl-sample-btn" data-nl-sample="nl-sat" data-testid="nl-sample-sat">NL · 整数对（sat）</button>
+                <button type="button" class="btn btn--ghost nl-sample-btn" data-nl-sample="nl-opt" data-testid="nl-sample-opt">NL · 最大化（LP）</button>
+                <button type="button" class="btn btn--ghost nl-sample-btn" data-nl-sample="nl-vague" data-testid="nl-sample-vague">NL · 模糊（澄清 demo）</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="btn btn--primary" id="nlProposeBtn" data-testid="nl-propose">Propose model (DeepSeek)</button>
+            <span id="nlStatus" class="status" role="status" aria-live="polite"></span>
+          </div>
+        </div>
+
+        <div class="actions" id="modelFormActions">
           <button type="submit" class="btn btn--primary" id="planBtn" data-testid="generate-plan">Generate plan</button>
           <span id="inputStatus" class="status" role="status" aria-live="polite"></span>
         </div>
@@ -88,8 +124,86 @@
       <h1 id="h-plan" tabindex="-1">2 · Plan review</h1>
       <p class="screen-lede">Check what would run. Nothing executes until you explicitly approve.</p>
 
+      <!-- ========== 2a · NL model review (i180/R3): shown while an NL proposal is active ========== -->
+      <div id="nlModelReview" hidden data-testid="nl-model-review">
+        <div id="nlReviewBanner" class="banner" hidden></div>
+
+        <div class="plan-grid">
+          <div class="plan-grid__main">
+            <h2>Original request</h2>
+            <pre id="nlOriginalText" tabindex="0" data-testid="nl-original-text"></pre>
+
+            <h2>Proposed model <span class="muted">(editable — structured form, never the raw SMT)</span></h2>
+            <div class="table-wrap">
+              <table id="nlVarsTable" class="steps-table" data-testid="nl-vars-table">
+                <caption>Variables (bounds are editable; |bound| ≤ 1,000,000)</caption>
+                <thead>
+                  <tr><th scope="col">Name</th><th scope="col">Integer</th><th scope="col">Lower</th><th scope="col">Upper</th></tr>
+                </thead>
+                <tbody id="nlVarsBody"></tbody>
+              </table>
+            </div>
+
+            <h3>Constraints</h3>
+            <p class="hint">Coefficients format: <code>name:int</code> pairs separated by spaces (e.g. <code>x:1 y:1 k:-7</code>). Declared variables only.</p>
+            <div id="nlConstraintsList" class="nl-constraint-list" data-testid="nl-constraints"></div>
+            <div class="actions">
+              <button type="button" class="btn btn--ghost" id="nlAddConstraintBtn">+ Add constraint</button>
+            </div>
+
+            <div id="nlObjectiveRow" class="field" hidden>
+              <h3>Objective <span class="muted">(question: optimize)</span></h3>
+              <label for="nlObjectiveDirection" class="field-label">Direction</label>
+              <select id="nlObjectiveDirection">
+                <option value="minimize">minimize</option>
+                <option value="maximize">maximize</option>
+              </select>
+              <label for="nlObjectiveCoeffs" class="field-label" style="margin-top:8px">Coefficients</label>
+              <input type="text" id="nlObjectiveCoeffs" class="nl-coeff-input" spellcheck="false" placeholder="x:3 y:2">
+            </div>
+
+            <h3>Model assumptions <span class="muted">(from the proposal — every non-obvious interpretation)</span></h3>
+            <ul id="nlAssumptionList" class="assumption-list"></ul>
+            <div class="actions">
+              <button type="button" class="btn btn--ghost" id="nlAddAssumptionBtn">+ Add assumption</button>
+              <button type="button" class="btn btn--primary" id="nlReviseBtn" data-testid="nl-apply-edits">Apply edits &amp; re-validate</button>
+            </div>
+            <p id="nlEditNote" class="hint" hidden></p>
+
+            <h3>Rendered SMT-LIB2 <span class="muted">(read-only, hash-bound — the solvers answer THIS, not your prose)</span></h3>
+            <pre id="nlRenderedSmt" tabindex="0" data-testid="nl-rendered-smt"></pre>
+
+            <details id="nlLpBox" class="json-box" hidden>
+              <summary>Rendered LP model (HiGHS typed shape — integrality dropped)</summary>
+              <pre id="nlRenderedLp" tabindex="0" data-testid="nl-rendered-lp"></pre>
+            </details>
+          </div>
+
+          <aside class="plan-grid__side">
+            <h2>Model decision</h2>
+            <div class="approve-card">
+              <h3>Provenance</h3>
+              <dl id="nlProvenance" class="provenance-list" data-testid="nl-provenance"></dl>
+              <p id="nlHonestyNote" class="hint" data-testid="nl-honesty-note"></p>
+              <p class="approve-card__gate" id="nlLpAckGate" data-testid="nl-lp-ack-gate" hidden>
+                <input type="checkbox" id="nlLpAckCheck" data-testid="nl-lp-ack-check">
+                <label for="nlLpAckCheck">I understand the result is the <strong>continuous LP relaxation</strong> — integrality is dropped; the answer is <strong>NOT the integer optimum</strong>.</label>
+              </p>
+              <p class="hint" style="margin-top:8px">Approving records your decision hash-bound (<code>approved_sha256</code>) and builds the execution plan. Rejecting is terminal: nothing is planned or executed.</p>
+              <button type="button" class="btn btn--primary btn--block" id="nlApproveBtn" data-testid="nl-approve" disabled>Approve model &amp; build plan</button>
+              <button type="button" class="btn btn--ghost btn--block" id="nlRejectBtn" data-testid="nl-reject">Reject (terminal)</button>
+              <button type="button" class="btn btn--ghost btn--block" id="nlBackBtn">← Edit input</button>
+              <p id="nlReviewStatus" class="status" role="status" aria-live="polite"></p>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      <!-- ========== 2b · Execution plan review (existing flow) ========== -->
+      <div id="planReview" hidden>
       <div id="planBanner" class="banner banner--info" hidden></div>
       <p class="hint" id="planSourceLine" hidden>Plan source: <span id="planSourceBadge" class="badge badge--source" data-testid="plan-source-badge"></span></p>
+      <div id="planLpBanner" class="banner banner--warn" role="alert" data-testid="plan-lp-banner" hidden></div>
 
       <div class="plan-grid">
         <div class="plan-grid__main">
@@ -132,6 +246,7 @@
           </div>
         </aside>
       </div>
+      </div><!-- /planReview -->
     </section>
 
     <!-- ============================ SCREEN 3: RUN ============================ -->
@@ -153,6 +268,7 @@
 
       <div id="resultNote" class="banner" role="alert" hidden></div>
       <div id="verdictBlock" class="verdict-block" data-testid="verdict-block"></div>
+      <p id="nlTranslationNote" class="hint" data-testid="nl-translation-note" hidden></p>
       <p id="environmentLine" class="hint" data-testid="environment-line"></p>
 
       <h2>Evidence</h2>

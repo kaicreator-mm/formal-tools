@@ -33,3 +33,10 @@ steps:
     image: bash
     commands:
       - node scripts/mcp-acceptance.mjs
+  # i180/R3: web bridge conformance incl. the NL lane (apps/web/server.mjs).
+  # Fully offline: providers are deterministic stubs; the suite skips real
+  # DeepSeek calls when DEEPSEEK_API_KEY is unset (it is unset in CI).
+  - name: web-bridge-tests
+    image: bash
+    commands:
+      - DEEPSEEK_API_KEY= node --test apps/web-tests/*.test.mjs
