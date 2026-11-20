@@ -147,15 +147,39 @@ status/reason — never the key, URL bodies or exception text).
 - **Inert text**: the launcher is a fixed header (plan_id, plan_sha256),
   `const PLAN = Object.freeze(JSON.parse("<canonical plan JSON>"))` — plan
   data exists only inside that JSON string literal — a guarded
-  `await import("../../packages/runner/js/workflow-executor.mjs")` (fixed
-  constant specifier), `main(argv)` which calls `executeWorkflowPlan(PLAN)`
-  and writes the receipt to `process.argv[2]` (never a plan field). No shell,
-  child_process, eval, dynamic requires, env mutation, or LLM text outside
-  the plan literal.
-- **Fail-closed**: until V3's executor exists relative to the launcher
-  (launcher is written two directory levels below the repo root), running it
-  exits with code 2 + `NOT_COMPILED_FOR_EXECUTION` and writes no receipt;
-  missing receipt path ⇒ code 1 + `LAUNCHER_USAGE`.
+  `await import(resolveExecutorUrl())` whose specifier comes only from the
+  trusted-executor locator below, `main(argv)` which calls
+  `executeWorkflowPlan(PLAN)` and writes the receipt to `process.argv[2]`
+  (never a plan field). No shell, child_process, eval, dynamic requires
+  computed from data, env mutation, or LLM text outside the plan literal.
+- **Trusted-executor locator (i180/R2, runtime — never compile time)**:
+  the launcher resolves `workflow-executor.mjs` when it runs, in this order:
+  1. `FORMAL_TOOLS_RUNNER_ROOT` if set (non-empty): must be a directory
+     containing `packages/runner/js/workflow-executor.mjs`, validated with
+     `existsSync` BEFORE the import; anything else ⇒ exit 2 +
+     `RUNNER_ROOT_INVALID`, no receipt (fail loud — never a silent fallback
+     to a different executor).
+  2. Otherwise the fixed relative specifier
+     `../../packages/runner/js/workflow-executor.mjs` resolved against the
+     launcher's own location (in-repo `artifacts/<plan_id>/` layout —
+     unchanged pre-R2 behavior).
+  No absolute path is ever baked into the launcher text, so `compilePlan`
+  stays byte-deterministic and machine-independent, and a launcher emitted
+  under an arbitrary cwd executes against the trusted runner when the caller
+  (user, trusted host, harness, or `workflow execute`) exports
+  `FORMAL_TOOLS_RUNNER_ROOT=<repository root>`. The only locator inputs
+  are the environment and the launcher's own URL — never plan or LLM data.
+  The env root must be a full runner root (repo-root layout): the executor
+  module resolves its repo-root assets (`registry/`,
+  `docs/tool-portfolio/`) relative to its own location, so a partial
+  directory that contains only the executor file fails the import and the
+  launcher still fails closed (`NOT_COMPILED_FOR_EXECUTION`, exit 2, no
+  receipt).
+- **Fail-closed**: with no locator hit (`RUNNER_ROOT_INVALID`) or no
+  executor at the resolved location (`NOT_COMPILED_FOR_EXECUTION`), running
+  the launcher exits with code 2 and writes no receipt (the plan stays
+  honestly `NOT_RUN`); missing receipt path ⇒ code 1 + `LAUNCHER_USAGE`;
+  any other failure ⇒ code 1.
 - **Non-mutating**: the caller's plan is cloned; hashes are backfilled only
   in the returned copy.
 - Tamper sensitivity: any step hash drift, cycle, unknown key or allowlist

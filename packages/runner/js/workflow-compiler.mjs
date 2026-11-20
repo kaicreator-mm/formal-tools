@@ -1,13 +1,24 @@
 /**
- * Issue #182 (i180/V2): deterministic launcher-script compiler.
+ * Issue #182 (i180/V2 + R2): deterministic launcher-script compiler.
  *
  * compilePlan(plan) emits (1) a byte-deterministic launcher.mjs source text
  * and (2) a manifest. The launcher is PURE TEXT: a fixed header, the plan
  * frozen as a JSON.parse literal, and imports of trusted runner APIs only.
  * It never inlines shell, child_process, eval, dynamic requires computed from
- * data, env mutation, or any LLM text outside the plan JSON literal. Plan
- * execution stays NOT_RUN here: the executor module arrives with V3, and the
- * launcher fails closed with NOT_COMPILED_FOR_EXECUTION until then.
+ * data, env mutation, or any LLM text outside the plan JSON literal.
+ *
+ * R2 trusted-executor locator (runtime, not compile time): the generated
+ * launcher resolves workflow-executor.mjs at RUN time —
+ * 1. FORMAL_TOOLS_RUNNER_ROOT if set: must be a directory containing
+ *    packages/runner/js/workflow-executor.mjs (checked before import;
+ *    otherwise RUNNER_ROOT_INVALID, exit 2, no receipt);
+ * 2. else the fixed relative specifier from the launcher's own location
+ *    (in-repo artifacts/ case, unchanged behavior).
+ * No absolute path is ever baked into the launcher text, so compilePlan
+ * stays byte-deterministic and machine-independent, and a launcher emitted
+ * under an arbitrary cwd still finds the trusted executor when the caller
+ * exports FORMAL_TOOLS_RUNNER_ROOT. The only locator inputs are the
+ * environment and the launcher's own URL — never plan or LLM data.
  */
 import { createHash } from "node:crypto";
 import {
@@ -17,8 +28,16 @@ import {
 export const LAUNCHER_ENTRY = "launcher.mjs";
 export const LAUNCHER_RUNTIME = "node>=20";
 export const LAUNCHER_GENERATED_BY = "workflow-compiler@1.0";
-/** Stable relative specifier; the launcher must be written two levels below the repo root. */
+/**
+ * Stable relative specifier from the launcher's own location to the trusted
+ * executor (in-repo artifacts layout: two levels below the repo root). Also
+ * appended to FORMAL_TOOLS_RUNNER_ROOT at run time when that env var is set.
+ */
 export const EXECUTOR_SPECIFIER = "../../packages/runner/js/workflow-executor.mjs";
+/** The same executor path relative to a runner root (repo root or portable bundle root). */
+export const EXECUTOR_RELATIVE_PATH = "packages/runner/js/workflow-executor.mjs";
+/** Env var callers set to point an out-of-repo launcher at the trusted runner root. */
+export const RUNNER_ROOT_ENV_VAR = "FORMAL_TOOLS_RUNNER_ROOT";
 
 const sha256Text = text => createHash("sha256").update(text, "utf8").digest("hex");
 
@@ -40,15 +59,43 @@ function renderLauncher(planId, planSha256, canonicalPlanJson) {
     "// runtime: " + LAUNCHER_RUNTIME,
     "// receipt: formal-tools/execution-receipt/1.0, written by executeWorkflowPlan (V3).",
     "// Until a receipt exists this plan's execution status is NOT_RUN.",
+    "// Trusted-executor locator (i180/R2), resolved at RUN time, in this order:",
+    "// 1. FORMAL_TOOLS_RUNNER_ROOT if set - a directory containing",
+    "//    packages/runner/js/workflow-executor.mjs (validated before import;",
+    "//    anything else fails closed with RUNNER_ROOT_INVALID);",
+    "// 2. else the fixed relative specifier below, resolved against this",
+    "//    launcher's own location (in-repo artifacts/ layout).",
+    "// No absolute path is baked in at compile time. The only locator inputs",
+    "// are the environment and this file's URL - never plan or LLM data.",
     "import { writeFile } from \"node:fs/promises\";",
+    "import { existsSync } from \"node:fs\";",
+    "import { resolve } from \"node:path\";",
     "import { pathToFileURL } from \"node:url\";",
     "const EXECUTOR_SPECIFIER = " + JSON.stringify(EXECUTOR_SPECIFIER) + ";",
+    "const EXECUTOR_RELATIVE_PATH = " + JSON.stringify(EXECUTOR_RELATIVE_PATH) + ";",
+    "const FORMAL_TOOLS_RUNNER_ENV = " + JSON.stringify(RUNNER_ROOT_ENV_VAR) + ";",
     "const PLAN = Object.freeze(JSON.parse(" + JSON.stringify(canonicalPlanJson) + "));",
+    "function resolveExecutorUrl() {",
+    "  const root = process.env[FORMAL_TOOLS_RUNNER_ENV];",
+    "  if (typeof root === \"string\" && root.length > 0) {",
+    "    const executorPath = resolve(root, EXECUTOR_RELATIVE_PATH);",
+    "    if (!existsSync(executorPath)) {",
+    "      const e = new Error(\"RUNNER_ROOT_INVALID: \" + FORMAL_TOOLS_RUNNER_ENV + \"=\" + JSON.stringify(root) + \" does not contain packages/runner/js/workflow-executor.mjs; this plan has never been executed (NOT_RUN).\");",
+    "      e.code = \"RUNNER_ROOT_INVALID\";",
+    "      throw e;",
+    "    }",
+    "    return pathToFileURL(executorPath).href;",
+    "  }",
+    "  return new URL(EXECUTOR_SPECIFIER, import.meta.url).href;",
+    "}",
     "let executeWorkflowPlan = null;",
+    "let locatorError = null;",
     "try {",
-    "  ({ executeWorkflowPlan } = await import(EXECUTOR_SPECIFIER));",
-    "} catch {",
-    "  // V3 executor not installed relative to this launcher: fail closed below.",
+    "  ({ executeWorkflowPlan } = await import(resolveExecutorUrl()));",
+    "} catch (e) {",
+    "  if (e && e.code === \"RUNNER_ROOT_INVALID\") locatorError = e;",
+    "  // Otherwise the trusted executor is not resolvable/importable from here:",
+    "  // fail closed in main() with NOT_COMPILED_FOR_EXECUTION.",
     "}",
     "export async function main(argv) {",
     "  const receiptPath = argv && argv[2] !== undefined ? argv[2] : process.argv[2];",
@@ -57,8 +104,9 @@ function renderLauncher(planId, planSha256, canonicalPlanJson) {
     "    e.code = \"LAUNCHER_USAGE\";",
     "    throw e;",
     "  }",
+    "  if (locatorError) throw locatorError;",
     "  if (typeof executeWorkflowPlan !== \"function\") {",
-    "    const e = new Error(\"NOT_COMPILED_FOR_EXECUTION: workflow-executor.mjs (V3) is not installed relative to this launcher; this plan has never been executed (NOT_RUN).\");",
+    "    const e = new Error(\"NOT_COMPILED_FOR_EXECUTION: workflow-executor.mjs (V3) is not installed relative to this launcher; set FORMAL_TOOLS_RUNNER_ROOT to a repository root (a directory containing packages/runner/js/workflow-executor.mjs plus its registry/docs assets) to run a launcher emitted outside the repo; this plan has never been executed (NOT_RUN).\");",
     "    e.code = \"NOT_COMPILED_FOR_EXECUTION\";",
     "    throw e;",
     "  }",
@@ -83,7 +131,7 @@ function renderLauncher(planId, planSha256, canonicalPlanJson) {
     "if (invokedDirectly) {",
     "  main(process.argv).then(receipt => { process.exitCode = receipt.overall?.claim_verdict === \"PASS\" ? 0 : 2; }, err => {",
     "    process.stderr.write(String(err && err.message ? err.message : err) + \"\\n\");",
-    "    process.exitCode = err && err.code === \"NOT_COMPILED_FOR_EXECUTION\" ? 2 : 1;",
+    "    process.exitCode = err && (err.code === \"NOT_COMPILED_FOR_EXECUTION\" || err.code === \"RUNNER_ROOT_INVALID\") ? 2 : 1;",
     "  });",
     "}",
     ""
@@ -96,7 +144,8 @@ function renderLauncher(planId, planSha256, canonicalPlanJson) {
  * object is never mutated; the returned plan is a backfilled copy whose
  * compiled hashes chain plan -> launcher -> manifest. Deterministic: two
  * compilations of the same plan (even with shuffled key order) are
- * byte-identical.
+ * byte-identical, independent of the environment (the launcher reads
+ * FORMAL_TOOLS_RUNNER_ROOT only at run time; no path is baked in).
  * @param {any} plan
  * @returns {{launcher: string, manifest: any, plan: any}}
  */
