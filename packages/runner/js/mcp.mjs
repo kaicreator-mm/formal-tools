@@ -172,7 +172,7 @@ const highsModelSchema=z.object({
   }).strict()).max(128)
 }).strict();
 serveStdio(()=>{
-  const server=new McpServer({name:"formal-tools-skill",version:"0.4.0"});
+  const server=new McpServer({name:"formal-tools-skill",version:"0.0.1"});
   server.registerTool("list_formal_tools",{
     description:"List original 13 native adapters, 23 candidate portfolio tools, and 4 pure JS model checkers.",
     inputSchema:z.object({})

@@ -59,6 +59,20 @@ test('r177 shared-interface wiring is recorded as additive post-window pin drift
     assert.notEqual(entry.new_blob, entry.old_blob, entry.path);
   }
 });
+
+test('v0.0.1 release version alignment is recorded as additive post-window pin drift (PR #209)', async () => {
+  const rel = evidence.source_pin_drift.release_v0_0_1_version_alignment;
+  assert.equal(rel.base_main, '9a448d73dc96e9e430231a1ac9adadaa69298194');
+  assert.equal(rel.pull_request, 209);
+  assert.equal(rel.output_label, 'FORMAL_TOOLS_V001_RELEASE_VERSION_ALIGNMENT');
+  assert.deepEqual(rel.changed_pinned_paths.map(p => p.path),
+    ['packages/runner/js/mcp.mjs', 'package.json', 'package-lock.json']);
+  for (const entry of rel.changed_pinned_paths) {
+    assert.equal(gitBlobSha1(await readFile(resolve(entry.path))), entry.new_blob, 'post-release blob mismatch: ' + entry.path);
+    assert.notEqual(entry.new_blob, entry.old_blob, entry.path);
+    assert.equal(evidence.source_pins[entry.path], entry.new_blob, 'source_pins not refreshed to the post-release blob: ' + entry.path);
+  }
+});
   const drift = evidence.source_pin_drift;
   assert.equal(drift.window.commits, 83);
   assert.deepEqual(drift.changed_pinned_paths.map(p => p.path),
