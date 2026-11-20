@@ -4,8 +4,14 @@
 # execCommands → exec(image, ["-e","-c",script])), so it must be a shell that
 # exists on the agent's PATH. The agent image ships bash 5.3 + node 24.21.0 —
 # the same node major version node:24-alpine would provide.
+# CI trigger hygiene (post-v0.0.1): an open-PR branch is validated by the
+# pull_request lane alone — pushing to it no longer duplicates the same steps.
+# push CI is main-only; any branch can still be checked via a manual run.
 when:
-  - event: [push, pull_request, manual]
+  - event: push
+    branch: main
+  - event: pull_request
+  - event: manual
 steps:
   - name: formal-js-source-and-finite-model
     image: bash
