@@ -1,0 +1,12 @@
+{
+  "submitted": {
+    "plan_sha256_submitted": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  "http_status": 422,
+  "response": {
+    "error": {
+      "code": "NL_APPROVAL_UNKNOWN",
+      "message": "fail-closed: no NL approval is registered in this server for plan sha256 ffffffffffff…; the binding is refused and nothing runs."
+    }
+  }
+}

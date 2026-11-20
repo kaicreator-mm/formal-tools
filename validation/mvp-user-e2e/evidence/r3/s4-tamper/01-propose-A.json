@@ -1,0 +1,88 @@
+{
+  "proposal": {
+    "schema": "formal-tools/nl-model-proposal/0.1",
+    "status": "MODEL_PROPOSED",
+    "original_text": "找出整数 x 和 y：x 至少是 3，y 至少是 1，两个都不超过 50，x+y 恰好是 7 的倍数，并且 y 不超过 x。这样的整数对存在吗？",
+    "provider": {
+      "name": "injected",
+      "model": "stub-nl-model-mock-provider"
+    },
+    "prompt_sha256": "a9ca251525db62f07132dcb10f57d8d15f13db5ab7d67271d403fb412e893541",
+    "response_sha256": "8295e05cc90584d1a473cde9d8041cb1f4f4ef50d3ef421e08a7f586f3dfaab3",
+    "model": {
+      "variables": [
+        {
+          "name": "x",
+          "integer": true,
+          "lower": 3,
+          "upper": 50
+        },
+        {
+          "name": "y",
+          "integer": true,
+          "lower": 1,
+          "upper": 50
+        },
+        {
+          "name": "k",
+          "integer": true,
+          "lower": 1,
+          "upper": 14
+        }
+      ],
+      "constraints": [
+        {
+          "coefficients": {
+            "x": 1,
+            "y": 1,
+            "k": -7
+          },
+          "op": "==",
+          "rhs": 0
+        },
+        {
+          "coefficients": {
+            "y": 1,
+            "x": -1
+          },
+          "op": "<=",
+          "rhs": 0
+        }
+      ],
+      "question": "sat",
+      "assumptions": [
+        "auxiliary k: x+y = 7*k",
+        "k bounded because 4 <= x+y <= 100"
+      ]
+    },
+    "rendering": {
+      "kind": "smt-lib2",
+      "logic": "QF_LIA",
+      "mode": "plan",
+      "text": "(set-logic QF_LIA)\n(declare-fun x () Int)\n(declare-fun y () Int)\n(declare-fun k () Int)\n(assert (>= x 3))\n(assert (<= x 50))\n(assert (>= y 1))\n(assert (<= y 50))\n(assert (>= k 1))\n(assert (<= k 14))\n(assert (= (+ (* -7 k) x y) 0))\n(assert (<= (+ (- x) y) 0))\n(check-sat)\n(exit)\n",
+      "sha256": "b964786a252ef7ab2334a9448d6408a11ab322e035bb005305411f013bf467d3",
+      "commands_allowlist": [
+        "set-logic",
+        "declare-fun",
+        "assert",
+        "check-sat",
+        "get-model",
+        "exit"
+      ],
+      "semantic_status": "TRANSLATION_PROPOSAL_NOT_VERIFIED_AGAINST_TEXT"
+    },
+    "original_text_sha256": "4da1b0564af49dcb21097c380a12ea7a2ef8fd7932f0c1d16e8fd3f134176192",
+    "clarification_needed": null,
+    "assumptions": [
+      "auxiliary k: x+y = 7*k",
+      "k bounded because 4 <= x+y <= 100"
+    ],
+    "issues": null,
+    "review": {
+      "approved": false
+    },
+    "honesty_note": "TRANSLATION PROPOSAL: the structured model is unverified against the text; a human must review it. Render validity does not imply translation fidelity.",
+    "proposal_sha256": "2afa63609778ee24e2bc1815b13870cfad68f4f7d684cff367163c2b1ce282a9"
+  },
+  "warnings": []
+}

@@ -1,0 +1,12 @@
+{
+ "url": "http://127.0.0.1:8790/",
+ "status": "NEEDS_CLARIFICATION — 4 question(s) returned; nothing was rendered or planned.",
+ "questions": [
+  "What are the concrete decision variables of the scheduling system (e.g., number of staff assigned per shift, per day, per role)?",
+  "What are the numeric constraints (coverage requirements, max hours per employee, rest periods, shift counts) and their bounds?",
+  "What does '不会出问题' (will not go wrong) mean operationally — which specific property should be proven (e.g., every shift covered by at least N people, no employee exceeds H hours, no overlapping shifts)?",
+  "Is the goal to find a feasible schedule (satisfiability) or to prove infeasibility of a violation, and over what finite time horizon (number of days)?"
+ ],
+ "modelReviewHidden": true,
+ "originalTextInput": "帮我证明我们的排班系统不会出问题。"
+}

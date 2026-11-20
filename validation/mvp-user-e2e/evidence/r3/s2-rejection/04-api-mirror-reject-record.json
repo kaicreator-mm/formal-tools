@@ -1,0 +1,15 @@
+{
+  "decision": "USER_REJECTED",
+  "record": {
+    "schema": "formal-tools/nl-model-approved/0.1",
+    "status": "USER_REJECTED",
+    "original_text": "找出整数 x 和 y：x 至少是 3，y 至少是 1，两个都不超过 50，x+y 恰好是 7 的倍数，并且 y 不超过 x。这样的整数对存在吗？",
+    "proposal_sha256": "2afa63609778ee24e2bc1815b13870cfad68f4f7d684cff367163c2b1ce282a9",
+    "review": {
+      "approved": false,
+      "edited": false,
+      "rejected": true
+    }
+  },
+  "warnings": []
+}

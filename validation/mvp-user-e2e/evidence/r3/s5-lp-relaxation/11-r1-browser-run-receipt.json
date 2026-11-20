@@ -1,0 +1,66 @@
+{
+  "schema": "formal-tools/execution-receipt/1.0",
+  "run_id": "run-mwnwnxg7-d3c176a6",
+  "plan_id": "wf-5a26c4684ea10088fd9ac733595bdbb9",
+  "plan_sha256": "830326a4d837e56be27256cad410c09a9b39c9e2b25c8f2021f80bc7acac7258",
+  "source_sha": "63e2df55a3222a32100f73771e3c65869a89d3beff96b971b0902d14bb88fafe",
+  "created_at": "2026-11-19T18:50:31.063Z",
+  "tool_versions": {
+    "highs": {
+      "version": "highspy 1.15.1",
+      "probe_sha256": null,
+      "probe_bounded": null
+    }
+  },
+  "steps": [
+    {
+      "step_id": "step-highs",
+      "tool": "highs",
+      "operation": "solve-lp",
+      "status": "EXECUTED",
+      "exit_code": 0,
+      "elapsed_ms": 219,
+      "stdout_sha256": "034759c36301b4bde8edfec7090a1ad380b3c60011e4ae80fcd4a265c71e083d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bounded": "{\"highspy_version\":\"1.15.1\",\"input_sha256\":\"bff163bbf8d53d68f52029fac2c424ae432d4e869768138d489e63886f3bad2a\",\"model_status\":\"kOptimal\",\"numpy_version\":\"2.5.4\",\"objective\":2.5,\"python_version\":\"3.13.5\",\"schema\":\"formal-tools/highs-solve-lp/1.0\",\"solver_api_status\":\"kOk\",\"tool\":\"highs\",\"variables\":[2.5]}\n",
+      "stderr_bounded": "",
+      "result": {
+        "highspy_version": "1.15.1",
+        "input_sha256": "bff163bbf8d53d68f52029fac2c424ae432d4e869768138d489e63886f3bad2a",
+        "model_status": "kOptimal",
+        "numpy_version": "2.5.4",
+        "objective": 2.5,
+        "python_version": "3.13.5",
+        "schema": "formal-tools/highs-solve-lp/1.0",
+        "solver_api_status": "kOk",
+        "tool": "highs",
+        "variables": [
+          2.5
+        ]
+      },
+      "artifacts": []
+    }
+  ],
+  "overall": {
+    "process_outcome": "OK",
+    "solver_answer": {
+      "kind": "solve-lp",
+      "value": "sat",
+      "by_step": [
+        {
+          "step_id": "step-highs",
+          "tool": "highs",
+          "operation": "solve-lp",
+          "answer": "kOptimal"
+        }
+      ]
+    },
+    "cross_tool_verdict": "NOT_APPLICABLE",
+    "claim_verdict": "NOT_APPLICABLE"
+  },
+  "environment": {
+    "host": "127.0.0.1",
+    "node": "v22.16.0",
+    "formal_portable_root_sha": "020f8f5ed4281e477d74303194cc3b5b38064013c4fa8d20a13039f2eceeb65a"
+  }
+}

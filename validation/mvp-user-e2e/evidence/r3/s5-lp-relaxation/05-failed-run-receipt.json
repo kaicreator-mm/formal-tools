@@ -1,0 +1,43 @@
+{
+  "schema": "formal-tools/execution-receipt/1.0",
+  "run_id": "run-mwnvta8s-f2907b4f",
+  "plan_id": "wf-5a26c4684ea10088fd9ac733595bdbb9",
+  "plan_sha256": "830326a4d837e56be27256cad410c09a9b39c9e2b25c8f2021f80bc7acac7258",
+  "source_sha": "63e2df55a3222a32100f73771e3c65869a89d3beff96b971b0902d14bb88fafe",
+  "created_at": "2026-11-19T18:26:41.308Z",
+  "tool_versions": {},
+  "steps": [
+    {
+      "step_id": "step-highs",
+      "tool": "highs",
+      "operation": "solve-lp",
+      "status": "ERROR",
+      "exit_code": null,
+      "elapsed_ms": 2,
+      "stdout_sha256": null,
+      "stderr_sha256": null,
+      "stdout_bounded": null,
+      "stderr_bounded": null,
+      "result": {
+        "error": "Error: PORTABLE_VERSION_DRIFT_EXPECTED_1.15.1"
+      },
+      "artifacts": []
+    }
+  ],
+  "overall": {
+    "process_outcome": "FAILED",
+    "solver_answer": {
+      "kind": "none",
+      "value": null,
+      "by_step": []
+    },
+    "cross_tool_verdict": "NOT_APPLICABLE",
+    "claim_verdict": "UNSUPPORTED_BY_MVP",
+    "fail_closed_reason": "HIGHS_ADAPTER_FAIL_CLOSED"
+  },
+  "environment": {
+    "host": "127.0.0.1",
+    "node": "v22.16.0",
+    "formal_portable_root_sha": "0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17"
+  }
+}

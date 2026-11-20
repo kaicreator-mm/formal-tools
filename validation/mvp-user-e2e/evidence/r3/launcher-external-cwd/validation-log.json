@@ -1,0 +1,80 @@
+{
+  "schema": "formal-tools/local-validation-log/0.1",
+  "validated_at": "2026-11-20",
+  "validator": "integrator subagent C (i180/R3), non-reviewer",
+  "subject": {
+    "pr": 198,
+    "branch": "i180/r2-launcher",
+    "head": "cf0e16d8fd603430d5941bc399229c6b32511b7b",
+    "stack_on": "PR 197 fix/i180-launcher-receipt-r1 @ 770c06065ebc11279d62c0b9d38219f2dabe8791"
+  },
+  "plan": {
+    "plan_id": "wf-d2eafd5f6c5e1f323764afced3be893c",
+    "plan_sha256": "bf6b86e99c903cef8a730270e9520f25240d1eda9b7d312bf85154f0d5638a01",
+    "launcher_sha256": "4738f6a242779000dd7fdb9b92a0c47a875599dbfeef333077023e9448a88fd0",
+    "steps": ["step-z3 (z3 solve-smt)", "step-cvc5 (cvc5 solve-smt)", "step-agree (compare cross-check)"]
+  },
+  "negative_windows_no_solver": [
+    {
+      "case": "NEG-1 BLOCKED",
+      "env": "FORMAL_TOOLS_RUNNER_ROOT=C:/xDev/ft-work/i180-r3/integrator, FORMAL_PORTABLE_ROOT unset",
+      "cmd": "node launcher-out.mjs receipt-blocked.json  (launcher copied OUTSIDE repo, cwd=temp)",
+      "exit_code": 2,
+      "assertions": ["receipt written", "overall.claim_verdict=BLOCKED", "overall.process_outcome=ABORTED", "overall.fail_closed_reason=BLOCKED_TOOL_MISSING", "all 3 steps NOT_RUN"],
+      "receipt": "blocked-win-nosolver.execution-receipt.json"
+    },
+    {
+      "case": "NEG-2 NOT_COMPILED_FOR_EXECUTION",
+      "env": "FORMAL_TOOLS_RUNNER_ROOT unset, launcher outside repo",
+      "cmd": "node launcher-out.mjs receipt-neg2.json",
+      "exit_code": 2,
+      "assertions": ["stderr NOT_COMPILED_FOR_EXECUTION", "no receipt written"]
+    },
+    {
+      "case": "NEG-3 RUNNER_ROOT_INVALID",
+      "env": "FORMAL_TOOLS_RUNNER_ROOT=<empty fake dir>",
+      "cmd": "node launcher-out.mjs receipt-neg3.json",
+      "exit_code": 2,
+      "assertions": ["stderr RUNNER_ROOT_INVALID", "no receipt written"]
+    }
+  ],
+  "positive_cc_lan200_container": {
+    "environment": "docker formal-tools-ssh (formal-tools:deb13-r0) on cc@192.168.100.200; repo cloned from git bundle @ cf0e16d8fd603430d5941bc399229c6b32511b7b into /tmp/ft-repo; node=/home/cc/formal-tools/runtimes/node22/bin/node (v22.16.0); launcher at /tmp/launcher-ext (outside repo); FORMAL_TOOLS_RUNNER_ROOT=/tmp/ft-repo; FORMAL_PORTABLE_ROOT=/home/cc/formal-tools; FORMAL_PORTABLE_RUNNER_SHA256=0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17",
+    "compile_cmd": "node /tmp/ft-repo/packages/runner/js/cli.mjs workflow plan --problem-file problem.smt2 --assumption \"solvers run locally\" --compile  (cwd=/tmp/ft-run)",
+    "compile_exit_code": 0,
+    "compile_note": "same plan_id wf-d2eafd5f... as the Windows local compile — byte-deterministic across platforms",
+    "run_cmd": "node launcher.mjs receipt-pass.json  (cwd=/tmp/launcher-ext)",
+    "run_exit_code": 0,
+    "verdicts": {
+      "claim_verdict": "PASS",
+      "process_outcome": "OK",
+      "cross_tool_verdict": "AGREE_UNSAT",
+      "solver_answer": "unsat",
+      "z3": "Z3 version 5.4.0 (unsat, exit 0, 12ms)",
+      "cvc5": "cvc5 1.4.2 (unsat, exit 0, 4ms)"
+    },
+    "receipt": "pass.execution-receipt.json",
+    "workspace_artifacts": "artifacts/ (workspace receipt+manifest+logs; all sha256 bindings verified: manifest.receipt_sha256==disk receipt hash, each log == receipt stdout_sha256)",
+    "host": "4441ce0dd265 (container id)"
+  },
+  "pr203_spot_check": {
+    "head": "864aa016d8ba0c557af26392d4da610a0cd2ed63",
+    "test": "node --test tests/workflow-executor.test.mjs",
+    "result": "22 pass / 0 fail",
+    "hash_assertions": {
+      "script": "writeExecutionReceiptArtifacts(dir, realReceipt, [{step_id:'step-z3', stdout:'...', stderr:''}])",
+      "return.receipt_sha256 == sha256(receipt.json on disk)": true,
+      "manifest.receipt_sha256 == sha256(receipt.json on disk)": true,
+      "manifest receipt.json artifact entry == same": true,
+      "return.receipt_sha256 != sha256(log bytes)": true,
+      "log listed in manifest with own hash": true,
+      "observed_receipt_sha256": "cbc4a61912f3e876108058a9eb8a54fa1d7c49476245749770b7386b57fc3436"
+    }
+  },
+  "pr_gate_state_at_validation": {
+    "197": { "head": "770c06065ebc11279d62c0b9d38219f2dabe8791", "ci": ["ci/woodpecker/push/formal-static success (pipeline 2194)", "ci/woodpecker/pr/formal-static success (pipeline 2195)"], "reviews": 0, "state": "OPEN", "mergeable": "MERGEABLE" },
+    "198": { "head": "cf0e16d8fd603430d5941bc399229c6b32511b7b", "ci": ["ci/woodpecker/push/formal-static success (pipeline 2203)", "ci/woodpecker/pr/formal-static success (pipeline 2204)"], "reviews": 0, "state": "OPEN(draft)", "mergeable": "MERGEABLE" },
+    "203": { "head": "864aa016d8ba0c557af26392d4da610a0cd2ed63", "ci": ["ci/woodpecker/push/formal-static success (pipeline 2214)", "ci/woodpecker/pr/formal-static success (pipeline 2215)"], "reviews": 0, "state": "OPEN", "mergeable": "MERGEABLE" }
+  },
+  "merge_decision": "BLOCKED_ON_EXTERNAL_REVIEW — zero reviews on all three PRs; integrator is a Writer-family session and must not approve or merge"
+}

@@ -1,0 +1,17 @@
+{
+ "bannerTitle": "RUN COMPLETE",
+ "bannerText": "RUN COMPLETEAll steps executed under the plan budget.",
+ "verdictRows": [
+  "process_outcomeTechnical execution result of the plan (did steps run cleanly?).OK",
+  "solver_answerWhat the solver(s) answered about the model itself (null when no step ran).sat",
+  "cross_tool_verdictAgreement between independent tools (only for cross-check plans).AGREE_SAT",
+  "claim_verdictVerdict about a user claim; no claim submitted in this MVP sample.PASS"
+ ],
+ "byStep": null,
+ "nlNote": "NL lane caveat: these verdicts answer the approved RENDERED MODEL (user-reviewed translation proposal, hash-bound), not your natural-language text. Render/solve validity does not prove translation fidelity.",
+ "environment": "environment — host: 127.0.0.1 · node: v22.16.0 · portable root sha: 0db55eab9c1b1006289030203e97002d89a61e37b9756697070e7a9470212e17 · receipt run_id: run-mwnx14na-b98594dd",
+ "evidenceHashLines": [
+  "step-z3 stdout — full-stream SHA-256 d9dbf94b05b8… (over the FULL captured stream) · bounded copy SHA-256 d9dbf94b05b8… (verified identical to the full stream)",
+  "step-cvc5 stdout — full-stream SHA-256 d9dbf94b05b8… (over the FULL captured stream) · bounded copy SHA-256 d9dbf94b05b8… (verified identical to the full stream)"
+ ]
+}
