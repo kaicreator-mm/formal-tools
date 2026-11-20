@@ -493,6 +493,19 @@ function collectNlAssumptions() {
     .filter(Boolean);
 }
 
+/**
+ * Compare the CURRENT visible review form to the last server-validated model.
+ * Object key order is irrelevant; constraint/variable/assumption array order
+ * is preserved. A changed form must be previewed before it can be approved.
+ */
+function nlReviewFingerprint(value) {
+  return JSON.stringify(value, (_key, item) => (
+    item && typeof item === 'object' && !Array.isArray(item)
+      ? Object.fromEntries(Object.keys(item).sort().map((key) => [key, item[key]]))
+      : item
+  ));
+}
+
 /** "x:1 y:-7" -> {x:1, y:-7}; null on any malformed pair (server re-validates). */
 function parseCoeffPairs(text) {
   const out = {};
@@ -601,8 +614,21 @@ $('#nlApproveBtn').addEventListener('click', async () => {
   const statusEl = $('#nlReviewStatus');
   btn.disabled = true;
   $('#nlRejectBtn').disabled = true;
-  setStatus(statusEl, 'Recording your approval (hash-bound) and building the execution plan…');
+  setStatus(statusEl, 'Checking that the displayed model matches the validated model…');
   try {
+    const visibleModel = collectNlEdits();
+    const reviewedModel = state.nlEditedModel || state.nlProposal.model;
+    if (nlReviewFingerprint(visibleModel) !== nlReviewFingerprint(reviewedModel)) {
+      // The user edited fields after the last preview. Never silently approve
+      // the older model while showing different constraint values on screen.
+      setStatus(statusEl,
+        'The visible model changed since its last validation. Click Re-validate edits and review the updated SMT model before approving.',
+        'error');
+      btn.disabled = false;
+      $('#nlRejectBtn').disabled = false;
+      return;
+    }
+    setStatus(statusEl, 'Recording your approval (hash-bound) and building the execution plan…');
     const payload = { proposal: state.nlProposal, approved: true };
     if (state.nlEditedModel) payload.edited = state.nlEditedModel;
     // R3 seam: the acknowledgement rides the decision ONLY when the explicit
@@ -726,6 +752,16 @@ function planSourceText(source) {
 function setPlan(plan, planSource) {
   state.plan = plan;
   state.planSource = planSource || null;
+  // NL assumptions are part of the approved, hash-bound model. Reusing the
+  // direct-model Regenerate button here would call /api/plan (not /api/nl/*)
+  // with a stale/undefined state.problemText and silently change provenance.
+  const nlPlan = state.planSource?.kind === 'nl-model';
+  $('#addAssumptionBtn').hidden = nlPlan;
+  $('#regenBtn').hidden = nlPlan;
+  $('#regenBtn').disabled = nlPlan;
+  $('#planAssumptionsHelp').textContent = nlPlan
+    ? 'Assumptions are fixed by your approved NL model. To change them, start a new NL proposal and review/approve it again.'
+    : 'Edit inline; Regenerate plan rebuilds the plan (and hashes) with your edits.';
   // NL model review yields to the execution-plan review once approved.
   $('#nlModelReview').hidden = true;
   $('#planReview').hidden = false;
@@ -814,6 +850,7 @@ function renderAssumptions(assumptions) {
     input.type = 'text';
     input.value = typeof text === 'string' ? text : '';
     input.maxLength = 256;
+    input.readOnly = state.planSource?.kind === 'nl-model';
     const labelId = `assumption-${index + 1}`;
     input.id = labelId;
     input.dataset.assumptionId = `a${index + 1}`;
@@ -827,6 +864,7 @@ function renderAssumptions(assumptions) {
     removeBtn.className = 'assumption-remove';
     removeBtn.textContent = '✕';
     removeBtn.setAttribute('aria-label', `Remove assumption a${index + 1}`);
+    removeBtn.hidden = state.planSource?.kind === 'nl-model';
     removeBtn.addEventListener('click', () => li.remove());
     li.append(label, input, removeBtn);
     list.append(li);
@@ -847,6 +885,12 @@ $('#addAssumptionBtn').addEventListener('click', () => {
 
 $('#regenBtn').addEventListener('click', async () => {
   const statusEl = $('#planStatus');
+  if (state.planSource?.kind === 'nl-model') {
+    setStatus(statusEl,
+      'This plan is bound to an approved NL model. Start a new NL proposal to change assumptions; direct-model regeneration is not valid here.',
+      'error');
+    return;
+  }
   setStatus(statusEl, 'Regenerating plan with edited assumptions…');
   try {
     const payload = { problem_text: state.problemText, assumptions: collectAssumptions() };
@@ -873,6 +917,19 @@ $('#approveBtn').addEventListener('click', async () => {
   const btn = $('#approveBtn');
   const statusEl = $('#planStatus');
   btn.disabled = true;
+  setStatus(statusEl, 'Checking that the displayed assumptions match the plan…');
+  // Plan-screen assumptions are independently editable. Do not execute an
+  // OLDER plan when the review screen currently displays different values.
+  // NL plans in particular cannot be rebuilt without a fresh model approval.
+  if (JSON.stringify(collectAssumptions()) !== JSON.stringify(state.plan.assumptions || [])) {
+    const isNl = state.planSource?.kind === 'nl-model';
+    setStatus(statusEl, isNl
+      ? 'Plan assumptions changed after model approval. Return to the task input and generate/review/approve a fresh NL model.'
+      : 'Plan assumptions changed. Click Regenerate plan, then review its updated hash before running.',
+      'error');
+    btn.disabled = false;
+    return;
+  }
   setStatus(statusEl, 'Starting run…');
   try {
     const payload = { plan: state.plan };
